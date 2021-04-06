@@ -4,7 +4,7 @@ resource "google_data_catalog_entry" "bar_entry" {
 
   user_specified_type = "Bar"
   user_specified_system = "Source"
-  linked_resource = "model.sysl:14"
+  linked_resource = "model.sysl:13"
 
   display_name = "Bar"
   description  = "A database.
@@ -46,7 +46,7 @@ resource "google_data_catalog_entry" "foo_entry" {
 
   user_specified_type = "Foo"
   user_specified_system = "Source"
-  linked_resource = "model.sysl:6"
+  linked_resource = "model.sysl:5"
 
   display_name = "Foo"
   description  = "A database.

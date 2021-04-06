@@ -15,6 +15,19 @@
               line: 37,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 41,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 37,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -34,6 +47,19 @@
                   line: 38,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 18,
+                    line: 38,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 38,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -72,6 +98,19 @@
                   line: 39,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 39,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 39,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -89,12 +128,24 @@
           line: 36,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            line: 36,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 36,
+          ),
+        ),
+      ],
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 1,
-              line: 45,
+              line: 46,
             ),
             file: 'model.sysl',
             start: (
@@ -102,35 +153,102 @@
               line: 41,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 1,
+                line: 46,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 41,
+              ),
+            ),
+          ],
           tuple: (
             attr_defs: {
               'ax': (
+                attrs: {
+                  'examples': (
+                    a: (
+                      elt: [
+                        (
+                          s: '12',
+                        ),
+                        (
+                          s: '42',
+                        ),
+                      ],
+                    ),
+                  ),
+                },
                 primitive: 'INT',
                 source_context: (
                   end: (
-                    col: 14,
-                    line: 42,
+                    col: 8,
+                    line: 44,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
+                    col: 8,
                     line: 42,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 8,
+                      line: 44,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 42,
+                    ),
+                  ),
+                ],
               ),
               'ay': (
+                attrs: {
+                  'examples': (
+                    a: (
+                      elt: [
+                        (
+                          s: '12',
+                        ),
+                        (
+                          s: '42',
+                        ),
+                      ],
+                    ),
+                  ),
+                },
                 primitive: 'INT',
                 source_context: (
                   end: (
-                    col: 14,
-                    line: 43,
+                    col: 40,
+                    line: 44,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 43,
+                    col: 8,
+                    line: 44,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 40,
+                      line: 44,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 44,
+                    ),
+                  ),
+                ],
               ),
             },
           ),
@@ -144,14 +262,27 @@
           source_context: (
             end: (
               col: 4,
-              line: 50,
+              line: 51,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 46,
+              line: 47,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 51,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 47,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -163,14 +294,27 @@
               source_context: (
                 end: (
                   col: 18,
-                  line: 47,
+                  line: 48,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 47,
+                  line: 48,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 18,
+                    line: 48,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 48,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -201,14 +345,27 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 48,
+                  line: 49,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 48,
+                  line: 49,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 49,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 49,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -218,27 +375,52 @@
       ),
       source_context: (
         end: (
-          line: 45,
+          line: 46,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 45,
+          line: 46,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            line: 46,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 46,
+          ),
+        ),
+      ],
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 1,
-              line: 54,
+              line: 55,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 50,
+              line: 51,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 1,
+                line: 55,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 51,
+              ),
+            ),
+          ],
           tuple: (
             attr_defs: {
               'bx': (
@@ -246,28 +428,54 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 51,
+                    line: 52,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 51,
+                    col: 8,
+                    line: 52,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 52,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 52,
+                    ),
+                  ),
+                ],
               ),
               'by': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 52,
+                    line: 53,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 52,
+                    col: 8,
+                    line: 53,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 53,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 53,
+                    ),
+                  ),
+                ],
               ),
             },
           ),
@@ -281,14 +489,27 @@
           source_context: (
             end: (
               col: 4,
-              line: 69,
+              line: 70,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 64,
+              line: 65,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 70,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 65,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -300,14 +521,27 @@
               source_context: (
                 end: (
                   col: 12,
-                  line: 65,
+                  line: 66,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 65,
+                  line: 66,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 12,
+                    line: 66,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 66,
+                  ),
+                ),
+              ],
             ),
             (
               call: (
@@ -319,14 +553,27 @@
               source_context: (
                 end: (
                   col: 12,
-                  line: 66,
+                  line: 67,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 66,
+                  line: 67,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 12,
+                    line: 67,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 67,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -361,14 +608,27 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 67,
+                  line: 68,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 67,
+                  line: 68,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 68,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 68,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -377,14 +637,27 @@
           source_context: (
             end: (
               col: 4,
-              line: 59,
+              line: 60,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 55,
+              line: 56,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 60,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 56,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -396,14 +669,27 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 56,
+                  line: 57,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 56,
+                  line: 57,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 13,
+                    line: 57,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 57,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -434,14 +720,27 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 57,
+                  line: 58,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 57,
+                  line: 58,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 58,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 58,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -450,14 +749,27 @@
           source_context: (
             end: (
               col: 4,
-              line: 64,
+              line: 65,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 59,
+              line: 60,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 65,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 60,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -469,14 +781,27 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 60,
+                  line: 61,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 60,
+                  line: 61,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 13,
+                    line: 61,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 61,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -507,14 +832,27 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 61,
+                  line: 62,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 61,
+                  line: 62,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 62,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 62,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -524,27 +862,52 @@
       ),
       source_context: (
         end: (
-          line: 54,
+          line: 55,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 54,
+          line: 55,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            line: 55,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 55,
+          ),
+        ),
+      ],
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 1,
-              line: 73,
+              line: 74,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 69,
+              line: 70,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 1,
+                line: 74,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 70,
+              ),
+            ),
+          ],
           tuple: (
             attr_defs: {
               'cx': (
@@ -552,28 +915,54 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 70,
+                    line: 71,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 70,
+                    col: 8,
+                    line: 71,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 71,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 71,
+                    ),
+                  ),
+                ],
               ),
               'cy': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 71,
+                    line: 72,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 71,
+                    col: 8,
+                    line: 72,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 72,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 72,
+                    ),
+                  ),
+                ],
               ),
             },
           ),
@@ -587,14 +976,27 @@
           source_context: (
             end: (
               col: 4,
-              line: 88,
+              line: 89,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 84,
+              line: 85,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 89,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 85,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -606,14 +1008,27 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 85,
+                  line: 86,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 85,
+                  line: 86,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 13,
+                    line: 86,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 86,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -644,14 +1059,27 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 86,
+                  line: 87,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 86,
+                  line: 87,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 87,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 87,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -661,28 +1089,53 @@
       ),
       source_context: (
         end: (
-          line: 83,
+          line: 84,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 83,
+          line: 84,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            line: 84,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 84,
+          ),
+        ),
+      ],
       types: {
         'Digit': (
           primitive: 'INT',
           source_context: (
             end: (
               col: 4,
-              line: 100,
+              line: 101,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 97,
+              line: 98,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 101,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 98,
+              ),
+            ),
+          ],
         ),
         'Digits': (
           sequence: (
@@ -690,39 +1143,78 @@
             source_context: (
               end: (
                 col: 3,
-                line: 103,
+                line: 104,
               ),
               file: 'model.sysl',
               start: (
                 col: 4,
-                line: 100,
+                line: 101,
               ),
             ),
+            source_contexts: [
+              (
+                end: (
+                  col: 3,
+                  line: 104,
+                ),
+                file: 'model.sysl',
+                start: (
+                  col: 4,
+                  line: 101,
+                ),
+              ),
+            ],
           ),
           source_context: (
             end: (
               col: 3,
-              line: 103,
+              line: 104,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 100,
+              line: 101,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 3,
+                line: 104,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 101,
+              ),
+            ),
+          ],
         ),
         'Display': (
           source_context: (
             end: (
               col: 4,
-              line: 97,
+              line: 98,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 94,
+              line: 95,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 98,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 95,
+              ),
+            ),
+          ],
           type_ref: (
             context: (
               appname: (
@@ -739,28 +1231,54 @@
           source_context: (
             end: (
               col: 4,
-              line: 94,
+              line: 95,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 88,
+              line: 89,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 95,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 89,
+              ),
+            ),
+          ],
           tuple: (
             attr_defs: {
               'ww': (
                 source_context: (
                   end: (
                     col: 14,
-                    line: 89,
+                    line: 90,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 89,
+                    col: 8,
+                    line: 90,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 90,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 90,
+                    ),
+                  ),
+                ],
                 type_ref: (
                   context: (
                     appname: (
@@ -778,41 +1296,80 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 90,
+                    line: 91,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 90,
+                    col: 8,
+                    line: 91,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 91,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 91,
+                    ),
+                  ),
+                ],
               ),
               'yy': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 91,
+                    line: 92,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 91,
+                    col: 8,
+                    line: 92,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 92,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 92,
+                    ),
+                  ),
+                ],
               ),
               'zz': (
                 source_context: (
                   end: (
                     col: 14,
-                    line: 92,
+                    line: 93,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 92,
+                    col: 8,
+                    line: 93,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 93,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 93,
+                    ),
+                  ),
+                ],
                 type_ref: (
                   context: (
                     appname: (
@@ -837,14 +1394,27 @@
           source_context: (
             end: (
               col: 4,
-              line: 79,
+              line: 80,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 74,
+              line: 75,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 80,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 75,
+              ),
+            ),
+          ],
           stmt: [
             (
               call: (
@@ -856,14 +1426,27 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 75,
+                  line: 76,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 75,
+                  line: 76,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 13,
+                    line: 76,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 76,
+                  ),
+                ),
+              ],
             ),
             (
               call: (
@@ -875,14 +1458,27 @@
               source_context: (
                 end: (
                   col: 13,
-                  line: 76,
+                  line: 77,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 76,
+                  line: 77,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 13,
+                    line: 77,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 77,
+                  ),
+                ),
+              ],
             ),
             (
               ret: (
@@ -917,14 +1513,27 @@
               source_context: (
                 end: (
                   col: 14,
-                  line: 77,
+                  line: 78,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 77,
+                  line: 78,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 78,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 78,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -934,27 +1543,52 @@
       ),
       source_context: (
         end: (
-          line: 73,
+          line: 74,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 73,
+          line: 74,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            line: 74,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 74,
+          ),
+        ),
+      ],
       types: {
         'FetchResponse': (
           source_context: (
             end: (
               col: 6,
-              line: 83,
+              line: 84,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 79,
+              line: 80,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 6,
+                line: 84,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 80,
+              ),
+            ),
+          ],
           tuple: (
             attr_defs: {
               'dx': (
@@ -962,28 +1596,54 @@
                 source_context: (
                   end: (
                     col: 14,
-                    line: 80,
+                    line: 81,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 80,
+                    col: 8,
+                    line: 81,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 81,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 81,
+                    ),
+                  ),
+                ],
               ),
               'dy': (
                 primitive: 'INT',
                 source_context: (
                   end: (
                     col: 14,
-                    line: 81,
+                    line: 82,
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 14,
-                    line: 81,
+                    col: 8,
+                    line: 82,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 14,
+                      line: 82,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 82,
+                    ),
+                  ),
+                ],
               ),
             },
           ),
@@ -1038,6 +1698,19 @@
                       line: 27,
                     ),
                   ),
+                  source_contexts: [
+                    (
+                      end: (
+                        col: 17,
+                        line: 27,
+                      ),
+                      file: 'model.sysl',
+                      start: (
+                        col: 9,
+                        line: 27,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -1053,6 +1726,19 @@
               line: 28,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 32,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 12,
+                line: 28,
+              ),
+            ),
+          ],
           stmt: [
             (
               ret: (
@@ -1083,6 +1769,19 @@
                   line: 29,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 22,
+                    line: 29,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 16,
+                    line: 29,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -1196,6 +1895,19 @@
                       line: 33,
                     ),
                   ),
+                  source_contexts: [
+                    (
+                      end: (
+                        col: 202,
+                        line: 33,
+                      ),
+                      file: 'model.sysl',
+                      start: (
+                        col: 194,
+                        line: 33,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               (
@@ -1215,6 +1927,19 @@
                       line: 33,
                     ),
                   ),
+                  source_contexts: [
+                    (
+                      end: (
+                        col: 213,
+                        line: 33,
+                      ),
+                      file: 'model.sysl',
+                      start: (
+                        col: 204,
+                        line: 33,
+                      ),
+                    ),
+                  ],
                   type_ref: (
                     context: (
                       appname: (
@@ -1240,6 +1965,19 @@
               line: 33,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 1,
+                line: 36,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 8,
+                line: 33,
+              ),
+            ),
+          ],
           stmt: [
             (
               ret: (
@@ -1270,6 +2008,19 @@
                   line: 34,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 18,
+                    line: 34,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 12,
+                    line: 34,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -1294,6 +2045,19 @@
               line: 22,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 26,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 22,
+              ),
+            ),
+          ],
           stmt: [
             (
               ret: (
@@ -1324,6 +2088,19 @@
                   line: 23,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 14,
+                    line: 23,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 23,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -1342,6 +2119,19 @@
           line: 1,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            col: 10,
+            line: 1,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 1,
+          ),
+        ),
+      ],
       types: {
         'Bar': (
           attrs: {
@@ -1371,10 +2161,23 @@
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 13,
+                    col: 8,
                     line: 15,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 24,
+                      line: 15,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 15,
+                    ),
+                  ),
+                ],
               ),
               'b': (
                 attrs: {
@@ -1393,10 +2196,23 @@
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 13,
-                    line: 17,
+                    col: 8,
+                    line: 16,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 8,
+                      line: 18,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 16,
+                    ),
+                  ),
+                ],
               ),
               'x': (
                 attrs: {
@@ -1411,10 +2227,23 @@
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 13,
-                    line: 19,
+                    col: 8,
+                    line: 18,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 4,
+                      line: 22,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 18,
+                    ),
+                  ),
+                ],
                 type_ref: (
                   context: (
                     appname: (
@@ -1440,9 +2269,22 @@
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 14,
+              line: 13,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 22,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 13,
+              ),
+            ),
+          ],
         ),
         'Foo': (
           attrs: {
@@ -1466,10 +2308,23 @@
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 13,
-                    line: 10,
+                    col: 8,
+                    line: 9,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 8,
+                      line: 11,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 9,
+                    ),
+                  ),
+                ],
               ),
               'y': (
                 primitive: 'INT',
@@ -1480,10 +2335,23 @@
                   ),
                   file: 'model.sysl',
                   start: (
-                    col: 13,
+                    col: 8,
                     line: 11,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 13,
+                      line: 11,
+                    ),
+                    file: 'model.sysl',
+                    start: (
+                      col: 8,
+                      line: 11,
+                    ),
+                  ),
+                ],
               ),
             },
           ),
@@ -1495,9 +2363,22 @@
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 6,
+              line: 5,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                col: 4,
+                line: 13,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 5,
+              ),
+            ),
+          ],
         ),
       },
     ),
@@ -1507,14 +2388,26 @@
           name: 'all',
           source_context: (
             end: (
-              line: 111,
+              line: 112,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 104,
+              line: 105,
             ),
           ),
+          source_contexts: [
+            (
+              end: (
+                line: 112,
+              ),
+              file: 'model.sysl',
+              start: (
+                col: 4,
+                line: 105,
+              ),
+            ),
+          ],
           stmt: [
             (
               action: (
@@ -1523,14 +2416,27 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 105,
+                  line: 106,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 105,
+                  line: 106,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 8,
+                    line: 106,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 106,
+                  ),
+                ),
+              ],
             ),
             (
               action: (
@@ -1539,14 +2445,27 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 106,
+                  line: 107,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 106,
+                  line: 107,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 8,
+                    line: 107,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 107,
+                  ),
+                ),
+              ],
             ),
             (
               action: (
@@ -1555,14 +2474,27 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 107,
+                  line: 108,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 107,
+                  line: 108,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 8,
+                    line: 108,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 108,
+                  ),
+                ),
+              ],
             ),
             (
               action: (
@@ -1571,14 +2503,27 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 108,
+                  line: 109,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 108,
+                  line: 109,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 8,
+                    line: 109,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 109,
+                  ),
+                ),
+              ],
             ),
             (
               action: (
@@ -1587,14 +2532,27 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 109,
+                  line: 110,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 109,
+                  line: 110,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 8,
+                    line: 110,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 110,
+                  ),
+                ),
+              ],
             ),
             (
               action: (
@@ -1603,14 +2561,27 @@
               source_context: (
                 end: (
                   col: 8,
-                  line: 110,
+                  line: 111,
                 ),
                 file: 'model.sysl',
                 start: (
                   col: 8,
-                  line: 110,
+                  line: 111,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 8,
+                    line: 111,
+                  ),
+                  file: 'model.sysl',
+                  start: (
+                    col: 8,
+                    line: 111,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -1620,14 +2591,26 @@
       ),
       source_context: (
         end: (
-          line: 103,
+          line: 104,
         ),
         file: 'model.sysl',
         start: (
           col: 1,
-          line: 103,
+          line: 104,
         ),
       ),
+      source_contexts: [
+        (
+          end: (
+            line: 104,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 1,
+            line: 104,
+          ),
+        ),
+      ],
     ),
   },
 )

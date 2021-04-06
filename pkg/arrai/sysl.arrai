@@ -79,7 +79,7 @@ let srcRel = \type \rel
     rel =>
         let t = //dict(.);
         let names = t where //seq.has_suffix('Name', .@);
-        //tuple(names | {$`${type}Src`: t(type).source_context?:{}})
+        //tuple(names | {$`${type}Src`: t(type).source_context?:{}, $`${type}Srcs`: t(type).source_contexts?:{}})
     ;
 
 # A macro to convert `ret` statement payload string to structured tuples.

@@ -316,6 +316,19 @@
                   line: 65,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 32,
+                    line: 65,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 18,
+                    line: 65,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -346,6 +359,19 @@
                   line: 70,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 19,
+                    line: 70,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 12,
+                    line: 70,
+                  ),
+                ),
+              ],
             ),
           ),
           (
@@ -362,6 +388,19 @@
                   line: 70,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 28,
+                    line: 70,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 26,
+                    line: 70,
+                  ),
+                ),
+              ],
             ),
           ),
           (
@@ -378,6 +417,19 @@
                   line: 70,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 44,
+                    line: 70,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 33,
+                    line: 70,
+                  ),
+                ),
+              ],
               type_ref: (
                 context: (
                   appname: (
@@ -408,6 +460,19 @@
                   line: 70,
                 ),
               ),
+              source_contexts: [
+                (
+                  end: (
+                    col: 61,
+                    line: 70,
+                  ),
+                  file: 'all.sysl',
+                  start: (
+                    col: 46,
+                    line: 70,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -1122,6 +1187,19 @@
             line: 3,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              col: 29,
+              line: 3,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 3,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['App', 'with', 'subpackages'],
@@ -1136,6 +1214,19 @@
             line: 16,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              col: 27,
+              line: 16,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 16,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['AppWithAnnotation'],
@@ -1149,6 +1240,18 @@
             line: 6,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              line: 6,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 6,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['EventAndSubscriber'],
@@ -1162,6 +1265,18 @@
             line: 254,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              line: 254,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 254,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1175,6 +1290,18 @@
             line: 37,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              line: 37,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 37,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['SimpleEndpoint'],
@@ -1188,6 +1315,18 @@
             line: 19,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              line: 19,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 19,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1201,6 +1340,18 @@
             line: 153,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              line: 153,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 153,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -1214,6 +1365,18 @@
             line: 92,
           ),
         ),
+        appSrcs: [
+          (
+            end: (
+              line: 92,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 1,
+              line: 92,
+            ),
+          ),
+        ],
       ),
     },
     ep: {
@@ -1231,6 +1394,19 @@
             line: 266,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 270,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 266,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1246,6 +1422,19 @@
             line: 50,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 53,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 50,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1261,6 +1450,19 @@
             line: 89,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 5,
+              line: 92,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 89,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1276,6 +1478,19 @@
             line: 42,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 44,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 42,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1291,6 +1506,19 @@
             line: 56,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 59,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 16,
+              line: 56,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1306,6 +1534,19 @@
             line: 60,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 65,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 60,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1321,6 +1562,19 @@
             line: 75,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 78,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 75,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1336,6 +1590,19 @@
             line: 66,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 69,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 66,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1351,6 +1618,19 @@
             line: 70,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 73,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 70,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1366,6 +1646,19 @@
             line: 48,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 50,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 48,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1381,6 +1674,19 @@
             line: 78,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 83,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 78,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1396,6 +1702,19 @@
             line: 44,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 46,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 44,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1411,6 +1730,19 @@
             line: 83,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 86,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 83,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1426,6 +1758,19 @@
             line: 46,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 48,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 46,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['RestEndpoint'],
@@ -1441,6 +1786,19 @@
             line: 86,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 89,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 86,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['SimpleEndpoint'],
@@ -1456,6 +1814,19 @@
             line: 20,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 23,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 20,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['SimpleEndpoint'],
@@ -1471,6 +1842,19 @@
             line: 34,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 12,
+              line: 37,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 34,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['SimpleEndpoint'],
@@ -1486,6 +1870,19 @@
             line: 31,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 34,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 31,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['SimpleEndpoint'],
@@ -1501,6 +1898,19 @@
             line: 23,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 28,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 23,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['SimpleEndpoint'],
@@ -1516,6 +1926,19 @@
             line: 28,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 31,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 28,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1531,6 +1954,19 @@
             line: 224,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 229,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 224,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1546,6 +1982,19 @@
             line: 216,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 224,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 216,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1561,6 +2010,19 @@
             line: 190,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 197,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 190,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1576,6 +2038,19 @@
             line: 211,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 216,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 211,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1591,6 +2066,19 @@
             line: 154,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 165,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 154,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1606,6 +2094,19 @@
             line: 165,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 185,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 165,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1621,6 +2122,19 @@
             line: 229,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 18,
+              line: 254,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 229,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1636,6 +2150,19 @@
             line: 197,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 211,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 197,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Statements'],
@@ -1651,6 +2178,19 @@
             line: 185,
           ),
         ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 190,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 185,
+            ),
+          ),
+        ],
       ),
     },
     event: {
@@ -1658,6 +2198,7 @@
         appName: ['App'],
         eventName: 'Event',
         eventSrc: {},
+        eventSrcs: {},
       ),
       (
         appName: ['EventAndSubscriber'],
@@ -1673,6 +2214,19 @@
             line: 255,
           ),
         ),
+        eventSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 262,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 255,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['EventAndSubscriber'],
@@ -1688,6 +2242,19 @@
             line: 262,
           ),
         ),
+        eventSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 266,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 262,
+            ),
+          ),
+        ],
       ),
     },
     field: {
@@ -1701,10 +2268,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 13,
+            col: 8,
             line: 39,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 13,
+              line: 39,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 39,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1717,10 +2297,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 17,
+            col: 12,
             line: 105,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 17,
+              line: 105,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 105,
+            ),
+          ),
+        ],
         typeName: 'Type.inplace',
       ),
       (
@@ -1733,10 +2326,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 17,
+            col: 12,
             line: 123,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 17,
+              line: 123,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 123,
+            ),
+          ),
+        ],
         typeName: 'Table.inplace',
       ),
       (
@@ -1749,10 +2355,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 25,
+            col: 8,
             line: 101,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 25,
+              line: 101,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 101,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1765,10 +2384,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 17,
+            col: 12,
             line: 106,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 17,
+              line: 106,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 106,
+            ),
+          ),
+        ],
         typeName: 'Type.inplace',
       ),
       (
@@ -1781,10 +2413,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 17,
+            col: 12,
             line: 124,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 17,
+              line: 124,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 124,
+            ),
+          ),
+        ],
         typeName: 'Table.inplace',
       ),
       (
@@ -1797,10 +2442,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 34,
+            col: 8,
             line: 119,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 45,
+              line: 119,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 119,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1817,6 +2475,19 @@
             line: 104,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 108,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 104,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1833,6 +2504,19 @@
             line: 122,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 126,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 122,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1845,10 +2529,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 27,
+            col: 8,
             line: 96,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 27,
+              line: 96,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 96,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1861,10 +2558,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 27,
+            col: 8,
             line: 112,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 27,
+              line: 112,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 112,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1877,10 +2587,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 20,
+            col: 8,
             line: 98,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 26,
+              line: 98,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 98,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1893,10 +2616,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 20,
+            col: 8,
             line: 114,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 26,
+              line: 114,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 114,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1909,10 +2645,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 22,
+            col: 8,
             line: 111,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 33,
+              line: 111,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 111,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1925,10 +2674,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 21,
+            col: 8,
             line: 97,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 34,
+              line: 97,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 97,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1941,10 +2703,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 21,
+            col: 8,
             line: 113,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 34,
+              line: 113,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 113,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1957,10 +2732,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 20,
+            col: 8,
             line: 100,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 32,
+              line: 100,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 100,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -1973,10 +2761,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 20,
+            col: 8,
             line: 116,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 32,
+              line: 116,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 116,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -1989,10 +2790,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 15,
+            col: 8,
             line: 99,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 22,
+              line: 99,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 99,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -2005,10 +2819,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 15,
+            col: 8,
             line: 115,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 22,
+              line: 115,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 115,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -2021,10 +2848,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 33,
+            col: 8,
             line: 120,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 41,
+              line: 120,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 120,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -2037,10 +2877,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 35,
+            col: 8,
             line: 121,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 47,
+              line: 121,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 121,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
       (
@@ -2053,10 +2906,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 21,
-            line: 103,
+            col: 8,
+            line: 102,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 104,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 102,
+            ),
+          ),
+        ],
         typeName: 'Type',
       ),
       (
@@ -2069,10 +2935,23 @@
           ),
           file: 'all.sysl',
           start: (
-            col: 21,
-            line: 118,
+            col: 8,
+            line: 117,
           ),
         ),
+        fieldSrcs: [
+          (
+            end: (
+              col: 8,
+              line: 119,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 117,
+            ),
+          ),
+        ],
         typeName: 'Table',
       ),
     },
@@ -2083,126 +2962,147 @@
         epName: 'DELETE /param',
         paramName: 'with_string',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /param',
         paramName: {},
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /pathwithtype/{native}',
         paramName: 'native',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /query',
         paramName: 'curly',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /query',
         paramName: 'native',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /query',
         paramName: 'optional',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /query',
         paramName: 't',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PATCH /param',
         paramName: 't',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'POST /param',
         paramName: 'native',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /param',
         paramName: 'limited',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /param',
         paramName: 'limited_num',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /param',
         paramName: 'num',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /param',
         paramName: 'unlimited',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /param',
         paramName: 'x',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithArray',
         paramName: 'limited',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithArray',
         paramName: 'limited_num',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithArray',
         paramName: 'num',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithArray',
         paramName: 'unlimited',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithArray',
         paramName: 'x',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithParamsRef',
         paramName: 'Types.type',
         paramSrc: {},
+        paramSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithTypes',
         paramName: 'native',
         paramSrc: {},
+        paramSrcs: {},
       ),
     },
     stmt: {
@@ -2210,141 +3110,169 @@
         appName: ['EventAndSubscriber'],
         epName: 'App -> Event',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'DELETE /',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'DELETE /param',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /nested1/nested2/nested3',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /notnested',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /param',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /pathwithtype/{native}',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'GET /query',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PATCH /',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PATCH /param',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'POST /',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'POST /param',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['RestEndpoint'],
         epName: 'PUT /param',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEp',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithAnnotations',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithArray',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithParamsRef',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['SimpleEndpoint'],
         epName: 'SimpleEpWithTypes',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'AnnotatedStatements',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'Calls',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'GroupStatements',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'IfStmt',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'Loops',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'Miscellanous',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'OneOfStatements',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
       (
         appName: ['Statements'],
         epName: 'Returns',
         stmtSrc: {},
+        stmtSrcs: {},
       ),
     },
     type: {
@@ -2362,6 +3290,19 @@
             line: 38,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 41,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 38,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2377,6 +3318,19 @@
             line: 138,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 141,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 138,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2392,6 +3346,19 @@
             line: 147,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 150,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 147,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2407,6 +3374,19 @@
             line: 150,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 10,
+              line: 153,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 150,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2422,6 +3402,19 @@
             line: 144,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 147,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 144,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2437,6 +3430,19 @@
             line: 141,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 144,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 141,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2452,6 +3458,19 @@
             line: 126,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 131,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 126,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
@@ -2467,11 +3486,25 @@
             line: 108,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 126,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 108,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
         typeName: 'Table.inplace',
         typeSrc: {},
+        typeSrcs: {},
       ),
       (
         appName: ['Types'],
@@ -2487,11 +3520,25 @@
             line: 93,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 108,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 93,
+            ),
+          ),
+        ],
       ),
       (
         appName: ['Types'],
         typeName: 'Type.inplace',
         typeSrc: {},
+        typeSrcs: {},
       ),
       (
         appName: ['Types'],
@@ -2507,6 +3554,19 @@
             line: 131,
           ),
         ),
+        typeSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 138,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 4,
+              line: 131,
+            ),
+          ),
+        ],
       ),
     },
     view: {},
@@ -2850,6 +3910,19 @@
                     line: 201,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 22,
+                      line: 201,
+                    ),
+                    file: 'all.sysl',
+                    start: (
+                      col: 16,
+                      line: 201,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -2871,6 +3944,19 @@
                     line: 204,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 22,
+                      line: 204,
+                    ),
+                    file: 'all.sysl',
+                    start: (
+                      col: 16,
+                      line: 204,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -2892,6 +3978,19 @@
                     line: 207,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 22,
+                      line: 207,
+                    ),
+                    file: 'all.sysl',
+                    start: (
+                      col: 16,
+                      line: 207,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -2912,6 +4011,19 @@
                     line: 209,
                   ),
                 ),
+                source_contexts: [
+                  (
+                    end: (
+                      col: 22,
+                      line: 209,
+                    ),
+                    file: 'all.sysl',
+                    start: (
+                      col: 16,
+                      line: 209,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
