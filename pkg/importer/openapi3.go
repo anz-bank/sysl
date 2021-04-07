@@ -250,6 +250,9 @@ func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 	case OpenAPI_ARRAY:
 		return typeNameFromSchemaRef(ref.Value.Items)
 	case OpenAPI_OBJECT, OpenAPI_EMPTY:
+		if ref.Value.Title != "" {
+			return ref.Value.Title
+		}
 		return OpenAPI_OBJECT
 	case OpenAPI_BOOLEAN:
 		return syslutil.Type_BOOL

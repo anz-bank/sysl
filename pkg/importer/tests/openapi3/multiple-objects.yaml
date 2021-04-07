@@ -1,0 +1,121 @@
+openapi: 3.0.1
+info:
+  description: This is the public Twilio REST API.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://www.twilio.com/legal/tos
+  title: Twilio - Conversations
+  version: 1.12.0
+paths:
+  /v1/Conversations:
+    description: A Conversation resource represents an omnichannel group conversation
+      with an ordered list of messages and a participant roster.
+    get:
+      description: Retrieve a list of conversations in your account's default service
+      operationId: ListConversation
+      parameters:
+      - description: How many resources to return in each list page. The default is
+          50, and the maximum is 1000.
+        in: query
+        name: PageSize
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  conversations:
+                    items:
+                      $ref: '#/components/schemas/conversations.v1.conversation'
+                    type: array
+                  meta:
+                    properties:
+                      url:
+                        format: uri
+                        type: string
+                    type: object
+                title: ListConversationResponse
+                type: object
+          description: OK
+  /v1/Conversations/{ConversationSid}/Messages:
+    description: A Message resource represents a message in a conversation.
+    get:
+      description: Retrieve a list of all messages in the conversation
+      operationId: ListConversationMessage
+      parameters:
+      - description: The unique ID of the [Conversation](https://www.twilio.com/docs/conversations/api/conversation-resource)
+          for messages.
+        in: path
+        name: ConversationSid
+        required: true
+        schema:
+          type: string
+      - description: How many resources to return in each list page. The default is
+          50, and the maximum is 1000.
+        in: query
+        name: PageSize
+        schema:
+          maximum: 1000
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  messages:
+                    items:
+                      $ref: '#/components/schemas/conversations.v1.conversation.conversation_message'
+                    type: array
+                  meta:
+                    properties:
+                      url:
+                        format: uri
+                        type: string
+                    type: object
+                title: ListConversationMessageResponse
+                type: object
+          description: OK
+components:
+  schemas:
+    conversations.v1.conversation:
+      properties:
+        account_sid:
+          description: The unique ID of the Account responsible for this conversation.
+          maxLength: 34
+          minLength: 34
+          nullable: true
+          pattern: ^AC[0-9a-fA-F]{32}$
+          type: string
+        attributes:
+          description: An optional string metadata field you can use to store any
+            data you wish.
+          nullable: true
+          type: string
+        links:
+          description: Absolute URLs to access the participants, messages and webhooks
+            of this conversation.
+          nullable: true
+          type: object
+        state:
+          description: Current state of this conversation.
+          enum:
+          - inactive
+          - active
+          - closed
+          nullable: true
+          type: string
+      type: object
+    conversations.v1.conversation.conversation_message:
+      properties:
+        body:
+          description: The content of the message.
+          nullable: true
+          type: string
+      type: object

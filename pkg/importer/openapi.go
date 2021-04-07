@@ -46,6 +46,7 @@ const (
 	OpenAPIFormat_BYTE     OpenAPIFormat = "byte"
 	OpenAPIFormat_BINARY   OpenAPIFormat = "binary"
 	OpenAPIFormat_UUID     OpenAPIFormat = "uuid"
+	OpenAPIFormat_URI      OpenAPIFormat = "uri"
 )
 
 func mapOpenAPITypeAndFormatToType(typeName, format string, logger *logrus.Logger) string {
@@ -61,6 +62,7 @@ func mapOpenAPITypeAndFormatToType(typeName, format string, logger *logrus.Logge
 			OpenAPIFormat_BYTE:     syslutil.Type_BYTES,
 			OpenAPIFormat_BINARY:   syslutil.Type_BYTES,
 			OpenAPIFormat_UUID:     syslutil.Type_UUID,
+			OpenAPIFormat_URI:      syslutil.Type_STRING,
 		},
 		OpenAPI_INTEGER: {
 			"":                  syslutil.Type_INT,
