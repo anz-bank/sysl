@@ -13,11 +13,20 @@ Server:
   Login:
     do input validation
     DB <- Save
+    AuditTopic <- Publish
     return success or failure
 
   Read User Balance:
     DB <- Load
-    return balance
+    Statement <- Download
+    return ok <: balance
+
+AuditTopic [~topic]:
+    <-> Publish: ...
+
+Statement [~file]:
+    Download:
+        return ok <: pdf
 
 DB [~db]:
   Save: ...

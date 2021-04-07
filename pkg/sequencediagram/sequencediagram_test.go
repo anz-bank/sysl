@@ -348,6 +348,8 @@ actor "User" as _0
 boundary "MobileApp" as _1
 control "<color red>Server</color>" as _2
 database "DB" as _3
+collections "Statement" as _5
+queue "AuditTopic" as _4
 skinparam maxMessageSize 250
 == User <- Check Balance ==
  _0->_1 : Login
@@ -356,6 +358,7 @@ skinparam maxMessageSize 250
   activate _2
   _2 -> _2 : do input validation
    _2->_3 :  <color green>Save</color>
+   _2->_4 : Publish
   _1<--_2 : success or failure
   deactivate _2
  deactivate _1
@@ -364,6 +367,10 @@ skinparam maxMessageSize 250
   _1->_2 : Read User Balance
   activate _2
    _2->_3 :  <color green>Load</color>
+   _2->_5 : Download
+   activate _5
+   _2<--_5 : pdf
+   deactivate _5
   _1<--_2 : balance
   deactivate _2
  deactivate _1
@@ -403,6 +410,8 @@ actor "User" as _0
 boundary "MobileApp" as _1
 control "<color red>Server</color>" as _2
 database "DB" as _3
+collections "Statement" as _5
+queue "AuditTopic" as _4
 skinparam maxMessageSize 250
 == User <- Check Balance ==
  _0->_1 : Login
@@ -411,6 +420,7 @@ skinparam maxMessageSize 250
   activate _2
   _2 -> _2 : do input validation
    _2->_3 :  <color green>Save</color>
+   _2->_4 : Publish
   _1<--_2 : success or failure
   deactivate _2
  deactivate _1
@@ -419,6 +429,10 @@ skinparam maxMessageSize 250
   _1->_2 : Read User Balance
   activate _2
    _2->_3 :  <color green>Load</color>
+   _2->_5 : Download
+   activate _5
+   _2<--_5 : pdf
+   deactivate _5
   _1<--_2 : balance
   deactivate _2
  deactivate _1

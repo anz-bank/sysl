@@ -609,6 +609,8 @@ var agents = map[string]Agent{
 	"cron":     {2, "control"},
 	"db":       {4, "database"},
 	"external": {5, "control"},
+	"file":     {6, "collections"},
+	"topic":    {7, "queue"},
 }
 
 func MakeAgent(attrs map[string]*sysl.Attribute) Agent {

@@ -20,6 +20,14 @@ This command requires the `SYSL_PLANTUML` environment variable to be set or pass
 
 `sysl sd` lets you generate a sequence diagram originating from a single endpoint.
 
+Applications are rendered with shapes based on their tags:
+
+- `~db`: "database" (vertical cylinder)
+- `~file`: "collections" (multiple boxes)
+- `~topic`: "queue" (horizontal cylinder)
+- `~human`: "actor" (stick figure)
+- `~ui`: "boundary"
+
 <img alt="Sequence diagram" src={useBaseUrl('img/diagramgen/seq-diagram-puml.png')}/>
 
 ## Usage
