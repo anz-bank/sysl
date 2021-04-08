@@ -45,7 +45,7 @@ let joinedName = //seq.join(' :: ');
 let resolveStmts = \stmt
     stmt >> cond {
         .stmtAction: $`${.stmtAction}`,
-        .stmtAlt: .stmtAlt -> \(:choice) $`
+        .stmtAlt: .stmtAlt -> \(:choice, ...) $`
             ${choice >> \c
                 # TODO: handle parent
                 # TODO: change the name attribute of cond
@@ -55,13 +55,13 @@ let resolveStmts = \stmt
                 `
             ::\i}
         `,
-        .stmtCall: .stmtCall -> \(:appName, :epName) $`${joinedName(appName)} <- ${epName}`,
+        .stmtCall: .stmtCall -> \(:appName, :epName, ...) $`${joinedName(appName)} <- ${epName}`,
         .stmtCond: '', # TODO: seems something is wrong with this
         .stmtForeach: '', # TODO
         .stmtGroup: '', # TODO
         .stmtLoop: '', # TODO
         .stmtLoopN: '', # TODO
-        .stmtRet: .stmtRet -> \(payload: (attr: (:modifier, :nvp), :status, :type))
+        .stmtRet: .stmtRet -> \(payload: (attr: (:modifier, :nvp), :status, :type), ...)
             $`
                 return ${status} <: ${type}${
                     # TODO: handle modifer
@@ -238,6 +238,6 @@ let fileMap = \file \apps
     _fileMap(//seq.split('/', //seq.trim_prefix('/', file)))
 ;
 
-let files = (src.app => \(:appName, :appSrc) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
+let files = (src.app => \(:appName, :appSrc, ...) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
 let fileMaps = files => fileMap(.file, .apps);
 reduce(fileMaps orderby ., \k \v dictMerge(v, k), {})
