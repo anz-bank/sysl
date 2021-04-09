@@ -296,7 +296,7 @@ let newNormalize = \m
 
     let enum = //rel.union(m.apps => \(@value:app, ...)
         app.types?:{} filter . {
-            (@:typeName, @value: (enum: (:items, ...))): (
+            (@:typeName, @value: (enum: (:items, ...), ...)): (
                 appName: app.name.part,
                 :typeName,
                 enumItems: items,

@@ -153,7 +153,17 @@
       appName: ['all'],
     ),
   },
-  enum: {},
+  enum: {
+    (
+      appName: ['B'],
+      enumItems: {
+        'A': 784,
+        'B': 971,
+        'C': 8,
+      },
+      typeName: 'Code',
+    ),
+  },
   ep: {
     (
       appName: ['A'],
@@ -681,23 +691,23 @@
         appName: ['C'],
         appSrc: (
           end: (
-            line: 55,
+            line: 60,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 55,
+            line: 60,
           ),
         ),
         appSrcs: [
           (
             end: (
-              line: 55,
+              line: 60,
             ),
             file: 'model.sysl',
             start: (
               col: 1,
-              line: 55,
+              line: 60,
             ),
           ),
         ],
@@ -706,23 +716,23 @@
         appName: ['Client'],
         appSrc: (
           end: (
-            line: 84,
+            line: 89,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 84,
+            line: 89,
           ),
         ),
         appSrcs: [
           (
             end: (
-              line: 84,
+              line: 89,
             ),
             file: 'model.sysl',
             start: (
               col: 1,
-              line: 84,
+              line: 89,
             ),
           ),
         ],
@@ -731,23 +741,23 @@
         appName: ['D'],
         appSrc: (
           end: (
-            line: 74,
+            line: 79,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 74,
+            line: 79,
           ),
         ),
         appSrcs: [
           (
             end: (
-              line: 74,
+              line: 79,
             ),
             file: 'model.sysl',
             start: (
               col: 1,
-              line: 74,
+              line: 79,
             ),
           ),
         ],
@@ -783,23 +793,23 @@
         appName: ['all'],
         appSrc: (
           end: (
-            line: 104,
+            line: 109,
           ),
           file: 'model.sysl',
           start: (
             col: 1,
-            line: 104,
+            line: 109,
           ),
         ),
         appSrcs: [
           (
             end: (
-              line: 104,
+              line: 109,
             ),
             file: 'model.sysl',
             start: (
               col: 1,
-              line: 104,
+              line: 109,
             ),
           ),
         ],
@@ -868,6 +878,62 @@
         epSrc: (
           end: (
             col: 4,
+            line: 75,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 4,
+            line: 70,
+          ),
+        ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 75,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 70,
+            ),
+          ),
+        ],
+      ),
+      (
+        appName: ['C'],
+        epName: 'FetchA',
+        epSrc: (
+          end: (
+            col: 4,
+            line: 65,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 4,
+            line: 61,
+          ),
+        ),
+        epSrcs: [
+          (
+            end: (
+              col: 4,
+              line: 65,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 61,
+            ),
+          ),
+        ],
+      ),
+      (
+        appName: ['C'],
+        epName: 'FetchB',
+        epSrc: (
+          end: (
+            col: 4,
             line: 70,
           ),
           file: 'model.sysl',
@@ -891,85 +957,29 @@
         ],
       ),
       (
-        appName: ['C'],
-        epName: 'FetchA',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 60,
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 56,
-          ),
-        ),
-        epSrcs: [
-          (
-            end: (
-              col: 4,
-              line: 60,
-            ),
-            file: 'model.sysl',
-            start: (
-              col: 4,
-              line: 56,
-            ),
-          ),
-        ],
-      ),
-      (
-        appName: ['C'],
-        epName: 'FetchB',
-        epSrc: (
-          end: (
-            col: 4,
-            line: 65,
-          ),
-          file: 'model.sysl',
-          start: (
-            col: 4,
-            line: 60,
-          ),
-        ),
-        epSrcs: [
-          (
-            end: (
-              col: 4,
-              line: 65,
-            ),
-            file: 'model.sysl',
-            start: (
-              col: 4,
-              line: 60,
-            ),
-          ),
-        ],
-      ),
-      (
         appName: ['Client'],
         epName: 'Do',
         epSrc: (
           end: (
             col: 4,
-            line: 89,
+            line: 94,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 85,
+            line: 90,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 89,
+              line: 94,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 85,
+              line: 90,
             ),
           ),
         ],
@@ -980,24 +990,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 80,
+            line: 85,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 75,
+            line: 80,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 80,
+              line: 85,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 75,
+              line: 80,
             ),
           ),
         ],
@@ -1091,23 +1101,23 @@
         epName: 'all',
         epSrc: (
           end: (
-            line: 112,
+            line: 117,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 105,
+            line: 110,
           ),
         ),
         epSrcs: [
           (
             end: (
-              line: 112,
+              line: 117,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 105,
+              line: 110,
             ),
           ),
         ],
@@ -1237,24 +1247,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 71,
+            line: 76,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 71,
+            line: 76,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 71,
+              line: 76,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 71,
+              line: 76,
             ),
           ),
         ],
@@ -1266,24 +1276,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 72,
+            line: 77,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 72,
+            line: 77,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 72,
+              line: 77,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 72,
+              line: 77,
             ),
           ),
         ],
@@ -1295,24 +1305,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 90,
+            line: 95,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 90,
+            line: 95,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 90,
+              line: 95,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 90,
+              line: 95,
             ),
           ),
         ],
@@ -1324,24 +1334,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 91,
+            line: 96,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 91,
+            line: 96,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 91,
+              line: 96,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 91,
+              line: 96,
             ),
           ),
         ],
@@ -1353,24 +1363,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 92,
+            line: 97,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 92,
+            line: 97,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 92,
+              line: 97,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 92,
+              line: 97,
             ),
           ),
         ],
@@ -1382,24 +1392,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 93,
+            line: 98,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 93,
+            line: 98,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 93,
+              line: 98,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 93,
+              line: 98,
             ),
           ),
         ],
@@ -1411,24 +1421,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 81,
+            line: 86,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 81,
+            line: 86,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 81,
+              line: 86,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 81,
+              line: 86,
             ),
           ),
         ],
@@ -1440,24 +1450,24 @@
         fieldSrc: (
           end: (
             col: 14,
-            line: 82,
+            line: 87,
           ),
           file: 'model.sysl',
           start: (
             col: 8,
-            line: 82,
+            line: 87,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 14,
-              line: 82,
+              line: 87,
             ),
             file: 'model.sysl',
             start: (
               col: 8,
-              line: 82,
+              line: 87,
             ),
           ),
         ],
@@ -1760,10 +1770,38 @@
       ),
       (
         appName: ['B'],
-        typeName: 'FetchResponse',
+        typeName: 'Code',
         typeSrc: (
           end: (
             col: 1,
+            line: 60,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 4,
+            line: 55,
+          ),
+        ),
+        typeSrcs: [
+          (
+            end: (
+              col: 1,
+              line: 60,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 4,
+              line: 55,
+            ),
+          ),
+        ],
+      ),
+      (
+        appName: ['B'],
+        typeName: 'FetchResponse',
+        typeSrc: (
+          end: (
+            col: 4,
             line: 55,
           ),
           file: 'model.sysl',
@@ -1775,7 +1813,7 @@
         typeSrcs: [
           (
             end: (
-              col: 1,
+              col: 4,
               line: 55,
             ),
             file: 'model.sysl',
@@ -1792,24 +1830,24 @@
         typeSrc: (
           end: (
             col: 1,
-            line: 74,
+            line: 79,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 70,
+            line: 75,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 1,
-              line: 74,
+              line: 79,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 70,
+              line: 75,
             ),
           ),
         ],
@@ -1820,24 +1858,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 101,
+            line: 106,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 98,
+            line: 103,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 101,
+              line: 106,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 98,
+              line: 103,
             ),
           ),
         ],
@@ -1848,24 +1886,24 @@
         typeSrc: (
           end: (
             col: 3,
-            line: 104,
+            line: 109,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 101,
+            line: 106,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 3,
-              line: 104,
+              line: 109,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 101,
+              line: 106,
             ),
           ),
         ],
@@ -1876,24 +1914,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 98,
+            line: 103,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 95,
+            line: 100,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 98,
+              line: 103,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 95,
+              line: 100,
             ),
           ),
         ],
@@ -1904,24 +1942,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 95,
+            line: 100,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 89,
+            line: 94,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 95,
+              line: 100,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 89,
+              line: 94,
             ),
           ),
         ],
@@ -1932,24 +1970,24 @@
         typeSrc: (
           end: (
             col: 6,
-            line: 84,
+            line: 89,
           ),
           file: 'model.sysl',
           start: (
             col: 4,
-            line: 80,
+            line: 85,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 6,
-              line: 84,
+              line: 89,
             ),
             file: 'model.sysl',
             start: (
               col: 4,
-              line: 80,
+              line: 85,
             ),
           ),
         ],
@@ -2663,6 +2701,12 @@
       appName: ['A'],
       typeDocstring: {},
       typeName: 'FetchResponse',
+      typeOpt: {},
+    ),
+    (
+      appName: ['B'],
+      typeDocstring: {},
+      typeName: 'Code',
       typeOpt: {},
     ),
     (

@@ -52,6 +52,11 @@ B:
         bx <: int
         by <: int
 
+    !enum Code:
+        A: 784
+        B: 971
+        C: 8
+
 C:
     FetchA:
         A <- Fetch
