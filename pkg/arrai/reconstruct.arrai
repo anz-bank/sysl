@@ -180,7 +180,7 @@ let fileContents = \file \apps
             ;
             let isEmpty = //rel.union({ep, type, field, table, enum, mixin, appAnno}) = {};
             $`
-                ${joinedName(appName)}${appLongName && (' ' ++ $`"${appLongName}"`)}}${appTags}:
+                ${joinedName(appName)}${appLongName && (' ' ++ $`"${appLongName}"`)}${appTags}:
                     ${cond {isEmpty: '...'}}
                     ${resolvedAnnotations(
                         anno.app => \(:appAnnoName, :appAnnoValue, ...) (name: appAnnoName, value: appAnnoValue)
