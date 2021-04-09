@@ -105,9 +105,7 @@ Types:
             a <: string
             b <: int
 
-    !table Table [annotation="annotation"]:
-        # FIXME: annotation not allowed
-        # @another_annotation = "annotation"
+    !table Table [~tag]:
         primaryKey <: string [~pk]
         nativeTypeField <: string
         reference <: RestEndpoint.Type
@@ -123,7 +121,7 @@ Types:
             a <: string
             b <: int
 
-    !enum Enum [annotation="annotation"]:
+    !enum Enum [annotation="annotation", ~tag]:
         ENUM_1: 1
         ENUM_2: 2
         ENUM_3: 3

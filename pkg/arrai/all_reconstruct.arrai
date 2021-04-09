@@ -1,0 +1,8 @@
+# A demo of the `reconstruct` feature that transforms the "all" Sysl proto
+# model into a relational model, then reconstructs it into a Sysl file.
+
+let sysl = //{./sysl};
+let reconstruct = //{./reconstruct};
+let model = sysl.load('out/all.pb');
+
+reconstruct(sysl.newNormalize(model))('all.sysl')

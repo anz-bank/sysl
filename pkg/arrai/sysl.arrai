@@ -126,7 +126,7 @@ let fixType = \apps \appName \typePayload
     let typePayload = trimWhitespace(typePayload);
     let (:app, :type, :field) = unpackType(typePayload);
     cond {
-        (cond type {[t]: t <: nativeDataTypes}): (primitive: type),
+        (cond type {[t]: t <: nativeDataTypes}): (primitive: type(0)),
         # local type ref
         app = '': (ref: (appname: (part: appToParts(appName)), path: (type ++ [field]) where .@item)),
         _: cond {

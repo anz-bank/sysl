@@ -7,78 +7,78 @@ skinparam component {
 skinparam stereotypeCBackgroundColor Orchid
 hide methods
 
-entity Source.Bar {
-  * x : **Foo.x** <<FK>>
-}
-
-entity Source.Bar {
+entity "Source.Bar" {
   b : int
 }
 
-entity Source.Bar {
+entity "Source.Bar" {
   * a : string
   --
 }
 
-entity D.FetchResponse {
+entity "Source.Bar" {
+  * x : **Foo.x** <<FK>>
+}
+
+entity "D.FetchResponse" {
   * dx : int
 }
 
-entity D.FetchResponse {
-  * dy : int
-}
-
-entity C.FetchResponse {
-  * cx : int
-}
-
-entity B.FetchResponse {
+entity "B.FetchResponse" {
   * by : int
 }
 
-entity B.FetchResponse {
-  * bx : int
-}
-
-entity A.FetchResponse {
+entity "A.FetchResponse" {
   * ay : int
 }
 
-entity A.FetchResponse {
+entity "C.FetchResponse" {
+  * cx : int
+}
+
+entity "A.FetchResponse" {
   * ax : int
 }
 
-entity C.FetchResponse {
+entity "B.FetchResponse" {
+  * bx : int
+}
+
+entity "D.FetchResponse" {
+  * dy : int
+}
+
+entity "C.FetchResponse" {
   * cy : int
 }
 
-entity Source.Foo {
+entity "Source.Foo" {
   * y : int
 }
 
-entity Source.Foo {
+entity "Source.Foo" {
   * x : int
 }
 
-entity Client.Screen {
-  * ww : digit
-}
-
-entity Client.Screen {
-  * zz : digits
-}
-
-entity Client.Screen {
-  * yy : int
-}
-
-entity Client.Screen {
+entity "Client.Screen" {
   * xx : int
 }
 
-Source.Bar             }o--|| Source.Foo
+entity "Client.Screen" {
+  * ww : digit
+}
+
+entity "Client.Screen" {
+  * zz : digits
+}
+
+entity "Client.Screen" {
+  * yy : int
+}
 
 
+
+"Source.Bar            " }o--|| "Source.Foo"
 
 
 

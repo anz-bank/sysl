@@ -1,0 +1,173 @@
+App "display name" [~abstract]:
+    ...
+
+AppWithAnnotation:
+    @annotation = "annotation"
+    @annotation1 = "you can do string annotation like this"
+    @annotation2 = ['or', 'in', 'an', 'array']
+    @annotation3 =:
+        | you can also do
+        | multiline annotations
+        | like this
+
+App :: with :: subpackages "display name":
+    ...
+
+SimpleEndpoint:
+    SimpleEp:
+        ...
+
+    SimpleEpWithAnnotations:
+        ...
+
+    SimpleEpWithArray:
+        ...
+
+    SimpleEpWithParamsRef:
+        ...
+
+    SimpleEpWithTypes:
+        ...
+
+RestEndpoint:
+    !type Type:
+        x <: int
+
+    /:
+        DELETE:
+            ...
+        GET:
+            ...
+        PATCH:
+            ...
+        POST:
+            ...
+        PUT:
+            ...
+
+    /nested1/nested2/nested3:
+        GET:
+            ...
+
+    /notnested:
+        GET:
+            ...
+
+    /param:
+        DELETE:
+            ...
+        GET:
+            ...
+        PATCH:
+            ...
+        POST:
+            ...
+        PUT:
+            ...
+
+    /pathwithtype/{native <: int}:
+        GET:
+            ...
+
+    /query:
+        GET:
+            ...
+
+
+Types:
+    !type Alias:
+        ...
+
+    !type AliasForeignRef:
+        ...
+
+    !type AliasForeignRefSet:
+        ...
+
+    !type AliasRef:
+        ...
+
+    !type AliasSequence:
+        ...
+
+    !type Enum [~tag]:
+        @annotation = "annotation"
+        ...
+
+    !type Type:
+        @annotation = "annotation"
+        aliasSequence <: Types.Alias
+        inplace <: Types.inplace
+        nativeTypeField <: string
+        optional <: string?
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+
+    !type Union:
+        @annotation = "annotation"
+        ...
+
+    !table Table [~tag]:
+        decimal_with_precision <: decimal
+        inplace <: Types.inplace
+        nativeTypeField <: string
+        optional <: string?
+        primaryKey <: string [~pk]
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        string_max_constraint <: string
+        string_range_constraint <: string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+
+
+Statements:
+    AnnotatedStatements:
+        Statements <- Miscellanous
+        return ok <: string [annotation=["as", "an", "array"]]
+        "statement"
+
+    Annotations:
+        ...
+
+    Calls:
+        Statements <- Returns
+        RestEndpoint <- GET /param
+
+    GroupStatements:
+        ...
+
+    IfStmt:
+        ...
+
+    Loops:
+        ...
+
+    Miscellanous:
+        | you can add comments like this
+        "string statements"
+        SimpleEndpoint -> SimpleEp
+
+    OneOfStatements:
+        one of:
+            case1:
+                ...
+            case number 2:
+                ...
+            "case 3":
+                ...
+            :
+                ...
+
+    Returns:
+        return ok <: string
+        return ok <: Types.Type
+        return error <: Types.Type
+
+EventAndSubscriber:
+    App -> Event:
+        ...

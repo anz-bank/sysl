@@ -4,8 +4,8 @@
 
 # Invokes a macro on a string as if it were source code at parsing time.
 let invokeMacro = \macro \s
-    macro -> (//dict(.@transform) >>> \rule \fn
-        fn(//grammar.parse(.@grammar, rule, s))).@value
+    (//dict(macro.@transform) single) -> \(@:rule, @value:fn)
+        fn(//grammar.parse(macro.@grammar, rule, s))
 ;
 
 # Transforms an AST into a simple tuple of its values.
@@ -194,8 +194,8 @@ let isDict = \d
         _: false,
     };
 
-# `dictMergeResolve` recursively merges two dictionaries into a single dictionary, combining 
-# values that themselves are dictionaries. In instances where both dictionaries define the same key 
+# `dictMergeResolve` recursively merges two dictionaries into a single dictionary, combining
+# values that themselves are dictionaries. In instances where both dictionaries define the same key
 # the `resolve` function is called.
 # `a` is the first dictionary to merge.
 # `b` is the second dictionary to merge.

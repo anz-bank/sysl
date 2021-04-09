@@ -11,6 +11,7 @@ RAW= \
 	$(OUT)/terraform_gdc.tf \
 	$(OUT)/sysl_polish.arrai \
 	$(OUT)/all_normalize.arrai \
+	$(OUT)/all_reconstruct.sysl \
 	$(OUT)/sysl_normalize.arrai
 
 # Diagram targets that require rendering.
@@ -30,6 +31,10 @@ $(OUT):
 # Generates outputs from the model by running named arr.ai scripts.
 .PRECIOUS: $(OUT)/%.puml
 $(OUT)/%.arrai $(OUT)/%.csv $(OUT)/%.puml $(OUT)/%.tf: %.arrai $(OUT)/model.pb $(OUT)/all.pb
+	arrai run $$(echo $* | cut -d'.' -f1).arrai > $@
+
+# Generates outputs from the model by running named arr.ai scripts and renaming output.
+$(OUT)/%.sysl: %.arrai $(OUT)/model.pb $(OUT)/all.pb
 	arrai run $$(echo $* | cut -d'.' -f1).arrai > $@
 
 # Generates diagram outputs from the model by calling PlantUML with the generated .puml output.
@@ -63,9 +68,15 @@ plantuml:
 
 # Testing
 
+test: test-arrai test-sysl
+
 # Run arr.ai unit tests.
-test:
+test-arrai:
 	arrai test
+
+# Validate Sysl specs.
+test-sysl: $(OUT)/all_reconstruct.sysl
+	$(foreach spec, $^, sysl validate $(spec) || exit)
 
 # Directory for Sysl/arr.ai comparisons.
 CMP_DIR=compare

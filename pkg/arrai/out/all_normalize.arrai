@@ -151,12 +151,6 @@
         appName: ['Types'],
         typeAnnoName: 'annotation',
         typeAnnoValue: 'annotation',
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        typeAnnoName: 'annotation',
-        typeAnnoValue: 'annotation',
         typeName: 'Type',
       ),
       (
@@ -1257,23 +1251,23 @@
         appName: ['EventAndSubscriber'],
         appSrc: (
           end: (
-            line: 254,
+            line: 252,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 254,
+            line: 252,
           ),
         ),
         appSrcs: [
           (
             end: (
-              line: 254,
+              line: 252,
             ),
             file: 'all.sysl',
             start: (
               col: 1,
-              line: 254,
+              line: 252,
             ),
           ),
         ],
@@ -1332,23 +1326,23 @@
         appName: ['Statements'],
         appSrc: (
           end: (
-            line: 153,
+            line: 151,
           ),
           file: 'all.sysl',
           start: (
             col: 1,
-            line: 153,
+            line: 151,
           ),
         ),
         appSrcs: [
           (
             end: (
-              line: 153,
+              line: 151,
             ),
             file: 'all.sysl',
             start: (
               col: 1,
-              line: 153,
+              line: 151,
             ),
           ),
         ],
@@ -1386,24 +1380,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 270,
+            line: 268,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 266,
+            line: 264,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 270,
+              line: 268,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 266,
+              line: 264,
             ),
           ),
         ],
@@ -1946,24 +1940,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 229,
+            line: 227,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 224,
+            line: 222,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 229,
+              line: 227,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 224,
+              line: 222,
             ),
           ),
         ],
@@ -1974,24 +1968,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 224,
+            line: 222,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 216,
+            line: 214,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 224,
+              line: 222,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 216,
+              line: 214,
             ),
           ),
         ],
@@ -2002,24 +1996,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 197,
+            line: 195,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 190,
+            line: 188,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 197,
+              line: 195,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 190,
+              line: 188,
             ),
           ),
         ],
@@ -2030,24 +2024,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 216,
+            line: 214,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 211,
+            line: 209,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 216,
+              line: 214,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 211,
+              line: 209,
             ),
           ),
         ],
@@ -2058,24 +2052,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 165,
+            line: 163,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 154,
+            line: 152,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 165,
+              line: 163,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 154,
+              line: 152,
             ),
           ),
         ],
@@ -2086,24 +2080,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 185,
+            line: 183,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 165,
+            line: 163,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 185,
+              line: 183,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 165,
+              line: 163,
             ),
           ),
         ],
@@ -2114,24 +2108,24 @@
         epSrc: (
           end: (
             col: 18,
-            line: 254,
+            line: 252,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 229,
+            line: 227,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 18,
-              line: 254,
+              line: 252,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 229,
+              line: 227,
             ),
           ),
         ],
@@ -2142,24 +2136,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 211,
+            line: 209,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 197,
+            line: 195,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 211,
+              line: 209,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 197,
+              line: 195,
             ),
           ),
         ],
@@ -2170,24 +2164,24 @@
         epSrc: (
           end: (
             col: 4,
-            line: 190,
+            line: 188,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 185,
+            line: 183,
           ),
         ),
         epSrcs: [
           (
             end: (
               col: 4,
-              line: 190,
+              line: 188,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 185,
+              line: 183,
             ),
           ),
         ],
@@ -2206,24 +2200,24 @@
         eventSrc: (
           end: (
             col: 4,
-            line: 262,
+            line: 260,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 255,
+            line: 253,
           ),
         ),
         eventSrcs: [
           (
             end: (
               col: 4,
-              line: 262,
+              line: 260,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 255,
+              line: 253,
             ),
           ),
         ],
@@ -2234,24 +2228,24 @@
         eventSrc: (
           end: (
             col: 4,
-            line: 266,
+            line: 264,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 262,
+            line: 260,
           ),
         ),
         eventSrcs: [
           (
             end: (
               col: 4,
-              line: 266,
+              line: 264,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 262,
+              line: 260,
             ),
           ),
         ],
@@ -2322,24 +2316,24 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 123,
+            line: 121,
           ),
           file: 'all.sysl',
           start: (
             col: 12,
-            line: 123,
+            line: 121,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 17,
-              line: 123,
+              line: 121,
             ),
             file: 'all.sysl',
             start: (
               col: 12,
-              line: 123,
+              line: 121,
             ),
           ),
         ],
@@ -2409,24 +2403,24 @@
         fieldSrc: (
           end: (
             col: 17,
-            line: 124,
+            line: 122,
           ),
           file: 'all.sysl',
           start: (
             col: 12,
-            line: 124,
+            line: 122,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 17,
-              line: 124,
+              line: 122,
             ),
             file: 'all.sysl',
             start: (
               col: 12,
-              line: 124,
+              line: 122,
             ),
           ),
         ],
@@ -2438,24 +2432,24 @@
         fieldSrc: (
           end: (
             col: 45,
-            line: 119,
+            line: 117,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 119,
+            line: 117,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 45,
-              line: 119,
+              line: 117,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 119,
+              line: 117,
             ),
           ),
         ],
@@ -2496,24 +2490,24 @@
         fieldSrc: (
           end: (
             col: 4,
-            line: 126,
+            line: 124,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 122,
+            line: 120,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 4,
-              line: 126,
+              line: 124,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 122,
+              line: 120,
             ),
           ),
         ],
@@ -2554,24 +2548,24 @@
         fieldSrc: (
           end: (
             col: 27,
-            line: 112,
+            line: 110,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 112,
+            line: 110,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 27,
-              line: 112,
+              line: 110,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 112,
+              line: 110,
             ),
           ),
         ],
@@ -2612,24 +2606,24 @@
         fieldSrc: (
           end: (
             col: 26,
-            line: 114,
+            line: 112,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 114,
+            line: 112,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 26,
-              line: 114,
+              line: 112,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 114,
+              line: 112,
             ),
           ),
         ],
@@ -2641,24 +2635,24 @@
         fieldSrc: (
           end: (
             col: 33,
-            line: 111,
+            line: 109,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 111,
+            line: 109,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 33,
-              line: 111,
+              line: 109,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 111,
+              line: 109,
             ),
           ),
         ],
@@ -2699,24 +2693,24 @@
         fieldSrc: (
           end: (
             col: 34,
-            line: 113,
+            line: 111,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 113,
+            line: 111,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 34,
-              line: 113,
+              line: 111,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 113,
+              line: 111,
             ),
           ),
         ],
@@ -2757,24 +2751,24 @@
         fieldSrc: (
           end: (
             col: 32,
-            line: 116,
+            line: 114,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 116,
+            line: 114,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 32,
-              line: 116,
+              line: 114,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 116,
+              line: 114,
             ),
           ),
         ],
@@ -2815,24 +2809,24 @@
         fieldSrc: (
           end: (
             col: 22,
-            line: 115,
+            line: 113,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 115,
+            line: 113,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 22,
-              line: 115,
+              line: 113,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 115,
+              line: 113,
             ),
           ),
         ],
@@ -2844,24 +2838,24 @@
         fieldSrc: (
           end: (
             col: 41,
-            line: 120,
+            line: 118,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 120,
+            line: 118,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 41,
-              line: 120,
+              line: 118,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 120,
+              line: 118,
             ),
           ),
         ],
@@ -2873,24 +2867,24 @@
         fieldSrc: (
           end: (
             col: 47,
-            line: 121,
+            line: 119,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 121,
+            line: 119,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 47,
-              line: 121,
+              line: 119,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 121,
+              line: 119,
             ),
           ),
         ],
@@ -2931,24 +2925,24 @@
         fieldSrc: (
           end: (
             col: 8,
-            line: 119,
+            line: 117,
           ),
           file: 'all.sysl',
           start: (
             col: 8,
-            line: 117,
+            line: 115,
           ),
         ),
         fieldSrcs: [
           (
             end: (
               col: 8,
-              line: 119,
+              line: 117,
             ),
             file: 'all.sysl',
             start: (
               col: 8,
-              line: 117,
+              line: 115,
             ),
           ),
         ],
@@ -3310,24 +3304,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 141,
+            line: 139,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 138,
+            line: 136,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 141,
+              line: 139,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 138,
+              line: 136,
             ),
           ),
         ],
@@ -3338,24 +3332,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 150,
+            line: 148,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 147,
+            line: 145,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 150,
+              line: 148,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 147,
+              line: 145,
             ),
           ),
         ],
@@ -3366,24 +3360,24 @@
         typeSrc: (
           end: (
             col: 10,
-            line: 153,
+            line: 151,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 150,
+            line: 148,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 10,
-              line: 153,
+              line: 151,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 150,
+              line: 148,
             ),
           ),
         ],
@@ -3394,24 +3388,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 147,
+            line: 145,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 144,
+            line: 142,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 147,
+              line: 145,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 144,
+              line: 142,
             ),
           ),
         ],
@@ -3422,24 +3416,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 144,
+            line: 142,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 141,
+            line: 139,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 144,
+              line: 142,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 141,
+              line: 139,
             ),
           ),
         ],
@@ -3450,24 +3444,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 131,
+            line: 129,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 126,
+            line: 124,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 131,
+              line: 129,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 126,
+              line: 124,
             ),
           ),
         ],
@@ -3478,7 +3472,7 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 126,
+            line: 124,
           ),
           file: 'all.sysl',
           start: (
@@ -3490,7 +3484,7 @@
           (
             end: (
               col: 4,
-              line: 126,
+              line: 124,
             ),
             file: 'all.sysl',
             start: (
@@ -3546,24 +3540,24 @@
         typeSrc: (
           end: (
             col: 4,
-            line: 138,
+            line: 136,
           ),
           file: 'all.sysl',
           start: (
             col: 4,
-            line: 131,
+            line: 129,
           ),
         ),
         typeSrcs: [
           (
             end: (
               col: 4,
-              line: 138,
+              line: 136,
             ),
             file: 'all.sysl',
             start: (
               col: 4,
-              line: 131,
+              line: 129,
             ),
           ),
         ],
@@ -3902,24 +3896,24 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 201,
+                    line: 199,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 201,
+                    line: 199,
                   ),
                 ),
                 source_contexts: [
                   (
                     end: (
                       col: 22,
-                      line: 201,
+                      line: 199,
                     ),
                     file: 'all.sysl',
                     start: (
                       col: 16,
-                      line: 201,
+                      line: 199,
                     ),
                   ),
                 ],
@@ -3936,24 +3930,24 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 204,
+                    line: 202,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 204,
+                    line: 202,
                   ),
                 ),
                 source_contexts: [
                   (
                     end: (
                       col: 22,
-                      line: 204,
+                      line: 202,
                     ),
                     file: 'all.sysl',
                     start: (
                       col: 16,
-                      line: 204,
+                      line: 202,
                     ),
                   ),
                 ],
@@ -3970,24 +3964,24 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 207,
+                    line: 205,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 207,
+                    line: 205,
                   ),
                 ),
                 source_contexts: [
                   (
                     end: (
                       col: 22,
-                      line: 207,
+                      line: 205,
                     ),
                     file: 'all.sysl',
                     start: (
                       col: 16,
-                      line: 207,
+                      line: 205,
                     ),
                   ),
                 ],
@@ -4003,24 +3997,24 @@
                 source_context: (
                   end: (
                     col: 22,
-                    line: 209,
+                    line: 207,
                   ),
                   file: 'all.sysl',
                   start: (
                     col: 16,
-                    line: 209,
+                    line: 207,
                   ),
                 ),
                 source_contexts: [
                   (
                     end: (
                       col: 22,
-                      line: 209,
+                      line: 207,
                     ),
                     file: 'all.sysl',
                     start: (
                       col: 16,
-                      line: 209,
+                      line: 207,
                     ),
                   ),
                 ],
@@ -4219,7 +4213,18 @@
       ),
     },
     stmt: {},
-    type: {},
+    type: {
+      (
+        appName: ['Types'],
+        typeName: 'Enum',
+        typeTag: 'tag',
+      ),
+      (
+        appName: ['Types'],
+        typeName: 'Table',
+        typeTag: 'tag',
+      ),
+    },
     view: {},
   ),
   type: {

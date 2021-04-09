@@ -38,22 +38,49 @@ let src = (
     view: m.src?.view?:{},
 );
 
+let (:annotations, ...) = //{./sysl};
+
 let (nativeDataTypes: native, :trimLines, :dictMerge, :reduce, ...) = //{./util};
 
 let joinedName = //seq.join(' :: ');
+
+let nvpStr = \nvp
+    let rec resolveVal = \v
+        cond v {
+            {k: _, ...}: $`${v orderby .@ >> $`${.@}=${resolveVal(.@value)}`::, }`,
+            (a: (:elt)): resolveVal(elt),
+            (a: [...]): resolveVal(v.a),
+            [...]: $`[${v >> resolveVal(.)::, }]`,
+            (:s): resolveVal(s),
+            _: $`"${v}"`,
+        };
+    cond nvp {
+        {}: '',
+        _: ' ' ++ $`[${nvp orderby .@ >> $`${.@}=${resolveVal(.@value)}`::, }]`
+    }
+;
+
+let rec resolvedType = \t cond t {
+    (:primitive, ...): //str.lower(primitive),
+    (appName: a, typePath: p, ...): $`${cond {a: //seq.join('::', a)++'.'}}${//seq.join('.', p)}`,
+    (:set, ...): $`set of ${resolvedType(set)}`,
+    (:sequence, ...): $`sequence of ${resolvedType(sequence)}`,
+    _: t
+};
 
 let resolveStmts = \stmt
     stmt >> cond {
         .stmtAction: $`${.stmtAction}`,
         .stmtAlt: .stmtAlt -> \(:choice, ...) $`
-            ${choice >> \c
-                # TODO: handle parent
-                # TODO: change the name attribute of cond
-                $`
-                    ${c.cond?:''}:
-                        ...
-                `
-            ::\i}
+            one of:
+                ${choice >> \c
+                    # TODO: handle parent
+                    # TODO: change the name attribute of cond
+                    $`
+                        ${c.cond?:''}:
+                            ...
+                    `
+                ::\i}
         `,
         .stmtCall: .stmtCall -> \(:appName, :epName, ...) $`${joinedName(appName)} <- ${epName}`,
         .stmtCond: '', # TODO: seems something is wrong with this
@@ -61,31 +88,14 @@ let resolveStmts = \stmt
         .stmtGroup: '', # TODO
         .stmtLoop: '', # TODO
         .stmtLoopN: '', # TODO
-        .stmtRet: .stmtRet -> \(payload: (attr: (:modifier, :nvp), :status, :type), ...)
-            $`
-                return ${status} <: ${type}${
-                    # TODO: handle modifer
-                    nvp && (
-                        ' ' + $`[${nvp => $`${.@}=${cond .@value {
-                            (:a): $`[${a >> $`'${.}'`::,}]`,
-                            (:s): $`'${s}'`,
-                        }}`}]`
-                    )
-                }
-            `
-        ,
+        # TODO: handle modifer
+        .stmtRet: .stmtRet -> \(attr: (:modifier, :nvp), :status, :type) $`
+            return ${status} <: ${resolvedType(type)}${nvpStr(nvp)}
+        `
     }
 ;
 
-let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtIndex);
-
-let rec resolvedType = \t cond t {
-    (:primitive): //str.lower(primitive),
-    (appName: a, typePath: p): $`${cond {a: //seq.join('::', a)++'.'}}${//seq.join('.', p)}`,
-    (:set): $`set of ${resolvedType(set)}`,
-    (:sequence): $`sequence of ${resolvedType(sequence)}`,
-    _: t
-};
+let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtIndex) where .@item;
 
 let resolvedAnnotations = \annotations
     annotations orderby .name >> \(:name, :value)
@@ -120,6 +130,25 @@ let orderedField = \field \typeName
     (field where typeName = .typeName && .fieldType != 'inplace') orderby .fieldName
 ;
 
+# Given a set of tags, return a Sysl source string to append to an element.
+# e.g. {'b', 'a'} -> ' [~a, ~b]'
+let tagsString = \tags
+    let tags = tags => $`~${.}` orderby .;
+    cond {tags: ' ' ++ $`[${//seq.join(', ', tags)}]`}
+;
+
+# Transform a REST endpoint spec to a path with type information on params.
+let typedPath =
+    let namesRe = //re.compile(`\{(\w+)\}`);
+    let namesInPath = \path namesRe.match(path) >> (.(1) rank (:.@));
+    let paramTypes = \params params => .@item => (@: .name, @value: resolvedType(.type));
+    # Given types for names, return path with name substituted for name <: type.
+    let subNameWithType = \types \path \name
+        //seq.sub($`{${name}}`, $`{${name} <: ${types(name)}}`, path);
+    \(url_param?:params:[], :path, ...)
+        reduce(namesInPath(path), subNameWithType(paramTypes(params)), path)
+;
+
 let fileContents = \file \apps
     let apps = apps orderby .appSrc.start?.line?:(.appName);
     let sortedEp = src.ep where .epSrc.file = file;
@@ -128,8 +157,7 @@ let fileContents = \file \apps
         ${apps >> \(:appName, ...)
             # TODO: appDocstring
             let appLongName = ((app where .appName = appName) single).appLongName?:{};
-            let appTags = ((tag.app where .appName = appName) => $`~${.appTag}`) orderby .;
-            let appTags = cond {(appTags != []): ' ' + $`[${//seq.join(', ', appTags)}]`};
+            let appTags = tagsString((tag.app where .appName = appName) => .appTag);
             let [anno, src, tag] = [anno, src, tag] >> (. :> \v (v where .appName = appName));
             let appAnno = anno.app where .appName = appName;
             let (
@@ -152,7 +180,7 @@ let fileContents = \file \apps
             ;
             let isEmpty = //rel.union({ep, type, field, table, enum, mixin, appAnno}) = {};
             $`
-                ${joinedName(appName)}${cond {(appLongName != ""): ' ' + $`"${appLongName}"`}}${appTags}:
+                ${joinedName(appName)}${appLongName && (' ' ++ $`"${appLongName}"`)}}${appTags}:
                     ${cond {isEmpty: '...'}}
                     ${resolvedAnnotations(
                         anno.app => \(:appAnnoName, :appAnnoValue, ...) (name: appAnnoName, value: appAnnoValue)
@@ -164,9 +192,9 @@ let fileContents = \file \apps
                         `
                     ::\i\n:\n}
                     ${type orderby .typeName >> \(:typeName, ...)
-                        let typeTags = ((tag.type where .typeName = typeName) => $`~${.typeTag}`) orderby .;
+                        let typeTags = tagsString((tag.type where .typeName = typeName) => .typeTag);
                         $`
-                            !type ${typeName} ${typeTags}:
+                            !type ${typeName}${typeTags}:
                                 ${resolvedTypeAnno(anno.type, typeName)::\i}
                                 ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                         $`
@@ -185,8 +213,9 @@ let fileContents = \file \apps
                         # TODO: tags
                         # TODO: pk should be set?
                         let pk = pk => .@item;
+                        let typeTags = tagsString((tag.type where .typeName = typeName) => .typeTag);
                         $`
-                            !table ${typeName}:
+                            !table ${typeName}${typeTags}:
                                 ${resolvedTypeAnno(anno.type, typeName)::\i}
                                 ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                         $`
@@ -203,7 +232,7 @@ let fileContents = \file \apps
                                 || ['...'] ::\i}
                         `
                     ::\i\n:\n}
-                    ${((ep where .rest) => . +> (:.rest.method, :.rest.path)) nest ~|path|eps orderby .path
+                    ${((ep where .rest) => . +> (:.rest.method, path: typedPath(.rest))) nest ~|path|eps orderby .path
                             >> \(:path, :eps)
                                 # TODO: stmts with parents
                                 # TODO: handle parameterized path
