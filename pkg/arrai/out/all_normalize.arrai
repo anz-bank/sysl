@@ -204,7 +204,17 @@
       appName: ['App', 'with', 'subpackages'],
     ),
   },
-  enum: {},
+  enum: {
+    (
+      appName: ['Types'],
+      enumItems: {
+        'ENUM_1': 1,
+        'ENUM_2': 2,
+        'ENUM_3': 3,
+      },
+      typeName: 'Enum',
+    ),
+  },
   ep: {
     (
       appName: ['EventAndSubscriber'],
@@ -3590,7 +3600,7 @@
         ),
         status: 'ok',
         type: (
-          primitive: ['string'],
+          primitive: 'string',
         ),
       ),
     ),
@@ -4053,7 +4063,7 @@
         ),
         status: 'ok',
         type: (
-          primitive: ['string'],
+          primitive: 'string',
         ),
       ),
     ),

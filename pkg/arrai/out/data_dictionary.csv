@@ -14,5 +14,7 @@ Action, Platform Name, Technology Name, Physical Attribute Name, Physical Object
 ?, ?, ?, a, Table, Source, Bar, "", ?, "?"
 ?, ?, ?, b, Table, Source, Bar, "An optional int", ?, "?"
 ?, ?, ?, x, Table, Source, Bar, "A foreign key", ?, "?"
+?, ?, ?, y, Table, Source, Bar, "A foreign key", ?, "?"
 ?, ?, ?, x, Table, Source, Foo, "The x value.", ?, "?"
 ?, ?, ?, y, Table, Source, Foo, "", ?, "?"
+?, ?, ?, z, Table, Source, Foo, "", ?, "?"

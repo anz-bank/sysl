@@ -75,6 +75,11 @@ RestEndpoint:
 
 
 Types:
+    !enum Enum:
+        ENUM_1: 1
+        ENUM_2: 2
+        ENUM_3: 3
+
     !type Alias:
         ...
 
@@ -88,10 +93,6 @@ Types:
         ...
 
     !type AliasSequence:
-        ...
-
-    !type Enum [~tag]:
-        @annotation = "annotation"
         ...
 
     !type Type:

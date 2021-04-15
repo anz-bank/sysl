@@ -1,14 +1,14 @@
 # Generates the PlantUML for an integration diagram of model.sysl.
 
 let sysl = //{./sysl};
-let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+let model = sysl.newNormalize(sysl.polish(sysl.load('out/model.pb')));
 
 # Transforms a module to an adjacency list of applications.
 #
 # The adjacency list is represented as an array of tuples with `from` (the name
 # of the upstream app) and `to` (a set of downstream apps that `from` calls).
 let toAdj = \m
-    m.calls => ((:.from, :.to) :> .appName) where .from != .to nest |to|to => :> => \v v.to?:v
+    sysl.calls(m) => ((:.from, :.to) :> //seq.join(' :: ', .appName)) where .from != .to nest |to|to => :> => \v v.to?:v
 ;
 
 # Transforms an adjacency list of applications to a PlantUML integration diagram.

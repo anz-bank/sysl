@@ -1,43 +1,62 @@
 # Generates an entity-relationship diagram from the tables of model.sysl.
 
 let sysl = //{./sysl};
-let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+let model = sysl.newNormalize(sysl.polish(sysl.load('out/model.pb')));
+
+# Returns true if the field has a primary key tag.
+let pk = \m \field {field} --- (m.tag.field where .fieldTag = 'pk');
 
 # Transforms a relation model into a set of table specs.
 let toTables = \m
-    m.types <&> m.fields nest |fieldName,fieldType,fk,opt,patterns,pk|columns
+    (m.table <&> m.field) => (. +> (pk: pk(m, .))) nest ~|appName, typeName|columns
 ;
 
 # Returns '|' if a field is required, or 'o' if not.
 # Used to draw FK relationship cardinality of the target.
-let zo = \f cond {f.opt: 'o', _: '|'};
+let zo = \f cond {f.fieldOpt: 'o', _: '|'};
 
 # Returns an array of strings representing each column as an entity field.
-let toRows = \cols cols orderby .fieldName >>
-    let name = $`${cond {(!.opt || .pk): '* '}}${.fieldName}`;
-    let type = $`${cond {.fk: $`**${.fieldType}** <<FK>>`, _: //str.lower(.fieldType)}}`;
-    $`${name} : ${type}`;
+let rec toRows = \cols
+    let toRow = \.
+        let name = $`${!.fieldOpt && '* '}${.pk && '**'}${.fieldName}${.pk && '**'}`;
+        let mods = ({.pk && 'PK', .fieldType.typePath?:{} && 'FK'} where .) orderby -.;
+        $`${name} : ${sysl.resolvedType(.fieldType)}${mods && ' ' ++ $`<<${mods::, }>>`}`
+    ;
+    let keys = cols where .pk count || .fieldType.typePath?:{};
+    cond {
+        0 < keys count < cols count: toRows(keys) ++ ['--'] ++ toRows(cols &~ keys),
+        _: cols orderby [!.pk, .fieldOpt, .fieldName] >> toRow(.)
+    }
+;
+
+# Returns the name of the entity referenced by a field.
+let fkEntity = \entityNames \field cond field.fieldType {
+    (typePath: [...ts, f], ...): cond {
+        (f <: entityNames): f,
+        _: $`${ts::.}`
+    }
+};
 
 # Transforms tables to an entity-relationship diagram.
 let toErd = \tables $`
     @startuml
-    skinparam component {
-      BackgroundColor FloralWhite
+    skinparam linetype ortho
+    skinparam class {
       BorderColor Black
       ArrowColor Crimson
     }
-    skinparam stereotypeCBackgroundColor Orchid
+    hide circle
     hide methods
 
-    ${tables orderby .typeName >> \(:appName, :typeName, columns:cols, ...) $`
-    entity "${appName}.${typeName}" {
-      ${toRows(cols where .pk) ++ cond {cols where .pk: ['--']} ++ toRows(cols where !.pk)::\i}
+    ${tables orderby .typeName >> \(:appName, :typeName, :columns, ...) $`
+    entity "${typeName}" {
+      ${toRows(columns)::\i}
     }`
     ::\n\n}
 
     ${tables orderby .typeName >> \(:appName, :typeName, :columns, ...)
-        let fks = columns where .fk orderby .;
-        $`${fks >> $`"${appName}.${typeName:-15s}" }o--${zo(.)}| "${.fk.appName}.${.fk.typeName}"`::\i}`
+        let refs = columns where .fieldType.typePath?:{} orderby .;
+        $`${refs >> $`"${typeName}" }o--${zo(.)}| "${fkEntity(tables => .typeName, .)}"`::\i}`
     ::\i}
     @enduml
 `;

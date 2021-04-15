@@ -138,6 +138,14 @@ let fixType = \apps \appName \typePayload
     }
 ;
 
+let rec resolvedType = \t cond t {
+    (:primitive, ...): //str.lower(primitive),
+    (appName: a, typePath: p, ...): $`${cond {a: //seq.join('::', a)++'.'}}${//seq.join('.', p)}`,
+    (:set, ...): $`set of ${resolvedType(set)}`,
+    (:sequence, ...): $`sequence of ${resolvedType(sequence)}`,
+    _: t
+};
+
 # Converts a return statement payload into a tuple of its parts.
 let parseReturn = \payload \apps \currApp
     let ret = //{./util}.invokeMacro(payloadMacro, payload);
@@ -177,7 +185,10 @@ let polish = \m
     # TODO: More polish.
 ;
 
-# Returns a normalised, relational model of a Sysl model.
+# Returns a normalised, relational model of a Sysl model. The returned relational model is as simple and small as possible. 
+# It should derive new data view from this relational model as much as possible to support new needs. And be very careful 
+# to create new items in this relational model when it has to.
+# e.g calls is a view derived from returned relational model.
 let newNormalize = \m
     let m = polish(m);
 
@@ -332,12 +343,8 @@ let newNormalize = \m
             fieldOpt: field.opt?:{},
             fieldType: parseFieldType(appName, field),
             fieldConstraint: let constraint = field.constraint?:{}; mergeArrayTuples(constraint),
-            # fk: cond field.type_ref?.ref.path:{} {
-            #     [t, f]: (appName:app.name.part, typeName: t, fieldName: f)
-            # },
-            # pk: !!({'pk'} & tags),
         );
-
+    
     # Parameters
     let _payload_params = //rel.union(
         _eps => \(:appName, :epName, :ep) ep.param?:{} =>
@@ -410,6 +417,15 @@ let newNormalize = \m
         :anno,
         :tag,
         :src,
+    )
+;
+
+# Get all calls from model stmt and convert them to a set inlcudes tuples, tuple format is (from:, to:)
+# which can facilitate drawing diagram.
+let calls = \m
+    m.stmt where .stmtCall => (
+        from: .|appName, epName|,
+        to: .stmtCall.|appName, epName|
     )
 ;
 
@@ -511,8 +527,11 @@ let normalize = \m
     :newNormalize,
 
     :annotations,
+    :calls,
     :tags,
     :annoRel,
     :tagRel,
     :parseReturn,
+
+    :resolvedType,
 )

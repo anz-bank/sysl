@@ -18,22 +18,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  38
+       line:  41
        col:  8
       }
       end:  {
-       line:  38
+       line:  41
        col:  18
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  38
+       line:  41
        col:  8
       }
       end:  {
-       line:  38
+       line:  41
        col:  18
       }
      }
@@ -45,22 +45,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  39
+       line:  42
        col:  8
       }
       end:  {
-       line:  39
+       line:  42
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  39
+       line:  42
        col:  8
       }
       end:  {
-       line:  39
+       line:  42
        col:  14
       }
      }
@@ -68,22 +68,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  37
+      line:  40
       col:  4
      }
      end:  {
-      line:  41
+      line:  44
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  37
+      line:  40
       col:  4
      }
      end:  {
-      line:  41
+      line:  44
       col:  4
      }
     }
@@ -113,22 +113,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  42
+         line:  45
          col:  8
         }
         end:  {
-         line:  44
+         line:  47
          col:  8
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  42
+         line:  45
          col:  8
         }
         end:  {
-         line:  44
+         line:  47
          col:  8
         }
        }
@@ -154,22 +154,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  44
+         line:  47
          col:  8
         }
         end:  {
-         line:  44
+         line:  47
          col:  40
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  44
+         line:  47
          col:  8
         }
         end:  {
-         line:  44
+         line:  47
          col:  40
         }
        }
@@ -179,22 +179,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  41
+      line:  44
       col:  4
      }
      end:  {
-      line:  46
+      line:  49
       col:  1
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  41
+      line:  44
       col:  4
      }
      end:  {
-      line:  46
+      line:  49
       col:  1
      }
     }
@@ -203,21 +203,21 @@ apps:  {
   source_context:  {
    file:  "model.sysl"
    start:  {
-    line:  36
+    line:  39
     col:  1
    }
    end:  {
-    line:  36
+    line:  39
    }
   }
   source_contexts:  {
    file:  "model.sysl"
    start:  {
-    line:  36
+    line:  39
     col:  1
    }
    end:  {
-    line:  36
+    line:  39
    }
   }
  }
@@ -242,22 +242,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  48
+       line:  51
        col:  8
       }
       end:  {
-       line:  48
+       line:  51
        col:  18
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  48
+       line:  51
        col:  8
       }
       end:  {
-       line:  48
+       line:  51
        col:  18
       }
      }
@@ -269,22 +269,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  49
+       line:  52
        col:  8
       }
       end:  {
-       line:  49
+       line:  52
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  49
+       line:  52
        col:  8
       }
       end:  {
-       line:  49
+       line:  52
        col:  14
       }
      }
@@ -292,23 +292,64 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  47
+      line:  50
       col:  4
      }
      end:  {
-      line:  51
+      line:  54
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  47
+      line:  50
       col:  4
      }
      end:  {
-      line:  51
+      line:  54
       col:  4
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Code"
+   value:  {
+    enum:  {
+     items:  {
+      key:  "A"
+      value:  784
+     }
+     items:  {
+      key:  "B"
+      value:  971
+     }
+     items:  {
+      key:  "C"
+      value:  8
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  58
+      col:  4
+     }
+     end:  {
+      line:  63
+      col:  1
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  58
+      col:  4
+     }
+     end:  {
+      line:  63
+      col:  1
      }
     }
    }
@@ -324,22 +365,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  52
+         line:  55
          col:  8
         }
         end:  {
-         line:  52
+         line:  55
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  52
+         line:  55
          col:  8
         }
         end:  {
-         line:  52
+         line:  55
          col:  14
         }
        }
@@ -352,22 +393,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  53
+         line:  56
          col:  8
         }
         end:  {
-         line:  53
+         line:  56
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  53
+         line:  56
          col:  8
         }
         end:  {
-         line:  53
+         line:  56
          col:  14
         }
        }
@@ -377,23 +418,23 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  51
+      line:  54
       col:  4
      }
      end:  {
-      line:  55
-      col:  1
+      line:  58
+      col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  51
+      line:  54
       col:  4
      }
      end:  {
-      line:  55
-      col:  1
+      line:  58
+      col:  4
      }
     }
    }
@@ -401,21 +442,21 @@ apps:  {
   source_context:  {
    file:  "model.sysl"
    start:  {
-    line:  46
+    line:  49
     col:  1
    }
    end:  {
-    line:  46
+    line:  49
    }
   }
   source_contexts:  {
    file:  "model.sysl"
    start:  {
-    line:  46
+    line:  49
     col:  1
    }
    end:  {
-    line:  46
+    line:  49
    }
   }
  }
@@ -440,22 +481,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  66
+       line:  74
        col:  8
       }
       end:  {
-       line:  66
+       line:  74
        col:  12
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  66
+       line:  74
        col:  8
       }
       end:  {
-       line:  66
+       line:  74
        col:  12
       }
      }
@@ -470,22 +511,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  67
+       line:  75
        col:  8
       }
       end:  {
-       line:  67
+       line:  75
        col:  12
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  67
+       line:  75
        col:  8
       }
       end:  {
-       line:  67
+       line:  75
        col:  12
       }
      }
@@ -497,22 +538,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  68
+       line:  76
        col:  8
       }
       end:  {
-       line:  68
+       line:  76
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  68
+       line:  76
        col:  8
       }
       end:  {
-       line:  68
+       line:  76
        col:  14
       }
      }
@@ -520,22 +561,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  65
+      line:  73
       col:  4
      }
      end:  {
-      line:  70
+      line:  78
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  65
+      line:  73
       col:  4
      }
      end:  {
-      line:  70
+      line:  78
       col:  4
      }
     }
@@ -555,22 +596,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  57
+       line:  65
        col:  8
       }
       end:  {
-       line:  57
+       line:  65
        col:  13
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  57
+       line:  65
        col:  8
       }
       end:  {
-       line:  57
+       line:  65
        col:  13
       }
      }
@@ -582,22 +623,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  58
+       line:  66
        col:  8
       }
       end:  {
-       line:  58
+       line:  66
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  58
+       line:  66
        col:  8
       }
       end:  {
-       line:  58
+       line:  66
        col:  14
       }
      }
@@ -605,22 +646,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  56
+      line:  64
       col:  4
      }
      end:  {
-      line:  60
+      line:  68
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  56
+      line:  64
       col:  4
      }
      end:  {
-      line:  60
+      line:  68
       col:  4
      }
     }
@@ -640,22 +681,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  61
+       line:  69
        col:  8
       }
       end:  {
-       line:  61
+       line:  69
        col:  13
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  61
+       line:  69
        col:  8
       }
       end:  {
-       line:  61
+       line:  69
        col:  13
       }
      }
@@ -667,22 +708,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  62
+       line:  70
        col:  8
       }
       end:  {
-       line:  62
+       line:  70
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  62
+       line:  70
        col:  8
       }
       end:  {
-       line:  62
+       line:  70
        col:  14
       }
      }
@@ -690,22 +731,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  60
+      line:  68
       col:  4
      }
      end:  {
-      line:  65
+      line:  73
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  60
+      line:  68
       col:  4
      }
      end:  {
-      line:  65
+      line:  73
       col:  4
      }
     }
@@ -722,22 +763,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  71
+         line:  79
          col:  8
         }
         end:  {
-         line:  71
+         line:  79
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  71
+         line:  79
          col:  8
         }
         end:  {
-         line:  71
+         line:  79
          col:  14
         }
        }
@@ -750,22 +791,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  72
+         line:  80
          col:  8
         }
         end:  {
-         line:  72
+         line:  80
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  72
+         line:  80
          col:  8
         }
         end:  {
-         line:  72
+         line:  80
          col:  14
         }
        }
@@ -775,22 +816,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  70
+      line:  78
       col:  4
      }
      end:  {
-      line:  74
+      line:  82
       col:  1
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  70
+      line:  78
       col:  4
      }
      end:  {
-      line:  74
+      line:  82
       col:  1
      }
     }
@@ -799,21 +840,21 @@ apps:  {
   source_context:  {
    file:  "model.sysl"
    start:  {
-    line:  55
+    line:  63
     col:  1
    }
    end:  {
-    line:  55
+    line:  63
    }
   }
   source_contexts:  {
    file:  "model.sysl"
    start:  {
-    line:  55
+    line:  63
     col:  1
    }
    end:  {
-    line:  55
+    line:  63
    }
   }
  }
@@ -838,22 +879,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  86
+       line:  94
        col:  8
       }
       end:  {
-       line:  86
+       line:  94
        col:  13
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  86
+       line:  94
        col:  8
       }
       end:  {
-       line:  86
+       line:  94
        col:  13
       }
      }
@@ -865,22 +906,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  87
+       line:  95
        col:  8
       }
       end:  {
-       line:  87
+       line:  95
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  87
+       line:  95
        col:  8
       }
       end:  {
-       line:  87
+       line:  95
        col:  14
       }
      }
@@ -888,22 +929,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  85
+      line:  93
       col:  4
      }
      end:  {
-      line:  89
+      line:  97
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  85
+      line:  93
       col:  4
      }
      end:  {
-      line:  89
+      line:  97
       col:  4
      }
     }
@@ -916,22 +957,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  98
+      line:  106
       col:  4
      }
      end:  {
-      line:  101
+      line:  109
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  98
+      line:  106
       col:  4
      }
      end:  {
-      line:  101
+      line:  109
       col:  4
      }
     }
@@ -945,22 +986,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  101
+       line:  109
        col:  4
       }
       end:  {
-       line:  104
+       line:  112
        col:  3
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  101
+       line:  109
        col:  4
       }
       end:  {
-       line:  104
+       line:  112
        col:  3
       }
      }
@@ -968,22 +1009,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  101
+      line:  109
       col:  4
      }
      end:  {
-      line:  104
+      line:  112
       col:  3
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  101
+      line:  109
       col:  4
      }
      end:  {
-      line:  104
+      line:  112
       col:  3
      }
     }
@@ -1006,22 +1047,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  95
+      line:  103
       col:  4
      }
      end:  {
-      line:  98
+      line:  106
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  95
+      line:  103
       col:  4
      }
      end:  {
-      line:  98
+      line:  106
       col:  4
      }
     }
@@ -1048,22 +1089,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  90
+         line:  98
          col:  8
         }
         end:  {
-         line:  90
+         line:  98
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  90
+         line:  98
          col:  8
         }
         end:  {
-         line:  90
+         line:  98
          col:  14
         }
        }
@@ -1076,22 +1117,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  91
+         line:  99
          col:  8
         }
         end:  {
-         line:  91
+         line:  99
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  91
+         line:  99
          col:  8
         }
         end:  {
-         line:  91
+         line:  99
          col:  14
         }
        }
@@ -1104,22 +1145,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  92
+         line:  100
          col:  8
         }
         end:  {
-         line:  92
+         line:  100
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  92
+         line:  100
          col:  8
         }
         end:  {
-         line:  92
+         line:  100
          col:  14
         }
        }
@@ -1142,22 +1183,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  93
+         line:  101
          col:  8
         }
         end:  {
-         line:  93
+         line:  101
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  93
+         line:  101
          col:  8
         }
         end:  {
-         line:  93
+         line:  101
          col:  14
         }
        }
@@ -1167,22 +1208,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  89
+      line:  97
       col:  4
      }
      end:  {
-      line:  95
+      line:  103
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  89
+      line:  97
       col:  4
      }
      end:  {
-      line:  95
+      line:  103
       col:  4
      }
     }
@@ -1191,21 +1232,21 @@ apps:  {
   source_context:  {
    file:  "model.sysl"
    start:  {
-    line:  84
+    line:  92
     col:  1
    }
    end:  {
-    line:  84
+    line:  92
    }
   }
   source_contexts:  {
    file:  "model.sysl"
    start:  {
-    line:  84
+    line:  92
     col:  1
    }
    end:  {
-    line:  84
+    line:  92
    }
   }
  }
@@ -1230,22 +1271,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  76
+       line:  84
        col:  8
       }
       end:  {
-       line:  76
+       line:  84
        col:  13
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  76
+       line:  84
        col:  8
       }
       end:  {
-       line:  76
+       line:  84
        col:  13
       }
      }
@@ -1260,22 +1301,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  77
+       line:  85
        col:  8
       }
       end:  {
-       line:  77
+       line:  85
        col:  13
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  77
+       line:  85
        col:  8
       }
       end:  {
-       line:  77
+       line:  85
        col:  13
       }
      }
@@ -1287,22 +1328,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  78
+       line:  86
        col:  8
       }
       end:  {
-       line:  78
+       line:  86
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  78
+       line:  86
        col:  8
       }
       end:  {
-       line:  78
+       line:  86
        col:  14
       }
      }
@@ -1310,22 +1351,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  75
+      line:  83
       col:  4
      }
      end:  {
-      line:  80
+      line:  88
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  75
+      line:  83
       col:  4
      }
      end:  {
-      line:  80
+      line:  88
       col:  4
      }
     }
@@ -1342,22 +1383,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  81
+         line:  89
          col:  8
         }
         end:  {
-         line:  81
+         line:  89
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  81
+         line:  89
          col:  8
         }
         end:  {
-         line:  81
+         line:  89
          col:  14
         }
        }
@@ -1370,22 +1411,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  82
+         line:  90
          col:  8
         }
         end:  {
-         line:  82
+         line:  90
          col:  14
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  82
+         line:  90
          col:  8
         }
         end:  {
-         line:  82
+         line:  90
          col:  14
         }
        }
@@ -1395,22 +1436,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  80
+      line:  88
       col:  4
      }
      end:  {
-      line:  84
+      line:  92
       col:  6
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  80
+      line:  88
       col:  4
      }
      end:  {
-      line:  84
+      line:  92
       col:  6
      }
     }
@@ -1419,21 +1460,21 @@ apps:  {
   source_context:  {
    file:  "model.sysl"
    start:  {
-    line:  74
+    line:  82
     col:  1
    }
    end:  {
-    line:  74
+    line:  82
    }
   }
   source_contexts:  {
    file:  "model.sysl"
    start:  {
-    line:  74
+    line:  82
     col:  1
    }
    end:  {
-    line:  74
+    line:  82
    }
   }
  }
@@ -1448,6 +1489,12 @@ apps:  {
    key:  "description"
    value:  {
     s:  "A database.\n Stores data.\n"
+   }
+  }
+  attrs:  {
+   key:  "package"
+   value:  {
+    s:  "io.sysl.bank.model"
    }
   }
   attrs:  {
@@ -1481,22 +1528,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  29
+       line:  32
        col:  16
       }
       end:  {
-       line:  29
+       line:  32
        col:  22
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  29
+       line:  32
        col:  16
       }
       end:  {
-       line:  29
+       line:  32
        col:  22
       }
      }
@@ -1511,22 +1558,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  27
+         line:  30
          col:  9
         }
         end:  {
-         line:  27
+         line:  30
          col:  17
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  27
+         line:  30
          col:  9
         }
         end:  {
-         line:  27
+         line:  30
          col:  17
         }
        }
@@ -1536,22 +1583,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  28
+      line:  31
       col:  12
      }
      end:  {
-      line:  32
+      line:  35
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  28
+      line:  31
       col:  12
      }
      end:  {
-      line:  32
+      line:  35
       col:  4
      }
     }
@@ -1655,22 +1702,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  34
+       line:  37
        col:  12
       }
       end:  {
-       line:  34
+       line:  37
        col:  18
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  34
+       line:  37
        col:  12
       }
       end:  {
-       line:  34
+       line:  37
        col:  18
       }
      }
@@ -1686,22 +1733,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  33
+         line:  36
          col:  194
         }
         end:  {
-         line:  33
+         line:  36
          col:  202
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  33
+         line:  36
          col:  194
         }
         end:  {
-         line:  33
+         line:  36
          col:  202
         }
        }
@@ -1724,22 +1771,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  33
+         line:  36
          col:  204
         }
         end:  {
-         line:  33
+         line:  36
          col:  213
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  33
+         line:  36
          col:  204
         }
         end:  {
-         line:  33
+         line:  36
          col:  213
         }
        }
@@ -1749,22 +1796,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  33
+      line:  36
       col:  8
      }
      end:  {
-      line:  36
+      line:  39
       col:  1
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  33
+      line:  36
       col:  8
      }
      end:  {
-      line:  36
+      line:  39
       col:  1
      }
     }
@@ -1787,22 +1834,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  23
+       line:  26
        col:  8
       }
       end:  {
-       line:  23
+       line:  26
        col:  14
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  23
+       line:  26
        col:  8
       }
       end:  {
-       line:  23
+       line:  26
        col:  14
       }
      }
@@ -1810,22 +1857,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  22
+      line:  25
       col:  4
      }
      end:  {
-      line:  26
+      line:  29
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  22
+      line:  25
       col:  4
      }
      end:  {
-      line:  26
+      line:  29
       col:  4
      }
     }
@@ -1852,22 +1899,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  15
+         line:  16
          col:  8
         }
         end:  {
-         line:  15
+         line:  16
          col:  24
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  15
+         line:  16
          col:  8
         }
         end:  {
-         line:  15
+         line:  16
          col:  24
         }
        }
@@ -1887,22 +1934,22 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  16
+         line:  17
          col:  8
         }
         end:  {
-         line:  18
+         line:  19
          col:  8
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  16
+         line:  17
          col:  8
         }
         end:  {
-         line:  18
+         line:  19
          col:  8
         }
        }
@@ -1932,22 +1979,67 @@ apps:  {
        source_context:  {
         file:  "model.sysl"
         start:  {
-         line:  18
+         line:  19
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
+         col:  8
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  19
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  8
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "y"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Source"
+         }
+         path:  "Bar"
+        }
+        ref:  {
+         path:  "Foo"
+         path:  "y"
+        }
+       }
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "A foreign key"
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  21
+         col:  8
+        }
+        end:  {
+         line:  25
          col:  4
         }
        }
        source_contexts:  {
         file:  "model.sysl"
         start:  {
-         line:  18
+         line:  21
          col:  8
         }
         end:  {
-         line:  22
+         line:  25
          col:  4
         }
        }
@@ -1966,22 +2058,22 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  13
+      line:  14
       col:  4
      }
      end:  {
-      line:  22
+      line:  25
       col:  4
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  13
+      line:  14
       col:  4
      }
      end:  {
-      line:  22
+      line:  25
       col:  4
      }
     }
@@ -2053,6 +2145,35 @@ apps:  {
        }
       }
      }
+     attr_defs:  {
+      key:  "z"
+      value:  {
+       primitive:  INT
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  12
+         col:  8
+        }
+        end:  {
+         line:  12
+         col:  16
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  12
+         col:  8
+        }
+        end:  {
+         line:  12
+         col:  16
+        }
+       }
+      }
+     }
     }
     attrs:  {
      key:  "description"
@@ -2067,7 +2188,7 @@ apps:  {
       col:  4
      }
      end:  {
-      line:  13
+      line:  14
       col:  4
      }
     }
@@ -2078,7 +2199,7 @@ apps:  {
       col:  4
      }
      end:  {
-      line:  13
+      line:  14
       col:  4
      }
     }
@@ -2092,7 +2213,7 @@ apps:  {
    }
    end:  {
     line:  1
-    col:  10
+    col:  39
    }
   }
   source_contexts:  {
@@ -2103,7 +2224,7 @@ apps:  {
    }
    end:  {
     line:  1
-    col:  10
+    col:  39
    }
   }
  }
@@ -2125,22 +2246,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  106
+       line:  114
        col:  8
       }
       end:  {
-       line:  106
+       line:  114
        col:  8
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  106
+       line:  114
        col:  8
       }
       end:  {
-       line:  106
+       line:  114
        col:  8
       }
      }
@@ -2152,22 +2273,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  107
+       line:  115
        col:  8
       }
       end:  {
-       line:  107
+       line:  115
        col:  8
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  107
+       line:  115
        col:  8
       }
       end:  {
-       line:  107
+       line:  115
        col:  8
       }
      }
@@ -2179,22 +2300,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  108
+       line:  116
        col:  8
       }
       end:  {
-       line:  108
+       line:  116
        col:  8
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  108
+       line:  116
        col:  8
       }
       end:  {
-       line:  108
+       line:  116
        col:  8
       }
      }
@@ -2206,22 +2327,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  109
+       line:  117
        col:  8
       }
       end:  {
-       line:  109
+       line:  117
        col:  8
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  109
+       line:  117
        col:  8
       }
       end:  {
-       line:  109
+       line:  117
        col:  8
       }
      }
@@ -2233,22 +2354,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  110
+       line:  118
        col:  8
       }
       end:  {
-       line:  110
+       line:  118
        col:  8
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  110
+       line:  118
        col:  8
       }
       end:  {
-       line:  110
+       line:  118
        col:  8
       }
      }
@@ -2260,22 +2381,22 @@ apps:  {
      source_context:  {
       file:  "model.sysl"
       start:  {
-       line:  111
+       line:  119
        col:  8
       }
       end:  {
-       line:  111
+       line:  119
        col:  8
       }
      }
      source_contexts:  {
       file:  "model.sysl"
       start:  {
-       line:  111
+       line:  119
        col:  8
       }
       end:  {
-       line:  111
+       line:  119
        col:  8
       }
      }
@@ -2283,21 +2404,21 @@ apps:  {
     source_context:  {
      file:  "model.sysl"
      start:  {
-      line:  105
+      line:  113
       col:  4
      }
      end:  {
-      line:  112
+      line:  120
      }
     }
     source_contexts:  {
      file:  "model.sysl"
      start:  {
-      line:  105
+      line:  113
       col:  4
      }
      end:  {
-      line:  112
+      line:  120
      }
     }
    }
@@ -2305,21 +2426,21 @@ apps:  {
   source_context:  {
    file:  "model.sysl"
    start:  {
-    line:  104
+    line:  112
     col:  1
    }
    end:  {
-    line:  104
+    line:  112
    }
   }
   source_contexts:  {
    file:  "model.sysl"
    start:  {
-    line:  104
+    line:  112
     col:  1
    }
    end:  {
-    line:  104
+    line:  112
    }
   }
  }

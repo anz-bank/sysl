@@ -1,4 +1,7 @@
 \m
+
+let sysl = //{./sysl};
+
 let app = m.app?:{};
 let enum = m.enum?:{};
 let ep = m.ep?:{};
@@ -60,14 +63,6 @@ let nvpStr = \nvp
     }
 ;
 
-let rec resolvedType = \t cond t {
-    (:primitive, ...): //str.lower(primitive),
-    (appName: a, typePath: p, ...): $`${cond {a: //seq.join('::', a)++'.'}}${//seq.join('.', p)}`,
-    (:set, ...): $`set of ${resolvedType(set)}`,
-    (:sequence, ...): $`sequence of ${resolvedType(sequence)}`,
-    _: t
-};
-
 let resolveStmts = \stmt
     stmt >> cond {
         .stmtAction: $`${.stmtAction}`,
@@ -90,7 +85,7 @@ let resolveStmts = \stmt
         .stmtLoopN: '', # TODO
         # TODO: handle modifer
         .stmtRet: .stmtRet -> \(attr: (:modifier, :nvp), :status, :type) $`
-            return ${status} <: ${resolvedType(type)}${nvpStr(nvp)}
+            return ${status} <: ${sysl.resolvedType(type)}${nvpStr(nvp)}
         `
     }
 ;
@@ -141,7 +136,7 @@ let tagsString = \tags
 let typedPath =
     let namesRe = //re.compile(`\{(\w+)\}`);
     let namesInPath = \path namesRe.match(path) >> (.(1) rank (:.@));
-    let paramTypes = \params params => .@item => (@: .name, @value: resolvedType(.type));
+    let paramTypes = \params params => .@item => (@: .name, @value: sysl.resolvedType(.type));
     # Given types for names, return path with name substituted for name <: type.
     let subNameWithType = \types \path \name
         //seq.sub($`{${name}}`, $`{${name} <: ${types(name)}}`, path);
@@ -198,7 +193,7 @@ let fileContents = \file \apps
                                 ${resolvedTypeAnno(anno.type, typeName)::\i}
                                 ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                         $`
-                                            ${fieldName} <: ${resolvedType(fieldType)}${cond {fieldOpt: '?'}}${
+                                            ${fieldName} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${
                                                 let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
                                                 anno && $`
                                                     :
@@ -219,7 +214,7 @@ let fileContents = \file \apps
                                 ${resolvedTypeAnno(anno.type, typeName)::\i}
                                 ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                         $`
-                                            ${fieldName} <: ${resolvedType(fieldType)}${cond {fieldOpt: '?'}}${cond {(fieldName <: pk): ' [~pk]'}}${
+                                            ${fieldName} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${cond {(fieldName <: pk): ' [~pk]'}}${
                                                 let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
                                                 cond {
                                                     (anno != ''): $`

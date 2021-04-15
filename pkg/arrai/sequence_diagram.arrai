@@ -1,29 +1,29 @@
 # Generates the PlantUML for a sequence diagram of "Client <- Do" in model.sysl.
 
 let sysl = //{./sysl};
-let model = sysl.normalize(sysl.polish(sysl.load('out/model.pb')));
+let model = sysl.newNormalize(sysl.polish(sysl.load('out/model.pb')));
 
 # Transforms a module to a tree of calls between endpoints.
 #
 # Each call is a tuple with attributes `from` (the upstream endpoint), `to` (the downstream endpoint
 # that `from` calls), and `calls` (a subtree of calls made by the downstream endpoint).
 let rec toTree = \(:m, :appName, :epName)
-    m.calls where .from.appName = appName && .from.epName = epName orderby .sourceContext.@
+    sysl.calls(m) where .from.appName = appName && .from.epName = epName orderby .
         >> (:.from, :.to, calls: toTree((:m, :.to.appName, :.to.epName)))
 ;
 
 # Transforms an endpoint to a PlantUML sequence from `from` to `to`, including all downstream calls.
 let rec toUml = \(:from, :to, :calls) \urls
     let label = cond {
-        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} -> ${to.appName} ${to.epName}`)} ${to.epName}]]`,
+        urls: $`[[${//seq.sub(' ', '%20', $`#${//seq.join(' :: ', from.appName)} ${from.epName} -> ${//seq.join(' :: ', from.appName)} ${to.epName}`)} ${to.epName}]]`,
         _: to.epName
     };
     let retLabel = cond {
-        urls: $`[[${//seq.sub(' ', '%20', $`#${from.appName} ${from.epName} <-- ${to.appName} ${to.epName}`)} ok]]`,
+        urls: $`[[${//seq.sub(' ', '%20', $`#${//seq.join(' :: ', from.appName)} ${from.epName} <-- ${//seq.join(' :: ', from.appName)} ${to.epName}`)} ok]]`,
         _: 'ok'
     };
     $`
-        ${from.appName} -> ${to.appName} ++ : ${label}
+        ${//seq.join(' :: ', from.appName)} -> ${//seq.join(' :: ', to.appName)} ++ : ${label}
         ${cond calls {[_, ...]: calls >> toUml(., urls)}::\i}
         return ${retLabel}
     `
@@ -37,7 +37,7 @@ let toSeq = \m \(:appName, :epName) \urls
     let model = (
         from: (appName: '', epName: ''),
         to: (:appName, :epName),
-        calls: toTree((:m, :appName, :epName))
+        calls: toTree((:m, :appName, :epName)),
     );
 
     # Returns a array of app names in the order they were first activated.
@@ -51,8 +51,8 @@ let toSeq = \m \(:appName, :epName) \urls
 
     # Enriches the app names with `type`, inferred from patterns and used as the primary sort key.
     let apps = (getApps(model, []) => \(:@, @item:name)
-        let patterns = //rel.union(m.apps where .appName = name => .appPatterns);
-        let type = cond {{'db'} & patterns: 'database', _: 'control'};
+        let patterns = //rel.union(m.app <&> m.tag.app where .appName = name => .appTag);
+        let type = cond { patterns <: {'db'}: 'database', _: 'control'};
         (:@, :name, :type)
     ) orderby [.type, .@];
 
@@ -64,11 +64,11 @@ let toSeq = \m \(:appName, :epName) \urls
             ArrowColor grey
         }`}}
 
-        ${apps >> $`${.type} "${.name}"`::\i}
+        ${apps >> $`${.type} "${//seq.join(' :: ', .name)}"`::\i}
 
         ${toUml(model, urls)}
         @enduml
     `
 ;
 
-toSeq(model, (appName: 'Client', epName: 'Do'), false)
+toSeq(model, (appName: ['Client'], epName: 'Do'), false)

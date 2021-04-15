@@ -1,16 +1,27 @@
 # Generates a catalog of pages describing the applications in model.sysl.
 
-let model = //{./sysl}.normalize(//{./sysl}.load('out/model.pb'));
+let sysl = //{./sysl};
+let model = sysl.newNormalize(//{./sysl}.load('out/model.pb'));
+
+let appAnnoValue = \appName \appAnno \annoName
+    appAnno where .appName = appName && .appAnnoName = annoName => .appAnnoValue orderby .;
+
+let appPackage = \appName \appAnno appAnnoValue(appName, appAnno, 'package');
+let appDescription = \appName \appAnno appAnnoValue(appName, appAnno, 'description');
+
+let appPatterns = \appName \tag tag where .appName = appName => .appTag;
+
+let appNameStr = \appName //seq.join(' :: ', appName);
 
 # Transforms the model's information about the named package to a page of HTML content.
-let toPackagePage = \m \appPackage
-    let apps = (m.apps where .appPackage = appPackage);
-    let dbs = apps where .appPatterns & {'db'};
-    let endpoints = apps <&> m.endpoints;
-    let types = apps <&> m.types;
+let toPackagePage = \m \specificAppPackage
+    let apps = m.app where appPackage(.appName, m.anno.app) = specificAppPackage;
+    let dbs = apps where appPatterns(.appName, m.tag.app) & {'db'};
+    let endpoints = apps <&> m.ep;
+    let types = apps <&> m.type;
 
     $`
-    <h1>${appPackage}</h1>
+    <h1>${specificAppPackage::}</h1>
 
     <h2>Integration Diagram</h2>
     <img src="TODO" />
@@ -22,7 +33,7 @@ let toPackagePage = \m \appPackage
     </tr>
     ${dbs => $`
         <tr>
-            <td>${.appName}</td>
+            <td>${appNameStr(.appName)}</td>
         </tr>
     ` orderby .::\i}
     </table>
@@ -35,7 +46,7 @@ let toPackagePage = \m \appPackage
     </tr>
     ${endpoints => $`
         <tr>
-            <td>${.appName}</td>
+            <td>${appNameStr(.appName)}</td>
             <td>${.epName}</td>
         </tr>
     ` orderby .::\i}
@@ -47,9 +58,9 @@ let toPackagePage = \m \appPackage
         <th>Application Name</th>
         <th>Type Name</th>
     </tr>
-    ${apps <&> m.types => $`
+    ${apps <&> m.type => $`
         <tr>
-            <td>${.appName}</td>
+            <td>${appNameStr(.appName)}</td>
             <td>${.typeName}</td>
         </tr>
     ` orderby .::\i}
@@ -57,15 +68,15 @@ let toPackagePage = \m \appPackage
 
     <h1>Databases</h1>
     ${dbs => $`
-        <h2>Database ${.appName}</h2>
+        <h2>Database ${appNameStr(.appName)}</h2>
     ` orderby .::\i}
 
     <h1>Applications</h1>
     ${apps => $`
-        <h2>Application ${.appName}</h2>
-        <p>${.appDescription}</p>
+        <h2>Application ${appNameStr(.appName)}</h2>
+        <p>${appDescription(.appName, m.anno.app)::}</p>
         ${endpoints => $`
-            <h3>${.appName} ${.epName}</h3>
+            <h3>${appNameStr(.appName)} ${.epName}</h3>
             <p>Sequence diagram</p>
             <p>Request types</p>
             <p>Response types</p>
@@ -76,7 +87,7 @@ let toPackagePage = \m \appPackage
     <ul>
     ${types => $`
         <li>
-            <p>${.appName}.${.typeName}</p>
+            <p>${appNameStr(.appName)}.${.typeName}</p>
             <p>Fields:</p>
             <table border="1">
             <tr>
@@ -84,10 +95,10 @@ let toPackagePage = \m \appPackage
                 <th>Type</th>
                 <th>Description</th>
             </tr>
-            ${{.} <&> m.fields => $`
+            ${{.} <&> m.field => $`
                 <tr>
                     <td>${.fieldName}</td>
-                    <td>${.fieldType}</td>
+                    <td>${sysl.resolvedType(.fieldType)}</td>
                     <td></td>
                 </tr>
             ` orderby .::\i}
@@ -99,8 +110,8 @@ let toPackagePage = \m \appPackage
 
 # Transforms the model to a map of output filename to HTML page content.
 let toCatalog = \m
-    let packages = m.apps => .appPackage where . && !//seq.has_prefix('google_', .);
-    packages => (@:$`${.}.html`, @value: toPackagePage(m, .))
+    let packages = m.app => appPackage(.appName, m.anno.app) where . && !//seq.has_prefix('google_', //seq.join("", .));
+    packages => (@:$`${.::}.html`, @value: toPackagePage(m, .))
 ;
 
 toCatalog(model)

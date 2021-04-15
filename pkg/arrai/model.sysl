@@ -1,4 +1,4 @@
-Source[~db]:
+Source[package="io.sysl.bank.model",~db]:
     @description =:
       | A database.
       | Stores data.
@@ -9,6 +9,7 @@ Source[~db]:
         x <: int:
             @description = "The x value."
         y <: int
+        z <: int?
 
     !table Bar:
         @description = "A bar table."
@@ -17,6 +18,8 @@ Source[~db]:
             @description = "An optional int"
         x <: Foo.x:
             @description = "A foreign key"
+        y <: Foo.y:
+            @description = "A foreign key"    
 
     # RPC function parameter
     Read(accountNumber <: string):

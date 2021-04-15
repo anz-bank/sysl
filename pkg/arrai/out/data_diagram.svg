@@ -1,100 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="266px" preserveAspectRatio="none" style="width:652px;height:266px;" version="1.1" viewBox="0 0 652 266" width="652px" zoomAndPan="magnify"><defs><filter height="300%" id="f1wblu8t94y8bl" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[498a707edf4a51645a1a637c5052cf0d]
-cluster Source--><polygon fill="#FFFFFF" filter="url(#f1wblu8t94y8bl)" points="512.5,6,574.5,6,581.5,28.2969,630.5,28.2969,630.5,81,512.5,81,512.5,6" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="512.5" x2="581.5" y1="28.2969" y2="28.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="56" x="516.5" y="20.9951">Source</text><!--MD5=[64b5332f12ac6862469c3805a514b144]
-class Source.Bar            --><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="40" id="Source.Bar            " style="stroke: #A80036; stroke-width: 1.5;" width="101" x="521" y="33"/><ellipse cx="536" cy="49" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M538.9688,54.6406 Q538.3906,54.9375 537.75,55.0781 Q537.1094,55.2344 536.4063,55.2344 Q533.9063,55.2344 532.5781,53.5938 Q531.2656,51.9375 531.2656,48.8125 Q531.2656,45.6875 532.5781,44.0313 Q533.9063,42.375 536.4063,42.375 Q537.1094,42.375 537.75,42.5313 Q538.4063,42.6875 538.9688,42.9844 L538.9688,45.7031 Q538.3438,45.125 537.75,44.8594 Q537.1563,44.5781 536.5313,44.5781 Q535.1875,44.5781 534.5,45.6563 Q533.8125,46.7188 533.8125,48.8125 Q533.8125,50.9063 534.5,51.9844 Q535.1875,53.0469 536.5313,53.0469 Q537.1563,53.0469 537.75,52.7813 Q538.3438,52.5 538.9688,51.9219 L538.9688,54.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="21" x="550" y="53.1543">Bar</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="522" x2="621" y1="65" y2="65"/><!--MD5=[7218ca274122d4b22d92dbfd01e1f3f5]
-class Source.Bar--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="86.4141" id="Source.Bar" style="stroke: #A80036; stroke-width: 1.5;" width="110" x="22.5" y="10"/><ellipse cx="41.55" cy="26" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M45.6594,32 L37.9406,32 L37.9406,19.6094 L45.6594,19.6094 L45.6594,21.7656 L40.3938,21.7656 L40.3938,24.4375 L45.1594,24.4375 L45.1594,26.5938 L40.3938,26.5938 L40.3938,29.8438 L45.6594,29.8438 L45.6594,32 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="69" x="56.45" y="30.1543">Source.Bar</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="23.5" x2="131.5" y1="42" y2="42"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="33" x="42.5" y="56.2104">b : int</text><ellipse cx="33.5" cy="65.8047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="52" x="42.5" y="69.0151">a : string</text><line style="stroke: #A80036; stroke-width: 1.0;" x1="23.5" x2="131.5" y1="75.6094" y2="75.6094"/><ellipse cx="33.5" cy="86.6094" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="14" x="42.5" y="89.8198">x :</text><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="35" x="60.5" y="89.8198">Foo.x</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="27" x="99.5" y="89.8198">«FK»</text><!--MD5=[aa79651228798bbf29e1a7f784751bf7]
-class D.FetchResponse--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="65.6094" id="D.FetchResponse" style="stroke: #A80036; stroke-width: 1.5;" width="142" x="167.5" y="20"/><ellipse cx="182.5" cy="36" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M186.6094,42 L178.8906,42 L178.8906,29.6094 L186.6094,29.6094 L186.6094,31.7656 L181.3438,31.7656 L181.3438,34.4375 L186.1094,34.4375 L186.1094,36.5938 L181.3438,36.5938 L181.3438,39.8438 L186.6094,39.8438 L186.6094,42 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="110" x="196.5" y="40.1543">D.FetchResponse</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="168.5" x2="308.5" y1="52" y2="52"/><ellipse cx="178.5" cy="63" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="187.5" y="66.2104">dx : int</text><ellipse cx="178.5" cy="75.8047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="187.5" y="79.0151">dy : int</text><!--MD5=[e986452442f8854676d2ac2b2c7cb603]
-class B.FetchResponse--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="65.6094" id="B.FetchResponse" style="stroke: #A80036; stroke-width: 1.5;" width="141" x="345" y="20"/><ellipse cx="360" cy="36" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M364.1094,42 L356.3906,42 L356.3906,29.6094 L364.1094,29.6094 L364.1094,31.7656 L358.8438,31.7656 L358.8438,34.4375 L363.6094,34.4375 L363.6094,36.5938 L358.8438,36.5938 L358.8438,39.8438 L364.1094,39.8438 L364.1094,42 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="109" x="374" y="40.1543">B.FetchResponse</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="346" x2="485" y1="52" y2="52"/><ellipse cx="356" cy="63" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="365" y="66.2104">by : int</text><ellipse cx="356" cy="75.8047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="365" y="79.0151">bx : int</text><!--MD5=[d27add52d1c8032bc3c5a0b9605083d9]
-class A.FetchResponse--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="65.6094" id="A.FetchResponse" style="stroke: #A80036; stroke-width: 1.5;" width="141" x="7" y="168.5"/><ellipse cx="22" cy="184.5" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M26.1094,190.5 L18.3906,190.5 L18.3906,178.1094 L26.1094,178.1094 L26.1094,180.2656 L20.8438,180.2656 L20.8438,182.9375 L25.6094,182.9375 L25.6094,185.0938 L20.8438,185.0938 L20.8438,188.3438 L26.1094,188.3438 L26.1094,190.5 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="109" x="36" y="188.6543">A.FetchResponse</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="8" x2="147" y1="200.5" y2="200.5"/><ellipse cx="18" cy="211.5" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="27" y="214.7104">ay : int</text><ellipse cx="18" cy="224.3047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="39" x="27" y="227.5151">ax : int</text><!--MD5=[4f66dba605cd752ef1d9c078b763a155]
-class C.FetchResponse--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="65.6094" id="C.FetchResponse" style="stroke: #A80036; stroke-width: 1.5;" width="141" x="183" y="168.5"/><ellipse cx="198" cy="184.5" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M202.1094,190.5 L194.3906,190.5 L194.3906,178.1094 L202.1094,178.1094 L202.1094,180.2656 L196.8438,180.2656 L196.8438,182.9375 L201.6094,182.9375 L201.6094,185.0938 L196.8438,185.0938 L196.8438,188.3438 L202.1094,188.3438 L202.1094,190.5 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="109" x="212" y="188.6543">C.FetchResponse</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="184" x2="323" y1="200.5" y2="200.5"/><ellipse cx="194" cy="211.5" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="38" x="203" y="214.7104">cx : int</text><ellipse cx="194" cy="224.3047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="38" x="203" y="227.5151">cy : int</text><!--MD5=[b8206dade849e21dd2671e436c34cb0c]
-class Source.Foo--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="65.6094" id="Source.Foo" style="stroke: #A80036; stroke-width: 1.5;" width="103" x="520" y="168.5"/><ellipse cx="535" cy="184.5" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M539.1094,190.5 L531.3906,190.5 L531.3906,178.1094 L539.1094,178.1094 L539.1094,180.2656 L533.8438,180.2656 L533.8438,182.9375 L538.6094,182.9375 L538.6094,185.0938 L533.8438,185.0938 L533.8438,188.3438 L539.1094,188.3438 L539.1094,190.5 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="71" x="549" y="188.6543">Source.Foo</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="521" x2="622" y1="200.5" y2="200.5"/><ellipse cx="531" cy="211.5" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="32" x="540" y="214.7104">y : int</text><ellipse cx="531" cy="224.3047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="32" x="540" y="227.5151">x : int</text><!--MD5=[94af4765a840a8f030423c004d6f9455]
-class Client.Screen--><rect fill="#FEFECE" filter="url(#f1wblu8t94y8bl)" height="91.2188" id="Client.Screen" style="stroke: #A80036; stroke-width: 1.5;" width="115" x="359" y="156"/><ellipse cx="374" cy="172" fill="#DA70D6" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M378.1094,178 L370.3906,178 L370.3906,165.6094 L378.1094,165.6094 L378.1094,167.7656 L372.8438,167.7656 L372.8438,170.4375 L377.6094,170.4375 L377.6094,172.5938 L372.8438,172.5938 L372.8438,175.8438 L378.1094,175.8438 L378.1094,178 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="83" x="388" y="176.1543">Client.Screen</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="360" x2="473" y1="188" y2="188"/><ellipse cx="370" cy="199" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="38" x="379" y="202.2104">xx : int</text><ellipse cx="370" cy="211.8047" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="54" x="379" y="215.0151">ww : digit</text><ellipse cx="370" cy="224.6094" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="53" x="379" y="227.8198">zz : digits</text><ellipse cx="370" cy="237.4141" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="38" x="379" y="240.6245">yy : int</text><!--MD5=[db216107a47f9823fd0686b2fe90ee71]
-link Source.Bar             to Source.Foo--><path d="M571.5,81.3089 C571.5,103.6304 571.5,135.0775 571.5,160.2064 " fill="none" id="Source.Bar            -Source.Foo" style="stroke: #DC143C; stroke-width: 1.0;"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="575.5" x2="567.5" y1="164.4638" y2="164.4638"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="575.5" x2="567.5" y1="161.4638" y2="161.4638"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="571.5" x2="571.5" y1="160.4638" y2="168.4638"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="571.5" x2="565.5" y1="81.0274" y2="73.0274"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="571.5" x2="577.5" y1="81.0274" y2="73.0274"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="571.5" x2="571.5" y1="81.0274" y2="73.0274"/><ellipse cx="571.5" cy="87.0274" fill="none" rx="4" ry="4" style="stroke: #DC143C; stroke-width: 1.0;"/><!--MD5=[e8778f656c10bd60bd323cf48d75d304]
-link Source.Bar to D.FetchResponse--><!--MD5=[8b6f4ac359f1c62caa4edf97b7680ac3]
-link D.FetchResponse to B.FetchResponse--><!--MD5=[7723e43bb4da83e5bd1efc8ca4d6621e]
-link Source.Bar to A.FetchResponse--><!--MD5=[dc70e0d8814f7ccd8a3270f5512f3bd9]
-link A.FetchResponse to C.FetchResponse--><!--MD5=[76407897dc0b4aff9d85aa1dfb08b1bd]
-link C.FetchResponse to Client.Screen--><!--MD5=[9cbafc4e3b0b3e484fb3c3a19e3313a1]
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="247px" preserveAspectRatio="none" style="width:175px;height:247px;" version="1.1" viewBox="0 0 175 247" width="175px" zoomAndPan="magnify"><defs><filter height="300%" id="f1jog8prtucsfa" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[fea15f7924bd848149aeb562f3a4d86b]
+class Bar--><rect fill="#FEFECE" filter="url(#f1jog8prtucsfa)" height="91.1875" id="Bar" style="stroke: #000000; stroke-width: 1.5;" width="149" x="7" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="21" x="71" y="23.1387">Bar</text><line style="stroke: #000000; stroke-width: 1.5;" x1="8" x2="155" y1="30.9688" y2="30.9688"/><ellipse cx="18" cy="41.9688" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="8" x="27" y="45.1792">a</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="73" x="39" y="45.1792">: string «PK»</text><ellipse cx="18" cy="54.7734" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="123" x="27" y="57.9839">x : Source.Foo.x «FK»</text><ellipse cx="18" cy="67.5781" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="123" x="27" y="70.7886">y : Source.Foo.y «FK»</text><line style="stroke: #000000; stroke-width: 1.0;" x1="8" x2="155" y1="77.3828" y2="77.3828"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="33" x="13" y="91.5933">b : int</text><!--MD5=[d10371c429a20e8e62c953c705282488]
+class Foo--><rect fill="#FEFECE" filter="url(#f1jog8prtucsfa)" height="70.3828" id="Foo" style="stroke: #000000; stroke-width: 1.5;" width="58" x="52.5" y="158"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="23" x="70" y="174.1387">Foo</text><line style="stroke: #000000; stroke-width: 1.5;" x1="53.5" x2="109.5" y1="181.9688" y2="181.9688"/><ellipse cx="63.5" cy="192.9688" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="32" x="72.5" y="196.1792">x : int</text><ellipse cx="63.5" cy="205.7734" fill="#000000" rx="3" ry="3" style="stroke: #000000; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="32" x="72.5" y="208.9839">y : int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="31" x="72.5" y="221.7886">z : int</text><!--MD5=[ec565736fa8c4caa1babd015b786ad3a]
+link Bar to Foo--><path d="M71.8333,106.1163 C71.8333,106.1163 71.8333,149.8475 71.8333,149.8475 " fill="none" id="Bar-Foo" style="stroke: #DC143C; stroke-width: 1.0;"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="75.8333" x2="67.8333" y1="153.8475" y2="153.8475"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="75.8333" x2="67.8333" y1="150.8475" y2="150.8475"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="71.8333" x2="71.8333" y1="149.8475" y2="157.8475"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="71.8333" x2="65.8333" y1="106.1163" y2="98.1163"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="71.8333" x2="77.8333" y1="106.1163" y2="98.1163"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="71.8333" x2="71.8333" y1="106.1163" y2="98.1163"/><ellipse cx="71.8333" cy="112.1163" fill="none" rx="4" ry="4" style="stroke: #DC143C; stroke-width: 1.0;"/><!--MD5=[ec565736fa8c4caa1babd015b786ad3a]
+link Bar to Foo--><path d="M91.1667,106.1163 C91.1667,106.1163 91.1667,149.8475 91.1667,149.8475 " fill="none" id="Bar-Foo-1" style="stroke: #DC143C; stroke-width: 1.0;"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="95.1667" x2="87.1667" y1="153.8475" y2="153.8475"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="95.1667" x2="87.1667" y1="150.8475" y2="150.8475"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="91.1667" x2="91.1667" y1="149.8475" y2="157.8475"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="91.1667" x2="85.1667" y1="106.1163" y2="98.1163"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="91.1667" x2="97.1667" y1="106.1163" y2="98.1163"/><line style="stroke: #DC143C; stroke-width: 1.0;" x1="91.1667" x2="91.1667" y1="106.1163" y2="98.1163"/><ellipse cx="91.1667" cy="112.1163" fill="none" rx="4" ry="4" style="stroke: #DC143C; stroke-width: 1.0;"/><!--MD5=[e59a3846bb500bd014e33d81ef0d4561]
 @startuml
-skinparam component {
-  BackgroundColor FloralWhite
+skinparam linetype ortho
+skinparam class {
   BorderColor Black
   ArrowColor Crimson
 }
-skinparam stereotypeCBackgroundColor Orchid
+hide circle
 hide methods
 
-entity "Source.Bar" {
+entity "Bar" {
+  * **a** : string <<PK>>
+  * x : Source.Foo.x <<FK>>
+  * y : Source.Foo.y <<FK>>
+  - -
   b : int
 }
 
-entity "Source.Bar" {
-  * a : string
-  - -
-}
-
-entity "Source.Bar" {
-  * x : **Foo.x** <<FK>>
-}
-
-entity "D.FetchResponse" {
-  * dx : int
-}
-
-entity "B.FetchResponse" {
-  * by : int
-}
-
-entity "A.FetchResponse" {
-  * ay : int
-}
-
-entity "C.FetchResponse" {
-  * cx : int
-}
-
-entity "A.FetchResponse" {
-  * ax : int
-}
-
-entity "B.FetchResponse" {
-  * bx : int
-}
-
-entity "D.FetchResponse" {
-  * dy : int
-}
-
-entity "C.FetchResponse" {
-  * cy : int
-}
-
-entity "Source.Foo" {
-  * y : int
-}
-
-entity "Source.Foo" {
+entity "Foo" {
   * x : int
+  * y : int
+  z : int
 }
 
-entity "Client.Screen" {
-  * xx : int
-}
-
-entity "Client.Screen" {
-  * ww : digit
-}
-
-entity "Client.Screen" {
-  * zz : digits
-}
-
-entity "Client.Screen" {
-  * yy : int
-}
-
-
-
-"Source.Bar            " }o- -|| "Source.Foo"
+"Bar" }o- -|| "Foo"
+"Bar" }o- -|| "Foo"
 @enduml
 
 PlantUML version 1.2020.14(Sat Jun 20 14:14:34 UTC 2020)

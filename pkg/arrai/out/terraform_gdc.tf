@@ -4,7 +4,7 @@ resource "google_data_catalog_entry" "bar_entry" {
 
   user_specified_type = "Bar"
   user_specified_system = "Source"
-  linked_resource = "model.sysl:13"
+  linked_resource = "model.sysl:14"
 
   display_name = "Bar"
   description  = "A database.
@@ -21,6 +21,12 @@ resource "google_data_catalog_entry" "bar_entry" {
         },
     {
           "column": "x",
+          "description": "A foreign key",
+          "mode": "REQUIRED",
+          "type": "?"
+        },
+    {
+          "column": "y",
           "description": "A foreign key",
           "mode": "REQUIRED",
           "type": "?"
@@ -59,6 +65,12 @@ resource "google_data_catalog_entry" "foo_entry" {
           "column": "y",
           "description": "",
           "mode": "REQUIRED",
+          "type": "INT"
+        },
+    {
+          "column": "z",
+          "description": "",
+          "mode": "NULLABLE",
           "type": "INT"
         },
     {

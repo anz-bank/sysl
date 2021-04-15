@@ -1,96 +1,27 @@
 @startuml
-skinparam component {
-  BackgroundColor FloralWhite
+skinparam linetype ortho
+skinparam class {
   BorderColor Black
   ArrowColor Crimson
 }
-skinparam stereotypeCBackgroundColor Orchid
+hide circle
 hide methods
 
-entity "Source.Bar" {
+entity "Bar" {
+  * **a** : string <<PK>>
+  * x : Source.Foo.x <<FK>>
+  * y : Source.Foo.y <<FK>>
+  --
   b : int
 }
 
-entity "Source.Bar" {
-  * a : string
-  --
-}
-
-entity "Source.Bar" {
-  * x : **Foo.x** <<FK>>
-}
-
-entity "D.FetchResponse" {
-  * dx : int
-}
-
-entity "B.FetchResponse" {
-  * by : int
-}
-
-entity "A.FetchResponse" {
-  * ay : int
-}
-
-entity "C.FetchResponse" {
-  * cx : int
-}
-
-entity "A.FetchResponse" {
-  * ax : int
-}
-
-entity "B.FetchResponse" {
-  * bx : int
-}
-
-entity "D.FetchResponse" {
-  * dy : int
-}
-
-entity "C.FetchResponse" {
-  * cy : int
-}
-
-entity "Source.Foo" {
-  * y : int
-}
-
-entity "Source.Foo" {
+entity "Foo" {
   * x : int
+  * y : int
+  z : int
 }
 
-entity "Client.Screen" {
-  * xx : int
-}
-
-entity "Client.Screen" {
-  * ww : digit
-}
-
-entity "Client.Screen" {
-  * zz : digits
-}
-
-entity "Client.Screen" {
-  * yy : int
-}
-
-
-
-"Source.Bar            " }o--|| "Source.Foo"
-
-
-
-
-
-
-
-
-
-
-
-
-
+"Bar" }o--|| "Foo"
+"Bar" }o--|| "Foo"
 
 @enduml
