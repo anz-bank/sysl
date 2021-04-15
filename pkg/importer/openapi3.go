@@ -351,7 +351,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Fie
 		f.Attributes = append(f.Attributes, fmt.Sprintf(`openapi_example="%s"`, strconv.FormatFloat(t, 'f', -1, 64)))
 	case nil:
 	default:
-		fmt.Printf("Unhandled example type %T", t)
+		fmt.Printf("Unhandled example type %T\n", t)
 	}
 
 	return f

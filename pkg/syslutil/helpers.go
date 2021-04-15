@@ -18,6 +18,12 @@ var LogLevels = map[string]logrus.Level{
 	"trace": logrus.TraceLevel,
 }
 
+func SetLogLevel(level string) {
+	if level, has := LogLevels[level]; has {
+		logrus.SetLevel(level)
+	}
+}
+
 func CleanAppName(name string) string {
 	parts := strings.Split(name, "::")
 	for i := range parts {
