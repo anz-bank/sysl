@@ -46,6 +46,12 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 	return runner.Run(selectedCommand, fs, logger)
 }
 
+func SetLogLevel(level string) {
+	if level, has := syslutil.LogLevels[level]; has {
+		logrus.SetLevel(level)
+	}
+}
+
 type debugTypeData struct {
 	loglevel string
 	verbose  bool
@@ -57,9 +63,7 @@ func (d *debugTypeData) do(_ *kingpin.ParseContext) error {
 		d.loglevel = cfg.LogLevel
 	}
 	// Default info
-	if level, has := syslutil.LogLevels[d.loglevel]; has {
-		logrus.SetLevel(level)
-	}
+	SetLogLevel(d.loglevel)
 
 	logrus.Debugf("Logging: %+v", *d)
 	return nil
