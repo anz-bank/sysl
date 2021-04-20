@@ -1,11 +1,11 @@
-let spannerType = \(:fieldType, :fieldConstraint, :patterns, ...)
-    let len = cond fieldConstraint where .@item.length?:{} {
-        [t]: t.length.max?:{},
-    };
+let spannerType = \(:fieldType, :fieldConstraint, ...)
+    let len = fieldConstraint.length?.max?:{};
     let rec type = \fieldType
         cond fieldType {
-            [t]: $`ARRAY<${type(t)}>`,
-            {t}: $`ARRAY<${type(t)}>`,
+            (:fkType, ...): type((fkType => .fieldType) single),
+            (:sequence): $`ARRAY<${type(sequence)}>`,
+            (:set): $`ARRAY<${type(set)}>`,
+            (:primitive): type(primitive),
             'BOOL': 'BOOL',
             'INT': 'INT64',
             'FLOAT': 'FLOAT64',
@@ -29,32 +29,35 @@ let ixGrammar = {://grammar.lang.wbnf:
 let ixTx = (index: \ast ast.col >> (name: .name.'', order: //str.upper((.).order?.val.'':{})));
 let ixParse = //{/pkg/arrai/util}.invokeMacro((@grammar: ixGrammar, @transform: ixTx));
 
-# Returns an array of indexes defined on the type.
-let indexes = \type
-    type.typeAnnotations('indexes')?:{} >> .a.elt >> (
-        name: //seq.split(':', .(0).s)(1),
-        key_parts: ixParse(//seq.split(':', .(1).s)(1)),
-    )
+# Returns an array of indexes defined on the table.
+let indexes = \m \app \table
+    cond {(:app.appName, :table.typeName)} <&> m.anno.type nest ~|appName,typeName|typeAnnotations {
+        {item}: item.typeAnnotations where .typeAnnoName = 'indexes' => .typeAnnoValue => \. . >> (
+            name: //seq.split(':', .(0))(1),
+            key_parts: ixParse(//seq.split(':', .(1))(1)),
+        )
+    }
 ;
 
 # Returns a representation of the position of something with sourceContext to orderby.
 let pos = \(start: (:line, :col), ...) [line, col];
 
-# Returns the primitive type of a type reference (or just the type if it's primitive).
-let resolveType = \m \f cond {
-    f.fk: (m.fields <&> {f.fk} => .fieldType) single,
-    _: f.fieldType
-};
-
 # Transforms a relational Sysl model to a DDL model.
 let toDdl = \m
-    let dbs = m.apps where 'db' <: .appPatterns;
-    let fields = dbs <&> m.types <&> m.fields;
-    fields nest ~|appName|tables =>
-        . +> (tables: .tables nest ~|typeName,typeAnnotations,typeSourceContext|fields =>
-            . +> (
-                fields: .fields => . +> (fieldType: resolveType(m, .)),
-                indexes: indexes(.),
+    let dbs = m.app -&- m.tag.app where .appTag = 'db';
+    let fields = dbs <&> m.table <&> m.src.type <&> m.field <&> m.src.field;
+    fields nest ~|appName|tables => # aggregates app by appName
+        \app app +> (tables: app.tables nest ~|typeName,typeSrcs,pk|fields => # aggregates table by typeName
+            \table table +> (
+                fields: table.fields => . +> cond .fieldType {
+                    (:appName, :typePath):
+                        let [typeName, fieldName] = typePath; 
+                        (fieldType: 
+                            .fieldType +> (fkType: 
+                                m.field <&> {(:appName, :typeName, :fieldName)})),
+                    _: (:.fieldType),
+                },
+                indexes: indexes(m, app, table),
             )
         )
 ;
@@ -64,26 +67,25 @@ let dbName = \. //str.lower(tableName(.));
 
 # Transforms a DDL structure into a Spanner DDL string.
 # TODO? CREATE DATABASE ${dbName(.appName)};
+# TODO? How to handle case the length of typeSrcs or fieldSrcs is more than 1?
 let writeDdl = \ddl $`
-    ${ddl orderby .appName >> $`
-        ${.tables orderby pos(.typeSourceContext) >> 
-            let typeName = tableName(.typeName);
-            let pks = .fields where .pk orderby pos(.fieldSourceContext);
-            let fks = .fields where .fk orderby pos(.fieldSourceContext);
+    ${ddl orderby .appName >> \app $`
+        ${app.tables orderby pos(.typeSrcs(0)) >> \table 
+            let typeName = tableName(table.typeName);
             $`
                 CREATE TABLE ${typeName} (
-                    ${.fields orderby pos(.fieldSourceContext) >> $`
-                        ${.fieldName} ${spannerType(.)}${
-                            cond {!.opt: ' NOT NULL'}
-                        },
+                    ${table.fields orderby pos(.fieldSrcs(0)) >> $`
+                        ${.fieldName} ${spannerType(.)}${!.fieldOpt && ' NOT NULL'},
                     `::\i}
-                    ${cond {fks: fks >> $`
-                        FOREIGN KEY (${.fieldName}) REFERENCES ${tableName(.fk.typeName)} (${.fk.fieldName})
-                    `}::,\i}
-                )${cond {pks: ' '++$` PRIMARY KEY (${pks >> .fieldName::, })`}};
-                ${.indexes >> $`CREATE INDEX ${.name} ON ${typeName}(${
+                    ${table.fields orderby pos(.fieldSrcs(0)) >> $`
+                        ${cond .fieldType {
+                            (:appName, :typePath, ...): $`
+                                FOREIGN KEY (${.fieldName}) REFERENCES ${tableName(typePath(0))} (${typePath(1)})`,
+                        }}` where .@item rank (:.@)::,\i}
+                )${cond {table.pk: ' '++$`PRIMARY KEY (${table.pk >> .::, })`}};
+                ${table.indexes orderby . >> $`${. >> $`CREATE INDEX ${.name} ON ${typeName}(${
                     .key_parts >> $`${.name }${cond {.order: ' '++.order}}`
-                ::, });`::\i:\n}
+                ::, });`::\i:\n}`::\i}
             `::\i}
     `::\i}
 `;
@@ -102,7 +104,7 @@ let export = \m
 # Loads and transforms a Sysl model to a DDL file.
 let exportFile = \syslPath
     let sysl = //{//pkg/arrai/sysl.arrai};
-    export(sysl.normalize(sysl.load(syslPath)))
+    export(sysl.newNormalize(sysl.load(syslPath)))
 ;
 
 (

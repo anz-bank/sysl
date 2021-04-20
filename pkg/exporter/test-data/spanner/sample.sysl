@@ -1,6 +1,6 @@
 # A Sysl model that exercises all the Spanner export features.
 App[~db]:
-    !table Types [indexes=[["name:Ix", "key_parts:float64_,int64_(desc)"]]]:
+    !table Types [indexes=[["name:Ix1", "key_parts:float64_,int64_(desc)"],["name:Ix2", "key_parts:string_,string_1(asc)"]]]:
         array <: sequence of int [~pk]
         array_set <: set of int
         bytes_ <: bytes
@@ -21,7 +21,7 @@ App[~db]:
         string_100 <: string(100) [~hex]
         string_max <: string [~max]
 
-        cust_id <: Customer.id [~fk]
+        cust_id <: Customer.id
 
     !table Customer:
         id <: int [~pk]
@@ -35,9 +35,9 @@ App[~db]:
         # ],[
         #     "columns:types_int,types_string"
         # ]]]
-        cust_id <: Customer.id [~fk]
-        types_int <: Types.int64_ [~fk]
-        types_string <: Types.string_ [~fk]
+        cust_id <: Customer.id
+        types_int <: Types.int64_
+        types_string <: Types.string_
 
     # TODO: Support empty relations.
     # !table Empty:

@@ -19,7 +19,8 @@ CREATE TABLE Types (
     cust_id INT64 NOT NULL,
     FOREIGN KEY (cust_id) REFERENCES Customer (id)
 ) PRIMARY KEY (array);
-CREATE INDEX Ix ON Types(float64_, int64_ DESC);
+CREATE INDEX Ix1 ON Types(float64_, int64_ DESC);
+CREATE INDEX Ix2 ON Types(string_, string_1 ASC);
 
 CREATE TABLE Customer (
     id INT64 NOT NULL,
