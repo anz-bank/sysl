@@ -18,7 +18,7 @@ jobs:
       # Generate tag if commit message contains #major or #patch or #patch
       - name: Bump version and push tag
         id: generate_tag
-        uses: anothrNick/github-tag-action@1.18.0
+        uses: anothrNick/github-tag-action@1.26.0
         env:
           # An action in a workflow run can't trigger a new workflow run.
           # When you use GITHUB_TOKEN in your actions, all of the interactions
