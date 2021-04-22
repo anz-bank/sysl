@@ -107,7 +107,3 @@ The `sourceContexts` field contains all locations where a given element can be f
 ```
 
 The `sourceContext` field is deprecated and contains only a single source instance. This value is presently retained in order to support legacy implementations.
-
-## See also
-
-- [Full sample](../../../tests/file_merge.sysl.golden.json)
