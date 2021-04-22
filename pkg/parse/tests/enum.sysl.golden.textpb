@@ -20,22 +20,22 @@ apps:  {
     source_context:  {
      file:  "tests/enum.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  8
+      line:  7
       col:  4
      }
     }
     source_contexts:  {
      file:  "tests/enum.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  8
+      line:  7
       col:  4
      }
     }
@@ -69,43 +69,37 @@ apps:  {
     source_context:  {
      file:  "tests/enum.sysl"
      start:  {
-      line:  8
+      line:  7
       col:  4
      }
      end:  {
-      line:  10
+      line:  9
      }
     }
     source_contexts:  {
      file:  "tests/enum.sysl"
      start:  {
-      line:  8
+      line:  7
       col:  4
      }
      end:  {
-      line:  10
+      line:  9
      }
     }
    }
   }
   source_context:  {
    file:  "tests/enum.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  9
    }
   }
   source_contexts:  {
    file:  "tests/enum.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  9
    }
   }
  }

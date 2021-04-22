@@ -38,22 +38,22 @@ apps:  {
      source_context:  {
       file:  "tests/openapi3.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  12
       }
       end:  {
-       line:  8
+       line:  7
        col:  18
       }
      }
      source_contexts:  {
       file:  "tests/openapi3.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  12
       }
       end:  {
-       line:  8
+       line:  7
        col:  18
       }
      }
@@ -65,22 +65,22 @@ apps:  {
     source_context:  {
      file:  "tests/openapi3.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  8
      }
      end:  {
-      line:  10
+      line:  9
       col:  4
      }
     }
     source_contexts:  {
      file:  "tests/openapi3.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  8
      }
      end:  {
-      line:  10
+      line:  9
       col:  4
      }
     }
@@ -103,21 +103,21 @@ apps:  {
        source_context:  {
         file:  "tests/openapi3.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  13
+         line:  12
         }
        }
        source_contexts:  {
         file:  "tests/openapi3.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  13
+         line:  12
         }
        }
       }
@@ -126,21 +126,21 @@ apps:  {
     source_context:  {
      file:  "tests/openapi3.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  4
      }
      end:  {
-      line:  13
+      line:  12
      }
     }
     source_contexts:  {
      file:  "tests/openapi3.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  4
      }
      end:  {
-      line:  13
+      line:  12
      }
     }
    }
@@ -148,23 +148,19 @@ apps:  {
   source_context:  {
    file:  "tests/openapi3.sysl"
    start:  {
-    line:  3
-    col:  1
+    line:  2
    }
    end:  {
-    line:  3
-    col:  40
+    line:  12
    }
   }
   source_contexts:  {
    file:  "tests/openapi3.sysl"
    start:  {
-    line:  3
-    col:  1
+    line:  2
    }
    end:  {
-    line:  3
-    col:  40
+    line:  12
    }
   }
  }
@@ -210,22 +206,22 @@ apps:  {
      source_context:  {
       file:  "tests/preference.yaml"
       start:  {
-       line:  15
+       line:  14
        col:  12
       }
       end:  {
-       line:  15
+       line:  14
        col:  18
       }
      }
      source_contexts:  {
       file:  "tests/preference.yaml"
       start:  {
-       line:  15
+       line:  14
        col:  12
       }
       end:  {
-       line:  15
+       line:  14
        col:  18
       }
      }
@@ -237,22 +233,22 @@ apps:  {
     source_context:  {
      file:  "tests/preference.yaml"
      start:  {
-      line:  13
+      line:  12
       col:  8
      }
      end:  {
-      line:  20
+      line:  19
       col:  4
      }
     }
     source_contexts:  {
      file:  "tests/preference.yaml"
      start:  {
-      line:  13
+      line:  12
       col:  8
      }
      end:  {
-      line:  20
+      line:  19
       col:  4
      }
     }
@@ -276,42 +272,42 @@ apps:  {
      source_context:  {
       file:  "tests/preference.yaml"
       start:  {
-       line:  30
+       line:  29
        col:  4
       }
       end:  {
-       line:  32
+       line:  31
       }
      }
      source_contexts:  {
       file:  "tests/preference.yaml"
       start:  {
-       line:  30
+       line:  29
        col:  4
       }
       end:  {
-       line:  32
+       line:  31
       }
      }
     }
     source_context:  {
      file:  "tests/preference.yaml"
      start:  {
-      line:  30
+      line:  29
       col:  4
      }
      end:  {
-      line:  32
+      line:  31
      }
     }
     source_contexts:  {
      file:  "tests/preference.yaml"
      start:  {
-      line:  30
+      line:  29
       col:  4
      }
      end:  {
-      line:  32
+      line:  31
      }
     }
    }
@@ -333,22 +329,22 @@ apps:  {
        source_context:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  21
+         line:  20
          col:  8
         }
         end:  {
-         line:  23
+         line:  22
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  21
+         line:  20
          col:  8
         }
         end:  {
-         line:  23
+         line:  22
          col:  8
         }
        }
@@ -368,22 +364,22 @@ apps:  {
        source_context:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  23
+         line:  22
          col:  8
         }
         end:  {
-         line:  25
+         line:  24
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  23
+         line:  22
          col:  8
         }
         end:  {
-         line:  25
+         line:  24
          col:  8
         }
        }
@@ -402,22 +398,22 @@ apps:  {
        source_context:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  25
+         line:  24
          col:  8
         }
         end:  {
-         line:  27
+         line:  26
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  25
+         line:  24
          col:  8
         }
         end:  {
-         line:  27
+         line:  26
          col:  8
         }
        }
@@ -446,22 +442,22 @@ apps:  {
        source_context:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  27
+         line:  26
          col:  8
         }
         end:  {
-         line:  30
+         line:  29
          col:  4
         }
        }
        source_contexts:  {
         file:  "tests/preference.yaml"
         start:  {
-         line:  27
+         line:  26
          col:  8
         }
         end:  {
-         line:  30
+         line:  29
          col:  4
         }
        }
@@ -471,22 +467,22 @@ apps:  {
     source_context:  {
      file:  "tests/preference.yaml"
      start:  {
-      line:  20
+      line:  19
       col:  4
      }
      end:  {
-      line:  30
+      line:  29
       col:  4
      }
     }
     source_contexts:  {
      file:  "tests/preference.yaml"
      start:  {
-      line:  20
+      line:  19
       col:  4
      }
      end:  {
-      line:  30
+      line:  29
       col:  4
      }
     }
@@ -495,23 +491,19 @@ apps:  {
   source_context:  {
    file:  "tests/preference.yaml"
    start:  {
-    line:  7
-    col:  1
+    line:  6
    }
    end:  {
-    line:  7
-    col:  11
+    line:  31
    }
   }
   source_contexts:  {
    file:  "tests/preference.yaml"
    start:  {
-    line:  7
-    col:  1
+    line:  6
    }
    end:  {
-    line:  7
-    col:  11
+    line:  31
    }
   }
  }

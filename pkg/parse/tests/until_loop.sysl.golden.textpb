@@ -22,46 +22,70 @@ apps:  {
        source_context:  {
         file:  "tests/until_loop.sysl"
         start:  {
-         line:  7
+         line:  6
          col:  12
         }
         end:  {
-         line:  7
+         line:  6
          col:  22
         }
        }
        source_contexts:  {
         file:  "tests/until_loop.sysl"
         start:  {
-         line:  7
+         line:  6
          col:  12
         }
         end:  {
-         line:  7
+         line:  6
          col:  22
         }
        }
+      }
+     }
+     source_context:  {
+      file:  "tests/until_loop.sysl"
+      start:  {
+       line:  5
+       col:  8
+      }
+      end:  {
+       line:  6
+       col:  22
+      }
+     }
+     source_contexts:  {
+      file:  "tests/until_loop.sysl"
+      start:  {
+       line:  5
+       col:  8
+      }
+      end:  {
+       line:  6
+       col:  22
       }
      }
     }
     source_context:  {
      file:  "tests/until_loop.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  9
+      line:  6
+      col:  22
      }
     }
     source_contexts:  {
      file:  "tests/until_loop.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  9
+      line:  6
+      col:  22
      }
     }
    }
@@ -69,21 +93,21 @@ apps:  {
   source_context:  {
    file:  "tests/until_loop.sysl"
    start:  {
-    line:  4
-    col:  1
+    line:  3
    }
    end:  {
-    line:  4
+    line:  6
+    col:  22
    }
   }
   source_contexts:  {
    file:  "tests/until_loop.sysl"
    start:  {
-    line:  4
-    col:  1
+    line:  3
    }
    end:  {
-    line:  4
+    line:  6
+    col:  22
    }
   }
  }
@@ -101,22 +125,22 @@ apps:  {
     source_context:  {
      file:  "tests/until_loop.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  21
      }
     }
     source_contexts:  {
      file:  "tests/until_loop.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  21
      }
     }
@@ -124,22 +148,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/until_loop.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
     line:  1
+    col:  21
    }
   }
   source_contexts:  {
    file:  "tests/until_loop.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
     line:  1
+    col:  21
    }
   }
  }

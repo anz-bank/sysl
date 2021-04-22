@@ -29,11 +29,22 @@ apps:  {
        source_context:  {
         file:  "tests/implied.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  3
+         line:  2
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/implied.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  2
          col:  4
         }
        }
@@ -49,11 +60,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  13
             }
             end:  {
-             line:  4
+             line:  3
+             col:  13
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  3
+             col:  13
+            }
+            end:  {
+             line:  3
              col:  13
             }
            }
@@ -68,11 +90,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  19
             }
             end:  {
-             line:  4
+             line:  3
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  3
+             col:  19
+            }
+            end:  {
+             line:  3
              col:  19
             }
            }
@@ -84,11 +117,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  19
           }
           text:  "abc2 = ... * 2"
@@ -96,11 +129,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  19
           }
           text:  "abc2 = ... * 2"
@@ -118,11 +151,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  5
+             line:  4
              col:  14
             }
             end:  {
-             line:  5
+             line:  4
+             col:  16
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  4
+             col:  14
+            }
+            end:  {
+             line:  4
              col:  16
             }
            }
@@ -133,11 +177,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  16
           }
           text:  "abc3a = ?.abc"
@@ -145,11 +189,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  16
           }
           text:  "abc3a = ?.abc"
@@ -167,11 +211,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  15
             }
             end:  {
-             line:  6
+             line:  5
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  5
+             col:  15
+            }
+            end:  {
+             line:  5
              col:  18
             }
            }
@@ -181,11 +236,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  18
           }
           text:  "abc3b1 = -> abc"
@@ -193,11 +248,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  18
           }
           text:  "abc3b1 = -> abc"
@@ -215,11 +270,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  15
             }
             end:  {
-             line:  7
+             line:  6
+             col:  33
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  6
+             col:  15
+            }
+            end:  {
+             line:  6
              col:  33
             }
            }
@@ -231,11 +297,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  33
           }
           text:  "abc3b2 = -> set of abc via foo"
@@ -243,11 +309,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  33
           }
           text:  "abc3b2 = -> set of abc via foo"
@@ -265,11 +331,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  15
             }
             end:  {
-             line:  8
+             line:  7
+             col:  34
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  7
+             col:  15
+            }
+            end:  {
+             line:  7
              col:  34
             }
            }
@@ -281,11 +358,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  34
           }
           text:  "abc3b3 = -> set of .abc via foo"
@@ -293,11 +370,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  34
           }
           text:  "abc3b3 = -> set of .abc via foo"
@@ -319,11 +396,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  15
               }
               end:  {
-               line:  9
+               line:  8
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  8
+               col:  15
+              }
+              end:  {
+               line:  8
                col:  18
               }
              }
@@ -333,11 +421,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  18
               }
               end:  {
-               line:  9
+               line:  8
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  8
+               col:  18
+              }
+              end:  {
+               line:  8
                col:  18
               }
              }
@@ -350,11 +449,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  15
             }
             end:  {
-             line:  9
+             line:  8
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  8
+             col:  15
+            }
+            end:  {
+             line:  8
              col:  18
             }
            }
@@ -366,11 +476,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  18
           }
           text:  "abc3c = ~~> abc"
@@ -378,11 +488,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  18
           }
           text:  "abc3c = ~~> abc"
@@ -404,11 +514,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  16
               }
               end:  {
-               line:  10
+               line:  9
+               col:  20
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  9
+               col:  16
+              }
+              end:  {
+               line:  9
                col:  20
               }
              }
@@ -420,11 +541,22 @@ apps:  {
                source_context:  {
                 file:  "tests/implied.sysl"
                 start:  {
-                 line:  10
+                 line:  9
                  col:  19
                 }
                 end:  {
-                 line:  10
+                 line:  9
+                 col:  20
+                }
+               }
+               source_contexts:  {
+                file:  "tests/implied.sysl"
+                start:  {
+                 line:  9
+                 col:  19
+                }
+                end:  {
+                 line:  9
                  col:  20
                 }
                }
@@ -434,11 +566,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  19
               }
               end:  {
-               line:  10
+               line:  9
+               col:  20
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  9
+               col:  19
+              }
+              end:  {
+               line:  9
                col:  20
               }
              }
@@ -451,11 +594,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  10
+             line:  9
              col:  16
             }
             end:  {
-             line:  10
+             line:  9
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  9
+             col:  16
+            }
+            end:  {
+             line:  9
              col:  20
             }
            }
@@ -467,11 +621,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  20
           }
           text:  "abc3c1 = ~~> .abc"
@@ -479,11 +633,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  20
           }
           text:  "abc3c1 = ~~> .abc"
@@ -505,11 +659,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  15
               }
               end:  {
-               line:  11
+               line:  10
+               col:  23
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  10
+               col:  15
+              }
+              end:  {
+               line:  10
                col:  23
               }
              }
@@ -519,11 +684,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  23
               }
               end:  {
-               line:  11
+               line:  10
+               col:  23
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  10
+               col:  23
+              }
+              end:  {
+               line:  10
                col:  23
               }
              }
@@ -536,11 +712,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  15
             }
             end:  {
-             line:  11
+             line:  10
+             col:  23
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  10
+             col:  15
+            }
+            end:  {
+             line:  10
              col:  23
             }
            }
@@ -552,11 +739,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  23
           }
           text:  "abc3d = ~~[abc]> abc"
@@ -564,11 +751,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  23
           }
           text:  "abc3d = ~~[abc]> abc"
@@ -590,11 +777,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  15
               }
               end:  {
-               line:  12
+               line:  11
+               col:  24
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  11
+               col:  15
+              }
+              end:  {
+               line:  11
                col:  24
               }
              }
@@ -604,11 +802,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  24
               }
               end:  {
-               line:  12
+               line:  11
+               col:  24
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  11
+               col:  24
+              }
+              end:  {
+               line:  11
                col:  24
               }
              }
@@ -621,11 +830,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  15
             }
             end:  {
-             line:  12
+             line:  11
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  11
+             col:  15
+            }
+            end:  {
+             line:  11
              col:  24
             }
            }
@@ -637,11 +857,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  24
           }
           text:  "abc3e = ~!~[abc]> abc"
@@ -649,11 +869,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  24
           }
           text:  "abc3e = ~!~[abc]> abc"
@@ -675,11 +895,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  15
               }
               end:  {
-               line:  13
+               line:  12
+               col:  27
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  12
+               col:  15
+              }
+              end:  {
+               line:  12
                col:  27
               }
              }
@@ -689,11 +920,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  27
               }
               end:  {
-               line:  13
+               line:  12
+               col:  27
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  12
+               col:  27
+              }
+              end:  {
+               line:  12
                col:  27
               }
              }
@@ -707,11 +949,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  15
             }
             end:  {
-             line:  13
+             line:  12
+             col:  27
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  12
+             col:  15
+            }
+            end:  {
+             line:  12
              col:  27
             }
            }
@@ -723,11 +976,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  27
           }
           text:  "abc3f = ~~[abc,def]> abc"
@@ -735,11 +988,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  27
           }
           text:  "abc3f = ~~[abc,def]> abc"
@@ -761,11 +1014,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  15
               }
               end:  {
-               line:  14
+               line:  13
+               col:  28
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  13
+               col:  15
+              }
+              end:  {
+               line:  13
                col:  28
               }
              }
@@ -775,11 +1039,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  28
               }
               end:  {
-               line:  14
+               line:  13
+               col:  28
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  13
+               col:  28
+              }
+              end:  {
+               line:  13
                col:  28
               }
              }
@@ -793,11 +1068,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  15
             }
             end:  {
-             line:  14
+             line:  13
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  13
+             col:  15
+            }
+            end:  {
+             line:  13
              col:  28
             }
            }
@@ -809,11 +1095,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  28
           }
           text:  "abc3g = ~!~[abc,def]> abc"
@@ -821,11 +1107,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  28
           }
           text:  "abc3g = ~!~[abc,def]> abc"
@@ -851,11 +1137,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/implied.sysl"
                   start:  {
-                   line:  15
+                   line:  14
                    col:  15
                   }
                   end:  {
-                   line:  15
+                   line:  14
+                   col:  18
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/implied.sysl"
+                  start:  {
+                   line:  14
+                   col:  15
+                  }
+                  end:  {
+                   line:  14
                    col:  18
                   }
                  }
@@ -865,11 +1162,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/implied.sysl"
                   start:  {
-                   line:  15
+                   line:  14
                    col:  18
                   }
                   end:  {
-                   line:  15
+                   line:  14
+                   col:  18
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/implied.sysl"
+                  start:  {
+                   line:  14
+                   col:  18
+                  }
+                  end:  {
+                   line:  14
                    col:  18
                   }
                  }
@@ -879,11 +1187,22 @@ apps:  {
                source_context:  {
                 file:  "tests/implied.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  15
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  18
+                }
+               }
+               source_contexts:  {
+                file:  "tests/implied.sysl"
+                start:  {
+                 line:  14
+                 col:  15
+                }
+                end:  {
+                 line:  14
                  col:  18
                 }
                }
@@ -893,11 +1212,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  21
               }
               end:  {
-               line:  15
+               line:  14
+               col:  22
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  14
+               col:  21
+              }
+              end:  {
+               line:  14
                col:  22
               }
              }
@@ -907,11 +1237,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  15
+             line:  14
              col:  25
             }
             end:  {
-             line:  15
+             line:  14
+             col:  26
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  14
+             col:  25
+            }
+            end:  {
+             line:  14
              col:  26
             }
            }
@@ -923,11 +1264,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  26
           }
           text:  "abc3h = ~~> foo.abc.def"
@@ -935,11 +1276,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  26
           }
           text:  "abc3h = ~~> foo.abc.def"
@@ -958,11 +1299,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  14
             }
             end:  {
-             line:  16
+             line:  15
+             col:  34
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  15
+             col:  14
+            }
+            end:  {
+             line:  15
              col:  34
             }
            }
@@ -977,11 +1329,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  30
             }
             end:  {
-             line:  16
+             line:  15
+             col:  30
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  15
+             col:  30
+            }
+            end:  {
+             line:  15
              col:  30
             }
            }
@@ -994,11 +1357,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  34
           }
           text:  "abc4a = . where(abcdef: true)"
@@ -1006,11 +1369,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  34
           }
           text:  "abc4a = . where(abcdef: true)"
@@ -1028,11 +1391,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  18
+             line:  17
              col:  14
             }
             end:  {
-             line:  18
+             line:  17
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  17
+             col:  14
+            }
+            end:  {
+             line:  17
              col:  24
             }
            }
@@ -1043,11 +1417,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  18
+           line:  17
            col:  6
           }
           end:  {
-           line:  18
+           line:  17
            col:  24
           }
           text:  "abc5a = .table of abc"
@@ -1055,11 +1429,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  18
+           line:  17
            col:  6
           }
           end:  {
-           line:  18
+           line:  17
            col:  24
           }
           text:  "abc5a = .table of abc"
@@ -1079,11 +1453,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  15
               }
               end:  {
-               line:  19
+               line:  18
+               col:  25
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  18
+               col:  15
+              }
+              end:  {
+               line:  18
                col:  25
               }
              }
@@ -1094,11 +1479,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  19
+             line:  18
              col:  15
             }
             end:  {
-             line:  19
+             line:  18
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  18
+             col:  15
+            }
+            end:  {
+             line:  18
              col:  25
             }
            }
@@ -1108,11 +1504,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  6
           }
           end:  {
-           line:  19
+           line:  18
            col:  29
           }
           text:  "abc5a1 = .table of abc.def"
@@ -1120,11 +1516,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  6
           }
           end:  {
-           line:  19
+           line:  18
            col:  29
           }
           text:  "abc5a1 = .table of abc.def"
@@ -1146,11 +1542,22 @@ apps:  {
                source_context:  {
                 file:  "tests/implied.sysl"
                 start:  {
-                 line:  20
+                 line:  19
                  col:  14
                 }
                 end:  {
-                 line:  20
+                 line:  19
+                 col:  24
+                }
+               }
+               source_contexts:  {
+                file:  "tests/implied.sysl"
+                start:  {
+                 line:  19
+                 col:  14
+                }
+                end:  {
+                 line:  19
                  col:  24
                 }
                }
@@ -1161,11 +1568,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  14
               }
               end:  {
-               line:  20
+               line:  19
+               col:  24
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  19
+               col:  14
+              }
+              end:  {
+               line:  19
                col:  24
               }
              }
@@ -1175,11 +1593,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  20
+             line:  19
              col:  27
             }
             end:  {
-             line:  20
+             line:  19
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  19
+             col:  27
+            }
+            end:  {
+             line:  19
              col:  28
             }
            }
@@ -1189,11 +1618,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  20
+           line:  19
            col:  6
           }
           end:  {
-           line:  20
+           line:  19
            col:  32
           }
           text:  "abc5b = .table of abc.def.ghi"
@@ -1201,11 +1630,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  20
+           line:  19
            col:  6
           }
           end:  {
-           line:  20
+           line:  19
            col:  32
           }
           text:  "abc5b = .table of abc.def.ghi"
@@ -1225,11 +1654,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  21
+               line:  20
                col:  14
               }
               end:  {
-               line:  21
+               line:  20
+               col:  25
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  20
+               col:  14
+              }
+              end:  {
+               line:  20
                col:  25
               }
              }
@@ -1241,11 +1681,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  21
+             line:  20
              col:  14
             }
             end:  {
-             line:  21
+             line:  20
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  20
+             col:  14
+            }
+            end:  {
+             line:  20
              col:  25
             }
            }
@@ -1255,11 +1706,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  21
+           line:  20
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  29
           }
           text:  "abc5c = ?.table of abc.def"
@@ -1267,11 +1718,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  21
+           line:  20
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  29
           }
           text:  "abc5c = ?.table of abc.def"
@@ -1289,11 +1740,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  22
+             line:  21
              col:  14
             }
             end:  {
-             line:  22
+             line:  21
+             col:  14
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  21
+             col:  14
+            }
+            end:  {
+             line:  21
              col:  14
             }
            }
@@ -1303,11 +1765,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  22
+           line:  21
            col:  6
           }
           end:  {
-           line:  22
+           line:  21
            col:  18
           }
           text:  "abc5d = abc.def"
@@ -1315,11 +1777,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  22
+           line:  21
            col:  6
           }
           end:  {
-           line:  22
+           line:  21
            col:  18
           }
           text:  "abc5d = abc.def"
@@ -1339,11 +1801,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  23
+               line:  22
                col:  14
               }
               end:  {
-               line:  23
+               line:  22
+               col:  14
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  22
+               col:  14
+              }
+              end:  {
+               line:  22
                col:  14
               }
              }
@@ -1353,11 +1826,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  23
+             line:  22
              col:  17
             }
             end:  {
-             line:  23
+             line:  22
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  22
+             col:  17
+            }
+            end:  {
+             line:  22
              col:  18
             }
            }
@@ -1367,11 +1851,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  23
+           line:  22
            col:  6
           }
           end:  {
-           line:  23
+           line:  22
            col:  22
           }
           text:  "abc5e = abc.def.ghi"
@@ -1379,11 +1863,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  23
+           line:  22
            col:  6
           }
           end:  {
-           line:  23
+           line:  22
            col:  22
           }
           text:  "abc5e = abc.def.ghi"
@@ -1403,11 +1887,22 @@ apps:  {
              source_context:  {
               file:  "tests/implied.sysl"
               start:  {
-               line:  24
+               line:  23
                col:  14
               }
               end:  {
-               line:  24
+               line:  23
+               col:  15
+              }
+             }
+             source_contexts:  {
+              file:  "tests/implied.sysl"
+              start:  {
+               line:  23
+               col:  14
+              }
+              end:  {
+               line:  23
                col:  15
               }
              }
@@ -1417,11 +1912,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  24
+             line:  23
              col:  14
             }
             end:  {
-             line:  24
+             line:  23
+             col:  15
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  23
+             col:  14
+            }
+            end:  {
+             line:  23
              col:  15
             }
            }
@@ -1431,11 +1937,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  24
+           line:  23
            col:  6
           }
           end:  {
-           line:  24
+           line:  23
            col:  19
           }
           text:  "abc5f = .abc.def"
@@ -1443,11 +1949,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  24
+           line:  23
            col:  6
           }
           end:  {
-           line:  24
+           line:  23
            col:  19
           }
           text:  "abc5f = .abc.def"
@@ -1468,11 +1974,22 @@ apps:  {
            source_context:  {
             file:  "tests/implied.sysl"
             start:  {
-             line:  25
+             line:  24
              col:  14
             }
             end:  {
-             line:  25
+             line:  24
+             col:  14
+            }
+           }
+           source_contexts:  {
+            file:  "tests/implied.sysl"
+            start:  {
+             line:  24
+             col:  14
+            }
+            end:  {
+             line:  24
              col:  14
             }
            }
@@ -1486,11 +2003,11 @@ apps:  {
          source_context:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  25
+           line:  24
            col:  6
           }
           end:  {
-           line:  25
+           line:  24
            col:  17
           }
           text:  "abc6 = {{:}}"
@@ -1498,11 +2015,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/implied.sysl"
           start:  {
-           line:  25
+           line:  24
            col:  6
           }
           end:  {
-           line:  25
+           line:  24
            col:  17
           }
           text:  "abc6 = {{:}}"
@@ -1514,11 +2031,22 @@ apps:  {
      source_context:  {
       file:  "tests/implied.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  26
+       line:  25
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/implied.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  25
        col:  5
       }
      }
@@ -1526,22 +2054,22 @@ apps:  {
     source_context:  {
      file:  "tests/implied.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  27
+      line:  26
      }
      text:  "!view impliedTest(number <: int ) -> int:"
     }
     source_contexts:  {
      file:  "tests/implied.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  27
+      line:  26
      }
      text:  "!view impliedTest(number <: int ) -> int:"
     }
@@ -1549,24 +2077,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/implied.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  24
+    col:  17
    }
   }
   source_contexts:  {
    file:  "tests/implied.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  24
+    col:  17
    }
   }
  }

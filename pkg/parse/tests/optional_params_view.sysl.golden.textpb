@@ -25,11 +25,22 @@ apps:  {
        source_context:  {
         file:  "tests/optional_params_view.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  3
+         line:  2
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/optional_params_view.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  2
          col:  4
         }
        }
@@ -43,11 +54,11 @@ apps:  {
          source_context:  {
           file:  "tests/optional_params_view.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  8
           }
           end:  {
-           line:  4
+           line:  3
            col:  14
           }
           text:  "out = bar"
@@ -55,11 +66,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/optional_params_view.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  8
           }
           end:  {
-           line:  4
+           line:  3
            col:  14
           }
           text:  "out = bar"
@@ -71,11 +82,22 @@ apps:  {
      source_context:  {
       file:  "tests/optional_params_view.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  5
+       line:  4
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/optional_params_view.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  4
        col:  5
       }
      }
@@ -83,22 +105,22 @@ apps:  {
     source_context:  {
      file:  "tests/optional_params_view.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  6
+      line:  5
      }
      text:  "!view Foo(bar <: string?) -> string?:"
     }
     source_contexts:  {
      file:  "tests/optional_params_view.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  6
+      line:  5
      }
      text:  "!view Foo(bar <: string?) -> string?:"
     }
@@ -106,22 +128,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/optional_params_view.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  3
+    col:  14
    }
   }
   source_contexts:  {
    file:  "tests/optional_params_view.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  3
+    col:  14
    }
   }
  }

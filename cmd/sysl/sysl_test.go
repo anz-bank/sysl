@@ -126,32 +126,61 @@ func testAllMain2WithRoot(t *testing.T, args []string, inputFile string, golden 
 	testMain2WithSyslRootMarker(t, append(args, rootFile), golden)
 }
 
-func TestMain2TextPB(t *testing.T) {
+func TestMain2_args_textpb(t *testing.T) {
 	t.Parallel()
 
 	testAllMain2(t, []string{}, "args.sysl", "args.sysl.golden.textpb")
 }
 
-func TestMain2MultipleDefinitionsTypeMerge(t *testing.T) {
-	t.Parallel()
-
-	// can't use the same expected file because of different source context.
-	testAllMain2(t, []string{}, "type_merge1.sysl", "type_merge1.sysl.golden.textpb")
-	testAllMain2(t, []string{}, "type_merge2.sysl", "type_merge2.sysl.golden.textpb")
-	testAllMain2(t, []string{}, "namespace_merge.sysl", "namespace_merge.golden.textpb")
-}
-
-func TestMain2MultipleDefinitionsMerge(t *testing.T) {
-	t.Parallel()
-
-	testAllMain2(t, []string{}, "file_merge.sysl", "file_merge.sysl.golden.textpb")
-	testAllMain2(t, []string{"--mode", "json"}, "file_merge.sysl", "file_merge.sysl.golden.json")
-}
-
-func TestMain2JSON(t *testing.T) {
+func TestMain2_args_json(t *testing.T) {
 	t.Parallel()
 
 	testAllMain2(t, []string{"--mode", "json"}, "args.sysl", "args.sysl.golden.json")
+}
+
+func TestMain2_args_textpb_stdout(t *testing.T) {
+	t.Parallel()
+
+	testMain2Stdout(t, []string{filepath.Join(testDir, "args.sysl")}, filepath.Join(testDir, "args.sysl.golden.textpb"))
+}
+
+func TestMain2_args_json_stdout(t *testing.T) {
+	t.Parallel()
+
+	testMain2Stdout(t,
+		[]string{"--mode", "json", filepath.Join(testDir, "args.sysl")},
+		filepath.Join(testDir, "args.sysl.golden.json"),
+	)
+}
+
+func TestMain2_type_merge1(t *testing.T) {
+	t.Parallel()
+
+	testAllMain2(t, []string{}, "type_merge1.sysl", "type_merge1.sysl.golden.textpb")
+}
+
+func TestMain2_type_merge2(t *testing.T) {
+	t.Parallel()
+
+	testAllMain2(t, []string{}, "type_merge2.sysl", "type_merge2.sysl.golden.textpb")
+}
+
+func TestMain2_namespace_merge(t *testing.T) {
+	t.Parallel()
+
+	testAllMain2(t, []string{}, "namespace_merge.sysl", "namespace_merge.sysl.golden.textpb")
+}
+
+func TestMain2_file_merge_textpb(t *testing.T) {
+	t.Parallel()
+
+	testAllMain2(t, []string{}, "file_merge.sysl", "file_merge.sysl.golden.textpb")
+}
+
+func TestMain2_file_merge_json(t *testing.T) {
+	t.Parallel()
+
+	testAllMain2(t, []string{"--mode", "json"}, "file_merge.sysl", "file_merge.sysl.golden.json")
 }
 
 func testMain2Stdout(t *testing.T, args []string, golden string) {
@@ -167,21 +196,6 @@ func testMain2Stdout(t *testing.T, args []string, golden string) {
 	assert.True(t, os.IsNotExist(err))
 
 	syslutil.AssertFsHasExactly(t, memFs)
-}
-
-func TestMain2TextPBStdout(t *testing.T) {
-	t.Parallel()
-
-	testMain2Stdout(t, []string{filepath.Join(testDir, "args.sysl")}, filepath.Join(testDir, "args.sysl.golden.textpb"))
-}
-
-func TestMain2JSONStdout(t *testing.T) {
-	t.Parallel()
-
-	testMain2Stdout(t,
-		[]string{"--mode", "json", filepath.Join(testDir, "args.sysl")},
-		filepath.Join(testDir, "args.sysl.golden.json"),
-	)
 }
 
 func TestMain2BadMode(t *testing.T) {

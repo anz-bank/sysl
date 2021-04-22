@@ -15,22 +15,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  22
+         line:  21
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  22
+         line:  21
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
          col:  18
         }
        }
@@ -40,23 +40,23 @@ apps:  {
     source_context:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  21
+      line:  20
       col:  4
      }
      end:  {
-      line:  24
-      col:  8
+      line:  21
+      col:  18
      }
     }
     source_contexts:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  21
+      line:  20
       col:  4
      }
      end:  {
-      line:  24
-      col:  8
+      line:  21
+      col:  18
      }
     }
    }
@@ -64,21 +64,21 @@ apps:  {
   source_context:  {
    file:  "tests/test2.sysl"
    start:  {
-    line:  20
-    col:  1
+    line:  19
    }
    end:  {
-    line:  20
+    line:  21
+    col:  18
    }
   }
   source_contexts:  {
    file:  "tests/test2.sysl"
    start:  {
-    line:  20
-    col:  1
+    line:  19
    }
    end:  {
-    line:  20
+    line:  21
+    col:  18
    }
   }
  }
@@ -110,22 +110,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  26
+         line:  25
          col:  8
         }
         end:  {
-         line:  26
+         line:  25
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  26
+         line:  25
          col:  8
         }
         end:  {
-         line:  26
+         line:  25
          col:  18
         }
        }
@@ -135,21 +135,23 @@ apps:  {
     source_context:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  25
+      line:  24
       col:  4
      }
      end:  {
-      line:  27
+      line:  25
+      col:  18
      }
     }
     source_contexts:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  25
+      line:  24
       col:  4
      }
      end:  {
-      line:  27
+      line:  25
+      col:  18
      }
     }
    }
@@ -157,21 +159,21 @@ apps:  {
   source_context:  {
    file:  "tests/test2.sysl"
    start:  {
-    line:  24
-    col:  1
+    line:  23
    }
    end:  {
-    line:  24
+    line:  25
+    col:  18
    }
   }
   source_contexts:  {
    file:  "tests/test2.sysl"
    start:  {
-    line:  24
-    col:  1
+    line:  23
    }
    end:  {
-    line:  24
+    line:  25
+    col:  18
    }
   }
  }
@@ -193,22 +195,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  8
         }
         end:  {
-         line:  4
+         line:  3
          col:  14
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  8
         }
         end:  {
-         line:  4
+         line:  3
          col:  14
         }
        }
@@ -224,23 +226,23 @@ apps:  {
     source_context:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  6
-      col:  4
+      line:  3
+      col:  14
      }
     }
     source_contexts:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  6
-      col:  4
+      line:  3
+      col:  14
      }
     }
    }
@@ -256,22 +258,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  16
+         line:  15
          col:  8
         }
         end:  {
-         line:  16
+         line:  15
          col:  22
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  16
+         line:  15
          col:  8
         }
         end:  {
-         line:  16
+         line:  15
          col:  22
         }
        }
@@ -284,22 +286,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  18
+         line:  17
          col:  8
         }
         end:  {
-         line:  18
+         line:  17
          col:  21
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  18
+         line:  17
          col:  8
         }
         end:  {
-         line:  18
+         line:  17
          col:  21
         }
        }
@@ -314,22 +316,22 @@ apps:  {
          source_context:  {
           file:  "tests/test2.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  8
           }
           end:  {
-           line:  17
+           line:  16
            col:  29
           }
          }
          source_contexts:  {
           file:  "tests/test2.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  8
           }
           end:  {
-           line:  17
+           line:  16
            col:  29
           }
          }
@@ -344,22 +346,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  15
+         line:  14
          col:  8
         }
         end:  {
-         line:  15
+         line:  14
          col:  17
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  15
+         line:  14
          col:  8
         }
         end:  {
-         line:  15
+         line:  14
          col:  17
         }
        }
@@ -369,23 +371,23 @@ apps:  {
     source_context:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  14
+      line:  13
       col:  4
      }
      end:  {
-      line:  20
-      col:  7
+      line:  17
+      col:  21
      }
     }
     source_contexts:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  14
+      line:  13
       col:  4
      }
      end:  {
-      line:  20
-      col:  7
+      line:  17
+      col:  21
      }
     }
    }
@@ -401,22 +403,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  10
+         line:  9
          col:  8
         }
         end:  {
-         line:  10
+         line:  9
          col:  21
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  10
+         line:  9
          col:  8
         }
         end:  {
-         line:  10
+         line:  9
          col:  21
         }
        }
@@ -430,22 +432,22 @@ apps:  {
         source_context:  {
          file:  "tests/test2.sysl"
          start:  {
-          line:  11
+          line:  10
           col:  8
          }
          end:  {
-          line:  11
+          line:  10
           col:  29
          }
         }
         source_contexts:  {
          file:  "tests/test2.sysl"
          start:  {
-          line:  11
+          line:  10
           col:  8
          }
          end:  {
-          line:  11
+          line:  10
           col:  29
          }
         }
@@ -453,22 +455,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  11
+         line:  10
          col:  29
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  11
+         line:  10
          col:  29
         }
        }
@@ -492,22 +494,22 @@ apps:  {
         source_context:  {
          file:  "tests/test2.sysl"
          start:  {
-          line:  12
+          line:  11
           col:  8
          }
          end:  {
-          line:  12
+          line:  11
           col:  22
          }
         }
         source_contexts:  {
          file:  "tests/test2.sysl"
          start:  {
-          line:  12
+          line:  11
           col:  8
          }
          end:  {
-          line:  12
+          line:  11
           col:  22
          }
         }
@@ -515,22 +517,22 @@ apps:  {
        source_context:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  12
+         line:  11
          col:  8
         }
         end:  {
-         line:  12
+         line:  11
          col:  22
         }
        }
        source_contexts:  {
         file:  "tests/test2.sysl"
         start:  {
-         line:  12
+         line:  11
          col:  8
         }
         end:  {
-         line:  12
+         line:  11
          col:  22
         }
        }
@@ -546,45 +548,41 @@ apps:  {
     source_context:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  4
      }
      end:  {
-      line:  14
-      col:  4
+      line:  11
+      col:  22
      }
     }
     source_contexts:  {
      file:  "tests/test2.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  4
      }
      end:  {
-      line:  14
-      col:  4
+      line:  11
+      col:  22
      }
     }
    }
   }
   source_context:  {
    file:  "tests/test2.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  17
+    col:  21
    }
   }
   source_contexts:  {
    file:  "tests/test2.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  17
+    col:  21
    }
   }
  }

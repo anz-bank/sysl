@@ -49,11 +49,22 @@ apps:  {
        source_context:  {
         file:  "tests/math.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  41
+         line:  40
+         col:  5
+        }
+       }
+       source_contexts:  {
+        file:  "tests/math.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  40
          col:  5
         }
        }
@@ -73,11 +84,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  12
               }
               end:  {
-               line:  4
+               line:  3
+               col:  12
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  3
+               col:  12
+              }
+              end:  {
+               line:  3
                col:  12
               }
              }
@@ -92,11 +114,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  21
               }
               end:  {
-               line:  4
+               line:  3
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  3
+               col:  21
+              }
+              end:  {
+               line:  3
                col:  21
               }
              }
@@ -108,11 +141,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  19
             }
             end:  {
-             line:  4
+             line:  3
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  3
+             col:  19
+            }
+            end:  {
+             line:  3
              col:  21
             }
            }
@@ -122,11 +166,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  25
             }
             end:  {
-             line:  4
+             line:  3
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  3
+             col:  25
+            }
+            end:  {
+             line:  3
              col:  25
             }
            }
@@ -138,11 +193,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  25
           }
           text:  "out = number + 1 - scopeVar"
@@ -150,11 +205,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  25
           }
           text:  "out = number + 1 - scopeVar"
@@ -175,11 +230,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  5
+             line:  4
              col:  12
             }
             end:  {
-             line:  5
+             line:  4
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  4
+             col:  12
+            }
+            end:  {
+             line:  4
              col:  12
             }
            }
@@ -194,11 +260,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  5
+               line:  4
                col:  17
               }
               end:  {
-               line:  5
+               line:  4
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  4
+               col:  17
+              }
+              end:  {
+               line:  4
                col:  17
               }
              }
@@ -210,11 +287,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  5
+               line:  4
                col:  22
               }
               end:  {
-               line:  5
+               line:  4
+               col:  22
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  4
+               col:  22
+              }
+              end:  {
+               line:  4
                col:  22
               }
              }
@@ -223,11 +311,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  5
+             line:  4
              col:  17
             }
             end:  {
-             line:  5
+             line:  4
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  4
+             col:  17
+            }
+            end:  {
+             line:  4
              col:  22
             }
            }
@@ -236,11 +335,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  22
           }
           text:  "out = 2 ** 3 ** 4"
@@ -248,11 +347,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  22
           }
           text:  "out = 2 ** 3 ** 4"
@@ -276,11 +375,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  6
+               line:  5
                col:  12
               }
               end:  {
-               line:  6
+               line:  5
+               col:  12
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  5
+               col:  12
+              }
+              end:  {
+               line:  5
                col:  12
               }
              }
@@ -295,11 +405,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  6
+                 line:  5
                  col:  17
                 }
                 end:  {
-                 line:  6
+                 line:  5
+                 col:  17
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  5
+                 col:  17
+                }
+                end:  {
+                 line:  5
                  col:  17
                 }
                }
@@ -314,11 +435,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/math.sysl"
                   start:  {
-                   line:  6
+                   line:  5
                    col:  23
                   }
                   end:  {
-                   line:  6
+                   line:  5
+                   col:  23
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/math.sysl"
+                  start:  {
+                   line:  5
+                   col:  23
+                  }
+                  end:  {
+                   line:  5
                    col:  23
                   }
                  }
@@ -327,11 +459,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  6
+                 line:  5
                  col:  22
                 }
                 end:  {
-                 line:  6
+                 line:  5
+                 col:  23
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  5
+                 col:  22
+                }
+                end:  {
+                 line:  5
                  col:  23
                 }
                }
@@ -340,11 +483,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  6
+               line:  5
                col:  17
               }
               end:  {
-               line:  6
+               line:  5
+               col:  23
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  5
+               col:  17
+              }
+              end:  {
+               line:  5
                col:  23
               }
              }
@@ -353,11 +507,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  12
             }
             end:  {
-             line:  6
+             line:  5
+             col:  23
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  5
+             col:  12
+            }
+            end:  {
+             line:  5
              col:  23
             }
            }
@@ -369,11 +534,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  27
             }
             end:  {
-             line:  6
+             line:  5
+             col:  27
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  5
+             col:  27
+            }
+            end:  {
+             line:  5
              col:  27
             }
            }
@@ -382,11 +558,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  27
           }
           text:  "out = 2 ** 3 ** -4 - 10"
@@ -394,11 +570,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  27
           }
           text:  "out = 2 ** 3 ** -4 - 10"
@@ -417,11 +593,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  18
             }
             end:  {
-             line:  7
+             line:  6
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  6
+             col:  18
+            }
+            end:  {
+             line:  6
              col:  18
             }
            }
@@ -433,11 +620,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  18
           }
           text:  "expr_not = !foo"
@@ -445,11 +632,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  18
           }
           text:  "expr_not = !foo"
@@ -468,11 +655,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  19
             }
             end:  {
-             line:  8
+             line:  7
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  7
+             col:  19
+            }
+            end:  {
+             line:  7
              col:  19
             }
            }
@@ -484,11 +682,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  19
           }
           text:  "expr_nota = ~foo"
@@ -496,11 +694,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  19
           }
           text:  "expr_nota = ~foo"
@@ -519,11 +717,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  19
             }
             end:  {
-             line:  9
+             line:  8
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  8
+             col:  19
+            }
+            end:  {
+             line:  8
              col:  19
             }
            }
@@ -535,11 +744,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  19
           }
           text:  "expr_notb = -foo"
@@ -547,11 +756,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  19
           }
           text:  "expr_notb = -foo"
@@ -570,11 +779,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  10
+             line:  9
              col:  19
             }
             end:  {
-             line:  10
+             line:  9
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  9
+             col:  19
+            }
+            end:  {
+             line:  9
              col:  19
             }
            }
@@ -586,11 +806,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  19
           }
           text:  "expr_notc = +foo"
@@ -598,11 +818,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  19
           }
           text:  "expr_notc = +foo"
@@ -627,11 +847,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  21
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  21
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  10
+                 col:  21
+                }
+                end:  {
+                 line:  10
                  col:  21
                 }
                }
@@ -641,11 +872,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  26
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  26
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  10
+                 col:  26
+                }
+                end:  {
+                 line:  10
                  col:  26
                 }
                }
@@ -657,11 +899,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  21
               }
               end:  {
-               line:  11
+               line:  10
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  10
+               col:  21
+              }
+              end:  {
+               line:  10
                col:  26
               }
              }
@@ -674,11 +927,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  36
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  36
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  10
+                 col:  36
+                }
+                end:  {
+                 line:  10
                  col:  36
                 }
                }
@@ -688,11 +952,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  41
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  41
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  10
+                 col:  41
+                }
+                end:  {
+                 line:  10
                  col:  41
                 }
                }
@@ -704,11 +979,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  36
               }
               end:  {
-               line:  11
+               line:  10
+               col:  41
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  10
+               col:  36
+              }
+              end:  {
+               line:  10
                col:  41
               }
              }
@@ -720,11 +1006,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  21
             }
             end:  {
-             line:  11
+             line:  10
+             col:  56
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  10
+             col:  21
+            }
+            end:  {
+             line:  10
              col:  56
             }
            }
@@ -737,11 +1034,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  51
               }
               end:  {
-               line:  11
+               line:  10
+               col:  51
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  10
+               col:  51
+              }
+              end:  {
+               line:  10
                col:  51
               }
              }
@@ -751,11 +1059,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  56
               }
               end:  {
-               line:  11
+               line:  10
+               col:  56
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  10
+               col:  56
+              }
+              end:  {
+               line:  10
                col:  56
               }
              }
@@ -767,11 +1086,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  51
             }
             end:  {
-             line:  11
+             line:  10
+             col:  56
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  10
+             col:  51
+            }
+            end:  {
+             line:  10
              col:  56
             }
            }
@@ -783,11 +1113,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  56
           }
           text:  "expr_but_not = a || b but not c || d but not e || f"
@@ -795,11 +1125,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  56
           }
           text:  "expr_but_not = a || b but not c || d but not e || f"
@@ -824,11 +1154,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  12
+                 line:  11
                  col:  16
                 }
                 end:  {
-                 line:  12
+                 line:  11
+                 col:  16
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  11
+                 col:  16
+                }
+                end:  {
+                 line:  11
                  col:  16
                 }
                }
@@ -841,11 +1182,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/math.sysl"
                   start:  {
-                   line:  12
+                   line:  11
                    col:  21
                   }
                   end:  {
-                   line:  12
+                   line:  11
+                   col:  21
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/math.sysl"
+                  start:  {
+                   line:  11
+                   col:  21
+                  }
+                  end:  {
+                   line:  11
                    col:  21
                   }
                  }
@@ -855,11 +1207,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/math.sysl"
                   start:  {
-                   line:  12
+                   line:  11
                    col:  26
                   }
                   end:  {
-                   line:  12
+                   line:  11
+                   col:  26
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/math.sysl"
+                  start:  {
+                   line:  11
+                   col:  26
+                  }
+                  end:  {
+                   line:  11
                    col:  26
                   }
                  }
@@ -871,11 +1234,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  12
+                 line:  11
                  col:  21
                 }
                 end:  {
-                 line:  12
+                 line:  11
+                 col:  26
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  11
+                 col:  21
+                }
+                end:  {
+                 line:  11
                  col:  26
                 }
                }
@@ -887,11 +1261,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  16
               }
               end:  {
-               line:  12
+               line:  11
+               col:  41
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  11
+               col:  16
+              }
+              end:  {
+               line:  11
                col:  41
               }
              }
@@ -904,11 +1289,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  12
+                 line:  11
                  col:  31
                 }
                 end:  {
-                 line:  12
+                 line:  11
+                 col:  31
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  11
+                 col:  31
+                }
+                end:  {
+                 line:  11
                  col:  31
                 }
                }
@@ -918,11 +1314,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  12
+                 line:  11
                  col:  36
                 }
                 end:  {
-                 line:  12
+                 line:  11
+                 col:  36
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  11
+                 col:  36
+                }
+                end:  {
+                 line:  11
                  col:  36
                 }
                }
@@ -934,11 +1341,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  31
               }
               end:  {
-               line:  12
+               line:  11
+               col:  36
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  11
+               col:  31
+              }
+              end:  {
+               line:  11
                col:  36
               }
              }
@@ -950,11 +1368,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  16
             }
             end:  {
-             line:  12
+             line:  11
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  11
+             col:  16
+            }
+            end:  {
+             line:  11
              col:  41
             }
            }
@@ -964,11 +1393,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  41
             }
             end:  {
-             line:  12
+             line:  11
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  11
+             col:  41
+            }
+            end:  {
+             line:  11
              col:  41
             }
            }
@@ -980,11 +1420,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  41
           }
           text:  "expr_or = a || b && c || d && e || f"
@@ -992,11 +1432,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  41
           }
           text:  "expr_or = a || b && c || d && e || f"
@@ -1021,11 +1461,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  17
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  17
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  12
+                 col:  17
+                }
+                end:  {
+                 line:  12
                  col:  17
                 }
                }
@@ -1035,11 +1486,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  21
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  21
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  12
+                 col:  21
+                }
+                end:  {
+                 line:  12
                  col:  21
                 }
                }
@@ -1051,11 +1513,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  17
               }
               end:  {
-               line:  13
+               line:  12
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  12
+               col:  17
+              }
+              end:  {
+               line:  12
                col:  21
               }
              }
@@ -1068,11 +1541,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  26
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  26
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  12
+                 col:  26
+                }
+                end:  {
+                 line:  12
                  col:  26
                 }
                }
@@ -1082,11 +1566,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  30
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  30
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  12
+                 col:  30
+                }
+                end:  {
+                 line:  12
                  col:  30
                 }
                }
@@ -1098,11 +1593,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  26
               }
               end:  {
-               line:  13
+               line:  12
+               col:  30
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  12
+               col:  26
+              }
+              end:  {
+               line:  12
                col:  30
               }
              }
@@ -1114,11 +1620,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  17
             }
             end:  {
-             line:  13
+             line:  12
+             col:  39
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  12
+             col:  17
+            }
+            end:  {
+             line:  12
              col:  39
             }
            }
@@ -1131,11 +1648,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  35
               }
               end:  {
-               line:  13
+               line:  12
+               col:  35
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  12
+               col:  35
+              }
+              end:  {
+               line:  12
                col:  35
               }
              }
@@ -1145,11 +1673,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  39
               }
               end:  {
-               line:  13
+               line:  12
+               col:  39
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  12
+               col:  39
+              }
+              end:  {
+               line:  12
                col:  39
               }
              }
@@ -1161,11 +1700,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  35
             }
             end:  {
-             line:  13
+             line:  12
+             col:  39
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  12
+             col:  35
+            }
+            end:  {
+             line:  12
              col:  39
             }
            }
@@ -1177,11 +1727,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  39
           }
           text:  "expr_and = a ^ b && c ^ d && e ^ f"
@@ -1189,11 +1739,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  39
           }
           text:  "expr_and = a ^ b && c ^ d && e ^ f"
@@ -1218,11 +1768,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  14
+                 line:  13
                  col:  19
                 }
                 end:  {
-                 line:  14
+                 line:  13
+                 col:  19
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  13
+                 col:  19
+                }
+                end:  {
+                 line:  13
                  col:  19
                 }
                }
@@ -1232,11 +1793,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  14
+                 line:  13
                  col:  23
                 }
                 end:  {
-                 line:  14
+                 line:  13
+                 col:  23
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  13
+                 col:  23
+                }
+                end:  {
+                 line:  13
                  col:  23
                 }
                }
@@ -1248,11 +1820,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  19
               }
               end:  {
-               line:  14
+               line:  13
+               col:  23
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  13
+               col:  19
+              }
+              end:  {
+               line:  13
                col:  23
               }
              }
@@ -1265,11 +1848,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  14
+                 line:  13
                  col:  28
                 }
                 end:  {
-                 line:  14
+                 line:  13
+                 col:  28
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  13
+                 col:  28
+                }
+                end:  {
+                 line:  13
                  col:  28
                 }
                }
@@ -1279,11 +1873,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  14
+                 line:  13
                  col:  32
                 }
                 end:  {
-                 line:  14
+                 line:  13
+                 col:  32
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  13
+                 col:  32
+                }
+                end:  {
+                 line:  13
                  col:  32
                 }
                }
@@ -1295,11 +1900,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  28
               }
               end:  {
-               line:  14
+               line:  13
+               col:  32
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  13
+               col:  28
+              }
+              end:  {
+               line:  13
                col:  32
               }
              }
@@ -1311,11 +1927,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  19
             }
             end:  {
-             line:  14
+             line:  13
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  13
+             col:  19
+            }
+            end:  {
+             line:  13
              col:  41
             }
            }
@@ -1328,11 +1955,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  37
               }
               end:  {
-               line:  14
+               line:  13
+               col:  37
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  13
+               col:  37
+              }
+              end:  {
+               line:  13
                col:  37
               }
              }
@@ -1342,11 +1980,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  41
               }
               end:  {
-               line:  14
+               line:  13
+               col:  41
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  13
+               col:  41
+              }
+              end:  {
+               line:  13
                col:  41
               }
              }
@@ -1358,11 +2007,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  37
             }
             end:  {
-             line:  14
+             line:  13
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  13
+             col:  37
+            }
+            end:  {
+             line:  13
              col:  41
             }
            }
@@ -1374,11 +2034,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  41
           }
           text:  "expr_bitor = a ^ b or c ^ d or e ^ f"
@@ -1386,11 +2046,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  41
           }
           text:  "expr_bitor = a ^ b or c ^ d or e ^ f"
@@ -1415,11 +2075,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  19
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  19
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  14
+                 col:  19
+                }
+                end:  {
+                 line:  14
                  col:  19
                 }
                }
@@ -1429,11 +2100,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  23
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  23
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  14
+                 col:  23
+                }
+                end:  {
+                 line:  14
                  col:  23
                 }
                }
@@ -1442,11 +2124,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  19
               }
               end:  {
-               line:  15
+               line:  14
+               col:  23
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  14
+               col:  19
+              }
+              end:  {
+               line:  14
                col:  23
               }
              }
@@ -1459,11 +2152,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  27
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  27
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  14
+                 col:  27
+                }
+                end:  {
+                 line:  14
                  col:  27
                 }
                }
@@ -1473,11 +2177,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  31
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  31
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  14
+                 col:  31
+                }
+                end:  {
+                 line:  14
                  col:  31
                 }
                }
@@ -1486,11 +2201,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  27
               }
               end:  {
-               line:  15
+               line:  14
+               col:  31
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  14
+               col:  27
+              }
+              end:  {
+               line:  14
                col:  31
               }
              }
@@ -1499,11 +2225,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  15
+             line:  14
              col:  19
             }
             end:  {
-             line:  15
+             line:  14
+             col:  39
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  14
+             col:  19
+            }
+            end:  {
+             line:  14
              col:  39
             }
            }
@@ -1516,11 +2253,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  35
               }
               end:  {
-               line:  15
+               line:  14
+               col:  35
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  14
+               col:  35
+              }
+              end:  {
+               line:  14
                col:  35
               }
              }
@@ -1530,11 +2278,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  39
               }
               end:  {
-               line:  15
+               line:  14
+               col:  39
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  14
+               col:  39
+              }
+              end:  {
+               line:  14
                col:  39
               }
              }
@@ -1543,11 +2302,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  15
+             line:  14
              col:  35
             }
             end:  {
-             line:  15
+             line:  14
+             col:  39
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  14
+             col:  35
+            }
+            end:  {
+             line:  14
              col:  39
             }
            }
@@ -1556,11 +2326,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  39
           }
           text:  "expr_bitor = a ^ b | c ^ d | e ^ f"
@@ -1568,11 +2338,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  39
           }
           text:  "expr_bitor = a ^ b | c ^ d | e ^ f"
@@ -1597,11 +2367,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  16
+                 line:  15
                  col:  21
                 }
                 end:  {
-                 line:  16
+                 line:  15
+                 col:  21
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  15
+                 col:  21
+                }
+                end:  {
+                 line:  15
                  col:  21
                 }
                }
@@ -1611,11 +2392,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  16
+                 line:  15
                  col:  25
                 }
                 end:  {
-                 line:  16
+                 line:  15
+                 col:  25
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  15
+                 col:  25
+                }
+                end:  {
+                 line:  15
                  col:  25
                 }
                }
@@ -1627,11 +2419,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  16
+               line:  15
                col:  21
               }
               end:  {
-               line:  16
+               line:  15
+               col:  25
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  15
+               col:  21
+              }
+              end:  {
+               line:  15
                col:  25
               }
              }
@@ -1644,11 +2447,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  16
+                 line:  15
                  col:  29
                 }
                 end:  {
-                 line:  16
+                 line:  15
+                 col:  29
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  15
+                 col:  29
+                }
+                end:  {
+                 line:  15
                  col:  29
                 }
                }
@@ -1658,11 +2472,22 @@ apps:  {
                source_context:  {
                 file:  "tests/math.sysl"
                 start:  {
-                 line:  16
+                 line:  15
                  col:  33
                 }
                 end:  {
-                 line:  16
+                 line:  15
+                 col:  33
+                }
+               }
+               source_contexts:  {
+                file:  "tests/math.sysl"
+                start:  {
+                 line:  15
+                 col:  33
+                }
+                end:  {
+                 line:  15
                  col:  33
                 }
                }
@@ -1674,11 +2499,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  16
+               line:  15
                col:  29
               }
               end:  {
-               line:  16
+               line:  15
+               col:  33
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  15
+               col:  29
+              }
+              end:  {
+               line:  15
                col:  33
               }
              }
@@ -1690,11 +2526,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  21
             }
             end:  {
-             line:  16
+             line:  15
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  15
+             col:  21
+            }
+            end:  {
+             line:  15
              col:  41
             }
            }
@@ -1707,11 +2554,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  16
+               line:  15
                col:  37
               }
               end:  {
-               line:  16
+               line:  15
+               col:  37
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  15
+               col:  37
+              }
+              end:  {
+               line:  15
                col:  37
               }
              }
@@ -1721,11 +2579,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  16
+               line:  15
                col:  41
               }
               end:  {
-               line:  16
+               line:  15
+               col:  41
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  15
+               col:  41
+              }
+              end:  {
+               line:  15
                col:  41
               }
              }
@@ -1737,11 +2606,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  37
             }
             end:  {
-             line:  16
+             line:  15
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  15
+             col:  37
+            }
+            end:  {
+             line:  15
              col:  41
             }
            }
@@ -1753,11 +2633,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  41
           }
           text:  "expr_bit_xor = a & b ^ c & d ^ e & f"
@@ -1765,11 +2645,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  41
           }
           text:  "expr_bit_xor = a & b ^ c & d ^ e & f"
@@ -1791,11 +2671,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  17
+               line:  16
                col:  17
               }
               end:  {
-               line:  17
+               line:  16
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  16
+               col:  17
+              }
+              end:  {
+               line:  16
                col:  17
               }
              }
@@ -1805,11 +2696,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  17
+               line:  16
                col:  21
               }
               end:  {
-               line:  17
+               line:  16
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  16
+               col:  21
+              }
+              end:  {
+               line:  16
                col:  21
               }
              }
@@ -1821,11 +2723,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  17
+             line:  16
              col:  19
             }
             end:  {
-             line:  17
+             line:  16
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  16
+             col:  19
+            }
+            end:  {
+             line:  16
              col:  21
             }
            }
@@ -1838,11 +2751,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  17
+               line:  16
                col:  26
               }
               end:  {
-               line:  17
+               line:  16
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  16
+               col:  26
+              }
+              end:  {
+               line:  16
                col:  26
               }
              }
@@ -1852,11 +2776,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  17
+               line:  16
                col:  30
               }
               end:  {
-               line:  17
+               line:  16
+               col:  30
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  16
+               col:  30
+              }
+              end:  {
+               line:  16
                col:  30
               }
              }
@@ -1868,11 +2803,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  17
+             line:  16
              col:  28
             }
             end:  {
-             line:  17
+             line:  16
+             col:  30
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  16
+             col:  28
+            }
+            end:  {
+             line:  16
              col:  30
             }
            }
@@ -1884,11 +2830,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  6
           }
           end:  {
-           line:  17
+           line:  16
            col:  30
           }
           text:  "expr_rel = a + b <= c - d"
@@ -1896,11 +2842,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  6
           }
           end:  {
-           line:  17
+           line:  16
            col:  30
           }
           text:  "expr_rel = a + b <= c - d"
@@ -1922,11 +2868,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  18
+               line:  17
                col:  17
               }
               end:  {
-               line:  18
+               line:  17
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  17
+               col:  17
+              }
+              end:  {
+               line:  17
                col:  17
               }
              }
@@ -1936,11 +2893,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  18
+               line:  17
                col:  21
               }
               end:  {
-               line:  18
+               line:  17
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  17
+               col:  21
+              }
+              end:  {
+               line:  17
                col:  21
               }
              }
@@ -1949,11 +2917,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  18
+             line:  17
              col:  19
             }
             end:  {
-             line:  18
+             line:  17
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  17
+             col:  19
+            }
+            end:  {
+             line:  17
              col:  21
             }
            }
@@ -1966,11 +2945,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  18
+               line:  17
                col:  26
               }
               end:  {
-               line:  18
+               line:  17
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  17
+               col:  26
+              }
+              end:  {
+               line:  17
                col:  26
               }
              }
@@ -1980,11 +2970,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  18
+               line:  17
                col:  30
               }
               end:  {
-               line:  18
+               line:  17
+               col:  30
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  17
+               col:  30
+              }
+              end:  {
+               line:  17
                col:  30
               }
              }
@@ -1993,11 +2994,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  18
+             line:  17
              col:  28
             }
             end:  {
-             line:  18
+             line:  17
+             col:  30
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  17
+             col:  28
+            }
+            end:  {
+             line:  17
              col:  30
             }
            }
@@ -2006,11 +3018,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  18
+           line:  17
            col:  6
           }
           end:  {
-           line:  18
+           line:  17
            col:  30
           }
           text:  "expr_rel = a * b >= c / d"
@@ -2018,11 +3030,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  18
+           line:  17
            col:  6
           }
           end:  {
-           line:  18
+           line:  17
            col:  30
           }
           text:  "expr_rel = a * b >= c / d"
@@ -2044,11 +3056,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  17
               }
               end:  {
-               line:  19
+               line:  18
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  18
+               col:  17
+              }
+              end:  {
+               line:  18
                col:  17
               }
              }
@@ -2058,11 +3081,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  22
               }
               end:  {
-               line:  19
+               line:  18
+               col:  22
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  18
+               col:  22
+              }
+              end:  {
+               line:  18
                col:  22
               }
              }
@@ -2071,11 +3105,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  19
+             line:  18
              col:  17
             }
             end:  {
-             line:  19
+             line:  18
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  18
+             col:  17
+            }
+            end:  {
+             line:  18
              col:  22
             }
            }
@@ -2088,11 +3133,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  26
               }
               end:  {
-               line:  19
+               line:  18
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  18
+               col:  26
+              }
+              end:  {
+               line:  18
                col:  26
               }
              }
@@ -2102,11 +3158,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  31
               }
               end:  {
-               line:  19
+               line:  18
+               col:  31
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  18
+               col:  31
+              }
+              end:  {
+               line:  18
                col:  31
               }
              }
@@ -2115,11 +3182,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  19
+             line:  18
              col:  26
             }
             end:  {
-             line:  19
+             line:  18
+             col:  31
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  18
+             col:  26
+            }
+            end:  {
+             line:  18
              col:  31
             }
            }
@@ -2128,11 +3206,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  6
           }
           end:  {
-           line:  19
+           line:  18
            col:  31
           }
           text:  "expr_rel = a ** b > c ** d"
@@ -2140,11 +3218,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  6
           }
           end:  {
-           line:  19
+           line:  18
            col:  31
           }
           text:  "expr_rel = a ** b > c ** d"
@@ -2166,11 +3244,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  17
               }
               end:  {
-               line:  20
+               line:  19
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  19
+               col:  17
+              }
+              end:  {
+               line:  19
                col:  17
               }
              }
@@ -2180,11 +3269,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  22
               }
               end:  {
-               line:  20
+               line:  19
+               col:  22
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  19
+               col:  22
+              }
+              end:  {
+               line:  19
                col:  22
               }
              }
@@ -2193,11 +3293,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  20
+             line:  19
              col:  17
             }
             end:  {
-             line:  20
+             line:  19
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  19
+             col:  17
+            }
+            end:  {
+             line:  19
              col:  22
             }
            }
@@ -2210,11 +3321,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  26
               }
               end:  {
-               line:  20
+               line:  19
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  19
+               col:  26
+              }
+              end:  {
+               line:  19
                col:  26
               }
              }
@@ -2224,11 +3346,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  31
               }
               end:  {
-               line:  20
+               line:  19
+               col:  31
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  19
+               col:  31
+              }
+              end:  {
+               line:  19
                col:  31
               }
              }
@@ -2237,11 +3370,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  20
+             line:  19
              col:  26
             }
             end:  {
-             line:  20
+             line:  19
+             col:  31
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  19
+             col:  26
+            }
+            end:  {
+             line:  19
              col:  31
             }
            }
@@ -2250,11 +3394,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  20
+           line:  19
            col:  6
           }
           end:  {
-           line:  20
+           line:  19
            col:  31
           }
           text:  "expr_rel = a ** b < c ** d"
@@ -2262,11 +3406,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  20
+           line:  19
            col:  6
           }
           end:  {
-           line:  20
+           line:  19
            col:  31
           }
           text:  "expr_rel = a ** b < c ** d"
@@ -2288,11 +3432,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  21
+               line:  20
                col:  17
               }
               end:  {
-               line:  21
+               line:  20
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  20
+               col:  17
+              }
+              end:  {
+               line:  20
                col:  17
               }
              }
@@ -2302,11 +3457,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  21
+               line:  20
                col:  21
               }
               end:  {
-               line:  21
+               line:  20
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  20
+               col:  21
+              }
+              end:  {
+               line:  20
                col:  21
               }
              }
@@ -2315,11 +3481,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  21
+             line:  20
              col:  19
             }
             end:  {
-             line:  21
+             line:  20
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  20
+             col:  19
+            }
+            end:  {
+             line:  20
              col:  21
             }
            }
@@ -2332,11 +3509,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  21
+               line:  20
                col:  26
               }
               end:  {
-               line:  21
+               line:  20
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  20
+               col:  26
+              }
+              end:  {
+               line:  20
                col:  26
               }
              }
@@ -2346,11 +3534,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  21
+               line:  20
                col:  30
               }
               end:  {
-               line:  21
+               line:  20
+               col:  30
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  20
+               col:  30
+              }
+              end:  {
+               line:  20
                col:  30
               }
              }
@@ -2359,11 +3558,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  21
+             line:  20
              col:  28
             }
             end:  {
-             line:  21
+             line:  20
+             col:  30
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  20
+             col:  28
+            }
+            end:  {
+             line:  20
              col:  30
             }
            }
@@ -2372,11 +3582,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  21
+           line:  20
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  30
           }
           text:  "expr_rel = a + b != c + d"
@@ -2384,11 +3594,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  21
+           line:  20
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  30
           }
           text:  "expr_rel = a + b != c + d"
@@ -2410,11 +3620,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  22
+               line:  21
                col:  17
               }
               end:  {
-               line:  22
+               line:  21
+               col:  17
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  21
+               col:  17
+              }
+              end:  {
+               line:  21
                col:  17
               }
              }
@@ -2424,11 +3645,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  22
+               line:  21
                col:  21
               }
               end:  {
-               line:  22
+               line:  21
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  21
+               col:  21
+              }
+              end:  {
+               line:  21
                col:  21
               }
              }
@@ -2437,11 +3669,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  22
+             line:  21
              col:  19
             }
             end:  {
-             line:  22
+             line:  21
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  21
+             col:  19
+            }
+            end:  {
+             line:  21
              col:  21
             }
            }
@@ -2454,11 +3697,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  22
+               line:  21
                col:  26
               }
               end:  {
-               line:  22
+               line:  21
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  21
+               col:  26
+              }
+              end:  {
+               line:  21
                col:  26
               }
              }
@@ -2468,11 +3722,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  22
+               line:  21
                col:  30
               }
               end:  {
-               line:  22
+               line:  21
+               col:  30
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  21
+               col:  30
+              }
+              end:  {
+               line:  21
                col:  30
               }
              }
@@ -2481,11 +3746,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  22
+             line:  21
              col:  28
             }
             end:  {
-             line:  22
+             line:  21
+             col:  30
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  21
+             col:  28
+            }
+            end:  {
+             line:  21
              col:  30
             }
            }
@@ -2494,11 +3770,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  22
+           line:  21
            col:  6
           }
           end:  {
-           line:  22
+           line:  21
            col:  30
           }
           text:  "expr_rel = a + b == c + d"
@@ -2506,11 +3782,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  22
+           line:  21
            col:  6
           }
           end:  {
-           line:  22
+           line:  21
            col:  30
           }
           text:  "expr_rel = a + b == c + d"
@@ -2529,11 +3805,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  23
+             line:  22
              col:  17
             }
             end:  {
-             line:  23
+             line:  22
+             col:  17
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  22
+             col:  17
+            }
+            end:  {
+             line:  22
              col:  17
             }
            }
@@ -2543,11 +3830,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  23
+             line:  22
              col:  22
             }
             end:  {
-             line:  23
+             line:  22
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  22
+             col:  22
+            }
+            end:  {
+             line:  22
              col:  22
             }
            }
@@ -2556,11 +3854,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  23
+           line:  22
            col:  6
           }
           end:  {
-           line:  23
+           line:  22
            col:  22
           }
           text:  "expr_rel = a in d"
@@ -2568,11 +3866,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  23
+           line:  22
            col:  6
           }
           end:  {
-           line:  23
+           line:  22
            col:  22
           }
           text:  "expr_rel = a in d"
@@ -2591,11 +3889,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  24
+             line:  23
              col:  17
             }
             end:  {
-             line:  24
+             line:  23
+             col:  17
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  23
+             col:  17
+            }
+            end:  {
+             line:  23
              col:  17
             }
            }
@@ -2605,11 +3914,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  24
+             line:  23
              col:  23
             }
             end:  {
-             line:  24
+             line:  23
+             col:  23
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  23
+             col:  23
+            }
+            end:  {
+             line:  23
              col:  23
             }
            }
@@ -2618,11 +3938,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  24
+           line:  23
            col:  6
           }
           end:  {
-           line:  24
+           line:  23
            col:  23
           }
           text:  "expr_rel = a !in d"
@@ -2630,11 +3950,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  24
+           line:  23
            col:  6
           }
           end:  {
-           line:  24
+           line:  23
            col:  23
           }
           text:  "expr_rel = a !in d"
@@ -2653,11 +3973,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  25
+             line:  24
              col:  17
             }
             end:  {
-             line:  25
+             line:  24
+             col:  17
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  24
+             col:  17
+            }
+            end:  {
+             line:  24
              col:  17
             }
            }
@@ -2667,11 +3998,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  25
+             line:  24
              col:  29
             }
             end:  {
-             line:  25
+             line:  24
+             col:  29
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  24
+             col:  29
+            }
+            end:  {
+             line:  24
              col:  29
             }
            }
@@ -2680,11 +4022,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  25
+           line:  24
            col:  6
           }
           end:  {
-           line:  25
+           line:  24
            col:  29
           }
           text:  "expr_rel = a !contains d"
@@ -2692,11 +4034,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  25
+           line:  24
            col:  6
           }
           end:  {
-           line:  25
+           line:  24
            col:  29
           }
           text:  "expr_rel = a !contains d"
@@ -2715,11 +4057,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  26
+             line:  25
              col:  17
             }
             end:  {
-             line:  26
+             line:  25
+             col:  17
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  25
+             col:  17
+            }
+            end:  {
+             line:  25
              col:  17
             }
            }
@@ -2729,11 +4082,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  26
+             line:  25
              col:  28
             }
             end:  {
-             line:  26
+             line:  25
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  25
+             col:  28
+            }
+            end:  {
+             line:  25
              col:  28
             }
            }
@@ -2742,11 +4106,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  26
+           line:  25
            col:  6
           }
           end:  {
-           line:  26
+           line:  25
            col:  28
           }
           text:  "expr_rel = a contains d"
@@ -2754,11 +4118,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  26
+           line:  25
            col:  6
           }
           end:  {
-           line:  26
+           line:  25
            col:  28
           }
           text:  "expr_rel = a contains d"
@@ -2777,11 +4141,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  27
+             line:  26
              col:  18
             }
             end:  {
-             line:  27
+             line:  26
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  26
+             col:  18
+            }
+            end:  {
+             line:  26
              col:  18
             }
            }
@@ -2795,11 +4170,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  27
+               line:  26
                col:  24
               }
               end:  {
-               line:  27
+               line:  26
+               col:  24
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  26
+               col:  24
+              }
+              end:  {
+               line:  26
                col:  24
               }
              }
@@ -2811,11 +4197,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  27
+               line:  26
                col:  31
               }
               end:  {
-               line:  27
+               line:  26
+               col:  31
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  26
+               col:  31
+              }
+              end:  {
+               line:  26
                col:  31
               }
              }
@@ -2827,11 +4224,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  27
+             line:  26
              col:  23
             }
             end:  {
-             line:  27
+             line:  26
+             col:  36
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  26
+             col:  23
+            }
+            end:  {
+             line:  26
              col:  36
             }
            }
@@ -2843,11 +4251,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  27
+           line:  26
            col:  6
           }
           end:  {
-           line:  27
+           line:  26
            col:  36
           }
           text:  "expr_set1 = a in {\"abc\", \"def\"}"
@@ -2855,11 +4263,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  27
+           line:  26
            col:  6
           }
           end:  {
-           line:  27
+           line:  26
            col:  36
           }
           text:  "expr_set1 = a in {\"abc\", \"def\"}"
@@ -2879,11 +4287,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  28
+             line:  27
              col:  19
             }
             end:  {
-             line:  28
+             line:  27
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  27
+             col:  19
+            }
+            end:  {
+             line:  27
              col:  19
             }
            }
@@ -2895,11 +4314,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  28
+             line:  27
              col:  26
             }
             end:  {
-             line:  28
+             line:  27
+             col:  26
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  27
+             col:  26
+            }
+            end:  {
+             line:  27
              col:  26
             }
            }
@@ -2911,11 +4341,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  28
+           line:  27
            col:  6
           }
           end:  {
-           line:  28
+           line:  27
            col:  31
           }
           text:  "expr_set2 = {\"abc\", \"def\"}"
@@ -2923,11 +4353,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  28
+           line:  27
            col:  6
           }
           end:  {
-           line:  28
+           line:  27
            col:  31
           }
           text:  "expr_set2 = {\"abc\", \"def\"}"
@@ -2948,11 +4378,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  29
+             line:  28
              col:  19
             }
             end:  {
-             line:  29
+             line:  28
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  28
+             col:  19
+            }
+            end:  {
+             line:  28
              col:  19
             }
            }
@@ -2966,11 +4407,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  29
+           line:  28
            col:  6
           }
           end:  {
-           line:  29
+           line:  28
            col:  22
           }
           text:  "expr_set3 = {{:}}"
@@ -2978,11 +4419,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  29
+           line:  28
            col:  6
           }
           end:  {
-           line:  29
+           line:  28
            col:  22
           }
           text:  "expr_set3 = {{:}}"
@@ -3005,11 +4446,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  30
+               line:  29
                col:  28
               }
               end:  {
-               line:  30
+               line:  29
+               col:  28
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  29
+               col:  28
+              }
+              end:  {
+               line:  29
                col:  28
               }
              }
@@ -3021,11 +4473,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  30
+               line:  29
                col:  32
               }
               end:  {
-               line:  30
+               line:  29
+               col:  32
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  29
+               col:  32
+              }
+              end:  {
+               line:  29
                col:  32
               }
              }
@@ -3037,11 +4500,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  30
+               line:  29
                col:  36
               }
               end:  {
-               line:  30
+               line:  29
+               col:  36
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  29
+               col:  36
+              }
+              end:  {
+               line:  29
                col:  36
               }
              }
@@ -3050,11 +4524,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  30
+             line:  29
              col:  27
             }
             end:  {
-             line:  30
+             line:  29
+             col:  41
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  29
+             col:  27
+            }
+            end:  {
+             line:  29
              col:  41
             }
            }
@@ -3063,11 +4548,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  30
+           line:  29
            col:  6
           }
           end:  {
-           line:  30
+           line:  29
            col:  42
           }
           text:  "expr_set4 = someFunc([\"1\",\"2\",\"abc\"])"
@@ -3075,11 +4560,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  30
+           line:  29
            col:  6
           }
           end:  {
-           line:  30
+           line:  29
            col:  42
           }
           text:  "expr_set4 = someFunc([\"1\",\"2\",\"abc\"])"
@@ -3099,11 +4584,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  31
+             line:  30
              col:  19
             }
             end:  {
-             line:  31
+             line:  30
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  30
+             col:  19
+            }
+            end:  {
+             line:  30
              col:  19
             }
            }
@@ -3115,11 +4611,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  31
+             line:  30
              col:  21
             }
             end:  {
-             line:  31
+             line:  30
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  30
+             col:  21
+            }
+            end:  {
+             line:  30
              col:  21
             }
            }
@@ -3131,11 +4638,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  31
+             line:  30
              col:  23
             }
             end:  {
-             line:  31
+             line:  30
+             col:  23
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  30
+             col:  23
+            }
+            end:  {
+             line:  30
              col:  23
             }
            }
@@ -3147,11 +4665,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  31
+           line:  30
            col:  6
           }
           end:  {
-           line:  31
+           line:  30
            col:  28
           }
           text:  "expr_set4 = {1,2,\"abc\"}"
@@ -3159,11 +4677,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  31
+           line:  30
            col:  6
           }
           end:  {
-           line:  31
+           line:  30
            col:  28
           }
           text:  "expr_set4 = {1,2,\"abc\"}"
@@ -3186,11 +4704,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  32
+             line:  31
              col:  20
             }
             end:  {
-             line:  32
+             line:  31
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  31
+             col:  20
+            }
+            end:  {
+             line:  31
              col:  20
             }
            }
@@ -3202,11 +4731,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  32
+             line:  31
              col:  22
             }
             end:  {
-             line:  32
+             line:  31
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  31
+             col:  22
+            }
+            end:  {
+             line:  31
              col:  22
             }
            }
@@ -3218,11 +4758,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  32
+             line:  31
              col:  24
             }
             end:  {
-             line:  32
+             line:  31
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  31
+             col:  24
+            }
+            end:  {
+             line:  31
              col:  24
             }
            }
@@ -3234,11 +4785,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  32
+           line:  31
            col:  6
           }
           end:  {
-           line:  32
+           line:  31
            col:  29
           }
           text:  "expr_list1 = [1,2,\"abc\"]"
@@ -3246,11 +4797,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  32
+           line:  31
            col:  6
           }
           end:  {
-           line:  32
+           line:  31
            col:  29
           }
           text:  "expr_list1 = [1,2,\"abc\"]"
@@ -3273,11 +4824,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  33
+             line:  32
              col:  20
             }
             end:  {
-             line:  33
+             line:  32
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  32
+             col:  20
+            }
+            end:  {
+             line:  32
              col:  20
             }
            }
@@ -3289,11 +4851,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  33
+             line:  32
              col:  24
             }
             end:  {
-             line:  33
+             line:  32
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  32
+             col:  24
+            }
+            end:  {
+             line:  32
              col:  24
             }
            }
@@ -3305,11 +4878,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  33
+             line:  32
              col:  28
             }
             end:  {
-             line:  33
+             line:  32
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  32
+             col:  28
+            }
+            end:  {
+             line:  32
              col:  28
             }
            }
@@ -3321,11 +4905,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  33
+           line:  32
            col:  6
           }
           end:  {
-           line:  33
+           line:  32
            col:  33
           }
           text:  "expr_list2 = [\"1\",\"2\",\"abc\"]"
@@ -3333,11 +4917,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  33
+           line:  32
            col:  6
           }
           end:  {
-           line:  33
+           line:  32
            col:  33
           }
           text:  "expr_list2 = [\"1\",\"2\",\"abc\"]"
@@ -3360,11 +4944,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  34
+               line:  33
                col:  29
               }
               end:  {
-               line:  34
+               line:  33
+               col:  29
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  33
+               col:  29
+              }
+              end:  {
+               line:  33
                col:  29
               }
              }
@@ -3376,11 +4971,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  34
+               line:  33
                col:  33
               }
               end:  {
-               line:  34
+               line:  33
+               col:  33
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  33
+               col:  33
+              }
+              end:  {
+               line:  33
                col:  33
               }
              }
@@ -3392,11 +4998,22 @@ apps:  {
              source_context:  {
               file:  "tests/math.sysl"
               start:  {
-               line:  34
+               line:  33
                col:  37
               }
               end:  {
-               line:  34
+               line:  33
+               col:  37
+              }
+             }
+             source_contexts:  {
+              file:  "tests/math.sysl"
+              start:  {
+               line:  33
+               col:  37
+              }
+              end:  {
+               line:  33
                col:  37
               }
              }
@@ -3405,11 +5022,22 @@ apps:  {
            source_context:  {
             file:  "tests/math.sysl"
             start:  {
-             line:  34
+             line:  33
              col:  28
             }
             end:  {
-             line:  34
+             line:  33
+             col:  42
+            }
+           }
+           source_contexts:  {
+            file:  "tests/math.sysl"
+            start:  {
+             line:  33
+             col:  28
+            }
+            end:  {
+             line:  33
              col:  42
             }
            }
@@ -3418,11 +5046,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  34
+           line:  33
            col:  6
           }
           end:  {
-           line:  34
+           line:  33
            col:  43
           }
           text:  "expr_list3 = someFunc([\"1\",\"2\",\"abc\"])"
@@ -3430,11 +5058,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  34
+           line:  33
            col:  6
           }
           end:  {
-           line:  34
+           line:  33
            col:  43
           }
           text:  "expr_list3 = someFunc([\"1\",\"2\",\"abc\"])"
@@ -3455,11 +5083,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  35
+           line:  34
            col:  6
           }
           end:  {
-           line:  35
+           line:  34
            col:  17
           }
           text:  "literal1 = false"
@@ -3467,11 +5095,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  35
+           line:  34
            col:  6
           }
           end:  {
-           line:  35
+           line:  34
            col:  17
           }
           text:  "literal1 = false"
@@ -3492,11 +5120,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  36
+           line:  35
            col:  6
           }
           end:  {
-           line:  36
+           line:  35
            col:  17
           }
           text:  "literal2 = true"
@@ -3504,11 +5132,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  36
+           line:  35
            col:  6
           }
           end:  {
-           line:  36
+           line:  35
            col:  17
           }
           text:  "literal2 = true"
@@ -3529,11 +5157,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  37
+           line:  36
            col:  6
           }
           end:  {
-           line:  37
+           line:  36
            col:  17
           }
           text:  "literal3 = null"
@@ -3541,11 +5169,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  37
+           line:  36
            col:  6
           }
           end:  {
-           line:  37
+           line:  36
            col:  17
           }
           text:  "literal3 = null"
@@ -3566,11 +5194,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  38
+           line:  37
            col:  6
           }
           end:  {
-           line:  38
+           line:  37
            col:  17
           }
           text:  "literal4 = \"abc\""
@@ -3578,11 +5206,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  38
+           line:  37
            col:  6
           }
           end:  {
-           line:  38
+           line:  37
            col:  17
           }
           text:  "literal4 = \"abc\""
@@ -3603,11 +5231,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  39
+           line:  38
            col:  6
           }
           end:  {
-           line:  39
+           line:  38
            col:  17
           }
           text:  "literal5 = 123"
@@ -3615,11 +5243,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  39
+           line:  38
            col:  6
           }
           end:  {
-           line:  39
+           line:  38
            col:  17
           }
           text:  "literal5 = 123"
@@ -3640,11 +5268,11 @@ apps:  {
          source_context:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  40
+           line:  39
            col:  6
           }
           end:  {
-           line:  40
+           line:  39
            col:  17
           }
           text:  "literal6 = 123.45"
@@ -3652,11 +5280,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/math.sysl"
           start:  {
-           line:  40
+           line:  39
            col:  6
           }
           end:  {
-           line:  40
+           line:  39
            col:  17
           }
           text:  "literal6 = 123.45"
@@ -3668,11 +5296,22 @@ apps:  {
      source_context:  {
       file:  "tests/math.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  41
+       line:  40
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/math.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  40
        col:  5
       }
      }
@@ -3680,22 +5319,22 @@ apps:  {
     source_context:  {
      file:  "tests/math.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  43
+      line:  42
      }
      text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type:"
     }
     source_contexts:  {
      file:  "tests/math.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  43
+      line:  42
      }
      text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type:"
     }
@@ -3703,24 +5342,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/math.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  40
+    col:  5
    }
   }
   source_contexts:  {
    file:  "tests/math.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  40
+    col:  5
    }
   }
  }

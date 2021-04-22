@@ -160,22 +160,22 @@ apps:  {
      source_context:  {
       file:  "tests/import_proto_JSON_conflict.sysl"
       start:  {
-       line:  11
+       line:  10
        col:  12
       }
       end:  {
-       line:  11
+       line:  10
        col:  18
       }
      }
      source_contexts:  {
       file:  "tests/import_proto_JSON_conflict.sysl"
       start:  {
-       line:  11
+       line:  10
        col:  12
       }
       end:  {
-       line:  11
+       line:  10
        col:  18
       }
      }
@@ -187,11 +187,11 @@ apps:  {
     source_context:  {
      file:  "tests/import_proto_JSON_conflict.sysl"
      start:  {
-      line:  9
+      line:  8
       col:  8
      }
      end:  {
-      line:  13
+      line:  12
       col:  12
      }
      version:  "v0.0.2"
@@ -199,11 +199,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/import_proto_JSON_conflict.sysl"
      start:  {
-      line:  9
+      line:  8
       col:  8
      }
      end:  {
-      line:  13
+      line:  12
       col:  12
      }
      version:  "v0.0.2"
@@ -251,24 +251,24 @@ apps:  {
   source_context:  {
    file:  "tests/import_proto_JSON_conflict.sysl"
    start:  {
-    line:  6
+    line:  5
     col:  1
    }
    end:  {
-    line:  6
-    col:  38
+    line:  10
+    col:  18
    }
    version:  "v0.0.2"
   }
   source_contexts:  {
    file:  "tests/import_proto_JSON_conflict.sysl"
    start:  {
-    line:  6
+    line:  5
     col:  1
    }
    end:  {
-    line:  6
-    col:  38
+    line:  10
+    col:  18
    }
    version:  "v0.0.2"
   }
@@ -866,11 +866,11 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_conflict.sysl"
         start:  {
-         line:  15
+         line:  14
          col:  8
         }
         end:  {
-         line:  17
+         line:  16
          col:  4
         }
         version:  "v0.0.2"
@@ -878,11 +878,11 @@ apps:  {
        source_contexts:  {
         file:  "tests/import_proto_JSON_conflict.sysl"
         start:  {
-         line:  15
+         line:  14
          col:  8
         }
         end:  {
-         line:  17
+         line:  16
          col:  4
         }
         version:  "v0.0.2"
@@ -899,11 +899,11 @@ apps:  {
     source_context:  {
      file:  "tests/import_proto_JSON_conflict.sysl"
      start:  {
-      line:  14
+      line:  13
       col:  4
      }
      end:  {
-      line:  17
+      line:  16
       col:  4
      }
      version:  "v0.0.2"
@@ -911,11 +911,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/import_proto_JSON_conflict.sysl"
      start:  {
-      line:  14
+      line:  13
       col:  4
      }
      end:  {
-      line:  17
+      line:  16
       col:  4
      }
      version:  "v0.0.2"
@@ -925,24 +925,24 @@ apps:  {
   source_context:  {
    file:  "tests/import_proto_JSON_conflict.sysl"
    start:  {
-    line:  13
+    line:  12
     col:  1
    }
    end:  {
-    line:  13
-    col:  43
+    line:  16
+    col:  4
    }
    version:  "v0.0.2"
   }
   source_contexts:  {
    file:  "tests/import_proto_JSON_conflict.sysl"
    start:  {
-    line:  13
+    line:  12
     col:  1
    }
    end:  {
-    line:  13
-    col:  43
+    line:  16
+    col:  4
    }
    version:  "v0.0.2"
   }

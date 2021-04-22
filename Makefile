@@ -45,9 +45,16 @@ coverage: generate
 	./scripts/test-with-coverage.sh 80
 
 # Updates golden test files in pkg/parse.
-# TODO: Extend to work for all golden files
 golden: generate
 	go test ./pkg/parse ./pkg/exporter ./pkg/importer -update
+	# TODO: Extend the -update flag to work for all golden files
+	sysl pb --mode=textpb tests/args.sysl > tests/args.sysl.golden.textpb
+	sysl pb --mode=json tests/args.sysl > tests/args.sysl.golden.json
+	sysl pb --mode=textpb tests/type_merge1.sysl > tests/type_merge1.sysl.golden.textpb
+	sysl pb --mode=textpb tests/type_merge2.sysl > tests/type_merge2.sysl.golden.textpb
+	sysl pb --mode=textpb tests/file_merge.sysl > tests/file_merge.sysl.golden.textpb
+	sysl pb --mode=json tests/file_merge.sysl > tests/file_merge.sysl.golden.json
+	sysl pb --mode=textpb tests/namespace_merge.sysl > tests/namespace_merge.sysl.golden.textpb
 
 check-clean: generate
 	git --no-pager diff HEAD && test -z "$$(git status --porcelain)"

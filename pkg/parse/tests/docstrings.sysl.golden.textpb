@@ -21,46 +21,46 @@ apps:  {
      source_context:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  12
+       line:  11
        col:  8
       }
       end:  {
-       line:  12
-       col:  8
+       line:  11
+       col:  11
       }
      }
      source_contexts:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  12
+       line:  11
        col:  8
       }
       end:  {
-       line:  12
-       col:  8
+       line:  11
+       col:  11
       }
      }
     }
     source_context:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  8
+      line:  7
       col:  4
      }
      end:  {
-      line:  14
-      col:  15
+      line:  11
+      col:  11
      }
     }
     source_contexts:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  8
+      line:  7
       col:  4
      }
      end:  {
-      line:  14
-      col:  15
+      line:  11
+      col:  11
      }
     }
    }
@@ -68,21 +68,21 @@ apps:  {
   source_context:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  7
-    col:  1
+    line:  6
    }
    end:  {
-    line:  7
+    line:  11
+    col:  11
    }
   }
   source_contexts:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  7
-    col:  1
+    line:  6
    }
    end:  {
-    line:  7
+    line:  11
+    col:  11
    }
   }
  }
@@ -107,23 +107,13 @@ apps:  {
   }
   source_context:  {
    file:  "tests/docstrings.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
-   end:  {
-    line:  1
-   }
+   start:  {}
+   end:  {}
   }
   source_contexts:  {
    file:  "tests/docstrings.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
-   end:  {
-    line:  1
-   }
+   start:  {}
+   end:  {}
   }
  }
 }
@@ -145,22 +135,22 @@ apps:  {
     source_context:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  24
+      line:  23
       col:  4
      }
      end:  {
-      line:  30
+      line:  29
       col:  8
      }
     }
     source_contexts:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  24
+      line:  23
       col:  4
      }
      end:  {
-      line:  30
+      line:  29
       col:  8
      }
     }
@@ -169,21 +159,21 @@ apps:  {
   source_context:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  23
-    col:  1
+    line:  22
    }
    end:  {
-    line:  23
+    line:  29
+    col:  8
    }
   }
   source_contexts:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  23
-    col:  1
+    line:  22
    }
    end:  {
-    line:  23
+    line:  29
+    col:  8
    }
   }
  }
@@ -211,22 +201,22 @@ apps:  {
        source_context:  {
         file:  "tests/docstrings.sysl"
         start:  {
-         line:  32
+         line:  31
          col:  8
         }
         end:  {
-         line:  36
+         line:  35
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/docstrings.sysl"
         start:  {
-         line:  32
+         line:  31
          col:  8
         }
         end:  {
-         line:  36
+         line:  35
          col:  8
         }
        }
@@ -240,22 +230,22 @@ apps:  {
        source_context:  {
         file:  "tests/docstrings.sysl"
         start:  {
-         line:  36
+         line:  35
          col:  8
         }
         end:  {
-         line:  36
+         line:  35
          col:  25
         }
        }
        source_contexts:  {
         file:  "tests/docstrings.sysl"
         start:  {
-         line:  36
+         line:  35
          col:  8
         }
         end:  {
-         line:  36
+         line:  35
          col:  25
         }
        }
@@ -265,21 +255,23 @@ apps:  {
     source_context:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  31
+      line:  30
       col:  4
      }
      end:  {
-      line:  37
+      line:  35
+      col:  25
      }
     }
     source_contexts:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  31
+      line:  30
       col:  4
      }
      end:  {
-      line:  37
+      line:  35
+      col:  25
      }
     }
    }
@@ -287,21 +279,21 @@ apps:  {
   source_context:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  30
-    col:  1
+    line:  29
    }
    end:  {
-    line:  30
+    line:  35
+    col:  25
    }
   }
   source_contexts:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  30
-    col:  1
+    line:  29
    }
    end:  {
-    line:  30
+    line:  35
+    col:  25
    }
   }
  }
@@ -323,22 +315,22 @@ apps:  {
      source_context:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  19
+       line:  18
        col:  8
       }
       end:  {
-       line:  19
+       line:  18
        col:  9
       }
      }
      source_contexts:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  19
+       line:  18
        col:  8
       }
       end:  {
-       line:  19
+       line:  18
        col:  9
       }
      }
@@ -350,46 +342,46 @@ apps:  {
      source_context:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  21
+       line:  20
        col:  8
       }
       end:  {
-       line:  21
-       col:  8
+       line:  20
+       col:  30
       }
      }
      source_contexts:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  21
+       line:  20
        col:  8
       }
       end:  {
-       line:  21
-       col:  8
+       line:  20
+       col:  30
       }
      }
     }
     source_context:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  18
+      line:  17
       col:  4
      }
      end:  {
-      line:  23
-      col:  5
+      line:  20
+      col:  30
      }
     }
     source_contexts:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  18
+      line:  17
       col:  4
      }
      end:  {
-      line:  23
-      col:  5
+      line:  20
+      col:  30
      }
     }
    }
@@ -405,46 +397,46 @@ apps:  {
      source_context:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  16
+       line:  15
        col:  8
       }
       end:  {
-       line:  16
-       col:  8
+       line:  15
+       col:  31
       }
      }
      source_contexts:  {
       file:  "tests/docstrings.sysl"
       start:  {
-       line:  16
+       line:  15
        col:  8
       }
       end:  {
-       line:  16
-       col:  8
+       line:  15
+       col:  31
       }
      }
     }
     source_context:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  15
+      line:  14
       col:  4
      }
      end:  {
-      line:  18
-      col:  4
+      line:  15
+      col:  31
      }
     }
     source_contexts:  {
      file:  "tests/docstrings.sysl"
      start:  {
-      line:  15
+      line:  14
       col:  4
      }
      end:  {
-      line:  18
-      col:  4
+      line:  15
+      col:  31
      }
     }
    }
@@ -452,21 +444,21 @@ apps:  {
   source_context:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  14
-    col:  1
+    line:  13
    }
    end:  {
-    line:  14
+    line:  20
+    col:  30
    }
   }
   source_contexts:  {
    file:  "tests/docstrings.sysl"
    start:  {
-    line:  14
-    col:  1
+    line:  13
    }
    end:  {
-    line:  14
+    line:  20
+    col:  30
    }
   }
  }

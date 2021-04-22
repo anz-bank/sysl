@@ -146,22 +146,22 @@ apps:  {
      source_context:  {
       file:  "tests/import_proto_JSON_dep.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  6
       }
       end:  {
-       line:  5
+       line:  4
        col:  17
       }
      }
      source_contexts:  {
       file:  "tests/import_proto_JSON_dep.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  6
       }
       end:  {
-       line:  5
+       line:  4
        col:  17
       }
      }
@@ -173,22 +173,22 @@ apps:  {
      source_context:  {
       file:  "tests/import_proto_JSON_dep.sysl"
       start:  {
-       line:  6
+       line:  5
        col:  6
       }
       end:  {
-       line:  6
+       line:  5
        col:  12
       }
      }
      source_contexts:  {
       file:  "tests/import_proto_JSON_dep.sysl"
       start:  {
-       line:  6
+       line:  5
        col:  6
       }
       end:  {
-       line:  6
+       line:  5
        col:  12
       }
      }
@@ -196,21 +196,23 @@ apps:  {
     source_context:  {
      file:  "tests/import_proto_JSON_dep.sysl"
      start:  {
-      line:  4
+      line:  3
       col:  4
      }
      end:  {
-      line:  7
+      line:  5
+      col:  12
      }
     }
     source_contexts:  {
      file:  "tests/import_proto_JSON_dep.sysl"
      start:  {
-      line:  4
+      line:  3
       col:  4
      }
      end:  {
-      line:  7
+      line:  5
+      col:  12
      }
     }
    }
@@ -294,24 +296,24 @@ apps:  {
   source_context:  {
    file:  "tests/import_proto_JSON_dep.sysl"
    start:  {
-    line:  3
+    line:  2
     col:  1
    }
    end:  {
-    line:  3
-    col:  38
+    line:  5
+    col:  12
    }
    version:  "v0.0.2"
   }
   source_contexts:  {
    file:  "tests/import_proto_JSON_dep.sysl"
    start:  {
-    line:  3
+    line:  2
     col:  1
    }
    end:  {
-    line:  3
-    col:  38
+    line:  5
+    col:  12
    }
    version:  "v0.0.2"
   }

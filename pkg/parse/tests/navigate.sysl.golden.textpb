@@ -29,11 +29,22 @@ apps:  {
        source_context:  {
         file:  "tests/navigate.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  3
+         line:  2
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/navigate.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  2
          col:  4
         }
        }
@@ -49,11 +60,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  17
             }
             end:  {
-             line:  4
+             line:  3
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  3
+             col:  17
+            }
+            end:  {
+             line:  3
              col:  20
             }
            }
@@ -63,11 +85,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  20
           }
           text:  "let out1 = -> foo"
@@ -75,11 +97,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  20
           }
           text:  "let out1 = -> foo"
@@ -97,11 +119,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  5
+             line:  4
              col:  17
             }
             end:  {
-             line:  5
+             line:  4
+             col:  17
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  4
+             col:  17
+            }
+            end:  {
+             line:  4
              col:  17
             }
            }
@@ -111,11 +144,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  24
           }
           text:  "let out2 = abc -> foo"
@@ -123,11 +156,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  24
           }
           text:  "let out2 = abc -> foo"
@@ -145,11 +178,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  18
             }
             end:  {
-             line:  6
+             line:  5
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  5
+             col:  18
+            }
+            end:  {
+             line:  5
              col:  18
             }
            }
@@ -160,11 +204,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  26
           }
           text:  "let out2a = abc ?-> foo"
@@ -172,11 +216,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  26
           }
           text:  "let out2a = abc ?-> foo"
@@ -196,11 +240,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  7
+               line:  6
                col:  18
               }
               end:  {
-               line:  7
+               line:  6
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  6
+               col:  18
+              }
+              end:  {
+               line:  6
                col:  18
               }
              }
@@ -210,11 +265,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  22
             }
             end:  {
-             line:  7
+             line:  6
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  6
+             col:  22
+            }
+            end:  {
+             line:  6
              col:  25
             }
            }
@@ -224,11 +290,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  29
           }
           text:  "let out2b = abc -> foo.bar"
@@ -236,11 +302,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  29
           }
           text:  "let out2b = abc -> foo.bar"
@@ -260,11 +326,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  8
+               line:  7
                col:  17
               }
               end:  {
-               line:  8
+               line:  7
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  7
+               col:  17
+              }
+              end:  {
+               line:  7
                col:  18
               }
              }
@@ -274,11 +351,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  17
             }
             end:  {
-             line:  8
+             line:  7
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  7
+             col:  17
+            }
+            end:  {
+             line:  7
              col:  18
             }
            }
@@ -288,11 +376,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  25
           }
           text:  "let out3 = .abc -> foo"
@@ -300,11 +388,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  25
           }
           text:  "let out3 = .abc -> foo"
@@ -324,11 +412,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  17
               }
               end:  {
-               line:  9
+               line:  8
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  8
+               col:  17
+              }
+              end:  {
+               line:  8
                col:  18
               }
              }
@@ -338,11 +437,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  17
             }
             end:  {
-             line:  9
+             line:  8
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  8
+             col:  17
+            }
+            end:  {
+             line:  8
              col:  18
             }
            }
@@ -352,11 +462,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  26
           }
           text:  "let out4 = .abc -> .foo"
@@ -364,11 +474,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  26
           }
           text:  "let out4 = .abc -> .foo"
@@ -388,11 +498,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  17
               }
               end:  {
-               line:  10
+               line:  9
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  9
+               col:  17
+              }
+              end:  {
+               line:  9
                col:  18
               }
              }
@@ -402,11 +523,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  10
+             line:  9
              col:  17
             }
             end:  {
-             line:  10
+             line:  9
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  9
+             col:  17
+            }
+            end:  {
+             line:  9
              col:  18
             }
            }
@@ -417,11 +549,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  33
           }
           text:  "let out5 = .abc -> set of .foo"
@@ -429,11 +561,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  33
           }
           text:  "let out5 = .abc -> set of .foo"
@@ -453,11 +585,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  17
               }
               end:  {
-               line:  11
+               line:  10
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  10
+               col:  17
+              }
+              end:  {
+               line:  10
                col:  18
               }
              }
@@ -467,11 +610,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  17
             }
             end:  {
-             line:  11
+             line:  10
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  10
+             col:  17
+            }
+            end:  {
+             line:  10
              col:  18
             }
            }
@@ -482,11 +636,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  32
           }
           text:  "let out6 = .abc -> set of foo"
@@ -494,11 +648,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  32
           }
           text:  "let out6 = .abc -> set of foo"
@@ -518,11 +672,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  17
               }
               end:  {
-               line:  12
+               line:  11
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  11
+               col:  17
+              }
+              end:  {
+               line:  11
                col:  18
               }
              }
@@ -532,11 +697,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  17
             }
             end:  {
-             line:  12
+             line:  11
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  11
+             col:  17
+            }
+            end:  {
+             line:  11
              col:  18
             }
            }
@@ -548,11 +724,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  40
           }
           text:  "let out7 = .abc -> set of foo via bar"
@@ -560,11 +736,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  40
           }
           text:  "let out7 = .abc -> set of foo via bar"
@@ -590,11 +766,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/navigate.sysl"
                   start:  {
-                   line:  13
+                   line:  12
                    col:  17
                   }
                   end:  {
-                   line:  13
+                   line:  12
+                   col:  18
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/navigate.sysl"
+                  start:  {
+                   line:  12
+                   col:  17
+                  }
+                  end:  {
+                   line:  12
                    col:  18
                   }
                  }
@@ -604,11 +791,22 @@ apps:  {
                source_context:  {
                 file:  "tests/navigate.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  17
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  18
+                }
+               }
+               source_contexts:  {
+                file:  "tests/navigate.sysl"
+                start:  {
+                 line:  12
+                 col:  17
+                }
+                end:  {
+                 line:  12
                  col:  18
                 }
                }
@@ -620,11 +818,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  22
               }
               end:  {
-               line:  13
+               line:  12
+               col:  40
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  12
+               col:  22
+              }
+              end:  {
+               line:  12
                col:  40
               }
              }
@@ -639,11 +848,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/navigate.sysl"
                   start:  {
-                   line:  13
+                   line:  12
                    col:  50
                   }
                   end:  {
-                   line:  13
+                   line:  12
+                   col:  51
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/navigate.sysl"
+                  start:  {
+                   line:  12
+                   col:  50
+                  }
+                  end:  {
+                   line:  12
                    col:  51
                   }
                  }
@@ -653,11 +873,22 @@ apps:  {
                source_context:  {
                 file:  "tests/navigate.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  50
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  51
+                }
+               }
+               source_contexts:  {
+                file:  "tests/navigate.sysl"
+                start:  {
+                 line:  12
+                 col:  50
+                }
+                end:  {
+                 line:  12
                  col:  51
                 }
                }
@@ -672,11 +903,22 @@ apps:  {
                source_context:  {
                 file:  "tests/navigate.sysl"
                 start:  {
-                 line:  13
+                 line:  12
                  col:  56
                 }
                 end:  {
-                 line:  13
+                 line:  12
+                 col:  56
+                }
+               }
+               source_contexts:  {
+                file:  "tests/navigate.sysl"
+                start:  {
+                 line:  12
+                 col:  56
+                }
+                end:  {
+                 line:  12
                  col:  56
                 }
                }
@@ -685,11 +927,22 @@ apps:  {
              source_context:  {
               file:  "tests/navigate.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  50
               }
               end:  {
-               line:  13
+               line:  12
+               col:  56
+              }
+             }
+             source_contexts:  {
+              file:  "tests/navigate.sysl"
+              start:  {
+               line:  12
+               col:  50
+              }
+              end:  {
+               line:  12
                col:  56
               }
              }
@@ -699,11 +952,22 @@ apps:  {
            source_context:  {
             file:  "tests/navigate.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  44
             }
             end:  {
-             line:  13
+             line:  12
+             col:  44
+            }
+           }
+           source_contexts:  {
+            file:  "tests/navigate.sysl"
+            start:  {
+             line:  12
+             col:  44
+            }
+            end:  {
+             line:  12
              col:  44
             }
            }
@@ -712,11 +976,11 @@ apps:  {
          source_context:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  62
           }
           text:  "let out8 = .abc -> set of foo via bar where(.a == true) snapshot"
@@ -724,11 +988,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/navigate.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  62
           }
           text:  "let out8 = .abc -> set of foo via bar where(.a == true) snapshot"
@@ -740,11 +1004,22 @@ apps:  {
      source_context:  {
       file:  "tests/navigate.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  14
+       line:  13
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/navigate.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  13
        col:  5
       }
      }
@@ -752,22 +1027,22 @@ apps:  {
     source_context:  {
      file:  "tests/navigate.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  15
+      line:  14
      }
      text:  "!view TestNavigate(number <: int) -> int:"
     }
     source_contexts:  {
      file:  "tests/navigate.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  15
+      line:  14
      }
      text:  "!view TestNavigate(number <: int) -> int:"
     }
@@ -775,24 +1050,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/navigate.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  12
+    col:  62
    }
   }
   source_contexts:  {
    file:  "tests/navigate.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  12
+    col:  62
    }
   }
  }

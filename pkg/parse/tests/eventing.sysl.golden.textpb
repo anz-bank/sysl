@@ -18,22 +18,22 @@ apps:  {
      source_context:  {
       file:  "tests/eventing.sysl"
       start:  {
-       line:  19
+       line:  18
        col:  4
       }
       end:  {
-       line:  19
+       line:  18
        col:  21
       }
      }
      source_contexts:  {
       file:  "tests/eventing.sysl"
       start:  {
-       line:  19
+       line:  18
        col:  4
       }
       end:  {
-       line:  19
+       line:  18
        col:  21
       }
      }
@@ -41,21 +41,23 @@ apps:  {
     source_context:  {
      file:  "tests/eventing.sysl"
      start:  {
-      line:  17
+      line:  16
       col:  2
      }
      end:  {
-      line:  20
+      line:  18
+      col:  21
      }
     }
     source_contexts:  {
      file:  "tests/eventing.sysl"
      start:  {
-      line:  17
+      line:  16
       col:  2
      }
      end:  {
-      line:  20
+      line:  18
+      col:  21
      }
     }
    }
@@ -63,21 +65,21 @@ apps:  {
   source_context:  {
    file:  "tests/eventing.sysl"
    start:  {
-    line:  16
-    col:  1
+    line:  15
    }
    end:  {
-    line:  16
+    line:  18
+    col:  21
    }
   }
   source_contexts:  {
    file:  "tests/eventing.sysl"
    start:  {
-    line:  16
-    col:  1
+    line:  15
    }
    end:  {
-    line:  16
+    line:  18
+    col:  21
    }
   }
  }
@@ -116,22 +118,22 @@ apps:  {
      source_context:  {
       file:  "tests/eventing.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  4
       }
       end:  {
-       line:  16
+       line:  15
        col:  11
       }
      }
      source_contexts:  {
       file:  "tests/eventing.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  4
       }
       end:  {
-       line:  16
+       line:  15
        col:  11
       }
      }
@@ -139,22 +141,22 @@ apps:  {
     source_context:  {
      file:  "tests/eventing.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  37
      }
     }
     source_contexts:  {
      file:  "tests/eventing.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  37
      }
     }
@@ -162,22 +164,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/eventing.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
     line:  1
+    col:  37
    }
   }
   source_contexts:  {
    file:  "tests/eventing.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
     line:  1
+    col:  37
    }
   }
  }
@@ -202,45 +200,45 @@ apps:  {
      source_context:  {
       file:  "tests/eventing.sysl"
       start:  {
-       line:  6
+       line:  5
        col:  8
       }
       end:  {
-       line:  6
-       col:  8
+       line:  5
+       col:  34
       }
      }
      source_contexts:  {
       file:  "tests/eventing.sysl"
       start:  {
-       line:  6
+       line:  5
        col:  8
       }
       end:  {
-       line:  6
-       col:  8
+       line:  5
+       col:  34
       }
      }
     }
     source_context:  {
      file:  "tests/eventing.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  16
+      line:  15
       col:  11
      }
     }
     source_contexts:  {
      file:  "tests/eventing.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  16
+      line:  15
       col:  11
      }
     }
@@ -249,21 +247,21 @@ apps:  {
   source_context:  {
    file:  "tests/eventing.sysl"
    start:  {
-    line:  4
-    col:  1
+    line:  3
    }
    end:  {
-    line:  4
+    line:  5
+    col:  34
    }
   }
   source_contexts:  {
    file:  "tests/eventing.sysl"
    start:  {
-    line:  4
-    col:  1
+    line:  3
    }
    end:  {
-    line:  4
+    line:  5
+    col:  34
    }
   }
  }

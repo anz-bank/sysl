@@ -29,11 +29,22 @@ apps:  {
        source_context:  {
         file:  "tests/matching.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  3
+         line:  2
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/matching.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  2
          col:  4
         }
        }
@@ -53,11 +64,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  17
               }
               end:  {
-               line:  4
+               line:  3
+               col:  20
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  3
+               col:  17
+              }
+              end:  {
+               line:  3
                col:  20
               }
              }
@@ -67,11 +89,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  20
               }
               end:  {
-               line:  4
+               line:  3
+               col:  20
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  3
+               col:  20
+              }
+              end:  {
+               line:  3
                col:  20
               }
              }
@@ -84,11 +117,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  17
             }
             end:  {
-             line:  4
+             line:  3
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  3
+             col:  17
+            }
+            end:  {
+             line:  3
              col:  20
             }
            }
@@ -100,11 +144,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  20
           }
           text:  "let out = ~~> foo1"
@@ -112,11 +156,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  20
           }
           text:  "let out = ~~> foo1"
@@ -135,11 +179,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  5
+             line:  4
              col:  17
             }
             end:  {
-             line:  5
+             line:  4
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  4
+             col:  17
+            }
+            end:  {
+             line:  4
              col:  22
             }
            }
@@ -149,11 +204,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  5
+             line:  4
              col:  22
             }
             end:  {
-             line:  5
+             line:  4
+             col:  22
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  4
+             col:  22
+            }
+            end:  {
+             line:  4
              col:  22
             }
            }
@@ -166,11 +232,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  22
           }
           text:  "let out1 = . ~> foo1"
@@ -178,11 +244,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  22
           }
           text:  "let out1 = . ~> foo1"
@@ -201,11 +267,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  17
             }
             end:  {
-             line:  6
+             line:  5
+             col:  17
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  5
+             col:  17
+            }
+            end:  {
+             line:  5
              col:  17
             }
            }
@@ -215,11 +292,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  24
             }
             end:  {
-             line:  6
+             line:  5
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  5
+             col:  24
+            }
+            end:  {
+             line:  5
              col:  24
             }
            }
@@ -232,11 +320,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  24
           }
           text:  "let out2 = abc ~> foo1"
@@ -244,11 +332,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  24
           }
           text:  "let out2 = abc ~> foo1"
@@ -269,11 +357,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  7
+               line:  6
                col:  17
               }
               end:  {
-               line:  7
+               line:  6
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  6
+               col:  17
+              }
+              end:  {
+               line:  6
                col:  18
               }
              }
@@ -283,11 +382,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  17
             }
             end:  {
-             line:  7
+             line:  6
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  6
+             col:  17
+            }
+            end:  {
+             line:  6
              col:  18
             }
            }
@@ -297,11 +407,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  25
             }
             end:  {
-             line:  7
+             line:  6
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  6
+             col:  25
+            }
+            end:  {
+             line:  6
              col:  25
             }
            }
@@ -314,11 +435,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  25
           }
           text:  "let out3 = .abc ~> foo1"
@@ -326,11 +447,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  25
           }
           text:  "let out3 = .abc ~> foo1"
@@ -351,11 +472,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  8
+               line:  7
                col:  17
               }
               end:  {
-               line:  8
+               line:  7
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  7
+               col:  17
+              }
+              end:  {
+               line:  7
                col:  18
               }
              }
@@ -365,11 +497,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  17
             }
             end:  {
-             line:  8
+             line:  7
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  7
+             col:  17
+            }
+            end:  {
+             line:  7
              col:  18
             }
            }
@@ -381,11 +524,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  8
+               line:  7
                col:  25
               }
               end:  {
-               line:  8
+               line:  7
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  7
+               col:  25
+              }
+              end:  {
+               line:  7
                col:  26
               }
              }
@@ -395,11 +549,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  25
             }
             end:  {
-             line:  8
+             line:  7
+             col:  26
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  7
+             col:  25
+            }
+            end:  {
+             line:  7
              col:  26
             }
            }
@@ -412,11 +577,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  26
           }
           text:  "let out4 = .abc ~> .def"
@@ -424,11 +589,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  26
           }
           text:  "let out4 = .abc ~> .def"
@@ -449,11 +614,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  17
               }
               end:  {
-               line:  9
+               line:  8
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  8
+               col:  17
+              }
+              end:  {
+               line:  8
                col:  18
               }
              }
@@ -463,11 +639,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  17
             }
             end:  {
-             line:  9
+             line:  8
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  8
+             col:  17
+            }
+            end:  {
+             line:  8
              col:  18
             }
            }
@@ -479,11 +666,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  25
               }
               end:  {
-               line:  9
+               line:  8
+               col:  35
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  8
+               col:  25
+              }
+              end:  {
+               line:  8
                col:  35
               }
              }
@@ -494,11 +692,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  25
             }
             end:  {
-             line:  9
+             line:  8
+             col:  35
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  8
+             col:  25
+            }
+            end:  {
+             line:  8
              col:  35
             }
            }
@@ -511,11 +720,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  35
           }
           text:  "let out5 = .abc ~> .table of abc"
@@ -523,11 +732,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  35
           }
           text:  "let out5 = .abc ~> .table of abc"
@@ -548,11 +757,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  17
               }
               end:  {
-               line:  10
+               line:  9
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  9
+               col:  17
+              }
+              end:  {
+               line:  9
                col:  18
               }
              }
@@ -562,11 +782,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  10
+             line:  9
              col:  17
             }
             end:  {
-             line:  10
+             line:  9
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  9
+             col:  17
+            }
+            end:  {
+             line:  9
              col:  18
             }
            }
@@ -578,11 +809,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  25
               }
               end:  {
-               line:  10
+               line:  9
+               col:  28
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  9
+               col:  25
+              }
+              end:  {
+               line:  9
                col:  28
               }
              }
@@ -592,11 +834,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  10
+             line:  9
              col:  25
             }
             end:  {
-             line:  10
+             line:  9
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  9
+             col:  25
+            }
+            end:  {
+             line:  9
              col:  28
             }
            }
@@ -609,11 +862,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  28
           }
           text:  "let out6 = .abc ~> -> foo"
@@ -621,11 +874,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  28
           }
           text:  "let out6 = .abc ~> -> foo"
@@ -646,11 +899,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  17
               }
               end:  {
-               line:  11
+               line:  10
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  10
+               col:  17
+              }
+              end:  {
+               line:  10
                col:  18
               }
              }
@@ -660,11 +924,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  17
             }
             end:  {
-             line:  11
+             line:  10
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  10
+             col:  17
+            }
+            end:  {
+             line:  10
              col:  18
             }
            }
@@ -674,11 +949,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  30
             }
             end:  {
-             line:  11
+             line:  10
+             col:  30
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  10
+             col:  30
+            }
+            end:  {
+             line:  10
              col:  30
             }
            }
@@ -691,11 +977,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  30
           }
           text:  "let out7 = .abc ~[abc]> foo"
@@ -703,11 +989,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  30
           }
           text:  "let out7 = .abc ~[abc]> foo"
@@ -728,11 +1014,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  18
               }
               end:  {
-               line:  12
+               line:  11
+               col:  19
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  11
+               col:  18
+              }
+              end:  {
+               line:  11
                col:  19
               }
              }
@@ -742,11 +1039,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  18
             }
             end:  {
-             line:  12
+             line:  11
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  11
+             col:  18
+            }
+            end:  {
+             line:  11
              col:  19
             }
            }
@@ -756,11 +1064,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  35
             }
             end:  {
-             line:  12
+             line:  11
+             col:  35
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  11
+             col:  35
+            }
+            end:  {
+             line:  11
              col:  35
             }
            }
@@ -774,11 +1093,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  35
           }
           text:  "let out7a = .abc ~[abc,def]> foo"
@@ -786,11 +1105,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  35
           }
           text:  "let out7a = .abc ~[abc,def]> foo"
@@ -811,11 +1130,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  18
               }
               end:  {
-               line:  13
+               line:  12
+               col:  19
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  12
+               col:  18
+              }
+              end:  {
+               line:  12
                col:  19
               }
              }
@@ -825,11 +1155,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  18
             }
             end:  {
-             line:  13
+             line:  12
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  12
+             col:  18
+            }
+            end:  {
+             line:  12
              col:  19
             }
            }
@@ -839,11 +1180,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  36
             }
             end:  {
-             line:  13
+             line:  12
+             col:  36
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  12
+             col:  36
+            }
+            end:  {
+             line:  12
              col:  36
             }
            }
@@ -857,11 +1209,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  36
           }
           text:  "let out7b = .abc !~[abc,def]> foo"
@@ -869,11 +1221,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  36
           }
           text:  "let out7b = .abc !~[abc,def]> foo"
@@ -896,11 +1248,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  14
+                 line:  13
                  col:  17
                 }
                 end:  {
-                 line:  14
+                 line:  13
+                 col:  18
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  13
+                 col:  17
+                }
+                end:  {
+                 line:  13
                  col:  18
                 }
                }
@@ -910,11 +1273,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  17
               }
               end:  {
-               line:  14
+               line:  13
+               col:  18
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  13
+               col:  17
+              }
+              end:  {
+               line:  13
                col:  18
               }
              }
@@ -924,11 +1298,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  35
               }
               end:  {
-               line:  14
+               line:  13
+               col:  35
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  13
+               col:  35
+              }
+              end:  {
+               line:  13
                col:  35
               }
              }
@@ -939,11 +1324,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  22
             }
             end:  {
-             line:  14
+             line:  13
+             col:  35
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  13
+             col:  22
+            }
+            end:  {
+             line:  13
              col:  35
             }
            }
@@ -953,11 +1349,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  39
           }
           text:  "let out8 = .abc !~[abc,def]> foo.def"
@@ -965,11 +1361,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  39
           }
           text:  "let out8 = .abc !~[abc,def]> foo.def"
@@ -992,11 +1388,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  18
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  19
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  14
+                 col:  18
+                }
+                end:  {
+                 line:  14
                  col:  19
                 }
                }
@@ -1006,11 +1413,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  18
               }
               end:  {
-               line:  15
+               line:  14
+               col:  19
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  14
+               col:  18
+              }
+              end:  {
+               line:  14
                col:  19
               }
              }
@@ -1022,11 +1440,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  15
+                 line:  14
                  col:  36
                 }
                 end:  {
-                 line:  15
+                 line:  14
+                 col:  37
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  14
+                 col:  36
+                }
+                end:  {
+                 line:  14
                  col:  37
                 }
                }
@@ -1036,11 +1465,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  36
               }
               end:  {
-               line:  15
+               line:  14
+               col:  37
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  14
+               col:  36
+              }
+              end:  {
+               line:  14
                col:  37
               }
              }
@@ -1051,11 +1491,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  15
+             line:  14
              col:  23
             }
             end:  {
-             line:  15
+             line:  14
+             col:  37
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  14
+             col:  23
+            }
+            end:  {
+             line:  14
              col:  37
             }
            }
@@ -1065,11 +1516,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  41
           }
           text:  "let out8b = .abc !~[abc,def]> .foo.def"
@@ -1077,11 +1528,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  41
           }
           text:  "let out8b = .abc !~[abc,def]> .foo.def"
@@ -1107,11 +1558,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/matching.sysl"
                   start:  {
-                   line:  16
+                   line:  15
                    col:  17
                   }
                   end:  {
-                   line:  16
+                   line:  15
+                   col:  18
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/matching.sysl"
+                  start:  {
+                   line:  15
+                   col:  17
+                  }
+                  end:  {
+                   line:  15
                    col:  18
                   }
                  }
@@ -1121,11 +1583,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  16
+                 line:  15
                  col:  17
                 }
                 end:  {
-                 line:  16
+                 line:  15
+                 col:  18
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  15
+                 col:  17
+                }
+                end:  {
+                 line:  15
                  col:  18
                 }
                }
@@ -1137,11 +1610,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/matching.sysl"
                   start:  {
-                   line:  16
+                   line:  15
                    col:  35
                   }
                   end:  {
-                   line:  16
+                   line:  15
+                   col:  36
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/matching.sysl"
+                  start:  {
+                   line:  15
+                   col:  35
+                  }
+                  end:  {
+                   line:  15
                    col:  36
                   }
                  }
@@ -1151,11 +1635,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  16
+                 line:  15
                  col:  35
                 }
                 end:  {
-                 line:  16
+                 line:  15
+                 col:  36
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  15
+                 col:  35
+                }
+                end:  {
+                 line:  15
                  col:  36
                 }
                }
@@ -1166,11 +1661,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  16
+               line:  15
                col:  22
               }
               end:  {
-               line:  16
+               line:  15
+               col:  36
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  15
+               col:  22
+              }
+              end:  {
+               line:  15
                col:  36
               }
              }
@@ -1180,11 +1686,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  39
             }
             end:  {
-             line:  16
+             line:  15
+             col:  40
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  15
+             col:  39
+            }
+            end:  {
+             line:  15
              col:  40
             }
            }
@@ -1199,11 +1716,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  50
             }
             end:  {
-             line:  16
+             line:  15
+             col:  50
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  15
+             col:  50
+            }
+            end:  {
+             line:  15
              col:  50
             }
            }
@@ -1216,11 +1744,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  54
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def where(true)"
@@ -1228,11 +1756,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  54
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def where(true)"
@@ -1258,11 +1786,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/matching.sysl"
                   start:  {
-                   line:  17
+                   line:  16
                    col:  17
                   }
                   end:  {
-                   line:  17
+                   line:  16
+                   col:  18
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/matching.sysl"
+                  start:  {
+                   line:  16
+                   col:  17
+                  }
+                  end:  {
+                   line:  16
                    col:  18
                   }
                  }
@@ -1272,11 +1811,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  17
+                 line:  16
                  col:  17
                 }
                 end:  {
-                 line:  17
+                 line:  16
+                 col:  18
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  16
+                 col:  17
+                }
+                end:  {
+                 line:  16
                  col:  18
                 }
                }
@@ -1288,11 +1838,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/matching.sysl"
                   start:  {
-                   line:  17
+                   line:  16
                    col:  35
                   }
                   end:  {
-                   line:  17
+                   line:  16
+                   col:  36
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/matching.sysl"
+                  start:  {
+                   line:  16
+                   col:  35
+                  }
+                  end:  {
+                   line:  16
                    col:  36
                   }
                  }
@@ -1302,11 +1863,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  17
+                 line:  16
                  col:  35
                 }
                 end:  {
-                 line:  17
+                 line:  16
+                 col:  36
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  16
+                 col:  35
+                }
+                end:  {
+                 line:  16
                  col:  36
                 }
                }
@@ -1317,11 +1889,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  17
+               line:  16
                col:  22
               }
               end:  {
-               line:  17
+               line:  16
+               col:  36
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  16
+               col:  22
+              }
+              end:  {
+               line:  16
                col:  36
               }
              }
@@ -1331,11 +1914,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  17
+             line:  16
              col:  39
             }
             end:  {
-             line:  17
+             line:  16
+             col:  40
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  16
+             col:  39
+            }
+            end:  {
+             line:  16
              col:  40
             }
            }
@@ -1344,11 +1938,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  6
           }
           end:  {
-           line:  17
+           line:  16
            col:  44
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def single"
@@ -1356,11 +1950,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  6
           }
           end:  {
-           line:  17
+           line:  16
            col:  44
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def single"
@@ -1386,11 +1980,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/matching.sysl"
                   start:  {
-                   line:  18
+                   line:  17
                    col:  17
                   }
                   end:  {
-                   line:  18
+                   line:  17
+                   col:  18
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/matching.sysl"
+                  start:  {
+                   line:  17
+                   col:  17
+                  }
+                  end:  {
+                   line:  17
                    col:  18
                   }
                  }
@@ -1400,11 +2005,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  18
+                 line:  17
                  col:  17
                 }
                 end:  {
-                 line:  18
+                 line:  17
+                 col:  18
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  17
+                 col:  17
+                }
+                end:  {
+                 line:  17
                  col:  18
                 }
                }
@@ -1416,11 +2032,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/matching.sysl"
                   start:  {
-                   line:  18
+                   line:  17
                    col:  35
                   }
                   end:  {
-                   line:  18
+                   line:  17
+                   col:  36
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/matching.sysl"
+                  start:  {
+                   line:  17
+                   col:  35
+                  }
+                  end:  {
+                   line:  17
                    col:  36
                   }
                  }
@@ -1430,11 +2057,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  18
+                 line:  17
                  col:  35
                 }
                 end:  {
-                 line:  18
+                 line:  17
+                 col:  36
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  17
+                 col:  35
+                }
+                end:  {
+                 line:  17
                  col:  36
                 }
                }
@@ -1445,11 +2083,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  18
+               line:  17
                col:  22
               }
               end:  {
-               line:  18
+               line:  17
+               col:  36
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  17
+               col:  22
+              }
+              end:  {
+               line:  17
                col:  36
               }
              }
@@ -1459,11 +2108,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  18
+             line:  17
              col:  39
             }
             end:  {
-             line:  18
+             line:  17
+             col:  40
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  17
+             col:  39
+            }
+            end:  {
+             line:  17
              col:  40
             }
            }
@@ -1472,11 +2132,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  18
+           line:  17
            col:  6
           }
           end:  {
-           line:  18
+           line:  17
            col:  44
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def singleOrNull"
@@ -1484,11 +2144,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  18
+           line:  17
            col:  6
           }
           end:  {
-           line:  18
+           line:  17
            col:  44
           }
           text:  "let out9 = .abc !~[abc,def]> .foo.def singleOrNull"
@@ -1512,11 +2172,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  20
+                 line:  19
                  col:  8
                 }
                 end:  {
-                 line:  20
+                 line:  19
+                 col:  8
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  19
+                 col:  8
+                }
+                end:  {
+                 line:  19
                  col:  8
                 }
                }
@@ -1531,11 +2202,22 @@ apps:  {
                source_context:  {
                 file:  "tests/matching.sysl"
                 start:  {
-                 line:  20
+                 line:  19
                  col:  13
                 }
                 end:  {
-                 line:  20
+                 line:  19
+                 col:  13
+                }
+               }
+               source_contexts:  {
+                file:  "tests/matching.sysl"
+                start:  {
+                 line:  19
+                 col:  13
+                }
+                end:  {
+                 line:  19
                  col:  13
                 }
                }
@@ -1544,11 +2226,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  8
               }
               end:  {
-               line:  20
+               line:  19
+               col:  13
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  19
+               col:  8
+              }
+              end:  {
+               line:  19
                col:  13
               }
              }
@@ -1557,11 +2250,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  19
+             line:  18
              col:  20
             }
             end:  {
-             line:  21
+             line:  20
+             col:  6
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  18
+             col:  20
+            }
+            end:  {
+             line:  20
              col:  6
             }
            }
@@ -1574,11 +2278,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  21
               }
               end:  {
-               line:  20
+               line:  19
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  19
+               col:  21
+              }
+              end:  {
+               line:  19
                col:  26
               }
              }
@@ -1588,11 +2303,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  20
+               line:  19
                col:  26
               }
               end:  {
-               line:  20
+               line:  19
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  19
+               col:  26
+              }
+              end:  {
+               line:  19
                col:  26
               }
              }
@@ -1605,11 +2331,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  20
+             line:  19
              col:  23
             }
             end:  {
-             line:  20
+             line:  19
+             col:  26
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  19
+             col:  23
+            }
+            end:  {
+             line:  19
              col:  26
             }
            }
@@ -1621,11 +2358,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  6
           }
           text:  "let out10 = if:\n        a == true => . ~> foo\n      let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)\n    )\n"
@@ -1633,11 +2370,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  6
           }
           text:  "let out10 = if:\n        a == true => . ~> foo\n      let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)\n    )\n"
@@ -1656,11 +2393,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  21
+             line:  20
              col:  18
             }
             end:  {
-             line:  21
+             line:  20
+             col:  18
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  20
+             col:  18
+            }
+            end:  {
+             line:  20
              col:  18
             }
            }
@@ -1672,11 +2420,22 @@ apps:  {
              source_context:  {
               file:  "tests/matching.sysl"
               start:  {
-               line:  21
+               line:  20
                col:  66
               }
               end:  {
-               line:  21
+               line:  20
+               col:  66
+              }
+             }
+             source_contexts:  {
+              file:  "tests/matching.sysl"
+              start:  {
+               line:  20
+               col:  66
+              }
+              end:  {
+               line:  20
                col:  66
               }
              }
@@ -1687,11 +2446,22 @@ apps:  {
            source_context:  {
             file:  "tests/matching.sysl"
             start:  {
-             line:  21
+             line:  20
              col:  71
             }
             end:  {
-             line:  21
+             line:  20
+             col:  81
+            }
+           }
+           source_contexts:  {
+            file:  "tests/matching.sysl"
+            start:  {
+             line:  20
+             col:  71
+            }
+            end:  {
+             line:  20
              col:  81
             }
            }
@@ -1704,11 +2474,11 @@ apps:  {
          source_context:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  21
+           line:  20
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  96
           }
           text:  "let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)"
@@ -1716,11 +2486,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/matching.sysl"
           start:  {
-           line:  21
+           line:  20
            col:  6
           }
           end:  {
-           line:  21
+           line:  20
            col:  96
           }
           text:  "let out11 = rankedSecurityDetailsSet ~[securityDetailsId]> (input.table of SecurityDetails)"
@@ -1732,11 +2502,22 @@ apps:  {
      source_context:  {
       file:  "tests/matching.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  22
+       line:  21
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/matching.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  21
        col:  5
       }
      }
@@ -1744,22 +2525,22 @@ apps:  {
     source_context:  {
      file:  "tests/matching.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  23
+      line:  22
      }
      text:  "!view TestMatching(number <: int) -> int:"
     }
     source_contexts:  {
      file:  "tests/matching.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  23
+      line:  22
      }
      text:  "!view TestMatching(number <: int) -> int:"
     }
@@ -1767,24 +2548,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/matching.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  20
+    col:  96
    }
   }
   source_contexts:  {
    file:  "tests/matching.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  20
+    col:  96
    }
   }
  }

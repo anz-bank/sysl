@@ -39,22 +39,22 @@ apps:  {
      source_context:  {
       file:  "tests/foreign_import_swagger.yaml"
       start:  {
-       line:  14
+       line:  13
        col:  12
       }
       end:  {
-       line:  14
+       line:  13
        col:  18
       }
      }
      source_contexts:  {
       file:  "tests/foreign_import_swagger.yaml"
       start:  {
-       line:  14
+       line:  13
        col:  12
       }
       end:  {
-       line:  14
+       line:  13
        col:  18
       }
      }
@@ -66,22 +66,22 @@ apps:  {
     source_context:  {
      file:  "tests/foreign_import_swagger.yaml"
      start:  {
-      line:  12
+      line:  11
       col:  8
      }
      end:  {
-      line:  19
+      line:  18
       col:  4
      }
     }
     source_contexts:  {
      file:  "tests/foreign_import_swagger.yaml"
      start:  {
-      line:  12
+      line:  11
       col:  8
      }
      end:  {
-      line:  19
+      line:  18
       col:  4
      }
     }
@@ -105,21 +105,21 @@ apps:  {
        source_context:  {
         file:  "tests/foreign_import_swagger.yaml"
         start:  {
-         line:  20
+         line:  19
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
         }
        }
        source_contexts:  {
         file:  "tests/foreign_import_swagger.yaml"
         start:  {
-         line:  20
+         line:  19
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
         }
        }
       }
@@ -128,21 +128,21 @@ apps:  {
     source_context:  {
      file:  "tests/foreign_import_swagger.yaml"
      start:  {
-      line:  19
+      line:  18
       col:  4
      }
      end:  {
-      line:  22
+      line:  21
      }
     }
     source_contexts:  {
      file:  "tests/foreign_import_swagger.yaml"
      start:  {
-      line:  19
+      line:  18
       col:  4
      }
      end:  {
-      line:  22
+      line:  21
      }
     }
    }
@@ -150,23 +150,19 @@ apps:  {
   source_context:  {
    file:  "tests/foreign_import_swagger.yaml"
    start:  {
-    line:  7
-    col:  1
+    line:  6
    }
    end:  {
-    line:  7
-    col:  35
+    line:  21
    }
   }
   source_contexts:  {
    file:  "tests/foreign_import_swagger.yaml"
    start:  {
-    line:  7
-    col:  1
+    line:  6
    }
    end:  {
-    line:  7
-    col:  35
+    line:  21
    }
   }
  }
@@ -223,23 +219,23 @@ apps:  {
      source_context:  {
       file:  "tests/foreign_import_swagger.sysl"
       start:  {
-       line:  20
+       line:  19
        col:  12
       }
       end:  {
-       line:  20
-       col:  12
+       line:  19
+       col:  15
       }
      }
      source_contexts:  {
       file:  "tests/foreign_import_swagger.sysl"
       start:  {
-       line:  20
+       line:  19
        col:  12
       }
       end:  {
-       line:  20
-       col:  12
+       line:  19
+       col:  15
       }
      }
     }
@@ -252,22 +248,22 @@ apps:  {
        source_context:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  13
         }
         end:  {
-         line:  19
+         line:  18
          col:  19
         }
        }
        source_contexts:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  13
         }
         end:  {
-         line:  19
+         line:  18
          col:  19
         }
        }
@@ -281,22 +277,22 @@ apps:  {
        source_context:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  29
         }
         end:  {
-         line:  19
+         line:  18
          col:  38
         }
        }
        source_contexts:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  29
         }
         end:  {
-         line:  19
+         line:  18
          col:  38
         }
        }
@@ -310,22 +306,22 @@ apps:  {
        source_context:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  40
         }
         end:  {
-         line:  19
+         line:  18
          col:  50
         }
        }
        source_contexts:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  40
         }
         end:  {
-         line:  19
+         line:  18
          col:  50
         }
        }
@@ -335,21 +331,21 @@ apps:  {
     source_context:  {
      file:  "tests/foreign_import_swagger.sysl"
      start:  {
-      line:  19
+      line:  18
       col:  8
      }
      end:  {
-      line:  22
+      line:  21
      }
     }
     source_contexts:  {
      file:  "tests/foreign_import_swagger.sysl"
      start:  {
-      line:  19
+      line:  18
       col:  8
      }
      end:  {
-      line:  22
+      line:  21
      }
     }
    }
@@ -376,22 +372,22 @@ apps:  {
        source_context:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  16
+         line:  15
          col:  8
         }
         end:  {
-         line:  16
+         line:  15
          col:  24
         }
        }
        source_contexts:  {
         file:  "tests/foreign_import_swagger.sysl"
         start:  {
-         line:  16
+         line:  15
          col:  8
         }
         end:  {
-         line:  16
+         line:  15
          col:  24
         }
        }
@@ -401,23 +397,23 @@ apps:  {
     source_context:  {
      file:  "tests/foreign_import_swagger.sysl"
      start:  {
-      line:  15
+      line:  14
       col:  4
      }
      end:  {
-      line:  18
-      col:  4
+      line:  15
+      col:  24
      }
     }
     source_contexts:  {
      file:  "tests/foreign_import_swagger.sysl"
      start:  {
-      line:  15
+      line:  14
       col:  4
      }
      end:  {
-      line:  18
-      col:  4
+      line:  15
+      col:  24
      }
     }
    }
@@ -425,23 +421,21 @@ apps:  {
   source_context:  {
    file:  "tests/foreign_import_swagger.sysl"
    start:  {
-    line:  9
-    col:  1
+    line:  8
    }
    end:  {
-    line:  9
-    col:  46
+    line:  19
+    col:  15
    }
   }
   source_contexts:  {
    file:  "tests/foreign_import_swagger.sysl"
    start:  {
-    line:  9
-    col:  1
+    line:  8
    }
    end:  {
-    line:  9
-    col:  46
+    line:  19
+    col:  15
    }
   }
  }

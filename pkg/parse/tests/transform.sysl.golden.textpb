@@ -52,22 +52,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  59
+         line:  58
          col:  6
         }
         end:  {
-         line:  59
+         line:  58
          col:  26
         }
        }
        source_contexts:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  59
+         line:  58
          col:  6
         }
         end:  {
-         line:  59
+         line:  58
          col:  26
         }
        }
@@ -80,22 +80,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  58
+         line:  57
          col:  6
         }
         end:  {
-         line:  58
+         line:  57
          col:  12
         }
        }
        source_contexts:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  58
+         line:  57
          col:  6
         }
         end:  {
-         line:  58
+         line:  57
          col:  12
         }
        }
@@ -105,21 +105,23 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  57
+      line:  56
       col:  2
      }
      end:  {
-      line:  60
+      line:  58
+      col:  26
      }
     }
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  57
+      line:  56
       col:  2
      }
      end:  {
-      line:  60
+      line:  58
+      col:  26
      }
     }
    }
@@ -163,11 +165,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  5
+         line:  4
+         col:  5
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  4
          col:  5
         }
        }
@@ -187,11 +200,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  12
               }
               end:  {
-               line:  4
+               line:  3
+               col:  12
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  3
+               col:  12
+              }
+              end:  {
+               line:  3
                col:  12
               }
              }
@@ -206,11 +230,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  21
               }
               end:  {
-               line:  4
+               line:  3
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  3
+               col:  21
+              }
+              end:  {
+               line:  3
                col:  21
               }
              }
@@ -222,11 +257,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  19
             }
             end:  {
-             line:  4
+             line:  3
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  3
+             col:  19
+            }
+            end:  {
+             line:  3
              col:  21
             }
            }
@@ -236,11 +282,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  25
             }
             end:  {
-             line:  4
+             line:  3
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  3
+             col:  25
+            }
+            end:  {
+             line:  3
              col:  25
             }
            }
@@ -252,11 +309,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  25
           }
           text:  "out = number + 1 - scopeVar"
@@ -264,11 +321,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  25
           }
           text:  "out = number + 1 - scopeVar"
@@ -280,11 +337,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  5
+       line:  4
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  4
        col:  5
       }
      }
@@ -302,11 +370,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  7
+      line:  6
       col:  2
      }
      text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
@@ -314,11 +382,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  7
+      line:  6
       col:  2
      }
      text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
@@ -344,11 +412,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  8
+         line:  7
          col:  4
         }
         end:  {
-         line:  8
+         line:  7
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  7
+         col:  4
+        }
+        end:  {
+         line:  7
          col:  4
         }
        }
@@ -365,11 +444,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  12
             }
             end:  {
-             line:  9
+             line:  8
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  8
+             col:  12
+            }
+            end:  {
+             line:  8
              col:  12
             }
            }
@@ -384,11 +474,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  21
             }
             end:  {
-             line:  9
+             line:  8
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  8
+             col:  21
+            }
+            end:  {
+             line:  8
              col:  21
             }
            }
@@ -400,11 +501,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  21
           }
           text:  "out = number - 1"
@@ -412,11 +513,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  21
           }
           text:  "out = number - 1"
@@ -428,11 +529,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  4
       }
       end:  {
-       line:  10
+       line:  9
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  7
+       col:  4
+      }
+      end:  {
+       line:  9
        col:  5
       }
      }
@@ -446,11 +558,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  2
      }
      end:  {
-      line:  12
+      line:  11
       col:  2
      }
      text:  "!view WithArgTransform(number <: int ) -> int [abc=\"foo\"]:"
@@ -458,11 +570,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  2
      }
      end:  {
-      line:  12
+      line:  11
       col:  2
      }
      text:  "!view WithArgTransform(number <: int ) -> int [abc=\"foo\"]:"
@@ -495,11 +607,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  48
+         line:  47
          col:  4
         }
         end:  {
-         line:  48
+         line:  47
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  47
+         col:  4
+        }
+        end:  {
+         line:  47
          col:  4
         }
        }
@@ -517,11 +640,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  49
+               line:  48
                col:  27
               }
               end:  {
-               line:  49
+               line:  48
+               col:  28
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  48
+               col:  27
+              }
+              end:  {
+               line:  48
                col:  28
               }
              }
@@ -531,11 +665,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  49
+             line:  48
              col:  27
             }
             end:  {
-             line:  49
+             line:  48
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  48
+             col:  27
+            }
+            end:  {
+             line:  48
              col:  28
             }
            }
@@ -551,11 +696,11 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  50
+               line:  49
                col:  8
               }
               end:  {
-               line:  50
+               line:  49
                col:  30
               }
               text:  "let breedId = autoinc()"
@@ -563,11 +708,11 @@ apps:  {
              source_contexts:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  50
+               line:  49
                col:  8
               }
               end:  {
-               line:  50
+               line:  49
                col:  30
               }
               text:  "let breedId = autoinc()"
@@ -585,11 +730,22 @@ apps:  {
                source_context:  {
                 file:  "tests/transform.sysl"
                 start:  {
-                 line:  51
+                 line:  50
                  col:  16
                 }
                 end:  {
-                 line:  53
+                 line:  52
+                 col:  9
+                }
+               }
+               source_contexts:  {
+                file:  "tests/transform.sysl"
+                start:  {
+                 line:  50
+                 col:  16
+                }
+                end:  {
+                 line:  52
                  col:  9
                 }
                }
@@ -605,11 +761,22 @@ apps:  {
                    source_context:  {
                     file:  "tests/transform.sysl"
                     start:  {
-                     line:  52
+                     line:  51
                      col:  24
                     }
                     end:  {
-                     line:  52
+                     line:  51
+                     col:  25
+                    }
+                   }
+                   source_contexts:  {
+                    file:  "tests/transform.sysl"
+                    start:  {
+                     line:  51
+                     col:  24
+                    }
+                    end:  {
+                     line:  51
                      col:  25
                     }
                    }
@@ -619,11 +786,11 @@ apps:  {
                  source_context:  {
                   file:  "tests/transform.sysl"
                   start:  {
-                   line:  52
+                   line:  51
                    col:  12
                   }
                   end:  {
-                   line:  52
+                   line:  51
                    col:  25
                   }
                   text:  "breedName = .name"
@@ -631,11 +798,11 @@ apps:  {
                  source_contexts:  {
                   file:  "tests/transform.sysl"
                   start:  {
-                   line:  52
+                   line:  51
                    col:  12
                   }
                   end:  {
-                   line:  52
+                   line:  51
                    col:  25
                   }
                   text:  "breedName = .name"
@@ -662,11 +829,11 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  51
+               line:  50
                col:  8
               }
               end:  {
-               line:  53
+               line:  52
                col:  9
               }
               text:  "breed = -> <PetShopModel.Breed>(:\n            breedName = .name\n        )\n"
@@ -674,11 +841,11 @@ apps:  {
              source_contexts:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  51
+               line:  50
                col:  8
               }
               end:  {
-               line:  53
+               line:  52
                col:  9
               }
               text:  "breed = -> <PetShopModel.Breed>(:\n            breedName = .name\n        )\n"
@@ -707,11 +874,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  49
+           line:  48
            col:  6
           }
           end:  {
-           line:  54
+           line:  53
            col:  7
           }
           text:  "let _breedsAndPets = .breeds -> <set of>(:\n        let breedId = autoinc()\n        breed = -> <PetShopModel.Breed>(:\n            breedName = .name\n        )\n      )\n"
@@ -719,11 +886,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  49
+           line:  48
            col:  6
           }
           end:  {
-           line:  54
+           line:  53
            col:  7
           }
           text:  "let _breedsAndPets = .breeds -> <set of>(:\n        let breedId = autoinc()\n        breed = -> <PetShopModel.Breed>(:\n            breedName = .name\n        )\n      )\n"
@@ -750,11 +917,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  48
+       line:  47
        col:  4
       }
       end:  {
-       line:  55
+       line:  54
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  47
+       col:  4
+      }
+      end:  {
+       line:  54
        col:  5
       }
      }
@@ -762,11 +940,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  47
+      line:  46
       col:  2
      }
      end:  {
-      line:  57
+      line:  56
       col:  2
      }
      text:  "!view nestedTransformWithAnonymousType(number <: int ) -> Some1.Type:"
@@ -774,11 +952,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  47
+      line:  46
       col:  2
      }
      end:  {
-      line:  57
+      line:  56
       col:  2
      }
      text:  "!view nestedTransformWithAnonymousType(number <: int ) -> Some1.Type:"
@@ -816,11 +994,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  43
+         line:  42
          col:  4
         }
         end:  {
-         line:  43
+         line:  42
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  42
+         col:  4
+        }
+        end:  {
+         line:  42
          col:  4
         }
        }
@@ -837,11 +1026,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  44
+             line:  43
              col:  12
             }
             end:  {
-             line:  44
+             line:  43
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  43
+             col:  12
+            }
+            end:  {
+             line:  43
              col:  12
             }
            }
@@ -856,11 +1056,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  44
+             line:  43
              col:  21
             }
             end:  {
-             line:  44
+             line:  43
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  43
+             col:  21
+            }
+            end:  {
+             line:  43
              col:  21
             }
            }
@@ -872,11 +1083,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  44
+           line:  43
            col:  6
           }
           end:  {
-           line:  44
+           line:  43
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -884,11 +1095,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  44
+           line:  43
            col:  6
           }
           end:  {
-           line:  44
+           line:  43
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -915,11 +1126,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  43
+       line:  42
        col:  4
       }
       end:  {
-       line:  45
+       line:  44
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  42
+       col:  4
+      }
+      end:  {
+       line:  44
        col:  5
       }
      }
@@ -927,11 +1149,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  42
+      line:  41
       col:  2
      }
      end:  {
-      line:  47
+      line:  46
       col:  2
      }
      text:  "!view noReturnType(number <: int ):"
@@ -939,11 +1161,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  42
+      line:  41
       col:  2
      }
      end:  {
-      line:  47
+      line:  46
       col:  2
      }
      text:  "!view noReturnType(number <: int ):"
@@ -969,11 +1191,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  13
+         line:  12
          col:  4
         }
         end:  {
-         line:  13
+         line:  12
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  12
+         col:  4
+        }
+        end:  {
+         line:  12
          col:  4
         }
        }
@@ -993,11 +1226,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  12
               }
               end:  {
-               line:  14
+               line:  13
+               col:  12
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  13
+               col:  12
+              }
+              end:  {
+               line:  13
                col:  12
               }
              }
@@ -1012,11 +1256,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  14
+               line:  13
                col:  21
               }
               end:  {
-               line:  14
+               line:  13
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  13
+               col:  21
+              }
+              end:  {
+               line:  13
                col:  21
               }
              }
@@ -1028,11 +1283,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  19
             }
             end:  {
-             line:  14
+             line:  13
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  13
+             col:  19
+            }
+            end:  {
+             line:  13
              col:  21
             }
            }
@@ -1047,11 +1313,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  27
             }
             end:  {
-             line:  14
+             line:  13
+             col:  27
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  13
+             col:  27
+            }
+            end:  {
+             line:  13
              col:  27
             }
            }
@@ -1063,11 +1340,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  27
           }
           text:  "out = number * 1.5 + 2"
@@ -1075,11 +1352,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  27
           }
           text:  "out = number * 1.5 + 2"
@@ -1091,11 +1368,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  13
+       line:  12
        col:  4
       }
       end:  {
-       line:  15
+       line:  14
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  12
+       col:  4
+      }
+      end:  {
+       line:  14
        col:  5
       }
      }
@@ -1103,11 +1391,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  12
+      line:  11
       col:  2
      }
      end:  {
-      line:  17
+      line:  16
       col:  2
      }
      text:  "!view noScopeVar(number <: int ) -> int:"
@@ -1115,11 +1403,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  12
+      line:  11
       col:  2
      }
      end:  {
-      line:  17
+      line:  16
       col:  2
      }
      text:  "!view noScopeVar(number <: int ) -> int:"
@@ -1145,11 +1433,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  18
+         line:  17
          col:  3
         }
         end:  {
-         line:  18
+         line:  17
+         col:  3
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  17
+         col:  3
+        }
+        end:  {
+         line:  17
          col:  3
         }
        }
@@ -1166,11 +1465,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  19
+             line:  18
              col:  11
             }
             end:  {
-             line:  19
+             line:  18
+             col:  11
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  18
+             col:  11
+            }
+            end:  {
+             line:  18
              col:  11
             }
            }
@@ -1188,11 +1498,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  21
               }
               end:  {
-               line:  19
+               line:  18
+               col:  21
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  18
+               col:  21
+              }
+              end:  {
+               line:  18
                col:  21
               }
              }
@@ -1207,11 +1528,22 @@ apps:  {
              source_context:  {
               file:  "tests/transform.sysl"
               start:  {
-               line:  19
+               line:  18
                col:  26
               }
               end:  {
-               line:  19
+               line:  18
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/transform.sysl"
+              start:  {
+               line:  18
+               col:  26
+              }
+              end:  {
+               line:  18
                col:  26
               }
              }
@@ -1223,11 +1555,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  19
+             line:  18
              col:  21
             }
             end:  {
-             line:  19
+             line:  18
+             col:  26
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  18
+             col:  21
+            }
+            end:  {
+             line:  18
              col:  26
             }
            }
@@ -1239,11 +1582,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  5
           }
           end:  {
-           line:  19
+           line:  18
            col:  26
           }
           text:  "out = number ** 2 ** 3"
@@ -1251,11 +1594,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  19
+           line:  18
            col:  5
           }
           end:  {
-           line:  19
+           line:  18
            col:  26
           }
           text:  "out = number ** 2 ** 3"
@@ -1267,11 +1610,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  18
+       line:  17
        col:  3
       }
       end:  {
-       line:  20
+       line:  19
+       col:  4
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  17
+       col:  3
+      }
+      end:  {
+       line:  19
        col:  4
       }
      }
@@ -1279,11 +1633,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  17
+      line:  16
       col:  2
      }
      end:  {
-      line:  22
+      line:  21
       col:  2
      }
      text:  "!view withAnonymousSetOfReturnType(number <: int ) -> int:"
@@ -1291,11 +1645,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  17
+      line:  16
       col:  2
      }
      end:  {
-      line:  22
+      line:  21
       col:  2
      }
      text:  "!view withAnonymousSetOfReturnType(number <: int ) -> int:"
@@ -1330,11 +1684,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  23
+         line:  22
          col:  4
         }
         end:  {
-         line:  23
+         line:  22
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  22
+         col:  4
+        }
+        end:  {
+         line:  22
          col:  4
         }
        }
@@ -1351,11 +1716,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  24
+             line:  23
              col:  12
             }
             end:  {
-             line:  24
+             line:  23
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  23
+             col:  12
+            }
+            end:  {
+             line:  23
              col:  12
             }
            }
@@ -1365,11 +1741,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  24
+             line:  23
              col:  21
             }
             end:  {
-             line:  24
+             line:  23
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  23
+             col:  21
+            }
+            end:  {
+             line:  23
              col:  21
             }
            }
@@ -1381,11 +1768,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  24
+           line:  23
            col:  6
           }
           end:  {
-           line:  24
+           line:  23
            col:  21
           }
           text:  "out = number / number"
@@ -1393,11 +1780,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  24
+           line:  23
            col:  6
           }
           end:  {
-           line:  24
+           line:  23
            col:  21
           }
           text:  "out = number / number"
@@ -1426,11 +1813,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  23
+       line:  22
        col:  4
       }
       end:  {
-       line:  25
+       line:  24
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  22
+       col:  4
+      }
+      end:  {
+       line:  24
        col:  5
       }
      }
@@ -1438,11 +1836,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  22
+      line:  21
       col:  2
      }
      end:  {
-      line:  27
+      line:  26
       col:  2
      }
      text:  "!view withSetOfReturnType(number <: int ) -> set of Some1.Type:"
@@ -1450,11 +1848,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  22
+      line:  21
       col:  2
      }
      end:  {
-      line:  27
+      line:  26
       col:  2
      }
      text:  "!view withSetOfReturnType(number <: int ) -> set of Some1.Type:"
@@ -1487,11 +1885,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  28
+         line:  27
          col:  4
         }
         end:  {
-         line:  28
+         line:  27
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  27
+         col:  4
+        }
+        end:  {
+         line:  27
          col:  4
         }
        }
@@ -1508,11 +1917,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  29
+             line:  28
              col:  12
             }
             end:  {
-             line:  29
+             line:  28
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  28
+             col:  12
+            }
+            end:  {
+             line:  28
              col:  12
             }
            }
@@ -1527,11 +1947,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  29
+             line:  28
              col:  21
             }
             end:  {
-             line:  29
+             line:  28
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  28
+             col:  21
+            }
+            end:  {
+             line:  28
              col:  21
             }
            }
@@ -1543,11 +1974,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  29
+           line:  28
            col:  6
           }
           end:  {
-           line:  29
+           line:  28
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -1555,11 +1986,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  29
+           line:  28
            col:  6
           }
           end:  {
-           line:  29
+           line:  28
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -1586,11 +2017,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  28
+       line:  27
        col:  4
       }
       end:  {
-       line:  30
+       line:  29
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  27
+       col:  4
+      }
+      end:  {
+       line:  29
        col:  5
       }
      }
@@ -1598,11 +2040,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  27
+      line:  26
       col:  2
      }
      end:  {
-      line:  32
+      line:  31
       col:  2
      }
      text:  "!view withSomeReturnType(number <: int ) -> Some1.Type:"
@@ -1610,11 +2052,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  27
+      line:  26
       col:  2
      }
      end:  {
-      line:  32
+      line:  31
       col:  2
      }
      text:  "!view withSomeReturnType(number <: int ) -> Some1.Type:"
@@ -1650,11 +2092,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  33
+         line:  32
          col:  4
         }
         end:  {
-         line:  33
+         line:  32
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  32
+         col:  4
+        }
+        end:  {
+         line:  32
          col:  4
         }
        }
@@ -1671,11 +2124,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  34
+             line:  33
              col:  12
             }
             end:  {
-             line:  34
+             line:  33
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  33
+             col:  12
+            }
+            end:  {
+             line:  33
              col:  12
             }
            }
@@ -1690,11 +2154,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  34
+             line:  33
              col:  21
             }
             end:  {
-             line:  34
+             line:  33
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  33
+             col:  21
+            }
+            end:  {
+             line:  33
              col:  21
             }
            }
@@ -1706,11 +2181,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  34
+           line:  33
            col:  6
           }
           end:  {
-           line:  34
+           line:  33
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -1718,11 +2193,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  34
+           line:  33
            col:  6
           }
           end:  {
-           line:  34
+           line:  33
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -1746,11 +2221,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  33
+       line:  32
        col:  4
       }
       end:  {
-       line:  35
+       line:  34
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  32
+       col:  4
+      }
+      end:  {
+       line:  34
        col:  5
       }
      }
@@ -1758,11 +2244,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  32
+      line:  31
       col:  2
      }
      end:  {
-      line:  37
+      line:  36
       col:  2
      }
      text:  "!view withSomeReturnType2(number <: Sometype ) -> set of Sometype:"
@@ -1770,11 +2256,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  32
+      line:  31
       col:  2
      }
      end:  {
-      line:  37
+      line:  36
       col:  2
      }
      text:  "!view withSomeReturnType2(number <: Sometype ) -> set of Sometype:"
@@ -1823,11 +2309,22 @@ apps:  {
        source_context:  {
         file:  "tests/transform.sysl"
         start:  {
-         line:  38
+         line:  37
          col:  4
         }
         end:  {
-         line:  38
+         line:  37
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/transform.sysl"
+        start:  {
+         line:  37
+         col:  4
+        }
+        end:  {
+         line:  37
          col:  4
         }
        }
@@ -1844,11 +2341,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  39
+             line:  38
              col:  12
             }
             end:  {
-             line:  39
+             line:  38
+             col:  12
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  38
+             col:  12
+            }
+            end:  {
+             line:  38
              col:  12
             }
            }
@@ -1863,11 +2371,22 @@ apps:  {
            source_context:  {
             file:  "tests/transform.sysl"
             start:  {
-             line:  39
+             line:  38
              col:  21
             }
             end:  {
-             line:  39
+             line:  38
+             col:  21
+            }
+           }
+           source_contexts:  {
+            file:  "tests/transform.sysl"
+            start:  {
+             line:  38
+             col:  21
+            }
+            end:  {
+             line:  38
              col:  21
             }
            }
@@ -1879,11 +2398,11 @@ apps:  {
          source_context:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  39
+           line:  38
            col:  6
           }
           end:  {
-           line:  39
+           line:  38
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -1891,11 +2410,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/transform.sysl"
           start:  {
-           line:  39
+           line:  38
            col:  6
           }
           end:  {
-           line:  39
+           line:  38
            col:  21
           }
           text:  "out = number + \"foo\""
@@ -1924,11 +2443,22 @@ apps:  {
      source_context:  {
       file:  "tests/transform.sysl"
       start:  {
-       line:  38
+       line:  37
        col:  4
       }
       end:  {
-       line:  40
+       line:  39
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/transform.sysl"
+      start:  {
+       line:  37
+       col:  4
+      }
+      end:  {
+       line:  39
        col:  5
       }
      }
@@ -1936,11 +2466,11 @@ apps:  {
     source_context:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  37
+      line:  36
       col:  2
      }
      end:  {
-      line:  42
+      line:  41
       col:  2
      }
      text:  "!view withSomeReturnType3(foo <: set of Model.SomeType ):"
@@ -1948,11 +2478,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/transform.sysl"
      start:  {
-      line:  37
+      line:  36
       col:  2
      }
      end:  {
-      line:  42
+      line:  41
       col:  2
      }
      text:  "!view withSomeReturnType3(foo <: set of Model.SomeType ):"
@@ -1961,24 +2491,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/transform.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  49
+    line:  58
+    col:  26
    }
   }
   source_contexts:  {
    file:  "tests/transform.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  49
+    line:  58
+    col:  26
    }
   }
  }

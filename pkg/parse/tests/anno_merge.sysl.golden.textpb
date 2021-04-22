@@ -39,33 +39,33 @@ apps:  {
        source_context:  {
         file:  "tests/anno_merge_import.sysl"
         start:  {
-         line:  5
+         line:  4
          col:  8
         }
         end:  {
-         line:  11
+         line:  10
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/anno_merge.sysl"
         start:  {
-         line:  7
+         line:  6
          col:  8
         }
         end:  {
-         line:  13
+         line:  12
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/anno_merge_import.sysl"
         start:  {
-         line:  5
+         line:  4
          col:  8
         }
         end:  {
-         line:  11
+         line:  10
          col:  8
         }
        }
@@ -103,31 +103,31 @@ apps:  {
        source_context:  {
         file:  "tests/anno_merge_import.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  15
+         line:  14
         }
        }
        source_contexts:  {
         file:  "tests/anno_merge.sysl"
         start:  {
-         line:  13
+         line:  12
          col:  8
         }
         end:  {
-         line:  21
+         line:  20
         }
        }
        source_contexts:  {
         file:  "tests/anno_merge_import.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  15
+         line:  14
         }
        }
       }
@@ -142,63 +142,56 @@ apps:  {
     source_context:  {
      file:  "tests/anno_merge_import.sysl"
      start:  {
-      line:  3
+      line:  2
       col:  4
      }
      end:  {
-      line:  15
+      line:  14
      }
     }
     source_contexts:  {
      file:  "tests/anno_merge.sysl"
      start:  {
-      line:  5
+      line:  4
       col:  4
      }
      end:  {
-      line:  21
+      line:  20
      }
     }
     source_contexts:  {
      file:  "tests/anno_merge_import.sysl"
      start:  {
-      line:  3
+      line:  2
       col:  4
      }
      end:  {
-      line:  15
+      line:  14
      }
     }
    }
   }
   source_context:  {
    file:  "tests/anno_merge_import.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  14
    }
   }
   source_contexts:  {
    file:  "tests/anno_merge.sysl"
    start:  {
-    line:  3
-    col:  1
+    line:  2
    }
    end:  {
-    line:  3
+    line:  20
    }
   }
   source_contexts:  {
    file:  "tests/anno_merge_import.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  14
    }
   }
  }

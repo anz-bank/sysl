@@ -18,23 +18,23 @@ apps:  {
        source_context:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  12
         }
         end:  {
-         line:  4
-         col:  12
+         line:  3
+         col:  24
         }
        }
        source_contexts:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  12
         }
         end:  {
-         line:  4
-         col:  12
+         line:  3
+         col:  24
         }
        }
       }
@@ -42,22 +42,22 @@ apps:  {
      source_context:  {
       file:  "tests/if_else.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  8
       }
       end:  {
-       line:  5
+       line:  4
        col:  8
       }
      }
      source_contexts:  {
       file:  "tests/if_else.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  8
       }
       end:  {
-       line:  5
+       line:  4
        col:  8
       }
      }
@@ -72,23 +72,23 @@ apps:  {
        source_context:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  12
         }
         end:  {
-         line:  6
-         col:  12
+         line:  5
+         col:  29
         }
        }
        source_contexts:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  12
         }
         end:  {
-         line:  6
-         col:  12
+         line:  5
+         col:  29
         }
        }
       }
@@ -96,22 +96,22 @@ apps:  {
      source_context:  {
       file:  "tests/if_else.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  8
       }
       end:  {
-       line:  7
+       line:  6
        col:  8
       }
      }
      source_contexts:  {
       file:  "tests/if_else.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  8
       }
       end:  {
-       line:  7
+       line:  6
        col:  8
       }
      }
@@ -126,22 +126,22 @@ apps:  {
        source_context:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  8
+         line:  7
          col:  12
         }
         end:  {
-         line:  8
+         line:  7
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  8
+         line:  7
          col:  12
         }
         end:  {
-         line:  8
+         line:  7
          col:  18
         }
        }
@@ -150,22 +150,22 @@ apps:  {
      source_context:  {
       file:  "tests/if_else.sysl"
       start:  {
-       line:  7
+       line:  6
        col:  8
       }
       end:  {
-       line:  10
+       line:  9
        col:  8
       }
      }
      source_contexts:  {
       file:  "tests/if_else.sysl"
       start:  {
-       line:  7
+       line:  6
        col:  8
       }
       end:  {
-       line:  10
+       line:  9
        col:  8
       }
      }
@@ -180,25 +180,47 @@ apps:  {
        source_context:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  12
         }
         end:  {
-         line:  11
-         col:  12
+         line:  10
+         col:  22
         }
        }
        source_contexts:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  12
         }
         end:  {
-         line:  11
-         col:  12
+         line:  10
+         col:  22
         }
        }
+      }
+     }
+     source_context:  {
+      file:  "tests/if_else.sysl"
+      start:  {
+       line:  9
+       col:  8
+      }
+      end:  {
+       line:  11
+       col:  8
+      }
+     }
+     source_contexts:  {
+      file:  "tests/if_else.sysl"
+      start:  {
+       line:  9
+       col:  8
+      }
+      end:  {
+       line:  11
+       col:  8
       }
      }
     }
@@ -212,23 +234,23 @@ apps:  {
        source_context:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  13
+         line:  12
          col:  12
         }
         end:  {
-         line:  13
-         col:  12
+         line:  12
+         col:  30
         }
        }
        source_contexts:  {
         file:  "tests/if_else.sysl"
         start:  {
-         line:  13
+         line:  12
          col:  12
         }
         end:  {
-         line:  13
-         col:  12
+         line:  12
+         col:  30
         }
        }
       }
@@ -242,25 +264,47 @@ apps:  {
          source_context:  {
           file:  "tests/if_else.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  16
           }
           end:  {
-           line:  15
-           col:  16
+           line:  14
+           col:  28
           }
          }
          source_contexts:  {
           file:  "tests/if_else.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  16
           }
           end:  {
-           line:  15
-           col:  16
+           line:  14
+           col:  28
           }
          }
+        }
+       }
+       source_context:  {
+        file:  "tests/if_else.sysl"
+        start:  {
+         line:  13
+         col:  12
+        }
+        end:  {
+         line:  15
+         col:  12
+        }
+       }
+       source_contexts:  {
+        file:  "tests/if_else.sysl"
+        start:  {
+         line:  13
+         col:  12
+        }
+        end:  {
+         line:  15
+         col:  12
         }
        }
       }
@@ -274,70 +318,112 @@ apps:  {
          source_context:  {
           file:  "tests/if_else.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  16
           }
           end:  {
-           line:  17
-           col:  16
+           line:  16
+           col:  27
           }
          }
          source_contexts:  {
           file:  "tests/if_else.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  16
           }
           end:  {
-           line:  17
-           col:  16
+           line:  16
+           col:  27
           }
          }
         }
        }
+       source_context:  {
+        file:  "tests/if_else.sysl"
+        start:  {
+         line:  15
+         col:  12
+        }
+        end:  {
+         line:  16
+         col:  27
+        }
+       }
+       source_contexts:  {
+        file:  "tests/if_else.sysl"
+        start:  {
+         line:  15
+         col:  12
+        }
+        end:  {
+         line:  16
+         col:  27
+        }
+       }
+      }
+     }
+     source_context:  {
+      file:  "tests/if_else.sysl"
+      start:  {
+       line:  11
+       col:  8
+      }
+      end:  {
+       line:  16
+       col:  27
+      }
+     }
+     source_contexts:  {
+      file:  "tests/if_else.sysl"
+      start:  {
+       line:  11
+       col:  8
+      }
+      end:  {
+       line:  16
+       col:  27
       }
      }
     }
     source_context:  {
      file:  "tests/if_else.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  18
+      line:  16
+      col:  27
      }
     }
     source_contexts:  {
      file:  "tests/if_else.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  18
+      line:  16
+      col:  27
      }
     }
    }
   }
   source_context:  {
    file:  "tests/if_else.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  16
+    col:  27
    }
   }
   source_contexts:  {
    file:  "tests/if_else.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  16
+    col:  27
    }
   }
  }

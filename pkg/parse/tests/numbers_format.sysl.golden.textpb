@@ -15,22 +15,22 @@ apps:  {
        source_context:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  3
+         line:  2
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  3
+         line:  2
          col:  18
         }
        }
@@ -54,22 +54,22 @@ apps:  {
        source_context:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  8
         }
         end:  {
-         line:  4
+         line:  3
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  8
         }
         end:  {
-         line:  4
+         line:  3
          col:  18
         }
        }
@@ -93,22 +93,22 @@ apps:  {
        source_context:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  5
+         line:  4
          col:  8
         }
         end:  {
-         line:  5
+         line:  4
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  5
+         line:  4
          col:  8
         }
         end:  {
-         line:  5
+         line:  4
          col:  18
         }
        }
@@ -118,23 +118,23 @@ apps:  {
     source_context:  {
      file:  "tests/numbers_format.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  7
-      col:  4
+      line:  4
+      col:  18
      }
     }
     source_contexts:  {
      file:  "tests/numbers_format.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  7
-      col:  4
+      line:  4
+      col:  18
      }
     }
    }
@@ -150,22 +150,22 @@ apps:  {
        source_context:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  8
+         line:  7
          col:  8
         }
         end:  {
-         line:  8
+         line:  7
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  8
+         line:  7
          col:  8
         }
         end:  {
-         line:  8
+         line:  7
          col:  18
         }
        }
@@ -181,22 +181,22 @@ apps:  {
        source_context:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  9
+         line:  8
          col:  8
         }
         end:  {
-         line:  9
+         line:  8
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  9
+         line:  8
          col:  8
         }
         end:  {
-         line:  9
+         line:  8
          col:  18
         }
        }
@@ -212,22 +212,22 @@ apps:  {
        source_context:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  10
+         line:  9
          col:  8
         }
         end:  {
-         line:  10
+         line:  9
          col:  18
         }
        }
        source_contexts:  {
         file:  "tests/numbers_format.sysl"
         start:  {
-         line:  10
+         line:  9
          col:  8
         }
         end:  {
-         line:  10
+         line:  9
          col:  18
         }
        }
@@ -237,43 +237,41 @@ apps:  {
     source_context:  {
      file:  "tests/numbers_format.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  4
      }
      end:  {
-      line:  12
+      line:  9
+      col:  18
      }
     }
     source_contexts:  {
      file:  "tests/numbers_format.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  4
      }
      end:  {
-      line:  12
+      line:  9
+      col:  18
      }
     }
    }
   }
   source_context:  {
    file:  "tests/numbers_format.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  9
+    col:  18
    }
   }
   source_contexts:  {
    file:  "tests/numbers_format.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  9
+    col:  18
    }
   }
  }

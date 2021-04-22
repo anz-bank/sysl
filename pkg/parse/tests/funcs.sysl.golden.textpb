@@ -29,11 +29,22 @@ apps:  {
        source_context:  {
         file:  "tests/funcs.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  3
+         line:  2
+         col:  4
+        }
+       }
+       source_contexts:  {
+        file:  "tests/funcs.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  2
          col:  4
         }
        }
@@ -52,11 +63,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  4
+               line:  3
                col:  24
               }
               end:  {
-               line:  4
+               line:  3
+               col:  25
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  3
+               col:  24
+              }
+              end:  {
+               line:  3
                col:  25
               }
              }
@@ -66,11 +88,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  24
             }
             end:  {
-             line:  4
+             line:  3
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  3
+             col:  24
+            }
+            end:  {
+             line:  3
              col:  25
             }
            }
@@ -85,11 +118,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  4
+             line:  3
              col:  34
             }
             end:  {
-             line:  4
+             line:  3
+             col:  34
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  3
+             col:  34
+            }
+            end:  {
+             line:  3
              col:  34
             }
            }
@@ -98,11 +142,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  38
           }
           text:  "AppOrderId2 = int(.orderId, null)"
@@ -110,11 +154,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  38
           }
           text:  "AppOrderId2 = int(.orderId, null)"
@@ -132,11 +176,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  24
           }
           text:  "let out = autoinc()"
@@ -144,11 +188,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  24
           }
           text:  "let out = autoinc()"
@@ -167,11 +211,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  16
             }
             end:  {
-             line:  6
+             line:  5
+             col:  16
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  5
+             col:  16
+            }
+            end:  {
+             line:  5
              col:  16
             }
            }
@@ -183,11 +238,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  6
+             line:  5
              col:  24
             }
             end:  {
-             line:  6
+             line:  5
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  5
+             col:  24
+            }
+            end:  {
+             line:  5
              col:  24
             }
            }
@@ -196,11 +262,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  25
           }
           text:  "let out = foo any(1)"
@@ -208,11 +274,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  25
           }
           text:  "let out = foo any(1)"
@@ -231,11 +297,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  16
             }
             end:  {
-             line:  7
+             line:  6
+             col:  16
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  6
+             col:  16
+            }
+            end:  {
+             line:  6
              col:  16
             }
            }
@@ -247,11 +324,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  7
+               line:  6
                col:  24
               }
               end:  {
-               line:  7
+               line:  6
+               col:  25
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  6
+               col:  24
+              }
+              end:  {
+               line:  6
                col:  25
               }
              }
@@ -261,11 +349,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  7
+             line:  6
              col:  24
             }
             end:  {
-             line:  7
+             line:  6
+             col:  25
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  6
+             col:  24
+            }
+            end:  {
+             line:  6
              col:  25
             }
            }
@@ -275,11 +374,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  28
           }
           text:  "let out = foo max(.bar)"
@@ -287,11 +386,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  7
+           line:  6
            col:  6
           }
           end:  {
-           line:  7
+           line:  6
            col:  28
           }
           text:  "let out = foo max(.bar)"
@@ -310,11 +409,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  16
             }
             end:  {
-             line:  8
+             line:  7
+             col:  16
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  7
+             col:  16
+            }
+            end:  {
+             line:  7
              col:  16
             }
            }
@@ -326,11 +436,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  8
+               line:  7
                col:  24
               }
               end:  {
-               line:  8
+               line:  7
+               col:  24
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  7
+               col:  24
+              }
+              end:  {
+               line:  7
                col:  24
               }
              }
@@ -340,11 +461,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  8
+             line:  7
              col:  27
             }
             end:  {
-             line:  8
+             line:  7
+             col:  28
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  7
+             col:  27
+            }
+            end:  {
+             line:  7
              col:  28
             }
            }
@@ -354,11 +486,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  31
           }
           text:  "let out = foo max(bar.baz)"
@@ -366,11 +498,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  31
           }
           text:  "let out = foo max(bar.baz)"
@@ -392,11 +524,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  16
               }
               end:  {
-               line:  9
+               line:  8
+               col:  16
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  8
+               col:  16
+              }
+              end:  {
+               line:  8
                col:  16
               }
              }
@@ -411,11 +554,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/funcs.sysl"
                   start:  {
-                   line:  9
+                   line:  8
                    col:  26
                   }
                   end:  {
-                   line:  9
+                   line:  8
+                   col:  27
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/funcs.sysl"
+                  start:  {
+                   line:  8
+                   col:  26
+                  }
+                  end:  {
+                   line:  8
                    col:  27
                   }
                  }
@@ -425,11 +579,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  9
+                 line:  8
                  col:  26
                 }
                 end:  {
-                 line:  9
+                 line:  8
+                 col:  27
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  8
+                 col:  26
+                }
+                end:  {
+                 line:  8
                  col:  27
                 }
                }
@@ -441,11 +606,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  9
+                 line:  8
                  col:  31
                 }
                 end:  {
-                 line:  9
+                 line:  8
+                 col:  31
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  8
+                 col:  31
+                }
+                end:  {
+                 line:  8
                  col:  31
                 }
                }
@@ -454,11 +630,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  26
               }
               end:  {
-               line:  9
+               line:  8
+               col:  31
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  8
+               col:  26
+              }
+              end:  {
+               line:  8
                col:  31
               }
              }
@@ -468,11 +655,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  20
             }
             end:  {
-             line:  9
+             line:  8
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  8
+             col:  20
+            }
+            end:  {
+             line:  8
              col:  20
             }
            }
@@ -486,11 +684,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  9
+                 line:  8
                  col:  38
                 }
                 end:  {
-                 line:  9
+                 line:  8
+                 col:  39
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  8
+                 col:  38
+                }
+                end:  {
+                 line:  8
                  col:  39
                 }
                }
@@ -500,11 +709,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  9
+               line:  8
                col:  38
               }
               end:  {
-               line:  9
+               line:  8
+               col:  39
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  8
+               col:  38
+              }
+              end:  {
+               line:  8
                col:  39
               }
              }
@@ -514,11 +734,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  9
+             line:  8
              col:  42
             }
             end:  {
-             line:  9
+             line:  8
+             col:  43
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  8
+             col:  42
+            }
+            end:  {
+             line:  8
              col:  43
             }
            }
@@ -528,11 +759,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  46
           }
           text:  "let out = foo where(.x > 0) max(.bar.baz)"
@@ -540,11 +771,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  46
           }
           text:  "let out = foo where(.x > 0) max(.bar.baz)"
@@ -566,11 +797,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  16
               }
               end:  {
-               line:  10
+               line:  9
+               col:  16
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  9
+               col:  16
+              }
+              end:  {
+               line:  9
                col:  16
               }
              }
@@ -585,11 +827,22 @@ apps:  {
                  source_context:  {
                   file:  "tests/funcs.sysl"
                   start:  {
-                   line:  10
+                   line:  9
                    col:  26
                   }
                   end:  {
-                   line:  10
+                   line:  9
+                   col:  27
+                  }
+                 }
+                 source_contexts:  {
+                  file:  "tests/funcs.sysl"
+                  start:  {
+                   line:  9
+                   col:  26
+                  }
+                  end:  {
+                   line:  9
                    col:  27
                   }
                  }
@@ -599,11 +852,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  10
+                 line:  9
                  col:  26
                 }
                 end:  {
-                 line:  10
+                 line:  9
+                 col:  27
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  9
+                 col:  26
+                }
+                end:  {
+                 line:  9
                  col:  27
                 }
                }
@@ -615,11 +879,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  10
+                 line:  9
                  col:  31
                 }
                 end:  {
-                 line:  10
+                 line:  9
+                 col:  31
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  9
+                 col:  31
+                }
+                end:  {
+                 line:  9
                  col:  31
                 }
                }
@@ -628,11 +903,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  10
+               line:  9
                col:  26
               }
               end:  {
-               line:  10
+               line:  9
+               col:  31
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  9
+               col:  26
+              }
+              end:  {
+               line:  9
                col:  31
               }
              }
@@ -642,11 +928,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  10
+             line:  9
              col:  20
             }
             end:  {
-             line:  10
+             line:  9
+             col:  20
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  9
+             col:  20
+            }
+            end:  {
+             line:  9
              col:  20
             }
            }
@@ -655,11 +952,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  34
           }
           text:  "let out = foo where(.x > 0) count"
@@ -667,11 +964,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  10
+           line:  9
            col:  6
           }
           end:  {
-           line:  10
+           line:  9
            col:  34
           }
           text:  "let out = foo where(.x > 0) count"
@@ -695,11 +992,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  16
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  26
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  10
+                 col:  16
+                }
+                end:  {
+                 line:  10
                  col:  26
                 }
                }
@@ -710,11 +1018,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  16
               }
               end:  {
-               line:  11
+               line:  10
+               col:  26
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  10
+               col:  16
+              }
+              end:  {
+               line:  10
                col:  26
               }
              }
@@ -726,11 +1045,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  35
               }
               end:  {
-               line:  11
+               line:  10
+               col:  35
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  10
+               col:  35
+              }
+              end:  {
+               line:  10
                col:  35
               }
              }
@@ -742,11 +1072,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  41
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  42
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  10
+                 col:  41
+                }
+                end:  {
+                 line:  10
                  col:  42
                 }
                }
@@ -756,11 +1097,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  41
               }
               end:  {
-               line:  11
+               line:  10
+               col:  42
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  10
+               col:  41
+              }
+              end:  {
+               line:  10
                col:  42
               }
              }
@@ -772,11 +1124,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  35
               }
               end:  {
-               line:  11
+               line:  10
+               col:  35
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  10
+               col:  35
+              }
+              end:  {
+               line:  10
                col:  35
               }
              }
@@ -788,11 +1151,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  11
+                 line:  10
                  col:  41
                 }
                 end:  {
-                 line:  11
+                 line:  10
+                 col:  42
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  10
+                 col:  41
+                }
+                end:  {
+                 line:  10
                  col:  42
                 }
                }
@@ -802,11 +1176,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  11
+               line:  10
                col:  41
               }
               end:  {
-               line:  11
+               line:  10
+               col:  42
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  10
+               col:  41
+              }
+              end:  {
+               line:  10
                col:  42
               }
              }
@@ -817,11 +1202,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  11
+             line:  10
              col:  29
             }
             end:  {
-             line:  11
+             line:  10
+             col:  44
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  10
+             col:  29
+            }
+            end:  {
+             line:  10
              col:  44
             }
            }
@@ -830,11 +1226,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  46
           }
           text:  "let out = -> set of fo first 1 by (.id) single"
@@ -842,11 +1238,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  11
+           line:  10
            col:  6
           }
           end:  {
-           line:  11
+           line:  10
            col:  46
           }
           text:  "let out = -> set of fo first 1 by (.id) single"
@@ -870,11 +1266,22 @@ apps:  {
                source_context:  {
                 file:  "tests/funcs.sysl"
                 start:  {
-                 line:  12
+                 line:  11
                  col:  24
                 }
                 end:  {
-                 line:  12
+                 line:  11
+                 col:  25
+                }
+               }
+               source_contexts:  {
+                file:  "tests/funcs.sysl"
+                start:  {
+                 line:  11
+                 col:  24
+                }
+                end:  {
+                 line:  11
                  col:  25
                 }
                }
@@ -884,11 +1291,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  24
               }
               end:  {
-               line:  12
+               line:  11
+               col:  25
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  11
+               col:  24
+              }
+              end:  {
+               line:  11
                col:  25
               }
              }
@@ -900,11 +1318,23 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  12
+               line:  11
                col:  40
               }
               end:  {
-               line:  12
+               line:  11
+               col:  44
+              }
+              text:  "now()"
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  11
+               col:  40
+              }
+              end:  {
+               line:  11
                col:  44
               }
               text:  "now()"
@@ -914,11 +1344,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  12
+             line:  11
              col:  24
             }
             end:  {
-             line:  12
+             line:  11
+             col:  44
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  11
+             col:  24
+            }
+            end:  {
+             line:  11
              col:  44
             }
            }
@@ -927,11 +1368,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  45
           }
           text:  "AppDate = to_date(.createdDate ?? now())"
@@ -939,11 +1380,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  45
           }
           text:  "AppDate = to_date(.createdDate ?? now())"
@@ -964,11 +1405,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  13
+               line:  12
                col:  23
               }
               end:  {
-               line:  13
+               line:  12
+               col:  24
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  12
+               col:  23
+              }
+              end:  {
+               line:  12
                col:  24
               }
              }
@@ -978,11 +1430,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  13
+             line:  12
              col:  23
             }
             end:  {
-             line:  13
+             line:  12
+             col:  24
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  12
+             col:  23
+            }
+            end:  {
+             line:  12
              col:  24
             }
            }
@@ -991,11 +1454,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  31
           }
           text:  "AppOrderId = str(.orderId)"
@@ -1003,11 +1466,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  13
+           line:  12
            col:  6
           }
           end:  {
-           line:  13
+           line:  12
            col:  31
           }
           text:  "AppOrderId = str(.orderId)"
@@ -1026,11 +1489,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  14
+             line:  13
              col:  16
             }
             end:  {
-             line:  14
+             line:  13
+             col:  16
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  13
+             col:  16
+            }
+            end:  {
+             line:  13
              col:  16
             }
            }
@@ -1039,11 +1513,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  17
           }
           text:  "foo = bar(.)"
@@ -1051,11 +1525,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  14
+           line:  13
            col:  6
           }
           end:  {
-           line:  14
+           line:  13
            col:  17
           }
           text:  "foo = bar(.)"
@@ -1078,11 +1552,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  20
               }
               end:  {
-               line:  15
+               line:  14
+               col:  20
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  14
+               col:  20
+              }
+              end:  {
+               line:  14
                col:  20
               }
              }
@@ -1094,11 +1579,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  15
+               line:  14
                col:  22
               }
               end:  {
-               line:  15
+               line:  14
+               col:  22
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  14
+               col:  22
+              }
+              end:  {
+               line:  14
                col:  22
               }
              }
@@ -1107,11 +1603,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  15
+             line:  14
              col:  19
             }
             end:  {
-             line:  15
+             line:  14
+             col:  23
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  14
+             col:  19
+            }
+            end:  {
+             line:  14
              col:  23
             }
            }
@@ -1123,11 +1630,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  15
+             line:  14
              col:  26
             }
             end:  {
-             line:  15
+             line:  14
+             col:  26
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  14
+             col:  26
+            }
+            end:  {
+             line:  14
              col:  26
             }
            }
@@ -1136,11 +1654,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  27
           }
           text:  "foo = concat([1,2], 3)"
@@ -1148,11 +1666,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  15
+           line:  14
            col:  6
           }
           end:  {
-           line:  15
+           line:  14
            col:  27
           }
           text:  "foo = concat([1,2], 3)"
@@ -1173,11 +1691,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  19
             }
             end:  {
-             line:  16
+             line:  15
+             col:  19
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  15
+             col:  19
+            }
+            end:  {
+             line:  15
              col:  19
             }
            }
@@ -1189,11 +1718,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  27
             }
             end:  {
-             line:  16
+             line:  15
+             col:  27
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  15
+             col:  27
+            }
+            end:  {
+             line:  15
              col:  27
             }
            }
@@ -1205,11 +1745,22 @@ apps:  {
              source_context:  {
               file:  "tests/funcs.sysl"
               start:  {
-               line:  16
+               line:  15
                col:  31
               }
               end:  {
-               line:  16
+               line:  15
+               col:  32
+              }
+             }
+             source_contexts:  {
+              file:  "tests/funcs.sysl"
+              start:  {
+               line:  15
+               col:  31
+              }
+              end:  {
+               line:  15
                col:  32
               }
              }
@@ -1219,11 +1770,22 @@ apps:  {
            source_context:  {
             file:  "tests/funcs.sysl"
             start:  {
-             line:  16
+             line:  15
              col:  31
             }
             end:  {
-             line:  16
+             line:  15
+             col:  32
+            }
+           }
+           source_contexts:  {
+            file:  "tests/funcs.sysl"
+            start:  {
+             line:  15
+             col:  31
+            }
+            end:  {
+             line:  15
              col:  32
             }
            }
@@ -1232,11 +1794,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  33
           }
           text:  "foo = regsub(\"\\\\D+\", \"\", .a)"
@@ -1244,11 +1806,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  16
+           line:  15
            col:  6
           }
           end:  {
-           line:  16
+           line:  15
            col:  33
           }
           text:  "foo = regsub(\"\\\\D+\", \"\", .a)"
@@ -1266,11 +1828,11 @@ apps:  {
          source_context:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  6
           }
           end:  {
-           line:  17
+           line:  16
            col:  12
           }
           text:  "foo = \"\\r\\n\""
@@ -1278,11 +1840,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/funcs.sysl"
           start:  {
-           line:  17
+           line:  16
            col:  6
           }
           end:  {
-           line:  17
+           line:  16
            col:  12
           }
           text:  "foo = \"\\r\\n\""
@@ -1301,11 +1863,22 @@ apps:  {
           source_context:  {
            file:  "tests/funcs.sysl"
            start:  {
-            line:  18
+            line:  17
             col:  35
            }
            end:  {
-            line:  18
+            line:  17
+            col:  35
+           }
+          }
+          source_contexts:  {
+           file:  "tests/funcs.sysl"
+           start:  {
+            line:  17
+            col:  35
+           }
+           end:  {
+            line:  17
             col:  35
            }
           }
@@ -1315,11 +1888,22 @@ apps:  {
           source_context:  {
            file:  "tests/funcs.sysl"
            start:  {
-            line:  18
+            line:  17
             col:  6
            }
            end:  {
-            line:  18
+            line:  17
+            col:  40
+           }
+          }
+          source_contexts:  {
+           file:  "tests/funcs.sysl"
+           start:  {
+            line:  17
+            col:  6
+           }
+           end:  {
+            line:  17
             col:  40
            }
           }
@@ -1328,11 +1912,23 @@ apps:  {
         source_context:  {
          file:  "tests/funcs.sysl"
          start:  {
-          line:  18
+          line:  17
           col:  6
          }
          end:  {
-          line:  18
+          line:  17
+          col:  37
+         }
+         text:  "withAnonymousSetOfReturnType(10)"
+        }
+        source_contexts:  {
+         file:  "tests/funcs.sysl"
+         start:  {
+          line:  17
+          col:  6
+         }
+         end:  {
+          line:  17
           col:  37
          }
          text:  "withAnonymousSetOfReturnType(10)"
@@ -1343,11 +1939,22 @@ apps:  {
      source_context:  {
       file:  "tests/funcs.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  19
+       line:  18
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/funcs.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  18
        col:  5
       }
      }
@@ -1355,22 +1962,22 @@ apps:  {
     source_context:  {
      file:  "tests/funcs.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  20
+      line:  19
      }
      text:  "!view TestInbuiltFuncs(number <: int) -> int:"
     }
     source_contexts:  {
      file:  "tests/funcs.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  20
+      line:  19
      }
      text:  "!view TestInbuiltFuncs(number <: int) -> int:"
     }
@@ -1378,24 +1985,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/funcs.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  17
+    col:  40
    }
   }
   source_contexts:  {
    file:  "tests/funcs.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  47
+    line:  17
+    col:  40
    }
   }
  }

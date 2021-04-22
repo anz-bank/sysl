@@ -30,24 +30,24 @@ apps: {
       payload: "ok <: string"
      }
      source_context: {
-      file: "file_merge.sysl"
+      file: "dev/sysl/tests/file_merge.sysl"
       start: {
-       line: 12
+       line: 11
        col: 12
       }
       end: {
-       line: 12
+       line: 11
        col: 18
       }
      }
      source_contexts: {
-      file: "file_merge.sysl"
+      file: "dev/sysl/tests/file_merge.sysl"
       start: {
-       line: 12
+       line: 11
        col: 12
       }
       end: {
-       line: 12
+       line: 11
        col: 18
       }
      }
@@ -57,24 +57,24 @@ apps: {
      path: "/user"
     }
     source_context: {
-     file: "file_merge.sysl"
+     file: "dev/sysl/tests/file_merge.sysl"
      start: {
-      line: 10
+      line: 9
       col: 8
      }
      end: {
-      line: 13
+      line: 12
       col: 8
      }
     }
     source_contexts: {
-     file: "file_merge.sysl"
+     file: "dev/sysl/tests/file_merge.sysl"
      start: {
-      line: 10
+      line: 9
       col: 8
      }
      end: {
-      line: 13
+      line: 12
       col: 8
      }
     }
@@ -105,24 +105,24 @@ apps: {
       payload: "ok <: string"
      }
      source_context: {
-      file: "file_merge_import.sysl"
+      file: "dev/sysl/tests/file_merge_import.sysl"
       start: {
-       line: 12
+       line: 11
        col: 12
       }
       end: {
-       line: 12
+       line: 11
        col: 18
       }
      }
      source_contexts: {
-      file: "file_merge_import.sysl"
+      file: "dev/sysl/tests/file_merge_import.sysl"
       start: {
-       line: 12
+       line: 11
        col: 12
       }
       end: {
-       line: 12
+       line: 11
        col: 18
       }
      }
@@ -132,24 +132,24 @@ apps: {
      path: "/user"
     }
     source_context: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 10
+      line: 9
       col: 8
      }
      end: {
-      line: 14
+      line: 13
       col: 4
      }
     }
     source_contexts: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 10
+      line: 9
       col: 8
      }
      end: {
-      line: 14
+      line: 13
       col: 4
      }
     }
@@ -183,24 +183,24 @@ apps: {
       payload: "error <: string"
      }
      source_context: {
-      file: "file_merge.sysl"
+      file: "dev/sysl/tests/file_merge.sysl"
       start: {
-       line: 15
+       line: 14
        col: 12
       }
       end: {
-       line: 15
+       line: 14
        col: 18
       }
      }
      source_contexts: {
-      file: "file_merge.sysl"
+      file: "dev/sysl/tests/file_merge.sysl"
       start: {
-       line: 15
+       line: 14
        col: 12
       }
       end: {
-       line: 15
+       line: 14
        col: 18
       }
      }
@@ -210,24 +210,24 @@ apps: {
       payload: "ok <: string"
      }
      source_context: {
-      file: "file_merge_import.sysl"
+      file: "dev/sysl/tests/file_merge_import.sysl"
       start: {
-       line: 9
+       line: 8
        col: 12
       }
       end: {
-       line: 9
+       line: 8
        col: 18
       }
      }
      source_contexts: {
-      file: "file_merge_import.sysl"
+      file: "dev/sysl/tests/file_merge_import.sysl"
       start: {
-       line: 9
+       line: 8
        col: 12
       }
       end: {
-       line: 9
+       line: 8
        col: 18
       }
      }
@@ -237,35 +237,35 @@ apps: {
      path: "/user"
     }
     source_context: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 7
+      line: 6
       col: 8
      }
      end: {
-      line: 10
+      line: 9
       col: 8
      }
     }
     source_contexts: {
-     file: "file_merge.sysl"
+     file: "dev/sysl/tests/file_merge.sysl"
      start: {
-      line: 13
+      line: 12
       col: 8
      }
      end: {
-      line: 17
+      line: 16
       col: 4
      }
     }
     source_contexts: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 7
+      line: 6
       col: 8
      }
      end: {
-      line: 10
+      line: 9
       col: 8
      }
     }
@@ -286,23 +286,23 @@ apps: {
         }
        }
        source_context: {
-        file: "file_merge.sysl"
+        file: "dev/sysl/tests/file_merge.sysl"
         start: {
-         line: 22
+         line: 21
          col: 8
         }
         end: {
-         line: 24
+         line: 23
         }
        }
        source_contexts: {
-        file: "file_merge.sysl"
+        file: "dev/sysl/tests/file_merge.sysl"
         start: {
-         line: 22
+         line: 21
          col: 8
         }
         end: {
-         line: 24
+         line: 23
         }
        }
       }
@@ -312,24 +312,24 @@ apps: {
       value: {
        primitive: STRING
        source_context: {
-        file: "file_merge_import.sysl"
+        file: "dev/sysl/tests/file_merge_import.sysl"
         start: {
-         line: 15
+         line: 14
          col: 8
         }
         end: {
-         line: 15
+         line: 14
          col: 14
         }
        }
        source_contexts: {
-        file: "file_merge_import.sysl"
+        file: "dev/sysl/tests/file_merge_import.sysl"
         start: {
-         line: 15
+         line: 14
          col: 8
         }
         end: {
-         line: 15
+         line: 14
          col: 14
         }
        }
@@ -352,78 +352,78 @@ apps: {
         }
        }
        source_context: {
-        file: "file_merge_import.sysl"
+        file: "dev/sysl/tests/file_merge_import.sysl"
         start: {
-         line: 16
+         line: 15
          col: 8
         }
         end: {
-         line: 18
+         line: 17
         }
        }
        source_contexts: {
-        file: "file_merge.sysl"
+        file: "dev/sysl/tests/file_merge.sysl"
         start: {
-         line: 18
+         line: 17
          col: 8
         }
         end: {
-         line: 21
+         line: 20
          col: 4
         }
        }
        source_contexts: {
-        file: "file_merge_import.sysl"
+        file: "dev/sysl/tests/file_merge_import.sysl"
         start: {
-         line: 16
+         line: 15
          col: 8
         }
         end: {
-         line: 18
+         line: 17
         }
        }
       }
      }
     }
     source_context: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 14
+      line: 13
       col: 4
      }
      end: {
-      line: 18
-     }
-    }
-    source_contexts: {
-     file: "file_merge.sysl"
-     start: {
       line: 17
+     }
+    }
+    source_contexts: {
+     file: "dev/sysl/tests/file_merge.sysl"
+     start: {
+      line: 16
       col: 4
      }
      end: {
-      line: 21
+      line: 20
       col: 4
      }
     }
     source_contexts: {
-     file: "file_merge.sysl"
+     file: "dev/sysl/tests/file_merge.sysl"
      start: {
-      line: 21
+      line: 20
       col: 4
      }
      end: {
-      line: 24
+      line: 23
      }
     }
     source_contexts: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 14
+      line: 13
       col: 4
      }
      end: {
-      line: 18
+      line: 17
      }
     }
    }
@@ -437,24 +437,24 @@ apps: {
       value: {
        primitive: STRING
        source_context: {
-        file: "file_merge_import.sysl"
+        file: "dev/sysl/tests/file_merge_import.sysl"
         start: {
-         line: 4
+         line: 3
          col: 8
         }
         end: {
-         line: 4
+         line: 3
          col: 14
         }
        }
        source_contexts: {
-        file: "file_merge_import.sysl"
+        file: "dev/sysl/tests/file_merge_import.sysl"
         start: {
-         line: 4
+         line: 3
          col: 8
         }
         end: {
-         line: 4
+         line: 3
          col: 14
         }
        }
@@ -465,24 +465,24 @@ apps: {
       value: {
        primitive: STRING
        source_context: {
-        file: "file_merge.sysl"
+        file: "dev/sysl/tests/file_merge.sysl"
         start: {
-         line: 6
+         line: 5
          col: 8
         }
         end: {
-         line: 6
+         line: 5
          col: 16
         }
        }
        source_contexts: {
-        file: "file_merge.sysl"
+        file: "dev/sysl/tests/file_merge.sysl"
         start: {
-         line: 6
+         line: 5
          col: 8
         }
         end: {
-         line: 6
+         line: 5
          col: 16
         }
        }
@@ -490,71 +490,65 @@ apps: {
      }
     }
     source_context: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 3
+      line: 2
       col: 4
      }
      end: {
-      line: 6
-      col: 4
+      line: 3
+      col: 14
      }
     }
     source_contexts: {
-     file: "file_merge.sysl"
+     file: "dev/sysl/tests/file_merge.sysl"
      start: {
+      line: 4
+      col: 4
+     }
+     end: {
       line: 5
-      col: 4
-     }
-     end: {
-      line: 9
-      col: 4
+      col: 16
      }
     }
     source_contexts: {
-     file: "file_merge_import.sysl"
+     file: "dev/sysl/tests/file_merge_import.sysl"
      start: {
-      line: 3
+      line: 2
       col: 4
      }
      end: {
-      line: 6
-      col: 4
+      line: 3
+      col: 14
      }
     }
    }
   }
   source_context: {
-   file: "file_merge_import.sysl"
+   file: "dev/sysl/tests/file_merge_import.sysl"
    start: {
-    line: 2
-    col: 1
+    line: 1
    }
    end: {
-    line: 2
-    col: 7
+    line: 17
    }
   }
   source_contexts: {
-   file: "file_merge.sysl"
+   file: "dev/sysl/tests/file_merge.sysl"
    start: {
-    line: 4
-    col: 1
+    line: 3
    }
    end: {
-    line: 4
-    col: 7
+    line: 23
    }
   }
   source_contexts: {
-   file: "file_merge_import.sysl"
+   file: "dev/sysl/tests/file_merge_import.sysl"
    start: {
-    line: 2
-    col: 1
+    line: 1
    }
    end: {
-    line: 2
-    col: 7
+    line: 17
    }
   }
  }

@@ -27,32 +27,32 @@ apps:  {
        source_context:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
-         line:  10
+         line:  9
          col:  8
         }
         end:  {
-         line:  12
+         line:  11
         }
        }
        source_contexts:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  6
+         line:  5
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
-         line:  10
+         line:  9
          col:  8
         }
         end:  {
-         line:  12
+         line:  11
         }
        }
       }
@@ -64,22 +64,22 @@ apps:  {
        source_context:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  8
         }
         end:  {
-         line:  6
+         line:  5
          col:  13
         }
        }
        source_contexts:  {
         file:  "tests/merge_attrs_table.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  8
         }
         end:  {
-         line:  6
+         line:  5
          col:  13
         }
        }
@@ -89,54 +89,48 @@ apps:  {
     source_context:  {
      file:  "tests/merge_attrs_table.sysl"
      start:  {
-      line:  9
+      line:  8
       col:  4
      }
      end:  {
-      line:  12
+      line:  11
      }
     }
     source_contexts:  {
      file:  "tests/merge_attrs_table.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  9
-      col:  4
+      line:  5
+      col:  13
      }
     }
     source_contexts:  {
      file:  "tests/merge_attrs_table.sysl"
      start:  {
-      line:  9
+      line:  8
       col:  4
      }
      end:  {
-      line:  12
+      line:  11
      }
     }
    }
   }
   source_context:  {
    file:  "tests/merge_attrs_table.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  11
    }
   }
   source_contexts:  {
    file:  "tests/merge_attrs_table.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  11
    }
   }
  }

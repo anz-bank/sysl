@@ -38,7 +38,7 @@ $`resource "google_data_catalog_entry" "${//str.lower(table.typeName)}_entry" {
 
   user_specified_type = "${table.typeName}"
   user_specified_system = "${table.appName}"
-  linked_resource = "${table.typeContext.file}:${table.typeContext.start.line}"
+  linked_resource = "${table.typeContext.file}:${table.typeContext.start.line+1}"
 
   display_name = "${table.typeName}"
   description  = "${table.appDesc}"
@@ -46,7 +46,7 @@ $`resource "google_data_catalog_entry" "${//str.lower(table.typeName)}_entry" {
   schema = <<EOF
 {
   "columns": [
-    ${table.columns >> 
+    ${table.columns >>
   $`{
       "column": "${.fieldName}",
       "description": "${.fieldDesc}",

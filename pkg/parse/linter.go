@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/sirupsen/logrus"
 )
@@ -121,7 +123,11 @@ func (s *TreeShapeListener) getApps() *graph {
 	return rec
 }
 
-func (s *TreeShapeListener) createLocation(lineNum, colNum int) string {
+func (s *TreeShapeListener) createLocation(token antlr.Token) string {
+	return s.createLocationForPos(token.GetLine(), token.GetColumn())
+}
+
+func (s *TreeShapeListener) createLocationForPos(lineNum, colNum int) string {
 	return fmt.Sprintf("%s:%d:%d", s.sc.filename, lineNum, colNum)
 }
 
@@ -255,7 +261,7 @@ func (s *TreeShapeListener) lintRetStmt(payload string, ctx *parser.Ret_stmtCont
 		}
 		logrus.Warnf(
 			"lint %s: 'return %s' not supported, use 'return ok <: %[2]s' instead",
-			s.createLocation(ctx.GetStart().GetLine(), ctx.GetStart().GetColumn()),
+			s.createLocation(ctx.GetStart()),
 			payload)
 	}
 }

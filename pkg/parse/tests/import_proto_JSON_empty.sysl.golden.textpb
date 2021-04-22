@@ -13,21 +13,19 @@ apps:  {
   source_context:  {
    file:  "tests/import_proto_JSON_empty.sysl"
    start:  {
-    line:  3
-    col:  1
+    line:  2
    }
    end:  {
-    line:  3
+    line:  2
    }
   }
   source_contexts:  {
    file:  "tests/import_proto_JSON_empty.sysl"
    start:  {
-    line:  3
-    col:  1
+    line:  2
    }
    end:  {
-    line:  3
+    line:  2
    }
   }
  }

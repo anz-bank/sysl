@@ -15,22 +15,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  3
+         line:  2
          col:  13
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  3
+         line:  2
          col:  13
         }
        }
@@ -40,45 +40,41 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  5
-      col:  1
+      line:  2
+      col:  13
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  5
-      col:  1
+      line:  2
+      col:  13
      }
     }
    }
   }
   source_context:  {
    file:  "tests/type_refs.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  2
+    col:  13
    }
   }
   source_contexts:  {
    file:  "tests/type_refs.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  2
+    col:  13
    }
   }
  }
@@ -96,22 +92,22 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  4
      }
      end:  {
-      line:  6
+      line:  5
       col:  13
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  4
      }
      end:  {
-      line:  6
+      line:  5
       col:  13
      }
     }
@@ -120,23 +116,21 @@ apps:  {
   source_context:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  5
-    col:  1
+    line:  4
    }
    end:  {
     line:  5
-    col:  5
+    col:  13
    }
   }
   source_contexts:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  5
-    col:  1
+    line:  4
    }
    end:  {
     line:  5
-    col:  5
+    col:  13
    }
   }
  }
@@ -153,23 +147,23 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  9
+      line:  8
       col:  4
      }
      end:  {
-      line:  13
-      col:  4
+      line:  10
+      col:  17
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  9
+      line:  8
       col:  4
      }
      end:  {
-      line:  13
-      col:  4
+      line:  10
+      col:  17
      }
     }
    }
@@ -185,22 +179,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  12
         }
         end:  {
-         line:  11
+         line:  10
          col:  17
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  12
         }
         end:  {
-         line:  11
+         line:  10
          col:  17
         }
        }
@@ -210,23 +204,23 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  8
      }
      end:  {
-      line:  13
-      col:  4
+      line:  10
+      col:  17
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  8
      }
      end:  {
-      line:  13
-      col:  4
+      line:  10
+      col:  17
      }
     }
    }
@@ -242,22 +236,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  14
+         line:  13
          col:  8
         }
         end:  {
-         line:  14
+         line:  13
          col:  13
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  14
+         line:  13
          col:  8
         }
         end:  {
-         line:  14
+         line:  13
          col:  13
         }
        }
@@ -284,22 +278,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  17
+         line:  16
          col:  8
         }
         end:  {
-         line:  17
+         line:  16
          col:  30
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  17
+         line:  16
          col:  8
         }
         end:  {
-         line:  17
+         line:  16
          col:  30
         }
        }
@@ -325,22 +319,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  16
+         line:  15
          col:  8
         }
         end:  {
-         line:  16
+         line:  15
          col:  27
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  16
+         line:  15
          col:  8
         }
         end:  {
-         line:  16
+         line:  15
          col:  27
         }
        }
@@ -367,22 +361,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  8
         }
         end:  {
-         line:  19
+         line:  18
          col:  34
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  8
         }
         end:  {
-         line:  19
+         line:  18
          col:  34
         }
        }
@@ -392,23 +386,23 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  13
+      line:  12
       col:  4
      }
      end:  {
-      line:  21
-      col:  4
+      line:  18
+      col:  34
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  13
+      line:  12
       col:  4
      }
      end:  {
-      line:  21
-      col:  4
+      line:  18
+      col:  34
      }
     }
    }
@@ -437,22 +431,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  22
+         line:  21
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
          col:  27
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  22
+         line:  21
          col:  8
         }
         end:  {
-         line:  22
+         line:  21
          col:  27
         }
        }
@@ -480,22 +474,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  27
+         line:  26
          col:  8
         }
         end:  {
-         line:  27
+         line:  26
          col:  27
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  27
+         line:  26
          col:  8
         }
         end:  {
-         line:  27
+         line:  26
          col:  27
         }
        }
@@ -522,22 +516,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  26
+         line:  25
          col:  8
         }
         end:  {
-         line:  26
+         line:  25
          col:  32
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  26
+         line:  25
          col:  8
         }
         end:  {
-         line:  26
+         line:  25
          col:  32
         }
        }
@@ -563,33 +557,33 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  25
+         line:  24
          col:  8
         }
         end:  {
-         line:  25
+         line:  24
          col:  29
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  24
+         line:  23
          col:  8
         }
         end:  {
-         line:  24
+         line:  23
          col:  27
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  25
+         line:  24
          col:  8
         }
         end:  {
-         line:  25
+         line:  24
          col:  29
         }
        }
@@ -599,23 +593,23 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  21
+      line:  20
       col:  4
      }
      end:  {
-      line:  29
-      col:  1
+      line:  26
+      col:  27
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  21
+      line:  20
       col:  4
      }
      end:  {
-      line:  29
-      col:  1
+      line:  26
+      col:  27
      }
     }
    }
@@ -623,21 +617,21 @@ apps:  {
   source_context:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  8
-    col:  1
+    line:  7
    }
    end:  {
-    line:  8
+    line:  26
+    col:  27
    }
   }
   source_contexts:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  8
-    col:  1
+    line:  7
    }
    end:  {
-    line:  8
+    line:  26
+    col:  27
    }
   }
  }
@@ -659,22 +653,22 @@ apps:  {
        source_context:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  31
+         line:  30
          col:  8
         }
         end:  {
-         line:  31
+         line:  30
          col:  13
         }
        }
        source_contexts:  {
         file:  "tests/type_refs.sysl"
         start:  {
-         line:  31
+         line:  30
          col:  8
         }
         end:  {
-         line:  31
+         line:  30
          col:  13
         }
        }
@@ -684,23 +678,23 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  30
+      line:  29
       col:  4
      }
      end:  {
-      line:  33
-      col:  1
+      line:  30
+      col:  13
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  30
+      line:  29
       col:  4
      }
      end:  {
-      line:  33
-      col:  1
+      line:  30
+      col:  13
      }
     }
    }
@@ -708,21 +702,21 @@ apps:  {
   source_context:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  29
-    col:  1
+    line:  28
    }
    end:  {
-    line:  29
+    line:  30
+    col:  13
    }
   }
   source_contexts:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  29
-    col:  1
+    line:  28
    }
    end:  {
-    line:  29
+    line:  30
+    col:  13
    }
   }
  }
@@ -791,23 +785,23 @@ apps:  {
      source_context:  {
       file:  "tests/type_refs.sysl"
       start:  {
-       line:  39
+       line:  38
        col:  12
       }
       end:  {
-       line:  39
-       col:  12
+       line:  38
+       col:  15
       }
      }
      source_contexts:  {
       file:  "tests/type_refs.sysl"
       start:  {
-       line:  39
+       line:  38
        col:  12
       }
       end:  {
-       line:  39
-       col:  12
+       line:  38
+       col:  15
       }
      }
     }
@@ -818,22 +812,22 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  38
+      line:  37
       col:  8
      }
      end:  {
-      line:  39
+      line:  38
       col:  15
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  38
+      line:  37
       col:  8
      }
      end:  {
-      line:  39
+      line:  38
       col:  15
      }
     }
@@ -845,22 +839,22 @@ apps:  {
     source_context:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  35
+      line:  34
       col:  4
      }
      end:  {
-      line:  35
+      line:  34
       col:  13
      }
     }
     source_contexts:  {
      file:  "tests/type_refs.sysl"
      start:  {
-      line:  35
+      line:  34
       col:  4
      }
      end:  {
-      line:  35
+      line:  34
       col:  13
      }
     }
@@ -869,21 +863,21 @@ apps:  {
   source_context:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  33
-    col:  1
+    line:  32
    }
    end:  {
-    line:  33
+    line:  38
+    col:  15
    }
   }
   source_contexts:  {
    file:  "tests/type_refs.sysl"
    start:  {
-    line:  33
-    col:  1
+    line:  32
    }
    end:  {
-    line:  33
+    line:  38
+    col:  15
    }
   }
  }

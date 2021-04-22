@@ -128,22 +128,22 @@ apps:  {
      source_context:  {
       file:  "tests/import_proto_JSON_merge.sysl"
       start:  {
-       line:  13
+       line:  12
        col:  12
       }
       end:  {
-       line:  13
+       line:  12
        col:  18
       }
      }
      source_contexts:  {
       file:  "tests/import_proto_JSON_merge.sysl"
       start:  {
-       line:  13
+       line:  12
        col:  12
       }
       end:  {
-       line:  13
+       line:  12
        col:  18
       }
      }
@@ -155,11 +155,11 @@ apps:  {
     source_context:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  8
      }
      end:  {
-      line:  15
+      line:  14
       col:  12
      }
      version:  "v0.0.2"
@@ -167,11 +167,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  8
      }
      end:  {
-      line:  15
+      line:  14
       col:  12
      }
      version:  "v0.0.2"
@@ -206,22 +206,22 @@ apps:  {
      source_context:  {
       file:  "tests/import_proto_JSON_merge.sysl"
       start:  {
-       line:  9
+       line:  8
        col:  12
       }
       end:  {
-       line:  9
+       line:  8
        col:  18
       }
      }
      source_contexts:  {
       file:  "tests/import_proto_JSON_merge.sysl"
       start:  {
-       line:  9
+       line:  8
        col:  12
       }
       end:  {
-       line:  9
+       line:  8
        col:  18
       }
      }
@@ -233,11 +233,11 @@ apps:  {
     source_context:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  8
      }
      end:  {
-      line:  10
+      line:  9
       col:  8
      }
      version:  "v0.0.2"
@@ -245,11 +245,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  8
      }
      end:  {
-      line:  10
+      line:  9
       col:  8
      }
      version:  "v0.0.2"
@@ -297,24 +297,24 @@ apps:  {
   source_context:  {
    file:  "tests/import_proto_JSON_merge.sysl"
    start:  {
-    line:  3
+    line:  2
     col:  1
    }
    end:  {
-    line:  3
-    col:  38
+    line:  12
+    col:  18
    }
    version:  "v0.0.2"
   }
   source_contexts:  {
    file:  "tests/import_proto_JSON_merge.sysl"
    start:  {
-    line:  3
+    line:  2
     col:  1
    }
    end:  {
-    line:  3
-    col:  38
+    line:  12
+    col:  18
    }
    version:  "v0.0.2"
   }
@@ -888,21 +888,23 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  21
+         line:  20
          col:  8
         }
         end:  {
-         line:  23
+         line:  22
+         col:  4
         }
        }
        source_contexts:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  21
+         line:  20
          col:  8
         }
         end:  {
-         line:  23
+         line:  22
+         col:  4
         }
        }
       }
@@ -920,11 +922,11 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  17
+         line:  16
          col:  8
         }
         end:  {
-         line:  19
+         line:  18
          col:  8
         }
         version:  "v0.0.2"
@@ -932,11 +934,11 @@ apps:  {
        source_contexts:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  17
+         line:  16
          col:  8
         }
         end:  {
-         line:  19
+         line:  18
          col:  8
         }
         version:  "v0.0.2"
@@ -956,11 +958,11 @@ apps:  {
        source_context:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  8
         }
         end:  {
-         line:  21
+         line:  20
          col:  8
         }
         version:  "v0.0.2"
@@ -968,11 +970,11 @@ apps:  {
        source_contexts:  {
         file:  "tests/import_proto_JSON_merge.sysl"
         start:  {
-         line:  19
+         line:  18
          col:  8
         }
         end:  {
-         line:  21
+         line:  20
          col:  8
         }
         version:  "v0.0.2"
@@ -989,11 +991,11 @@ apps:  {
     source_context:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
-      line:  16
+      line:  15
       col:  4
      }
      end:  {
-      line:  23
+      line:  22
       col:  4
      }
      version:  "v0.0.2"
@@ -1001,11 +1003,11 @@ apps:  {
     source_contexts:  {
      file:  "tests/import_proto_JSON_merge.sysl"
      start:  {
-      line:  16
+      line:  15
       col:  4
      }
      end:  {
-      line:  23
+      line:  22
       col:  4
      }
      version:  "v0.0.2"
@@ -1015,24 +1017,24 @@ apps:  {
   source_context:  {
    file:  "tests/import_proto_JSON_merge.sysl"
    start:  {
-    line:  15
+    line:  14
     col:  1
    }
    end:  {
-    line:  15
-    col:  43
+    line:  22
+    col:  4
    }
    version:  "v0.0.2"
   }
   source_contexts:  {
    file:  "tests/import_proto_JSON_merge.sysl"
    start:  {
-    line:  15
+    line:  14
     col:  1
    }
    end:  {
-    line:  15
-    col:  43
+    line:  22
+    col:  4
    }
    version:  "v0.0.2"
   }

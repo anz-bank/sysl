@@ -89,68 +89,64 @@ apps:  {
      source_context:  {
       file:  "tests/attribs.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  8
       }
       end:  {
-       line:  5
-       col:  8
+       line:  4
+       col:  11
       }
      }
      source_contexts:  {
       file:  "tests/attribs.sysl"
       start:  {
-       line:  5
+       line:  4
        col:  8
       }
       end:  {
-       line:  5
-       col:  8
+       line:  4
+       col:  11
       }
      }
     }
     source_context:  {
      file:  "tests/attribs.sysl"
      start:  {
-      line:  4
+      line:  3
       col:  4
      }
      end:  {
-      line:  6
+      line:  4
+      col:  11
      }
     }
     source_contexts:  {
      file:  "tests/attribs.sysl"
      start:  {
-      line:  4
+      line:  3
       col:  4
      }
      end:  {
-      line:  6
+      line:  4
+      col:  11
      }
     }
    }
   }
   source_context:  {
    file:  "tests/attribs.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  51
+    line:  4
+    col:  11
    }
   }
   source_contexts:  {
    file:  "tests/attribs.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  51
+    line:  4
+    col:  11
    }
   }
  }

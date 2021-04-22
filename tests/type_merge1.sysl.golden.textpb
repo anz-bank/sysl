@@ -13,24 +13,24 @@ apps: {
       value: {
        primitive: INT
        source_context: {
-        file: "type_merge1.sysl"
+        file: "dev/sysl/tests/type_merge1.sysl"
         start: {
-         line: 3
+         line: 2
          col: 8
         }
         end: {
-         line: 3
+         line: 2
          col: 13
         }
        }
        source_contexts: {
-        file: "type_merge1.sysl"
+        file: "dev/sysl/tests/type_merge1.sysl"
         start: {
-         line: 3
+         line: 2
          col: 8
         }
         end: {
-         line: 3
+         line: 2
          col: 13
         }
        }
@@ -57,66 +57,62 @@ apps: {
      }
     }
     source_context: {
-     file: "type_merge1.sysl"
+     file: "dev/sysl/tests/type_merge1.sysl"
      start: {
-      line: 6
-      col: 4
-     }
-     end: {
-      line: 8
-     }
-    }
-    source_contexts: {
-     file: "type_merge1.sysl"
-     start: {
-      line: 2
-      col: 4
-     }
-     end: {
       line: 5
-      col: 3
-     }
-    }
-    source_contexts: {
-     file: "type_merge1.sysl"
-     start: {
-      line: 6
       col: 4
      }
      end: {
-      line: 8
+      line: 7
+     }
+    }
+    source_contexts: {
+     file: "dev/sysl/tests/type_merge1.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 13
+     }
+    }
+    source_contexts: {
+     file: "dev/sysl/tests/type_merge1.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 7
      }
     }
    }
   }
   source_context: {
-   file: "type_merge1.sysl"
+   file: "dev/sysl/tests/type_merge1.sysl"
    start: {
-    line: 5
-    col: 1
+    line: 4
    }
    end: {
-    line: 5
+    line: 7
    }
   }
   source_contexts: {
-   file: "type_merge1.sysl"
-   start: {
-    line: 1
-    col: 1
-   }
+   file: "dev/sysl/tests/type_merge1.sysl"
+   start: {}
    end: {
-    line: 1
+    line: 2
+    col: 13
    }
   }
   source_contexts: {
-   file: "type_merge1.sysl"
+   file: "dev/sysl/tests/type_merge1.sysl"
    start: {
-    line: 5
-    col: 1
+    line: 4
    }
    end: {
-    line: 5
+    line: 7
    }
   }
  }

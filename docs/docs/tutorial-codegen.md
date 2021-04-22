@@ -572,7 +572,6 @@ The unfortunate outcome of this approach is that HTTP headers are also passed _i
 
 This is a known, legacy implementation detail that we aim to address soon but in the meantime we encourage that a fresh set of HTTP headers are set against the context before all downstream HTTP requests are made.
 
-
 ## Next steps
 
 TODO: We'll be adding more instructions soon to use the response we received to fetch an image of a random pet.

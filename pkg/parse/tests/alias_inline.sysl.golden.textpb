@@ -11,22 +11,22 @@ apps:  {
     source_context:  {
      file:  "tests/alias_inline.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  20
      }
     }
     source_contexts:  {
      file:  "tests/alias_inline.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  20
      }
     }
@@ -34,22 +34,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/alias_inline.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
     line:  1
+    col:  20
    }
   }
   source_contexts:  {
    file:  "tests/alias_inline.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
     line:  1
+    col:  20
    }
   }
  }

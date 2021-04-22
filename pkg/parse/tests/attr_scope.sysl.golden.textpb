@@ -21,22 +21,22 @@ apps:  {
        source_context:  {
         file:  "tests/attr_scope.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  8
         }
         end:  {
-         line:  6
+         line:  5
          col:  8
         }
        }
        source_contexts:  {
         file:  "tests/attr_scope.sysl"
         start:  {
-         line:  4
+         line:  3
          col:  8
         }
         end:  {
-         line:  6
+         line:  5
          col:  8
         }
        }
@@ -55,21 +55,21 @@ apps:  {
        source_context:  {
         file:  "tests/attr_scope.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  8
         }
         end:  {
-         line:  8
+         line:  7
         }
        }
        source_contexts:  {
         file:  "tests/attr_scope.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  8
         }
         end:  {
-         line:  8
+         line:  7
         }
        }
       }
@@ -84,43 +84,37 @@ apps:  {
     source_context:  {
      file:  "tests/attr_scope.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  8
+      line:  7
      }
     }
     source_contexts:  {
      file:  "tests/attr_scope.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  8
+      line:  7
      }
     }
    }
   }
   source_context:  {
    file:  "tests/attr_scope.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  7
    }
   }
   source_contexts:  {
    file:  "tests/attr_scope.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  7
    }
   }
  }

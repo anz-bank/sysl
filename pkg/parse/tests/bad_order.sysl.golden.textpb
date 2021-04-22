@@ -35,23 +35,23 @@ apps:  {
      source_context:  {
       file:  "tests/bad_order.sysl"
       start:  {
-       line:  4
+       line:  3
        col:  12
       }
       end:  {
-       line:  4
-       col:  12
+       line:  3
+       col:  15
       }
      }
      source_contexts:  {
       file:  "tests/bad_order.sysl"
       start:  {
-       line:  4
+       line:  3
        col:  12
       }
       end:  {
-       line:  4
-       col:  12
+       line:  3
+       col:  15
       }
      }
     }
@@ -65,22 +65,22 @@ apps:  {
        source_context:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  13
         }
         end:  {
-         line:  3
+         line:  2
          col:  19
         }
        }
        source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  13
         }
         end:  {
-         line:  3
+         line:  2
          col:  19
         }
        }
@@ -94,22 +94,22 @@ apps:  {
        source_context:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  23
         }
         end:  {
-         line:  3
+         line:  2
          col:  32
         }
        }
        source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  23
         }
         end:  {
-         line:  3
+         line:  2
          col:  32
         }
        }
@@ -123,22 +123,22 @@ apps:  {
        source_context:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  34
         }
         end:  {
-         line:  3
+         line:  2
          col:  44
         }
        }
        source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  34
         }
         end:  {
-         line:  3
+         line:  2
          col:  44
         }
        }
@@ -151,22 +151,22 @@ apps:  {
        source_context:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  2
+         line:  1
          col:  5
         }
         end:  {
-         line:  2
+         line:  1
          col:  13
         }
        }
        source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  2
+         line:  1
          col:  5
         }
         end:  {
-         line:  2
+         line:  1
          col:  13
         }
        }
@@ -176,22 +176,22 @@ apps:  {
     source_context:  {
      file:  "tests/bad_order.sysl"
      start:  {
-      line:  3
+      line:  2
       col:  8
      }
      end:  {
-      line:  6
+      line:  5
       col:  8
      }
     }
     source_contexts:  {
      file:  "tests/bad_order.sysl"
      start:  {
-      line:  3
+      line:  2
       col:  8
      }
      end:  {
-      line:  6
+      line:  5
       col:  8
      }
     }
@@ -218,23 +218,23 @@ apps:  {
      source_context:  {
       file:  "tests/bad_order.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  16
       }
       end:  {
-       line:  8
-       col:  16
+       line:  7
+       col:  19
       }
      }
      source_contexts:  {
       file:  "tests/bad_order.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  16
       }
       end:  {
-       line:  8
-       col:  16
+       line:  7
+       col:  19
       }
      }
     }
@@ -248,22 +248,22 @@ apps:  {
        source_context:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  2
+         line:  1
          col:  5
         }
         end:  {
-         line:  2
+         line:  1
          col:  13
         }
        }
        source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  2
+         line:  1
          col:  5
         }
         end:  {
-         line:  2
+         line:  1
          col:  13
         }
        }
@@ -276,22 +276,22 @@ apps:  {
        source_context:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  15
         }
         end:  {
-         line:  6
+         line:  5
          col:  25
         }
        }
        source_contexts:  {
         file:  "tests/bad_order.sysl"
         start:  {
-         line:  6
+         line:  5
          col:  15
         }
         end:  {
-         line:  6
+         line:  5
          col:  25
         }
        }
@@ -301,45 +301,39 @@ apps:  {
     source_context:  {
      file:  "tests/bad_order.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  12
      }
      end:  {
-      line:  9
+      line:  8
      }
     }
     source_contexts:  {
      file:  "tests/bad_order.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  12
      }
      end:  {
-      line:  9
+      line:  8
      }
     }
    }
   }
   source_context:  {
    file:  "tests/bad_order.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  13
+    line:  7
+    col:  19
    }
   }
   source_contexts:  {
    file:  "tests/bad_order.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  13
+    line:  7
+    col:  19
    }
   }
  }

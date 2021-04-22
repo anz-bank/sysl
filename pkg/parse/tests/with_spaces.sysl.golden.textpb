@@ -30,22 +30,22 @@ apps:  {
        source_context:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  11
+         line:  10
          col:  42
         }
        }
        source_contexts:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  11
+         line:  10
          col:  8
         }
         end:  {
-         line:  11
+         line:  10
          col:  42
         }
        }
@@ -73,22 +73,22 @@ apps:  {
        source_context:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  12
+         line:  11
          col:  8
         }
         end:  {
-         line:  12
+         line:  11
          col:  45
         }
        }
        source_contexts:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  12
+         line:  11
          col:  8
         }
         end:  {
-         line:  12
+         line:  11
          col:  45
         }
        }
@@ -117,22 +117,22 @@ apps:  {
        source_context:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  13
+         line:  12
          col:  8
         }
         end:  {
-         line:  13
+         line:  12
          col:  51
         }
        }
        source_contexts:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  13
+         line:  12
          col:  8
         }
         end:  {
-         line:  13
+         line:  12
          col:  51
         }
        }
@@ -161,22 +161,22 @@ apps:  {
        source_context:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  14
+         line:  13
          col:  8
         }
         end:  {
-         line:  14
+         line:  13
          col:  54
         }
        }
        source_contexts:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  14
+         line:  13
          col:  8
         }
         end:  {
-         line:  14
+         line:  13
          col:  54
         }
        }
@@ -186,21 +186,23 @@ apps:  {
     source_context:  {
      file:  "tests/with_spaces.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  4
      }
      end:  {
-      line:  15
+      line:  13
+      col:  54
      }
     }
     source_contexts:  {
      file:  "tests/with_spaces.sysl"
      start:  {
-      line:  10
+      line:  9
       col:  4
      }
      end:  {
-      line:  15
+      line:  13
+      col:  54
      }
     }
    }
@@ -208,21 +210,21 @@ apps:  {
   source_context:  {
    file:  "tests/with_spaces.sysl"
    start:  {
-    line:  9
-    col:  1
+    line:  8
    }
    end:  {
-    line:  9
+    line:  13
+    col:  54
    }
   }
   source_contexts:  {
    file:  "tests/with_spaces.sysl"
    start:  {
-    line:  9
-    col:  1
+    line:  8
    }
    end:  {
-    line:  9
+    line:  13
+    col:  54
    }
   }
  }
@@ -245,22 +247,22 @@ apps:  {
        source_context:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  3
+         line:  2
          col:  14
         }
        }
        source_contexts:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  3
+         line:  2
          col:  14
         }
        }
@@ -270,47 +272,41 @@ apps:  {
     source_context:  {
      file:  "tests/with_spaces.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  5
-      col:  2
+      line:  2
+      col:  14
      }
     }
     source_contexts:  {
      file:  "tests/with_spaces.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  5
-      col:  2
+      line:  2
+      col:  14
      }
     }
    }
   }
   source_context:  {
    file:  "tests/with_spaces.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  12
+    line:  2
+    col:  14
    }
   }
   source_contexts:  {
    file:  "tests/with_spaces.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  12
+    line:  2
+    col:  14
    }
   }
  }
@@ -334,22 +330,22 @@ apps:  {
        source_context:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  7
+         line:  6
          col:  8
         }
         end:  {
-         line:  7
+         line:  6
          col:  14
         }
        }
        source_contexts:  {
         file:  "tests/with_spaces.sysl"
         start:  {
-         line:  7
+         line:  6
          col:  8
         }
         end:  {
-         line:  7
+         line:  6
          col:  14
         }
        }
@@ -359,23 +355,23 @@ apps:  {
     source_context:  {
      file:  "tests/with_spaces.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  4
      }
      end:  {
-      line:  9
-      col:  10
+      line:  6
+      col:  14
      }
     }
     source_contexts:  {
      file:  "tests/with_spaces.sysl"
      start:  {
-      line:  6
+      line:  5
       col:  4
      }
      end:  {
-      line:  9
-      col:  10
+      line:  6
+      col:  14
      }
     }
    }
@@ -383,23 +379,21 @@ apps:  {
   source_context:  {
    file:  "tests/with_spaces.sysl"
    start:  {
-    line:  5
-    col:  1
+    line:  4
    }
    end:  {
-    line:  5
-    col:  19
+    line:  6
+    col:  14
    }
   }
   source_contexts:  {
    file:  "tests/with_spaces.sysl"
    start:  {
-    line:  5
-    col:  1
+    line:  4
    }
    end:  {
-    line:  5
-    col:  19
+    line:  6
+    col:  14
    }
   }
  }

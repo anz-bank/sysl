@@ -22,22 +22,22 @@ apps:  {
         source_context:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  10
+          line:  9
           col:  16
          }
          end:  {
-          line:  10
+          line:  9
           col:  27
          }
         }
         source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  10
+          line:  9
           col:  16
          }
          end:  {
-          line:  10
+          line:  9
           col:  27
          }
         }
@@ -55,22 +55,22 @@ apps:  {
         source_context:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  12
+          line:  11
           col:  16
          }
          end:  {
-          line:  12
+          line:  11
           col:  27
          }
         }
         source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  12
+          line:  11
           col:  16
          }
          end:  {
-          line:  12
+          line:  11
           col:  27
          }
         }
@@ -91,22 +91,22 @@ apps:  {
         source_context:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  14
+          line:  13
           col:  16
          }
          end:  {
-          line:  14
+          line:  13
           col:  42
          }
         }
         source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  14
+          line:  13
           col:  16
          }
          end:  {
-          line:  14
+          line:  13
           col:  42
          }
         }
@@ -116,46 +116,46 @@ apps:  {
      source_context:  {
       file:  "tests/oneof.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  8
       }
       end:  {
-       line:  16
-       col:  4
+       line:  13
+       col:  42
       }
      }
      source_contexts:  {
       file:  "tests/oneof.sysl"
       start:  {
-       line:  8
+       line:  7
        col:  8
       }
       end:  {
-       line:  16
-       col:  4
+       line:  13
+       col:  42
       }
      }
     }
     source_context:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  4
      }
      end:  {
-      line:  16
-      col:  4
+      line:  13
+      col:  42
      }
     }
     source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  7
+      line:  6
       col:  4
      }
      end:  {
-      line:  16
-      col:  4
+      line:  13
+      col:  42
      }
     }
    }
@@ -174,23 +174,23 @@ apps:  {
         source_context:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  19
+          line:  18
           col:  16
          }
          end:  {
-          line:  19
-          col:  16
+          line:  18
+          col:  27
          }
         }
         source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  19
+          line:  18
           col:  16
          }
          end:  {
-          line:  19
-          col:  16
+          line:  18
+          col:  27
          }
         }
        }
@@ -203,23 +203,23 @@ apps:  {
         source_context:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  21
+          line:  20
           col:  16
          }
          end:  {
-          line:  21
-          col:  16
+          line:  20
+          col:  27
          }
         }
         source_contexts:  {
          file:  "tests/oneof.sysl"
          start:  {
-          line:  21
+          line:  20
           col:  16
          }
          end:  {
-          line:  21
-          col:  16
+          line:  20
+          col:  27
          }
         }
        }
@@ -228,42 +228,46 @@ apps:  {
      source_context:  {
       file:  "tests/oneof.sysl"
       start:  {
-       line:  17
+       line:  16
        col:  8
       }
       end:  {
-       line:  22
+       line:  20
+       col:  27
       }
      }
      source_contexts:  {
       file:  "tests/oneof.sysl"
       start:  {
-       line:  17
+       line:  16
        col:  8
       }
       end:  {
-       line:  22
+       line:  20
+       col:  27
       }
      }
     }
     source_context:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  16
+      line:  15
       col:  4
      }
      end:  {
-      line:  22
+      line:  20
+      col:  27
      }
     }
     source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  16
+      line:  15
       col:  4
      }
      end:  {
-      line:  22
+      line:  20
+      col:  27
      }
     }
    }
@@ -271,21 +275,21 @@ apps:  {
   source_context:  {
    file:  "tests/oneof.sysl"
    start:  {
-    line:  6
-    col:  1
+    line:  5
    }
    end:  {
-    line:  6
+    line:  20
+    col:  27
    }
   }
   source_contexts:  {
    file:  "tests/oneof.sysl"
    start:  {
-    line:  6
-    col:  1
+    line:  5
    }
    end:  {
-    line:  6
+    line:  20
+    col:  27
    }
   }
  }
@@ -303,22 +307,22 @@ apps:  {
     source_context:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  9
      }
     }
     source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  2
+      line:  1
       col:  9
      }
     }
@@ -331,22 +335,22 @@ apps:  {
     source_context:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  3
+      line:  2
       col:  4
      }
      end:  {
-      line:  3
+      line:  2
       col:  9
      }
     }
     source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  3
+      line:  2
       col:  4
      }
      end:  {
-      line:  3
+      line:  2
       col:  9
      }
     }
@@ -365,45 +369,41 @@ apps:  {
     source_context:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  4
+      line:  3
       col:  4
      }
      end:  {
-      line:  4
-      col:  28
+      line:  3
+      col:  19
      }
     }
     source_contexts:  {
      file:  "tests/oneof.sysl"
      start:  {
-      line:  4
+      line:  3
       col:  4
      }
      end:  {
-      line:  4
-      col:  28
+      line:  3
+      col:  19
      }
     }
    }
   }
   source_context:  {
    file:  "tests/oneof.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  3
+    col:  19
    }
   }
   source_contexts:  {
    file:  "tests/oneof.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  3
+    col:  19
    }
   }
  }

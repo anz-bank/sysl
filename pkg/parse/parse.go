@@ -180,9 +180,6 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: \n%v\n", filename, err))
 		}
 		fsinput := &fsFileStream{antlr.NewInputStream(string(res)), filename}
-		if err != nil {
-			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
-		}
 
 		listener.sc = sourceCtxHelper{source.filename, version}
 		listener.base = filepath.Dir(filename)

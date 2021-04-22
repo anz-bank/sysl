@@ -16,21 +16,21 @@ apps:  {
         source_context:  {
          file:  "tests/sequence_type.sysl"
          start:  {
-          line:  3
+          line:  2
           col:  8
          }
          end:  {
-          line:  5
+          line:  4
          }
         }
         source_contexts:  {
          file:  "tests/sequence_type.sysl"
          start:  {
-          line:  3
+          line:  2
           col:  8
          }
          end:  {
-          line:  5
+          line:  4
          }
         }
        }
@@ -44,21 +44,21 @@ apps:  {
        source_context:  {
         file:  "tests/sequence_type.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  5
+         line:  4
         }
        }
        source_contexts:  {
         file:  "tests/sequence_type.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  8
         }
         end:  {
-         line:  5
+         line:  4
         }
        }
       }
@@ -67,43 +67,37 @@ apps:  {
     source_context:  {
      file:  "tests/sequence_type.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  5
+      line:  4
      }
     }
     source_contexts:  {
      file:  "tests/sequence_type.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  4
      }
      end:  {
-      line:  5
+      line:  4
      }
     }
    }
   }
   source_context:  {
    file:  "tests/sequence_type.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  4
    }
   }
   source_contexts:  {
    file:  "tests/sequence_type.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
+    line:  4
    }
   }
  }

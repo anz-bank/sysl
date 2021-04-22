@@ -50,11 +50,22 @@ apps:  {
        source_context:  {
         file:  "tests/strings_expr.sysl"
         start:  {
-         line:  3
+         line:  2
          col:  4
         }
         end:  {
-         line:  13
+         line:  12
+         col:  5
+        }
+       }
+       source_contexts:  {
+        file:  "tests/strings_expr.sysl"
+        start:  {
+         line:  2
+         col:  4
+        }
+        end:  {
+         line:  12
          col:  5
         }
        }
@@ -73,11 +84,11 @@ apps:  {
          source_context:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  12
           }
           text:  "out = \"abc\""
@@ -85,11 +96,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  4
+           line:  3
            col:  6
           }
           end:  {
-           line:  4
+           line:  3
            col:  12
           }
           text:  "out = \"abc\""
@@ -110,11 +121,11 @@ apps:  {
          source_context:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  13
           }
           text:  "out1 = \"'abc'\""
@@ -122,11 +133,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  5
+           line:  4
            col:  6
           }
           end:  {
-           line:  5
+           line:  4
            col:  13
           }
           text:  "out1 = \"'abc'\""
@@ -147,11 +158,11 @@ apps:  {
          source_context:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  13
           }
           text:  "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
@@ -159,11 +170,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  6
+           line:  5
            col:  6
           }
           end:  {
-           line:  6
+           line:  5
            col:  13
           }
           text:  "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
@@ -184,11 +195,11 @@ apps:  {
          source_context:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  13
           }
           text:  "out3 = '\"abc\"'"
@@ -196,11 +207,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  8
+           line:  7
            col:  6
           }
           end:  {
-           line:  8
+           line:  7
            col:  13
           }
           text:  "out3 = '\"abc\"'"
@@ -221,11 +232,11 @@ apps:  {
          source_context:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  13
           }
           text:  "out4 = 'abc'"
@@ -233,11 +244,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  9
+           line:  8
            col:  6
           }
           end:  {
-           line:  9
+           line:  8
            col:  13
           }
           text:  "out4 = 'abc'"
@@ -258,11 +269,11 @@ apps:  {
          source_context:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  13
           }
           text:  "out5 = '\"abc\\ndef\"'"
@@ -270,11 +281,11 @@ apps:  {
          source_contexts:  {
           file:  "tests/strings_expr.sysl"
           start:  {
-           line:  12
+           line:  11
            col:  6
           }
           end:  {
-           line:  12
+           line:  11
            col:  13
           }
           text:  "out5 = '\"abc\\ndef\"'"
@@ -286,11 +297,22 @@ apps:  {
      source_context:  {
       file:  "tests/strings_expr.sysl"
       start:  {
-       line:  3
+       line:  2
        col:  4
       }
       end:  {
-       line:  13
+       line:  12
+       col:  5
+      }
+     }
+     source_contexts:  {
+      file:  "tests/strings_expr.sysl"
+      start:  {
+       line:  2
+       col:  4
+      }
+      end:  {
+       line:  12
        col:  5
       }
      }
@@ -308,22 +330,22 @@ apps:  {
     source_context:  {
      file:  "tests/strings_expr.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  14
+      line:  13
      }
      text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
     }
     source_contexts:  {
      file:  "tests/strings_expr.sysl"
      start:  {
-      line:  2
+      line:  1
       col:  2
      }
      end:  {
-      line:  14
+      line:  13
      }
      text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
     }
@@ -331,24 +353,18 @@ apps:  {
   }
   source_context:  {
    file:  "tests/strings_expr.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  64
+    line:  12
+    col:  5
    }
   }
   source_contexts:  {
    file:  "tests/strings_expr.sysl"
-   start:  {
-    line:  1
-    col:  1
-   }
+   start:  {}
    end:  {
-    line:  1
-    col:  64
+    line:  12
+    col:  5
    }
   }
  }
