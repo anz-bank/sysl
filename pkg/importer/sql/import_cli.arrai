@@ -1,0 +1,15 @@
+let config = {
+    'app-name': (type: 'string', alias: 'a', default: 'App', usage: 'Name of the imported app'),
+    'input': (type: 'string', alias: 'i', usage: 'Path to the file or directory to import'),
+};
+
+let args = //flag.parser(config).parse(//os.args);
+
+cond args {
+    (flags: {'input': input, 'app-name': appName, ...}, ...): //{./import}.import(appName, input),
+    _: $`
+        Usage:  import_cli [options]
+
+        ${//flag.help(config)}
+    `
+}

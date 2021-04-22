@@ -1,0 +1,22 @@
+let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
+
+(
+    macro:
+        let model = {:macro:
+            CREATE DATABASE macro;
+            CREATE TABLE foo (a INT PRIMARY KEY);
+        :};
+
+        model = (
+            schema: {(name: 'macro')},
+            indexes: {},
+            entities: {(
+                name: 'foo',
+                attributes: [(array: {}, length: 0, name: 'a', nullable: true, options: {}, scale: {}, type: 'int')],
+                primary_key: ['a'],
+                foreign_keys: {},
+                unique_keys: {},
+                cluster: {},
+            )}
+        )
+)

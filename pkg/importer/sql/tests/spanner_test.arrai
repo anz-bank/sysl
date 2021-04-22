@@ -1,0 +1,186 @@
+let (
+    emptyModel: empty,
+    :parseDdl,
+
+    :applyStmt,
+    :applyCreateTable,
+    :applyCreateIndex,
+    :applyCreateDatabase,
+    :applyAlterTable,
+    :applyDropTable,
+    :applyDropIndex,
+    ...
+) = //{/pkg/importer/sql/sql};
+
+let [createTable] = parseDdl('CREATE TABLE foo (a INT64) PRIMARY KEY (a);');
+let foo = applyCreateTable(createTable.data, empty);
+
+let [addCol] = parseDdl('ALTER TABLE foo ADD COLUMN b INT64;');
+let foo_b = applyAlterTable(addCol.data, foo);
+
+let [alterCol] = parseDdl('ALTER TABLE foo ALTER COLUMN b INT64 NOT NULL;');
+let foo_b2 = applyAlterTable(alterCol.data, foo_b);
+
+let [dropCol] = parseDdl('ALTER TABLE foo DROP COLUMN b;');
+let foo_bx = applyAlterTable(dropCol.data, foo_b2);
+
+let [addIndex] = parseDdl('CREATE INDEX i ON foo (a DESC);');
+let foo_i = applyCreateIndex(addIndex.data, foo_bx);
+
+let [updateTable] = parseDdl('UPDATE foo SET a = 1 WHERE a >= 1;');
+
+let dropIndexSql = 'DROP INDEX i;';
+let [dropIndex] = parseDdl(dropIndexSql);
+let foo_ix = applyDropIndex(dropIndex.data, foo_i);
+
+let interleaved = applyStmt(parseDdl('
+    CREATE DATABASE test;
+    CREATE TABLE foo (a INT64) PRIMARY KEY (a);
+    CREATE TABLE bar (a INT64, t TIMESTAMP OPTIONS (allow_commit_timestamp = true)) PRIMARY KEY (a, t), INTERLEAVE IN PARENT foo;
+'), empty);
+
+(
+    parseDdl: (
+        createTable: createTable = (
+            stmt: 'create_table',
+            data: (
+                name: 'foo',
+                attributes: [(name: 'a', type: 'int64', array: {}, length: 0, nullable: true, options: {}, scale: {})],
+                primary_key: ['a'],
+                foreign_keys: {},
+                unique_keys: {},
+                cluster: {},
+            ),
+        ),
+        addCol: addCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'add_column',
+                    alteration: (name: 'b', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                )],
+            ),
+        ),
+        dropCol: dropCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'drop_column',
+                    alteration: (name: 'b'),
+                )],
+            ),
+        ),
+        alterCol: alterCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'alter_column',
+                    alteration: (name: 'b', type: 'int64', nullable: false, options: {}, array: {}, length: 0, scale: {}),
+                )],
+            ),
+        ),
+        dropCol: dropCol = (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'drop_column',
+                    alteration: (name: 'b'),
+                )],
+            )
+        ),
+        dropIndex: dropIndex = (
+            stmt: 'drop_index',
+            data: 'i',
+        ),
+        commentOnly: parseDdl("-- Foo\n--bar") = {},
+        commentWrapped: parseDdl($`
+            -- Foo
+            --bar
+            ${dropIndexSql}
+            --Baz
+        `) = [dropIndex],
+        commentInline: parseDdl($`
+            DROP --a
+            INDEX --b
+            i --c;
+        `) = [dropIndex],
+
+        updateTable: updateTable = {},
+    ),
+
+    applyCreateTable: (
+        foo: foo.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', array: {}, length: 0, nullable: true, options: {}, type: 'int64', scale: {}),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            unique_keys: {},
+            cluster: {},
+        )}
+    ),
+
+    applyCreateIndex: (
+        foo_i: foo_i.indexes = {(
+            name: 'i',
+            table_name: 'foo',
+            key_parts: ['a(desc)'],
+            unique: {},
+            nullfiltered: {},
+            storing_col: {},
+            interleaved_table: {},
+        )}
+    ),
+
+    applyDropIndex: (
+        foo: foo.indexes = {}
+    ),
+
+    applyAlterTable: (
+        addCol: foo_b.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'b', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            unique_keys: {},
+            cluster: {},
+        )},
+
+        alterCol: foo_b2.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'b', type: 'int64', nullable: false, options: {}, array: {}, length: 0, scale: {}),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            unique_keys: {},
+            cluster: {},
+        )},
+
+        dropCol: foo_bx = foo,
+    ),
+
+    applyStmt: (
+        interleaved:
+            let a = (name: 'a', type: 'int64', array: {}, length: 0, nullable: true, options: {}, scale: {});
+            let t = (name: 't', type: 'datetime', array: {}, length: 0, nullable: true, options: {'allow_commit_timestamp': 'true'}, scale: {});
+            interleaved = (
+                entities: {
+                    |name , attributes, primary_key, foreign_keys, unique_keys, cluster                                 |
+                    ('foo', [a]       , ['a']      , {}          , {}         , {}                                      ),
+                    ('bar', [a, t]    , ['a', 't'] , {}          , {}         , [(interleaved_in: 'foo', on_delete: {})]),
+                },
+                indexes: {},
+                schema: {(name: 'test')},
+            ),
+    ),
+)

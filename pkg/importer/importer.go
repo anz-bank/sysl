@@ -75,22 +75,22 @@ func Factory(path string, isDir bool, format string, content []byte, logger *log
 		return NewAvroImporter(logger), nil
 	case SpannerSQL.Name:
 		logger.Debugln("Detected Spanner SQL file")
-		return MakeSpannerImporter(logger), nil
+		return MakeSQLImporter(logger), nil
 	case SpannerSQLDir.Name:
 		logger.Debugln("Detected Spanner SQL directory")
-		return MakeSpannerDirImporter(logger), nil
+		return MakeSQLImporter(logger), nil
 	case Postgres.Name:
 		logger.Debugln("Detected PostgreSQL file")
-		return MakePostgresqlImporter(logger), nil
+		return MakeSQLImporter(logger), nil
 	case PostgresDir.Name:
 		logger.Debugln("Detected PostgreSQL directory")
-		return MakePostgresqlDirImporter(logger), nil
+		return MakeSQLImporter(logger), nil
 	case MySQL.Name:
 		logger.Debugln("Detected MySQL file")
-		return MakeMySQLImporter(logger), nil
+		return MakeSQLImporter(logger), nil
 	case MySQLDir.Name:
 		logger.Debugln("Detected MySQL directory")
-		return MakeMySQLDirImporter(logger), nil
+		return MakeSQLImporter(logger), nil
 	default:
 		return nil, fmt.Errorf("an importer does not exist for %s", fileType.Name)
 	}

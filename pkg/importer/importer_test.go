@@ -125,7 +125,7 @@ func TestLoadXSDFromTestFiles(t *testing.T) {
 func TestLoadSpannerFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadSpannerFromTestFiles",
-		testDir:       "spanner/tests",
+		testDir:       "sql/tests/spanner",
 		testExtension: ".sql",
 		format:        "spannerSQL",
 	})
@@ -134,7 +134,7 @@ func TestLoadSpannerFromTestFiles(t *testing.T) {
 func TestLoadSpannerDirFromTestDir(t *testing.T) {
 	runImportDirEqualityTests(t, testConfig{
 		name:          "TestLoadSpannerDirFromTestDir",
-		testDir:       "spanner/tests/migrations",
+		testDir:       "sql/tests/spanner/migrations",
 		testExtension: "",
 		format:        "spannerSQLdir",
 	})
@@ -143,7 +143,7 @@ func TestLoadSpannerDirFromTestDir(t *testing.T) {
 func TestLoadPostgresqlFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadPostgresqlFromTestFiles",
-		testDir:       "postgresql/tests",
+		testDir:       "sql/tests/postgresql",
 		testExtension: ".sql",
 		format:        "postgres",
 	})
@@ -152,7 +152,7 @@ func TestLoadPostgresqlFromTestFiles(t *testing.T) {
 func TestLoadPostgresqlDirFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadPostgresqlDirFromTestFiles",
-		testDir:       "postgresql/tests/migrations",
+		testDir:       "sql/tests/postgresql/migrations",
 		testExtension: "",
 		format:        "postgresDir",
 	})
@@ -161,7 +161,7 @@ func TestLoadPostgresqlDirFromTestFiles(t *testing.T) {
 func TestLoadMySQLFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadMySQLFromTestFiles",
-		testDir:       "mysql/tests",
+		testDir:       "sql/tests/mysql",
 		testExtension: ".sql",
 		format:        "mysql",
 	})
@@ -170,7 +170,7 @@ func TestLoadMySQLFromTestFiles(t *testing.T) {
 func TestLoadMySQLDirFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{
 		name:          "TestLoadMySQLDirFromTestFiles",
-		testDir:       "mysql/tests/migrations",
+		testDir:       "sql/tests/mysql/migrations",
 		testExtension: "",
 		format:        "mysqlDir",
 	})

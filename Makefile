@@ -80,13 +80,7 @@ build-sysl-version-diff-docker: generate
 
 internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \
-		pkg/importer/postgresql/import_postgresql_sql.arraiz \
-		pkg/importer/postgresql/import_migrations.arraiz \
-		pkg/importer/mysql/import_mysql_sql.arraiz \
-		pkg/importer/mysql/import_migrations.arraiz \
-		pkg/importer/spanner/import_spanner_sql.arraiz \
-		pkg/importer/spanner/import_migrations.arraiz \
-		pkg/exporter/spanner/spanner_cli.arraiz
+		pkg/importer/sql/import_cli.arraiz
 	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
 	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-clean failed.
 	# So add parameter `-modtime 1` to set a fixed modTime.

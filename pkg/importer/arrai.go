@@ -46,13 +46,13 @@ func (i *ArraiImporter) LoadFile(path string) (string, error) {
 		return "", err
 	}
 	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(b, path, i.appName, i.pkg)
+	val, err := arrai.EvaluateBundle(b, `--app-name`, i.appName, `--input`, path)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
-			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", path, i.appName, i.pkg),
+			Context:  fmt.Sprintf("import(`%s`, `%s`)", i.appName, path),
 			Err:      err,
 			ShortMsg: err.Error(),
-		}, "Executing arrai transform failed")
+		}, "Executing arr.ai transform failed")
 	}
 	return val.String(), nil
 }

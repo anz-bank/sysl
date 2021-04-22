@@ -1,0 +1,55 @@
+# Generates a Sysl spec equivalent to the model produced by applying the sequence of statements in
+# the input SQL file(s).
+
+let (:parseSchema, :applyStmt, :emptyModel, ...) = //{/pkg/importer/sql/sql};
+let (:transformModel, ...) = //{./sysl};
+
+# Imports a database model into Sysl from multiple SQL files applied sequentially.
+let importFiles = \appName \files
+    let model = applyStmt(parseSchema(files), emptyModel);
+
+    transformModel(
+        cond {
+            model.schema: model,
+            _: model.|entities, indexes| +> (schema: {(name: appName)}),
+        }
+    )
+;
+
+# Imports a database model into Sysl from a SQL file.
+let importFile = \appName \file importFiles(appName, [file]);
+
+# Imports a database model into Sysl from the SQL migration scripts in dir.
+let importDir = \appName \dir
+    # True if the path ends with .up.sql or .up.ddl (a common pattern for reversible migrations).
+    let isUpSql = \path {'.up.sql', '.up.ddl'} => //seq.has_suffix(., path) where .;
+
+    # True if the path ends with .sql or .ddl. isUpSql should be used in preference, but isSql applies
+    # if there are not .up.* scripts.
+    let isSql = \path {'.sql', '.ddl'} => //seq.has_suffix(., path) where .;
+
+    let paths = //os.tree(dir) => .path;
+    let sqls = (paths where isUpSql(.)) || (paths where isSql(.)) orderby .;
+
+    importFiles(appName, sqls)
+;
+
+let import = \appName \input
+    cond input {
+        [...]: importFiles(appName, input),
+        _:
+            let [..., base] = //seq.split(//os.path_separator, input);
+            cond {
+                //seq.has_suffix('.sql', base): importFile(appName, input),
+                _: importDir(appName, input),
+            }
+    }
+;
+
+(
+    :importFile,
+    :importFiles,
+    :importDir,
+
+    :import,
+)

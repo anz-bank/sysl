@@ -1,0 +1,142 @@
+# Transforms that generate sysl from an arr.ai-based SQL model.
+
+# import sysl lib.
+let util = //{/pkg/arrai/util};
+
+# size returns the size of an attribute.
+let size = \attr
+    cond {
+        attr.length = 'MAX': '',
+        //seq.has_prefix('0x', attr.length): $`(${//seq.trim_prefix('0x', attr.length)})`,
+        attr.length > 0 && attr.type != 'decimal': $`(${attr.length})`,
+        attr.type = 'decimal': $`(${attr.length}.${attr.scale})`,
+    };
+
+# sortingOrder determines and appends sorting order.
+let sortingOrder = \e \attr
+    let re = //re.compile($`${attr.name}\((asc|desc)\)`);
+    let keyOrder = e.primary_key >> (re.match(.)(0)?(1)?:{} rank (:.@)) where .;
+    (keyOrder where .@item) rank (@: .@);
+
+# compareColumnOrder compares the col order between primary key and table.
+let compareColumnOrder = \entity
+    let pk = entity.primary_key >> //seq.split('(', .)(0);
+    pk !(<=) (entity.attributes >> .name);
+
+# matchingFKs returns the foreign keys matching attribute name.
+let matchingFKs = \entity \attr
+    //rel.union(entity.foreign_keys => .foreign_keys) where .attribute = attr.name;
+
+# attributePatterns generates the patterns for an attribute.
+let attributePatterns = \entity \attr
+    let attrName = cond {
+        !util.isValidIdentifier(attr.name): $`name="${attr.name}"`
+    };
+    let options = $`${(attr.options?:{} => \(@:k, @value:v) $`${k}="${v}"`) orderby .::, }`;
+    let pk = cond {
+        entity.primary_key where attr.name = //seq.split("(", .@item rank (:.@))(0):
+            $`~pk${cond {sortingOrder(entity, attr):$`, ~${sortingOrder(entity, attr) ::}`}}`
+    };
+    let fk = cond { matchingFKs(entity, attr): '~fk' };
+    let length = cond { attr.length = 'MAX': '~max' };
+    let hexPrefix = cond { //seq.has_prefix('0x', attr.length): '~hex' };
+    let byteLength = cond {
+        attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $`length="${attr.length}"`
+    };
+    [attrName, options, byteLength, pk, fk, length, hexPrefix] where .@item;
+
+# entityPatterns generates the patterns for an entity.
+let entityPatterns = \entity \model
+    let pk = cond {
+        entity.primary_key count > 1 && compareColumnOrder(entity):
+            $`primary_key="${entity.primary_key ::,}"`,
+    };
+    let cluster = cond {
+        entity.cluster:
+            //seq.join(', ', entity.cluster >>
+            $`interleave_in_parent="${.interleaved_in}", interleave_on_delete="${//str.lower(.on_delete)}"`),
+    };
+    let fk = cond entity.foreign_keys?:{} {
+        {}: {},
+        fks: $`
+            foreign_keys=[${(fks => \keys $`
+                [${cond {keys.constraint_name: $`"constraint:${keys.constraint_name}",`}}"columns:${keys.foreign_keys => .attribute orderby .::,}"]
+            `) orderby .::,}]
+        `,
+    };
+    let indx = model.indexes where .table_name = entity.name => ([
+        $`"name:${.name}"`,
+        cond {.unique: $`"unique:${.unique}"`},
+        cond {.nullfiltered: $`"null_filtered:${.nullfiltered}"`},
+        $`"key_parts:${.key_parts::,}"`,
+        cond {.storing_col: $`"storing:${.storing_col::,}"`},
+        cond {.interleaved_table: $`"interleave_in:${.interleaved_table}"`},
+    ] where .@item) => '[' ++ //seq.join(',', .) ++ ']';
+    [pk, cluster, fk, cond { indx: $`indexes=[${indx orderby . ::,}]` }] where .@item;
+
+# entityPatternsString returns the annotation for an entity's patterns.
+let entityPatternsString = \entity \model cond entityPatterns(entity, model) {[]: '', ePats: $`[${ePats ::, }]`};
+
+# attributePatternsString returns the annotation for an attribute's patterns.
+let attributePatternsString = \entity \attr cond attributePatterns(entity, attr) {[]: '', aPats: $`[${aPats ::, }]`};
+
+# typeInfo generates the type info for an attribute.
+let typeInfo = \entities \entity \attr
+    let interleavedType =
+        let parents = entities where .name <: (entity.cluster => .@item.interleaved_in);
+        cond parents {
+            {p}: attr.name <: (p.primary_key => .@item) && $`${p.name}.${attr.name}`
+        }
+    ;
+    cond {
+        interleavedType: interleavedType,
+        _:
+            let type = attr.type ++ cond {attr.type != 'bytes': size(attr)};
+            let isArray = attr.array;
+            let fks = matchingFKs(entity, attr);
+            let fkAttr = fks => .reference_attribute;
+            let fkTable = fks => .reference_table;
+            cond {
+                fkAttr && fkTable: $`${fkTable orderby . ::}.${fkAttr orderby . ::}`,
+                isArray: $`sequence of ${type}`,
+                _: type,
+            }
+    } ++ cond {attr.nullable: '?'}
+;
+
+
+# Trim trailing whitespace.
+let trim = \str
+    let re = //re.compile(`^(.*[^\s])\s*$`);
+    $`${//seq.split('\n', str) >> cond re.match(.) {[[_, s]]: s, _: ''}::\n}`;
+
+# transformModel translates the empty model into sysl file.
+let transformModel = \model
+    # Sysl specification:
+    # https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.proto
+    trim($`
+        # Code generated by Sysl. DO NOT EDIT.
+
+        ${model.schema orderby . >> $`
+            ${.name}:
+                ${model.entities orderby .name >> \entity
+                    let eps = //seq.sub(", , ", ", ", entityPatternsString(entity, model));
+                    $`
+                        !table ${entity.name}${cond{eps: ' ' ++ eps}}:
+                            ${entity.attributes >>
+                                let aps = //seq.sub(", , ", ", ", attributePatternsString(entity, .));
+                                let name = util.resolveValidIdentifier(//seq.sub("`", "", .name));
+                                let type = typeInfo(model.entities, entity, .);
+                                $`
+                                    ${name} <: ${type} ${aps}
+                                `
+                            ::\n}
+                    `
+                ::\n\i}
+        `::\i:\n}
+    `)
+;
+
+(
+    :transformModel,
+)

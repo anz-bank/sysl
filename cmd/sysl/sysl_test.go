@@ -1003,7 +1003,8 @@ func TestSpannerSQLImport(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	tmp1, err := ioutil.TempDir("", "tmp1")
 	assert.NoError(t, err)
-	ret := main2([]string{"sysl", "import", "--input", filepath.Join("../../pkg/importer/spanner/tests/spanner.sql"),
+	ret := main2([]string{"sysl", "import",
+		"--input", "../../pkg/importer/sql/tests/spanner/spanner.sql",
 		"--app-name", "customeraccounts",
 		"--package", "retail",
 		"--format", "spannerSQL",
@@ -1019,7 +1020,8 @@ func TestSpannerSQLImportWithoutPackage(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	tmp1, err := ioutil.TempDir("", "tmp1")
 	assert.NoError(t, err)
-	ret := main2([]string{"sysl", "import", "--input", filepath.Join("../../pkg/importer/spanner/tests/spanner.sql"),
+	ret := main2([]string{"sysl", "import",
+		"--input", "../../pkg/importer/sql/tests/spanner/spanner.sql",
 		"--app-name", "customeraccounts",
 		"--format", "spannerSQL",
 		"--output", filepath.Join(tmp1, "/accounts.sysl")}, afero.NewOsFs(), logger, main3)
@@ -1032,7 +1034,8 @@ func TestSpannerSQLImportWithoutPackage(t *testing.T) {
 func TestSpannerSQLImportDefOut(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	ret := main2([]string{"sysl", "import", "--input", filepath.Join("../../pkg/importer/spanner/tests/spanner.sql"),
+	ret := main2([]string{"sysl", "import",
+		"--input", "../../pkg/importer/sql/tests/spanner/spanner.sql",
 		"--app-name", "customeraccounts",
 		"--format", "spannerSQL",
 		"--package", "retail"}, afero.NewOsFs(), logger, main3)

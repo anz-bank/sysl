@@ -1,0 +1,1 @@
+CREATE TABLE foo (a BIGINT, PRIMARY KEY (a));
