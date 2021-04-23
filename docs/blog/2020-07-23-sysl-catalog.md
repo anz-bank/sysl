@@ -8,8 +8,6 @@ author_image_url: https://avatars3.githubusercontent.com/u/32605850?s=400&v=4
 tags: []
 ---
 
-# sysl-catalog
-
 A Markdown/HTML + Diagram generator for Sysl specifications.
 
 ## Objective

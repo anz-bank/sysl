@@ -12,3 +12,7 @@ jobs:
       with:
         config-file: '.md-link-check-config.json'
         folder-path: 'docs/docs,docs/blog'
+
+    - name: yarn build docs
+      working-directory: docs
+      run: yarn install && yarn build

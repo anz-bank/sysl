@@ -1,9 +1,8 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
+import BrowserOnly from "@docusaurus/core/lib/client/exports/BrowserOnly";
+
 import classnames from "classnames";
 import styles from "./styles.module.css";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/theme-monokai";
 
 const playgroundUrl = "https://sysl-playground.herokuapp.com/";
 const proxyUrl = "https://cors-anywhere.herokuapp.com/";
@@ -185,19 +184,18 @@ function Tryout() {
       </div>
       <div className={classnames("row", styles.gutter)}>
         <div className="col col-6">
-          <AceEditor
-            width="100%"
-            theme="monokai"
-            onChange={inputOnChange}
-            value={code}
-          />
+          <BrowserOnly fallback={<div>Loading editor...</div>}>
+            {() => {
+              const AceEditor = require("react-ace").default;
+              require("ace-builds/src-noconflict/theme-monokai");
+              return <AceEditor
+                  width="100%" theme="monokai" onChange={inputOnChange} value={code}/>
+            }}
+          </BrowserOnly>
         </div>
 
         <div className="col col-6">
-          <div
-            className={styles.tryout__output}
-            dangerouslySetInnerHTML={{ __html: output }}
-          ></div>
+          <div className={styles.tryout__output} dangerouslySetInnerHTML={{__html: output}} />
         </div>
       </div>
 
@@ -212,7 +210,7 @@ function Tryout() {
         >
           Open in playground
         </a>
-        <div style={{ clear: "both" }}></div>
+        <div style={{clear: "both"}} />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-.PHONY: install build start lint tidy update
+.PHONY: install build clean start lint tidy update
 
 all: build
 
@@ -7,6 +7,9 @@ install:
 
 build:
 	yarn build
+
+clean:
+	rm -rf .docusaurus build
 
 start:
 	yarn start
