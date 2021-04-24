@@ -3,7 +3,6 @@ import Layout from "@theme/Layout";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Hero from "./components/Hero/hero";
 import Deliver from "./components/Deliver/Deliver";
-import Tryout from "./components/Tryout/Tryout";
 import WhySysl from "./components/WhySysl/WhySysl";
 
 function Home() {
@@ -17,7 +16,6 @@ function Home() {
       <Hero />
       <main>
         <Deliver />
-        <Tryout />
         <WhySysl />
       </main>
     </Layout>
