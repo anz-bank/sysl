@@ -3,7 +3,7 @@ import classnames from "classnames";
 import styles from "./styles.module.css";
 
 const playgroundUrl = "https://sysl-playground.herokuapp.com/";
-const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+
 const exampleList = [
   {
     name: "Sequence Diagram",
@@ -105,7 +105,7 @@ function Tryout() {
     setLoading(true);
     try {
       let commandArgs = command.match(/\".+?\"|\S+/g);
-      const response = await fetch(`${proxyUrl}${playgroundUrl}api/compile`, {
+      const response = await fetch(`${playgroundUrl}api/compile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
