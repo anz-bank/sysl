@@ -71,7 +71,7 @@ let _app = (
             //test.assert.unequal((), result),
         all:
             let _all = load('out/all.pb');
-            let expected = //{./test_all_sysl_normalized};
+            let expected = //{./out/all_normalize};
             let result = newNormalize(_all);
             //test.assert.equal(expected, result),
     ),

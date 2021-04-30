@@ -14,5 +14,4 @@ dist
 coverage.txt
 .DS_Store
 .blueprint
-out/
 .lint-cache
