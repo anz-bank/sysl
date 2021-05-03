@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "/"
+    vendor: true
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Australia/Melbourne"
