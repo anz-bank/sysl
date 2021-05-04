@@ -19,7 +19,6 @@ let simple = $`
             migrations: import('Foo', './tests/mysql/migrations') = simple,
         ),
     ),
-
     postgresql: (
         import: (
             file: import('Foo', './tests/postgresql/migrations/01_create_foo.up.sql') = simple,

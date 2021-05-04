@@ -4,6 +4,8 @@
 # - parse parses some SQL source with grammar, then transforms it to an arr.ai model.
 # - macro wraps parse in a macro structure so it can be used inline.
 
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
 let grammar = {://grammar.lang.wbnf:
 ddl                 -> stmt=(create_database
                             |create_table
@@ -23,7 +25,7 @@ ddl                 -> stmt=(create_database
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
 create_table        -> "CREATE" "TABLE" table_name "("(
-                              attr=(column_name attr_type options_def? pk?)
+                              attr=(column_name attr_type generated? options_def? pk?)
                             | table_constraint
                             | pks=(pk "(" key_parts ")")
                         ):"," ","? ")"
@@ -32,13 +34,19 @@ create_table        -> "CREATE" "TABLE" table_name "("(
 table_constraint    -> ("CONSTRAINT" constraint_name)? (unique | fk);
 unique              -> "UNIQUE" ("KEY" key_name=name)? "(" column_name:"," ")";
 fk                  -> "FOREIGN KEY" "(" column_name:"," ")"
-                       "REFERENCES" foreign=(table_name "(" column_name:"," ")");
-cluster             -> "INTERLEAVE" "IN" "PARENT" table_name ("ON" "DELETE" on_delete)?; //# Spanner
-on_delete           -> CASCADE   = "CASCADE"
-                     | NO_ACTION = "NO" "ACTION";
+                       "REFERENCES" foreign=(table_name "(" column_name:"," ")")
+                       on_delete? on_update?;
+cluster             -> "INTERLEAVE" "IN" "PARENT" table_name on_delete?; //# Spanner
+on_delete           -> "ON" "DELETE" on_action;
+on_update           -> "ON" "UPDATE" on_action;
+on_action           -> CASCADE     = "CASCADE"
+                     | NO_ACTION   = "NO" "ACTION"
+                     | RESTRICT    = "RESTRICT"
+                     | SET_NULL    = "SET" "NULL"
+                     | SET_DEFAULT = "SET" "DEFAULT";
 
 create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED")? "INDEX" index_name
-                       "ON" table_name "(" key_parts ")" storing_clause? interleaving_clause?;
+                       "ON" table_name "(" key_parts ")" storing_clause? ","? interleaving_clause?;
 storing_clause      -> "STORING" "(" column_name:",",? ")";
 interleaving_clause -> "INTERLEAVE" "IN" table_name;
 
@@ -62,13 +70,15 @@ create_trigger      -> "CREATE" "TRIGGER" trigger_name=name
                        "EXECUTE" "PROCEDURE" function_name=name "(" ")";
 
 alter_table         -> "ALTER" "TABLE" table_name (alter=(table_alteration|attr_alteration)):",";
-table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN" column_name (attr_type | options_def))
+table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name (attr_type | options_def) generated?)
                      | DROP_COLUMN     = ("DROP" "COLUMN" column_name)
                      | RENAME_COLUMN   = ("RENAME" "COLUMN" from=column_name "TO" to=column_name)
-                     | SET_COLUMN      = ("SET" "ON" "DELETE" on_delete)
+                     | SET_COLUMN      = ("SET" on_delete)
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
-                     | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name);
-attr_alteration     -> "ALTER" "COLUMN" column_name (action=("SET" | "DROP") not_null | "SET" options_def | "TYPE"? attr_type);
+                     | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name)
+                     | drop_index;
+attr_alteration     -> ("ALTER" | "MODIFY") "COLUMN" column_name
+                       (action=("SET" | "DROP") not_null | "SET" options_def | "TYPE"? attr_type);
 
 //# Spanner
 update_table        -> "UPDATE" table_name
@@ -106,31 +116,26 @@ options_def         -> "OPTIONS" "("(option):",",? ")";
 option              -> k="allow_commit_timestamp" "=" v=("true"|"false");
 
 key_parts            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
-attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) not_null? default?;
+attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) ("NULL" | not_null)? default?;
 default             -> "DEFAULT" value;
-
+generated           -> "GENERATED" "ALWAYS" "AS" expr ("VIRTUAL" | "STORED");
+expr                -> [^()]* "(" [^()]* expr? [^()]* ")";
 not_null            -> "NOT" "NULL";
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
 ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]"
                      | "ARRAY<" SCALAR_TYPE ">"; //# Spanner
 
-SCALAR_TYPE         -> BLOB      = "BLOB"
-                     | LONGBLOB  = "LONGBLOB"
-                     | BOOLEAN   = ("BOOLEAN" | "BOOL")
+SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | INT64     = ("BIGINT" | "INT64")
                      | INT       = "INT"
-                     | FLOAT64   = "FLOAT64"
+                     | FLOAT64   = ("FLOAT64" | "DOUBLE")
                      | FLOAT     = "FLOAT"
-                     | DOUBLE    = "DOUBLE"
-                     | DECIMAL   = ("DECIMAL" | "DEC" | "FIXED") ("(" precision=length "," scale=length ")")?
-                     | NUMERIC   = "NUMERIC"  ("(" precision=length "," scale=length ")")?
-                     | DATETIME  = "DATETIME" "(" length ")"
+                     | DECIMAL   = (("DECIMAL" | "DEC" | "FIXED" | "NUMERIC") ("(" precision=int_value "," scale=int_value ")")?)
+                     | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP")
                      | DATE      = "DATE"
-                     | TIMESTAMP = "TIMESTAMP"
-                     | TEXT      = "TEXT"
-                     | STRING   = ("VARCHAR" | "STRING") "(" length ")"
-                     | BYTES     = "BYTES" "(" length ")"
+                     | STRING    = (("TEXT" | "VARCHAR" | "STRING") ("(" length ")")?)
+                     | BYTES     = ("BYTES" ("(" length ")")? | "BLOB" | "LONGBLOB")
                      ;
 
 length              -> (int_value|"MAX");
@@ -161,7 +166,13 @@ time_value          -> "NOW" "(" ")" "at" "time" "zone" string_value;
 let evalInt = \parsed cond parsed {
     (decimal_value: ('': val), ...): //eval.value(val),
     (hex_value: ('': val), ...): val,
-    _: "MAX"
+    _: 0
+};
+
+let evalLength = \l cond l {
+    (int_value: v, ...): evalInt(v),
+    ('': s, ...): s rank (:.@),
+    _: l
 };
 
 # evalType turns an attr_type parse node into an attribute type
@@ -171,17 +182,17 @@ let evalType = \parsed
         (ARRAY_TYPE: (SCALAR_TYPE: scalar, ...), ...): (scalar: scalar, array: true),
     };
     let type = cond data.scalar {
-        (BOOLEAN: _, ...):         (type: "bool", length: 0),
-        (INT: _, ...):             (type: "int", length: 0),
-        (INT64: _, ...):           (type: "int64", length: 0),
-        (FLOAT: _, ...):           (type: "float", length: 0),
-        (FLOAT64: _, ...):         (type: "float64", length: 0),
-        (NUMERIC: _, ...):         (type: "decimal", length: 38, scale: 9),
-        (DATE: _, ...):            (type: "date", length: 0),
-        (TIMESTAMP: _, ...):       (type: "datetime", length: 0),
-        (TEXT: _, ...):            (type: "string", length: "MAX"),
-        (STRING: _, :length, ...): (type: "string", length: evalInt(length.int_value?:"MAX")),
-        (BYTES: _, :length, ...):  (type: "bytes", length: evalInt(length.int_value?:"MAX")),
+        (BOOLEAN: x, ...):  (type: "bool", length: 0),
+        (INT: x, ...):      (type: "int", length: 0),
+        (INT64: x, ...):    (type: "int64", length: 0),
+        (FLOAT: x, ...):    (type: "float", length: 0),
+        (FLOAT64: x, ...):  (type: "float64", length: 0),
+        (DECIMAL: x, ...):  (type: "decimal", length: evalLength(x.precision?:38), scale: evalLength(x.scale?:9)),
+        (DATE: x, ...):     (type: "date", length: 0),
+        (DATETIME: x, ...): (type: "datetime", length: evalLength(x.length?:0)),
+        (STRING: x, ...):   (type: "string", length: evalLength(x.length?:0)),
+        (BYTES: x, ...):    (type: "bytes", length: evalLength(x.length?:0)),
+        _:                  //error($`unknown type: ${//fmt.pretty(data.scalar)}`)
     };
     (
         type: type.type,
@@ -207,6 +218,14 @@ let evalAttribute = \parsed
         _: (),
     };
 
+let evalOnAction = \a cond a {
+    (CASCADE: ('': s), ...): s rank (:.@),
+    (NO_ACTION: ('': s), ...): s rank (:.@),
+    (RESTRICT: ('': s), ...): s rank (:.@),
+    (SET_NULL: ('': s), ...): s rank (:.@),
+    (SET_DEFAULT: ('': s), ...): s rank (:.@),
+};
+
 let evalForeignKeyConstraint = \parsed
     let reference = parsed.fk.foreign -> (
         table_name: .table_name.'' rank (:.@),
@@ -219,6 +238,8 @@ let evalForeignKeyConstraint = \parsed
             reference_table: reference.table_name,
             reference_attribute: reference.attributes(.@),
         ),
+        on_update: evalOnAction(parsed.fk.on_update?.on_action?:{}),
+        on_delete: evalOnAction(parsed.fk.on_delete?.on_action?:{}),
     );
 
 let evalUniqueConstraint = \parsed (
@@ -255,7 +276,7 @@ let evalTableAlteration = \parsed cond parsed {
     ),
 
     (table_alteration: (SET_COLUMN: data, ...), ...): (
-        type: "on_delete",
+        type: "set_column",
         alteration: data
     ),
 
@@ -269,10 +290,17 @@ let evalTableAlteration = \parsed cond parsed {
         alteration: data,
     ),
 
+    (table_alteration: (drop_index: data, ...), ...): (
+        type: "drop_index",
+        alteration: data,
+    ),
+
     (attr_alteration: data, ...): (
         type: "alter_column",
         alteration: evalAttribute(data),
     ),
+
+    _: //error($`unmapped alteration: ${//fmt.pretty(parsed)}`)
 };
 
 # concatOffset appends the two strings preserving string offsets
@@ -314,10 +342,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
                 cluster: cond {
                     (val.cluster?:false): val.cluster >> (
                         interleaved_in: (.table_name.'' rank (:.@)),
-                        on_delete: cond (.).on_delete?:{} {
-                            (CASCADE: ('': s), ...): s rank (:.@),
-                            (NO_ACTION: ('': s), ...): s rank (:.@),
-                        },
+                        on_delete: evalOnAction((.).on_delete?.on_action?:{}),
                     ),
                 },
             ),
@@ -354,7 +379,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
         stmt: "alter_table",
         data: (
             table_name: val.table_name.'' rank (:.@),
-            alterations: val.alter >> evalTableAlteration(.),
+            alterations: val.alter >> evalTableAlteration(.) where .@item,
         ),
     ),
 
@@ -447,12 +472,13 @@ let stepAlt = \m \t \(:type, alteration:alt)
         # 'on_delete':  TODO,
         # 'add_constraint':  TODO,
         # 'drop_constraint':  TODO,
+        # 'drop_index':  TODO,
         _: m,
     };
 
 # applies an alter table stamement
 let applyAlterTable = \(table_name: t, :alterations) \model
-    //{/pkg/arrai/util}.reduce(alterations, \m \a stepAlt(m, t, a), model);
+    reduce(alterations, \m \a stepAlt(m, t, a), model);
 
 # applies either a single staement or a list of statements in the given order
 let rec applyStmt = \stmt \model

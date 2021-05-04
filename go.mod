@@ -11,7 +11,7 @@ require (
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.25
 	github.com/arr-ai/arrai v0.233.0
-	github.com/arr-ai/wbnf v0.28.0
+	github.com/arr-ai/wbnf v0.30.0
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
@@ -21,7 +21,6 @@ require (
 	github.com/hashicorp/hcl v1.0.0
 	github.com/imdario/mergo v0.3.11
 	github.com/joshcarp/gop v0.0.0-20200922043230-a225272c1746
-	github.com/orlade/plantuml-encode v0.12.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/sirupsen/logrus v1.8.1

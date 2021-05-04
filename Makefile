@@ -5,7 +5,7 @@ include ./scripts/version-report.mk
 GOPATH		= $(shell go env GOPATH)
 GOVERSION	= $(shell go version | cut -d' ' -f3-4)
 BIN_DIR		:= $(GOPATH)/bin
-ARRAI		= docker run --rm -v $(CURDIR):/src -w /src anzbank/arrai
+ARRAI		= go run github.com/arr-ai/arrai/cmd/arrai
 
 ifneq ("$(shell which gotestsum)", "")
 	TESTEXE := gotestsum --

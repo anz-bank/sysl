@@ -1,12 +1,24 @@
 # Generates a Sysl spec equivalent to the model produced by applying the sequence of statements in
 # the input SQL file(s).
 
-let (:parseSchema, :applyStmt, :emptyModel, ...) = //{/pkg/importer/sql/sql};
+let (:parseSchema, :parseDdl, :applyStmt, :emptyModel, ...) = //{./sql};
 let (:transformModel, ...) = //{./sysl};
 
 # Imports a database model into Sysl from multiple SQL files applied sequentially.
 let importFiles = \appName \files
     let model = applyStmt(parseSchema(files), emptyModel);
+
+    transformModel(
+        cond {
+            model.schema: model,
+            _: model.|entities, indexes| +> (schema: {(name: appName)}),
+        }
+    )
+;
+
+# Imports a database model into Sysl from a SQL string.
+let importString = \appName \sql
+    let model = applyStmt(parseDdl(sql), emptyModel);
 
     transformModel(
         cond {
@@ -47,6 +59,7 @@ let import = \appName \input
 ;
 
 (
+    :importString,
     :importFile,
     :importFiles,
     :importDir,

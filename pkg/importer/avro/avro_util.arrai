@@ -13,7 +13,7 @@ let transformPrimitiveType = \type
         'double': 'float64',
         'bytes': 'bytes',
         'string': 'string',
-        _: 'NonPrimitiveType'              
+        _: 'NonPrimitiveType'
     }
 ;
 
@@ -29,7 +29,7 @@ let transformLogicalTypes = \type
         'local-timestamp-millis': 'datetime',
         'local-timestamp-micros': 'datetime',
         'duration': 'bytes',
-        _: 'NonLogicalType'  
+        _: 'NonLogicalType'
     }
 ;
 
@@ -44,11 +44,11 @@ let isFirstLetterUppercase = \str
 let annotation = \item \name
     let annotation = cond item {
         (:s): s,
-        _: 
+        _:
             let key = cond name {
                 'description': 'doc',
                 n: n,
-            }; 
+            };
             item(key)?.s:'',
     };
     cond annotation {
@@ -60,12 +60,12 @@ let annotation = \item \name
 # nameAnnotation returns the 'name' annotation as required for the given item.
 # This method returns a (name, value) tuple in instances where the item requires
 # that a 'name' annotation is appended, or an empty tuple () in instances it is not.
-# 
+#
 # The result of this function may differ depending on whether or not the annotation
 # is being applied to a type or a field:
 # !type Type1         # type
 #   attr1 <: string   # field
-let nameAnnotation = \item \isType 
+let nameAnnotation = \item \isType
     let annotation = cond item {
         (:s): s,
         _: item('name')?.s:'',
@@ -84,9 +84,9 @@ let nameAnnotation = \item \isType
 # [union=['string', 'null'], description="Relationship end date", default="null"].
 let prettyAnnotations = \annotations
     let str = $`${annotations >> . && cond . {
-        (name: 'union', :value): $'union=${value}', 
-        (:name, :value): $'${name}="${value}"', 
-        (:name): $'${name}', 
+        (name: 'union', :value): $'union=${value}',
+        (:name, :value): $'${name}="${value}"',
+        (:name): $'${name}',
         _: {},
     } where .@item rank (:.@)::, }`;
     str && $`[${str}]`
@@ -111,7 +111,7 @@ let syslTypeName = \name
 let syslTypeNameWithIdentifierCheck = \name
     cond {
         !isValidIdentifier(name): resolveValidIdentifier(name),
-        _: syslTypeName(name),         
+        _: syslTypeName(name),
     }
 ;
 
@@ -120,23 +120,28 @@ let syslTypeNameWithIdentifierCheck = \name
 # param t is type.
 let syslTypeNameTuple = \t
     cond t {
-        (:s): 
+        (:s):
             (s: syslTypeName(s), collectionType: syslTypeName(s)),
         {'type': _, 'items': items, ...}:
             cond items {
                 (:s):
-                    let name = syslTypeName(s); (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
+                    let name = syslTypeName(s);
+                    (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
                 {'type': _, 'name': (s: initName), ...}:
-                    let name = syslTypeName(initName); (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
+                    let name = syslTypeName(initName);
+                    (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
             },
         {'type': _, 'values': values, ...}:
             cond values {
                 (:s):
-                    let name = syslTypeName(s); (s: $`String${//str.title(name)}Item`, collectionType: $`set of String${//str.title(name)}Item`),
+                    let name = syslTypeName(s);
+                    (s: $`String${//str.title(name)}Item`, collectionType: $`set of String${//str.title(name)}Item`),
                 {'type': _, 'name': (s: initName), ...}:
-                    let name = syslTypeName(initName); (s: $`String${name}Item`, collectionType: $`set of String${name}Item`),
+                    let name = syslTypeName(initName);
+                    (s: $`String${name}Item`, collectionType: $`set of String${name}Item`),
             },
-        {'type': _, 'name': (:s), ...}: # This pattern matching must be in the end. 
+        # This pattern matching must be last.
+        {'type': _, 'name': (:s), ...}:
             (s: syslTypeName(s), collectionType: syslTypeName(s)),
     }
 ;
@@ -150,15 +155,15 @@ let syslCombinedTypesName = \types \handler
         //seq.contains(['null'], types):
             let typeNames = fullTypeNames where .@item.s != 'null' rank (:.@);
             cond types count {
-                2: //seq.concat(typeNames >> handler(.)) + '?', # ['string', 'null'] -> string? .
-                _: //seq.concat(typeNames => //str.title(.@item.s) orderby .) + '?' # ['string', 'null', 'int'] -> IntString? .
+                2: $`${typeNames >> handler(.)::}?`, # ['string', 'null'] -> string?
+                _: $`${typeNames => //str.title(.@item.s) orderby .::}?` # ['string', 'null', 'int'] -> IntString?
             }
         ,
         _:
             cond types count {
-                1: $`${//str.title(//seq.concat(types))}Item`, # ['string'] -> StringItem .   
-                _: //seq.concat(types => //str.title(.@item) orderby .), # ['string', 'int'] -> IntString .
-            } 
+                1: $`${//str.title(//seq.concat(types))}Item`, # ['string'] -> StringItem
+                _: //seq.concat(types => //str.title(.@item) orderby .), # ['string', 'int'] -> IntString
+            }
     }
 ;
 
@@ -173,35 +178,37 @@ let transformType = \type
         (a: typeArray):
             # Type can be ['null', 'string'], ['string', 'int'] or ['null', {'type':'record', ...}] etc.
             # [(s: 'null'), (s: 'string')] to ['null', 'string'].
-            syslCombinedTypesName(typeArray, \type cond type {(:collectionType, ...): collectionType, _: type.s}),
-        {'logicalType': logicalTypeName, 'type': typeName, ...}: # Must be before {'type': typeName, ...}.
-            transformLogicalTypes(type), 
+            syslCombinedTypesName(typeArray, \type cond type {(collectionType: ct, ...): ct, _: type.s}),
+        # Must be before {'type': typeName, ...}.
+        {'type': typeName, 'logicalType': logicalTypeName, ...}:
+            transformLogicalTypes(type),
         {'type': typeName, ...}:
             # It is array, map.
             cond typeName.s {
-                'array': 
-                    'sequence of ' + cond type('items') {
-                                        {'name': (:s), ...}: syslTypeNameWithIdentifierCheck(s), 
-                                        (:s): syslTypeName(s),
-                                    },
-                'map': 
-                    'set of ' + cond type('values') {
-                                    {'name': (:s), ...}: 'String' + syslTypeName(s) + 'Item', 
-                                    (:s): 'String' + //str.title(s) + 'Item', # Primitive.
-                                },
+                'array':
+                    let type = cond type('items') {
+                        {'name': (:s), ...}: syslTypeNameWithIdentifierCheck(s),
+                        (:s): syslTypeName(s),
+                    };
+                    $`sequence of ${type}`,
+                'map':
+                    let type = cond type('values') {
+                        {'name': (:s), ...}: $`String${syslTypeName(s)}Item`,
+                        (:s): $`String${//str.title(s)}Item`, # Primitive.
+                    };
+                    $`set of ${type}`,
                 _: syslTypeNameWithIdentifierCheck(type('name').s)
             },
     }
 ;
 
 let defaultVal = \item
-    let default = item('default')?:''; 
+    let default = item('default')?:'';
     cond default {
         '': cond item {
                 {'type': {'type': (s: 'map'), ...}, ...}: (name: 'default', value: "{}"), # Map's default value is {}.
-                _: '',
             },
-        (): (name: 'default', value: "null"), 
+        (): (name: 'default', value: "null"),
         (b: true): (name: 'default', value: true),
         (b: false): (name: 'default', value: false),
         (a: {}): (name: 'default', value: "[]"),
@@ -209,7 +216,7 @@ let defaultVal = \item
         {...}: (name: 'default', value: default >> .s),
         (:s): (name: 'default', value: s),
         _: (name: 'default', value: default),
-    } 
+    }
 ;
 
 (
