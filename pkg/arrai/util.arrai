@@ -2,102 +2,6 @@
 #
 # If generally useful, these should gradually migrate to a more standard library.
 
-# Invokes a macro on a string as if it were source code at parsing time.
-let invokeMacro = \macro \s
-    (//dict(macro.@transform) single) -> \(@:rule, @value:fn)
-        fn(//grammar.parse(macro.@grammar, rule, s))
-;
-
-# Transforms an AST into a simple tuple of its values.
-# Useful for the @transform of a flat grammar.
-let rec simpleTransform = \ast
-    cond ast {
-        (...):
-            let d = //dict(ast) >> \term cond term {
-                ('':value, ...): value,
-                (...): simpleTransform(term),
-                [...]: term >> simpleTransform(.) where .@item,
-                _: {},
-            };
-            //tuple(d where .@value),
-        _: {}
-    }
-;
-
-# Filters the nodes of a hierarchical data structure based on a (key, value) predicate.
-# Key-value pairs for which the predicate returns false will be removed from the result.
-let rec filterTree = \pred \ast
-    cond ast {
-        {(@:..., @value:...), ...}: ast where pred(.@, .@value) >> filterTree(pred, .),
-        [...]: ast >> filterTree(pred, .),
-        {...}: ast => filterTree(pred, .),
-        (...): safetuple(//dict(ast) where pred(.@, .@value) >> filterTree(pred, .)),
-        _: ast,
-    }
-;
-
-# Sequentially applies `fn(accumulator, i)` for each `i` in `arr`. The `accumulator` is initialised
-# to `val`, and updated to the result of `fn` after each invocation.
-# Returns the final accumulated value.
-let rec reduce = \arr \fn \val
-    cond arr {
-        [head, ...]:
-            let tail = -1\(arr without (@:0, @item:head));
-            reduce(tail, fn, fn(val, head)),
-        _: val,
-    }
-;
-
-# Sequentially applies `fn(accumulator, k, v)` for each `{k: v}` pair in `obj`.
-# The `accumulator` is initialised to `val`, and updated to the result of `fn`
-# after each invocation.
-# Returns the final accumulated value.
-let rec reduceObj = \obj \fn \val
-    cond obj {
-        {}: val,
-        [(@:k, @value:v), ...tail]: reduceObj(tail rank (:.@), fn, fn(val, k, v)),
-        [(@:k, @item:v), ...tail]:  reduceObj(tail rank (:.@), fn, fn(val, k, v)),
-        (...): reduceObj(//dict(obj) orderby .@, fn, val),
-        _:     reduceObj(obj orderby .@, fn, val),
-    }
-;
-
-# Performs `reduce` once on `arr`, and once for each array output of `fn`. Accumulates to the same
-# value across all invocations.
-let reduceFlat = \arr \fn \val
-    reduce(arr, \z \i reduce(i, fn, z), val)
-;
-
-# Returns a sequence with any offset and holes removed.
-let ranked = \s s rank (:.@);
-# Explore constructs a dependency graph by starting at source and calling step
-# to find adjacent nodes. Deps is the graph constructed so far.
-# Self-edges are ignored.
-let rec _explore = \source \step \deps
-    cond {
-        {source} & (deps => .@): deps,
-        _:
-            let next = step(source) where . != source;
-            let deps = deps | {(@:source, @value: next)};
-            reduce(next orderby ., \v \i _explore(i, step, v), deps)
-    };
-let explore = \source \step _explore(source, step, {});
-
-# Unimported returns the set of nodes with no in-edges.
-let unimported = \g (g => .@) where !({.} & //rel.union(g => .@value));
-
-# Topsort returns an array of nodes in graph in dependency order.
-let rec _topsort = \graph \sorted \sources
-    cond sources orderby . {
-        []: sorted,
-        [..., tail]:
-            let adjs = graph(tail);
-            let graph = graph where .@ != tail;
-            let sources = (sources &~ {tail}) | (adjs & unimported(graph));
-            _topsort(graph, sorted ++ [tail], sources)
-    };
-let topsort = \graph _topsort(graph, [], unimported(graph));
-
 # TODO: this should be part of stdlib
 let rec trimWhitespace = \str
     let prefix = //seq.trim_prefix(' ');
@@ -119,10 +23,9 @@ let trimLines =
 ;
 
 # TODO: Handle type without app reference
-let typeGrammar = {:
-        //grammar.lang.wbnf[grammar]:
-        types -> (app=([^\.]+) ".")? type=([^\.]+):".";
-    :};
+let typeGrammar = {://grammar.lang.wbnf[grammar]:
+    types -> (app=([^\.]+) ".")? type=([^\.]+):".";
+:};
 
 let unpackType = \type (
     cond type {
@@ -154,8 +57,7 @@ let packType = \(app: appName, type: typeSeq, field: fieldName) (
             },
         _: //seq.join('.', [appName] ++ typeSeq ++ [fieldName]),
     }
-)
-;
+);
 
 # isValidIdentifier checks whether the identifier name is valid.
 let isValidIdentifier = \identifier
@@ -183,16 +85,7 @@ let nativeDataTypes = {
     'date', 'bool', 'decimal', 'datetime', 'bytes'
 };
 
-let appToParts = \appName
-    //seq.split('::', appName) >> trimWhitespace(.)
-;
-
-# `isDict` returns true if the given argument is a dictionary.
-let isDict = \d
-    cond d {
-        {...}: let items = d orderby .; cond items { [(@:_, @value:_), ...]: true, _: false, },
-        _: false,
-    };
+let appToParts = \appName //seq.split('::', appName) >> trimWhitespace(.);
 
 # `dictMergeResolve` recursively merges two dictionaries into a single dictionary, combining
 # values that themselves are dictionaries. In instances where both dictionaries define the same key
@@ -202,6 +95,7 @@ let isDict = \d
 # `resolve` is a function with signature `\x \y \k` where `x` and `y` are dictionaries that both
 # contain key `k`, the result of the function being the value to set for the merged result.
 let rec dictMergeResolve = \a \b \resolve
+    let isDict = \x cond x {{_: ...}: true};
     let keys = (a => .@) | (b => .@);
     keys => (@:., @value:
         let has_a = . <: (a => .@);
@@ -225,18 +119,6 @@ let dictMerge = \a \b
     dictMergeResolve(a, b, \_ \y \k y(k));
 
 (
-    :explore,
-    :filterTree,
-    :invokeMacro,
-    :simpleTransform,
-    :ranked,
-    :reduce,
-    :reduceFlat,
-    :reduceObj,
-    :ranked,
-    :simpleTransform,
-    :topsort,
-    :unimported,
     :unpackType,
     :packType,
     :trimWhitespace,
@@ -245,7 +127,6 @@ let dictMerge = \a \b
     :resolveValidIdentifier,
     :nativeDataTypes,
     :appToParts,
-    :isDict,
     :dictMergeResolve,
     :dictMerge,
 )

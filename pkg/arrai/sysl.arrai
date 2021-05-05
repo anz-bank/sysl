@@ -1,30 +1,19 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
+let (:nativeDataTypes, :trimWhitespace, :unpackType, :appToParts, ...) = //{./util};
+let (:simpleTransform, :reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
 # String representing a placeholder.
 let empty = '...';
 
 # Loads and returns a Sysl model from bytes in binary protobuf format.
-# The load must first locate the sysl.pb descriptor to decode the model. It searches:
-# 1. The path given by $SYSL_PB_PATH env var (if present);
-# 2. A sibling "sysl" directory
-# 3. A child "sysl" directory
-# If a local sysl.pb file is not found, it is fetched from GitHub for convenience.
 let loadBytes = \bytes
-    let syslPbEnv = 'SYSL_PB_PATH';
-    let syslPbPath = '../sysl/sysl.pb';
-    let syslPbFallbackPath = './sysl/sysl.pb';
-    let syslPb = cond {
-        //os.get_env(syslPbEnv): //os.file(//os.get_env(syslPbEnv)),
-        //os.exists(syslPbPath): //os.file(syslPbPath),
-        //os.exists(syslPbFallbackPath): //os.file(syslPbFallbackPath),
-        _: //net.http.get((), 'https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.pb?raw=true').body,
-    };
+    let syslPb = //[//encoding.bytes]{/pkg/sysl/sysl.pb};
     let syslDescriptor = //encoding.proto.descriptor(syslPb);
     //encoding.proto.decode(syslDescriptor, 'Module' , bytes);
 
 # Loads and returns a Sysl model from a file path in binary protobuf format.
 let load = \path loadBytes(//os.file(path));
-
 
 let attrs = \x
     cond x {
@@ -103,7 +92,7 @@ let payloadMacro = (
             "{" entry=(key=child ":" value=child):"," "}"
         }
     :},
-    @transform: (payload: //{./util}.simpleTransform),
+    @transform: (payload: simpleTransform),
 );
 
 # TODO: this is assuming that attribute values are similar to arrai strings
@@ -116,8 +105,6 @@ let rec buildNvp = \nvp cond nvp {
     (str: ('': s, ...), ...): //eval.value(//seq.join('', s)),
     _: //eval.value(//seq.join('', nvp.''))
 };
-
-let (:ranked, :nativeDataTypes, :reduce, :trimWhitespace, :unpackType, :appToParts, ...) = //{./util};
 
 # TODO: add this fix in the parsing instead of here.
 # tries to fix type without full reference
@@ -153,10 +140,10 @@ let parseReturn = \payload \apps \currApp
     ret +> (
         type: fixType(apps, currApp, retType),
         attr: //grammar -> .parse(payloadMacro.@grammar, 'payload', payload).attr?:() -> \attr
-                (
-                    nvp: attr.nvp?:{} => (@: ranked(.@item.name.''), @value: buildNvp(.@item.nvp_item)),
-                    modifier: attr.modifier?:{} => ranked(.@item.name.'')
-                )
+            (
+                nvp: attr.nvp?:{} => (@: (.@item.name.'' rank (:.@)), @value: buildNvp(.@item.nvp_item)),
+                modifier: attr.modifier?:{} => (.@item.name.'' rank (:.@))
+            )
     )
 ;
 
@@ -185,8 +172,8 @@ let polish = \m
     # TODO: More polish.
 ;
 
-# Returns a normalised, relational model of a Sysl model. The returned relational model is as simple and small as possible. 
-# It should derive new data view from this relational model as much as possible to support new needs. And be very careful 
+# Returns a normalised, relational model of a Sysl model. The returned relational model is as simple and small as possible.
+# It should derive new data view from this relational model as much as possible to support new needs. And be very careful
 # to create new items in this relational model when it has to.
 # e.g calls is a view derived from returned relational model.
 let newNormalize = \m
@@ -344,7 +331,7 @@ let newNormalize = \m
             fieldType: parseFieldType(appName, field),
             fieldConstraint: let constraint = field.constraint?:{}; mergeArrayTuples(constraint),
         );
-    
+
     # Parameters
     let _payload_params = //rel.union(
         _eps => \(:appName, :epName, :ep) ep.param?:{} =>

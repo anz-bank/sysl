@@ -7,26 +7,6 @@ let _concat = \z \k \v $`${z}+${k}${v}`;
 let fail = \a \b //test.assert.false(true);
 
 (
-    reduce: (
-        empty: util.reduce([], _sum, {}) = {},
-        one: util.reduce([1], _sum, 0) = 1,
-        many: util.reduce([1,2,3], _sum, 0) = 6,
-    ),
-
-    reduceFlat: (
-        empty: util.reduceFlat([], _sum, {}) = {},
-        one: util.reduceFlat([[1]], _sum, 0) = 1,
-        many: util.reduceFlat([[1],[2],[3]], _sum, 0) = 6,
-        pairs: util.reduceFlat([[1,2],[3,4]], _sum, 0) = 10,
-    ),
-
-    reduceObj: (
-        empty: util.reduceObj({}, _concat, '') = '',
-        one: util.reduceObj((a: 1), _concat, '') = '+a1',
-        tuple: util.reduceObj((b: 1, a: 2), _concat, '') = '+a2+b1',
-        dict: util.reduceObj({'b': 1, 'a': 2}, _concat, '') = '+a2+b1',
-    ),
-
     trimLines: (
         empty: util.trimLines('') = '',
         singleDirty: util.trimLines(' a') = ' a',
@@ -39,22 +19,16 @@ let fail = \a \b //test.assert.false(true);
             `) = 'a\n  b\n    c\n',
     ),
 
-    isDict: (
-        empty: //test.assert.false(util.isDict({})),
-        string: //test.assert.false(util.isDict('hello')),
-        dict: //test.assert.true(util.isDict({'a':'b'})),
-    ),
-
     dictMerge: (
         empty:
             let expected = {1:{1:2}};
             let actual = util.dictMerge({}, {1:{1:2}});
             //test.assert.equal(expected, actual),
-        simple: 
+        simple:
             let expected = {1:{1:2, 2:3}};
             let actual = util.dictMerge({1:{1:2}}, {1:{2:3}});
             //test.assert.equal(expected, actual),
-        conflict: 
+        conflict:
             let expected = {1:{1:3}};
             let actual = util.dictMerge({1:{1:2}}, {1:{1:3}});
             //test.assert.equal(expected, actual),
@@ -65,7 +39,7 @@ let fail = \a \b //test.assert.false(true);
             let expected = {1:{1:2}};
             let actual = util.dictMergeResolve({}, {1:{1:2}}, fail);
             //test.assert.equal(expected, actual),
-        noConflict: 
+        noConflict:
             let expected = {1:{1:2, 2:3}};
             let actual = util.dictMergeResolve({1:{1:2}}, {1:{2:3}}, fail);
             //test.assert.equal(expected, actual),
