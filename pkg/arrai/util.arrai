@@ -32,18 +32,18 @@ let unpackType = \type (
         (''): (app: '', type: '', field: ''),
         _: (//grammar -> .parse(typeGrammar, 'types', type))
             ->
-            let app = trimWhitespace(ranked((.).app?.''?:''));
+            let app = trimWhitespace((.).app?.''?:'' rank (:.@));
             let typeCount = .type count;
             cond (typeCount) {
                 (1): (
                     :app,
-                    type : .type >> trimWhitespace(ranked(.'')),
+                    type : .type >> trimWhitespace(.'' rank (:.@)),
                     field: ''
                 ),
                 _: (
                     :app,
-                    type : .type where .@ != typeCount - 1 >> trimWhitespace(ranked(.'')),
-                    field: trimWhitespace(ranked(.type(typeCount-1).''))
+                    type : .type where .@ != typeCount - 1 >> trimWhitespace(.'' rank (:.@)),
+                    field: trimWhitespace(.type(typeCount-1).'' rank (:.@))
                 )
             }
     }

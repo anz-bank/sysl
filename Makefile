@@ -1,6 +1,6 @@
 include ./scripts/version-report.mk
 
-.PHONY: all install grammar antlr build lint coverage clean check-clean golden
+.PHONY: all install grammar antlr build lint test test-arrai coverage clean check-clean golden
 
 GOPATH		= $(shell go env GOPATH)
 GOVERSION	= $(shell go version | cut -d' ' -f3-4)
@@ -38,8 +38,10 @@ tidy:
 generate: internal/arrai/bindata.go
 gen: generate
 
-test: generate
-	$(TESTEXE)
+test: test-arrai coverage
+
+test-arrai:
+	$(ARRAI) test
 
 coverage: generate
 	./scripts/test-with-coverage.sh 80

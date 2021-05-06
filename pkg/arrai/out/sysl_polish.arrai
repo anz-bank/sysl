@@ -76,7 +76,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -331,7 +330,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -627,7 +625,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -739,7 +736,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -851,7 +847,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -1078,7 +1073,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -1532,7 +1526,6 @@
                       'description': '1:1 transform',
                     },
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -1783,7 +1776,6 @@
                     modifier: {},
                     nvp: {},
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -2022,7 +2014,6 @@
                     modifier: {},
                     nvp: {},
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (
@@ -2102,7 +2093,6 @@
                     modifier: {},
                     nvp: {},
                   ),
-                  status: 'ok',
                   type: (
                     ref: (
                       appname: (

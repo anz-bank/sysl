@@ -1,5 +1,5 @@
 # TODO: unfinished
-let mapping = \data 
+let mapping = \data
     data => \(
         from: (
             appName: fAppName,

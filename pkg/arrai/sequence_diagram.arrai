@@ -1,14 +1,16 @@
 # Generates the PlantUML for a sequence diagram of "Client <- Do" in model.sysl.
 
-let sysl = //{./sysl};
-let model = sysl.newNormalize(sysl.polish(sysl.load('out/model.pb')));
+let (:reduceFlat, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
+let (:loadBytes, :newNormalize, :calls, ...) = //{./sysl};
+let model = newNormalize(loadBytes(//[//encoding.bytes]{./out/model.pb}));
 
 # Transforms a module to a tree of calls between endpoints.
 #
 # Each call is a tuple with attributes `from` (the upstream endpoint), `to` (the downstream endpoint
 # that `from` calls), and `calls` (a subtree of calls made by the downstream endpoint).
 let rec toTree = \(:m, :appName, :epName)
-    sysl.calls(m) where .from.appName = appName && .from.epName = epName orderby .
+    calls(m) where .from.appName = appName && .from.epName = epName orderby .
         >> (:.from, :.to, calls: toTree((:m, :.to.appName, :.to.epName)))
 ;
 
@@ -44,7 +46,7 @@ let toSeq = \m \(:appName, :epName) \urls
     let rec getApps = \(:from, :to, :calls) \all
         let all = appendIfNew(all, to.appName);
         cond {
-            calls: //{./util}.reduceFlat(calls >> getApps(., all), appendIfNew, all),
+            calls: reduceFlat(calls >> getApps(., all), appendIfNew, all),
             _: all,
         }
     ;

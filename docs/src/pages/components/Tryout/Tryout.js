@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import classnames from "classnames";
 import styles from "./styles.module.css";
 
@@ -182,11 +182,23 @@ function Tryout() {
       </div>
       <div className={classnames("row", styles.gutter)}>
         <div className="col col-6">
-          <textarea className={styles.tryout__editor} name="code" value={code} onChange={inputOnChange} autoCorrect="off" autoComplete="off" autoCapitalize="off" spellCheck="false"></textarea>
+          <textarea
+            className={styles.tryout__editor}
+            name="code"
+            value={code}
+            onChange={inputOnChange}
+            autoCorrect="off"
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck="false"
+          ></textarea>
         </div>
 
         <div className="col col-6">
-          <div className={styles.tryout__output} dangerouslySetInnerHTML={{__html: output}} />
+          <div
+            className={styles.tryout__output}
+            dangerouslySetInnerHTML={{ __html: output }}
+          />
         </div>
       </div>
 
@@ -201,7 +213,7 @@ function Tryout() {
         >
           Open in playground
         </a>
-        <div style={{clear: "both"}} />
+        <div style={{ clear: "both" }} />
       </div>
     </div>
   );

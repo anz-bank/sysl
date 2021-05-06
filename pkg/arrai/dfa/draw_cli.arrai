@@ -1,3 +1,8 @@
-let model = //os.args(1);
+let modelPath = //os.args(1);
 let type = //os.args(2);
+
+let (:loadBytes, :polish, ...) = //{/pkg/arrai/sysl};
+
+let model = polish(load(modelPath));
+
 //{./draw_cmd}(model, type)

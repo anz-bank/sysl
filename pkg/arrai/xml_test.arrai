@@ -6,7 +6,7 @@ let _attrs = '<a k="v"><b k="v" b="b">c</b></a>';
 (
     grammar:
         let ast = //grammar.parse(grammar, 'doc', _simple);
-        (ast.node.node.@item.text(0).'' rank (:.@)) = 'c',
+        ((ast.node.node single).@item.text(0).'' rank (:.@)) = 'c',
 
     toArrai: (
         simple:

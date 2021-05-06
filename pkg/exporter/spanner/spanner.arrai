@@ -1,3 +1,5 @@
+let (:invokeMacro, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
 let spannerType = \(:fieldType, :fieldConstraint, ...)
     let len = fieldConstraint.length?.max?:{};
     let rec type = \fieldType
@@ -27,7 +29,7 @@ let ixGrammar = {://grammar.lang.wbnf:
     order -> "(" val=("asc" | "desc") ")";
 :};
 let ixTx = (index: \ast ast.col >> (name: .name.'', order: //str.upper((.).order?.val.'':{})));
-let ixParse = //{/pkg/arrai/util}.invokeMacro((@grammar: ixGrammar, @transform: ixTx));
+let ixParse = invokeMacro((@grammar: ixGrammar, @transform: ixTx));
 
 # Returns an array of indexes defined on the table.
 let indexes = \m \app \table
@@ -44,16 +46,16 @@ let pos = \(start: (:line, :col), ...) [line, col];
 
 # Transforms a relational Sysl model to a DDL model.
 let toDdl = \m
-    let dbs = m.app -&- m.tag.app where .appTag = 'db';
+    let dbs = m.app -&- (m.tag.app where .appTag = 'db');
     let fields = dbs <&> m.table <&> m.src.type <&> m.field <&> m.src.field;
     fields nest ~|appName|tables => # aggregates app by appName
         \app app +> (tables: app.tables nest ~|typeName,typeSrcs,pk|fields => # aggregates table by typeName
             \table table +> (
                 fields: table.fields => . +> cond .fieldType {
                     (:appName, :typePath):
-                        let [typeName, fieldName] = typePath; 
-                        (fieldType: 
-                            .fieldType +> (fkType: 
+                        let [typeName, fieldName] = typePath;
+                        (fieldType:
+                            .fieldType +> (fkType:
                                 m.field <&> {(:appName, :typeName, :fieldName)})),
                     _: (:.fieldType),
                 },
@@ -70,7 +72,7 @@ let dbName = \. //str.lower(tableName(.));
 # TODO? How to handle case the length of typeSrcs or fieldSrcs is more than 1?
 let writeDdl = \ddl $`
     ${ddl orderby .appName >> \app $`
-        ${app.tables orderby pos(.typeSrcs(0)) >> \table 
+        ${app.tables orderby pos(.typeSrcs(0)) >> \table
             let typeName = tableName(table.typeName);
             $`
                 CREATE TABLE ${typeName} (

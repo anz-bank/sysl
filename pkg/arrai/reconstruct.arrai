@@ -43,7 +43,8 @@ let src = (
 
 let (:annotations, ...) = //{./sysl};
 
-let (nativeDataTypes: native, :trimLines, :dictMerge, :reduce, ...) = //{./util};
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (nativeDataTypes: native, :trimLines, :dictMerge, ...) = //{./util};
 
 let joinedName = //seq.join(' :: ');
 

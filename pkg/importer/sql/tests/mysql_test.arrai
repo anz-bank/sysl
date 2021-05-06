@@ -90,9 +90,14 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
                 name: 't',
                 attributes: [(name: 'x', type: 'int', array: {}, length: 0, nullable: true, options: {}, scale: {})],
                 primary_key: {},
-                foreign_keys: {(constraint_name: {}, foreign_keys: {
-                    (attribute: 'x', reference_table: 'a', reference_attribute: 'b')
-                })},
+                foreign_keys: {(
+                    foreign_keys: {
+                        (attribute: 'x', reference_table: 'a', reference_attribute: 'b'),
+                    },
+                    constraint_name: {},
+                    on_delete: {},
+                    on_update: {},
+                )},
                 unique_keys: {},
                 cluster: {},
             ),

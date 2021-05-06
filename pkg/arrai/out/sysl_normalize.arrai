@@ -2146,6 +2146,24 @@
       epName: 'Fetch',
       stmtAction: {},
       stmtAlt: {},
+      stmtCall: (
+        appName: ['Source'],
+        epName: 'Read',
+      ),
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['A'],
+      epName: 'Fetch',
+      stmtAction: {},
+      stmtAlt: {},
       stmtCall: {},
       stmtCond: {},
       stmtForeach: {},
@@ -2167,7 +2185,6 @@
             'description': '1:1 transform',
           },
         ),
-        status: 'ok',
         type: (
           appName: ['A'],
           typePath: ['FetchResponse'],
@@ -2175,7 +2192,7 @@
       ),
     ),
     (
-      appName: ['A'],
+      appName: ['B'],
       epName: 'Fetch',
       stmtAction: {},
       stmtAlt: {},
@@ -2218,64 +2235,8 @@
             'description': '1:1 transform',
           },
         ),
-        status: 'ok',
         type: (
           appName: ['B'],
-          typePath: ['FetchResponse'],
-        ),
-      ),
-    ),
-    (
-      appName: ['B'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['Source'],
-        epName: 'Read',
-      ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
-    ),
-    (
-      appName: ['C'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 2,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
-        attr: (
-          modifier: {},
-          nvp: {
-            'dataflow': (
-              d: {
-                'C.FetchResponse.cx': (
-                  a: ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
-                ),
-                'C.FetchResponse.cy': (
-                  a: ['A.FetchResponse.ay', 'B.FetchResponse.by'],
-                ),
-              },
-            ),
-            'description': '1:1 transform',
-          },
-        ),
-        status: 'ok',
-        type: (
-          appName: ['C'],
           typePath: ['FetchResponse'],
         ),
       ),
@@ -2318,6 +2279,60 @@
     ),
     (
       appName: ['C'],
+      epName: 'Fetch',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'C.FetchResponse.cx': (
+                  a: ['A.FetchResponse.ax', 'B.FetchResponse.bx'],
+                ),
+                'C.FetchResponse.cy': (
+                  a: ['A.FetchResponse.ay', 'B.FetchResponse.by'],
+                ),
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        type: (
+          appName: ['C'],
+          typePath: ['FetchResponse'],
+        ),
+      ),
+    ),
+    (
+      appName: ['C'],
+      epName: 'FetchA',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: (
+        appName: ['A'],
+        epName: 'Fetch',
+      ),
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 0,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: {},
+    ),
+    (
+      appName: ['C'],
       epName: 'FetchA',
       stmtAction: {},
       stmtAlt: {},
@@ -2342,7 +2357,6 @@
             'description': '1:1 transform',
           },
         ),
-        status: 'ok',
         type: (
           appName: ['C'],
           typePath: ['FetchResponse'],
@@ -2351,11 +2365,11 @@
     ),
     (
       appName: ['C'],
-      epName: 'FetchA',
+      epName: 'FetchB',
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: ['A'],
+        appName: ['B'],
         epName: 'Fetch',
       ),
       stmtCond: {},
@@ -2393,7 +2407,6 @@
             'description': '1:1 transform',
           },
         ),
-        status: 'ok',
         type: (
           appName: ['C'],
           typePath: ['FetchResponse'],
@@ -2401,12 +2414,12 @@
       ),
     ),
     (
-      appName: ['C'],
-      epName: 'FetchB',
+      appName: ['Client'],
+      epName: 'Do',
       stmtAction: {},
       stmtAlt: {},
       stmtCall: (
-        appName: ['B'],
+        appName: ['D'],
         epName: 'Fetch',
       ),
       stmtCond: {},
@@ -2444,65 +2457,9 @@
             'description': '1:1 transform',
           },
         ),
-        status: 'ok',
         type: (
           appName: ['Client'],
           typePath: ['Screen'],
-        ),
-      ),
-    ),
-    (
-      appName: ['Client'],
-      epName: 'Do',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['D'],
-        epName: 'Fetch',
-      ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
-    ),
-    (
-      appName: ['D'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 2,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
-        attr: (
-          modifier: {},
-          nvp: {
-            'dataflow': (
-              d: {
-                'D.FetchResponse.dx': (
-                  a: ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
-                ),
-                'D.FetchResponse.dy': (
-                  a: ['A.FetchResponse.ay', 'C.FetchResponse.cy'],
-                ),
-              },
-            ),
-            'description': '1:1 transform',
-          },
-        ),
-        status: 'ok',
-        type: (
-          appName: ['D'],
-          typePath: ['FetchResponse'],
         ),
       ),
     ),
@@ -2543,6 +2500,42 @@
       stmtRet: {},
     ),
     (
+      appName: ['D'],
+      epName: 'Fetch',
+      stmtAction: {},
+      stmtAlt: {},
+      stmtCall: {},
+      stmtCond: {},
+      stmtForeach: {},
+      stmtGroup: {},
+      stmtIndex: 2,
+      stmtLoop: {},
+      stmtLoopN: {},
+      stmtParent: {},
+      stmtRet: (
+        attr: (
+          modifier: {},
+          nvp: {
+            'dataflow': (
+              d: {
+                'D.FetchResponse.dx': (
+                  a: ['A.FetchResponse.ax', 'C.FetchResponse.cx'],
+                ),
+                'D.FetchResponse.dy': (
+                  a: ['A.FetchResponse.ay', 'C.FetchResponse.cy'],
+                ),
+              },
+            ),
+            'description': '1:1 transform',
+          },
+        ),
+        type: (
+          appName: ['D'],
+          typePath: ['FetchResponse'],
+        ),
+      ),
+    ),
+    (
       appName: ['Source'],
       epName: 'GET /get/{id}',
       stmtAction: {},
@@ -2560,7 +2553,6 @@
           modifier: {},
           nvp: {},
         ),
-        status: 'ok',
         type: (
           appName: ['Source'],
           typePath: ['Foo'],
@@ -2585,7 +2577,6 @@
           modifier: {},
           nvp: {},
         ),
-        status: 'ok',
         type: (
           appName: ['Source'],
           typePath: ['Foo'],
@@ -2610,7 +2601,6 @@
           modifier: {},
           nvp: {},
         ),
-        status: 'ok',
         type: (
           appName: ['Source'],
           typePath: ['Foo'],

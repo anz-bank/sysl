@@ -34,7 +34,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run unit tests
-        run: make coverage
+        run: make test
 
       - name: Set GOVERSION environment variable
         run: echo "GOVERSION=$(go version | awk '{print $3, $4;}')" >> $GITHUB_ENV

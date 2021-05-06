@@ -1,15 +1,15 @@
-\rel \targetType (
+\model \rel \targetType (
     let targetType = //{/pkg/arrai/util}.unpackType(targetType);
     let calls = rel.calls;
-    let transforms = rel.transforms;
+    let transforms = //{./transforms}(model.apps);
     let isSubsetType = \t \subset
-                            let makeSeq = \type (
-                                cond type.field {
-                                    (''): [type.app] ++ type.type,
-                                    _: [type.app] ++ type.type ++ [type.field],
-                                }
-                            );
-                            //seq.has_prefix(makeSeq(t), makeSeq(subset))
+        let makeSeq = \type (
+            cond type.field {
+                (''): [type.app] ++ type.type,
+                _: [type.app] ++ type.type ++ [type.field],
+            }
+        );
+        //seq.has_prefix(makeSeq(t), makeSeq(subset))
     ;
 
     # For each edges, find the next edges
@@ -41,8 +41,7 @@
                 ;
                 edges | nextEdges | traverse(nextEdges &~ edges)
         }
-    )
-    ;
+    );
 
     # initial edges, edges where it involves the target type or type related to target type
     let initEdges =

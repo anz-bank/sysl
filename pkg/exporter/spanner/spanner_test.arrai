@@ -1,7 +1,7 @@
 let (:export, ...) = //{./spanner};
 
-let sysl = //{//pkg/arrai/sysl.arrai};
-let sample = sysl.newNormalize(sysl.load('../test-data/spanner/sample.sysl.pb'));
+let (:loadBytes, :newNormalize, ...) = //{/pkg/arrai/sysl};
+let sample = newNormalize(loadBytes(//{/pkg/exporter/test-data/spanner/sample.sysl.pb}));
 
 (
     export: (

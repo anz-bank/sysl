@@ -1,7 +1,7 @@
 # Performs transformations of Sysl models, producing "better" Sysl models.
 
 let (:nativeDataTypes, :trimWhitespace, :unpackType, :appToParts, ...) = //{./util};
-let (:simpleTransform, :reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (:simpleTransform, :reduce, :invokeMacro, ...) = //{github.com/arr-ai/arrai/contrib/util};
 
 # String representing a placeholder.
 let empty = '...';
@@ -135,7 +135,7 @@ let rec resolvedType = \t cond t {
 
 # Converts a return statement payload into a tuple of its parts.
 let parseReturn = \payload \apps \currApp
-    let ret = //{./util}.invokeMacro(payloadMacro, payload);
+    let ret = invokeMacro(payloadMacro, payload);
     let retType = ret.type?:'';
     ret +> (
         type: fixType(apps, currApp, retType),
@@ -491,14 +491,12 @@ let normalize = \m
                 )
         ) where .
     );
-    # let transforms = //{./dfa/transforms}(m.apps);
     (
         :apps,
         :endpoints,
         :calls,
         :types,
         :fields,
-        # :transforms,
         # TODO:
         # :annotations, (aka attributes)
         # :tags, (aka patterns)

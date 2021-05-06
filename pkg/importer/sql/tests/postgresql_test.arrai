@@ -104,9 +104,14 @@ let foo_c = applyAlterTable(renameCol.data, foo_b);
                 name: 't',
                 attributes: [(name: 'x', type: 'int', array: {}, length: 0, nullable: true, options: {}, scale: {})],
                 primary_key: {},
-                foreign_keys: {(constraint_name: {}, foreign_keys: {
-                    (attribute: 'x', reference_table: 'a', reference_attribute: 'b')
-                })},
+                foreign_keys: {(
+                    constraint_name: {},
+                    foreign_keys: {
+                        (attribute: 'x', reference_table: 'a', reference_attribute: 'b')
+                    },
+                    on_delete: {},
+                    on_update: {},
+                )},
                 unique_keys: {},
                 cluster: {},
             ),
