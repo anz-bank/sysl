@@ -146,4 +146,13 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
             ],
         } >>> \k \v v >> {k} --- {colType(.)}
     ,
+
+    values:
+        let  insert = {:macro:INSERT INTO t (c) VALUES (
+            "string", 'string', "", -42, 0, 42, -0x2A, 0x0, 0x2A,
+            TRUE, FALSE, NULL, CURRENT_TIMESTAMP, NOW() at time zone 'foo'
+        ):};
+        # Assert that the values were all parsed, but don't expect a model.
+        insert = emptyModel
+    ,
 )
