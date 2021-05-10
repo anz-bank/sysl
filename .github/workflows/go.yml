@@ -55,11 +55,6 @@ jobs:
         env:
           GOPATH: .
 
-      - name: Upload coverage to Codecov
-        run: bash <(curl -s https://codecov.io/bash) -f ./coverage.txt
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   test-windows:
     name: Run unit tests (Windows)
     runs-on: windows-latest
