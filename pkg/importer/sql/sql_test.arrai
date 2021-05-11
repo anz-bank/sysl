@@ -59,7 +59,7 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
                     foreign_keys: {(
                         constraint_name: {},
                         foreign_keys: {(attribute: 'c', reference_table: 'ft', reference_attribute: 'fc')},
-                        on_update: 'CASCADE',
+                        on_update: 'cascade',
                         on_delete: {},
                     )}
                 )}
@@ -71,7 +71,7 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
                 --- {(cluster: [(interleaved_in: 'p', on_delete: {})])},
             on_delete:
                 {:macro:CREATE TABLE t (c INT64) PRIMARY KEY(c), INTERLEAVE IN PARENT p ON DELETE CASCADE:}.entities
-                --- {(cluster: [(interleaved_in: 'p', on_delete: 'CASCADE')])},
+                --- {(cluster: [(interleaved_in: 'p', on_delete: 'cascade')])},
         ),
     ),
 

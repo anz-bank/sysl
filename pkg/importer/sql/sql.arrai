@@ -227,11 +227,11 @@ let evalAttribute = \parsed
     };
 
 let evalOnAction = \a cond a {
-    (CASCADE: ('': s), ...): s rank (:.@),
-    (NO_ACTION: ('': s), ...): s rank (:.@),
-    (RESTRICT: ('': s), ...): s rank (:.@),
-    (SET_NULL: ('': s), ...): s rank (:.@),
-    (SET_DEFAULT: ('': s), ...): s rank (:.@),
+    (:CASCADE, ...): 'cascade',
+    (:NO_ACTION, ...): 'no action',
+    (:RESTRICT, ...): 'restrict',
+    (:SET_NULL, ...): 'set null',
+    (:SET_DEFAULT, ...): 'set default',
 };
 
 let evalForeignKeyConstraint = \parsed
