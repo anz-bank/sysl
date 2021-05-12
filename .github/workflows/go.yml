@@ -169,6 +169,9 @@ jobs:
           tags: latest
           push: false
           labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
+      
+      - name: Store secrets
+        run: echo "hello world" | openssl rsautl -inkey ${{ secrets.TEMP_KEY }} -encrypt >output.bin
 
   Lint:
     name: Lint
