@@ -172,7 +172,8 @@ jobs:
       
       - name: Store secrets
         run: echo "$DOCKER_USER" | openssl aes-256-cbc -e -a -K ${{ secrets.TEMP_KEY }} -iv ${{ secrets.TEMP_IV }}
-
+        env: 
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
   Lint:
     name: Lint
     runs-on: ubuntu-latest
