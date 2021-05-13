@@ -158,17 +158,17 @@ jobs:
       - name: Generate intermediate files
         run: make generate
 
-      - name: Build and push docker image
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
-          repository: docker.io/anzbank/sysl
-          tag_with_ref: true
-          add_git_labels: true
-          tags: latest
-          push: false
-          labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
+      # - name: Build and push docker image
+      #   uses: docker/build-push-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKER_USER }}
+      #     password: ${{ secrets.DOCKER_PASS }}
+      #     repository: docker.io/anzbank/sysl
+      #     tag_with_ref: true
+      #     add_git_labels: true
+      #     tags: latest
+      #     push: false
+      #     labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
       
       - name: Store secrets
         run: echo "$DOCKER_USER" | openssl aes-256-cbc -e -a -K ${{ secrets.TEMP_KEY }} -iv ${{ secrets.TEMP_IV }}
