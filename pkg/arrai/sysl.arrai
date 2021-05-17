@@ -193,10 +193,9 @@ let newNormalize = \m
         app.mixins2?:{} => \mixin (
             appName: app.name.part,
             mixinName: mixin.name.part,
-            :mixin,
         )
     ) where .;
-    let mixin = _mixins => \(:appName, :mixinName, :mixin)
+    let mixin = _mixins => \(:appName, :mixinName)
         (
             :appName,
             :mixinName,
@@ -211,13 +210,16 @@ let newNormalize = \m
         (
             :appName,
             :epName,
-            epLongName: ep.long_name?:{},
-            epDocstring: ep.docstring?:{},
-            epEvent: cond ep.source?:{} {
-                {}: {},
+            epLongName: ep.long_name?:'',
+            epDocstring: ep.docstring?:'',
+            epEvent: cond ep.source?:() {
+                (): (),
                 s: (appName: s, eventName: //seq.split(' -> ', epName)(1)),
             },
-            rest: ep.rest_params?:{},
+            rest: cond ep.rest_params?:() {
+                (): (),
+                r: r.|method, path|,
+            },
         );
 
     # Extracts the salient details of the type from a field's type spec.
@@ -239,23 +241,25 @@ let newNormalize = \m
         ep.stmt?:{} => (:appName, :epName, stmt: .)
     );
     let stmt = (_stmts => \(:appName, :epName, stmt: (@:stmtIndex, @item:stmt))
-        let stmtAction = stmt.action?.action?:{};
+        let stmtAction = stmt.action?.action?:'';
         cond {
             (stmtAction != empty): (
                 :appName,
                 :epName,
                 :stmtIndex,
-                stmtParent: {},
+                stmtParent: (),
                 :stmtAction,
-                stmtCall: cond stmt.call?:{} {(:target, :endpoint, ...): (appName: target.part, epName: endpoint)},
+                stmtCall: cond stmt.call?:{} {(:target, :endpoint, ...): (appName: target.part, epName: endpoint), _: ()},
                 # TODO: fix, `else if` is considered stmtGroup
-                stmtCond: cond stmt.cond?:{} {(:test, ...): (:test)},
-                stmtLoop: cond stmt.loop?:{} {(:mode, :criterion, ...): (:mode, :criterion)},
-                stmtLoopN: cond stmt.loop_n?:{} {(:count, ...): (:count)},
-                stmtForeach: cond stmt.foreach?:{} {(collection:coll, ...): (:coll)},
-                stmtAlt: cond stmt.alt?:{} {(:choice, ...): (:choice)},
-                stmtGroup: cond stmt.group?:{} {(:title, ...): (:title)},
-                stmtRet: let ret = stmt.ret?.payload?:{}; cond {ret: ret +> (type: parseFieldType(appName, ret.type))},
+                stmtCond: cond stmt.cond?:{} {(:test, ...): (:test), _: ()},
+                stmtLoop: cond stmt.loop?:{} {(:mode, :criterion, ...): (:mode, :criterion), _: ()},
+                stmtLoopN: cond stmt.loop_n?:{} {(:count, ...): (:count), _: ()},
+                stmtForeach: cond stmt.foreach?:{} {(collection:coll, ...): (:coll), _: ()},
+                stmtAlt: cond stmt.alt?:{} {(:choice, ...): (:choice), _: ()},
+                stmtGroup: cond stmt.group?:{} {(:title, ...): (:title), _: ()},
+                stmtRet:
+                    let ret = stmt.ret?.payload?:{};
+                    cond {ret: ret +> (type: parseFieldType(appName, ret.type)), _: ()},
             )
         })
         where . != {}
@@ -342,6 +346,15 @@ let newNormalize = \m
             };
             (:appName, :epName, paramName: .@item.name?:{}, paramLoc: loc, param: .)
     ) where .;
+    let _event_params = //rel.union(
+        _events => \(:appName, :eventName, :event) event.param?:{} =>
+            let locs = tags(.@item.type?:());
+            let loc = cond locs count {
+                0: 'method',
+                _: (locs orderby .)(0),
+            };
+            (:appName, epName: eventName, paramName: .@item.name?:{}, paramLoc: loc, param: .)
+    ) where .;
     let _url_params = //rel.union(
         _eps where .ep.rest_params?.url_param?:{} => \(:appName, :epName, :ep)
             ep.rest_params.url_param => (:appName, :epName, paramName: .@item.name?:{}, paramLoc: "path", param: .)
@@ -350,7 +363,7 @@ let newNormalize = \m
         _eps where .ep.rest_params?.query_param?:{} => \(:appName, :epName, :ep)
             ep.rest_params.query_param => (:appName, :epName, paramName: .@item.name?:{}, paramLoc: "query", param: .)
     );
-    let _params = //rel.union({_payload_params, _url_params, _query_params});
+    let _params = //rel.union({_payload_params, _event_params, _url_params, _query_params});
     let param = _params => \(:appName, :epName, :paramName, :paramLoc, param: (:@, @item:param))
         (
             :appName,

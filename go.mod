@@ -10,7 +10,8 @@ require (
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.25
-	github.com/arr-ai/arrai v0.249.0
+	github.com/arr-ai/arrai v0.252.0
+	github.com/arr-ai/frozen v0.17.0
 	github.com/arr-ai/wbnf v0.30.0
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0

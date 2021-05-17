@@ -37,6 +37,11 @@ func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (
 	return parse.LoadAndGetDefaultApp(projectConfig.Module, projectConfig.Fs, modelParser)
 }
 
+// LoadSyslPb decodes a Sysl module from a protobuf message.
+func LoadSyslModuleFromPb(pbPath string, fs afero.Fs) (*sysl.Module, error) {
+	return pbutil.FromPB(pbPath, fs)
+}
+
 func NewProjectConfiguration() *ProjectConfiguration {
 	return &ProjectConfiguration{
 		Root:        "",
