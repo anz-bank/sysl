@@ -5,6 +5,10 @@ import (
 	"fmt"
 
 	"github.com/anz-bank/sysl/pkg/arrai"
+	"github.com/arr-ai/arrai/pkg/arraictx"
+	"github.com/arr-ai/arrai/syntax"
+	"github.com/arr-ai/wbnf/parser"
+	"github.com/pkg/errors"
 
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -16,13 +20,33 @@ import (
 const tagAttr = "patterns"
 const placeholder = "..."
 
+type ctxKey int
+
+const (
+	payloadParseKey ctxKey = iota
+)
+
 // NormalizeSpec returns a relational form of a Sysl module loaded from a Sysl spec.
-func NormalizeSpec(root, path string) (*Schema, error) {
+func NormalizeSpec(ctx context.Context, root, path string) (*Schema, error) {
 	m, _, err := loader.LoadSyslModule(root, path, afero.NewOsFs(), logrus.StandardLogger())
 	if err != nil {
 		return nil, err
 	}
-	return Normalize(m)
+	return Normalize(ctx, m)
+}
+
+// withPayloadParser precompiles the arr.ai function for parsing return statement payloads.
+func withPayloadParser(ctx context.Context) (context.Context, error) {
+	expr, err := buildPayloadParser()
+	if err != nil {
+		return nil, err
+	}
+	return context.WithValue(ctx, payloadParseKey, expr), nil
+}
+
+// getPayloadParser returns the payload parser function stored in ctx.
+func getPayloadParser(ctx context.Context) rel.Expr {
+	return ctx.Value(payloadParseKey).(*rel.BinExpr)
 }
 
 // attrToValue returns the attribute value as a rel.Value.
@@ -79,51 +103,35 @@ func annos(attrs map[string]*sysl.Attribute) map[string]interface{} {
 	return annos
 }
 
-func unpackType(typ rel.Tuple) interface{} {
-	tuple := typ.(rel.Tuple)
-	//nolint:gocritic
-	if name, ok := tuple.Get("primitive"); ok {
-		return TypePrimitive{Primitive: name.String()}
-	} else if set, ok := tuple.Get("set"); ok {
-		return TypeSet{unpackType(set.(rel.Tuple))}
-	} else if seq, ok := tuple.Get("sequence"); ok {
-		return TypeSequence{unpackType(seq.(rel.Tuple))}
-	} else if tuple.HasName("typePath") {
-		ctx := context.Background()
-		return TypeRef{
-			AppName:  arrai.ToStrings(tuple.MustGet("appName").Export(ctx)),
-			TypePath: arrai.ToStrings(tuple.MustGet("typePath").Export(ctx)),
-		}
-	} else {
-		panic(fmt.Errorf("unknown type: %T %s", typ, typ))
-	}
-}
-
-func parseReturnPayload(payload string) (StatementReturn, error) {
-	grammar := `
-		payload -> (status ("<:" type)? | (status "<:")? type) attr?;
-		type		-> sequence | set | PRIMITIVE | ref $ | raw $;
-		sequence	-> "sequence of " type;
-		set			-> "set of " type;
-		ref			-> (app=([^\s.:]+):"::" ".")? type=[^\s.]+;
-		raw			-> [^\[\n]+\b;
-		PRIMITIVE	-> "int" | "int32" | "int64" | "float" | "float32" | "float64" | "decimal"
-					 | "bool" | "bytes" | "string" | "date" | "datetime" | "any";
-		status -> ("ok"|"error"|[1-5][0-9][0-9]);
-		attr -> %!Array(nvp|modifier);
-		nvp_item -> str | array=%!Array(nvp_item) | dict=%!Dict(nvp_item);
-		nvp ->  name=\w+ "=" nvp_item;
-		modifier -> "~" name=[\w\+]+;
-		str -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") {
-			.wrapRE -> /{()};
-		};
-		.wrapRE -> /{\s*()\s*};
-		.macro Array(child) {
-			"[" (child):"," "]"
-		}
-		.macro Dict(child) {
-			"{" entry=(key=child ":" value=child):"," "}"
-		}
+// buildPayloadParser constructs an expression to parse return statement payloads.
+func buildPayloadParser() (rel.Expr, error) {
+	ctx := arraictx.InitRunCtx(context.Background())
+	parse := `
+		\payload //grammar.parse({://grammar.lang.wbnf:
+			payload -> (status ("<:" type)? | (status "<:")? type) attr?;
+			type		-> sequence | set | PRIMITIVE | ref $ | raw $;
+			sequence	-> "sequence of " type;
+			set			-> "set of " type;
+			ref			-> (app=([^\s.:]+):"::" ".")? type=[^\s.]+;
+			raw			-> [^\[\n]+\b;
+			PRIMITIVE	-> "int" | "int32" | "int64" | "float" | "float32" | "float64" | "decimal"
+						 | "bool" | "bytes" | "string" | "date" | "datetime" | "any";
+			status -> ("ok"|"error"|[1-5][0-9][0-9]);
+			attr -> %!Array(nvp|modifier);
+			nvp_item -> str | array=%!Array(nvp_item) | dict=%!Dict(nvp_item);
+			nvp ->  name=\w+ "=" nvp_item;
+			modifier -> "~" name=[\w\+]+;
+			str -> ('"' ([^"\\] | [\\][\\brntu'"])* '"' | "'" ([^''])* "'") {
+				.wrapRE -> /{()};
+			};
+			.wrapRE -> /{\s*()\s*};
+			.macro Array(child) {
+				"[" (child):"," "]"
+			}
+			.macro Dict(child) {
+				"{" entry=(key=child ":" value=child):"," "}"
+			}
+		:}, "payload", payload)
 	`
 	tx := `
 		\ast
@@ -154,13 +162,65 @@ func parseReturnPayload(payload string) (StatementReturn, error) {
 			modifier: ast.attr?.modifier?:{} => (.@item.name.'' rank (:.@))
 		)
 	`
-	out, err := arrai.EvaluateMacro(grammar, "payload", tx, payload)
+
+	txFn, err := syntax.EvaluateExpr(ctx, ".", tx)
+	if err != nil {
+		return nil, err
+	}
+	if _, is := txFn.(rel.Closure); !is {
+		return nil, errors.New("tx not a function")
+	}
+
+	parseFn, err := syntax.EvaluateExpr(ctx, ".", parse)
+	if err != nil {
+		return nil, err
+	}
+	if _, is := parseFn.(rel.Closure); !is {
+		return nil, errors.New("parse not a function")
+	}
+
+	wrapFn, err := syntax.EvaluateExpr(ctx, ".", `\parse \tx \payload tx(parse(payload))`)
+	if err != nil {
+		return nil, err
+	}
+	if _, is := parseFn.(rel.Closure); !is {
+		return nil, errors.New("wrap not a function")
+	}
+
+	scanner := *parser.NewScanner("")
+	return rel.NewCallExprCurry(scanner, wrapFn, parseFn, txFn), nil
+}
+
+func unpackType(typ rel.Tuple) interface{} {
+	tuple := typ.(rel.Tuple)
+	//nolint:gocritic
+	if name, ok := tuple.Get("primitive"); ok {
+		return TypePrimitive{Primitive: name.String()}
+	} else if set, ok := tuple.Get("set"); ok {
+		return TypeSet{unpackType(set.(rel.Tuple))}
+	} else if seq, ok := tuple.Get("sequence"); ok {
+		return TypeSequence{unpackType(seq.(rel.Tuple))}
+	} else if tuple.HasName("typePath") {
+		ctx := context.Background()
+		return TypeRef{
+			AppName:  arrai.ToStrings(tuple.MustGet("appName").Export(ctx)),
+			TypePath: arrai.ToStrings(tuple.MustGet("typePath").Export(ctx)),
+		}
+	} else {
+		panic(fmt.Errorf("unknown type: %T %s", typ, typ))
+	}
+}
+
+func parseReturnPayload(ctx context.Context, payload string) (StatementReturn, error) {
+	parse := getPayloadParser(ctx)
+
+	scanner := *parser.NewScanner("")
+	out, err := rel.NewCallExpr(scanner, parse, rel.NewString([]rune(payload))).Eval(ctx, rel.EmptyScope)
 	if err != nil {
 		return StatementReturn{}, err
 	}
 	t := out.(rel.Tuple)
 
-	ctx := context.Background()
 	r := StatementReturn{
 		Status: t.MustGet("status").String(),
 		Attr: StatementReturnAttrs{

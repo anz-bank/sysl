@@ -80,8 +80,8 @@ github.com/anz-bank/sysl v0.207.0/go.mod h1:7B7C93LbRBLlKg2DfCVug692IO3d1NepkNHw
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
-github.com/arr-ai/arrai v0.252.0 h1:KxeCWf2dmPbuY62rCDCQRcX3HCk8bpE/9O+RbwXluPk=
-github.com/arr-ai/arrai v0.252.0/go.mod h1:KIIMDE2datEbc6Y8I8vEfFQod/J0SooUUqRHas9Cio4=
+github.com/arr-ai/arrai v0.253.0 h1:pd0BV/UCjNMF9Sw/lNfE9jQyena63ZN6aMKFfdzjR1o=
+github.com/arr-ai/arrai v0.253.0/go.mod h1:KIIMDE2datEbc6Y8I8vEfFQod/J0SooUUqRHas9Cio4=
 github.com/arr-ai/frozen v0.11.1/go.mod h1:YEr4TubkrAoA3f9U1R4PcEVB5ocBUdiS3NKh03cbVts=
 github.com/arr-ai/frozen v0.13.0/go.mod h1:YEr4TubkrAoA3f9U1R4PcEVB5ocBUdiS3NKh03cbVts=
 github.com/arr-ai/frozen v0.14.0/go.mod h1:YEr4TubkrAoA3f9U1R4PcEVB5ocBUdiS3NKh03cbVts=

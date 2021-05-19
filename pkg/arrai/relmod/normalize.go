@@ -2,6 +2,8 @@
 package relmod
 
 import (
+	"context"
+	"sort"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -11,24 +13,36 @@ import (
 type tuple map[string]interface{}
 
 // Normalize transforms a module into a relational model schema.
-func Normalize(m *sysl.Module) (*Schema, error) {
+func Normalize(ctx context.Context, m *sysl.Module) (*Schema, error) {
+	var err error
+	ctx, err = withPayloadParser(ctx)
+	if err != nil {
+		return nil, err
+	}
 	s := &Schema{}
-	if err := normalizeModule(s, m); err != nil {
+	if err := normalizeModule(ctx, s, m); err != nil {
 		return nil, err
 	}
 	return s, nil
 }
 
-func normalizeModule(s *Schema, m *sysl.Module) error {
-	for _, app := range m.Apps {
-		if err := normalizeApp(s, app); err != nil {
+func normalizeModule(ctx context.Context, s *Schema, m *sysl.Module) error {
+	// Normalize apps in a deterministic (alphabetical) order.
+	keys := make([]string, 0, len(m.Apps))
+	for k := range m.Apps {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, name := range keys {
+		if err := normalizeApp(ctx, s, m.Apps[name]); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func normalizeApp(s *Schema, app *sysl.Application) error {
+func normalizeApp(ctx context.Context, s *Schema, app *sysl.Application) error {
 	s.App = append(s.App, App{
 		AppName:      app.Name.Part,
 		AppLongName:  app.LongName,
@@ -42,7 +56,7 @@ func normalizeApp(s *Schema, app *sysl.Application) error {
 	}
 
 	for _, ep := range app.Endpoints {
-		if err := normalizeEndpoint(s, app, ep); err != nil {
+		if err := normalizeEndpoint(ctx, s, app, ep); err != nil {
 			return err
 		}
 	}
@@ -67,7 +81,7 @@ func normalizeMixin(s *Schema, app *sysl.Application, mixin *sysl.Application) {
 	normalizeMixinMeta(s, app, mixin)
 }
 
-func normalizeEndpoint(s *Schema, app *sysl.Application, ep *sysl.Endpoint) error {
+func normalizeEndpoint(ctx context.Context, s *Schema, app *sysl.Application, ep *sysl.Endpoint) error {
 	if ep.Name == placeholder {
 		return nil
 	}
@@ -117,7 +131,7 @@ func normalizeEndpoint(s *Schema, app *sysl.Application, ep *sysl.Endpoint) erro
 	}
 
 	for i, stmt := range ep.Stmt {
-		if err := normalizeStatement(s, app, ep, stmt, i); err != nil {
+		if err := normalizeStatement(ctx, s, app, ep, stmt, i); err != nil {
 			return err
 		}
 	}
@@ -139,6 +153,7 @@ func normalizeEvent(s *Schema, app *sysl.Application, event *sysl.Endpoint) {
 }
 
 func normalizeStatement(
+	ctx context.Context,
 	s *Schema,
 	app *sysl.Application,
 	ep *sysl.Endpoint,
@@ -181,7 +196,7 @@ func normalizeStatement(
 		statement.StmtGroup = tuple{"title": stmt.GetGroup().Title}
 	}
 	if stmt.GetRet() != nil && stmt.GetRet().Payload != "" {
-		r, err := parseReturnPayload(stmt.GetRet().Payload)
+		r, err := parseReturnPayload(ctx, stmt.GetRet().Payload)
 		if err != nil {
 			return err
 		}
@@ -221,6 +236,7 @@ func normalizeParam(
 	}
 	if paramType == nil {
 		param.ParamOpt = false
+		param.ParamType = TypePrimitive{Primitive: "any"}
 	} else {
 		param.ParamType = parseFieldType(app.Name.Part, paramType)
 		param.ParamOpt = paramType.Opt

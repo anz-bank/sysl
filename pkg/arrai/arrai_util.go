@@ -5,6 +5,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/pbutil"
+	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/arr-ai/arrai/translate/pb"
+	"github.com/spf13/afero"
+	"google.golang.org/protobuf/reflect/protoreflect"
+
 	"github.com/arr-ai/frozen"
 
 	"github.com/arr-ai/arrai/pkg/arraictx"
@@ -20,6 +26,20 @@ type ExecutionError struct {
 }
 
 func (e ExecutionError) Error() string { return e.Context + ": " + e.Err.Error() }
+
+// SyslPbToValue loads a Sysl protobuf message from a path and serializes it to an arr.ai value.
+func SyslPbToValue(pbPath string) (rel.Value, error) {
+	m, err := pbutil.FromPB(pbPath, afero.NewOsFs())
+	if err != nil {
+		return nil, err
+	}
+	return SyslModuleToValue(m)
+}
+
+// SyslPbToValue serializes a Sysl protobuf message to an arr.ai value.
+func SyslModuleToValue(module *sysl.Module) (rel.Value, error) {
+	return pb.FromProtoValue(protoreflect.ValueOf(module.ProtoReflect()))
+}
 
 // EvaluateScript evaluates script with passed parameters.
 // It help to pass Go's type parameters to arrai script explicitly.

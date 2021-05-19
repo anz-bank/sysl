@@ -52,8 +52,11 @@ func TestAnnos(t *testing.T) {
 func TestParseReturnPayload(t *testing.T) {
 	t.Parallel()
 
+	ctx, err := withPayloadParser(context.Background())
+	require.NoError(t, err)
+
 	mustParseReturnPayload := func(p string) StatementReturn {
-		r, err := parseReturnPayload(p)
+		r, err := parseReturnPayload(ctx, p)
 		require.NoError(t, err)
 		return r
 	}

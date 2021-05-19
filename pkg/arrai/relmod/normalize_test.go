@@ -1,6 +1,7 @@
 package relmod
 
 import (
+	"context"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -16,7 +17,9 @@ import (
 func TestNormalize(t *testing.T) {
 	t.Parallel()
 
-	m, err := NormalizeSpec("..", "all.sysl")
+	ctx := context.Background()
+
+	m, err := NormalizeSpec(ctx, "..", "all.sysl")
 	require.NoError(t, err)
 	v, err := rel.NewValue(m)
 	require.NoError(t, err)
@@ -66,7 +69,9 @@ func TestNormalize_serializeStmt(t *testing.T) {
 }
 
 func assertNormalizes(t *testing.T, m *sysl.Module, s Schema) {
-	out, err := Normalize(m)
+	ctx := context.Background()
+
+	out, err := Normalize(ctx, m)
 	require.NoError(t, err)
 	actual, err := rel.NewValue(out)
 	require.NoError(t, err)
