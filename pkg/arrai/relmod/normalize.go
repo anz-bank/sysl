@@ -131,7 +131,7 @@ func normalizeEndpoint(ctx context.Context, s *Schema, app *sysl.Application, ep
 	}
 
 	for i, stmt := range ep.Stmt {
-		if err := normalizeStatement(ctx, s, app, ep, stmt, i); err != nil {
+		if err := normalizeStatement(ctx, s, app, ep, stmt, []int{i}); err != nil {
 			return err
 		}
 	}
@@ -158,13 +158,26 @@ func normalizeStatement(
 	app *sysl.Application,
 	ep *sysl.Endpoint,
 	stmt *sysl.Statement,
-	stmtIndex int,
+	stmtIndex []int,
 ) error {
-	statement := Statement{
-		AppName:    app.Name.Part,
-		EpName:     ep.Name,
-		StmtIndex:  stmtIndex,
-		StmtParent: StatementParent{},
+	stmtSkeleton := func() Statement {
+		return Statement{
+			AppName:    app.Name.Part,
+			EpName:     ep.Name,
+			StmtIndex:  stmtIndex,
+			StmtParent: StatementParent{},
+		}
+	}
+	statement := stmtSkeleton()
+
+	normalizeChildren := func(children []*sysl.Statement, parentIndex []int) error {
+		for i, child := range children {
+			err := normalizeStatement(ctx, s, app, ep, child, append(parentIndex, i))
+			if err != nil {
+				return err
+			}
+		}
+		return nil
 	}
 
 	if stmt.GetAction() != nil {
@@ -178,30 +191,58 @@ func normalizeStatement(
 	}
 	if stmt.GetCond() != nil {
 		statement.StmtCond = tuple{"test": stmt.GetCond().Test}
+		if err := normalizeChildren(stmt.GetCond().Stmt, stmtIndex); err != nil {
+			return err
+		}
 	}
 	if stmt.GetLoop() != nil {
 		loop := stmt.GetLoop()
 		statement.StmtLoop = tuple{"mode": loop.Mode.String(), "criterion": loop.Criterion}
+		if err := normalizeChildren(stmt.GetLoop().Stmt, stmtIndex); err != nil {
+			return err
+		}
 	}
 	if stmt.GetLoopN() != nil {
 		statement.StmtLoopN = tuple{"count": stmt.GetLoopN().Count}
+		if err := normalizeChildren(stmt.GetLoopN().Stmt, stmtIndex); err != nil {
+			return err
+		}
 	}
 	if stmt.GetForeach() != nil {
 		statement.StmtForeach = tuple{"coll": stmt.GetForeach().Collection}
-	}
-	if stmt.GetAlt() != nil {
-		statement.StmtAlt = tuple{"choice": ""} // stmt.GetAlt().GetChoice()
+		if err := normalizeChildren(stmt.GetForeach().Stmt, stmtIndex); err != nil {
+			return err
+		}
 	}
 	if stmt.GetGroup() != nil {
 		statement.StmtGroup = tuple{"title": stmt.GetGroup().Title}
+		if err := normalizeChildren(stmt.GetGroup().Stmt, stmtIndex); err != nil {
+			return err
+		}
 	}
 	if stmt.GetRet() != nil && stmt.GetRet().Payload != "" {
-		r, err := parseReturnPayload(ctx, stmt.GetRet().Payload)
+		r, err := parseReturnPayload(ctx, stmt.GetRet().Payload, app.Name.Part)
 		if err != nil {
 			return err
 		}
 		statement.StmtRet = r
 	}
+	if stmt.GetAlt() != nil {
+		// An alt statement is a forest of statements (no root). Append a statement for each choice
+		// and recurse on their children.
+		for i, choice := range stmt.GetAlt().Choice {
+			statement = stmtSkeleton()
+			statement.StmtIndex = append(statement.StmtIndex, i)
+			statement.StmtAlt = tuple{"choice": choice.Cond}
+			if err := normalizeChildren(choice.Stmt, statement.StmtIndex); err != nil {
+				return err
+			}
+			s.Stmt = append(s.Stmt, statement)
+		}
+		normalizeStatementMeta(s, app, ep, stmt, statement.StmtIndex)
+		return nil
+	}
+
 	s.Stmt = append(s.Stmt, statement)
 
 	normalizeStatementMeta(s, app, ep, stmt, stmtIndex)
@@ -448,7 +489,13 @@ func normalizeEventMeta(s *Schema, app *sysl.Application, event *sysl.Endpoint) 
 	}
 }
 
-func normalizeStatementMeta(s *Schema, app *sysl.Application, ep *sysl.Endpoint, stmt *sysl.Statement, stmtIndex int) {
+func normalizeStatementMeta(
+	s *Schema,
+	app *sysl.Application,
+	ep *sysl.Endpoint,
+	stmt *sysl.Statement,
+	stmtIndex []int,
+) {
 	tags := tags(stmt.Attrs)
 	for _, tag := range tags {
 		s.Tag.Stmt = append(s.Tag.Stmt, StatementTag{

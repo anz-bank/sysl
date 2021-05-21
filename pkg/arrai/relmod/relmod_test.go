@@ -53,63 +53,62 @@ func TestParseReturnPayload(t *testing.T) {
 	t.Parallel()
 
 	ctx, err := withPayloadParser(context.Background())
+	appName := []string{"App"}
 	require.NoError(t, err)
 
-	mustParseReturnPayload := func(p string) StatementReturn {
-		r, err := parseReturnPayload(ctx, p)
+	mustParseReturnPayload := func(p string, appName []string) StatementReturn {
+		r, err := parseReturnPayload(ctx, p, appName)
 		require.NoError(t, err)
 		return r
 	}
 
-	assert.Equal(t, StatementReturn{Status: "ok"}, mustParseReturnPayload("ok"))
+	assert.Equal(t, StatementReturn{Status: "ok"}, mustParseReturnPayload("ok", appName))
 
 	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypePrimitive{"any"}},
-		mustParseReturnPayload("ok <: list of unmatched"),
+		mustParseReturnPayload("ok <: list of unmatched", appName),
 	)
 
 	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypePrimitive{"int"}},
-		mustParseReturnPayload("ok <: int"),
+		mustParseReturnPayload("ok <: int", appName),
 	)
 
 	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypeSet{TypePrimitive{"int"}}},
-		mustParseReturnPayload("ok <: set of int"),
-	)
-
-	assert.Equal(t,
-		StatementReturn{Status: "ok", Type: TypeRef{TypePath: []string{"Type"}}},
-		mustParseReturnPayload("ok <: Type"),
-	)
-
-	assert.Equal(t,
-		StatementReturn{Status: "ok", Type: TypeSequence{TypeRef{TypePath: []string{"Type"}}}},
-		mustParseReturnPayload("ok <: sequence of Type"),
+		mustParseReturnPayload("ok <: set of int", appName),
 	)
 
 	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypeRef{
-			AppName:  []string{"App"},
+			AppName:  appName,
 			TypePath: []string{"Type"},
 		}},
-		mustParseReturnPayload("ok <: App.Type"),
+		mustParseReturnPayload("ok <: Type", appName),
+	)
+
+	assert.Equal(t,
+		StatementReturn{Status: "ok", Type: TypeSequence{TypeRef{
+			AppName:  appName,
+			TypePath: []string{"Type"},
+		}}},
+		mustParseReturnPayload("ok <: sequence of Type", appName),
 	)
 
 	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypeRef{
-			AppName:  []string{"Namespace", "App"},
+			AppName:  []string{"Other"},
 			TypePath: []string{"Type"},
 		}},
-		mustParseReturnPayload("ok <: Namespace::App.Type"),
+		mustParseReturnPayload("ok <: Other.Type", appName),
 	)
 
 	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypeRef{
-			AppName:  []string{"A"},
-			TypePath: []string{"B"},
+			AppName:  []string{"Namespace", "Other"},
+			TypePath: []string{"Type"},
 		}},
-		mustParseReturnPayload("ok <: A.B"),
+		mustParseReturnPayload("ok <: Namespace::Other.Type", appName),
 	)
 
 	assert.Equal(t,
@@ -124,7 +123,7 @@ func TestParseReturnPayload(t *testing.T) {
 				},
 			},
 		},
-		mustParseReturnPayload(`ok <: int [~tag, k="v", ak=["a1", "a2"]]`),
+		mustParseReturnPayload(`ok <: int [~tag, k="v", ak=["a1", "a2"]]`, appName),
 	)
 
 	assert.Equal(t,
@@ -139,7 +138,7 @@ func TestParseReturnPayload(t *testing.T) {
 				},
 			},
 		},
-		mustParseReturnPayload(`ok <: string [annotation=["as", "an", "array"]]`),
+		mustParseReturnPayload(`ok <: string [annotation=["as", "an", "array"]]`, appName),
 	)
 
 	assert.Equal(t,
@@ -157,7 +156,10 @@ func TestParseReturnPayload(t *testing.T) {
 				},
 			},
 		},
-		mustParseReturnPayload(`ok <: string [annotation=[["or", "as", "an"], ["array", "of", "arrays"]]]`),
+		mustParseReturnPayload(
+			`ok <: string [annotation=[["or", "as", "an"], ["array", "of", "arrays"]]]`,
+			appName,
+		),
 	)
 }
 

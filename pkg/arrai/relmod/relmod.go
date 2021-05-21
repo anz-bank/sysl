@@ -191,19 +191,23 @@ func buildPayloadParser() (rel.Expr, error) {
 	return rel.NewCallExprCurry(scanner, wrapFn, parseFn, txFn), nil
 }
 
-func unpackType(typ rel.Tuple) interface{} {
+func unpackType(typ rel.Tuple, appName []string) interface{} {
 	tuple := typ.(rel.Tuple)
 	//nolint:gocritic
 	if name, ok := tuple.Get("primitive"); ok {
 		return TypePrimitive{Primitive: name.String()}
 	} else if set, ok := tuple.Get("set"); ok {
-		return TypeSet{unpackType(set.(rel.Tuple))}
+		return TypeSet{unpackType(set.(rel.Tuple), appName)}
 	} else if seq, ok := tuple.Get("sequence"); ok {
-		return TypeSequence{unpackType(seq.(rel.Tuple))}
+		return TypeSequence{unpackType(seq.(rel.Tuple), appName)}
 	} else if tuple.HasName("typePath") {
 		ctx := context.Background()
+		name := arrai.ToStrings(tuple.MustGet("appName").Export(ctx))
+		if len(name) == 0 {
+			name = appName
+		}
 		return TypeRef{
-			AppName:  arrai.ToStrings(tuple.MustGet("appName").Export(ctx)),
+			AppName:  name,
 			TypePath: arrai.ToStrings(tuple.MustGet("typePath").Export(ctx)),
 		}
 	} else {
@@ -211,7 +215,7 @@ func unpackType(typ rel.Tuple) interface{} {
 	}
 }
 
-func parseReturnPayload(ctx context.Context, payload string) (StatementReturn, error) {
+func parseReturnPayload(ctx context.Context, payload string, appName []string) (StatementReturn, error) {
 	parse := getPayloadParser(ctx)
 
 	scanner := *parser.NewScanner("")
@@ -230,7 +234,7 @@ func parseReturnPayload(ctx context.Context, payload string) (StatementReturn, e
 	}
 
 	if typ, ok := t.Get("type"); ok && typ.IsTrue() {
-		r.Type = unpackType(typ.(rel.Tuple))
+		r.Type = unpackType(typ.(rel.Tuple), appName)
 	}
 	return r, nil
 }

@@ -47,7 +47,7 @@ func TestNormalize_serializeApp(t *testing.T) {
 	assertNormalizes(t, m, Schema{App: []App{{AppName: appName}}})
 }
 
-func TestNormalize_serializeStmt(t *testing.T) {
+func TestNormalize_serializeStmtAction(t *testing.T) {
 	t.Parallel()
 
 	appName := []string{"foo"}
@@ -64,7 +64,50 @@ func TestNormalize_serializeStmt(t *testing.T) {
 	assertNormalizes(t, m, Schema{
 		App:  []App{{AppName: appName}},
 		Ep:   []Endpoint{{AppName: appName, EpName: "ep"}},
-		Stmt: []Statement{{AppName: appName, EpName: "ep", StmtAction: "action"}},
+		Stmt: []Statement{{AppName: appName, EpName: "ep", StmtAction: "action", StmtIndex: []int{0}}},
+	})
+}
+
+func TestNormalize_serializeStmtAlt(t *testing.T) {
+	t.Parallel()
+
+	appName := []string{"foo"}
+	m := &sysl.Module{Apps: map[string]*sysl.Application{"foo": {
+		Name: &sysl.AppName{Part: appName},
+		Endpoints: map[string]*sysl.Endpoint{"ep": {
+			Name: "ep",
+			Stmt: []*sysl.Statement{
+				{Stmt: &sysl.Statement_Alt{Alt: &sysl.Alt{Choice: []*sysl.Alt_Choice{
+					{
+						Cond: "if",
+						Stmt: []*sysl.Statement{
+							{Stmt: &sysl.Statement_Action{Action: &sysl.Action{Action: "0.0"}}},
+							{Stmt: &sysl.Statement_Action{Action: &sysl.Action{Action: "0.1"}}},
+						},
+					},
+					{
+						Cond: "else",
+						Stmt: []*sysl.Statement{
+							{Stmt: &sysl.Statement_Action{Action: &sysl.Action{Action: "1.0"}}},
+							{Stmt: &sysl.Statement_Action{Action: &sysl.Action{Action: "1.1"}}},
+						},
+					},
+				}}}},
+			},
+		}},
+	}}}
+
+	assertNormalizes(t, m, Schema{
+		App: []App{{AppName: appName}},
+		Ep:  []Endpoint{{AppName: appName, EpName: "ep"}},
+		Stmt: []Statement{
+			{AppName: appName, EpName: "ep", StmtAlt: tuple{"choice": "if"}, StmtIndex: []int{0, 0}},
+			{AppName: appName, EpName: "ep", StmtAction: "0.0", StmtIndex: []int{0, 0, 0}},
+			{AppName: appName, EpName: "ep", StmtAction: "0.1", StmtIndex: []int{0, 0, 1}},
+			{AppName: appName, EpName: "ep", StmtAlt: tuple{"choice": "else"}, StmtIndex: []int{0, 1}},
+			{AppName: appName, EpName: "ep", StmtAction: "1.0", StmtIndex: []int{0, 1, 0}},
+			{AppName: appName, EpName: "ep", StmtAction: "1.1", StmtIndex: []int{0, 1, 1}},
+		},
 	})
 }
 

@@ -55,7 +55,7 @@ type Param struct {
 type Statement struct {
 	AppName     []string
 	EpName      string
-	StmtIndex   int
+	StmtIndex   []int
 	StmtParent  StatementParent        `arrai:",zeroempty"`
 	StmtAction  string                 `arrai:",zeroempty"`
 	StmtCall    map[string]interface{} `arrai:",zeroempty"`
@@ -209,7 +209,7 @@ type StatementAnnotation struct {
 	EpName        string
 	StmtAnnoName  string
 	StmtAnnoValue interface{} // string, number, array of self
-	StmtIndex     int
+	StmtIndex     []int
 }
 
 type EventAnnotation struct {
@@ -269,7 +269,7 @@ type ParamTag struct {
 type StatementTag struct {
 	AppName   []string
 	EpName    string
-	StmtIndex int
+	StmtIndex []int
 	StmtTag   string
 }
 
@@ -331,7 +331,7 @@ type ParamContext struct {
 type StatementContext struct {
 	AppName   []string
 	EpName    string
-	StmtIndex int
+	StmtIndex []int
 	StmtSrc   SourceContext
 	StmtSrcs  []SourceContext
 }
