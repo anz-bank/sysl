@@ -75,6 +75,11 @@ func TestParseReturnPayload(t *testing.T) {
 	)
 
 	assert.Equal(t,
+		StatementReturn{Status: "ok", Type: TypePrimitive{"int"}},
+		mustParseReturnPayload("int", appName),
+	)
+
+	assert.Equal(t,
 		StatementReturn{Status: "ok", Type: TypeSet{TypePrimitive{"int"}}},
 		mustParseReturnPayload("ok <: set of int", appName),
 	)

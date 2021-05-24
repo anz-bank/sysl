@@ -225,8 +225,12 @@ func parseReturnPayload(ctx context.Context, payload string, appName []string) (
 	}
 	t := out.(rel.Tuple)
 
+	status := "ok"
+	if v := t.MustGet("status"); v.IsTrue() {
+		status = v.String()
+	}
 	r := StatementReturn{
-		Status: t.MustGet("status").String(),
+		Status: status,
 		Attr: StatementReturnAttrs{
 			Modifier: arrai.ToStrings(t.MustGet("modifier").Export(ctx)),
 			Nvp:      arrai.ToInterfaceMap(t.MustGet("nvp").Export(ctx)),
