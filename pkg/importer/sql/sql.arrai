@@ -127,7 +127,7 @@ ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]"
 
 SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | INT64     = ("BIGINT" | "INT64")
-                     | INT       = "INT"
+                     | INT       = ("INTEGER" | "INT")
                      | FLOAT64   = ("FLOAT64" | "DOUBLE")
                      | FLOAT     = "FLOAT"
                      | DECIMAL   = (("DECIMAL" | "DEC" | "FIXED" | "NUMERIC") ("(" precision=int_value "," scale=int_value ")")?)
@@ -135,6 +135,7 @@ SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | DATE      = "DATE"
                      | STRING    = (("TEXT" | "VARCHAR" | "STRING") ("(" length ")")?)
                      | BYTES     = ("BYTES" ("(" length ")")? | "BLOB" | "LONGBLOB")
+                     | UUID      = "UUID"
                      ;
 
 length              -> (int_value|"MAX");
@@ -200,6 +201,8 @@ let evalType = \parsed
         (DATETIME: x, ...): (type: "datetime", length: evalLength(x.length?:0)),
         (STRING: x, ...):   (type: "string", length: evalLength(x.length?:0)),
         (BYTES: x, ...):    (type: "bytes", length: evalLength(x.length?:0)),
+        # TODO: Tag with ~uuid.
+        (UUID: x, ...):     (type: "string", length: evalLength(x.length?:0)),
         _:                  //error($`unknown type: ${//fmt.pretty(data.scalar)}`)
     };
     (

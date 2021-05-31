@@ -95,7 +95,8 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
                 {:macro:CREATE TABLE t (c BOOLEAN):},
             ],
             (type: 'int'): [
-                {:macro:CREATE TABLE t (c INT):}
+                {:macro:CREATE TABLE t (c INT):},
+                {:macro:CREATE TABLE t (c INTEGER):},
             ],
             (type: 'int64'): [
                 {:macro:CREATE TABLE t (c BIGINT):},
@@ -128,6 +129,8 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
                 {:macro:CREATE TABLE t (c TEXT):},
                 {:macro:CREATE TABLE t (c STRING):},
                 {:macro:CREATE TABLE t (c VARCHAR):},
+                # TODO: Capture UUID-ness as well.
+                {:macro:CREATE TABLE t (c UUID):},
             ],
             (type: 'string', length: 42): [
                 {:macro:CREATE TABLE t (c STRING(42)):},
