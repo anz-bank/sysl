@@ -8,8 +8,10 @@ let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 
 let grammar = {://grammar.lang.wbnf:
 ddl                 -> stmt=(create_database
+                            |select
                             |create_table
                             |create_index
+                            |create_view
                             |create_sequence
                             |create_function
                             |create_trigger
@@ -17,6 +19,7 @@ ddl                 -> stmt=(create_database
                             |update_table
                             |drop_table
                             |drop_index
+                            |drop_view
                             |insert
                             |use
                             |set
@@ -46,9 +49,13 @@ on_action           -> CASCADE     = "CASCADE"
                      | SET_DEFAULT = "SET" "DEFAULT";
 
 create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED")? "INDEX" index_name
-                       "ON" table_name "(" key_parts ")" storing_clause? ","? interleaving_clause?;
+                       "ON" table_name "(" key_parts ")"
+                       ("WHERE" condition)?
+                       storing_clause? ","? interleaving_clause?;
 storing_clause      -> "STORING" "(" column_name:",",? ")";
 interleaving_clause -> "INTERLEAVE" "IN" table_name;
+
+create_view         -> "CREATE" ("OR" "REPLACE")? "VIEW" view_name "AS" select;
 
 create_sequence     -> "CREATE" "SEQUENCE" if_not_exists? sequence_name sequence_opt*;
 sequence_opt        -> "START" "WITH" \d+
@@ -89,12 +96,12 @@ condition           -> column_name (("IS" "NOT"? NULL) | comparison value);
 comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
 
 
-drop_table          -> "DROP" "TABLE" table_name;
-
-drop_index          -> "DROP" "INDEX" index_name;
+drop_table          -> "DROP" "TABLE" if_exists? table_name;
+drop_index          -> "DROP" "INDEX" if_exists? index_name;
+drop_view           -> "DROP" "VIEW" if_exists? view_name;
 
 insert              -> "INSERT" "INTO" table_name "(" column_name:"," ")"
-                       "VALUES" "(" value:"," ")" on_conflict?;
+                       "VALUES" ("(" value:"," ")"):"," on_conflict?;
 on_conflict         -> "ON" "CONFLICT" "(" column_name:"," ")" conflict_action?;
 conflict_action     -> "DO" "NOTHING"; // TODO: "DO" "UPDATE" "SET"
 
@@ -111,6 +118,8 @@ right               -> "USAGE"
 use                 -> "USE" name;
 set                 -> "SET" name "=" value;
 
+select              -> "SELECT" [^;:]*;
+
 //# Spanner
 options_def         -> "OPTIONS" "("(option):",",? ")";
 option              -> k="allow_commit_timestamp" "=" v=("true"|"false");
@@ -120,6 +129,7 @@ attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) (NULL | NOT_NULL)? default?;
 default             -> "DEFAULT" value;
 generated           -> "GENERATED" "ALWAYS" "AS" expr ("VIRTUAL" | "STORED");
 expr                -> [^()]* "(" [^()]* expr? [^()]* ")";
+if_exists           -> "IF" "EXISTS";
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
 ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]"
@@ -145,20 +155,24 @@ table_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 constraint_name     -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 column_name         -> /{`[^`]*`|[$@A-Za-z_][0-9$@A-Za-z_]*}; //`
 index_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
+view_name           -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 sequence_name       -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
 value               -> int_value
                      | bool_value
                      | string_value
                      | time_value
+                     | id_value
                      | NULL
                      | CURRENT_TIMESTAMP;
 int_value           -> hex_value|decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
 bool_value          -> "TRUE" | "FALSE";
-string_value        -> ('"' [^"]* '"' | "'" [^']* "'"); //'
-time_value          -> "NOW" "(" ")" "at" "time" "zone" string_value;
+string_value        -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //'
+time_value          -> "NOW" "(" ")" ("at" "time" "zone" string_value)?;
+id_value            -> ("NEWID" "(" ")")
+                     | ("uuid_generate_v1" "(" ")" | "uuid_generate_v4" "(" ")");
 
 NULL                -> "NULL";
 NOT_NULL            -> "NOT" NULL;
@@ -379,6 +393,14 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
         ),
     ),
 
+    (create_view: val, ...): (
+        stmt: "create_view",
+        data: (
+            name: val.view_name.'' rank (:.@),
+            as: val.select,
+        ),
+    ),
+
     (create_database: val, ...): (
         stmt: "create_database",
         data: (
@@ -404,9 +426,15 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
         data: val.index_name.'' rank (:.@),
     ),
 
+    (drop_view: val, ...): (
+        stmt: "drop_view",
+        data: val.view_name.'' rank (:.@),
+    ),
+
     # Ignore non-DDL statements.
     (:use, ...): {},
     (:set, ...): {},
+    (:select, ...): {},
     (:insert, ...): {},
     (:grant, ...): {},
     (:update_table, ...): {},

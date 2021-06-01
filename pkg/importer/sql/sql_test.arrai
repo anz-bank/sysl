@@ -86,6 +86,12 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
         ,
     ),
 
+    # TODO: Include views in model.
+    view: (
+        create: ({:macro:CREATE VIEW v AS SELECT stuff:}) = emptyModel,
+        drop: ({:macro:DROP VIEW v:}) = emptyModel,
+    ),
+
     scalar_types:
         let colType = \m (m.entities single).attributes(0);
         # Map of Sysl types to single-column tables with equivalent SQL types.
@@ -151,11 +157,17 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
     ,
 
     values:
-        let  insert = {:macro:INSERT INTO t (c) VALUES (
-            "string", 'string', "", -42, 0, 42, -0x2A, 0x0, 0x2A,
-            TRUE, FALSE, NULL, CURRENT_TIMESTAMP, NOW() at time zone 'foo'
-        ):};
+        let insert = {:macro:INSERT INTO t (c) VALUES (
+            "string", 'string', "it""s", 'it''s', "", -42, 0, 42, -0x2A, 0x0, 0x2A,
+            TRUE, FALSE, NULL, CURRENT_TIMESTAMP, NOW(), NOW() at time zone 'foo',
+            NEWID(), uuid_generate_v1(), uuid_generate_v4()
+        ), (0):};
         # Assert that the values were all parsed, but don't expect a model.
         insert = emptyModel
+    ,
+
+    select:
+        let select = {:macro:SELECT a FROM b NATURAL JOIN c; SELECT;:};
+        select = emptyModel
     ,
 )
