@@ -25,5 +25,5 @@ jobs:
           # with the repository are on behalf of the Github-actions bot.
           # The operations act by Github-actions bot cannot trigger a new workflow run.
           # More details: https://help.github.com/en/actions/reference/events-that-trigger-workflows#about-workflow-events
-          GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true

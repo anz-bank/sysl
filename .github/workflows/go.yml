@@ -193,20 +193,3 @@ jobs:
 
       - name: Check tidy
         run: make check-clean
-
-  downstream:
-    name: Test downstream repos
-    runs-on: ubuntu-latest
-    container: golang:1.14-stretch
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/...
-
-      - name: Run downstream tests
-        env:
-          DOWNSTREAM_TEST: ${{ secrets.DOWNSTREAM_TEST }}
-          ORG_GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
-        run: eval "${DOWNSTREAM_TEST:-echo 'no downstream repos to test'}"

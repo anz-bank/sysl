@@ -52,7 +52,7 @@ jobs:
           version: v0.126.0
           args: release --rm-dist --debug -f .goreleaser.yml
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push docker image
         uses: docker/build-push-action@v1
