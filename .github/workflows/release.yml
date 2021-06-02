@@ -19,8 +19,10 @@ jobs:
         with:
           go-version: 1.13
 
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Install go-bindata
         run: go get github.com/anz-bank/go-bindata/... && go mod tidy
@@ -37,9 +39,9 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Validate goreleaser config
-        uses: goreleaser/goreleaser-action@v1.3.1
+        uses: goreleaser/goreleaser-action@v2
         with:
-          version: v0.126.0
+          version: latest
           args: check -f .goreleaser.yml
 
       - name: Set GOVERSION env var
@@ -47,9 +49,9 @@ jobs:
 
       # GoReleaser release process is customized in `.goreleaser.yml` file
       - name: Release binaries via goreleaser
-        uses: goreleaser/goreleaser-action@v1.3.1
+        uses: goreleaser/goreleaser-action@v2
         with:
-          version: v0.126.0
+          version: latest
           args: release --rm-dist --debug -f .goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
