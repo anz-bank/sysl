@@ -21,6 +21,7 @@ ddl                 -> stmt=(create_database
                             |drop_index
                             |drop_view
                             |insert
+                            |delete
                             |use
                             |set
                             |grant):";"? ";"? \s*;
@@ -104,6 +105,8 @@ insert              -> "INSERT" "INTO" table_name "(" column_name:"," ")"
                        "VALUES" ("(" value:"," ")"):"," on_conflict?;
 on_conflict         -> "ON" "CONFLICT" "(" column_name:"," ")" conflict_action?;
 conflict_action     -> "DO" "NOTHING"; // TODO: "DO" "UPDATE" "SET"
+
+delete              -> "DELETE" "FROM" table_name ("WHERE" condition)?;
 
 grant               -> "GRANT" right:"," "ON" ("ALL" ("TABLES"|"SEQUENCES"|"FUNCTIONS") "IN")?
                        "SCHEMA" schema=name "TO" '"' subject=[^"]+ '"'; //'

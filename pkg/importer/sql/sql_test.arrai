@@ -170,4 +170,15 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
         let select = {:macro:SELECT a FROM b NATURAL JOIN c; SELECT;:};
         select = emptyModel
     ,
+
+    delete: (
+        bare:
+            let delete = {:macro:DELETE FROM t:};
+            delete = emptyModel
+        ,
+        where:
+            let delete = {:macro:DELETE FROM t WHERE c = 'x':};
+            delete = emptyModel
+        ,
+    ),
 )
