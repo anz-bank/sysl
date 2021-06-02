@@ -27,9 +27,6 @@ jobs:
       - name: Install go-bindata
         run: go get github.com/anz-bank/go-bindata/... && go mod tidy
 
-      - name: Unshallow
-        run: git fetch --prune --unshallow
-
       - name: Check go.mod and go.sum are tidy
         run: make check-clean
 
