@@ -4,6 +4,8 @@ ARG ARRAI_IMAGE=anzbank/arrai
 FROM ${ARRAI_IMAGE}:${ARRAI_VERSION} AS stage
 RUN go get github.com/anz-bank/go-bindata/...
 
+RUN apk add --no-cache make
+
 WORKDIR /sysl
 COPY . .
 RUN make build
