@@ -2,7 +2,6 @@
 Match your system implementation and design as consistent as possible
 
 [![Latest Release](https://img.shields.io/github/v/release/anz-bank/sysl?color=%2300ADD8)](https://github.com/anz-bank/sysl/releases)
-[![Codecov](https://img.shields.io/codecov/c/github/anz-bank/sysl/master.svg)](https://codecov.io/gh/anz-bank/sysl/branch/master)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fanz-bank%2Fsysl.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fanz-bank%2Fsysl?ref=badge_shield)
 
 [![GitHub Actions Release status](https://github.com/anz-bank/sysl/workflows/Release/badge.svg)](https://github.com/anz-bank/sysl/actions?query=workflow%3ARelease)
