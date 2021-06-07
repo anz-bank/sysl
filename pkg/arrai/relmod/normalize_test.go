@@ -51,20 +51,34 @@ func TestNormalize_serializeStmtAction(t *testing.T) {
 	t.Parallel()
 
 	appName := []string{"foo"}
-	m := &sysl.Module{Apps: map[string]*sysl.Application{"foo": {
-		Name: &sysl.AppName{Part: appName},
-		Endpoints: map[string]*sysl.Endpoint{"ep": {
-			Name: "ep",
-			Stmt: []*sysl.Statement{
-				{Stmt: &sysl.Statement_Action{Action: &sysl.Action{Action: "action"}}},
-			},
-		}},
-	}}}
+	action := sysl.Statement_Action{Action: &sysl.Action{Action: "action"}}
+	m := buildStmt(appName, &sysl.Statement{Stmt: &action})
 
 	assertNormalizes(t, m, Schema{
 		App:  []App{{AppName: appName}},
 		Ep:   []Endpoint{{AppName: appName, EpName: "ep"}},
 		Stmt: []Statement{{AppName: appName, EpName: "ep", StmtAction: "action", StmtIndex: []int{0}}},
+	})
+}
+
+func TestNormalize_serializeStmtCall(t *testing.T) {
+	t.Parallel()
+
+	appName := []string{"foo"}
+	targetApp := []string{"bar"}
+	targetEp := "targetEp"
+	m := buildStmt(appName, &sysl.Statement{Stmt: &sysl.Statement_Call{Call: &sysl.Call{
+		Target:   &sysl.AppName{Part: targetApp},
+		Endpoint: targetEp,
+	}}})
+
+	assertNormalizes(t, m, Schema{
+		App: []App{{AppName: appName}},
+		Ep:  []Endpoint{{AppName: appName, EpName: "ep"}},
+		Stmt: []Statement{{AppName: appName, EpName: "ep", StmtIndex: []int{0}, StmtCall: tuple{
+			"appName": targetApp,
+			"epName":  targetEp,
+		}}},
 	})
 }
 
@@ -109,6 +123,16 @@ func TestNormalize_serializeStmtAlt(t *testing.T) {
 			{AppName: appName, EpName: "ep", StmtAction: "1.1", StmtIndex: []int{0, 1, 1}},
 		},
 	})
+}
+
+func buildStmt(appName []string, stmt *sysl.Statement) *sysl.Module {
+	return &sysl.Module{Apps: map[string]*sysl.Application{"foo": {
+		Name: &sysl.AppName{Part: appName},
+		Endpoints: map[string]*sysl.Endpoint{"ep": {
+			Name: "ep",
+			Stmt: []*sysl.Statement{stmt},
+		}},
+	}}}
 }
 
 func assertNormalizes(t *testing.T, m *sysl.Module, s Schema) {

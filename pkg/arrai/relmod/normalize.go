@@ -187,7 +187,10 @@ func normalizeStatement(
 		statement.StmtAction = stmt.GetAction().Action
 	}
 	if stmt.GetCall() != nil {
-		statement.StmtCall = tuple{"appName": app.Name.Part, "epName": ep.Name}
+		statement.StmtCall = tuple{
+			"appName": stmt.GetCall().Target.Part,
+			"epName":  stmt.GetCall().Endpoint,
+		}
 	}
 	if stmt.GetCond() != nil {
 		statement.StmtCond = tuple{"test": stmt.GetCond().Test}
