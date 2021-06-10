@@ -1,5 +1,4 @@
 # A collection of helper functions for arr.ai.
-#
 # If generally useful, these should gradually migrate to a more standard library.
 
 # TODO: this should be part of stdlib
@@ -85,7 +84,143 @@ let nativeDataTypes = {
     'date', 'bool', 'decimal', 'datetime', 'bytes'
 };
 
+# `appToParts` splits an application name into parts. For example:
+# `appToParts('Foo :: Bar :: Baz')` returns `['Foo', 'Bar', 'Baz']`.
 let appToParts = \appName //seq.split('::', appName) >> trimWhitespace(.);
+
+# `joinAppName` joins an application name into a string. For example:
+# `joinAppName(['Foo', 'Bar', 'Baz'])` returns `'Foo :: Bar :: Baz'`.
+let joinAppName = \name
+    //seq.join(' :: ', name);
+
+# `ancestorAnno` returns the first annotation encountered when ascending the hierarchy from the
+# item provided. The hierarchy includes not only items within an application but also parent
+# applications that use the convention of a common path. For example, given the Sysl specification
+# below, if a statement item is given, the function will search the items in the following order:
+# 1. The statement
+# 2: The endpoint
+# 3: The app: Foo::Bar::Baz
+# 4: The app: Foo::Bar
+# 5: The app: Foo
+# 
+# Foo: ...               # app
+# Foo :: Bar: ...        # app
+# Foo :: Bar :: Baz:     # app
+#   Endpoint:            # endpoint
+#     Other <- Endpoint  # statement
+# 
+# `rel` is the relational model to query for ancestors.
+# `item` is an item from the relational model to search.
+# `name` is the name of the annotation to search for.
+# `path` is true if parent application paths (e.g. Foo::Bar -> Foo) should be searched.
+let rec ancestorAnnoWithPath = \rel \item \name \path
+    let (:anno, :ancestor) = cond item {
+        (:appName, :epName, :stmtIndex, ...): (
+            anno: rel.anno.stmt <-- {(:appName, :epName, :stmtIndex, stmtAnnoName: name)} => .stmtAnnoValue,
+            ancestor: \item ancestorAnnoWithPath(rel, (:item.appName, :item.epName), name, path) ),
+        (:appName, :epName, ...): (
+            anno: rel.anno.ep <-- {(:appName, :epName, epAnnoName: name)} => .epAnnoValue,
+            ancestor: \item ancestorAnnoWithPath(rel, (:item.appName), name, path) ),
+        (appName:[n], ...): (
+            anno: rel.anno.app where .appName = [n] && .appAnnoName = name => .appAnnoValue,
+            ancestor: \item {} ),
+        (appName:[...p, n], ...): (
+            anno: rel.anno.app where .appName = p ++ [n] && .appAnnoName = name => .appAnnoValue,
+            ancestor: \item cond { path: ancestorAnnoWithPath(rel, (appName:p), name, path) } ),
+    };
+    cond anno { {a}: a, _: ancestor(item) };
+
+# `ancestorAnno` returns the first annotation encountered when ascending the hierarchy from the
+# item provided. For example, given the Sysl specification below, if a statement item is given, the
+# function will first search the statement for the annotation, then the endpoint, then the
+# application, returning the value of the first instance at which it is found:
+# 
+# Foo :: Bar :: Baz:     # app
+#   Endpoint:            # endpoint
+#     Other <- Endpoint  # statement
+# 
+# `rel` is the relational model to query for ancestors.
+# `item` is an item from the relational model to search.
+# `name` is the name of the annotation to search for.
+let ancestorAnno = \rel \item \name
+    ancestorAnnoWithPath(rel, item, name, false);
+
+# `appNamePatternMatch` returns whether or not the given application name matches the given pattern.
+# 
+# The pattern is comprised of parts segmented by double colons. For example, the following pattern
+# is comprised of two parts, `Foo` and `Bar`:
+# Foo::Bar
+# 
+# Whitespace surrounding the segments is ignored. For example, the following pattern is equivalent
+# to the pattern above:
+# Foo :: Bar
+# 
+# Individual parts are either comprised of explicit names (like `Foo`) or a single asterisk `*` or
+# a double asterisk `**`. A single asterisk matches a single part within the given application name
+# whereas a double asterisk matches one or more parts within the application name. Consider the
+# following examples:
+# 
+# Name                  Pattern                 Match
+# Foo :: Bar            Foo :: Bar              true
+# Foo :: Bar            Foo :: Baz              false
+# Foo :: Bar            Foo :: *                true
+# Foo :: Bar            Foo :: **               true
+# Foo :: Bar :: Baz     Foo :: *                false
+# Foo :: Bar :: Baz     Foo :: **               true
+# Foo :: Bar :: Baz     Foo :: * :: Baz         true
+# 
+# `appName` is name of the application to match.
+# `pattern` is the pattern to matches against the application name.
+# For example:
+# appNamePatternMatch(['Foo', 'Bar'], 'Foo::*')  # true
+# appNamePatternMatch(['Foo', 'Bar'], '*::Foo')  # false
+let appNamePatternMatch = \appName \pattern
+    let patternParts = appToParts(pattern);
+    cond {
+        !//seq.contains('*', pattern):
+            # Optimisation: no pattern, use straight match.
+            appName = patternParts,
+        _:
+            # Attempt to match using a regular expression. The approach here is to convert the
+            # application name parts into a single string prefixed by a given character (e.g. >Foo>Bar)
+            # then convert the pattern parts into a appropriate regular expression pattern.
+            let prefix = '>';
+            let regexParts = patternParts >> \part
+                cond part { '**': prefix ++ '.+', '*': prefix ++ '[^' ++ prefix ++ ']+', _: prefix ++ part };
+            let regex = '^' ++ //seq.join('', regexParts) ++ '$';
+            let match = prefix ++ //seq.join(prefix, appName);
+            !!//re.compile(regex).match(match)
+    };
+
+# `appEpPatternMatch` returns whether or not the given application and endpoint satisfy the given pattern.
+# 
+# The pattern is comprised of the following grammar:
+# app_pattern (<- ep_name)?
+# 
+# If the pattern includes an endpoint then both the application and endpoint must match the provided
+# values. If the pattern does not include an endpoint then the endpoint name is ignored and the
+# match is made against the application only.
+# 
+# Example usage:
+# appEpPatternMatch(['Foo', 'Bar'], 'Ep', 'Foo :: Bar <- Ep')       # True. Application and endpoint match.
+# appEpPatternMatch(['Foo', 'Bar'], 'Ep', '** <- Ep')               # True. Application and endpoint match.
+# appEpPatternMatch(['Foo', 'Bar'], 'Ep', 'Foo :: Bar')             # True. Application match, no endpoint match requested.
+# appEpPatternMatch(['Foo', 'Bar'], 'Ep', 'Foo :: Baz' <- Ep)       # False. Application doesn't match.
+# appEpPatternMatch(['Foo', 'Bar'], 'Ep', 'Foo :: *' <- Ep2)        # False. Endpoint doesn't match.
+# 
+# `appName` is the name of the application that the pattern must match.
+# `epName` is the name of the endpoint that the pattern must match (if an endpoint is included in the pattern).
+# `pattern` is the pattern to match.
+let appEpPatternMatch = \appName \epName \pattern
+
+    # Extract the app name and endpoint from the pattern.
+    let split = //seq.split("<-", pattern);
+    let appNamePattern = split(0);
+    let epNamePattern = cond split { [_, ep]: trimWhitespace(ep) };
+
+    # Return if the condition matches.
+    appNamePatternMatch(appName, appNamePattern) && (!epNamePattern || epName = epNamePattern);
+
 
 # `dictMergeResolve` recursively merges two dictionaries into a single dictionary, combining
 # values that themselves are dictionaries. In instances where both dictionaries define the same key
@@ -127,6 +262,11 @@ let dictMerge = \a \b
     :resolveValidIdentifier,
     :nativeDataTypes,
     :appToParts,
+    :joinAppName,
+    :ancestorAnnoWithPath,
+    :ancestorAnno,
+    :appNamePatternMatch,
+    :appEpPatternMatch,
     :dictMergeResolve,
     :dictMerge,
 )

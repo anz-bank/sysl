@@ -1,4 +1,6 @@
 let util = //{./util};
+let sysl = //{./sysl};
+let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/hierarchy.sysl.pb}));
 
 let _sum = \z \i z + i;
 
@@ -55,5 +57,103 @@ let fail = \a \b //test.assert.false(true);
             let expected = {1: 'ab'};
             let actual = util.dictMergeResolve({1: 'a'}, {1: 'b'}, \x \y \k x(k) ++ y(k));
             //test.assert.equal(expected, actual),
+    ),
+
+    # Test retrieving an ancestor annotation that includes searching the path.
+    ancestorAnnoWithPath: (
+       statementToAncestorApp: (
+           let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo', true);
+           //test.assert.equal('Foo', actual)
+       ),
+       statementToApp: (
+           let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo_bar_baz', true);
+           //test.assert.equal('FooBarBaz', actual)
+       ),
+       statementToEndpoint: (
+           let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo_bar_baz_endpoint', true);
+           //test.assert.equal('FooBarBazEndpoint', actual)
+       ),
+       statementToStatement: (
+           let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo_bar_baz_endpoint_statement', true);
+           //test.assert.equal('FooBarBazEndpointStatement', actual)
+       ),
+       endpointToAncestorApp: (
+           let item = (rel.ep where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo', true);
+           //test.assert.equal('Foo', actual)
+       ),
+       appToAncestorApp: (
+           let item = (rel.app where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo', true);
+           //test.assert.equal('Foo', actual)
+       ),
+       none: (
+           let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'none', true);
+           //test.assert.equal({}, actual)
+       ),
+       missingAncestor: (
+           let item = (rel.app where .appName = ['Foo', 'Bar', 'Baz', 'Missing', 'Bop']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo', true);
+           //test.assert.equal('Foo', actual)
+       ),
+       withoutPath: (
+           let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+           let actual = util.ancestorAnnoWithPath(rel, item, 'foo', false);
+           //test.assert.equal({}, actual)
+       ),
+    ),
+
+    # Test retrieving an ancestor annotation.
+    ancestorAnno: (
+        statementToAncestorApp: (
+            let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+            let actual = util.ancestorAnno(rel, item, 'foo');
+            //test.assert.equal({}, actual)
+        ),
+        statementToApp: (
+            let item = (rel.stmt where .appName = ['Foo', 'Bar', 'Baz']) single;
+            let actual = util.ancestorAnno(rel, item, 'foo_bar_baz');
+            //test.assert.equal('FooBarBaz', actual)
+        ),
+    ),
+
+    # Test matching an application name against a pattern.
+    appNamePatternMatch: (
+        let case = \appName \pattern \expected (:appName, :pattern, :expected);
+        (
+            explicitNoWhitespace:       case(['Foo', 'Bar'],        'Foo::Bar',             true),
+            explicit:                   case(['Foo', 'Bar'],        'Foo :: Bar',           true),
+            explicitInvalid:            case(['Foo', 'Bar'],        'Foo :: Baz',           false),
+            singleMatchEnd:             case(['Foo', 'Bar'],        'Foo :: *',             true),
+            singleMatchStart:           case(['Foo', 'Bar'],        '* :: Bar',             true),
+            singleMatchMiddle:          case(['Foo', 'Bar', 'Baz'], 'Foo :: * :: Baz',      true),
+            singleMatchMultiple:        case(['Foo', 'Bar'],        '* :: *',               true),
+            singleMatchNotEnough:       case(['Foo', 'Bar'],        '*',                    false),
+            singleMatchSingle:          case(['Foo'],               '*',                    true),
+            multipleMatchSingle:        case(['Foo', 'Bar', 'Baz'], 'Foo :: Bar :: **',     true),
+            multipleMatchMultiple:      case(['Foo', 'Bar', 'Baz'], 'Foo :: **',            true),
+            multipleMatchStart:         case(['Foo', 'Bar', 'Baz'], '** :: Baz',            true),
+            multipleMatchMiddle:        case(['Foo', 'Bar', 'Baz'], 'Foo :: ** :: Baz',     true),
+            multipleMatchInvalid:       case(['Foo', 'Bar', 'Baz'], 'Baz :: **',            false),
+            multipleMatchAll:           case(['Foo', 'Bar', 'Baz'], '**',                   true),
+        ) :> //test.assert.equal(.expected, util.appNamePatternMatch(.appName, .pattern))
+    ),
+
+    # Test matching an application and endpoint against a pattern.
+    appEpPatternMatch: (
+        let case = \appName \epName \pattern \expected (:appName, :epName, :pattern, :expected);
+        (
+            application:            case(['Foo', 'Bar'],    'Ep',   'Foo :: Bar',           true),
+            applicationPattern:     case(['Foo', 'Bar'],    'Ep',   'Foo :: *',             true),
+            applicationEp:          case(['Foo', 'Bar'],    'Ep',   'Foo :: Bar <- Ep',     true),
+            applicationEpPattern:   case(['Foo', 'Bar'],    'Ep',   'Foo :: * <- Ep',       true),
+            applicationInvalid:     case(['Foo', 'Bar'],    'Ep',   'Foo :: Baz',           false),
+            epInvalid:              case(['Foo', 'Bar'],    'Ep',   'Foo :: Bar <- Ep2',    false),
+        ) :> //test.assert.equal(.expected, util.appEpPatternMatch(.appName, .epName, .pattern))
     ),
 )

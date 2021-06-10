@@ -1,0 +1,12 @@
+Foo [foo = "Foo"]:
+    ...
+
+Foo :: Bar [foo_bar = "FooBar"]:
+    ...
+
+Foo :: Bar :: Baz [foo_bar_baz = "FooBarBaz"]:
+    Endpoint [foo_bar_baz_endpoint = "FooBarBazEndpoint"]:
+        Foo :: Bar <- Action [foo_bar_baz_endpoint_statement = "FooBarBazEndpointStatement"]
+
+Foo :: Bar :: Baz :: Missing :: Bop [foo_bar_baz_missing_bop = "FooBarBazMissingBop"]:
+    ...
