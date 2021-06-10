@@ -10,7 +10,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
-//sequencePair keeps track of the application pairs and the associated endpoint we visit during the recursion
+// sequencePair keeps track of the application pairs and the associated endpoint we visit during the recursion
 type sequencePair struct {
 	firstApp, secondApp, endPoint string
 }
@@ -19,13 +19,13 @@ var startElse = regexp.MustCompile("^else.*")
 var isElse = regexp.MustCompile("^else$")
 var isLoop = regexp.MustCompile("^loop.*")
 
-//GenerateSequenceDiagram accepts an application name and an endpoint as inputs and returns a string and an error
-//The resulting string is the mermaid code for the sequence diagram for that application and endpoint
+// GenerateSequenceDiagram accepts an application name and an endpoint as inputs and returns a string and an error
+// The resulting string is the mermaid code for the sequence diagram for that application and endpoint
 func GenerateSequenceDiagram(m *sysl.Module, appname string, epname string) (string, error) {
 	return generateSequenceDiagramHelper(m, syslutil.CleanAppName(appname), epname, "...", 1, &[]sequencePair{}, true)
 }
 
-//generateSequenceDiagramHelper is a helper which has additional arguments which need not be entered by the user
+// generateSequenceDiagramHelper is a helper which has additional arguments which need not be entered by the user
 func generateSequenceDiagramHelper(m *sysl.Module, appName string, epName string,
 	previousApp string, indent int, sequencePairs *[]sequencePair, theStart bool) (string, error) {
 	var result string
@@ -43,8 +43,8 @@ func generateSequenceDiagramHelper(m *sysl.Module, appName string, epName string
 	return result, nil
 }
 
-//printSequenceDiagramStatements is where the printing takes place
-//Uses a switch statement to decide what to print and what recursion needs to be done
+// printSequenceDiagramStatements is where the printing takes place
+// Uses a switch statement to decide what to print and what recursion needs to be done
 func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement, appName string,
 	previousApp string, indent int, sequencePairs *[]sequencePair, theStart bool) string {
 	var result string
@@ -113,7 +113,7 @@ func printSequenceDiagramStatements(m *sysl.Module, statements []*sysl.Statement
 	return result
 }
 
-//isValidAppNameAndEndpoint checks if the entered application name and endpoint exists in the sysl module or not
+// isValidAppNameAndEndpoint checks if the entered application name and endpoint exists in the sysl module or not
 func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) error {
 	if _, ok := m.Apps[appName]; !ok {
 		return fmt.Errorf("invalid app name %s", appName)
@@ -124,13 +124,13 @@ func isValidAppNameAndEndpoint(m *sysl.Module, appName string, epName string) er
 	return nil
 }
 
-//callStatement is a printer to print a call statement
+// callStatement is a printer to print a call statement
 func callStatement(appName string, epName string, nextApp string, indent int) string {
 	return fmt.Sprintf("%s%s ->> %s: %s\n", addIndent(indent),
 		cleanAppName(appName), cleanAppName(nextApp), epName)
 }
 
-//retStatement is a printer to print a return statement
+// retStatement is a printer to print a return statement
 func retStatement(appName string, epName string, previousApp string, indent int, theStart bool) string {
 	if theStart {
 		return fmt.Sprintf("%s%s -->> %s: %s\n", addIndent(indent),
@@ -140,13 +140,13 @@ func retStatement(appName string, epName string, previousApp string, indent int,
 		cleanAppName(appName), cleanAppName(previousApp), epName)
 }
 
-//actionStatement is a printer to print an action statement
+// actionStatement is a printer to print an action statement
 func actionStatement(appName string, action string, indent int) string {
 	return fmt.Sprintf("%s%s ->> %s: %s\n", addIndent(indent),
 		cleanAppName(appName), cleanAppName(appName), action)
 }
 
-//addIndent adds indents based on the input
+// addIndent adds indents based on the input
 func addIndent(indent int) string {
 	var out string
 	for i := 0; i < indent; i++ {

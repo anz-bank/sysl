@@ -812,8 +812,29 @@ Client:
     Server <- Login
 ```
 
-To disable Sysl Modules, set the environment variable
-`SYSL_MODULES=off`.
+Environment variables:
+
+- `SYSL_MODULES`
+
+Setting `SYSL_MODULES` to `on` means Sysl modules are enabled, `off` means disabled. By default, if this is not declared, Sysl modules are enabled.
+
+- `SYSL_TOKENS`
+
+```
+export SYSL_TOKENS=github.com:<GITHUB-PAT>
+```
+
+Setting `SYSL_TOKENS` with tokens (e.g. [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)) for sysl to import specifications from private source via token.
+
+- `SYSL_SSH_PRIVATE_KEY` and `SYSL_SSH_PASSPHRASE`
+
+```
+export SYSL_SSH_PRIVATE_KEY="/ssh/private/key/filepath"
+export SYSL_SSH_PASSPHRASE="abcdef"
+```
+
+Setting `SYSL_SSH_PRIVATE_KEY` with filepath to your [SSH private key](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for sysl to import specifications from private source via SSH.
+
 
 ### Non-sysl file
 

@@ -219,7 +219,7 @@ func (v *DataModelView) DrawTuple(
 	}
 	sort.Strings(attrNames)
 	for _, attrName := range attrNames {
-		//If the first element before the dot isn't what we passed in, then it's referring to another app
+		// If the first element before the dot isn't what we passed in, then it's referring to another app
 		if arr := strings.Split(attrName, "."); len(arr) <= 1 {
 			appName = strings.Split(viewParam.EntityName, ".")[0]
 		} else if arr[0] != appName {
@@ -339,7 +339,7 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 	// *Type_Tuple_ OR *Type_Relation_
 	typeMap := map[string]*sysl.Type{}
 	ignoredTypes := map[string]struct{}{}
-	//typeMap := dataParam.App.GetTypes()
+	// typeMap := dataParam.App.GetTypes()
 	// TODO: Actually put The app/project name and the app in a struct so strings.split and join dont need to be used
 	entityNames := []string{}
 	for _, app := range dataParam.Mod.Apps {

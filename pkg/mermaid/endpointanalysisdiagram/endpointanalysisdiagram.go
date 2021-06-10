@@ -8,24 +8,24 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
-//externalLink keeps track of the statement-endpoint pairs we visit during execution
+// externalLink keeps track of the statement-endpoint pairs we visit during execution
 type externalLink struct {
 	statement, endPoint string
 }
 
-//GenerateEndpointAnalysisDiagram accepts the sysl module and returns a string (and an error if any)
-//The resulting string is the mermaid code for the endpoint analysis for that application and endpoint
+// GenerateEndpointAnalysisDiagram accepts the sysl module and returns a string (and an error if any)
+// The resulting string is the mermaid code for the endpoint analysis for that application and endpoint
 func GenerateEndpointAnalysisDiagram(m *sysl.Module) (string, error) {
 	return generateEndpointAnalysisDiagramHelper(m, &[]externalLink{}, true)
 }
 
-//Similar to the above, but accepts a slice of application names
-//and returns a diagram only including applications specified
+// Similar to the above, but accepts a slice of application names
+// and returns a diagram only including applications specified
 func GenerateMultipleAppEndpointAnalysisDiagram(m *sysl.Module, appNames []string) (string, error) {
 	return generateMultipleAppEndpointAnalysisDiagramHelper(m, mermaid.CleanAppNames(appNames), &[]externalLink{}, true)
 }
 
-//generateEndpointAnalysisDiagram is a helper which has additional arguments which need not be entered by the user
+// generateEndpointAnalysisDiagram is a helper which has additional arguments which need not be entered by the user
 func generateEndpointAnalysisDiagramHelper(m *sysl.Module,
 	externalLinks *[]externalLink, theStart bool) (string, error) {
 	var result string
@@ -71,7 +71,7 @@ func generateMultipleAppEndpointAnalysisDiagramHelper(m *sysl.Module, appNames [
 	return result, nil
 }
 
-//printEndpointAnalysisStatements is used to print the mermaid code for different sysl statements
+// printEndpointAnalysisStatements is used to print the mermaid code for different sysl statements
 func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statement,
 	endPoint string, externalLinks *[]externalLink) string {
 	var result string
@@ -107,7 +107,7 @@ func printEndpointAnalysisStatements(m *sysl.Module, statements []*sysl.Statemen
 	return result
 }
 
-//externalLinksContain checks if the statement-endpoint group have been already visited or not
+// externalLinksContain checks if the statement-endpoint group have been already visited or not
 func externalLinksContain(i []externalLink, ip externalLink) bool {
 	for _, a := range i {
 		if a == ip {

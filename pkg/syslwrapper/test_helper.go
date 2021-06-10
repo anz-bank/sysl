@@ -178,7 +178,7 @@ func MakeOneOf(oneOfType []*sysl.Type) *sysl.Type {
 	}
 }
 
-//TODO relation, set, sequence, notype
+// TODO relation, set, sequence, notype
 func MakeRelation(types map[string]*sysl.Type, primaryKey string, keys []string) *sysl.Type {
 	var relationKeys []*sysl.Type_Relation_Key
 	for _, val := range keys {

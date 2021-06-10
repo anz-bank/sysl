@@ -188,7 +188,7 @@ func getValue(name string, value *sysl.Value) *sysl.Value {
 		return value
 	default:
 		// Should we convert int and bools to string and return?
-		//return eval.UnaryString(value)
+		// return eval.UnaryString(value)
 		return nil
 	}
 	return nil

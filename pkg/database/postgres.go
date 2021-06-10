@@ -20,7 +20,7 @@ func (v *ScriptView) writeCreateSQLForATable(
 	lineNumberMap := map[int32]string{}
 	for columnName := range table.AttrDefs {
 		column := table.AttrDefs[columnName]
-		lineNumber := column.GetSourceContext().GetStart().GetLine() //nolint:staticcheck
+		lineNumber := column.GetSourceContext().GetStart().GetLine() // nolint:staticcheck
 		lineNumberMap[lineNumber] = columnName
 		lineNumbers = append(lineNumbers, lineNumber)
 	}
@@ -60,7 +60,7 @@ func (v *ScriptView) writeModifySQLForATable(
 	primaryKeyExisted := false
 
 	for _, attrNameOld := range attrNamesListOld {
-		//column dropped
+		// column dropped
 		attrTypeOld := attrDefsOld[attrNameOld]
 		attrTypeNew := attrDefsNew[attrNameOld]
 		if attrTypeNew == nil {
@@ -78,7 +78,7 @@ func (v *ScriptView) writeModifySQLForATable(
 		attrTypeOld := attrDefsOld[attrNameNew]
 		attrTypeNew := attrDefsNew[attrNameNew]
 		if attrTypeOld == nil {
-			//attribute added
+			// attribute added
 			var foreignKeyConstraints []string
 			str, isNewColumnPK := v.writeCreateSQLForAColumn(attrTypeNew, tableName, attrNameNew,
 				&primaryKeys, &foreignKeyConstraints, visitedAttributes)
@@ -95,7 +95,7 @@ func (v *ScriptView) writeModifySQLForATable(
 			}
 		}
 		if attrTypeOld != nil {
-			//column retained. Find out it anything changed about the column. And then write alter queries for those columns
+			// column retained. Find out it anything changed about the column. And then write alter queries for those columns
 			primaryKeyChangedByColumn, wasOldPrimaryKey := v.writeModifySQLForAColumn(attrTypeOld, attrTypeNew,
 				tableName, attrNameNew, &primaryKeys, visitedAttributes)
 			if primaryKeyChangedByColumn {
@@ -108,13 +108,13 @@ func (v *ScriptView) writeModifySQLForATable(
 	}
 	pkConstraintName := strings.ToUpper(tableName + "_PK")
 
-	//DROP PK IF it existed and has changed
+	// DROP PK IF it existed and has changed
 	if primaryKeyExisted && primaryKeyChanged {
 		v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s DROP CONSTRAINT %s;\n", tableName, pkConstraintName))
 	}
-	//DELETE COLUMNS
+	// DELETE COLUMNS
 	v.stringBuilder.WriteString(dropColumnQueries)
-	//ADD A PRIMARY KEY
+	// ADD A PRIMARY KEY
 	if primaryKeyChanged {
 		pk := v.getPrimaryKeyString(primaryKeys)
 		v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY(%s);\n",
@@ -211,10 +211,10 @@ func (v *ScriptView) writeModifySQLForAColumn(attrTypeOld, attrTypeNew *sysl.Typ
 			datatype = v.getPostgresDataTypes(syslDataType, attributeSize)
 			v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", tableName,
 				attrName, datatype))
-			//datatype has not changed. Check if the autoincrement has changed
+			// datatype has not changed. Check if the autoincrement has changed
 		} else if isAutoIncrementNew != isAutoIncrementOld {
 			if isAutoIncrementNew {
-				//auto increment added for the attribute. Alter table and put datatype as bigserial
+				// auto increment added for the attribute. Alter table and put datatype as bigserial
 				sequenceName := tableName + "_" + attrName + "_seq"
 				v.stringBuilder.WriteString(fmt.Sprintf("CREATE SEQUENCE %s;\n", sequenceName))
 				v.stringBuilder.WriteString(fmt.Sprintf("ALTER TABLE %s ALTER COLUMN %s TYPE %s;\n", tableName,

@@ -137,7 +137,7 @@ func findAddedDeletedRetainedTables(
 	tableDepthMapOld, tableDepthMapNew map[int][]string) []TableDetails {
 	tableDepthsListNew := makeSortedListOfTableDepth(tableDepthMapNew)
 	var tableWithAction []TableDetails
-	//Add the retained and added tables
+	// Add the retained and added tables
 	for _, depth := range tableDepthsListNew {
 		tableNames := tableDepthMapNew[depth]
 		sort.Strings(tableNames)

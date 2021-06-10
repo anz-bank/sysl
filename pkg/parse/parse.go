@@ -7,22 +7,20 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/env"
-	"github.com/joshcarp/gop/gop"
-
-	"github.com/joshcarp/gop/gop/cli"
-
-	"github.com/imdario/mergo"
-	"github.com/spf13/afero"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	pkgmod "github.com/anz-bank/pkg/mod"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/msg"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/anz-bank/gop/pkg/cli"
+	"github.com/anz-bank/gop/pkg/gop"
+	pkgmod "github.com/anz-bank/pkg/mod"
+	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -131,7 +129,7 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error) {
 	tokensEnv := env.SYSL_TOKENS.Value() // Expects the token to be in form gita.com:<tokena>,gitb.com:<tokenb>
 	var hostTokens []string
-	var cache, proxy string
+	var cache, proxy, privKey, passphrase string
 	if tokensEnv != "" {
 		hostTokens = strings.Split(tokensEnv, ",")
 	}
@@ -146,8 +144,10 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 	if moduleFlag := env.SYSL_MODULES.Value(); moduleFlag != "" && moduleFlag != "false" && moduleFlag != "off" {
 		cache = env.SYSL_CACHE.Value()
 		proxy = env.SYSL_PROXY.Value()
+		privKey = env.SYSL_SSH_PRIVATE_KEY.Value()
+		passphrase = env.SYSL_SSH_PASSPHRASE.Value()
 	}
-	retriever := cli.Default(fs, cache, proxy, tokenmap)
+	retriever := cli.Default(fs, cache, proxy, tokenmap, privKey, passphrase)
 	return p.Parse(filename, retriever)
 }
 

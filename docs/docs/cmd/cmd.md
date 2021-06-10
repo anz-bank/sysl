@@ -89,12 +89,39 @@ Several commands require environment variables to be set before they are able to
 export SYSL_PLANTUML=http://www.plantuml.com/plantuml
 ```
 
+URL of PlantUML server. Sysl depends upon [PlantUML](http://plantuml.com/) for diagram generation.
+
 - `SYSL_MODULES`
 
 ```
 export SYSL_MODULES=on
 ```
 
-Setting `SYSL_MODULES` to `on` means Sysl modules are enabled, `off` means disabled. By default, if this is not declared, Sysl modules are enabled.
+Whether the sysl modules is enabled. Enable by default, set to "off" to disable sysl modules.
+
+- `SYSL_CACHE`
+
+Cache location in current directory, defaults to "sysl-modules" if SYSL_MODULES is enabled
+
+- `SYSL_PROXY`
+
+Proxy service to use, won't use SYSL_PROXY if not set
+
+- `SYSL_TOKENS`
+
+```
+export SYSL_TOKENS=github.com:<GITHUB-PAT>
+```
+
+Setting `SYSL_TOKENS` with tokens (e.g. [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)) for sysl to import specifications from private source via token.
+
+- `SYSL_SSH_PRIVATE_KEY` and `SYSL_SSH_PASSPHRASE`
+
+```
+export SYSL_SSH_PRIVATE_KEY="/ssh/private/key/filepath"
+export SYSL_SSH_PASSPHRASE="abcdef"
+```
+
+Setting `SYSL_SSH_PRIVATE_KEY` with filepath to your [SSH private key](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for sysl to import specifications from private source via SSH.
 
 For more details, refer to [Installation doc](../installation.md)

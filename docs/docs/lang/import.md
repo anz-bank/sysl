@@ -38,6 +38,8 @@ TODO:
 - Non-Sysl imports
 - GOP
 
+See [Language Specification#Imports](https://sysl.io/docs/lang-spec/#imports) for more details.
+
 ## See also
 
 - [Module](./module.md)

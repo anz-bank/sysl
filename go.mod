@@ -8,6 +8,7 @@ require (
 	aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
+	github.com/anz-bank/gop v0.18.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.25
 	github.com/arr-ai/arrai v0.253.0
@@ -21,7 +22,6 @@ require (
 	github.com/golang/protobuf v1.4.2
 	github.com/hashicorp/hcl v1.0.0
 	github.com/imdario/mergo v0.3.11
-	github.com/joshcarp/gop v0.0.0-20200922043230-a225272c1746
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/sirupsen/logrus v1.8.1

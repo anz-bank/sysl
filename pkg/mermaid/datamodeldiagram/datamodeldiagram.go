@@ -17,13 +17,13 @@ const (
 	relation = "relation"
 )
 
-//externalLink keeps track of the dependencies between two types
+// externalLink keeps track of the dependencies between two types
 type externalLink struct {
 	firstType, secondType string
 }
 
-//GenerateFullDataDiagram accepts a sysl module and returns a string (and an error if any)
-//The resulting string is the mermaid code for the data model for that module
+// GenerateFullDataDiagram accepts a sysl module and returns a string (and an error if any)
+// The resulting string is the mermaid code for the data model for that module
 func GenerateFullDataDiagram(m *sysl.Module) (string, error) {
 	mapper := syslwrapper.MakeAppMapper(m)
 	mapper.IndexTypes()
@@ -31,7 +31,7 @@ func GenerateFullDataDiagram(m *sysl.Module) (string, error) {
 	return generateFullDataDiagramHelper(mapper.SimpleTypes, &[]externalLink{})
 }
 
-//GenerateDataDiagramWithMapper generates the data model diagram for a specific type with a provided mapper
+// GenerateDataDiagramWithMapper generates the data model diagram for a specific type with a provided mapper
 // The mapper should first be initialised using
 // mapper := syslwrapper.MakeAppMapper(module)
 // mapper.IndexTypes()
@@ -42,7 +42,7 @@ func GenerateDataDiagramWithMapper(mapper *syslwrapper.AppMapper, appName string
 		&[]externalLink{}, &[]string{}, &[]externalLink{})
 }
 
-//GenerateDataDiagramWithAppAndType generates the data model for a specific type
+// GenerateDataDiagramWithAppAndType generates the data model for a specific type
 func GenerateDataDiagramWithAppAndType(m *sysl.Module, appName string, typeName string) (string, error) {
 	mapper := syslwrapper.MakeAppMapper(m)
 	mapper.IndexTypes()
@@ -58,7 +58,7 @@ func GeneratePrimitive(typeName string) string {
 	return mermaidString
 }
 
-//generateDataDiagramWithAppAndTypeHelper is a helper which has additional arguments
+// generateDataDiagramWithAppAndTypeHelper is a helper which has additional arguments
 func generateDataDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwrapper.Type, appName string,
 	typeName string, externalLinks *[]externalLink, appTypes *[]string, eLinks *[]externalLink) (string, error) {
 	var result string
@@ -100,7 +100,7 @@ func generateDataDiagramWithAppAndTypeHelper(simpleTypes map[string]*syslwrapper
 	return result, nil
 }
 
-//generateFullDataDiagramHelper is a helper which has additional arguments
+// generateFullDataDiagramHelper is a helper which has additional arguments
 func generateFullDataDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
 	externalLinks *[]externalLink) (string, error) {
 	var result string
@@ -126,10 +126,10 @@ func generateFullDataDiagramHelper(simpleTypes map[string]*syslwrapper.Type,
 	return result, nil
 }
 
-//printProperties prints appropriate mermaid code for values inside a property
+// printProperties prints appropriate mermaid code for values inside a property
 func printProperties(properties map[string]*syslwrapper.Type, appType string, externalLinks *[]externalLink) string {
 	var result string
-	//TODO: sort elements in map for uniformity
+	// TODO: sort elements in map for uniformity
 	for typeName, value := range properties {
 		switch value.Type {
 		case "int", "bool", "float", "decimal", "string", "string_8", "bytes", "date", "datetime", "xml", "uuid":
@@ -142,7 +142,7 @@ func printProperties(properties map[string]*syslwrapper.Type, appType string, ex
 			result += fmt.Sprintf("  %s %s\n", mermaid.CleanString(value.Reference),
 				mermaid.CleanString(typeName))
 		case "list", "set":
-			//TODO: check if list of lists is possible
+			// TODO: check if list of lists is possible
 			if value.Items[0].Type == ref {
 				pair := externalLink{appType,
 					value.Items[0].Reference}
@@ -162,14 +162,14 @@ func printProperties(properties map[string]*syslwrapper.Type, appType string, ex
 	return result
 }
 
-//printMap prints appropriate mermaid code for values inside a map
+// printMap prints appropriate mermaid code for values inside a map
 func printMap(properties map[string]*syslwrapper.Type,
 	appType string, primaryKey string, externalLinks *[]externalLink) string {
 	var result string
 	var type1, type2, name, name1, name2 string
 	name = appType
 	name1 = primaryKey
-	//TODO: sort elements in map for uniformity
+	// TODO: sort elements in map for uniformity
 	for typeName, value := range properties {
 		if typeName == primaryKey {
 			type1 = value.Type
@@ -186,7 +186,7 @@ func printMap(properties map[string]*syslwrapper.Type,
 				*externalLinks = append(*externalLinks, pair)
 			}
 		case "list", "set":
-			//TODO: check if list of lists is possible
+			// TODO: check if list of lists is possible
 			if value.Items[0].Type == ref {
 				pair := externalLink{mermaid.CleanString(appType),
 					mermaid.CleanString(value.Items[0].Reference)}
@@ -202,17 +202,17 @@ func printMap(properties map[string]*syslwrapper.Type,
 	return result
 }
 
-//printEnum prints appropriate mermaid code for values inside an enum
+// printEnum prints appropriate mermaid code for values inside an enum
 func printEnum(enum map[int64]string) string {
 	var result string
-	//TODO: sort keys in map for uniformity
+	// TODO: sort keys in map for uniformity
 	for key, value := range enum {
 		result += fmt.Sprintf("  %s %d\n", value, key)
 	}
 	return result
 }
 
-//getRelatedTypes finds all the types that are referred in a type
+// getRelatedTypes finds all the types that are referred in a type
 func getRelatedTypes(appType string, externalLinks []externalLink, appTypes *[]string, elinks *[]externalLink) {
 	if !appTypesContain(*appTypes, appType) {
 		*appTypes = append(*appTypes, appType)
@@ -230,7 +230,7 @@ func getRelatedTypes(appType string, externalLinks []externalLink, appTypes *[]s
 	}
 }
 
-//externalLinksContain checks if a connection between two data types exists or not
+// externalLinksContain checks if a connection between two data types exists or not
 func externalLinksContain(f []externalLink, s externalLink) bool {
 	for _, a := range f {
 		if a == s {
@@ -240,7 +240,7 @@ func externalLinksContain(f []externalLink, s externalLink) bool {
 	return false
 }
 
-//appTypesContain checks if an app is already present in the visited apps
+// appTypesContain checks if an app is already present in the visited apps
 func appTypesContain(f []string, s string) bool {
 	for _, a := range f {
 		if a == s {

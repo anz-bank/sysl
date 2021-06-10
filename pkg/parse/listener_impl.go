@@ -2228,8 +2228,8 @@ func (s *TreeShapeListener) ExitFunc_arg(*parser.Func_argContext) {
 	case top.GetCall() != nil:
 		args = &top.GetCall().Arg
 	}
-	syslutil.Assert(args != nil, "ExitFunc_arg: should not be here")
-	*args = append(*args, arg) // nolint:staticcheck
+	syslutil.Assert(args != nil, "ExitFunc_arg: should not be here") // nolint:staticcheck
+	*args = append(*args, arg)                                       // nolint:staticcheck
 }
 
 // EnterExpr_func is called when production expr_func is entered.

@@ -10,18 +10,18 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
-//integrationPair keeps track of the application pairs we visit during the recursion
+// integrationPair keeps track of the application pairs we visit during the recursion
 type integrationPair struct {
 	firstApp, secondApp string
 }
 
-//GenerateFullIntegrationDiagram returns the full integration diagram for a sysl module
+// GenerateFullIntegrationDiagram returns the full integration diagram for a sysl module
 func GenerateFullIntegrationDiagram(m *sysl.Module) (string, error) {
 	return generateFullIntegrationDiagramHelper(m, &[]integrationPair{})
 }
 
-//GenerateIntegrationDiagram accepts an application name as input and returns a string (and an error if any)
-//The resulting string is the mermaid code for the integration diagram
+// GenerateIntegrationDiagram accepts an application name as input and returns a string (and an error if any)
+// The resulting string is the mermaid code for the integration diagram
 func GenerateIntegrationDiagram(m *sysl.Module, appName string) (string, error) {
 	return generateIntegrationDiagramHelper(m, appName, &[]integrationPair{}, true)
 }
@@ -30,7 +30,7 @@ func GenerateMultipleAppIntegrationDiagram(m *sysl.Module, appNames []string) (s
 	return generateMultipleAppIntegrationDiagramHelper(m, mermaid.CleanAppNames(appNames), &[]integrationPair{})
 }
 
-//generateEntireIntegrationDiagramHelper is a helper which is generates an entire integration diagram
+// generateEntireIntegrationDiagramHelper is a helper which is generates an entire integration diagram
 func generateFullIntegrationDiagramHelper(m *sysl.Module,
 	integrationPairs *[]integrationPair) (string, error) {
 	var result string
@@ -45,7 +45,7 @@ func generateFullIntegrationDiagramHelper(m *sysl.Module,
 	return result, nil
 }
 
-//generateIntegrationDiagramHelper accepts an application name and returns the respective integration diagram
+// generateIntegrationDiagramHelper accepts an application name and returns the respective integration diagram
 func generateIntegrationDiagramHelper(m *sysl.Module, appName string,
 	integrationPairs *[]integrationPair, theStart bool) (string, error) {
 	var result string
@@ -56,7 +56,7 @@ func generateIntegrationDiagramHelper(m *sysl.Module, appName string,
 		}
 	}
 	endPoints := m.Apps[appName].Endpoints
-	//For every endpoint, the statements are retrieved and we pass it to the printer to print appropriate mermaid code
+	// For every endpoint, the statements are retrieved and we pass it to the printer to print appropriate mermaid code
 	for _, endPoint := range endPoints {
 		statements := endPoint.Stmt
 		result += printIntegrationDiagramStatements(m, statements, appName, integrationPairs)
@@ -95,8 +95,8 @@ func printClassStatement(className string) string {
 	return fmt.Sprintf("    %s\n", cleanAppName(className))
 }
 
-//printIntegrationDiagramStatements is where the printing takes place
-//Uses a switch statement to decide what to print and what recursion needs to be done
+// printIntegrationDiagramStatements is where the printing takes place
+// Uses a switch statement to decide what to print and what recursion needs to be done
 func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statement,
 	appName string, integrationPairs *[]integrationPair) string {
 	var result string
@@ -136,8 +136,8 @@ func printIntegrationDiagramStatements(m *sysl.Module, statements []*sysl.Statem
 	return result
 }
 
-//printIntegrationDiagramStatements is where the printing takes place
-//Uses a switch statement to decide what to print and what recursion needs to be done
+// printIntegrationDiagramStatements is where the printing takes place
+// Uses a switch statement to decide what to print and what recursion needs to be done
 func printIntegrationDiagramStatementsTargetedApp(m *sysl.Module, statements []*sysl.Statement,
 	appName string, integrationPairs *[]integrationPair, targetAppName string) string {
 	var result string
@@ -177,7 +177,7 @@ func printIntegrationDiagramStatementsTargetedApp(m *sysl.Module, statements []*
 	return result
 }
 
-//IsValidAppName checks if the entered application name exists in the sysl module or not
+// IsValidAppName checks if the entered application name exists in the sysl module or not
 func IsValidAppName(m *sysl.Module, appName string) error {
 	if _, ok := m.Apps[appName]; !ok {
 		return errors.New("invalid app name")
@@ -185,7 +185,7 @@ func IsValidAppName(m *sysl.Module, appName string) error {
 	return nil
 }
 
-//integrationPairsContain checks if the application couple have been already visited or not
+// integrationPairsContain checks if the application couple have been already visited or not
 func integrationPairsContain(i []integrationPair, ip integrationPair) bool {
 	for _, a := range i {
 		if a == ip {
