@@ -354,6 +354,14 @@ library:
     caller: false
 ```
 
+To assist in tracing calls through the log, every request will automatically be assigned a `traceid` which will be added to all log messages associated with that request. This ID will either be copied from the incoming `RequestID` header (if it exists) otherwise it will be a randomly generated UUID.
+If the ID you would like to use is in a different header, you can override the default location using the config:
+```
+library:
+  trace:
+    incomingHeaderForID: headerToUse
+```
+
 #### Admin Server
 
 The attributes `hostName`, `port` and `basePath` represent the whereabouts of the admin server whereas the attributes `readTimeout` and `writeTimeout` represent the access timeouts for the read and the write operations.
