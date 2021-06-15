@@ -5,6 +5,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/env"
+
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 

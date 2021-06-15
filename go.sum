@@ -75,8 +75,8 @@ github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6 h1:LHiO9PmM+glloVgvAW
 github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6/go.mod h1:T7PbCXFs94rrTttyxjbyT5+/1V8T2TYDejxUfHJjw1Y=
 github.com/anz-bank/afero v1.2.4 h1:+tqmZVCbuisKNlQoNKrlDHiafM4cZNor4bOrhebqrD0=
 github.com/anz-bank/afero v1.2.4/go.mod h1:Ai8FlHk4v/PARR026UzYexafAt9roJ7LcLMAmO6Z93I=
-github.com/anz-bank/gop v0.19.0 h1:JZ651X/vvKO2evqraifyUqFsVzIbIagryW/V22M5vDc=
-github.com/anz-bank/gop v0.19.0/go.mod h1:PxHydMP7CTRG4j61J11v0rtWaod6AiIg6tUp1GktRbU=
+github.com/anz-bank/gop v0.20.0 h1:WVl+9+6mNwoA7p+5YVfm+ESgXto0jGhojNoS1bnIvDc=
+github.com/anz-bank/gop v0.20.0/go.mod h1:PxHydMP7CTRG4j61J11v0rtWaod6AiIg6tUp1GktRbU=
 github.com/anz-bank/mermaid-go v0.1.1 h1:nTtJKas+gx0cyChwjZn61iLDpGCN/MSzAl4VTVXWB0A=
 github.com/anz-bank/mermaid-go v0.1.1/go.mod h1:vo8d6wJgGhqvyjBNBjbGvg7PtgYL/JS6JqXwfVD+bZk=
 github.com/anz-bank/pkg v0.0.22/go.mod h1:NSkF/h+NBS8lADLotCb1Exmdmt7wdmr1yOqAEbar+Io=

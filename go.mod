@@ -8,7 +8,7 @@ require (
 	aqwari.net/xml v0.0.0-20200619145941-6c62842e69c1
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/antlr/antlr4 v0.0.0-20200712162734-eb1adaa8a7a6
-	github.com/anz-bank/gop v0.19.0
+	github.com/anz-bank/gop v0.20.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.25
 	github.com/arr-ai/arrai v0.253.0
