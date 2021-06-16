@@ -85,7 +85,7 @@ let resolveStmts = \stmt
         .stmtLoop: '', # TODO
         .stmtLoopN: '', # TODO
         # TODO: handle modifer
-        .stmtRet: .stmtRet -> \(attr: (:modifier, :nvp), :status, :type) $`
+        .stmtRet: .stmtRet -> \(attr: (:modifier, :nvp), ?:status:'ok', :type) $`
             return ${status} <: ${sysl.resolvedType(type)}${nvpStr(nvp)}
         `
     }
@@ -137,12 +137,12 @@ let tagsString = \tags
 let typedPath =
     let namesRe = //re.compile(`\{(\w+)\}`);
     let namesInPath = \path namesRe.match(path) >> (.(1) rank (:.@));
-    let paramTypes = \params params => .@item => (@: .name, @value: sysl.resolvedType(.type));
+    let paramTypes = \params params => (@: .paramName, @value: sysl.resolvedType(.paramType));
     # Given types for names, return path with name substituted for name <: type.
     let subNameWithType = \types \path \name
-        //seq.sub($`{${name}}`, $`{${name} <: ${types(name)}}`, path);
-    \(url_param?:params:[], :path, ...)
-        reduce(namesInPath(path), subNameWithType(paramTypes(params)), path)
+        let type = types(name)?:'';
+        //seq.sub($`{${name}}`, $`{${name}${type && ' ' ++ $`<: ${type}`}}`, path);
+    \path \params reduce(namesInPath(path), subNameWithType(paramTypes(params)), path)
 ;
 
 let fileContents = \file \apps
@@ -228,7 +228,9 @@ let fileContents = \file \apps
                                 || ['...'] ::\i}
                         `
                     ::\i\n:\n}
-                    ${((ep where .rest) => . +> (:.rest.method, path: typedPath(.rest))) nest ~|path|eps orderby .path
+                    ${((ep where .rest) =>
+                        let path = typedPath(.rest.path, {. +> (paramLoc: 'path')} -&> param);
+                        . +> (:.rest.method, :path)) nest ~|path|eps orderby .path
                             >> \(:path, :eps)
                                 # TODO: stmts with parents
                                 # TODO: handle parameterized path

@@ -1,6 +1,6 @@
 # Parses, transforms and reserializes an SVG document.
 
-let data = //os.file('out/sequence_diagram.svg');
+let data = //[//encoding.bytes]{./out/sequence_diagram.svg};
 # let data = //os.stdin;
 
 let texts = //eval.value(//os.args(1)?:'{"Do"}');

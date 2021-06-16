@@ -1,7 +1,7 @@
 let (:annotations, :tags, :annoRel, :tagRel,
      :loadBytes, :polish, :normalize, :newNormalize, ...) = //{./sysl};
 
-let _model = loadBytes(//{./out/model.pb});
+let _model = loadBytes(//[//encoding.bytes]{./out/model.pb});
 
 let _app = (
     appName: 'App',

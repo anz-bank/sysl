@@ -1,1032 +1,874 @@
 (
   alias: {
+    |aliasType, appName, typeName|
     (
-      aliasType: (
+      (
         appName: ['RestEndpoint'],
         typePath: ['Type'],
       ),
-      appName: ['Types'],
-      typeName: 'AliasForeignRef',
+      ['Types'],
+      'AliasForeignRef',
     ),
     (
-      aliasType: (
+      (
         appName: ['Types'],
         typePath: ['Type'],
       ),
-      appName: ['Types'],
-      typeName: 'AliasRef',
+      ['Types'],
+      'AliasRef',
     ),
     (
-      aliasType: (
+      (
         primitive: 'INT',
       ),
-      appName: ['Types'],
-      typeName: 'Alias',
+      ['Types'],
+      'Alias',
     ),
     (
-      aliasType: (
+      (
         sequence: (
           primitive: 'STRING',
         ),
       ),
-      appName: ['Types'],
-      typeName: 'AliasSequence',
+      ['Types'],
+      'AliasSequence',
     ),
     (
-      aliasType: (
+      (
         set: (
           appName: ['RestEndpoint'],
           typePath: ['Type'],
         ),
       ),
-      appName: ['Types'],
-      typeName: 'AliasForeignRefSet',
+      ['Types'],
+      'AliasForeignRefSet',
     ),
   },
   anno: (
     app: {
-      (
-        appAnnoName: 'annotation',
-        appAnnoValue: 'annotation',
-        appName: ['AppWithAnnotation'],
-      ),
-      (
-        appAnnoName: 'annotation1',
-        appAnnoValue: 'you can do string annotation like this',
-        appName: ['AppWithAnnotation'],
-      ),
-      (
-        appAnnoName: 'annotation2',
-        appAnnoValue: ['or', 'in', 'an', 'array'],
-        appName: ['AppWithAnnotation'],
-      ),
-      (
-        appAnnoName: 'annotation3',
-        appAnnoValue: 'you can also do\n multiline annotations\n like this\n',
-        appName: ['AppWithAnnotation'],
-      ),
+      |appAnnoName, appAnnoValue, appName|
+      ('annotation', 'annotation', ['AppWithAnnotation']),
+      ('annotation1', 'you can do string annotation like this', ['AppWithAnnotation']),
+      ('annotation2', ['or', 'in', 'an', 'array'], ['AppWithAnnotation']),
+      ('annotation3', 'you can also do\n multiline annotations\n like this\n', ['AppWithAnnotation']),
     },
     ep: {
-      (
-        appName: ['EventAndSubscriber'],
-        epAnnoName: 'annotations',
-        epAnnoValue: 'annotation',
-        epName: 'App -> Event',
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epAnnoName: 'annotation',
-        epAnnoValue: 'annotation',
-        epName: 'SimpleEpWithAnnotations',
-      ),
-      (
-        appName: ['Statements'],
-        epAnnoName: 'annotation1',
-        epAnnoValue: 'you can do string annotation like this',
-        epName: 'Annotations',
-      ),
-      (
-        appName: ['Statements'],
-        epAnnoName: 'annotation2',
-        epAnnoValue: ['or', 'in', 'an', 'array'],
-        epName: 'Annotations',
-      ),
-      (
-        appName: ['Statements'],
-        epAnnoName: 'annotation3',
-        epAnnoValue: 'you can also do\n multiline annotations\n like this\n',
-        epName: 'Annotations',
-      ),
+      |appName, epAnnoName, epAnnoValue, epName|
+      (['EventAndSubscriber'], 'annotations', 'annotation', 'App -> Event'),
+      (['SimpleEndpoint'], 'annotation', 'annotation', 'SimpleEpWithAnnotations'),
+      (['Statements'], 'annotation1', 'you can do string annotation like this', 'Annotations'),
+      (['Statements'], 'annotation2', ['or', 'in', 'an', 'array'], 'Annotations'),
+      (['Statements'], 'annotation3', 'you can also do\n multiline annotations\n like this\n', 'Annotations'),
     },
     event: {
-      (
-        appName: ['EventAndSubscriber'],
-        eventAnnoName: 'annotations',
-        eventAnnoValue: 'annotation',
-        eventName: 'Event',
-      ),
+      |appName, eventAnnoName, eventAnnoValue, eventName|
+      (['EventAndSubscriber'], 'annotations', 'annotation', 'Event'),
     },
     field: {
-      (
-        appName: ['Types'],
-        fieldAnnoName: 'annotation',
-        fieldAnnoValue: 'this is an annotation',
-        fieldName: 'with_anno',
-        typeName: 'Table',
-      ),
-      (
-        appName: ['Types'],
-        fieldAnnoName: 'annotation',
-        fieldAnnoValue: 'this is an annotation',
-        fieldName: 'with_anno',
-        typeName: 'Type',
-      ),
+      |appName, fieldAnnoName, fieldAnnoValue, fieldName, typeName|
+      (['Types'], 'annotation', 'this is an annotation', 'with_anno', 'Table'),
+      (['Types'], 'annotation', 'this is an annotation', 'with_anno', 'Type'),
     },
     mixin: {},
     param: {},
     stmt: {
-      (
-        appName: ['Statements'],
-        epName: 'AnnotatedStatements',
-        stmtAnnoName: 'annotation',
-        stmtAnnoValue: 'annotation can be added for any statement as a string',
-        stmtIndex: 0,
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'AnnotatedStatements',
-        stmtAnnoName: 'annotation',
-        stmtAnnoValue: [['or', 'as', 'an'], ['array', 'of', 'arrays']],
-        stmtIndex: 2,
-      ),
+      |appName, epName, stmtAnnoName, stmtAnnoValue, stmtIndex|
+      (['Statements'], 'AnnotatedStatements', 'annotation', 'annotation can be added for any statement as a string', 0),
+      (['Statements'], 'AnnotatedStatements', 'annotation', [['or', 'as', 'an'], ['array', 'of', 'arrays']], 2),
     },
     type: {
-      (
-        appName: ['Types'],
-        typeAnnoName: 'annotation',
-        typeAnnoValue: 'annotation',
-        typeName: 'Enum',
-      ),
-      (
-        appName: ['Types'],
-        typeAnnoName: 'annotation',
-        typeAnnoValue: 'annotation',
-        typeName: 'Type',
-      ),
-      (
-        appName: ['Types'],
-        typeAnnoName: 'annotation',
-        typeAnnoValue: 'annotation',
-        typeName: 'Union',
-      ),
+      |appName, typeAnnoName, typeAnnoValue, typeName|
+      (['Types'], 'annotation', 'annotation', 'Enum'),
+      (['Types'], 'annotation', 'annotation', 'Type'),
+      (['Types'], 'annotation', 'annotation', 'Union'),
     },
     view: {},
   ),
   app: {
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['AppWithAnnotation'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['EventAndSubscriber'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['RestEndpoint'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['SimpleEndpoint'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['Statements'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['Types'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: 'display name',
-      appName: ['App'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: 'display name',
-      appName: ['App', 'with', 'subpackages'],
-    ),
+    |appDocstring, appLongName, appName|
+    ({}, {}, ['AppWithAnnotation']),
+    ({}, {}, ['EventAndSubscriber']),
+    ({}, {}, ['RestEndpoint']),
+    ({}, {}, ['SimpleEndpoint']),
+    ({}, {}, ['Statements']),
+    ({}, {}, ['Types']),
+    ({}, 'display name', ['App']),
+    ({}, 'display name', ['App', 'with', 'subpackages']),
   },
   enum: {
+    |appName, enumItems, typeName|
     (
-      appName: ['Types'],
-      enumItems: {
+      ['Types'],
+      {
         'ENUM_1': 1,
         'ENUM_2': 2,
         'ENUM_3': 3,
       },
-      typeName: 'Enum',
+      'Enum',
     ),
   },
   ep: {
+    |appName, epDocstring, epEvent, epLongName, epName, rest|
     (
-      appName: ['EventAndSubscriber'],
-      epDocstring: {},
-      epEvent: (
+      ['EventAndSubscriber'],
+      {},
+      (
         appName: (
           part: ['App'],
         ),
         eventName: 'Event',
       ),
-      epLongName: {},
-      epName: 'App -> Event',
-      rest: (),
+      {},
+      'App -> Event',
+      (),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'DELETE /',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'DELETE /',
+      (
         method: 'DELETE',
         path: '/',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'DELETE /param',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'DELETE /param',
+      (
         method: 'DELETE',
         path: '/param',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GET /',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'GET /',
+      (
         method: 'GET',
         path: '/',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GET /nested1/nested2/nested3',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'GET /nested1/nested2/nested3',
+      (
         method: 'GET',
         path: '/nested1/nested2/nested3',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GET /notnested',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'GET /notnested',
+      (
         method: 'GET',
         path: '/notnested',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GET /param',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'GET /param',
+      (
         method: 'GET',
         path: '/param',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GET /pathwithtype/{native}',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'GET /pathwithtype/{native}',
+      (
         method: 'GET',
         path: '/pathwithtype/{native}',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GET /query',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'GET /query',
+      (
         method: 'GET',
         path: '/query',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'PATCH /',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'PATCH /',
+      (
         method: 'PATCH',
         path: '/',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'PATCH /param',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'PATCH /param',
+      (
         method: 'PATCH',
         path: '/param',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'POST /',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'POST /',
+      (
         method: 'POST',
         path: '/',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'POST /param',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'POST /param',
+      (
         method: 'POST',
         path: '/param',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'PUT /',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'PUT /',
+      (
         method: 'PUT',
         path: '/',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'PUT /param',
-      rest: (
+      ['RestEndpoint'],
+      {},
+      (),
+      {},
+      'PUT /param',
+      (
         method: 'PUT',
         path: '/param',
       ),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'SimpleEp',
-      rest: (),
+      ['SimpleEndpoint'],
+      {},
+      (),
+      {},
+      'SimpleEp',
+      (),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'SimpleEpWithAnnotations',
-      rest: (),
+      ['SimpleEndpoint'],
+      {},
+      (),
+      {},
+      'SimpleEpWithAnnotations',
+      (),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'SimpleEpWithArray',
-      rest: (),
+      ['SimpleEndpoint'],
+      {},
+      (),
+      {},
+      'SimpleEpWithArray',
+      (),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'SimpleEpWithParamsRef',
-      rest: (),
+      ['SimpleEndpoint'],
+      {},
+      (),
+      {},
+      'SimpleEpWithParamsRef',
+      (),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'SimpleEpWithTypes',
-      rest: (),
+      ['SimpleEndpoint'],
+      {},
+      (),
+      {},
+      'SimpleEpWithTypes',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'AnnotatedStatements',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'AnnotatedStatements',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'Annotations',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'Annotations',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'Calls',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'Calls',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'GroupStatements',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'GroupStatements',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'IfStmt',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'IfStmt',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'Loops',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'Loops',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'Miscellanous',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'Miscellanous',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'OneOfStatements',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'OneOfStatements',
+      (),
     ),
     (
-      appName: ['Statements'],
-      epDocstring: {},
-      epEvent: (),
-      epLongName: {},
-      epName: 'Returns',
-      rest: (),
+      ['Statements'],
+      {},
+      (),
+      {},
+      'Returns',
+      (),
     ),
   },
   event: {
-    (
-      appName: ['App'],
-      eventName: 'Event',
-    ),
-    (
-      appName: ['EventAndSubscriber'],
-      eventName: 'Event',
-    ),
-    (
-      appName: ['EventAndSubscriber'],
-      eventName: 'EventWithParams',
-    ),
+    |appName, eventName|
+    (['App'], 'Event'),
+    (['EventAndSubscriber'], 'Event'),
+    (['EventAndSubscriber'], 'EventWithParams'),
   },
   field: {
+    |appName, fieldConstraint, fieldName, fieldOpt, fieldType, typeName|
     (
-      appName: ['RestEndpoint'],
-      fieldConstraint: (),
-      fieldName: 'x',
-      fieldOpt: {},
-      fieldType: (
+      ['RestEndpoint'],
+      (),
+      'x',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'a',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'a',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table.inplace',
+      'Table.inplace',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'a',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'a',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Type.inplace',
+      'Type.inplace',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'aliasSequence',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'aliasSequence',
+      {},
+      (
         appName: ['Types'],
         typePath: ['Alias'],
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'b',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'b',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Table.inplace',
+      'Table.inplace',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'b',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'b',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Type.inplace',
+      'Type.inplace',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'inplace',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'inplace',
+      {},
+      (
         appName: ['Types'],
         typePath: ['inplace'],
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'inplace',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'inplace',
+      {},
+      (
         appName: ['Types'],
         typePath: ['inplace'],
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'nativeTypeField',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'nativeTypeField',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'nativeTypeField',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'nativeTypeField',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'optional',
-      fieldOpt: {
-        (),
-      },
-      fieldType: (
+      ['Types'],
+      (),
+      'optional',
+      true,
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'optional',
-      fieldOpt: {
-        (),
-      },
-      fieldType: (
+      ['Types'],
+      (),
+      'optional',
+      true,
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'primaryKey',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'primaryKey',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'reference',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'reference',
+      {},
+      (
         appName: ['RestEndpoint'],
         typePath: ['Type'],
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'reference',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'reference',
+      {},
+      (
         appName: ['RestEndpoint'],
         typePath: ['Type'],
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'sequence',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'sequence',
+      {},
+      (
         sequence: (
           primitive: 'STRING',
         ),
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'sequence',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'sequence',
+      {},
+      (
         sequence: (
           primitive: 'STRING',
         ),
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'set',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'set',
+      {},
+      (
         set: (
           primitive: 'STRING',
         ),
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'set',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'set',
+      {},
+      (
         set: (
           primitive: 'STRING',
         ),
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'with_anno',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'with_anno',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (),
-      fieldName: 'with_anno',
-      fieldOpt: {},
-      fieldType: (
+      ['Types'],
+      (),
+      'with_anno',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Type',
+      'Type',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (
+      ['Types'],
+      (
         length: (
           max: 5,
         ),
       ),
-      fieldName: 'string_max_constraint',
-      fieldOpt: {},
-      fieldType: (
+      'string_max_constraint',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (
+      ['Types'],
+      (
         length: (
           max: 5,
         ),
         precision: 5,
         scale: 8,
       ),
-      fieldName: 'decimal_with_precision',
-      fieldOpt: {},
-      fieldType: (
+      'decimal_with_precision',
+      {},
+      (
         primitive: 'DECIMAL',
       ),
-      typeName: 'Table',
+      'Table',
     ),
     (
-      appName: ['Types'],
-      fieldConstraint: (
+      ['Types'],
+      (
         length: (
           max: 10,
         ),
       ),
-      fieldName: 'string_range_constraint',
-      fieldOpt: {},
-      fieldType: (
+      'string_range_constraint',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Table',
+      'Table',
     ),
   },
   mixin: {},
   param: {
+    |appName, epName, paramIndex, paramLoc, paramName, paramOpt, paramType|
     (
-      appName: ['EventAndSubscriber'],
-      epName: 'EventWithParams',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'native',
-      paramOpt: {},
-      paramType: (
+      ['EventAndSubscriber'],
+      'EventWithParams',
+      0,
+      'method',
+      'native',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'DELETE /param',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'with_string',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'DELETE /param',
+      0,
+      'method',
+      'with_string',
+      {},
+      (
+        primitive: 'INT',
+      ),
+    ),
+    (['RestEndpoint'], 'GET /param', 0, 'method', {}, {}, {}),
+    (
+      ['RestEndpoint'],
+      'GET /pathwithtype/{native}',
+      0,
+      'path',
+      'native',
+      {},
+      (
         primitive: 'INT',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'GET /param',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: {},
-      paramOpt: {},
-      paramType: {},
-    ),
-    (
-      appName: ['RestEndpoint'],
-      epName: 'GET /pathwithtype/{native}',
-      paramIndex: 0,
-      paramLoc: 'path',
-      paramName: 'native',
-      paramOpt: {},
-      paramType: (
-        primitive: 'INT',
-      ),
-    ),
-    (
-      appName: ['RestEndpoint'],
-      epName: 'GET /query',
-      paramIndex: 0,
-      paramLoc: 'query',
-      paramName: 'native',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'GET /query',
+      0,
+      'query',
+      'native',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
+    (['RestEndpoint'], 'GET /query', 1, 'query', 't', {}, {}),
     (
-      appName: ['RestEndpoint'],
-      epName: 'GET /query',
-      paramIndex: 1,
-      paramLoc: 'query',
-      paramName: 't',
-      paramOpt: {},
-      paramType: {},
-    ),
-    (
-      appName: ['RestEndpoint'],
-      epName: 'GET /query',
-      paramIndex: 2,
-      paramLoc: 'query',
-      paramName: 'curly',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'GET /query',
+      2,
+      'query',
+      'curly',
+      {},
+      (
         appName: ['RestEndpoint'],
         typePath: ['Type'],
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'GET /query',
-      paramIndex: 3,
-      paramLoc: 'query',
-      paramName: 'optional',
-      paramOpt: {
-        (),
-      },
-      paramType: (
+      ['RestEndpoint'],
+      'GET /query',
+      3,
+      'query',
+      'optional',
+      true,
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'PATCH /param',
-      paramIndex: 0,
-      paramLoc: 'body',
-      paramName: 't',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'PATCH /param',
+      0,
+      'body',
+      't',
+      {},
+      (
         appName: ['Types'],
         typePath: ['Type'],
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'POST /param',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'native',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'POST /param',
+      0,
+      'method',
+      'native',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'PUT /param',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'unlimited',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'PUT /param',
+      0,
+      'method',
+      'unlimited',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'PUT /param',
-      paramIndex: 1,
-      paramLoc: 'method',
-      paramName: 'limited',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'PUT /param',
+      1,
+      'method',
+      'limited',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'PUT /param',
-      paramIndex: 2,
-      paramLoc: 'method',
-      paramName: 'num',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'PUT /param',
+      2,
+      'method',
+      'num',
+      {},
+      (
         primitive: 'INT',
       ),
     ),
     (
-      appName: ['RestEndpoint'],
-      epName: 'PUT /param',
-      paramIndex: 3,
-      paramLoc: 'method',
-      paramName: 'limited_num',
-      paramOpt: {},
-      paramType: (
+      ['RestEndpoint'],
+      'PUT /param',
+      3,
+      'method',
+      'limited_num',
+      {},
+      (
         primitive: 'INT',
       ),
     ),
+    (['RestEndpoint'], 'PUT /param', 4, 'method', 'x', {}, {}),
     (
-      appName: ['RestEndpoint'],
-      epName: 'PUT /param',
-      paramIndex: 4,
-      paramLoc: 'method',
-      paramName: 'x',
-      paramOpt: {},
-      paramType: {},
-    ),
-    (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithArray',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'unlimited',
-      paramOpt: {},
-      paramType: (
+      ['SimpleEndpoint'],
+      'SimpleEpWithArray',
+      0,
+      'method',
+      'unlimited',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithArray',
-      paramIndex: 1,
-      paramLoc: 'method',
-      paramName: 'limited',
-      paramOpt: {},
-      paramType: (
+      ['SimpleEndpoint'],
+      'SimpleEpWithArray',
+      1,
+      'method',
+      'limited',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithArray',
-      paramIndex: 2,
-      paramLoc: 'method',
-      paramName: 'num',
-      paramOpt: {},
-      paramType: (
+      ['SimpleEndpoint'],
+      'SimpleEpWithArray',
+      2,
+      'method',
+      'num',
+      {},
+      (
         primitive: 'INT',
       ),
     ),
     (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithArray',
-      paramIndex: 3,
-      paramLoc: 'method',
-      paramName: 'limited_num',
-      paramOpt: {},
-      paramType: (
+      ['SimpleEndpoint'],
+      'SimpleEpWithArray',
+      3,
+      'method',
+      'limited_num',
+      {},
+      (
         primitive: 'INT',
       ),
     ),
+    (['SimpleEndpoint'], 'SimpleEpWithArray', 4, 'method', 'x', {}, {}),
+    (['SimpleEndpoint'], 'SimpleEpWithParamsRef', 0, 'method', 'Types.type', {}, {}),
     (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithArray',
-      paramIndex: 4,
-      paramLoc: 'method',
-      paramName: 'x',
-      paramOpt: {},
-      paramType: {},
-    ),
-    (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithParamsRef',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'Types.type',
-      paramOpt: {},
-      paramType: {},
-    ),
-    (
-      appName: ['SimpleEndpoint'],
-      epName: 'SimpleEpWithTypes',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'native',
-      paramOpt: {},
-      paramType: (
+      ['SimpleEndpoint'],
+      'SimpleEpWithTypes',
+      0,
+      'method',
+      'native',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
   },
   src: (
     app: {
+      |appName, appSrc, appSrcs|
       (
-        appName: ['App'],
-        appSrc: (
+        ['App'],
+        (
           end: (
             col: 29,
             line: 2,
@@ -1036,7 +878,7 @@
             line: 2,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 29,
@@ -1050,8 +892,8 @@
         ],
       ),
       (
-        appName: ['App', 'with', 'subpackages'],
-        appSrc: (
+        ['App', 'with', 'subpackages'],
+        (
           end: (
             col: 27,
             line: 15,
@@ -1061,7 +903,7 @@
             line: 15,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 27,
@@ -1075,8 +917,8 @@
         ],
       ),
       (
-        appName: ['AppWithAnnotation'],
-        appSrc: (
+        ['AppWithAnnotation'],
+        (
           end: (
             line: 5,
           ),
@@ -1085,7 +927,7 @@
             line: 5,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               line: 5,
@@ -1098,8 +940,8 @@
         ],
       ),
       (
-        appName: ['EventAndSubscriber'],
-        appSrc: (
+        ['EventAndSubscriber'],
+        (
           end: (
             col: 11,
             line: 265,
@@ -1109,7 +951,7 @@
             line: 251,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1123,8 +965,8 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        appSrc: (
+        ['RestEndpoint'],
+        (
           end: (
             col: 15,
             line: 89,
@@ -1134,7 +976,7 @@
             line: 36,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 15,
@@ -1148,8 +990,8 @@
         ],
       ),
       (
-        appName: ['SimpleEndpoint'],
-        appSrc: (
+        ['SimpleEndpoint'],
+        (
           end: (
             col: 11,
             line: 34,
@@ -1159,7 +1001,7 @@
             line: 18,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1173,8 +1015,8 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        appSrc: (
+        ['Statements'],
+        (
           end: (
             col: 34,
             line: 229,
@@ -1184,7 +1026,7 @@
             line: 150,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 34,
@@ -1198,8 +1040,8 @@
         ],
       ),
       (
-        appName: ['Types'],
-        appSrc: (
+        ['Types'],
+        (
           end: (
             col: 10,
             line: 150,
@@ -1209,7 +1051,7 @@
             line: 91,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 10,
@@ -1224,10 +1066,11 @@
       ),
     },
     ep: {
+      |appName, epName, epSrc, epSrcs|
       (
-        appName: ['EventAndSubscriber'],
-        epName: 'App -> Event',
-        epSrc: (
+        ['EventAndSubscriber'],
+        'App -> Event',
+        (
           end: (
             col: 4,
             line: 267,
@@ -1238,7 +1081,7 @@
             line: 263,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1253,9 +1096,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /',
-        epSrc: (
+        ['RestEndpoint'],
+        'DELETE /',
+        (
           end: (
             col: 4,
             line: 52,
@@ -1266,7 +1109,7 @@
             line: 49,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1281,9 +1124,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /param',
-        epSrc: (
+        ['RestEndpoint'],
+        'DELETE /param',
+        (
           end: (
             col: 5,
             line: 91,
@@ -1294,7 +1137,7 @@
             line: 88,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 5,
@@ -1309,9 +1152,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'GET /',
-        epSrc: (
+        ['RestEndpoint'],
+        'GET /',
+        (
           end: (
             col: 8,
             line: 43,
@@ -1322,7 +1165,7 @@
             line: 41,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1337,9 +1180,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'GET /nested1/nested2/nested3',
-        epSrc: (
+        ['RestEndpoint'],
+        'GET /nested1/nested2/nested3',
+        (
           end: (
             col: 4,
             line: 58,
@@ -1350,7 +1193,7 @@
             line: 55,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1365,9 +1208,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'GET /notnested',
-        epSrc: (
+        ['RestEndpoint'],
+        'GET /notnested',
+        (
           end: (
             col: 4,
             line: 64,
@@ -1378,7 +1221,7 @@
             line: 59,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1393,9 +1236,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'GET /param',
-        epSrc: (
+        ['RestEndpoint'],
+        'GET /param',
+        (
           end: (
             col: 8,
             line: 77,
@@ -1406,7 +1249,7 @@
             line: 74,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1421,9 +1264,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'GET /pathwithtype/{native}',
-        epSrc: (
+        ['RestEndpoint'],
+        'GET /pathwithtype/{native}',
+        (
           end: (
             col: 4,
             line: 68,
@@ -1434,7 +1277,7 @@
             line: 65,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1449,9 +1292,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        epSrc: (
+        ['RestEndpoint'],
+        'GET /query',
+        (
           end: (
             col: 4,
             line: 72,
@@ -1462,7 +1305,7 @@
             line: 69,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1477,9 +1320,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /',
-        epSrc: (
+        ['RestEndpoint'],
+        'PATCH /',
+        (
           end: (
             col: 8,
             line: 49,
@@ -1490,7 +1333,7 @@
             line: 47,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1505,9 +1348,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /param',
-        epSrc: (
+        ['RestEndpoint'],
+        'PATCH /param',
+        (
           end: (
             col: 8,
             line: 82,
@@ -1518,7 +1361,7 @@
             line: 77,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1533,9 +1376,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'POST /',
-        epSrc: (
+        ['RestEndpoint'],
+        'POST /',
+        (
           end: (
             col: 8,
             line: 45,
@@ -1546,7 +1389,7 @@
             line: 43,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1561,9 +1404,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'POST /param',
-        epSrc: (
+        ['RestEndpoint'],
+        'POST /param',
+        (
           end: (
             col: 8,
             line: 85,
@@ -1574,7 +1417,7 @@
             line: 82,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1589,9 +1432,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /',
-        epSrc: (
+        ['RestEndpoint'],
+        'PUT /',
+        (
           end: (
             col: 8,
             line: 47,
@@ -1602,7 +1445,7 @@
             line: 45,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1617,9 +1460,9 @@
         ],
       ),
       (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        epSrc: (
+        ['RestEndpoint'],
+        'PUT /param',
+        (
           end: (
             col: 8,
             line: 88,
@@ -1630,7 +1473,7 @@
             line: 85,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1645,9 +1488,9 @@
         ],
       ),
       (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEp',
-        epSrc: (
+        ['SimpleEndpoint'],
+        'SimpleEp',
+        (
           end: (
             col: 11,
             line: 20,
@@ -1658,7 +1501,7 @@
             line: 19,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1673,9 +1516,9 @@
         ],
       ),
       (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithAnnotations',
-        epSrc: (
+        ['SimpleEndpoint'],
+        'SimpleEpWithAnnotations',
+        (
           end: (
             col: 11,
             line: 34,
@@ -1686,7 +1529,7 @@
             line: 33,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1701,9 +1544,9 @@
         ],
       ),
       (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        epSrc: (
+        ['SimpleEndpoint'],
+        'SimpleEpWithArray',
+        (
           end: (
             col: 11,
             line: 31,
@@ -1714,7 +1557,7 @@
             line: 30,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1729,9 +1572,9 @@
         ],
       ),
       (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithParamsRef',
-        epSrc: (
+        ['SimpleEndpoint'],
+        'SimpleEpWithParamsRef',
+        (
           end: (
             col: 11,
             line: 23,
@@ -1742,7 +1585,7 @@
             line: 22,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1757,9 +1600,9 @@
         ],
       ),
       (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithTypes',
-        epSrc: (
+        ['SimpleEndpoint'],
+        'SimpleEpWithTypes',
+        (
           end: (
             col: 11,
             line: 28,
@@ -1770,7 +1613,7 @@
             line: 27,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 11,
@@ -1785,9 +1628,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'AnnotatedStatements',
-        epSrc: (
+        ['Statements'],
+        'AnnotatedStatements',
+        (
           end: (
             col: 19,
             line: 224,
@@ -1798,7 +1641,7 @@
             line: 221,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 19,
@@ -1813,9 +1656,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'Annotations',
-        epSrc: (
+        ['Statements'],
+        'Annotations',
+        (
           end: (
             col: 4,
             line: 221,
@@ -1826,7 +1669,7 @@
             line: 213,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1841,9 +1684,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'Calls',
-        epSrc: (
+        ['Statements'],
+        'Calls',
+        (
           end: (
             col: 24,
             line: 192,
@@ -1854,7 +1697,7 @@
             line: 187,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 24,
@@ -1869,9 +1712,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'GroupStatements',
-        epSrc: (
+        ['Statements'],
+        'GroupStatements',
+        (
           end: (
             col: 16,
             line: 211,
@@ -1882,7 +1725,7 @@
             line: 208,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 16,
@@ -1897,9 +1740,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'IfStmt',
-        epSrc: (
+        ['Statements'],
+        'IfStmt',
+        (
           end: (
             col: 15,
             line: 160,
@@ -1910,7 +1753,7 @@
             line: 151,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 15,
@@ -1925,9 +1768,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'Loops',
-        epSrc: (
+        ['Statements'],
+        'Loops',
+        (
           end: (
             col: 15,
             line: 180,
@@ -1938,7 +1781,7 @@
             line: 162,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 15,
@@ -1953,9 +1796,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'Miscellanous',
-        epSrc: (
+        ['Statements'],
+        'Miscellanous',
+        (
           end: (
             col: 34,
             line: 229,
@@ -1966,7 +1809,7 @@
             line: 226,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 34,
@@ -1981,9 +1824,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'OneOfStatements',
-        epSrc: (
+        ['Statements'],
+        'OneOfStatements',
+        (
           end: (
             col: 22,
             line: 206,
@@ -1994,7 +1837,7 @@
             line: 194,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 22,
@@ -2009,9 +1852,9 @@
         ],
       ),
       (
-        appName: ['Statements'],
-        epName: 'Returns',
-        epSrc: (
+        ['Statements'],
+        'Returns',
+        (
           end: (
             col: 14,
             line: 185,
@@ -2022,7 +1865,7 @@
             line: 182,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -2038,16 +1881,12 @@
       ),
     },
     event: {
+      |appName, eventName, eventSrc, eventSrcs|
+      (['App'], 'Event', {}, {}),
       (
-        appName: ['App'],
-        eventName: 'Event',
-        eventSrc: {},
-        eventSrcs: {},
-      ),
-      (
-        appName: ['EventAndSubscriber'],
-        eventName: 'Event',
-        eventSrc: (
+        ['EventAndSubscriber'],
+        'Event',
+        (
           end: (
             col: 4,
             line: 259,
@@ -2058,7 +1897,7 @@
             line: 252,
           ),
         ),
-        eventSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -2073,9 +1912,9 @@
         ],
       ),
       (
-        appName: ['EventAndSubscriber'],
-        eventName: 'EventWithParams',
-        eventSrc: (
+        ['EventAndSubscriber'],
+        'EventWithParams',
+        (
           end: (
             col: 4,
             line: 263,
@@ -2086,7 +1925,7 @@
             line: 259,
           ),
         ),
-        eventSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -2102,10 +1941,11 @@
       ),
     },
     field: {
+      |appName, fieldName, fieldSrc, fieldSrcs, typeName|
       (
-        appName: ['RestEndpoint'],
-        fieldName: 'x',
-        fieldSrc: (
+        ['RestEndpoint'],
+        'x',
+        (
           end: (
             col: 13,
             line: 38,
@@ -2116,7 +1956,7 @@
             line: 38,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 13,
@@ -2129,12 +1969,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'a',
-        fieldSrc: (
+        ['Types'],
+        'a',
+        (
           end: (
             col: 17,
             line: 104,
@@ -2145,7 +1985,7 @@
             line: 104,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 17,
@@ -2158,12 +1998,12 @@
             ),
           ),
         ],
-        typeName: 'Type.inplace',
+        'Type.inplace',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'a',
-        fieldSrc: (
+        ['Types'],
+        'a',
+        (
           end: (
             col: 17,
             line: 120,
@@ -2174,7 +2014,7 @@
             line: 120,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 17,
@@ -2187,12 +2027,12 @@
             ),
           ),
         ],
-        typeName: 'Table.inplace',
+        'Table.inplace',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'aliasSequence',
-        fieldSrc: (
+        ['Types'],
+        'aliasSequence',
+        (
           end: (
             col: 25,
             line: 100,
@@ -2203,7 +2043,7 @@
             line: 100,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 25,
@@ -2216,12 +2056,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'b',
-        fieldSrc: (
+        ['Types'],
+        'b',
+        (
           end: (
             col: 17,
             line: 105,
@@ -2232,7 +2072,7 @@
             line: 105,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 17,
@@ -2245,12 +2085,12 @@
             ),
           ),
         ],
-        typeName: 'Type.inplace',
+        'Type.inplace',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'b',
-        fieldSrc: (
+        ['Types'],
+        'b',
+        (
           end: (
             col: 17,
             line: 121,
@@ -2261,7 +2101,7 @@
             line: 121,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 17,
@@ -2274,12 +2114,12 @@
             ),
           ),
         ],
-        typeName: 'Table.inplace',
+        'Table.inplace',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'decimal_with_precision',
-        fieldSrc: (
+        ['Types'],
+        'decimal_with_precision',
+        (
           end: (
             col: 45,
             line: 116,
@@ -2290,7 +2130,7 @@
             line: 116,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 45,
@@ -2303,12 +2143,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'inplace',
-        fieldSrc: (
+        ['Types'],
+        'inplace',
+        (
           end: (
             col: 4,
             line: 107,
@@ -2319,7 +2159,7 @@
             line: 103,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -2332,12 +2172,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'inplace',
-        fieldSrc: (
+        ['Types'],
+        'inplace',
+        (
           end: (
             col: 4,
             line: 123,
@@ -2348,7 +2188,7 @@
             line: 119,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -2361,12 +2201,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'nativeTypeField',
-        fieldSrc: (
+        ['Types'],
+        'nativeTypeField',
+        (
           end: (
             col: 27,
             line: 95,
@@ -2377,7 +2217,7 @@
             line: 95,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 27,
@@ -2390,12 +2230,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'nativeTypeField',
-        fieldSrc: (
+        ['Types'],
+        'nativeTypeField',
+        (
           end: (
             col: 27,
             line: 109,
@@ -2406,7 +2246,7 @@
             line: 109,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 27,
@@ -2419,12 +2259,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'optional',
-        fieldSrc: (
+        ['Types'],
+        'optional',
+        (
           end: (
             col: 26,
             line: 97,
@@ -2435,7 +2275,7 @@
             line: 97,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 26,
@@ -2448,12 +2288,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'optional',
-        fieldSrc: (
+        ['Types'],
+        'optional',
+        (
           end: (
             col: 26,
             line: 111,
@@ -2464,7 +2304,7 @@
             line: 111,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 26,
@@ -2477,12 +2317,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'primaryKey',
-        fieldSrc: (
+        ['Types'],
+        'primaryKey',
+        (
           end: (
             col: 33,
             line: 108,
@@ -2493,7 +2333,7 @@
             line: 108,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 33,
@@ -2506,12 +2346,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'reference',
-        fieldSrc: (
+        ['Types'],
+        'reference',
+        (
           end: (
             col: 34,
             line: 96,
@@ -2522,7 +2362,7 @@
             line: 96,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 34,
@@ -2535,12 +2375,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'reference',
-        fieldSrc: (
+        ['Types'],
+        'reference',
+        (
           end: (
             col: 34,
             line: 110,
@@ -2551,7 +2391,7 @@
             line: 110,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 34,
@@ -2564,12 +2404,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'sequence',
-        fieldSrc: (
+        ['Types'],
+        'sequence',
+        (
           end: (
             col: 32,
             line: 99,
@@ -2580,7 +2420,7 @@
             line: 99,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 32,
@@ -2593,12 +2433,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'sequence',
-        fieldSrc: (
+        ['Types'],
+        'sequence',
+        (
           end: (
             col: 32,
             line: 113,
@@ -2609,7 +2449,7 @@
             line: 113,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 32,
@@ -2622,12 +2462,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'set',
-        fieldSrc: (
+        ['Types'],
+        'set',
+        (
           end: (
             col: 22,
             line: 98,
@@ -2638,7 +2478,7 @@
             line: 98,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 22,
@@ -2651,12 +2491,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'set',
-        fieldSrc: (
+        ['Types'],
+        'set',
+        (
           end: (
             col: 22,
             line: 112,
@@ -2667,7 +2507,7 @@
             line: 112,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 22,
@@ -2680,12 +2520,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'string_max_constraint',
-        fieldSrc: (
+        ['Types'],
+        'string_max_constraint',
+        (
           end: (
             col: 41,
             line: 117,
@@ -2696,7 +2536,7 @@
             line: 117,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 41,
@@ -2709,12 +2549,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'string_range_constraint',
-        fieldSrc: (
+        ['Types'],
+        'string_range_constraint',
+        (
           end: (
             col: 47,
             line: 118,
@@ -2725,7 +2565,7 @@
             line: 118,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 47,
@@ -2738,12 +2578,12 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'with_anno',
-        fieldSrc: (
+        ['Types'],
+        'with_anno',
+        (
           end: (
             col: 8,
             line: 103,
@@ -2754,7 +2594,7 @@
             line: 101,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -2767,12 +2607,12 @@
             ),
           ),
         ],
-        typeName: 'Type',
+        'Type',
       ),
       (
-        appName: ['Types'],
-        fieldName: 'with_anno',
-        fieldSrc: (
+        ['Types'],
+        'with_anno',
+        (
           end: (
             col: 8,
             line: 116,
@@ -2783,7 +2623,7 @@
             line: 114,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -2796,341 +2636,72 @@
             ),
           ),
         ],
-        typeName: 'Table',
+        'Table',
       ),
     },
     mixin: {},
     param: {
-      (
-        appName: ['EventAndSubscriber'],
-        epName: 'EventWithParams',
-        paramName: 'native',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /param',
-        paramName: 'with_string',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /param',
-        paramName: {},
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /pathwithtype/{native}',
-        paramName: 'native',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        paramName: 'curly',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        paramName: 'native',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        paramName: 'optional',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        paramName: 't',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /param',
-        paramName: 't',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /param',
-        paramName: 'native',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        paramName: 'limited',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        paramName: 'limited_num',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        paramName: 'num',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        paramName: 'unlimited',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        paramName: 'x',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        paramName: 'limited',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        paramName: 'limited_num',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        paramName: 'num',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        paramName: 'unlimited',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        paramName: 'x',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithParamsRef',
-        paramName: 'Types.type',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithTypes',
-        paramName: 'native',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
+      |appName, epName, paramName, paramSrc, paramSrcs|
+      (['EventAndSubscriber'], 'EventWithParams', 'native', {}, {}),
+      (['RestEndpoint'], 'DELETE /param', 'with_string', {}, {}),
+      (['RestEndpoint'], 'GET /param', {}, {}, {}),
+      (['RestEndpoint'], 'GET /pathwithtype/{native}', 'native', {}, {}),
+      (['RestEndpoint'], 'GET /query', 'curly', {}, {}),
+      (['RestEndpoint'], 'GET /query', 'native', {}, {}),
+      (['RestEndpoint'], 'GET /query', 'optional', {}, {}),
+      (['RestEndpoint'], 'GET /query', 't', {}, {}),
+      (['RestEndpoint'], 'PATCH /param', 't', {}, {}),
+      (['RestEndpoint'], 'POST /param', 'native', {}, {}),
+      (['RestEndpoint'], 'PUT /param', 'limited', {}, {}),
+      (['RestEndpoint'], 'PUT /param', 'limited_num', {}, {}),
+      (['RestEndpoint'], 'PUT /param', 'num', {}, {}),
+      (['RestEndpoint'], 'PUT /param', 'unlimited', {}, {}),
+      (['RestEndpoint'], 'PUT /param', 'x', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithArray', 'limited', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithArray', 'limited_num', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithArray', 'num', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithArray', 'unlimited', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithArray', 'x', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithParamsRef', 'Types.type', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithTypes', 'native', {}, {}),
     },
     stmt: {
-      (
-        appName: ['EventAndSubscriber'],
-        epName: 'App -> Event',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /param',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /nested1/nested2/nested3',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /notnested',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /param',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /pathwithtype/{native}',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /param',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /param',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEp',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithAnnotations',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithArray',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithParamsRef',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['SimpleEndpoint'],
-        epName: 'SimpleEpWithTypes',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'AnnotatedStatements',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'Calls',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'GroupStatements',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'IfStmt',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'Loops',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'Miscellanous',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'OneOfStatements',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Statements'],
-        epName: 'Returns',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
+      |appName, epName, stmtSrc, stmtSrcs|
+      (['EventAndSubscriber'], 'App -> Event', {}, {}),
+      (['RestEndpoint'], 'DELETE /', {}, {}),
+      (['RestEndpoint'], 'DELETE /param', {}, {}),
+      (['RestEndpoint'], 'GET /', {}, {}),
+      (['RestEndpoint'], 'GET /nested1/nested2/nested3', {}, {}),
+      (['RestEndpoint'], 'GET /notnested', {}, {}),
+      (['RestEndpoint'], 'GET /param', {}, {}),
+      (['RestEndpoint'], 'GET /pathwithtype/{native}', {}, {}),
+      (['RestEndpoint'], 'GET /query', {}, {}),
+      (['RestEndpoint'], 'PATCH /', {}, {}),
+      (['RestEndpoint'], 'PATCH /param', {}, {}),
+      (['RestEndpoint'], 'POST /', {}, {}),
+      (['RestEndpoint'], 'POST /param', {}, {}),
+      (['RestEndpoint'], 'PUT /', {}, {}),
+      (['RestEndpoint'], 'PUT /param', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEp', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithAnnotations', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithArray', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithParamsRef', {}, {}),
+      (['SimpleEndpoint'], 'SimpleEpWithTypes', {}, {}),
+      (['Statements'], 'AnnotatedStatements', {}, {}),
+      (['Statements'], 'Calls', {}, {}),
+      (['Statements'], 'GroupStatements', {}, {}),
+      (['Statements'], 'IfStmt', {}, {}),
+      (['Statements'], 'Loops', {}, {}),
+      (['Statements'], 'Miscellanous', {}, {}),
+      (['Statements'], 'OneOfStatements', {}, {}),
+      (['Statements'], 'Returns', {}, {}),
     },
     type: {
+      |appName, typeName, typeSrc, typeSrcs|
       (
-        appName: ['RestEndpoint'],
-        typeName: 'Type',
-        typeSrc: (
+        ['RestEndpoint'],
+        'Type',
+        (
           end: (
             col: 13,
             line: 38,
@@ -3141,7 +2712,7 @@
             line: 37,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 13,
@@ -3156,9 +2727,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'Alias',
-        typeSrc: (
+        ['Types'],
+        'Alias',
+        (
           end: (
             col: 4,
             line: 138,
@@ -3169,7 +2740,7 @@
             line: 135,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -3184,9 +2755,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'AliasForeignRef',
-        typeSrc: (
+        ['Types'],
+        'AliasForeignRef',
+        (
           end: (
             col: 4,
             line: 147,
@@ -3197,7 +2768,7 @@
             line: 144,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -3212,9 +2783,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'AliasForeignRefSet',
-        typeSrc: (
+        ['Types'],
+        'AliasForeignRefSet',
+        (
           end: (
             col: 10,
             line: 150,
@@ -3225,7 +2796,7 @@
             line: 147,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 10,
@@ -3240,9 +2811,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'AliasRef',
-        typeSrc: (
+        ['Types'],
+        'AliasRef',
+        (
           end: (
             col: 4,
             line: 144,
@@ -3253,7 +2824,7 @@
             line: 141,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -3268,9 +2839,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'AliasSequence',
-        typeSrc: (
+        ['Types'],
+        'AliasSequence',
+        (
           end: (
             col: 4,
             line: 141,
@@ -3281,7 +2852,7 @@
             line: 138,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -3296,9 +2867,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'Enum',
-        typeSrc: (
+        ['Types'],
+        'Enum',
+        (
           end: (
             col: 4,
             line: 128,
@@ -3309,7 +2880,7 @@
             line: 123,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -3324,9 +2895,9 @@
         ],
       ),
       (
-        appName: ['Types'],
-        typeName: 'Table',
-        typeSrc: (
+        ['Types'],
+        'Table',
+        (
           end: (
             col: 17,
             line: 121,
@@ -3337,7 +2908,7 @@
             line: 107,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 17,
@@ -3351,16 +2922,11 @@
           ),
         ],
       ),
+      (['Types'], 'Table.inplace', {}, {}),
       (
-        appName: ['Types'],
-        typeName: 'Table.inplace',
-        typeSrc: {},
-        typeSrcs: {},
-      ),
-      (
-        appName: ['Types'],
-        typeName: 'Type',
-        typeSrc: (
+        ['Types'],
+        'Type',
+        (
           end: (
             col: 17,
             line: 105,
@@ -3371,7 +2937,7 @@
             line: 92,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 17,
@@ -3385,16 +2951,11 @@
           ),
         ],
       ),
+      (['Types'], 'Type.inplace', {}, {}),
       (
-        appName: ['Types'],
-        typeName: 'Type.inplace',
-        typeSrc: {},
-        typeSrcs: {},
-      ),
-      (
-        appName: ['Types'],
-        typeName: 'Union',
-        typeSrc: (
+        ['Types'],
+        'Union',
+        (
           end: (
             col: 4,
             line: 135,
@@ -3405,7 +2966,7 @@
             line: 128,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -3423,20 +2984,21 @@
     view: {},
   ),
   stmt: {
+    |appName, epName, stmtAction, stmtAlt, stmtCall, stmtCond, stmtForeach, stmtGroup, stmtIndex, stmtLoop, stmtLoopN, stmtParent, stmtRet|
     (
-      appName: ['Statements'],
-      epName: 'AnnotatedStatements',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 1,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (
+      ['Statements'],
+      'AnnotatedStatements',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -3451,296 +3013,296 @@
       ),
     ),
     (
-      appName: ['Statements'],
-      epName: 'AnnotatedStatements',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (
+      ['Statements'],
+      'AnnotatedStatements',
+      {},
+      (),
+      (
         appName: ['Statements'],
         epName: 'Miscellanous',
       ),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'AnnotatedStatements',
-      stmtAction: '"statement"',
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 2,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      ['Statements'],
+      'AnnotatedStatements',
+      '"statement"',
+      (),
+      (),
+      (),
+      (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Calls',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (
+      ['Statements'],
+      'Calls',
+      {},
+      (),
+      (
         appName: ['RestEndpoint'],
         epName: 'GET /param',
       ),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 1,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Calls',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (
+      ['Statements'],
+      'Calls',
+      {},
+      (),
+      (
         appName: ['Statements'],
         epName: 'Returns',
       ),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'GroupStatements',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (
+      ['Statements'],
+      'GroupStatements',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (
         title: 'grouped',
       ),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'IfStmt',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (
+      ['Statements'],
+      'IfStmt',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (
         title: 'else',
       ),
-      stmtIndex: 2,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      2,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'IfStmt',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (
+      ['Statements'],
+      'IfStmt',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (
         title: 'else if predicate2',
       ),
-      stmtIndex: 1,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      1,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'IfStmt',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (
+      ['Statements'],
+      'IfStmt',
+      {},
+      (),
+      (),
+      (
         test: 'predicate1',
       ),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Loops',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 1,
-      stmtLoop: (
+      ['Statements'],
+      'Loops',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (
         criterion: 'predicate',
         mode: 'UNTIL',
       ),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Loops',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 5,
-      stmtLoop: (
+      ['Statements'],
+      'Loops',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      5,
+      (
         criterion: 'predicate',
         mode: 'WHILE',
       ),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Loops',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (
+      ['Statements'],
+      'Loops',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (
         title: 'alt predicate',
       ),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Loops',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (
+      ['Statements'],
+      'Loops',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (
         title: 'for predicate',
       ),
-      stmtIndex: 3,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      3,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Loops',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (
+      ['Statements'],
+      'Loops',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (
         title: 'loop predicate',
       ),
-      stmtIndex: 4,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      4,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Loops',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (
+      ['Statements'],
+      'Loops',
+      {},
+      (),
+      (),
+      (),
+      (
         coll: 'predicate',
       ),
-      stmtGroup: (),
-      stmtIndex: 2,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Miscellanous',
-      stmtAction: '"string statements"',
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 1,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      ['Statements'],
+      'Miscellanous',
+      '"string statements"',
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Miscellanous',
-      stmtAction: 'SimpleEndpoint -> SimpleEp',
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 2,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      ['Statements'],
+      'Miscellanous',
+      'SimpleEndpoint -> SimpleEp',
+      (),
+      (),
+      (),
+      (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Miscellanous',
-      stmtAction: '| you can add comments like this',
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      ['Statements'],
+      'Miscellanous',
+      '| you can add comments like this',
+      (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'OneOfStatements',
-      stmtAction: {},
-      stmtAlt: (
+      ['Statements'],
+      'OneOfStatements',
+      {},
+      (
         choice: [
           (
             cond: 'case1',
@@ -3879,30 +3441,30 @@
           ),
         ],
       ),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Returns',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 0,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (
+      ['Statements'],
+      'Returns',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {},
@@ -3913,19 +3475,19 @@
       ),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Returns',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 1,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (
+      ['Statements'],
+      'Returns',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {},
@@ -3937,19 +3499,19 @@
       ),
     ),
     (
-      appName: ['Statements'],
-      epName: 'Returns',
-      stmtAction: {},
-      stmtAlt: (),
-      stmtCall: (),
-      stmtCond: (),
-      stmtForeach: (),
-      stmtGroup: (),
-      stmtIndex: 2,
-      stmtLoop: (),
-      stmtLoopN: (),
-      stmtParent: (),
-      stmtRet: (
+      ['Statements'],
+      'Returns',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {},
@@ -3962,197 +3524,63 @@
     ),
   },
   table: {
-    (
-      appName: ['Types'],
-      pk: ['primaryKey'],
-      typeName: 'Table',
-    ),
+    |appName, pk, typeName|
+    (['Types'], ['primaryKey'], 'Table'),
   },
   tag: (
     app: {
-      (
-        appName: ['App'],
-        appTag: 'abstract',
-      ),
+      |appName, appTag|
+      (['App'], 'abstract'),
     },
     ep: {
-      (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'DELETE /param',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /nested1/nested2/nested3',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /notnested',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /param',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /pathwithtype/{native}',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'GET /query',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /param',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'POST /param',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PUT /param',
-        epTag: 'rest',
-      ),
+      |appName, epName, epTag|
+      (['RestEndpoint'], 'DELETE /', 'rest'),
+      (['RestEndpoint'], 'DELETE /param', 'rest'),
+      (['RestEndpoint'], 'GET /', 'rest'),
+      (['RestEndpoint'], 'GET /nested1/nested2/nested3', 'rest'),
+      (['RestEndpoint'], 'GET /notnested', 'rest'),
+      (['RestEndpoint'], 'GET /param', 'rest'),
+      (['RestEndpoint'], 'GET /pathwithtype/{native}', 'rest'),
+      (['RestEndpoint'], 'GET /query', 'rest'),
+      (['RestEndpoint'], 'PATCH /', 'rest'),
+      (['RestEndpoint'], 'PATCH /param', 'rest'),
+      (['RestEndpoint'], 'POST /', 'rest'),
+      (['RestEndpoint'], 'POST /param', 'rest'),
+      (['RestEndpoint'], 'PUT /', 'rest'),
+      (['RestEndpoint'], 'PUT /param', 'rest'),
     },
     event: {},
     field: {
-      (
-        appName: ['Types'],
-        fieldName: 'primaryKey',
-        fieldTag: 'pk',
-        typeName: 'Table',
-      ),
+      |appName, fieldName, fieldTag, typeName|
+      (['Types'], 'primaryKey', 'pk', 'Table'),
     },
     mixin: {},
     param: {
-      (
-        appName: ['RestEndpoint'],
-        epName: 'PATCH /param',
-        paramName: 't',
-        paramTag: 'body',
-      ),
+      |appName, epName, paramName, paramTag|
+      (['RestEndpoint'], 'PATCH /param', 't', 'body'),
     },
     stmt: {},
     type: {
-      (
-        appName: ['Types'],
-        typeName: 'Enum',
-        typeTag: 'tag',
-      ),
-      (
-        appName: ['Types'],
-        typeName: 'Table',
-        typeTag: 'tag',
-      ),
+      |appName, typeName, typeTag|
+      (['Types'], 'Enum', 'tag'),
+      (['Types'], 'Table', 'tag'),
     },
     view: {},
   ),
   type: {
-    (
-      appName: ['RestEndpoint'],
-      typeDocstring: {},
-      typeName: 'Type',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Alias',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'AliasForeignRef',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'AliasForeignRefSet',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'AliasRef',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'AliasSequence',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Enum',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Table',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Table.inplace',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Type',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Type.inplace',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Types'],
-      typeDocstring: {},
-      typeName: 'Union',
-      typeOpt: {},
-    ),
+    |appName, typeDocstring, typeName, typeOpt|
+    (['RestEndpoint'], {}, 'Type', {}),
+    (['Types'], {}, 'Alias', {}),
+    (['Types'], {}, 'AliasForeignRef', {}),
+    (['Types'], {}, 'AliasForeignRefSet', {}),
+    (['Types'], {}, 'AliasRef', {}),
+    (['Types'], {}, 'AliasSequence', {}),
+    (['Types'], {}, 'Enum', {}),
+    (['Types'], {}, 'Table', {}),
+    (['Types'], {}, 'Table.inplace', {}),
+    (['Types'], {}, 'Type', {}),
+    (['Types'], {}, 'Type.inplace', {}),
+    (['Types'], {}, 'Union', {}),
   },
   view: {},
 )

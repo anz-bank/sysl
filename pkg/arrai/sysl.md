@@ -33,7 +33,7 @@ let model = sysl.load('myModel.pb');
 
 ## loadBytes()
 
-Loads a sysl model protobuf-encoded bytes (e.g. from `//os.file()` or `//os.stdin`). For example, you can generate those bytes from `myModel.sysl` and pipe them into an arr.ai script `myScript.arrai` using the following command:
+Loads a sysl model protobuf-encoded bytes (e.g. from `//os.stdin`, `//[//encoding.bytes]{./path}` or `//os.file()`). For example, you can generate those bytes from `myModel.sysl` and pipe them into an arr.ai script `myScript.arrai` using the following command:
 ```sh
 sysl protobuf --mode=pb myModel.sysl | arrai r myScript.arrai
 ```

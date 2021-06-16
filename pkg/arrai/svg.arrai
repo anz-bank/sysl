@@ -1,7 +1,5 @@
 # Functions for working with SVG documents.
 
-let (:ranked, ...) = //{./util};
-
 let comment = \k \v k = "comment";
 let at = \k \v //seq.has_prefix("@", k);
 # Filters out nodes of an AST that are keyed by "comment" or "@*".
@@ -16,7 +14,7 @@ let transformDoc = \ast
     let rec transformNode = \node (
         @tag: node.tag.name.'',
         attrs: node.attr?:{} => \(@item:a, ...)
-            let @ = ranked(a.name.'');
+            let @ = a.name.'' rank (:.@);
             let v = a.value.'';
             (:@, @value: cond {{@} & nums: //eval.value(v), _: v}),
         text: //seq.join("", node.text?:{} >> .''),
@@ -48,14 +46,14 @@ let toSvg = \m
 # Manipulation functions
 
 # Returns the ranked tag of the node.
-let tag = \node ranked(node.@tag);
+let tag = \node node.@tag rank (:.@);
 # Returns the first g node.
-let g = \svg ranked(svg.root.children where tag(.@item) = 'g')(0);
+let g = \svg (svg.root.children where tag(.@item) = 'g' rank (:.@))(0);
 # Returns all nodes with the given tag.
 let byTag = \svg \t (g(svg).children where tag(.@item) = t) => .@item;
 
 # Returns the uppermost y coordinate of the node.
-let getY = \n 
+let getY = \n
     let py = \poly //eval.value(//seq.split(',', poly.attrs('points'))(1));
     n.attrs('y')?:{} || n.attrs('y1')?:{} || py(n)
 ;
@@ -68,8 +66,8 @@ let parts = \in
     let ing = //re.compile('#?\\s*([^-<>]*)\\s*([-<>]+)\\s*(.+)');
     let [[_, lhs, arrow, rhs]] = ing.match(//str.lower(urldecode(in)));
     (
-        lhs: ranked(//seq.trim_suffix(' ', lhs)),
-        arrow: ranked(arrow), 
+        lhs: //seq.trim_suffix(' ', lhs) rank (:.@),
+        arrow: arrow rank (:.@),
         rhs: (//seq.trim_suffix(' ', rhs))
     )
 ;
@@ -78,9 +76,10 @@ let kids = \ns ns => .children => .@item;
 
 # Returns text nodes that contain the given text. May be nested in a nodes.
 let texts = \svg \text
-    let raw = byTag(svg, 'text') where ranked(.text) = ranked(text);
+    let text = text rank (:.@);
+    let raw = byTag(svg, 'text') where (.text rank (:.@)) = text;
     let as = kids(byTag(svg, 'a') where parts(.attrs('href')) = parts(text));
-    let ats = kids(byTag(svg, 'a')) where ranked(.text) = ranked(text);
+    let ats = kids(byTag(svg, 'a')) where (.text rank (:.@)) = text;
     raw | as | ats
 ;
 
@@ -89,7 +88,7 @@ let byText = \svg \text
     let texts = texts(svg, text);
     //rel.union({'line', 'polygon'} => \t
         let elts = byTag(svg, t) orderby getY(.);
-        texts => getY(.) => \y ranked(elts where getY(.@item) > y)(0)?:{}
+        texts => getY(.) => \y (elts where getY(.@item) > y rank (:.@))(0)?:{}
     ) | texts where .
 ;
 

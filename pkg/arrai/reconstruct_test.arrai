@@ -17,6 +17,13 @@ let nested = (
     src: (app: {(appName: ['A'], appSrc: (file: 'foo/a.sysl')), (appName: ['B'], appSrc: (file: 'foo/bar/b.sysl'))}),
 );
 
+let rest = (
+    app: {(appName: ['A'])},
+    ep: {(appName: ['A'], epName: 'Ep', rest: (method: 'GET', path: '/path/{p}'))},
+    param: {(appName: ['A'], epName: 'Ep', paramName: 'p', paramLoc: 'path', paramIndex: 0, paramOpt: false, paramType: (primitive: ('INT')))},
+    src: (app: {(appName: ['A'], appSrc: (file: 'a.sysl'))}),
+);
+
 (
     # Note: The following tests are commented out due to failure.
     #all: reconstruct(all) = //{./test_reconstruct_all},
@@ -74,5 +81,17 @@ let nested = (
         };
         let actual = reconstruct(nested);
         //test.assert.equal(expected, actual)
+    ,
+
+    rest:
+        reconstruct(rest) = {
+            'a.sysl': $`
+                A:
+                    /path/{p <: int}:
+                        GET:
+                            ...
+
+            `
+        }
     ,
 )

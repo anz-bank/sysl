@@ -1,680 +1,469 @@
 (
   alias: {
+    |aliasType, appName, typeName|
     (
-      aliasType: (
+      (
         appName: ['Client'],
         typePath: ['Screen'],
       ),
-      appName: ['Client'],
-      typeName: 'Display',
+      ['Client'],
+      'Display',
     ),
     (
-      aliasType: (
+      (
         primitive: 'INT',
       ),
-      appName: ['Client'],
-      typeName: 'Digit',
+      ['Client'],
+      'Digit',
     ),
     (
-      aliasType: (
+      (
         sequence: (
           primitive: 'INT',
         ),
       ),
-      appName: ['Client'],
-      typeName: 'Digits',
+      ['Client'],
+      'Digits',
     ),
   },
   anno: (
     app: {
-      (
-        appAnnoName: 'description',
-        appAnnoValue: 'A database.\n Stores data.\n',
-        appName: ['Source'],
-      ),
-      (
-        appAnnoName: 'package',
-        appAnnoValue: 'io.sysl.bank.model',
-        appName: ['Source'],
-      ),
+      |appAnnoName, appAnnoValue, appName|
+      ('description', 'A database.\n Stores data.\n', ['Source']),
+      ('package', 'io.sysl.bank.model', ['Source']),
     },
     ep: {},
     event: {},
     field: {
-      (
-        appName: ['A'],
-        fieldAnnoName: 'examples',
-        fieldAnnoValue: ['12', '42'],
-        fieldName: 'ax',
-        typeName: 'FetchResponse',
-      ),
-      (
-        appName: ['A'],
-        fieldAnnoName: 'examples',
-        fieldAnnoValue: ['12', '42'],
-        fieldName: 'ay',
-        typeName: 'FetchResponse',
-      ),
-      (
-        appName: ['Source'],
-        fieldAnnoName: 'description',
-        fieldAnnoValue: 'A foreign key',
-        fieldName: 'x',
-        typeName: 'Bar',
-      ),
-      (
-        appName: ['Source'],
-        fieldAnnoName: 'description',
-        fieldAnnoValue: 'A foreign key',
-        fieldName: 'y',
-        typeName: 'Bar',
-      ),
-      (
-        appName: ['Source'],
-        fieldAnnoName: 'description',
-        fieldAnnoValue: 'An optional int',
-        fieldName: 'b',
-        typeName: 'Bar',
-      ),
-      (
-        appName: ['Source'],
-        fieldAnnoName: 'description',
-        fieldAnnoValue: 'The x value.',
-        fieldName: 'x',
-        typeName: 'Foo',
-      ),
+      |appName, fieldAnnoName, fieldAnnoValue, fieldName, typeName|
+      (['A'], 'examples', ['12', '42'], 'ax', 'FetchResponse'),
+      (['A'], 'examples', ['12', '42'], 'ay', 'FetchResponse'),
+      (['Source'], 'description', 'A foreign key', 'x', 'Bar'),
+      (['Source'], 'description', 'A foreign key', 'y', 'Bar'),
+      (['Source'], 'description', 'An optional int', 'b', 'Bar'),
+      (['Source'], 'description', 'The x value.', 'x', 'Foo'),
     },
     mixin: {},
     param: {
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramAnnoName: 'mediatype',
-        paramAnnoValue: 'application/json',
-        paramIndex: 2,
-        paramName: 'request',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramAnnoName: 'name',
-        paramAnnoValue: 'ssotoken',
-        paramIndex: 1,
-        paramName: 'ssotoken',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramAnnoName: 'name',
-        paramAnnoValue: 'x-request-id',
-        paramIndex: 0,
-        paramName: 'x_request_id',
-      ),
+      |appName, epName, paramAnnoName, paramAnnoValue, paramIndex, paramName|
+      (['Source'], 'POST /post', 'mediatype', 'application/json', 2, 'request'),
+      (['Source'], 'POST /post', 'name', 'ssotoken', 1, 'ssotoken'),
+      (['Source'], 'POST /post', 'name', 'x-request-id', 0, 'x_request_id'),
     },
     stmt: {},
     type: {
-      (
-        appName: ['Source'],
-        typeAnnoName: 'description',
-        typeAnnoValue: 'A Foo.\n Represents foo things.\n',
-        typeName: 'Foo',
-      ),
-      (
-        appName: ['Source'],
-        typeAnnoName: 'description',
-        typeAnnoValue: 'A bar table.',
-        typeName: 'Bar',
-      ),
+      |appName, typeAnnoName, typeAnnoValue, typeName|
+      (['Source'], 'description', 'A Foo.\n Represents foo things.\n', 'Foo'),
+      (['Source'], 'description', 'A bar table.', 'Bar'),
     },
     view: {},
   ),
   app: {
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['A'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['B'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['C'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['Client'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['D'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['Source'],
-    ),
-    (
-      appDocstring: {},
-      appLongName: {},
-      appName: ['all'],
-    ),
+    |appDocstring, appLongName, appName|
+    ({}, {}, ['A']),
+    ({}, {}, ['B']),
+    ({}, {}, ['C']),
+    ({}, {}, ['Client']),
+    ({}, {}, ['D']),
+    ({}, {}, ['Source']),
+    ({}, {}, ['all']),
   },
   enum: {
+    |appName, enumItems, typeName|
     (
-      appName: ['B'],
-      enumItems: {
+      ['B'],
+      {
         'A': 784,
         'B': 971,
         'C': 8,
       },
-      typeName: 'Code',
+      'Code',
     ),
   },
   ep: {
+    |appName, epDocstring, epEvent, epLongName, epName, rest|
     (
-      appName: ['A'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'Fetch',
-      rest: {},
+      ['A'],
+      {},
+      (),
+      {},
+      'Fetch',
+      (),
     ),
     (
-      appName: ['B'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'Fetch',
-      rest: {},
+      ['B'],
+      {},
+      (),
+      {},
+      'Fetch',
+      (),
     ),
     (
-      appName: ['C'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'Fetch',
-      rest: {},
+      ['C'],
+      {},
+      (),
+      {},
+      'Fetch',
+      (),
     ),
     (
-      appName: ['C'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'FetchA',
-      rest: {},
+      ['C'],
+      {},
+      (),
+      {},
+      'FetchA',
+      (),
     ),
     (
-      appName: ['C'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'FetchB',
-      rest: {},
+      ['C'],
+      {},
+      (),
+      {},
+      'FetchB',
+      (),
     ),
     (
-      appName: ['Client'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'Do',
-      rest: {},
+      ['Client'],
+      {},
+      (),
+      {},
+      'Do',
+      (),
     ),
     (
-      appName: ['D'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'Fetch',
-      rest: {},
+      ['D'],
+      {},
+      (),
+      {},
+      'Fetch',
+      (),
     ),
     (
-      appName: ['Source'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'GET /get/{id}',
-      rest: (
+      ['Source'],
+      {},
+      (),
+      {},
+      'GET /get/{id}',
+      (
         method: 'GET',
         path: '/get/{id}',
-        url_param: [
-          (
-            name: 'id',
-            type: (
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 17,
-                  line: 29,
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 9,
-                  line: 29,
-                ),
-              ),
-              source_contexts: [
-                (
-                  end: (
-                    col: 17,
-                    line: 29,
-                  ),
-                  file: 'model.sysl',
-                  start: (
-                    col: 9,
-                    line: 29,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     ),
     (
-      appName: ['Source'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'POST /post',
-      rest: (
+      ['Source'],
+      {},
+      (),
+      {},
+      'POST /post',
+      (
         method: 'POST',
         path: '/post',
-        query_param: [
-          (
-            name: 'page',
-            type: (
-              opt: {
-                (),
-              },
-              primitive: 'INT',
-              source_context: (
-                end: (
-                  col: 202,
-                  line: 35,
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 194,
-                  line: 35,
-                ),
-              ),
-              source_contexts: [
-                (
-                  end: (
-                    col: 202,
-                    line: 35,
-                  ),
-                  file: 'model.sysl',
-                  start: (
-                    col: 194,
-                    line: 35,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          (
-            name: 'bar',
-            type: (
-              opt: {
-                (),
-              },
-              source_context: (
-                end: (
-                  col: 213,
-                  line: 35,
-                ),
-                file: 'model.sysl',
-                start: (
-                  col: 204,
-                  line: 35,
-                ),
-              ),
-              source_contexts: [
-                (
-                  end: (
-                    col: 213,
-                    line: 35,
-                  ),
-                  file: 'model.sysl',
-                  start: (
-                    col: 204,
-                    line: 35,
-                  ),
-                ),
-              ],
-              type_ref: (
-                context: (
-                  appname: (
-                    part: ['Source'],
-                  ),
-                ),
-                ref: (
-                  path: ['Bar'],
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     ),
     (
-      appName: ['Source'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'Read',
-      rest: {},
+      ['Source'],
+      {},
+      (),
+      {},
+      'Read',
+      (),
     ),
     (
-      appName: ['all'],
-      epDocstring: {},
-      epEvent: {},
-      epLongName: {},
-      epName: 'all',
-      rest: {},
+      ['all'],
+      {},
+      (),
+      {},
+      'all',
+      (),
     ),
   },
   event: {},
   field: {
+    |appName, fieldConstraint, fieldName, fieldOpt, fieldType, typeName|
     (
-      appName: ['A'],
-      fieldConstraint: (),
-      fieldName: 'ax',
-      fieldOpt: {},
-      fieldType: (
+      ['A'],
+      (),
+      'ax',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['A'],
-      fieldConstraint: (),
-      fieldName: 'ay',
-      fieldOpt: {},
-      fieldType: (
+      ['A'],
+      (),
+      'ay',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['B'],
-      fieldConstraint: (),
-      fieldName: 'bx',
-      fieldOpt: {},
-      fieldType: (
+      ['B'],
+      (),
+      'bx',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['B'],
-      fieldConstraint: (),
-      fieldName: 'by',
-      fieldOpt: {},
-      fieldType: (
+      ['B'],
+      (),
+      'by',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['C'],
-      fieldConstraint: (),
-      fieldName: 'cx',
-      fieldOpt: {},
-      fieldType: (
+      ['C'],
+      (),
+      'cx',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['C'],
-      fieldConstraint: (),
-      fieldName: 'cy',
-      fieldOpt: {},
-      fieldType: (
+      ['C'],
+      (),
+      'cy',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['Client'],
-      fieldConstraint: (),
-      fieldName: 'ww',
-      fieldOpt: {},
-      fieldType: (
+      ['Client'],
+      (),
+      'ww',
+      {},
+      (
         appName: ['Client'],
         typePath: ['Digit'],
       ),
-      typeName: 'Screen',
+      'Screen',
     ),
     (
-      appName: ['Client'],
-      fieldConstraint: (),
-      fieldName: 'xx',
-      fieldOpt: {},
-      fieldType: (
+      ['Client'],
+      (),
+      'xx',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Screen',
+      'Screen',
     ),
     (
-      appName: ['Client'],
-      fieldConstraint: (),
-      fieldName: 'yy',
-      fieldOpt: {},
-      fieldType: (
+      ['Client'],
+      (),
+      'yy',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Screen',
+      'Screen',
     ),
     (
-      appName: ['Client'],
-      fieldConstraint: (),
-      fieldName: 'zz',
-      fieldOpt: {},
-      fieldType: (
+      ['Client'],
+      (),
+      'zz',
+      {},
+      (
         appName: ['Client'],
         typePath: ['Digits'],
       ),
-      typeName: 'Screen',
+      'Screen',
     ),
     (
-      appName: ['D'],
-      fieldConstraint: (),
-      fieldName: 'dx',
-      fieldOpt: {},
-      fieldType: (
+      ['D'],
+      (),
+      'dx',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['D'],
-      fieldConstraint: (),
-      fieldName: 'dy',
-      fieldOpt: {},
-      fieldType: (
+      ['D'],
+      (),
+      'dy',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'FetchResponse',
+      'FetchResponse',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'a',
-      fieldOpt: {},
-      fieldType: (
+      ['Source'],
+      (),
+      'a',
+      {},
+      (
         primitive: 'STRING',
       ),
-      typeName: 'Bar',
+      'Bar',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'b',
-      fieldOpt: {
-        (),
-      },
-      fieldType: (
+      ['Source'],
+      (),
+      'b',
+      true,
+      (
         primitive: 'INT',
       ),
-      typeName: 'Bar',
+      'Bar',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'x',
-      fieldOpt: {},
-      fieldType: (
+      ['Source'],
+      (),
+      'x',
+      {},
+      (
         appName: ['Source'],
         typePath: ['Foo', 'x'],
       ),
-      typeName: 'Bar',
+      'Bar',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'x',
-      fieldOpt: {},
-      fieldType: (
+      ['Source'],
+      (),
+      'x',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Foo',
+      'Foo',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'y',
-      fieldOpt: {},
-      fieldType: (
+      ['Source'],
+      (),
+      'y',
+      {},
+      (
         appName: ['Source'],
         typePath: ['Foo', 'y'],
       ),
-      typeName: 'Bar',
+      'Bar',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'y',
-      fieldOpt: {},
-      fieldType: (
+      ['Source'],
+      (),
+      'y',
+      {},
+      (
         primitive: 'INT',
       ),
-      typeName: 'Foo',
+      'Foo',
     ),
     (
-      appName: ['Source'],
-      fieldConstraint: (),
-      fieldName: 'z',
-      fieldOpt: {
-        (),
-      },
-      fieldType: (
+      ['Source'],
+      (),
+      'z',
+      true,
+      (
         primitive: 'INT',
       ),
-      typeName: 'Foo',
+      'Foo',
     ),
   },
   mixin: {},
   param: {
+    |appName, epName, paramIndex, paramLoc, paramName, paramOpt, paramType|
     (
-      appName: ['Source'],
-      epName: 'GET /get/{id}',
-      paramIndex: 0,
-      paramLoc: 'path',
-      paramName: 'id',
-      paramOpt: {},
-      paramType: (
+      ['Source'],
+      'GET /get/{id}',
+      0,
+      'path',
+      'id',
+      {},
+      (
         primitive: 'INT',
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'POST /post',
-      paramIndex: 0,
-      paramLoc: 'header',
-      paramName: 'x_request_id',
-      paramOpt: {},
-      paramType: (
+      ['Source'],
+      'POST /post',
+      0,
+      'header',
+      'x_request_id',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'POST /post',
-      paramIndex: 0,
-      paramLoc: 'query',
-      paramName: 'page',
-      paramOpt: {
-        (),
-      },
-      paramType: (
+      ['Source'],
+      'POST /post',
+      0,
+      'query',
+      'page',
+      true,
+      (
         primitive: 'INT',
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'POST /post',
-      paramIndex: 1,
-      paramLoc: 'cookie',
-      paramName: 'ssotoken',
-      paramOpt: {
-        (),
-      },
-      paramType: (
+      ['Source'],
+      'POST /post',
+      1,
+      'cookie',
+      'ssotoken',
+      true,
+      (
         primitive: 'STRING',
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'POST /post',
-      paramIndex: 1,
-      paramLoc: 'query',
-      paramName: 'bar',
-      paramOpt: {
-        (),
-      },
-      paramType: (
+      ['Source'],
+      'POST /post',
+      1,
+      'query',
+      'bar',
+      true,
+      (
         appName: ['Source'],
         typePath: ['Bar'],
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'POST /post',
-      paramIndex: 2,
-      paramLoc: 'body',
-      paramName: 'request',
-      paramOpt: {},
-      paramType: (
+      ['Source'],
+      'POST /post',
+      2,
+      'body',
+      'request',
+      {},
+      (
         appName: ['Source'],
         typePath: ['Bar'],
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'Read',
-      paramIndex: 0,
-      paramLoc: 'method',
-      paramName: 'accountNumber',
-      paramOpt: {},
-      paramType: (
+      ['Source'],
+      'Read',
+      0,
+      'method',
+      'accountNumber',
+      {},
+      (
         primitive: 'STRING',
       ),
     ),
   },
   src: (
     app: {
+      |appName, appSrc, appSrcs|
       (
-        appName: ['A'],
-        appSrc: (
+        ['A'],
+        (
           end: (
             col: 40,
             line: 46,
@@ -684,7 +473,7 @@
             line: 38,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 40,
@@ -698,8 +487,8 @@
         ],
       ),
       (
-        appName: ['B'],
-        appSrc: (
+        ['B'],
+        (
           end: (
             col: 1,
             line: 62,
@@ -709,7 +498,7 @@
             line: 48,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 1,
@@ -723,8 +512,8 @@
         ],
       ),
       (
-        appName: ['C'],
-        appSrc: (
+        ['C'],
+        (
           end: (
             col: 14,
             line: 79,
@@ -734,7 +523,7 @@
             line: 62,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -748,8 +537,8 @@
         ],
       ),
       (
-        appName: ['Client'],
-        appSrc: (
+        ['Client'],
+        (
           end: (
             col: 3,
             line: 111,
@@ -759,7 +548,7 @@
             line: 91,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 3,
@@ -773,8 +562,8 @@
         ],
       ),
       (
-        appName: ['D'],
-        appSrc: (
+        ['D'],
+        (
           end: (
             col: 14,
             line: 89,
@@ -784,7 +573,7 @@
             line: 81,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -798,8 +587,8 @@
         ],
       ),
       (
-        appName: ['Source'],
-        appSrc: (
+        ['Source'],
+        (
           end: (
             col: 18,
             line: 36,
@@ -807,7 +596,7 @@
           file: 'model.sysl',
           start: (),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 18,
@@ -819,8 +608,8 @@
         ],
       ),
       (
-        appName: ['all'],
-        appSrc: (
+        ['all'],
+        (
           end: (
             col: 9,
             line: 118,
@@ -830,7 +619,7 @@
             line: 111,
           ),
         ),
-        appSrcs: [
+        [
           (
             end: (
               col: 9,
@@ -845,10 +634,11 @@
       ),
     },
     ep: {
+      |appName, epName, epSrc, epSrcs|
       (
-        appName: ['A'],
-        epName: 'Fetch',
-        epSrc: (
+        ['A'],
+        'Fetch',
+        (
           end: (
             col: 14,
             line: 41,
@@ -859,7 +649,7 @@
             line: 39,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -874,9 +664,9 @@
         ],
       ),
       (
-        appName: ['B'],
-        epName: 'Fetch',
-        epSrc: (
+        ['B'],
+        'Fetch',
+        (
           end: (
             col: 14,
             line: 51,
@@ -887,7 +677,7 @@
             line: 49,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -902,9 +692,9 @@
         ],
       ),
       (
-        appName: ['C'],
-        epName: 'Fetch',
-        epSrc: (
+        ['C'],
+        'Fetch',
+        (
           end: (
             col: 14,
             line: 75,
@@ -915,7 +705,7 @@
             line: 72,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -930,9 +720,9 @@
         ],
       ),
       (
-        appName: ['C'],
-        epName: 'FetchA',
-        epSrc: (
+        ['C'],
+        'FetchA',
+        (
           end: (
             col: 14,
             line: 65,
@@ -943,7 +733,7 @@
             line: 63,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -958,9 +748,9 @@
         ],
       ),
       (
-        appName: ['C'],
-        epName: 'FetchB',
-        epSrc: (
+        ['C'],
+        'FetchB',
+        (
           end: (
             col: 14,
             line: 69,
@@ -971,7 +761,7 @@
             line: 67,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -986,9 +776,9 @@
         ],
       ),
       (
-        appName: ['Client'],
-        epName: 'Do',
-        epSrc: (
+        ['Client'],
+        'Do',
+        (
           end: (
             col: 14,
             line: 94,
@@ -999,7 +789,7 @@
             line: 92,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1014,9 +804,9 @@
         ],
       ),
       (
-        appName: ['D'],
-        epName: 'Fetch',
-        epSrc: (
+        ['D'],
+        'Fetch',
+        (
           end: (
             col: 14,
             line: 85,
@@ -1027,7 +817,7 @@
             line: 82,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1042,9 +832,9 @@
         ],
       ),
       (
-        appName: ['Source'],
-        epName: 'GET /get/{id}',
-        epSrc: (
+        ['Source'],
+        'GET /get/{id}',
+        (
           end: (
             col: 4,
             line: 34,
@@ -1055,7 +845,7 @@
             line: 30,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1070,9 +860,9 @@
         ],
       ),
       (
-        appName: ['Source'],
-        epName: 'POST /post',
-        epSrc: (
+        ['Source'],
+        'POST /post',
+        (
           end: (
             col: 1,
             line: 38,
@@ -1083,7 +873,7 @@
             line: 35,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 1,
@@ -1098,9 +888,9 @@
         ],
       ),
       (
-        appName: ['Source'],
-        epName: 'Read',
-        epSrc: (
+        ['Source'],
+        'Read',
+        (
           end: (
             col: 14,
             line: 25,
@@ -1111,7 +901,7 @@
             line: 24,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1126,9 +916,9 @@
         ],
       ),
       (
-        appName: ['all'],
-        epName: 'all',
-        epSrc: (
+        ['all'],
+        'all',
+        (
           end: (
             col: 9,
             line: 118,
@@ -1139,7 +929,7 @@
             line: 112,
           ),
         ),
-        epSrcs: [
+        [
           (
             end: (
               col: 9,
@@ -1156,10 +946,11 @@
     },
     event: {},
     field: {
+      |appName, fieldName, fieldSrc, fieldSrcs, typeName|
       (
-        appName: ['A'],
-        fieldName: 'ax',
-        fieldSrc: (
+        ['A'],
+        'ax',
+        (
           end: (
             col: 8,
             line: 46,
@@ -1170,7 +961,7 @@
             line: 44,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1183,12 +974,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['A'],
-        fieldName: 'ay',
-        fieldSrc: (
+        ['A'],
+        'ay',
+        (
           end: (
             col: 40,
             line: 46,
@@ -1199,7 +990,7 @@
             line: 46,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 40,
@@ -1212,12 +1003,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['B'],
-        fieldName: 'bx',
-        fieldSrc: (
+        ['B'],
+        'bx',
+        (
           end: (
             col: 14,
             line: 54,
@@ -1228,7 +1019,7 @@
             line: 54,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1241,12 +1032,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['B'],
-        fieldName: 'by',
-        fieldSrc: (
+        ['B'],
+        'by',
+        (
           end: (
             col: 14,
             line: 55,
@@ -1257,7 +1048,7 @@
             line: 55,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1270,12 +1061,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['C'],
-        fieldName: 'cx',
-        fieldSrc: (
+        ['C'],
+        'cx',
+        (
           end: (
             col: 14,
             line: 78,
@@ -1286,7 +1077,7 @@
             line: 78,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1299,12 +1090,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['C'],
-        fieldName: 'cy',
-        fieldSrc: (
+        ['C'],
+        'cy',
+        (
           end: (
             col: 14,
             line: 79,
@@ -1315,7 +1106,7 @@
             line: 79,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1328,12 +1119,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['Client'],
-        fieldName: 'ww',
-        fieldSrc: (
+        ['Client'],
+        'ww',
+        (
           end: (
             col: 14,
             line: 97,
@@ -1344,7 +1135,7 @@
             line: 97,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1357,12 +1148,12 @@
             ),
           ),
         ],
-        typeName: 'Screen',
+        'Screen',
       ),
       (
-        appName: ['Client'],
-        fieldName: 'xx',
-        fieldSrc: (
+        ['Client'],
+        'xx',
+        (
           end: (
             col: 14,
             line: 98,
@@ -1373,7 +1164,7 @@
             line: 98,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1386,12 +1177,12 @@
             ),
           ),
         ],
-        typeName: 'Screen',
+        'Screen',
       ),
       (
-        appName: ['Client'],
-        fieldName: 'yy',
-        fieldSrc: (
+        ['Client'],
+        'yy',
+        (
           end: (
             col: 14,
             line: 99,
@@ -1402,7 +1193,7 @@
             line: 99,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1415,12 +1206,12 @@
             ),
           ),
         ],
-        typeName: 'Screen',
+        'Screen',
       ),
       (
-        appName: ['Client'],
-        fieldName: 'zz',
-        fieldSrc: (
+        ['Client'],
+        'zz',
+        (
           end: (
             col: 14,
             line: 100,
@@ -1431,7 +1222,7 @@
             line: 100,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1444,12 +1235,12 @@
             ),
           ),
         ],
-        typeName: 'Screen',
+        'Screen',
       ),
       (
-        appName: ['D'],
-        fieldName: 'dx',
-        fieldSrc: (
+        ['D'],
+        'dx',
+        (
           end: (
             col: 14,
             line: 88,
@@ -1460,7 +1251,7 @@
             line: 88,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1473,12 +1264,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['D'],
-        fieldName: 'dy',
-        fieldSrc: (
+        ['D'],
+        'dy',
+        (
           end: (
             col: 14,
             line: 89,
@@ -1489,7 +1280,7 @@
             line: 89,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1502,12 +1293,12 @@
             ),
           ),
         ],
-        typeName: 'FetchResponse',
+        'FetchResponse',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'a',
-        fieldSrc: (
+        ['Source'],
+        'a',
+        (
           end: (
             col: 24,
             line: 15,
@@ -1518,7 +1309,7 @@
             line: 15,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 24,
@@ -1531,12 +1322,12 @@
             ),
           ),
         ],
-        typeName: 'Bar',
+        'Bar',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'b',
-        fieldSrc: (
+        ['Source'],
+        'b',
+        (
           end: (
             col: 8,
             line: 18,
@@ -1547,7 +1338,7 @@
             line: 16,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1560,12 +1351,12 @@
             ),
           ),
         ],
-        typeName: 'Bar',
+        'Bar',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'x',
-        fieldSrc: (
+        ['Source'],
+        'x',
+        (
           end: (
             col: 8,
             line: 10,
@@ -1576,7 +1367,7 @@
             line: 8,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1589,12 +1380,12 @@
             ),
           ),
         ],
-        typeName: 'Foo',
+        'Foo',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'x',
-        fieldSrc: (
+        ['Source'],
+        'x',
+        (
           end: (
             col: 8,
             line: 20,
@@ -1605,7 +1396,7 @@
             line: 18,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 8,
@@ -1618,12 +1409,12 @@
             ),
           ),
         ],
-        typeName: 'Bar',
+        'Bar',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'y',
-        fieldSrc: (
+        ['Source'],
+        'y',
+        (
           end: (
             col: 4,
             line: 24,
@@ -1634,7 +1425,7 @@
             line: 20,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1647,12 +1438,12 @@
             ),
           ),
         ],
-        typeName: 'Bar',
+        'Bar',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'y',
-        fieldSrc: (
+        ['Source'],
+        'y',
+        (
           end: (
             col: 13,
             line: 10,
@@ -1663,7 +1454,7 @@
             line: 10,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 13,
@@ -1676,12 +1467,12 @@
             ),
           ),
         ],
-        typeName: 'Foo',
+        'Foo',
       ),
       (
-        appName: ['Source'],
-        fieldName: 'z',
-        fieldSrc: (
+        ['Source'],
+        'z',
+        (
           end: (
             col: 16,
             line: 11,
@@ -1692,7 +1483,7 @@
             line: 11,
           ),
         ),
-        fieldSrcs: [
+        [
           (
             end: (
               col: 16,
@@ -1705,134 +1496,40 @@
             ),
           ),
         ],
-        typeName: 'Foo',
+        'Foo',
       ),
     },
     mixin: {},
     param: {
-      (
-        appName: ['Source'],
-        epName: 'GET /get/{id}',
-        paramName: 'id',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'bar',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'page',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'request',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'ssotoken',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'x_request_id',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'Read',
-        paramName: 'accountNumber',
-        paramSrc: {},
-        paramSrcs: {},
-      ),
+      |appName, epName, paramName, paramSrc, paramSrcs|
+      (['Source'], 'GET /get/{id}', 'id', {}, {}),
+      (['Source'], 'POST /post', 'bar', {}, {}),
+      (['Source'], 'POST /post', 'page', {}, {}),
+      (['Source'], 'POST /post', 'request', {}, {}),
+      (['Source'], 'POST /post', 'ssotoken', {}, {}),
+      (['Source'], 'POST /post', 'x_request_id', {}, {}),
+      (['Source'], 'Read', 'accountNumber', {}, {}),
     },
     stmt: {
-      (
-        appName: ['A'],
-        epName: 'Fetch',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['B'],
-        epName: 'Fetch',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['C'],
-        epName: 'Fetch',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['C'],
-        epName: 'FetchA',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['C'],
-        epName: 'FetchB',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Client'],
-        epName: 'Do',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['D'],
-        epName: 'Fetch',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'GET /get/{id}',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['Source'],
-        epName: 'Read',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
-      (
-        appName: ['all'],
-        epName: 'all',
-        stmtSrc: {},
-        stmtSrcs: {},
-      ),
+      |appName, epName, stmtSrc, stmtSrcs|
+      (['A'], 'Fetch', {}, {}),
+      (['B'], 'Fetch', {}, {}),
+      (['C'], 'Fetch', {}, {}),
+      (['C'], 'FetchA', {}, {}),
+      (['C'], 'FetchB', {}, {}),
+      (['Client'], 'Do', {}, {}),
+      (['D'], 'Fetch', {}, {}),
+      (['Source'], 'GET /get/{id}', {}, {}),
+      (['Source'], 'POST /post', {}, {}),
+      (['Source'], 'Read', {}, {}),
+      (['all'], 'all', {}, {}),
     },
     type: {
+      |appName, typeName, typeSrc, typeSrcs|
       (
-        appName: ['A'],
-        typeName: 'FetchResponse',
-        typeSrc: (
+        ['A'],
+        'FetchResponse',
+        (
           end: (
             col: 40,
             line: 46,
@@ -1843,7 +1540,7 @@
             line: 43,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 40,
@@ -1858,9 +1555,9 @@
         ],
       ),
       (
-        appName: ['B'],
-        typeName: 'Code',
-        typeSrc: (
+        ['B'],
+        'Code',
+        (
           end: (
             col: 1,
             line: 62,
@@ -1871,7 +1568,7 @@
             line: 57,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 1,
@@ -1886,9 +1583,9 @@
         ],
       ),
       (
-        appName: ['B'],
-        typeName: 'FetchResponse',
-        typeSrc: (
+        ['B'],
+        'FetchResponse',
+        (
           end: (
             col: 14,
             line: 55,
@@ -1899,7 +1596,7 @@
             line: 53,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1914,9 +1611,9 @@
         ],
       ),
       (
-        appName: ['C'],
-        typeName: 'FetchResponse',
-        typeSrc: (
+        ['C'],
+        'FetchResponse',
+        (
           end: (
             col: 14,
             line: 79,
@@ -1927,7 +1624,7 @@
             line: 77,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -1942,9 +1639,9 @@
         ],
       ),
       (
-        appName: ['Client'],
-        typeName: 'Digit',
-        typeSrc: (
+        ['Client'],
+        'Digit',
+        (
           end: (
             col: 4,
             line: 108,
@@ -1955,7 +1652,7 @@
             line: 105,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -1970,9 +1667,9 @@
         ],
       ),
       (
-        appName: ['Client'],
-        typeName: 'Digits',
-        typeSrc: (
+        ['Client'],
+        'Digits',
+        (
           end: (
             col: 3,
             line: 111,
@@ -1983,7 +1680,7 @@
             line: 108,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 3,
@@ -1998,9 +1695,9 @@
         ],
       ),
       (
-        appName: ['Client'],
-        typeName: 'Display',
-        typeSrc: (
+        ['Client'],
+        'Display',
+        (
           end: (
             col: 4,
             line: 105,
@@ -2011,7 +1708,7 @@
             line: 102,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -2026,9 +1723,9 @@
         ],
       ),
       (
-        appName: ['Client'],
-        typeName: 'Screen',
-        typeSrc: (
+        ['Client'],
+        'Screen',
+        (
           end: (
             col: 14,
             line: 100,
@@ -2039,7 +1736,7 @@
             line: 96,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -2054,9 +1751,9 @@
         ],
       ),
       (
-        appName: ['D'],
-        typeName: 'FetchResponse',
-        typeSrc: (
+        ['D'],
+        'FetchResponse',
+        (
           end: (
             col: 14,
             line: 89,
@@ -2067,7 +1764,7 @@
             line: 87,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 14,
@@ -2082,9 +1779,9 @@
         ],
       ),
       (
-        appName: ['Source'],
-        typeName: 'Bar',
-        typeSrc: (
+        ['Source'],
+        'Bar',
+        (
           end: (
             col: 4,
             line: 24,
@@ -2095,7 +1792,7 @@
             line: 13,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 4,
@@ -2110,9 +1807,9 @@
         ],
       ),
       (
-        appName: ['Source'],
-        typeName: 'Foo',
-        typeSrc: (
+        ['Source'],
+        'Foo',
+        (
           end: (
             col: 16,
             line: 11,
@@ -2123,7 +1820,7 @@
             line: 4,
           ),
         ),
-        typeSrcs: [
+        [
           (
             end: (
               col: 16,
@@ -2141,38 +1838,21 @@
     view: {},
   ),
   stmt: {
+    |appName, epName, stmtAction, stmtAlt, stmtCall, stmtCond, stmtForeach, stmtGroup, stmtIndex, stmtLoop, stmtLoopN, stmtParent, stmtRet|
     (
-      appName: ['A'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['Source'],
-        epName: 'Read',
-      ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
-    ),
-    (
-      appName: ['A'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['A'],
+      'Fetch',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2192,37 +1872,37 @@
       ),
     ),
     (
-      appName: ['B'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
+      ['A'],
+      'Fetch',
+      {},
+      (),
+      (
         appName: ['Source'],
         epName: 'Read',
       ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['B'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['B'],
+      'Fetch',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2242,55 +1922,37 @@
       ),
     ),
     (
-      appName: ['C'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['C'],
-        epName: 'FetchA',
+      ['B'],
+      'Fetch',
+      {},
+      (),
+      (
+        appName: ['Source'],
+        epName: 'Read',
       ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['C'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['C'],
-        epName: 'FetchB',
-      ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
-    ),
-    (
-      appName: ['C'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 2,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['C'],
+      'Fetch',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2314,37 +1976,55 @@
       ),
     ),
     (
-      appName: ['C'],
-      epName: 'FetchA',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['A'],
-        epName: 'Fetch',
+      ['C'],
+      'Fetch',
+      {},
+      (),
+      (
+        appName: ['C'],
+        epName: 'FetchA',
       ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['C'],
-      epName: 'FetchA',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['C'],
+      'Fetch',
+      {},
+      (),
+      (
+        appName: ['C'],
+        epName: 'FetchB',
+      ),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (),
+    ),
+    (
+      ['C'],
+      'FetchA',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2364,37 +2044,37 @@
       ),
     ),
     (
-      appName: ['C'],
-      epName: 'FetchB',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['B'],
+      ['C'],
+      'FetchA',
+      {},
+      (),
+      (
+        appName: ['A'],
         epName: 'Fetch',
       ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['C'],
-      epName: 'FetchB',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['C'],
+      'FetchB',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2414,37 +2094,37 @@
       ),
     ),
     (
-      appName: ['Client'],
-      epName: 'Do',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['D'],
+      ['C'],
+      'FetchB',
+      {},
+      (),
+      (
+        appName: ['B'],
         epName: 'Fetch',
       ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['Client'],
-      epName: 'Do',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['Client'],
+      'Do',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2464,55 +2144,37 @@
       ),
     ),
     (
-      appName: ['D'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['A'],
+      ['Client'],
+      'Do',
+      {},
+      (),
+      (
+        appName: ['D'],
         epName: 'Fetch',
       ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['D'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: (
-        appName: ['C'],
-        epName: 'Fetch',
-      ),
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
-    ),
-    (
-      appName: ['D'],
-      epName: 'Fetch',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 2,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['D'],
+      'Fetch',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {
@@ -2536,19 +2198,55 @@
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'GET /get/{id}',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['D'],
+      'Fetch',
+      {},
+      (),
+      (
+        appName: ['A'],
+        epName: 'Fetch',
+      ),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
+    ),
+    (
+      ['D'],
+      'Fetch',
+      {},
+      (),
+      (
+        appName: ['C'],
+        epName: 'Fetch',
+      ),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (),
+    ),
+    (
+      ['Source'],
+      'GET /get/{id}',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {},
@@ -2560,19 +2258,19 @@
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'POST /post',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['Source'],
+      'POST /post',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {},
@@ -2584,19 +2282,19 @@
       ),
     ),
     (
-      appName: ['Source'],
-      epName: 'Read',
-      stmtAction: {},
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: (
+      ['Source'],
+      'Read',
+      {},
+      (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (
         attr: (
           modifier: {},
           nvp: {},
@@ -2608,240 +2306,142 @@
       ),
     ),
     (
-      appName: ['all'],
-      epName: 'all',
-      stmtAction: 'A',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 2,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      ['all'],
+      'all',
+      'A',
+      (),
+      (),
+      (),
+      (),
+      (),
+      2,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['all'],
-      epName: 'all',
-      stmtAction: 'B',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 3,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      ['all'],
+      'all',
+      'B',
+      (),
+      (),
+      (),
+      (),
+      (),
+      3,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['all'],
-      epName: 'all',
-      stmtAction: 'C',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 4,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      ['all'],
+      'all',
+      'C',
+      (),
+      (),
+      (),
+      (),
+      (),
+      4,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['all'],
-      epName: 'all',
-      stmtAction: 'Client',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 1,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      ['all'],
+      'all',
+      'Client',
+      (),
+      (),
+      (),
+      (),
+      (),
+      1,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['all'],
-      epName: 'all',
-      stmtAction: 'D',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 5,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      ['all'],
+      'all',
+      'D',
+      (),
+      (),
+      (),
+      (),
+      (),
+      5,
+      (),
+      (),
+      (),
+      (),
     ),
     (
-      appName: ['all'],
-      epName: 'all',
-      stmtAction: 'Source',
-      stmtAlt: {},
-      stmtCall: {},
-      stmtCond: {},
-      stmtForeach: {},
-      stmtGroup: {},
-      stmtIndex: 0,
-      stmtLoop: {},
-      stmtLoopN: {},
-      stmtParent: {},
-      stmtRet: {},
+      ['all'],
+      'all',
+      'Source',
+      (),
+      (),
+      (),
+      (),
+      (),
+      0,
+      (),
+      (),
+      (),
+      (),
     ),
   },
   table: {
-    (
-      appName: ['Source'],
-      pk: {},
-      typeName: 'Foo',
-    ),
-    (
-      appName: ['Source'],
-      pk: ['a'],
-      typeName: 'Bar',
-    ),
+    |appName, pk, typeName|
+    (['Source'], {}, 'Foo'),
+    (['Source'], ['a'], 'Bar'),
   },
   tag: (
     app: {
-      (
-        appName: ['Source'],
-        appTag: 'db',
-      ),
+      |appName, appTag|
+      (['Source'], 'db'),
     },
     ep: {
-      (
-        appName: ['Source'],
-        epName: 'GET /get/{id}',
-        epTag: 'rest',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        epTag: 'rest',
-      ),
+      |appName, epName, epTag|
+      (['Source'], 'GET /get/{id}', 'rest'),
+      (['Source'], 'POST /post', 'rest'),
     },
     event: {},
     field: {
-      (
-        appName: ['Source'],
-        fieldName: 'a',
-        fieldTag: 'pk',
-        typeName: 'Bar',
-      ),
+      |appName, fieldName, fieldTag, typeName|
+      (['Source'], 'a', 'pk', 'Bar'),
     },
     mixin: {},
     param: {
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'request',
-        paramTag: 'body',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'ssotoken',
-        paramTag: 'cookie',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'ssotoken',
-        paramTag: 'required',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'x_request_id',
-        paramTag: 'header',
-      ),
-      (
-        appName: ['Source'],
-        epName: 'POST /post',
-        paramName: 'x_request_id',
-        paramTag: 'required',
-      ),
+      |appName, epName, paramName, paramTag|
+      (['Source'], 'POST /post', 'request', 'body'),
+      (['Source'], 'POST /post', 'ssotoken', 'cookie'),
+      (['Source'], 'POST /post', 'ssotoken', 'required'),
+      (['Source'], 'POST /post', 'x_request_id', 'header'),
+      (['Source'], 'POST /post', 'x_request_id', 'required'),
     },
     stmt: {},
     type: {},
     view: {},
   ),
   type: {
-    (
-      appName: ['A'],
-      typeDocstring: {},
-      typeName: 'FetchResponse',
-      typeOpt: {},
-    ),
-    (
-      appName: ['B'],
-      typeDocstring: {},
-      typeName: 'Code',
-      typeOpt: {},
-    ),
-    (
-      appName: ['B'],
-      typeDocstring: {},
-      typeName: 'FetchResponse',
-      typeOpt: {},
-    ),
-    (
-      appName: ['C'],
-      typeDocstring: {},
-      typeName: 'FetchResponse',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Client'],
-      typeDocstring: {},
-      typeName: 'Digit',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Client'],
-      typeDocstring: {},
-      typeName: 'Digits',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Client'],
-      typeDocstring: {},
-      typeName: 'Display',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Client'],
-      typeDocstring: {},
-      typeName: 'Screen',
-      typeOpt: {},
-    ),
-    (
-      appName: ['D'],
-      typeDocstring: {},
-      typeName: 'FetchResponse',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Source'],
-      typeDocstring: {},
-      typeName: 'Bar',
-      typeOpt: {},
-    ),
-    (
-      appName: ['Source'],
-      typeDocstring: {},
-      typeName: 'Foo',
-      typeOpt: {},
-    ),
+    |appName, typeDocstring, typeName, typeOpt|
+    (['A'], {}, 'FetchResponse', {}),
+    (['B'], {}, 'Code', {}),
+    (['B'], {}, 'FetchResponse', {}),
+    (['C'], {}, 'FetchResponse', {}),
+    (['Client'], {}, 'Digit', {}),
+    (['Client'], {}, 'Digits', {}),
+    (['Client'], {}, 'Display', {}),
+    (['Client'], {}, 'Screen', {}),
+    (['D'], {}, 'FetchResponse', {}),
+    (['Source'], {}, 'Bar', {}),
+    (['Source'], {}, 'Foo', {}),
   },
   view: {},
 )

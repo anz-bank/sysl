@@ -1870,9 +1870,7 @@
                     ),
                   ),
                 },
-                opt: {
-                  (),
-                },
+                opt: true,
                 primitive: 'STRING',
               ),
             ),
@@ -1908,9 +1906,7 @@
               (
                 name: 'page',
                 type: (
-                  opt: {
-                    (),
-                  },
+                  opt: true,
                   primitive: 'INT',
                   source_context: (
                     end: (
@@ -1941,9 +1937,7 @@
               (
                 name: 'bar',
                 type: (
-                  opt: {
-                    (),
-                  },
+                  opt: true,
                   source_context: (
                     end: (
                       col: 213,
@@ -2205,9 +2199,7 @@
                     s: 'An optional int',
                   ),
                 },
-                opt: {
-                  (),
-                },
+                opt: true,
                 primitive: 'INT',
                 source_context: (
                   end: (
@@ -2416,9 +2408,7 @@
                 ],
               ),
               'z': (
-                opt: {
-                  (),
-                },
+                opt: true,
                 primitive: 'INT',
                 source_context: (
                   end: (

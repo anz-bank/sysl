@@ -3,6 +3,6 @@
 
 let sysl = //{./sysl};
 let reconstruct = //{./reconstruct};
-let model = sysl.load('out/all.pb');
+let model = sysl.loadBytes(//[//encoding.bytes]{./out/all.pb});
 
 reconstruct(sysl.newNormalize(model))('all.sysl')

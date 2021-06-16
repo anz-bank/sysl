@@ -2,7 +2,7 @@
 # model into a relational model.
 
 let sysl = //{./sysl};
-let model = sysl.load('out/all.pb');
+let model = sysl.loadBytes(//[//encoding.bytes]{./out/all.pb});
 
 let out = sysl.newNormalize(model);
 
