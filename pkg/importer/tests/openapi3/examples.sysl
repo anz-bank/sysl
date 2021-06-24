@@ -5,26 +5,38 @@
 ##########################################
 
 TestApp "Examples" [package="com.example.package"]:
+    @version = "1.2.3"
     @description =:
         | No description.
 
-    /examples:
-        GET (reqRequest <: req [mediatype="application/json", ~body]):
+    /example:
+        POST (PropertyLevelExampleRequest <: PropertyLevelExample [mediatype="application/json", ~body]):
             | No description.
-            return ok <: unauth_no_meta
+            return ok <: ReusedExample
+
+    /examples:
+        POST (ObjectLevelExampleRequest <: ObjectLevelExample [mediatype="application/json", examples=[["Jessica","{\"value\":{\"id\":10,\"name\":\"Jessica Smith\"}}"],["Ron","{\"value\":{\"id\":11,\"name\":\"Ron Stewart\"}}"]], ~body]):
+            | No description.
+            return ok <: ObjectLevelExample
 
     #---------------------------------------------------------------------------
     # definitions
 
-    !type req:
-        response <: string? [openapi_example="[{\"assertions\":[{\"assertionScheme\":\"test\"}]}]"]:
+    !type ObjectLevelExample:
+        id <: int64?:
+            @json_tag = "id"
+        name <: string?:
+            @json_tag = "name"
+
+    !type PropertyLevelExample:
+        response <: string? [examples=[["","[{\"assertions\":[{\"assertionScheme\":\"test\"}]}]"]]]:
             @json_tag = "response"
-        responseCode <: int? [openapi_example="1200"]:
+        responseCode <: int? [examples=[["","1200"]]]:
             @json_tag = "responseCode"
-        responseMsg <: string? [openapi_example="Completed"]:
+        responseMsg <: string? [examples=[["","Completed"]]]:
             @json_tag = "responseMsg"
 
-    !type unauth_no_meta:
+    !type ReusedExample:
         authId <: string?:
             @json_tag = "authId"
         nextStages <: sequence of string?:

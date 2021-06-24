@@ -17,7 +17,7 @@ type Type interface {
 type StandardType struct {
 	name       string
 	Properties FieldList
-	Attributes []string
+	Attrs      []string
 }
 
 func (s *StandardType) Name() string { return s.name }
@@ -100,11 +100,11 @@ type sizeSpec struct {
 }
 
 type Field struct {
-	Name       string
-	Type       Type
-	Optional   bool
-	Attributes []string
-	SizeSpec   *sizeSpec
+	Name     string
+	Type     Type
+	Optional bool
+	Attrs    []string
+	SizeSpec *sizeSpec
 }
 
 type TypeList struct {
@@ -124,6 +124,12 @@ func (t TypeList) Sort() {
 }
 
 type FieldList []Field
+
+func (props FieldList) Sort() {
+	sort.SliceStable(props, func(i, j int) bool {
+		return strings.Compare(props[i].Name, props[j].Name) < 0
+	})
+}
 
 func (t TypeList) Find(name string) (Type, bool) {
 	if builtin, ok := checkBuiltInTypes(name); ok {

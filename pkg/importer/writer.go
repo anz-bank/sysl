@@ -35,6 +35,14 @@ type MethodEndpoints struct {
 	Endpoints []Endpoint
 }
 
+func (me MethodEndpoints) Sort() {
+	sort.SliceStable(me.Endpoints, func(i, j int) bool {
+		a := me.Endpoints[i].Path
+		b := me.Endpoints[j].Path
+		return strings.Compare(a, b) < 0
+	})
+}
+
 type writer struct {
 	io.Writer
 	ind    *IndentWriter
@@ -128,7 +136,7 @@ func buildDescriptionLines(prefix, description string, wrapAt int) []string {
 	return result
 }
 
-func appendAttributesString(prefix string, attrs []string) string {
+func appendAttrsString(prefix string, attrs []string) string {
 	if len(attrs) == 0 {
 		return prefix
 	}
@@ -178,7 +186,7 @@ func buildRequestBodyString(params []Param) string {
 		})
 		var parts []string
 		for _, p := range params {
-			attrs := appendAttributesString("", append(p.Field.Attributes, "~body"))
+			attrs := appendAttrsString("", append(p.Field.Attrs, "~body"))
 			parts = append(parts, fmt.Sprintf("%s <: %s%s", p.Name, getSyslTypeName(p.Type), attrs))
 		}
 		body = strings.Join(parts, ", ")
@@ -203,7 +211,7 @@ func buildRequestString(params []Param, loc string) string {
 
 			safeName := regexp.MustCompile("( |-)+").ReplaceAll([]byte(p.Name), []byte("_"))
 			text := fmt.Sprintf("%s <: %s", strings.ToLower(string(safeName)),
-				appendAttributesString(getSyslTypeName(p.Type)+optional, []string{"~" + loc, "name=" + quote(p.Name)}))
+				appendAttrsString(getSyslTypeName(p.Type)+optional, []string{"~" + loc, "name=" + quote(p.Name)}))
 			parts = append(parts, text)
 		}
 		requests = strings.Join(parts, ", ")
@@ -247,14 +255,16 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 	if len(endpoint.Responses) > 0 {
 		var outs []string
 		for _, resp := range endpoint.Responses {
-			var newline string
+			newline := "return "
+			typ := resp.Type
+			text := resp.Text
 			switch {
-			case resp.Type != nil && resp.Text != "":
-				newline = fmt.Sprintf("return %s <: %s", resp.Text, getSyslTypeName(resp.Type))
-			case resp.Type != nil:
-				newline = "return " + getSyslTypeName(resp.Type)
+			case typ != nil && text != "":
+				newline += fmt.Sprintf("%s <: %s", text, getSyslTypeName(typ))
+			case typ != nil:
+				newline += getSyslTypeName(typ)
 			default:
-				newline = "return " + resp.Text
+				newline += text
 			}
 			if !swag.ContainsStrings(outs, newline) {
 				outs = append(outs, newline)
@@ -297,14 +307,13 @@ func (w *writer) writeDefinitions(types TypeList) {
 }
 
 func (w *writer) writeDefinition(t *StandardType) {
-	bangName := "type"
-	w.writeLines(fmt.Sprintf("!%s %s:", bangName, appendAttributesString(getSyslTypeName(t), t.Attributes)))
+	w.writeLines(fmt.Sprintf("!type %s:", appendAttrsString(getSyslTypeName(t), t.Attrs)))
 	for _, prop := range t.Properties {
 		suffix := ""
 		if prop.Optional {
 			suffix = "?"
 		}
-		suffix = appendAttributesString(suffix, prop.Attributes)
+		suffix = appendAttrsString(suffix, prop.Attrs)
 
 		name := getSyslSafeName(prop.Name)
 		if syslutil.IsBuiltIn(name) {
@@ -341,15 +350,15 @@ func (w *writer) writeExternalAlias(item Type) {
 		}
 	case *ExternalAlias:
 		aliasType = getSyslTypeName(t.Target)
-		attrs = appendAttributesString("", t.Attrs)
+		attrs = appendAttrsString("", t.Attrs)
 	case *Alias:
 		aliasType = getSyslTypeName(t.Target)
-		attrs = appendAttributesString("", t.Attrs)
+		attrs = appendAttrsString("", t.Attrs)
 	case *Array:
 		aliasType = getSyslTypeName(item)
 		aliasName = t.name
 	case *Enum:
-		attrs = appendAttributesString("", t.Attrs)
+		attrs = appendAttrsString("", t.Attrs)
 	}
 	w.writeLines(fmt.Sprintf("!alias %s%s:", aliasName, attrs),
 		PushIndent, aliasType, PopIndent)

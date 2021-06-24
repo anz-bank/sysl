@@ -161,8 +161,8 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 				}
 			}
 			x := t.(*StandardType)
-			if !utils.Contains("~xml_root", x.Attributes) {
-				x.Attributes = append(x.Attributes, "~xml_root")
+			if !utils.Contains("~xml_root", x.Attrs) {
+				x.Attrs = append(x.Attrs, "~xml_root")
 			}
 		} else if t := findType(data, &types); t == nil {
 			types.Add(makeType(name, data, &types, logger))
@@ -206,7 +206,7 @@ func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus
 			Type: childType,
 		}
 		if isAttr {
-			f.Attributes = []string{"~xml_attribute"}
+			f.Attrs = []string{"~xml_attribute"}
 		}
 		f.Optional = optional
 

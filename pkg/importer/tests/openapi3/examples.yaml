@@ -1,31 +1,58 @@
-openapi: "3.0"
+openapi: "3.0.0"
 info:
   title: Examples
+  version: 1.2.3
 paths:
-  /examples:
-    get:
+  /example:
+    post:
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/req"
+              $ref: "#/components/schemas/PropertyLevelExample"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/unauth_no_meta"
+                $ref: "#/components/schemas/ReusedExample"
               examples:
-                Current. User not registered.:
+                unregistered:
                   $ref: "#/components/examples/resp_create_prospect"
-                Current. User registered:
+                registered:
                   $ref: "#/components/examples/resp_verify_pin"
-
+  /examples:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObjectLevelExample'
+            examples:
+              Jessica:
+                value:
+                  id: 10
+                  name: Jessica Smith
+              Ron:
+                value:
+                  id: 11
+                  name: Ron Stewart
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObjectLevelExample'
+              example: 
+                id: 12
+                name: Paul Smith
 components:
   schemas:
-    req:
+    PropertyLevelExample:
       type: object
       properties:
         response:
@@ -37,7 +64,7 @@ components:
         responseMsg:
           type: string
           example: Completed
-    unauth_no_meta:
+    ReusedExample:
       properties:
         authId:
           type: string
@@ -45,7 +72,15 @@ components:
           type: array
           items:
             type: string
-            enum: [create_prospect, verify_pin,""]
+            enum: [create_prospect, verify_pin]
+    ObjectLevelExample:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
 
   examples:
     resp_create_prospect:
@@ -53,7 +88,6 @@ components:
         authId: string
         nextStages:
             - create_prospect
-
     resp_verify_pin:
       value:
         authId: string

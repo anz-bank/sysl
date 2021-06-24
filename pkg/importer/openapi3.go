@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/url"
 	"path/filepath"
-	"reflect"
 	"runtime"
 	"sort"
 	"strconv"
@@ -71,17 +70,18 @@ func NewOpenAPI3Loader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoad
 	loader.LoadSwaggerFromURIFunc = func(
 		loader *openapi3.SwaggerLoader, url *url.URL) (swagger *openapi3.Swagger, err error) {
 		if url.Host == "" && url.Scheme == "" {
-			logger.Debugf("Loading OpenAPI3 ref: %s", url.String())
+			logger.Debugf("Loading OpenAPI3 ref: %s", url)
+
 			data, err := afero.ReadFile(fs, pathFromURL(url))
 			if err != nil {
 				return nil, err
 			}
+
 			if strings.Contains(string(data), "swagger:") {
 				swagger, _, err = convertToOpenAPI3(data, url, loader)
 			} else {
 				swagger, err = loader.LoadSwaggerFromDataWithPath(data, url)
 			}
-
 			if err != nil {
 				return nil, err
 			}
@@ -98,21 +98,13 @@ func (o *OpenAPI3Importer) pushName(n string) func() {
 		o.popName()
 	}
 }
+
 func (o *OpenAPI3Importer) popName() { o.nameStack = o.nameStack[:len(o.nameStack)-1] }
 
-func orderedKeys(mapObj interface{}) []string {
-	var typeNames []string
-	for _, k := range reflect.ValueOf(mapObj).MapKeys() {
-		typeNames = append(typeNames, k.String())
-	}
-	sort.Strings(typeNames)
-	return typeNames
-}
-
 func (o *OpenAPI3Importer) convertSpec(spec *openapi3.Swagger) (string, error) {
+	// Convert types
 	o.types = TypeList{}
-	for _, name := range orderedKeys(spec.Components.Schemas) {
-		ref := spec.Components.Schemas[name]
+	for name, ref := range spec.Components.Schemas {
 		if _, found := o.types.Find(name); !found {
 			if ref.Value == nil {
 				o.types.Add(NewStringAlias(name))
@@ -122,29 +114,30 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.Swagger) (string, error) {
 		}
 	}
 
+	// Convert endpoints
 	endpoints := make(map[string][]Endpoint, len(methodDisplayOrder))
 	for _, k := range methodDisplayOrder {
 		endpoints[k] = nil
 	}
-
 	for path, ep := range spec.Paths {
 		meps := o.buildEndpoint(path, ep)
 		for _, mep := range meps {
 			endpoints[mep.Method] = append(endpoints[mep.Method], mep.Endpoints...)
 		}
 	}
+
 	o.types.Sort()
+
 	meps := make([]MethodEndpoints, 0, len(methodDisplayOrder))
 	for _, k := range methodDisplayOrder {
 		me := MethodEndpoints{
 			Method:    k,
 			Endpoints: endpoints[k],
 		}
-		sort.Slice(me.Endpoints, func(i, j int) bool {
-			return strings.Compare(me.Endpoints[i].Path, me.Endpoints[j].Path) < 0
-		})
+		me.Sort()
 		meps = append(meps, me)
 	}
+
 	result := &bytes.Buffer{}
 	err := newWriter(result, o.logger).Write(o.buildSyslInfo(spec, o.basePath), o.types, meps...)
 
@@ -186,12 +179,6 @@ func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.Swagger, basepath string
 }
 
 const openapiv3DefinitionPrefix = "#/components/schemas/"
-
-func sortProperties(props FieldList) {
-	sort.SliceStable(props, func(i, j int) bool {
-		return strings.Compare(props[i].Name, props[j].Name) < 0
-	})
-}
 
 func attrsForArray(schema *openapi3.Schema) []string {
 	var attrs []string
@@ -337,21 +324,12 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Fie
 		}
 	case OpenAPI_STRING:
 		f.SizeSpec = makeSizeSpec(prop.Value.MinLength, prop.Value.MaxLength)
-		f.Attributes = attrsForStrings(prop.Value)
+		f.Attrs = attrsForStrings(prop.Value)
 	}
 
-	switch t := prop.Value.Example.(type) {
-	case string:
-		b, err := json.Marshal(t)
-		if err != nil {
-			fmt.Printf("JSON marshal example string %s error %s", t, err.Error())
-		}
-		f.Attributes = append(f.Attributes, fmt.Sprintf(`openapi_example=%s`, string(b)))
-	case float64:
-		f.Attributes = append(f.Attributes, fmt.Sprintf(`openapi_example="%s"`, strconv.FormatFloat(t, 'f', -1, 64)))
-	case nil:
-	default:
-		fmt.Printf("Unhandled example type %T\n", t)
+	e := exampleAttr(prop.Value.Example)
+	if e != "" {
+		f.Attrs = append(f.Attrs, e)
 	}
 
 	return f
@@ -391,7 +369,7 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		obj := &StandardType{
 			name:       name,
 			Properties: nil,
-			Attributes: getAttrs(schema),
+			Attrs:      getAttrs(schema),
 		}
 
 		if len(schema.OneOf) != 0 {
@@ -424,7 +402,7 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		if len(obj.Properties) == 0 {
 			return NewStringAlias(name)
 		}
-		sortProperties(obj.Properties)
+		obj.Properties.Sort()
 		return obj
 	default:
 		if schema.Type == OpenAPI_STRING && schema.Enum != nil {
@@ -453,6 +431,7 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 		if op == nil {
 			continue
 		}
+
 		me := MethodEndpoints{Method: method}
 		ep := Endpoint{
 			Path:        getSyslSafeName(path),
@@ -463,7 +442,7 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 		if req := op.RequestBody; req != nil {
 			for mediaType, obj := range req.Value.Content {
 				param := Param{In: "body"}
-				param.Field = o.fieldForMediaType(mediaType, obj.Schema, "Request")
+				param.Field = o.fieldForMediaType(mediaType, obj, "Request")
 				ep.Params.Add(param)
 			}
 		}
@@ -473,18 +452,20 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 			if statusCode[0] == '2' {
 				text = "ok"
 			}
+
 			respType := &StandardType{
 				name:       typePrefix + text,
 				Properties: FieldList{},
 			}
+
 			for mediaType, val := range resp.Value.Content {
-				f := o.fieldForMediaType(mediaType, val.Schema, "")
+				f := o.fieldForMediaType(mediaType, val, "")
 				respType.Properties = append(respType.Properties, f)
 			}
 			for name := range resp.Value.Headers {
 				f := Field{
-					Name:       name,
-					Attributes: []string{"~header"},
+					Name:  name,
+					Attrs: []string{"~header"},
 				}
 				if f.Type == nil {
 					f.Type = StringAlias
@@ -493,10 +474,10 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 			}
 			r := Response{Text: text}
 			if len(respType.Properties) > 0 {
-				if len(respType.Properties) == 1 && respType.Properties[0].Attributes[0] != "~header" {
+				if len(respType.Properties) == 1 && respType.Properties[0].Attrs[0] != "~header" {
 					r.Type = respType.Properties[0].Type
 				} else {
-					sortProperties(respType.Properties)
+					respType.Properties.Sort()
 					o.types.Add(respType)
 					r.Type = respType
 				}
@@ -531,7 +512,8 @@ func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) Parameters {
 	return out
 }
 
-func (o *OpenAPI3Importer) fieldForMediaType(mediatype string, schema *openapi3.SchemaRef, typeSuffix string) Field {
+func (o *OpenAPI3Importer) fieldForMediaType(mediatype string, mediaObj *openapi3.MediaType, typeSuffix string) Field {
+	schema := mediaObj.Schema
 	tname := typeNameFromSchemaRef(schema)
 	field := o.buildField(tname+typeSuffix, schema)
 	if _, found := o.types.Find(tname); !found {
@@ -540,9 +522,21 @@ func (o *OpenAPI3Importer) fieldForMediaType(mediatype string, schema *openapi3.
 	if a, ok := field.Type.(*Array); ok && typeSuffix == "Request" {
 		field.Type = o.types.AddAndRet(&Alias{name: field.Name, Target: a})
 	}
+
 	if mediatype != "" {
-		field.Attributes = append(field.Attributes, fmt.Sprintf(`mediatype="%s"`, mediatype))
+		field.Attrs = append(field.Attrs, fmt.Sprintf(`mediatype="%s"`, mediatype))
 	}
+
+	e := exampleAttr(mediaObj.Example)
+	if e != "" {
+		field.Attrs = append(field.Attrs, e)
+	}
+
+	es := examplesAttr(mediaObj.Examples)
+	if es != "" {
+		field.Attrs = append(field.Attrs, es)
+	}
+
 	return field
 }
 
@@ -564,4 +558,68 @@ func pathFromURL(u *url.URL) string {
 		return filepath.FromSlash(u.Path[1:])
 	}
 	return u.Path
+}
+
+func exampleAttr(example interface{}) string {
+	if e := exampleAttrStr(example); e != "" {
+		return examplesAttrStr(map[string]string{"": e})
+	}
+	return ""
+}
+
+func examplesAttr(examples map[string]*openapi3.ExampleRef) string {
+	if len(examples) == 0 {
+		return ""
+	}
+
+	examplesStr := make(map[string]string)
+	for k, e := range examples {
+		examplesStr[k] = exampleAttrStr(e.Value)
+	}
+
+	return examplesAttrStr(examplesStr)
+}
+
+func exampleAttrStr(example interface{}) string {
+	switch t := example.(type) {
+	case string:
+		b, err := json.Marshal(t)
+		if err != nil {
+			fmt.Printf("JSON marshal example string %s error %s", t, err.Error())
+			return ""
+		}
+		return string(b)
+	case float64:
+		return fmt.Sprintf(`"%s"`, strconv.FormatFloat(t, 'f', -1, 64))
+	case map[string]interface{}, *openapi3.Example:
+		b, err := json.Marshal(t)
+		if err != nil {
+			fmt.Printf("JSON marshal example string %s error %s", t, err.Error())
+			return ""
+		}
+		return exampleAttrStr(string(b))
+	case nil:
+	default:
+		fmt.Printf("Unhandled example type %T %s\n", t, t)
+	}
+
+	return ""
+}
+
+func examplesAttrStr(examples map[string]string) string {
+	var b bytes.Buffer
+
+	b.Write([]byte("examples=["))
+
+	for _, k := range utils.OrderedKeys(examples) {
+		v := examples[k]
+		if b.Len() > len("examples=[") {
+			b.Write([]byte{','})
+		}
+		b.Write([]byte(fmt.Sprintf("[\"%s\",%s]", k, v)))
+	}
+
+	b.Write([]byte{']'})
+
+	return b.String()
 }
