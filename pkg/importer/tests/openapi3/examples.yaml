@@ -76,6 +76,18 @@ components:
         responseMsg:
           type: string
           example: Completed
+        registered:
+          type: boolean
+          example: true
+        responseDetail:
+          type: array
+          items:
+            type: number
+            format: float
+          example:
+            - 11.220000
+            - 7.800000
+            - 8.900000
     ReusedExample:
       properties:
         authId:

@@ -593,6 +593,8 @@ func exampleAttrStr(example interface{}) string {
 		return string(b)
 	case float64:
 		return fmt.Sprintf(`"%s"`, strconv.FormatFloat(t, 'f', -1, 64))
+	case bool:
+		return fmt.Sprintf(`"%t"`, t)
 	case map[string]interface{}, *openapi3.Example:
 		b, err := json.Marshal(t)
 		if err != nil {
@@ -600,6 +602,12 @@ func exampleAttrStr(example interface{}) string {
 			return ""
 		}
 		return exampleAttrStr(string(b))
+	case []interface{}:
+		strs := []string{}
+		for _, e := range t {
+			strs = append(strs, exampleAttrStr(e))
+		}
+		return exampleAttrStr(fmt.Sprintf(`[%s]`, strings.Join(strs, ",")))
 	case nil:
 	default:
 		fmt.Printf("Unhandled example type %T %s\n", t, t)
