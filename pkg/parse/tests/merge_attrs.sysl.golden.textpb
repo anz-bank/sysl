@@ -1,136 +1,197 @@
-apps:  {
- key:  "Test"
- value:  {
-  name:  {
-   part:  "Test"
+apps: {
+ key: "Test"
+ value: {
+  name: {
+   part: "Test"
   }
-  types:  {
-   key:  "Foo"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "x"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "anothertag"
-        value:  {
-         s:  "bar"
+  types: {
+   key: "Foo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "x"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "anothertag"
+        value: {
+         s: "bar"
+         source_context: {
+          file: "tests/merge_attrs.sysl"
+          start: {
+           line: 4
+           col: 26
+          }
+          end: {
+           line: 4
+           col: 31
+          }
+         }
+         source_contexts: {
+          file: "tests/merge_attrs.sysl"
+          start: {
+           line: 4
+           col: 26
+          }
+          end: {
+           line: 4
+           col: 31
+          }
+         }
+         source_contexts: {
+          file: "tests/merge_attrs.sysl"
+          start: {
+           line: 10
+           col: 26
+          }
+          end: {
+           line: 10
+           col: 31
+          }
+         }
         }
        }
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "hello"
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "hello"
+         source_context: {
+          file: "tests/merge_attrs.sysl"
+          start: {
+           line: 3
+           col: 24
+          }
+          end: {
+           line: 3
+           col: 31
+          }
+         }
+         source_contexts: {
+          file: "tests/merge_attrs.sysl"
+          start: {
+           line: 3
+           col: 24
+          }
+          end: {
+           line: 3
+           col: 31
+          }
+         }
         }
        }
-       source_context:  {
-        file:  "tests/merge_attrs.sysl"
-        start:  {
-         line:  9
-         col:  8
+       source_context: {
+        file: "tests/merge_attrs.sysl"
+        start: {
+         line: 9
+         col: 8
         }
-        end:  {
-         line:  11
-        }
-       }
-       source_contexts:  {
-        file:  "tests/merge_attrs.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  5
-         col:  8
+        end: {
+         line: 11
+         col: 1
         }
        }
-       source_contexts:  {
-        file:  "tests/merge_attrs.sysl"
-        start:  {
-         line:  9
-         col:  8
+       source_contexts: {
+        file: "tests/merge_attrs.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  11
+        end: {
+         line: 5
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/merge_attrs.sysl"
+        start: {
+         line: 9
+         col: 8
+        }
+        end: {
+         line: 11
+         col: 1
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "y"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/merge_attrs.sysl"
-        start:  {
-         line:  5
-         col:  8
+     attr_defs: {
+      key: "y"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/merge_attrs.sysl"
+        start: {
+         line: 5
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  13
+        end: {
+         line: 5
+         col: 16
         }
        }
-       source_contexts:  {
-        file:  "tests/merge_attrs.sysl"
-        start:  {
-         line:  5
-         col:  8
+       source_contexts: {
+        file: "tests/merge_attrs.sysl"
+        start: {
+         line: 5
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  13
+        end: {
+         line: 5
+         col: 16
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/merge_attrs.sysl"
-     start:  {
-      line:  8
-      col:  4
+    source_context: {
+     file: "tests/merge_attrs.sysl"
+     start: {
+      line: 8
+      col: 4
      }
-     end:  {
-      line:  11
-     }
-    }
-    source_contexts:  {
-     file:  "tests/merge_attrs.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  5
-      col:  13
+     end: {
+      line: 10
+      col: 31
      }
     }
-    source_contexts:  {
-     file:  "tests/merge_attrs.sysl"
-     start:  {
-      line:  8
-      col:  4
+    source_contexts: {
+     file: "tests/merge_attrs.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  11
+     end: {
+      line: 5
+      col: 16
+     }
+    }
+    source_contexts: {
+     file: "tests/merge_attrs.sysl"
+     start: {
+      line: 8
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 31
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/merge_attrs.sysl"
-   start:  {}
-   end:  {
-    line:  11
+  source_context: {
+   file: "tests/merge_attrs.sysl"
+   start: {}
+   end: {
+    line: 10
+    col: 31
    }
   }
-  source_contexts:  {
-   file:  "tests/merge_attrs.sysl"
-   start:  {}
-   end:  {
-    line:  11
+  source_contexts: {
+   file: "tests/merge_attrs.sysl"
+   start: {}
+   end: {
+    line: 10
+    col: 31
    }
   }
  }

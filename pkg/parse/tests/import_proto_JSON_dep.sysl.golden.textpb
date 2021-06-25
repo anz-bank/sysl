@@ -1,1342 +1,1342 @@
-apps:  {
- key:  "Cart"
- value:  {
-  name:  {
-   part:  "Cart"
+apps: {
+ key: "Cart"
+ value: {
+  name: {
+   part: "Cart"
   }
-  attrs:  {
-   key:  "description"
-   value:  {
-    s:  "The Cart API lets users add and remove items from their cart.\n"
+  attrs: {
+   key: "description"
+   value: {
+    s: "The Cart API lets users add and remove items from their cart.\n"
    }
   }
-  attrs:  {
-   key:  "docs.url"
-   value:  {
-    s:  "https://en.wikipedia.org/wiki/Grocery_store"
+  attrs: {
+   key: "docs.url"
+   value: {
+    s: "https://en.wikipedia.org/wiki/Grocery_store"
    }
   }
-  attrs:  {
-   key:  "owner.name"
-   value:  {
-    s:  "Sam Tarwell"
+  attrs: {
+   key: "owner.name"
+   value: {
+    s: "Sam Tarwell"
    }
   }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "InventoryService"
+  attrs: {
+   key: "package"
+   value: {
+    s: "InventoryService"
    }
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "rest"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "rest"
      }
     }
    }
   }
-  attrs:  {
-   key:  "repo.url"
-   value:  {
-    s:  "https://github.com/anz-bank/sysl"
+  attrs: {
+   key: "repo.url"
+   value: {
+    s: "https://github.com/anz-bank/sysl"
    }
   }
-  attrs:  {
-   key:  "team.slack"
-   value:  {
-    s:  "https://slack.com/intl/en-au/"
+  attrs: {
+   key: "team.slack"
+   value: {
+    s: "https://slack.com/intl/en-au/"
    }
   }
-  attrs:  {
-   key:  "version"
-   value:  {
-    s:  "1.0.0"
+  attrs: {
+   key: "version"
+   value: {
+    s: "1.0.0"
    }
   }
-  endpoints:  {
-   key:  "DELETE /cart"
-   value:  {
-    name:  "DELETE /cart"
-    docstring:  "Removes the specified item from the cart"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "DELETE /cart"
+   value: {
+    name: "DELETE /cart"
+    docstring: "Removes the specified item from the cart"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  DELETE
-     path:  "/cart"
+    rest_params: {
+     method: DELETE
+     path: "/cart"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  91
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 91
+      col: 8
      }
-     end:  {
-      line:  95
-      col:  4
+     end: {
+      line: 95
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "GET /cart"
-   value:  {
-    name:  "GET /cart"
-    docstring:  "Returns a list of items in the specified cart"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /cart"
+   value: {
+    name: "GET /cart"
+    docstring: "Returns a list of items in the specified cart"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/cart"
+    rest_params: {
+     method: GET
+     path: "/cart"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  85
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 85
+      col: 8
      }
-     end:  {
-      line:  88
-      col:  8
+     end: {
+      line: 88
+      col: 8
      }
-     version:  "v0.0.2"
-    }
-   }
-  }
-  endpoints:  {
-   key:  "GetCart"
-   value:  {
-    name:  "GetCart"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Grocery"
-      }
-      endpoint:  "GET /cart"
-     }
-     source_context:  {
-      file:  "tests/import_proto_JSON_dep.sysl"
-      start:  {
-       line:  4
-       col:  6
-      }
-      end:  {
-       line:  4
-       col:  17
-      }
-     }
-     source_contexts:  {
-      file:  "tests/import_proto_JSON_dep.sysl"
-      start:  {
-       line:  4
-       col:  6
-      }
-      end:  {
-       line:  4
-       col:  17
-      }
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "ok"
-     }
-     source_context:  {
-      file:  "tests/import_proto_JSON_dep.sysl"
-      start:  {
-       line:  5
-       col:  6
-      }
-      end:  {
-       line:  5
-       col:  12
-      }
-     }
-     source_contexts:  {
-      file:  "tests/import_proto_JSON_dep.sysl"
-      start:  {
-       line:  5
-       col:  6
-      }
-      end:  {
-       line:  5
-       col:  12
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/import_proto_JSON_dep.sysl"
-     start:  {
-      line:  3
-      col:  4
-     }
-     end:  {
-      line:  5
-      col:  12
-     }
-    }
-    source_contexts:  {
-     file:  "tests/import_proto_JSON_dep.sysl"
-     start:  {
-      line:  3
-      col:  4
-     }
-     end:  {
-      line:  5
-      col:  12
-     }
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "POST /cart"
-   value:  {
-    name:  "POST /cart"
-    docstring:  "Updates the cart with the specified item"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GetCart"
+   value: {
+    name: "GetCart"
+    stmt: {
+     call: {
+      target: {
+       part: "Grocery"
+      }
+      endpoint: "GET /cart"
+     }
+     source_context: {
+      file: "tests/import_proto_JSON_dep.sysl"
+      start: {
+       line: 4
+       col: 6
+      }
+      end: {
+       line: 4
+       col: 26
+      }
+     }
+     source_contexts: {
+      file: "tests/import_proto_JSON_dep.sysl"
+      start: {
+       line: 4
+       col: 6
+      }
+      end: {
+       line: 4
+       col: 26
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok"
+     }
+     source_context: {
+      file: "tests/import_proto_JSON_dep.sysl"
+      start: {
+       line: 5
+       col: 6
+      }
+      end: {
+       line: 5
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/import_proto_JSON_dep.sysl"
+      start: {
+       line: 5
+       col: 6
+      }
+      end: {
+       line: 5
+       col: 15
+      }
+     }
+    }
+    source_context: {
+     file: "tests/import_proto_JSON_dep.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 15
+     }
+    }
+    source_contexts: {
+     file: "tests/import_proto_JSON_dep.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 15
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "POST /cart"
+   value: {
+    name: "POST /cart"
+    docstring: "Updates the cart with the specified item"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/cart"
+    rest_params: {
+     method: POST
+     path: "/cart"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  88
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 88
+      col: 8
      }
-     end:  {
-      line:  91
-      col:  8
+     end: {
+      line: 91
+      col: 8
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "POST /checkout"
-   value:  {
-    name:  "POST /checkout"
-    docstring:  "Checks out the specified cart"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /checkout"
+   value: {
+    name: "POST /checkout"
+    docstring: "Checks out the specified cart"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/checkout"
+    rest_params: {
+     method: POST
+     path: "/checkout"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  96
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 96
+      col: 8
      }
-     end:  {
-      line:  100
-      col:  7
+     end: {
+      line: 100
+      col: 7
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  source_context:  {
-   file:  "tests/import_proto_JSON_dep.sysl"
-   start:  {
-    line:  2
-    col:  1
+  source_context: {
+   file: "tests/import_proto_JSON_dep.sysl"
+   start: {
+    line: 2
+    col: 1
    }
-   end:  {
-    line:  5
-    col:  12
+   end: {
+    line: 5
+    col: 15
    }
-   version:  "v0.0.2"
+   version: "v0.0.2"
   }
-  source_contexts:  {
-   file:  "tests/import_proto_JSON_dep.sysl"
-   start:  {
-    line:  2
-    col:  1
+  source_contexts: {
+   file: "tests/import_proto_JSON_dep.sysl"
+   start: {
+    line: 2
+    col: 1
    }
-   end:  {
-    line:  5
-    col:  12
+   end: {
+    line: 5
+    col: 15
    }
-   version:  "v0.0.2"
+   version: "v0.0.2"
   }
  }
 }
-apps:  {
- key:  "GroceryStore"
- value:  {
-  name:  {
-   part:  "GroceryStore"
+apps: {
+ key: "GroceryStore"
+ value: {
+  name: {
+   part: "GroceryStore"
   }
-  attrs:  {
-   key:  "description"
-   value:  {
-    s:  "The Grocery Store API lets users shop for groceries.\n"
+  attrs: {
+   key: "description"
+   value: {
+    s: "The Grocery Store API lets users shop for groceries.\n"
    }
   }
-  attrs:  {
-   key:  "docs.url"
-   value:  {
-    s:  "https://en.wikipedia.org/wiki/Grocery_store"
+  attrs: {
+   key: "docs.url"
+   value: {
+    s: "https://en.wikipedia.org/wiki/Grocery_store"
    }
   }
-  attrs:  {
-   key:  "owner.name"
-   value:  {
-    s:  "Eddard Stark"
+  attrs: {
+   key: "owner.name"
+   value: {
+    s: "Eddard Stark"
    }
   }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "GroceryStore"
+  attrs: {
+   key: "package"
+   value: {
+    s: "GroceryStore"
    }
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "rest"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "rest"
      }
     }
    }
   }
-  attrs:  {
-   key:  "repo.url"
-   value:  {
-    s:  "https://github.com/anz-bank/sysl"
+  attrs: {
+   key: "repo.url"
+   value: {
+    s: "https://github.com/anz-bank/sysl"
    }
   }
-  attrs:  {
-   key:  "team.slack"
-   value:  {
-    s:  "https://slack.com/intl/en-au/"
+  attrs: {
+   key: "team.slack"
+   value: {
+    s: "https://slack.com/intl/en-au/"
    }
   }
-  attrs:  {
-   key:  "version"
-   value:  {
-    s:  "1.0.0"
+  attrs: {
+   key: "version"
+   value: {
+    s: "1.0.0"
    }
   }
-  endpoints:  {
-   key:  "DELETE /cart"
-   value:  {
-    name:  "DELETE /cart"
-    docstring:  "Removes the specified item from the cart"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "DELETE /cart"
+   value: {
+    name: "DELETE /cart"
+    docstring: "Removes the specified item from the cart"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Cart"
+    stmt: {
+     call: {
+      target: {
+       part: "Cart"
       }
-      endpoint:  "DELETE /cart"
+      endpoint: "DELETE /cart"
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "CartResponse"
+    stmt: {
+     ret: {
+      payload: "CartResponse"
      }
     }
-    rest_params:  {
-     method:  DELETE
-     path:  "/cart"
+    rest_params: {
+     method: DELETE
+     path: "/cart"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  50
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 50
+      col: 8
      }
-     end:  {
-      line:  55
-      col:  4
+     end: {
+      line: 55
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "GET /cart"
-   value:  {
-    name:  "GET /cart"
-    docstring:  "Adds the specified item to the cart"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /cart"
+   value: {
+    name: "GET /cart"
+    docstring: "Adds the specified item to the cart"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Cart"
+    stmt: {
+     call: {
+      target: {
+       part: "Cart"
       }
-      endpoint:  "GET /cart"
+      endpoint: "GET /cart"
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "CartResponse"
+    stmt: {
+     ret: {
+      payload: "CartResponse"
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/cart"
+    rest_params: {
+     method: GET
+     path: "/cart"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  42
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 42
+      col: 8
      }
-     end:  {
-      line:  46
-      col:  8
+     end: {
+      line: 46
+      col: 8
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "GET /inventory"
-   value:  {
-    name:  "GET /inventory"
-    docstring:  "Returns a list of items in the inventory"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /inventory"
+   value: {
+    name: "GET /inventory"
+    docstring: "Returns a list of items in the inventory"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    param:  {
-     name:  "fooid"
-     type:  {
-      primitive:  STRING
-      attrs:  {
-       key:  "name"
-       value:  {
-        s:  "FooID"
+    param: {
+     name: "fooid"
+     type: {
+      primitive: STRING
+      attrs: {
+       key: "name"
+       value: {
+        s: "FooID"
        }
       }
-      attrs:  {
-       key:  "patterns"
-       value:  {
-        a:  {
-         elt:  {
-          s:  "header"
+      attrs: {
+       key: "patterns"
+       value: {
+        a: {
+         elt: {
+          s: "header"
          }
-         elt:  {
-          s:  "required"
+         elt: {
+          s: "required"
          }
         }
        }
       }
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Inventory"
+    stmt: {
+     call: {
+      target: {
+       part: "Inventory"
       }
-      endpoint:  "GET /inventory"
+      endpoint: "GET /inventory"
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "sequence of InventoryResponse"
+    stmt: {
+     ret: {
+      payload: "sequence of InventoryResponse"
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/inventory"
+    rest_params: {
+     method: GET
+     path: "/inventory"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  35
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 35
+      col: 8
      }
-     end:  {
-      line:  41
-      col:  4
+     end: {
+      line: 41
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "POST /cart"
-   value:  {
-    name:  "POST /cart"
-    docstring:  "Adds the specified item to the cart"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /cart"
+   value: {
+    name: "POST /cart"
+    docstring: "Adds the specified item to the cart"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Cart"
+    stmt: {
+     call: {
+      target: {
+       part: "Cart"
       }
-      endpoint:  "POST /cart"
+      endpoint: "POST /cart"
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "CartResponse"
+    stmt: {
+     ret: {
+      payload: "CartResponse"
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/cart"
+    rest_params: {
+     method: POST
+     path: "/cart"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  46
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 46
+      col: 8
      }
-     end:  {
-      line:  50
-      col:  8
+     end: {
+      line: 50
+      col: 8
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  endpoints:  {
-   key:  "POST /checkout"
-   value:  {
-    name:  "POST /checkout"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /checkout"
+   value: {
+    name: "POST /checkout"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Payment"
+    stmt: {
+     call: {
+      target: {
+       part: "Payment"
       }
-      endpoint:  "POST /validate"
+      endpoint: "POST /validate"
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Payment"
+    stmt: {
+     call: {
+      target: {
+       part: "Payment"
       }
-      endpoint:  "POST /pay"
+      endpoint: "POST /pay"
      }
     }
-    stmt:  {
-     action:  {
-      action:  "| Checks out the specified cart"
+    stmt: {
+     action: {
+      action: "| Checks out the specified cart"
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/checkout"
-     query_param:  {
-      name:  "payment_info"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  56
-         col:  13
+    rest_params: {
+     method: POST
+     path: "/checkout"
+     query_param: {
+      name: "payment_info"
+      type: {
+       primitive: STRING
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 56
+         col: 13
         }
-        end:  {
-         line:  56
-         col:  26
+        end: {
+         line: 56
+         col: 26
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  56
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 56
+      col: 8
      }
-     end:  {
-      line:  62
-      col:  9
+     end: {
+      line: 62
+      col: 9
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  types:  {
-   key:  "CartRequest"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "cart_id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "cart_id"
+  types: {
+   key: "CartRequest"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "cart_id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "cart_id"
         }
        }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "6"
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "6"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  21
-         col:  19
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 21
+         col: 19
         }
-        end:  {
-         line:  23
-         col:  4
+        end: {
+         line: 23
+         col: 4
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
-     attr_defs:  {
-      key:  "item_id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "item_id"
+     attr_defs: {
+      key: "item_id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "item_id"
         }
        }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "5"
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "5"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  18
-         col:  19
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 18
+         col: 19
         }
-        end:  {
-         line:  19
-         col:  8
+        end: {
+         line: 19
+         col: 8
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  15
-      col:  4
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 15
+      col: 4
      }
-     end:  {
-      line:  23
-      col:  4
+     end: {
+      line: 23
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  types:  {
-   key:  "CartResponse"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "cart_id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "cart_id"
+  types: {
+   key: "CartResponse"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "cart_id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "cart_id"
         }
        }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "4"
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "4"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  32
-         col:  19
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 32
+         col: 19
         }
-        end:  {
-         line:  34
-         col:  4
+        end: {
+         line: 34
+         col: 4
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
-     attr_defs:  {
-      key:  "item_id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "item_id"
+     attr_defs: {
+      key: "item_id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "item_id"
         }
        }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "body"
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "body"
           }
          }
         }
        }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "2"
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "2"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  29
-         col:  19
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 29
+         col: 19
         }
-        end:  {
-         line:  30
-         col:  8
+        end: {
+         line: 30
+         col: 8
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
-     attr_defs:  {
-      key:  "transaction_id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "transaction_id"
+     attr_defs: {
+      key: "transaction_id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "transaction_id"
         }
        }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "header"
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "header"
           }
          }
         }
        }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "1"
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "1"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  26
-         col:  26
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 26
+         col: 26
         }
-        end:  {
-         line:  27
-         col:  8
+        end: {
+         line: 27
+         col: 8
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  23
-      col:  4
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 23
+      col: 4
      }
-     end:  {
-      line:  34
-      col:  4
+     end: {
+      line: 34
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  types:  {
-   key:  "InventoryResponse"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "item_id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "item_id"
+  types: {
+   key: "InventoryResponse"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "item_id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "item_id"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  11
-         col:  19
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 11
+         col: 19
         }
-        end:  {
-         line:  12
-         col:  8
+        end: {
+         line: 12
+         col: 8
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
-     attr_defs:  {
-      key:  "quantity"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "quantity"
+     attr_defs: {
+      key: "quantity"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "quantity"
         }
        }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  13
-         col:  20
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 13
+         col: 20
         }
-        end:  {
-         line:  15
-         col:  4
+        end: {
+         line: 15
+         col: 4
         }
-        version:  "v0.0.2"
+        version: "v0.0.2"
        }
       }
      }
     }
-    attrs:  {
-     key:  "json_map_key"
-     value:  {
-      s:  "item_id"
+    attrs: {
+     key: "json_map_key"
+     value: {
+      s: "item_id"
      }
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  9
-      col:  4
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 9
+      col: 4
      }
-     end:  {
-      line:  15
-      col:  4
+     end: {
+      line: 15
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  source_context:  {
-   file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-   start:  {
-    line:  1
-    col:  1
+  source_context: {
+   file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+   start: {
+    line: 1
+    col: 1
    }
-   end:  {
-    line:  1
-    col:  43
+   end: {
+    line: 1
+    col: 43
    }
-   version:  "v0.0.2"
+   version: "v0.0.2"
   }
  }
 }
-apps:  {
- key:  "Inventory"
- value:  {
-  name:  {
-   part:  "Inventory"
+apps: {
+ key: "Inventory"
+ value: {
+  name: {
+   part: "Inventory"
   }
-  attrs:  {
-   key:  "description"
-   value:  {
-    s:  "The Inventory API gives information on items available for purchase.\n"
+  attrs: {
+   key: "description"
+   value: {
+    s: "The Inventory API gives information on items available for purchase.\n"
    }
   }
-  attrs:  {
-   key:  "docs.url"
-   value:  {
-    s:  "https://en.wikipedia.org/wiki/Grocery_store"
+  attrs: {
+   key: "docs.url"
+   value: {
+    s: "https://en.wikipedia.org/wiki/Grocery_store"
    }
   }
-  attrs:  {
-   key:  "owner.name"
-   value:  {
-    s:  "Jon Snow"
+  attrs: {
+   key: "owner.name"
+   value: {
+    s: "Jon Snow"
    }
   }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "InventoryService"
+  attrs: {
+   key: "package"
+   value: {
+    s: "InventoryService"
    }
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "rest"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "rest"
      }
     }
    }
   }
-  attrs:  {
-   key:  "repo.url"
-   value:  {
-    s:  "https://github.com/anz-bank/sysl"
+  attrs: {
+   key: "repo.url"
+   value: {
+    s: "https://github.com/anz-bank/sysl"
    }
   }
-  attrs:  {
-   key:  "team.slack"
-   value:  {
-    s:  "https://slack.com/intl/en-au/"
+  attrs: {
+   key: "team.slack"
+   value: {
+    s: "https://slack.com/intl/en-au/"
    }
   }
-  attrs:  {
-   key:  "version"
-   value:  {
-    s:  "1.0.0"
+  attrs: {
+   key: "version"
+   value: {
+    s: "1.0.0"
    }
   }
-  endpoints:  {
-   key:  "GET /inventory"
-   value:  {
-    name:  "GET /inventory"
-    docstring:  "Returns a list of available items for purchase "
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /inventory"
+   value: {
+    name: "GET /inventory"
+    docstring: "Returns a list of available items for purchase "
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/inventory"
+    rest_params: {
+     method: GET
+     path: "/inventory"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  72
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 72
+      col: 8
      }
-     end:  {
-      line:  76
-      col:  4
+     end: {
+      line: 76
+      col: 4
      }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  source_context:  {
-   file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-   start:  {
-    line:  62
-    col:  1
+  source_context: {
+   file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+   start: {
+    line: 62
+    col: 1
    }
-   end:  {
-    line:  62
-    col:  43
+   end: {
+    line: 62
+    col: 43
    }
-   version:  "v0.0.2"
+   version: "v0.0.2"
   }
  }
 }
-apps:  {
- key:  "Payment"
- value:  {
-  name:  {
-   part:  "Payment"
+apps: {
+ key: "Payment"
+ value: {
+  name: {
+   part: "Payment"
   }
-  attrs:  {
-   key:  "description"
-   value:  {
-    s:  "The Payment API processes payments.\n"
+  attrs: {
+   key: "description"
+   value: {
+    s: "The Payment API processes payments.\n"
    }
   }
-  attrs:  {
-   key:  "docs.url"
-   value:  {
-    s:  "https://en.wikipedia.org/wiki/Grocery_store"
+  attrs: {
+   key: "docs.url"
+   value: {
+    s: "https://en.wikipedia.org/wiki/Grocery_store"
    }
   }
-  attrs:  {
-   key:  "owner.name"
-   value:  {
-    s:  "Arya Stark"
+  attrs: {
+   key: "owner.name"
+   value: {
+    s: "Arya Stark"
    }
   }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "Payment"
+  attrs: {
+   key: "package"
+   value: {
+    s: "Payment"
    }
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "rest"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "rest"
      }
     }
    }
   }
-  attrs:  {
-   key:  "repo.url"
-   value:  {
-    s:  "https://github.com/anz-bank/sysl"
+  attrs: {
+   key: "repo.url"
+   value: {
+    s: "https://github.com/anz-bank/sysl"
    }
   }
-  attrs:  {
-   key:  "team.slack"
-   value:  {
-    s:  "https://slack.com/intl/en-au/"
+  attrs: {
+   key: "team.slack"
+   value: {
+    s: "https://slack.com/intl/en-au/"
    }
   }
-  attrs:  {
-   key:  "version"
-   value:  {
-    s:  "1.0.0"
+  attrs: {
+   key: "version"
+   value: {
+    s: "1.0.0"
    }
   }
-  endpoints:  {
-   key:  "POST /pay"
-   value:  {
-    name:  "POST /pay"
-    docstring:  "Processes a payment"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /pay"
+   value: {
+    name: "POST /pay"
+    docstring: "Processes a payment"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: string"
+    stmt: {
+     ret: {
+      payload: "ok <: string"
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/pay"
+    rest_params: {
+     method: POST
+     path: "/pay"
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  123
-      col:  8
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 123
+      col: 8
      }
-     end:  {
-      line:  126
+     end: {
+      line: 126
      }
-     version:  "v0.0.2"
-    }
-   }
-  }
-  endpoints:  {
-   key:  "POST /validate"
-   value:  {
-    name:  "POST /validate"
-    docstring:  "Validates payment information"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-      }
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "200 <: string"
-     }
-    }
-    rest_params:  {
-     method:  POST
-     path:  "/validate"
-     query_param:  {
-      name:  "payment_info"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  118
-         col:  13
-        }
-        end:  {
-         line:  118
-         col:  26
-        }
-        version:  "v0.0.2"
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  118
-      col:  8
-     }
-     end:  {
-      line:  122
-      col:  4
-     }
-     version:  "v0.0.2"
+     version: "v0.0.2"
     }
    }
   }
-  types:  {
-   key:  "PaymentInfo"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "credit_card_number"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "credit_card_number"
-        }
-       }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "1"
-        }
-       }
-       attrs:  {
-        key:  "sensitive"
-        value:  {
-         s:  "true"
-        }
-       }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  112
-         col:  30
-        }
-        end:  {
-         line:  113
-         col:  8
-        }
-        version:  "v0.0.2"
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "type"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "type"
-        }
-       }
-       attrs:  {
-        key:  "rpcId"
-        value:  {
-         s:  "2"
-        }
-       }
-       source_context:  {
-        file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-        start:  {
-         line:  115
-         col:  16
-        }
-        end:  {
-         line:  117
-         col:  4
-        }
-        version:  "v0.0.2"
+  endpoints: {
+   key: "POST /validate"
+   value: {
+    name: "POST /validate"
+    docstring: "Validates payment information"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    source_context:  {
-     file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-     start:  {
-      line:  108
-      col:  4
+    stmt: {
+     ret: {
+      payload: "200 <: string"
      }
-     end:  {
-      line:  117
-      col:  4
+    }
+    rest_params: {
+     method: POST
+     path: "/validate"
+     query_param: {
+      name: "payment_info"
+      type: {
+       primitive: STRING
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 118
+         col: 13
+        }
+        end: {
+         line: 118
+         col: 26
+        }
+        version: "v0.0.2"
+       }
+      }
      }
-     version:  "v0.0.2"
+    }
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 118
+      col: 8
+     }
+     end: {
+      line: 122
+      col: 4
+     }
+     version: "v0.0.2"
     }
    }
   }
-  source_context:  {
-   file:  "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
-   start:  {
-    line:  100
-    col:  1
+  types: {
+   key: "PaymentInfo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "credit_card_number"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "credit_card_number"
+        }
+       }
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "1"
+        }
+       }
+       attrs: {
+        key: "sensitive"
+        value: {
+         s: "true"
+        }
+       }
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 112
+         col: 30
+        }
+        end: {
+         line: 113
+         col: 8
+        }
+        version: "v0.0.2"
+       }
+      }
+     }
+     attr_defs: {
+      key: "type"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "type"
+        }
+       }
+       attrs: {
+        key: "rpcId"
+        value: {
+         s: "2"
+        }
+       }
+       source_context: {
+        file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+        start: {
+         line: 115
+         col: 16
+        }
+        end: {
+         line: 117
+         col: 4
+        }
+        version: "v0.0.2"
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+     start: {
+      line: 108
+      col: 4
+     }
+     end: {
+      line: 117
+      col: 4
+     }
+     version: "v0.0.2"
+    }
    }
-   end:  {
-    line:  100
-    col:  32
+  }
+  source_context: {
+   file: "github.com/anz-bank/sysl-examples/demos/grocerystore/grocerystore.sysl"
+   start: {
+    line: 100
+    col: 1
    }
-   version:  "v0.0.2"
+   end: {
+    line: 100
+    col: 32
+   }
+   version: "v0.0.2"
   }
  }
 }
-apps:  {
- key:  "groceryStore"
- value:  {
-  name:  {
-   part:  "groceryStore"
+apps: {
+ key: "groceryStore"
+ value: {
+  name: {
+   part: "groceryStore"
   }
-  endpoints:  {
-   key:  "..."
-   value:  {
-    name:  "..."
+  endpoints: {
+   key: "..."
+   value: {
+    name: "..."
    }
   }
-  source_context:  {
-   file:  "test.sysl"
-   start:  {
-    line:  3
-    col:  1
+  source_context: {
+   file: "test.sysl"
+   start: {
+    line: 3
+    col: 1
    }
-   end:  {
-    line:  3
+   end: {
+    line: 3
    }
   }
  }

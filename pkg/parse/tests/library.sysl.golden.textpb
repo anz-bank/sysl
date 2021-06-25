@@ -1,699 +1,897 @@
-apps:  {
- key:  "School"
- value:  {
-  name:  {
-   part:  "School"
+apps: {
+ key: "School"
+ value: {
+  name: {
+   part: "School"
   }
-  types:  {
-   key:  "Class"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "Id"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+  types: {
+   key: "Class"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "Id"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 19
+            }
+            end: {
+             line: 2
+             col: 22
+            }
+           }
+           source_contexts: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 19
+            }
+            end: {
+             line: 2
+             col: 22
+            }
+           }
           }
-          elt:  {
-           s:  "autoinc"
-          }
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  32
-        }
-       }
-       source_contexts:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  32
-        }
-       }
-      }
-     }
-     primary_key:  {
-      attr_name:  "Id"
-     }
-    }
-    source_context:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  32
-     }
-    }
-    source_contexts:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  32
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Student"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "ClassId"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "School"
-         }
-         path:  "Student"
-        }
-        ref:  {
-         path:  "Class"
-         path:  "Idd"
-        }
-       }
-       source_context:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  25
-        }
-       }
-       source_contexts:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  25
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Id"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+          elt: {
+           s: "autoinc"
+           source_context: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 24
+            }
+            end: {
+             line: 2
+             col: 32
+            }
+           }
+           source_contexts: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 24
+            }
+            end: {
+             line: 2
+             col: 32
+            }
+           }
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  5
-         col:  8
+       source_context: {
+        file: "tests/school.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  22
+        end: {
+         line: 2
+         col: 33
         }
        }
-       source_contexts:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  5
-         col:  8
+       source_contexts: {
+        file: "tests/school.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  22
+        end: {
+         line: 2
+         col: 33
         }
        }
       }
      }
-     primary_key:  {
-      attr_name:  "Id"
+     primary_key: {
+      attr_name: "Id"
      }
     }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "describe the table"
+    source_context: {
+     file: "tests/school.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 32
      }
     }
-    source_context:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_contexts: {
+     file: "tests/school.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  6
-      col:  25
-     }
-    }
-    source_contexts:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  3
-      col:  4
-     }
-     end:  {
-      line:  6
-      col:  25
+     end: {
+      line: 2
+      col: 32
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/school.sysl"
-   start:  {}
-   end:  {
-    line:  6
-    col:  25
+  types: {
+   key: "Student"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "ClassId"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "School"
+         }
+         path: "Student"
+        }
+        ref: {
+         path: "Class"
+         path: "Idd"
+        }
+       }
+       source_context: {
+        file: "tests/school.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/school.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 28
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Id"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/school.sysl"
+            start: {
+             line: 5
+             col: 19
+            }
+            end: {
+             line: 5
+             col: 22
+            }
+           }
+           source_contexts: {
+            file: "tests/school.sysl"
+            start: {
+             line: 5
+             col: 19
+            }
+            end: {
+             line: 5
+             col: 22
+            }
+           }
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/school.sysl"
+        start: {
+         line: 5
+         col: 8
+        }
+        end: {
+         line: 5
+         col: 23
+        }
+       }
+       source_contexts: {
+        file: "tests/school.sysl"
+        start: {
+         line: 5
+         col: 8
+        }
+        end: {
+         line: 5
+         col: 23
+        }
+       }
+      }
+     }
+     primary_key: {
+      attr_name: "Id"
+     }
+    }
+    attrs: {
+     key: "description"
+     value: {
+      s: "describe the table"
+      source_context: {
+       file: "tests/school.sysl"
+       start: {
+        line: 4
+        col: 23
+       }
+       end: {
+        line: 4
+        col: 43
+       }
+      }
+      source_contexts: {
+       file: "tests/school.sysl"
+       start: {
+        line: 4
+        col: 23
+       }
+       end: {
+        line: 4
+        col: 43
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/school.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 28
+     }
+    }
+    source_contexts: {
+     file: "tests/school.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 28
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/school.sysl"
-   start:  {}
-   end:  {
-    line:  6
-    col:  25
+  source_context: {
+   file: "tests/school.sysl"
+   start: {}
+   end: {
+    line: 6
+    col: 28
+   }
+  }
+  source_contexts: {
+   file: "tests/school.sysl"
+   start: {}
+   end: {
+    line: 6
+    col: 28
    }
   }
  }
 }
-apps:  {
- key:  "SchoolLibrary"
- value:  {
-  name:  {
-   part:  "SchoolLibrary"
+apps: {
+ key: "SchoolLibrary"
+ value: {
+  name: {
+   part: "SchoolLibrary"
   }
-  types:  {
-   key:  "Book"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "Author"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  12
-         col:  8
+  types: {
+   key: "Book"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "Author"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 12
+         col: 8
         }
-        end:  {
-         line:  12
-         col:  18
+        end: {
+         line: 12
+         col: 24
         }
        }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  12
-         col:  8
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 12
+         col: 8
         }
-        end:  {
-         line:  12
-         col:  18
+        end: {
+         line: 12
+         col: 24
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "BookId"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+     attr_defs: {
+      key: "BookId"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/library.sysl"
+            start: {
+             line: 10
+             col: 23
+            }
+            end: {
+             line: 10
+             col: 26
+            }
+           }
+           source_contexts: {
+            file: "tests/library.sysl"
+            start: {
+             line: 10
+             col: 23
+            }
+            end: {
+             line: 10
+             col: 26
+            }
+           }
           }
-          elt:  {
-           s:  "autoinc"
-          }
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  10
-         col:  8
-        }
-        end:  {
-         line:  10
-         col:  36
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  10
-         col:  8
-        }
-        end:  {
-         line:  10
-         col:  36
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "name"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  11
-         col:  8
-        }
-        end:  {
-         line:  11
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  11
-         col:  8
-        }
-        end:  {
-         line:  11
-         col:  16
-        }
-       }
-      }
-     }
-     primary_key:  {
-      attr_name:  "BookId"
-     }
-    }
-    source_context:  {
-     file:  "tests/library.sysl"
-     start:  {
-      line:  9
-      col:  4
-     }
-     end:  {
-      line:  12
-      col:  18
-     }
-    }
-    source_contexts:  {
-     file:  "tests/library.sysl"
-     start:  {
-      line:  9
-      col:  4
-     }
-     end:  {
-      line:  12
-      col:  18
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Borrow"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "BookId"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "SchoolLibrary"
-         }
-         path:  "Borrow"
-        }
-        ref:  {
-         path:  "Book"
-         path:  "BookId"
-        }
-       }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+          elt: {
+           s: "autoinc"
+           source_context: {
+            file: "tests/library.sysl"
+            start: {
+             line: 10
+             col: 28
+            }
+            end: {
+             line: 10
+             col: 36
+            }
+           }
+           source_contexts: {
+            file: "tests/library.sysl"
+            start: {
+             line: 10
+             col: 28
+            }
+            end: {
+             line: 10
+             col: 36
+            }
+           }
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  15
-         col:  8
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 10
+         col: 8
         }
-        end:  {
-         line:  15
-         col:  34
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  15
-         col:  8
-        }
-        end:  {
-         line:  15
-         col:  34
+        end: {
+         line: 10
+         col: 37
         }
        }
-      }
-     }
-     attr_defs:  {
-      key:  "DueDate"
-      value:  {
-       primitive:  DATE
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  16
-         col:  8
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 10
+         col: 8
         }
-        end:  {
-         line:  16
-         col:  19
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  16
-         col:  8
-        }
-        end:  {
-         line:  16
-         col:  19
+        end: {
+         line: 10
+         col: 37
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "MemberId"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "SchoolLibrary"
+     attr_defs: {
+      key: "name"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 11
+         col: 8
+        }
+        end: {
+         line: 11
+         col: 22
+        }
+       }
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 11
+         col: 8
+        }
+        end: {
+         line: 11
+         col: 22
+        }
+       }
+      }
+     }
+     primary_key: {
+      attr_name: "BookId"
+     }
+    }
+    source_context: {
+     file: "tests/library.sysl"
+     start: {
+      line: 9
+      col: 4
+     }
+     end: {
+      line: 12
+      col: 24
+     }
+    }
+    source_contexts: {
+     file: "tests/library.sysl"
+     start: {
+      line: 9
+      col: 4
+     }
+     end: {
+      line: 12
+      col: 24
+     }
+    }
+   }
+  }
+  types: {
+   key: "Borrow"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "BookId"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "SchoolLibrary"
          }
-         path:  "Borrow"
+         path: "Borrow"
         }
-        ref:  {
-         path:  "Member"
-         path:  "MemberId"
+        ref: {
+         path: "Book"
+         path: "BookId"
         }
        }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/library.sysl"
+            start: {
+             line: 15
+             col: 31
+            }
+            end: {
+             line: 15
+             col: 34
+            }
+           }
+           source_contexts: {
+            file: "tests/library.sysl"
+            start: {
+             line: 15
+             col: 31
+            }
+            end: {
+             line: 15
+             col: 34
+            }
+           }
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  14
-         col:  8
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 15
+         col: 8
         }
-        end:  {
-         line:  14
-         col:  40
+        end: {
+         line: 15
+         col: 35
         }
        }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  14
-         col:  8
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 15
+         col: 8
         }
-        end:  {
-         line:  14
-         col:  40
+        end: {
+         line: 15
+         col: 35
         }
        }
       }
      }
-     primary_key:  {
-      attr_name:  "MemberId"
-      attr_name:  "BookId"
+     attr_defs: {
+      key: "DueDate"
+      value: {
+       primitive: DATE
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 16
+         col: 8
+        }
+        end: {
+         line: 16
+         col: 23
+        }
+       }
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 16
+         col: 8
+        }
+        end: {
+         line: 16
+         col: 23
+        }
+       }
+      }
      }
-    }
-    source_context:  {
-     file:  "tests/library.sysl"
-     start:  {
-      line:  13
-      col:  4
-     }
-     end:  {
-      line:  16
-      col:  19
-     }
-    }
-    source_contexts:  {
-     file:  "tests/library.sysl"
-     start:  {
-      line:  13
-      col:  4
-     }
-     end:  {
-      line:  16
-      col:  19
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Member"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "MemberId"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "SchoolLibrary"
+     attr_defs: {
+      key: "MemberId"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "SchoolLibrary"
          }
-         path:  "Member"
+         path: "Borrow"
         }
-        ref:  {
-         appname:  {
-          part:  "Student"
+        ref: {
+         path: "Member"
+         path: "MemberId"
+        }
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/library.sysl"
+            start: {
+             line: 14
+             col: 37
+            }
+            end: {
+             line: 14
+             col: 40
+            }
+           }
+           source_contexts: {
+            file: "tests/library.sysl"
+            start: {
+             line: 14
+             col: 37
+            }
+            end: {
+             line: 14
+             col: 40
+            }
+           }
+          }
          }
-         path:  "Id"
         }
        }
-       attrs:  {
-        key:  "description"
-        value:  {
-         s:  "\n"
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 41
         }
        }
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  4
-         col:  8
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 14
+         col: 8
         }
-        end:  {
-         line:  6
-         col:  8
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  4
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  8
+        end: {
+         line: 14
+         col: 41
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "amount"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         max:  14
-        }
-        precision:  14
-        scale:  2
-       }
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  8
-         col:  8
-        }
-        end:  {
-         line:  8
-         col:  30
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  8
-         col:  8
-        }
-        end:  {
-         line:  8
-         col:  30
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "city"
-      value:  {
-       primitive:  STRING
-       constraint:  {
-        length:  {
-         max:  100
-        }
-       }
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  7
-         col:  8
-        }
-        end:  {
-         line:  7
-         col:  26
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  7
-         col:  8
-        }
-        end:  {
-         line:  7
-         col:  26
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "name"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/library.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  16
-        }
-       }
-      }
+     primary_key: {
+      attr_name: "MemberId"
+      attr_name: "BookId"
      }
     }
-    source_context:  {
-     file:  "tests/library.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_context: {
+     file: "tests/library.sysl"
+     start: {
+      line: 13
+      col: 4
      }
-     end:  {
-      line:  8
-      col:  30
+     end: {
+      line: 16
+      col: 23
      }
     }
-    source_contexts:  {
-     file:  "tests/library.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_contexts: {
+     file: "tests/library.sysl"
+     start: {
+      line: 13
+      col: 4
      }
-     end:  {
-      line:  8
-      col:  30
+     end: {
+      line: 16
+      col: 23
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/library.sysl"
-   start:  {
-    line:  2
-   }
-   end:  {
-    line:  16
-    col:  19
+  types: {
+   key: "Member"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "MemberId"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "SchoolLibrary"
+         }
+         path: "Member"
+        }
+        ref: {
+         appname: {
+          part: "Student"
+         }
+         path: "Id"
+        }
+       }
+       attrs: {
+        key: "description"
+        value: {
+         s: "\n"
+         source_context: {
+          file: "tests/library.sysl"
+          start: {
+           line: 5
+           col: 27
+          }
+          end: {
+           line: 5
+           col: 31
+          }
+         }
+         source_contexts: {
+          file: "tests/library.sysl"
+          start: {
+           line: 5
+           col: 27
+          }
+          end: {
+           line: 5
+           col: 31
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 9
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "amount"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         max: 14
+        }
+        precision: 14
+        scale: 2
+       }
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 8
+         col: 8
+        }
+        end: {
+         line: 8
+         col: 31
+        }
+       }
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 8
+         col: 8
+        }
+        end: {
+         line: 8
+         col: 31
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "city"
+      value: {
+       primitive: STRING
+       constraint: {
+        length: {
+         max: 100
+        }
+       }
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 7
+         col: 8
+        }
+        end: {
+         line: 7
+         col: 27
+        }
+       }
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 7
+         col: 8
+        }
+        end: {
+         line: 7
+         col: 27
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "name"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/library.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 22
+        }
+       }
+       source_contexts: {
+        file: "tests/library.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 22
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/library.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 8
+      col: 31
+     }
+    }
+    source_contexts: {
+     file: "tests/library.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 8
+      col: 31
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/library.sysl"
-   start:  {
-    line:  2
+  source_context: {
+   file: "tests/library.sysl"
+   start: {
+    line: 2
    }
-   end:  {
-    line:  16
-    col:  19
+   end: {
+    line: 16
+    col: 23
+   }
+  }
+  source_contexts: {
+   file: "tests/library.sysl"
+   start: {
+    line: 2
+   }
+   end: {
+    line: 16
+    col: 23
    }
   }
  }

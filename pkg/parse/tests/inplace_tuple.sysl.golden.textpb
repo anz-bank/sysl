@@ -1,1180 +1,819 @@
-apps:  {
- key:  "Model"
- value:  {
-  name:  {
-   part:  "Model"
+apps: {
+ key: "Model"
+ value: {
+  name: {
+   part: "Model"
   }
-  types:  {
-   key:  "Request"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "bar"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         min:  10
-         max:  9999
+  types: {
+   key: "Request"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "bar"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         min: 10
+         max: 9999
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  18
-         col:  8
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 18
+         col: 8
         }
-        end:  {
-         line:  18
-         col:  31
+        end: {
+         line: 18
+         col: 32
         }
        }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  18
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 18
+         col: 8
         }
-        end:  {
-         line:  18
-         col:  31
+        end: {
+         line: 18
+         col: 32
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  17
-      col:  4
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 17
+      col: 4
      }
-     end:  {
-      line:  18
-      col:  31
-     }
-    }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  17
-      col:  4
-     }
-     end:  {
-      line:  18
-      col:  31
+     end: {
+      line: 18
+      col: 32
      }
     }
-   }
-  }
-  source_context:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {
-    line:  16
-   }
-   end:  {
-    line:  18
-    col:  31
-   }
-  }
-  source_contexts:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {
-    line:  16
-   }
-   end:  {
-    line:  18
-    col:  31
-   }
-  }
- }
-}
-apps:  {
- key:  "My :: Browser :: Client Model"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Browser"
-   part:  "Client Model"
-  }
-  types:  {
-   key:  "Request"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "bar"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         min:  10
-         max:  9999
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  13
-         col:  8
-        }
-        end:  {
-         line:  13
-         col:  31
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  13
-         col:  8
-        }
-        end:  {
-         line:  13
-         col:  31
-        }
-       }
-      }
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 17
+      col: 4
      }
-     attr_defs:  {
-      key:  "baz"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         max:  10
-        }
-        precision:  10
-        scale:  2
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  14
-         col:  8
-        }
-        end:  {
-         line:  14
-         col:  27
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  14
-         col:  8
-        }
-        end:  {
-         line:  14
-         col:  27
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "foo"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         max:  10
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  12
-         col:  8
-        }
-        end:  {
-         line:  12
-         col:  25
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  12
-         col:  8
-        }
-        end:  {
-         line:  12
-         col:  25
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  11
-      col:  4
-     }
-     end:  {
-      line:  14
-      col:  27
-     }
-    }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  11
-      col:  4
-     }
-     end:  {
-      line:  14
-      col:  27
+     end: {
+      line: 18
+      col: 32
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {
-    line:  10
+  source_context: {
+   file: "tests/inplace_tuple.sysl"
+   start: {
+    line: 16
    }
-   end:  {
-    line:  14
-    col:  27
+   end: {
+    line: 18
+    col: 32
    }
   }
-  source_contexts:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {
-    line:  10
+  source_contexts: {
+   file: "tests/inplace_tuple.sysl"
+   start: {
+    line: 16
    }
-   end:  {
-    line:  14
-    col:  27
+   end: {
+    line: 18
+    col: 32
    }
   }
  }
 }
-apps:  {
- key:  "My :: Client Model"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Client Model"
+apps: {
+ key: "My :: Browser :: Client Model"
+ value: {
+  name: {
+   part: "My"
+   part: "Browser"
+   part: "Client Model"
   }
-  long_name:  "My client Model"
-  types:  {
-   key:  "Request"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "bar"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         min:  10
-         max:  9999
+  types: {
+   key: "Request"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "bar"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         min: 10
+         max: 9999
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  8
-         col:  8
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 13
+         col: 8
         }
-        end:  {
-         line:  8
-         col:  31
+        end: {
+         line: 13
+         col: 32
         }
        }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  8
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 13
+         col: 8
         }
-        end:  {
-         line:  8
-         col:  31
+        end: {
+         line: 13
+         col: 32
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "baz"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         max: 10
+        }
+        precision: 10
+        scale: 2
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 28
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "foo"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         max: 10
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 12
+         col: 8
+        }
+        end: {
+         line: 12
+         col: 26
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 12
+         col: 8
+        }
+        end: {
+         line: 12
+         col: 26
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  7
-      col:  4
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 11
+      col: 4
      }
-     end:  {
-      line:  8
-      col:  31
+     end: {
+      line: 14
+      col: 28
      }
     }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  7
-      col:  4
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 11
+      col: 4
      }
-     end:  {
-      line:  8
-      col:  31
+     end: {
+      line: 14
+      col: 28
      }
     }
    }
   }
-  types:  {
-   key:  "Response"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       list:  {
-        type:  {
-         primitive:  INT
-         constraint:  {
-          range:  {
-           min:  {
-            i:  -2147483648
-           }
-           max:  {
-            i:  2147483647
-           }
-          }
-          bit_width:  32
-         }
-         source_context:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  4
-           col:  8
-          }
-          end:  {
-           line:  4
-           col:  22
-          }
-         }
-         source_contexts:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  4
-           col:  8
-          }
-          end:  {
-           line:  4
-           col:  22
-          }
-         }
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "id2"
-      value:  {
-       list:  {
-        type:  {
-         primitive:  INT
-         constraint:  {
-          range:  {
-           min:  {
-            i:  -9223372036854775808
-           }
-           max:  {
-            i:  9223372036854775807
-           }
-          }
-          bit_width:  64
-         }
-         source_context:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  5
-           col:  8
-          }
-          end:  {
-           line:  5
-           col:  23
-          }
-         }
-         source_contexts:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  5
-           col:  8
-          }
-          end:  {
-           line:  5
-           col:  23
-          }
-         }
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "list"
-      value:  {
-       list:  {
-        type:  {
-         type_ref:  {
-          context:  {
-           appname:  {
-            part:  "My"
-            part:  "Client Model"
-           }
-           path:  "Response"
-          }
-          ref:  {
-           path:  "Request"
-          }
-         }
-         source_context:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  3
-           col:  8
-          }
-          end:  {
-           line:  3
-           col:  24
-          }
-         }
-         source_contexts:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  3
-           col:  8
-          }
-          end:  {
-           line:  3
-           col:  24
-          }
-         }
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "requests"
-      value:  {
-       set:  {
-        type_ref:  {
-         context:  {
-          appname:  {
-           part:  "My"
-           part:  "Client Model"
-          }
-          path:  "Response"
-         }
-         ref:  {
-          path:  "Request"
-         }
-        }
-        source_context:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  2
-          col:  8
-         }
-         end:  {
-          line:  2
-          col:  27
-         }
-        }
-        source_contexts:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  2
-          col:  8
-         }
-         end:  {
-          line:  2
-          col:  27
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  27
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  27
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  5
-      col:  23
-     }
-    }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  5
-      col:  23
-     }
-    }
+  source_context: {
+   file: "tests/inplace_tuple.sysl"
+   start: {
+    line: 10
+   }
+   end: {
+    line: 14
+    col: 28
    }
   }
-  source_context:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {}
-   end:  {
-    line:  8
-    col:  31
+  source_contexts: {
+   file: "tests/inplace_tuple.sysl"
+   start: {
+    line: 10
    }
-  }
-  source_contexts:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {}
-   end:  {
-    line:  8
-    col:  31
+   end: {
+    line: 14
+    col: 28
    }
   }
  }
 }
-apps:  {
- key:  "My :: Tuple Model"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Tuple Model"
+apps: {
+ key: "My :: Client Model"
+ value: {
+  name: {
+   part: "My"
+   part: "Client Model"
   }
-  types:  {
-   key:  "Req"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "Application"
-      value:  {
-       type_ref:  {
-        ref:  {
-         path:  "Application"
+  long_name: "My client Model"
+  types: {
+   key: "Request"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "bar"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         min: 10
+         max: 9999
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  55
-         col:  8
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 8
+         col: 8
         }
-        end:  {
-         line:  66
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  55
-         col:  8
-        }
-        end:  {
-         line:  66
+        end: {
+         line: 8
+         col: 32
         }
        }
-      }
-     }
-     attr_defs:  {
-      key:  "Header"
-      value:  {
-       type_ref:  {
-        ref:  {
-         path:  "Header"
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 8
+         col: 8
         }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  48
-         col:  8
-        }
-        end:  {
-         line:  55
-         col:  8
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  48
-         col:  8
-        }
-        end:  {
-         line:  55
-         col:  8
+        end: {
+         line: 8
+         col: 32
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  47
-      col:  4
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 7
+      col: 4
      }
-     end:  {
-      line:  65
-      col:  16
+     end: {
+      line: 8
+      col: 32
      }
     }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  47
-      col:  4
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 7
+      col: 4
      }
-     end:  {
-      line:  65
-      col:  16
+     end: {
+      line: 8
+      col: 32
      }
     }
    }
   }
-  types:  {
-   key:  "Req.Application"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "AccountType"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  57
-         col:  12
-        }
-        end:  {
-         line:  57
-         col:  12
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  57
-         col:  12
-        }
-        end:  {
-         line:  57
-         col:  12
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Applicable"
-      value:  {
-       primitive:  BOOL
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  58
-         col:  12
-        }
-        end:  {
-         line:  58
-         col:  26
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  58
-         col:  12
-        }
-        end:  {
-         line:  58
-         col:  26
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "ApplicationType"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  56
-         col:  12
-        }
-        end:  {
-         line:  56
-         col:  12
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  56
-         col:  12
-        }
-        end:  {
-         line:  56
-         col:  12
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Detail"
-      value:  {
-       list:  {
-        type:  {
-         type_ref:  {
-          ref:  {
-           path:  "Detail"
-          }
-         }
-         source_context:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  59
-           col:  12
-          }
-          end:  {
-           line:  63
-           col:  12
-          }
-         }
-         source_contexts:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  59
-           col:  12
-          }
-          end:  {
-           line:  63
-           col:  12
-          }
-         }
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Purpose"
-      value:  {
-       list:  {
-        type:  {
-         type_ref:  {
-          ref:  {
-           path:  "Purpose"
-          }
-         }
-         source_context:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  63
-           col:  12
-          }
-          end:  {
-           line:  66
-          }
-         }
-         source_contexts:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  63
-           col:  12
-          }
-          end:  {
-           line:  66
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Req.Application.Detail"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "Code"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  61
-         col:  16
-        }
-        end:  {
-         line:  61
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  61
-         col:  16
-        }
-        end:  {
-         line:  61
-         col:  16
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "ObjectID"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  60
-         col:  16
-        }
-        end:  {
-         line:  60
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  60
-         col:  16
-        }
-        end:  {
-         line:  60
-         col:  16
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Status"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  62
-         col:  16
-        }
-        end:  {
-         line:  62
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  62
-         col:  16
-        }
-        end:  {
-         line:  62
-         col:  16
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Req.Application.Purpose"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "PurposeCode"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  64
-         col:  16
-        }
-        end:  {
-         line:  64
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  64
-         col:  16
-        }
-        end:  {
-         line:  64
-         col:  16
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "RemainDays"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  65
-         col:  16
-        }
-        end:  {
-         line:  65
-         col:  16
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  65
-         col:  16
-        }
-        end:  {
-         line:  65
-         col:  16
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Req.Header"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "Action"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  50
-         col:  12
-        }
-        end:  {
-         line:  50
-         col:  12
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  50
-         col:  12
-        }
-        end:  {
-         line:  50
-         col:  12
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "AppDate"
-      value:  {
-       primitive:  DATE
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  52
-         col:  12
-        }
-        end:  {
-         line:  52
-         col:  23
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  52
-         col:  12
-        }
-        end:  {
-         line:  52
-         col:  23
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "AppHostSystem"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  51
-         col:  12
-        }
-        end:  {
-         line:  51
-         col:  12
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  51
-         col:  12
-        }
-        end:  {
-         line:  51
-         col:  12
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "AppNbr"
-      value:  {
-       no_type:  {}
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  53
-         col:  12
-        }
-        end:  {
-         line:  53
-         col:  12
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  53
-         col:  12
-        }
-        end:  {
-         line:  53
-         col:  12
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Data"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "Req"
-         path:  "Header"
-        }
-        ref:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "TopLevelPayload"
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  49
-         col:  12
-        }
-        end:  {
-         line:  49
-         col:  38
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  49
-         col:  12
-        }
-        end:  {
-         line:  49
-         col:  38
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "responseList"
-      value:  {
-       list:  {
-        type:  {
-         type_ref:  {
-          context:  {
-           appname:  {
-            part:  "My"
-            part:  "Tuple Model"
+  types: {
+   key: "Response"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       list: {
+        type: {
+         primitive: INT
+         constraint: {
+          range: {
+           min: {
+            i: -2147483648
            }
-           path:  "Req"
-           path:  "Header"
-          }
-          ref:  {
-           appname:  {
-            part:  "My"
-            part:  "Tuple Model"
+           max: {
+            i: 2147483647
            }
-           path:  "Response"
+          }
+          bit_width: 32
+         }
+         source_context: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 4
+           col: 8
+          }
+          end: {
+           line: 4
+           col: 27
           }
          }
-         source_context:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  54
-           col:  12
+         source_contexts: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 4
+           col: 8
           }
-          end:  {
-           line:  54
-           col:  54
+          end: {
+           line: 4
+           col: 27
           }
          }
-         source_contexts:  {
-          file:  "tests/inplace_tuple.sysl"
-          start:  {
-           line:  54
-           col:  12
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "id2"
+      value: {
+       list: {
+        type: {
+         primitive: INT
+         constraint: {
+          range: {
+           min: {
+            i: -9223372036854775808
+           }
+           max: {
+            i: 9223372036854775807
+           }
           }
-          end:  {
-           line:  54
-           col:  54
+          bit_width: 64
+         }
+         source_context: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 5
+           col: 8
+          }
+          end: {
+           line: 5
+           col: 28
+          }
+         }
+         source_contexts: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 5
+           col: 8
+          }
+          end: {
+           line: 5
+           col: 28
+          }
+         }
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "list"
+      value: {
+       list: {
+        type: {
+         type_ref: {
+          context: {
+           appname: {
+            part: "My"
+            part: "Client Model"
+           }
+           path: "Response"
+          }
+          ref: {
+           path: "Request"
+          }
+         }
+         source_context: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 3
+           col: 8
+          }
+          end: {
+           line: 3
+           col: 31
+          }
+         }
+         source_contexts: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 3
+           col: 8
+          }
+          end: {
+           line: 3
+           col: 31
+          }
+         }
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "requests"
+      value: {
+       set: {
+        type_ref: {
+         context: {
+          appname: {
+           part: "My"
+           part: "Client Model"
+          }
+          path: "Response"
+         }
+         ref: {
+          path: "Request"
+         }
+        }
+        source_context: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 2
+          col: 8
+         }
+         end: {
+          line: 2
+          col: 34
+         }
+        }
+        source_contexts: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 2
+          col: 8
+         }
+         end: {
+          line: 2
+          col: 34
+         }
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 34
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 34
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 28
+     }
+    }
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 28
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/inplace_tuple.sysl"
+   start: {}
+   end: {
+    line: 8
+    col: 32
+   }
+  }
+  source_contexts: {
+   file: "tests/inplace_tuple.sysl"
+   start: {}
+   end: {
+    line: 8
+    col: 32
+   }
+  }
+ }
+}
+apps: {
+ key: "My :: Tuple Model"
+ value: {
+  name: {
+   part: "My"
+   part: "Tuple Model"
+  }
+  types: {
+   key: "Req"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "Application"
+      value: {
+       type_ref: {
+        ref: {
+         path: "Application"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 55
+         col: 8
+        }
+        end: {
+         line: 66
+         col: 1
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 55
+         col: 8
+        }
+        end: {
+         line: 66
+         col: 1
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Header"
+      value: {
+       type_ref: {
+        ref: {
+         path: "Header"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 48
+         col: 8
+        }
+        end: {
+         line: 55
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 48
+         col: 8
+        }
+        end: {
+         line: 55
+         col: 9
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 47
+      col: 4
+     }
+     end: {
+      line: 65
+      col: 26
+     }
+    }
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 47
+      col: 4
+     }
+     end: {
+      line: 65
+      col: 26
+     }
+    }
+   }
+  }
+  types: {
+   key: "Req.Application"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "AccountType"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 57
+         col: 12
+        }
+        end: {
+         line: 57
+         col: 23
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 57
+         col: 12
+        }
+        end: {
+         line: 57
+         col: 23
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Applicable"
+      value: {
+       primitive: BOOL
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 58
+         col: 12
+        }
+        end: {
+         line: 58
+         col: 30
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 58
+         col: 12
+        }
+        end: {
+         line: 58
+         col: 30
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "ApplicationType"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 56
+         col: 12
+        }
+        end: {
+         line: 56
+         col: 27
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 56
+         col: 12
+        }
+        end: {
+         line: 56
+         col: 27
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Detail"
+      value: {
+       list: {
+        type: {
+         type_ref: {
+          ref: {
+           path: "Detail"
+          }
+         }
+         source_context: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 59
+           col: 12
+          }
+          end: {
+           line: 63
+           col: 13
+          }
+         }
+         source_contexts: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 59
+           col: 12
+          }
+          end: {
+           line: 63
+           col: 13
+          }
+         }
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Purpose"
+      value: {
+       list: {
+        type: {
+         type_ref: {
+          ref: {
+           path: "Purpose"
+          }
+         }
+         source_context: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 63
+           col: 12
+          }
+          end: {
+           line: 66
+           col: 1
+          }
+         }
+         source_contexts: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 63
+           col: 12
+          }
+          end: {
+           line: 66
+           col: 1
           }
          }
         }
@@ -1184,906 +823,1271 @@ apps:  {
     }
    }
   }
-  types:  {
-   key:  "Response"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "bar"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         min:  10
+  types: {
+   key: "Req.Application.Detail"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "Code"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 61
+         col: 16
+        }
+        end: {
+         line: 61
+         col: 20
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  25
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 61
+         col: 16
         }
-        end:  {
-         line:  25
-         col:  27
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  25
-         col:  8
-        }
-        end:  {
-         line:  25
-         col:  27
+        end: {
+         line: 61
+         col: 20
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "baz"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         max:  9999
+     attr_defs: {
+      key: "ObjectID"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 60
+         col: 16
+        }
+        end: {
+         line: 60
+         col: 24
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  26
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 60
+         col: 16
         }
-        end:  {
-         line:  26
-         col:  30
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  26
-         col:  8
-        }
-        end:  {
-         line:  26
-         col:  30
+        end: {
+         line: 60
+         col: 24
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "code"
-      value:  {
-       primitive:  INT
-       constraint:  {
-        length:  {
-         max:  9999
+     attr_defs: {
+      key: "Status"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 62
+         col: 16
+        }
+        end: {
+         line: 62
+         col: 22
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  23
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 62
+         col: 16
         }
-        end:  {
-         line:  23
-         col:  27
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  23
-         col:  8
-        }
-        end:  {
-         line:  23
-         col:  27
+        end: {
+         line: 62
+         col: 22
         }
        }
       }
-     }
-     attr_defs:  {
-      key:  "foo"
-      value:  {
-       primitive:  DECIMAL
-       constraint:  {
-        length:  {
-         min:  10
-         max:  9999
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  24
-         col:  8
-        }
-        end:  {
-         line:  24
-         col:  31
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  24
-         col:  8
-        }
-        end:  {
-         line:  24
-         col:  31
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "nested"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "Response"
-        }
-        ref:  {
-         path:  "Payload"
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  28
-         col:  8
-        }
-        end:  {
-         line:  28
-         col:  18
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  28
-         col:  8
-        }
-        end:  {
-         line:  28
-         col:  18
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "status"
-      value:  {
-       primitive:  STRING
-       constraint:  {
-        length:  {
-         max:  30
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  22
-         col:  8
-        }
-        end:  {
-         line:  22
-         col:  31
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  22
-         col:  8
-        }
-        end:  {
-         line:  22
-         col:  31
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "toplevel"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "Response"
-        }
-        ref:  {
-         path:  "TopLevelPayload"
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  27
-         col:  8
-        }
-        end:  {
-         line:  27
-         col:  20
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  27
-         col:  8
-        }
-        end:  {
-         line:  27
-         col:  20
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  21
-      col:  4
-     }
-     end:  {
-      line:  35
-      col:  22
-     }
-    }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  21
-      col:  4
-     }
-     end:  {
-      line:  35
-      col:  22
      }
     }
    }
   }
-  types:  {
-   key:  "Response.Payload"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "XMLDoc"
-      value:  {
-       primitive:  XML
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  35
-         col:  12
+  types: {
+   key: "Req.Application.Purpose"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "PurposeCode"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 64
+         col: 16
         }
-        end:  {
-         line:  35
-         col:  22
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  35
-         col:  12
-        }
-        end:  {
-         line:  35
-         col:  22
+        end: {
+         line: 64
+         col: 27
         }
        }
-      }
-     }
-     attr_defs:  {
-      key:  "code"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  31
-         col:  12
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 64
+         col: 16
         }
-        end:  {
-         line:  31
-         col:  20
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  31
-         col:  12
-        }
-        end:  {
-         line:  31
-         col:  20
+        end: {
+         line: 64
+         col: 27
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "data"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "Response"
-         path:  "Payload"
+     attr_defs: {
+      key: "RemainDays"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 65
+         col: 16
         }
-        ref:  {
-         path:  "string_8"
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  33
-         col:  12
-        }
-        end:  {
-         line:  33
-         col:  34
+        end: {
+         line: 65
+         col: 26
         }
        }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  33
-         col:  12
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 65
+         col: 16
         }
-        end:  {
-         line:  33
-         col:  34
+        end: {
+         line: 65
+         col: 26
         }
        }
       }
-     }
-     attr_defs:  {
-      key:  "footer"
-      value:  {
-       primitive:  STRING
-       constraint:  {
-        length:  {}
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  34
-         col:  12
-        }
-        end:  {
-         line:  34
-         col:  32
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  34
-         col:  12
-        }
-        end:  {
-         line:  34
-         col:  32
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "value"
-      value:  {
-       primitive:  INT
-       constraint:  {
-        length:  {
-         min:  1
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  32
-         col:  12
-        }
-        end:  {
-         line:  32
-         col:  28
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  32
-         col:  12
-        }
-        end:  {
-         line:  32
-         col:  28
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  30
-      col:  8
-     }
-     end:  {
-      line:  35
-      col:  22
-     }
-    }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  30
-      col:  8
-     }
-     end:  {
-      line:  35
-      col:  22
      }
     }
    }
   }
-  types:  {
-   key:  "TopLevelPayload"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "bars"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "TopLevelPayload"
+  types: {
+   key: "Req.Header"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "Action"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 50
+         col: 12
         }
-        ref:  {
-         appname:  {
-          part:  "My"
-          part:  "Client Model"
-         }
-         path:  "Request"
-         path:  "status"
+        end: {
+         line: 50
+         col: 18
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  43
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 50
+         col: 12
         }
-        end:  {
-         line:  43
-         col:  45
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  43
-         col:  8
-        }
-        end:  {
-         line:  43
-         col:  45
+        end: {
+         line: 50
+         col: 18
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "data"
-      value:  {
-       primitive:  STRING
-       constraint:  {
-        length:  {
-         max:  500
+     attr_defs: {
+      key: "AppDate"
+      value: {
+       primitive: DATE
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 52
+         col: 12
+        }
+        end: {
+         line: 52
+         col: 27
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  38
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 52
+         col: 12
         }
-        end:  {
-         line:  38
-         col:  26
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  38
-         col:  8
-        }
-        end:  {
-         line:  38
-         col:  26
+        end: {
+         line: 52
+         col: 27
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "data2"
-      value:  {
-       set:  {
-        primitive:  STRING
-        constraint:  {
-         length:  {
-          max:  500
-         }
+     attr_defs: {
+      key: "AppHostSystem"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 51
+         col: 12
         }
-        source_context:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  39
-          col:  8
-         }
-         end:  {
-          line:  39
-          col:  34
-         }
-        }
-        source_contexts:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  39
-          col:  8
-         }
-         end:  {
-          line:  39
-          col:  34
-         }
+        end: {
+         line: 51
+         col: 25
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  39
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 51
+         col: 12
         }
-        end:  {
-         line:  39
-         col:  34
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  39
-         col:  8
-        }
-        end:  {
-         line:  39
-         col:  34
+        end: {
+         line: 51
+         col: 25
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "field1"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "TopLevelPayload"
+     attr_defs: {
+      key: "AppNbr"
+      value: {
+       no_type: {}
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 53
+         col: 12
         }
-        ref:  {
-         appname:  {
-          part:  "Model"
-         }
-         path:  "Request"
-         path:  "status"
+        end: {
+         line: 53
+         col: 18
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  41
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 53
+         col: 12
         }
-        end:  {
-         line:  41
-         col:  32
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  41
-         col:  8
-        }
-        end:  {
-         line:  41
-         col:  32
+        end: {
+         line: 53
+         col: 18
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "field2"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
+     attr_defs: {
+      key: "Data"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
          }
-         path:  "TopLevelPayload"
+         path: "Req"
+         path: "Header"
         }
-        ref:  {
-         appname:  {
-          part:  "My"
-          part:  "Browser"
-          part:  "Client Model"
+        ref: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
          }
-         path:  "Request"
-         path:  "status"
+         path: "TopLevelPayload"
         }
        }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  42
-         col:  8
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 49
+         col: 12
         }
-        end:  {
-         line:  42
-         col:  59
+        end: {
+         line: 49
+         col: 53
         }
        }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  42
-         col:  8
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 49
+         col: 12
         }
-        end:  {
-         line:  42
-         col:  59
+        end: {
+         line: 49
+         col: 53
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "foos"
-      value:  {
-       set:  {
-        type_ref:  {
-         context:  {
-          appname:  {
-           part:  "My"
-           part:  "Tuple Model"
+     attr_defs: {
+      key: "responseList"
+      value: {
+       list: {
+        type: {
+         type_ref: {
+          context: {
+           appname: {
+            part: "My"
+            part: "Tuple Model"
+           }
+           path: "Req"
+           path: "Header"
           }
-          path:  "TopLevelPayload"
-         }
-         ref:  {
-          appname:  {
-           part:  "Response"
+          ref: {
+           appname: {
+            part: "My"
+            part: "Tuple Model"
+           }
+           path: "Response"
           }
-          path:  "foo"
          }
-        }
-        source_context:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  44
-          col:  8
-         }
-         end:  {
-          line:  44
-          col:  32
-         }
-        }
-        source_contexts:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  44
-          col:  8
-         }
-         end:  {
-          line:  44
-          col:  32
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  44
-         col:  8
-        }
-        end:  {
-         line:  44
-         col:  32
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  44
-         col:  8
-        }
-        end:  {
-         line:  44
-         col:  32
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "responseSet"
-      value:  {
-       set:  {
-        type_ref:  {
-         context:  {
-          appname:  {
-           part:  "My"
-           part:  "Tuple Model"
+         source_context: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 54
+           col: 12
           }
-          path:  "TopLevelPayload"
+          end: {
+           line: 54
+           col: 62
+          }
          }
-         ref:  {
-          path:  "Response"
+         source_contexts: {
+          file: "tests/inplace_tuple.sysl"
+          start: {
+           line: 54
+           col: 12
+          }
+          end: {
+           line: 54
+           col: 62
+          }
          }
-        }
-        source_context:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  45
-          col:  8
-         }
-         end:  {
-          line:  45
-          col:  30
-         }
-        }
-        source_contexts:  {
-         file:  "tests/inplace_tuple.sysl"
-         start:  {
-          line:  45
-          col:  8
-         }
-         end:  {
-          line:  45
-          col:  30
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  45
-         col:  8
-        }
-        end:  {
-         line:  45
-         col:  30
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  45
-         col:  8
-        }
-        end:  {
-         line:  45
-         col:  30
         }
        }
       }
-     }
-     attr_defs:  {
-      key:  "status"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Tuple Model"
-         }
-         path:  "TopLevelPayload"
-        }
-        ref:  {
-         path:  "Response"
-         path:  "status"
-        }
-       }
-       source_context:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  40
-         col:  8
-        }
-        end:  {
-         line:  40
-         col:  27
-        }
-       }
-       source_contexts:  {
-        file:  "tests/inplace_tuple.sysl"
-        start:  {
-         line:  40
-         col:  8
-        }
-        end:  {
-         line:  40
-         col:  27
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  37
-      col:  4
-     }
-     end:  {
-      line:  45
-      col:  30
-     }
-    }
-    source_contexts:  {
-     file:  "tests/inplace_tuple.sysl"
-     start:  {
-      line:  37
-      col:  4
-     }
-     end:  {
-      line:  45
-      col:  30
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {
-    line:  20
-   }
-   end:  {
-    line:  65
-    col:  16
+  types: {
+   key: "Response"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "bar"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         min: 10
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 25
+         col: 8
+        }
+        end: {
+         line: 25
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 25
+         col: 8
+        }
+        end: {
+         line: 25
+         col: 28
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "baz"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         max: 9999
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 26
+         col: 8
+        }
+        end: {
+         line: 26
+         col: 31
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 26
+         col: 8
+        }
+        end: {
+         line: 26
+         col: 31
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "code"
+      value: {
+       primitive: INT
+       constraint: {
+        length: {
+         max: 9999
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 23
+         col: 8
+        }
+        end: {
+         line: 23
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 23
+         col: 8
+        }
+        end: {
+         line: 23
+         col: 28
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "foo"
+      value: {
+       primitive: DECIMAL
+       constraint: {
+        length: {
+         min: 10
+         max: 9999
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 24
+         col: 8
+        }
+        end: {
+         line: 24
+         col: 32
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 24
+         col: 8
+        }
+        end: {
+         line: 24
+         col: 32
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "nested"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "Response"
+        }
+        ref: {
+         path: "Payload"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 28
+         col: 8
+        }
+        end: {
+         line: 28
+         col: 25
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 28
+         col: 8
+        }
+        end: {
+         line: 28
+         col: 25
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "status"
+      value: {
+       primitive: STRING
+       constraint: {
+        length: {
+         max: 30
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 22
+         col: 8
+        }
+        end: {
+         line: 22
+         col: 32
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 22
+         col: 8
+        }
+        end: {
+         line: 22
+         col: 32
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "toplevel"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "Response"
+        }
+        ref: {
+         path: "TopLevelPayload"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 27
+         col: 8
+        }
+        end: {
+         line: 27
+         col: 35
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 27
+         col: 8
+        }
+        end: {
+         line: 27
+         col: 35
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 21
+      col: 4
+     }
+     end: {
+      line: 35
+      col: 25
+     }
+    }
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 21
+      col: 4
+     }
+     end: {
+      line: 35
+      col: 25
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/inplace_tuple.sysl"
-   start:  {
-    line:  20
+  types: {
+   key: "Response.Payload"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "XMLDoc"
+      value: {
+       primitive: XML
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 35
+         col: 12
+        }
+        end: {
+         line: 35
+         col: 25
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 35
+         col: 12
+        }
+        end: {
+         line: 35
+         col: 25
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "code"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 31
+         col: 12
+        }
+        end: {
+         line: 31
+         col: 23
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 31
+         col: 12
+        }
+        end: {
+         line: 31
+         col: 23
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "data"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "Response"
+         path: "Payload"
+        }
+        ref: {
+         path: "string_8"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 33
+         col: 12
+        }
+        end: {
+         line: 33
+         col: 35
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 33
+         col: 12
+        }
+        end: {
+         line: 33
+         col: 35
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "footer"
+      value: {
+       primitive: STRING
+       constraint: {
+        length: {}
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 34
+         col: 12
+        }
+        end: {
+         line: 34
+         col: 33
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 34
+         col: 12
+        }
+        end: {
+         line: 34
+         col: 33
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "value"
+      value: {
+       primitive: INT
+       constraint: {
+        length: {
+         min: 1
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 32
+         col: 12
+        }
+        end: {
+         line: 32
+         col: 29
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 32
+         col: 12
+        }
+        end: {
+         line: 32
+         col: 29
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 30
+      col: 8
+     }
+     end: {
+      line: 35
+      col: 25
+     }
+    }
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 30
+      col: 8
+     }
+     end: {
+      line: 35
+      col: 25
+     }
+    }
    }
-   end:  {
-    line:  65
-    col:  16
+  }
+  types: {
+   key: "TopLevelPayload"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "bars"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "TopLevelPayload"
+        }
+        ref: {
+         appname: {
+          part: "My"
+          part: "Client Model"
+         }
+         path: "Request"
+         path: "status"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 43
+         col: 8
+        }
+        end: {
+         line: 43
+         col: 51
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 43
+         col: 8
+        }
+        end: {
+         line: 43
+         col: 51
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "data"
+      value: {
+       primitive: STRING
+       constraint: {
+        length: {
+         max: 500
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 38
+         col: 8
+        }
+        end: {
+         line: 38
+         col: 27
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 38
+         col: 8
+        }
+        end: {
+         line: 38
+         col: 27
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "data2"
+      value: {
+       set: {
+        primitive: STRING
+        constraint: {
+         length: {
+          max: 500
+         }
+        }
+        source_context: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 39
+          col: 8
+         }
+         end: {
+          line: 39
+          col: 35
+         }
+        }
+        source_contexts: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 39
+          col: 8
+         }
+         end: {
+          line: 39
+          col: 35
+         }
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 39
+         col: 8
+        }
+        end: {
+         line: 39
+         col: 35
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 39
+         col: 8
+        }
+        end: {
+         line: 39
+         col: 35
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "field1"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "TopLevelPayload"
+        }
+        ref: {
+         appname: {
+          part: "Model"
+         }
+         path: "Request"
+         path: "status"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 41
+         col: 8
+        }
+        end: {
+         line: 41
+         col: 38
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 41
+         col: 8
+        }
+        end: {
+         line: 41
+         col: 38
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "field2"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "TopLevelPayload"
+        }
+        ref: {
+         appname: {
+          part: "My"
+          part: "Browser"
+          part: "Client Model"
+         }
+         path: "Request"
+         path: "status"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 42
+         col: 8
+        }
+        end: {
+         line: 42
+         col: 65
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 42
+         col: 8
+        }
+        end: {
+         line: 42
+         col: 65
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "foos"
+      value: {
+       set: {
+        type_ref: {
+         context: {
+          appname: {
+           part: "My"
+           part: "Tuple Model"
+          }
+          path: "TopLevelPayload"
+         }
+         ref: {
+          appname: {
+           part: "Response"
+          }
+          path: "foo"
+         }
+        }
+        source_context: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 44
+          col: 8
+         }
+         end: {
+          line: 44
+          col: 35
+         }
+        }
+        source_contexts: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 44
+          col: 8
+         }
+         end: {
+          line: 44
+          col: 35
+         }
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 44
+         col: 8
+        }
+        end: {
+         line: 44
+         col: 35
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 44
+         col: 8
+        }
+        end: {
+         line: 44
+         col: 35
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "responseSet"
+      value: {
+       set: {
+        type_ref: {
+         context: {
+          appname: {
+           part: "My"
+           part: "Tuple Model"
+          }
+          path: "TopLevelPayload"
+         }
+         ref: {
+          path: "Response"
+         }
+        }
+        source_context: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 45
+          col: 8
+         }
+         end: {
+          line: 45
+          col: 38
+         }
+        }
+        source_contexts: {
+         file: "tests/inplace_tuple.sysl"
+         start: {
+          line: 45
+          col: 8
+         }
+         end: {
+          line: 45
+          col: 38
+         }
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 45
+         col: 8
+        }
+        end: {
+         line: 45
+         col: 38
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 45
+         col: 8
+        }
+        end: {
+         line: 45
+         col: 38
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "status"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Tuple Model"
+         }
+         path: "TopLevelPayload"
+        }
+        ref: {
+         path: "Response"
+         path: "status"
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 40
+         col: 8
+        }
+        end: {
+         line: 40
+         col: 33
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 40
+         col: 8
+        }
+        end: {
+         line: 40
+         col: 33
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 37
+      col: 4
+     }
+     end: {
+      line: 45
+      col: 38
+     }
+    }
+    source_contexts: {
+     file: "tests/inplace_tuple.sysl"
+     start: {
+      line: 37
+      col: 4
+     }
+     end: {
+      line: 45
+      col: 38
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/inplace_tuple.sysl"
+   start: {
+    line: 20
+   }
+   end: {
+    line: 65
+    col: 26
+   }
+  }
+  source_contexts: {
+   file: "tests/inplace_tuple.sysl"
+   start: {
+    line: 20
+   }
+   end: {
+    line: 65
+    col: 26
    }
   }
  }

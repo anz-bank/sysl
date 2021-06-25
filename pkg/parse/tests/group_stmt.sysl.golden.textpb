@@ -1,132 +1,132 @@
-apps:  {
- key:  "App"
- value:  {
-  name:  {
-   part:  "App"
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
   }
-  endpoints:  {
-   key:  "Endpoint"
-   value:  {
-    name:  "Endpoint"
-    stmt:  {
-     group:  {
-      title:  "group in series"
-      stmt:  {
-       action:  {
-        action:  "do something"
+  endpoints: {
+   key: "Endpoint"
+   value: {
+    name: "Endpoint"
+    stmt: {
+     group: {
+      title: "group in series"
+      stmt: {
+       action: {
+        action: "do something"
        }
-       source_context:  {
-        file:  "tests/group_stmt.sysl"
-        start:  {
-         line:  3
-         col:  12
+       source_context: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 3
+         col: 12
         }
-        end:  {
-         line:  3
-         col:  24
-        }
-       }
-       source_contexts:  {
-        file:  "tests/group_stmt.sysl"
-        start:  {
-         line:  3
-         col:  12
-        }
-        end:  {
-         line:  3
-         col:  24
+        end: {
+         line: 3
+         col: 24
         }
        }
-      }
-      stmt:  {
-       action:  {
-        action:  "do another thing"
-       }
-       source_context:  {
-        file:  "tests/group_stmt.sysl"
-        start:  {
-         line:  4
-         col:  12
+       source_contexts: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 3
+         col: 12
         }
-        end:  {
-         line:  4
-         col:  28
-        }
-       }
-       source_contexts:  {
-        file:  "tests/group_stmt.sysl"
-        start:  {
-         line:  4
-         col:  12
-        }
-        end:  {
-         line:  4
-         col:  28
+        end: {
+         line: 3
+         col: 24
         }
        }
       }
-     }
-     source_context:  {
-      file:  "tests/group_stmt.sysl"
-      start:  {
-       line:  2
-       col:  8
-      }
-      end:  {
-       line:  4
-       col:  28
+      stmt: {
+       action: {
+        action: "do another thing"
+       }
+       source_context: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 4
+         col: 12
+        }
+        end: {
+         line: 4
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 4
+         col: 12
+        }
+        end: {
+         line: 4
+         col: 28
+        }
+       }
       }
      }
-     source_contexts:  {
-      file:  "tests/group_stmt.sysl"
-      start:  {
-       line:  2
-       col:  8
+     source_context: {
+      file: "tests/group_stmt.sysl"
+      start: {
+       line: 2
+       col: 8
       }
-      end:  {
-       line:  4
-       col:  28
+      end: {
+       line: 4
+       col: 28
       }
      }
-    }
-    source_context:  {
-     file:  "tests/group_stmt.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  4
-      col:  28
+     source_contexts: {
+      file: "tests/group_stmt.sysl"
+      start: {
+       line: 2
+       col: 8
+      }
+      end: {
+       line: 4
+       col: 28
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/group_stmt.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_context: {
+     file: "tests/group_stmt.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  4
-      col:  28
+     end: {
+      line: 4
+      col: 28
+     }
+    }
+    source_contexts: {
+     file: "tests/group_stmt.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 28
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/group_stmt.sysl"
-   start:  {}
-   end:  {
-    line:  4
-    col:  28
+  source_context: {
+   file: "tests/group_stmt.sysl"
+   start: {}
+   end: {
+    line: 4
+    col: 28
    }
   }
-  source_contexts:  {
-   file:  "tests/group_stmt.sysl"
-   start:  {}
-   end:  {
-    line:  4
-    col:  28
+  source_contexts: {
+   file: "tests/group_stmt.sysl"
+   start: {}
+   end: {
+    line: 4
+    col: 28
    }
   }
  }

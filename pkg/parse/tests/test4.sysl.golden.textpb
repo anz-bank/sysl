@@ -1,690 +1,690 @@
-apps:  {
- key:  "Browser App"
- value:  {
-  name:  {
-   part:  "Browser App"
+apps: {
+ key: "Browser App"
+ value: {
+  name: {
+   part: "Browser App"
   }
-  endpoints:  {
-   key:  "EP"
-   value:  {
-    name:  "EP"
-    param:  {
-     name:  "p1"
-     type:  {
-      type_ref:  {
-       ref:  {
-        appname:  {
-         part:  "GO"
-         part:  "Sample"
-         part:  "My Todo App"
+  endpoints: {
+   key: "EP"
+   value: {
+    name: "EP"
+    param: {
+     name: "p1"
+     type: {
+      type_ref: {
+       ref: {
+        appname: {
+         part: "GO"
+         part: "Sample"
+         part: "My Todo App"
         }
-        path:  "Todo"
-        path:  "id"
+        path: "Todo"
+        path: "id"
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  21
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 21
+      col: 4
      }
-     end:  {
-      line:  21
-      col:  47
+     end: {
+      line: 21
+      col: 49
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  21
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 21
+      col: 4
      }
-     end:  {
-      line:  21
-      col:  47
+     end: {
+      line: 21
+      col: 49
      }
     }
    }
   }
-  endpoints:  {
-   key:  "EP1"
-   value:  {
-    name:  "EP1"
-    param:  {
-     name:  "p2"
-     type:  {
-      type_ref:  {
-       ref:  {
-        appname:  {
-         part:  "Sample"
-         part:  "My Todo App"
+  endpoints: {
+   key: "EP1"
+   value: {
+    name: "EP1"
+    param: {
+     name: "p2"
+     type: {
+      type_ref: {
+       ref: {
+        appname: {
+         part: "Sample"
+         part: "My Todo App"
         }
-        path:  "Todo"
-        path:  "id"
+        path: "Todo"
+        path: "id"
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  22
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 22
+      col: 4
      }
-     end:  {
-      line:  22
-      col:  42
+     end: {
+      line: 22
+      col: 44
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  22
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 22
+      col: 4
      }
-     end:  {
-      line:  22
-      col:  42
+     end: {
+      line: 22
+      col: 44
      }
     }
    }
   }
-  endpoints:  {
-   key:  "EP2"
-   value:  {
-    name:  "EP2"
-    param:  {
-     name:  "p3"
-     type:  {
-      type_ref:  {
-       ref:  {
-        appname:  {
-         part:  "My Todo App"
+  endpoints: {
+   key: "EP2"
+   value: {
+    name: "EP2"
+    param: {
+     name: "p3"
+     type: {
+      type_ref: {
+       ref: {
+        appname: {
+         part: "My Todo App"
         }
-        path:  "Todo"
-        path:  "id"
+        path: "Todo"
+        path: "id"
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  23
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 23
+      col: 4
      }
-     end:  {
-      line:  23
-      col:  33
+     end: {
+      line: 23
+      col: 35
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  23
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 23
+      col: 4
      }
-     end:  {
-      line:  23
-      col:  33
+     end: {
+      line: 23
+      col: 35
      }
     }
    }
   }
-  endpoints:  {
-   key:  "EP3"
-   value:  {
-    name:  "EP3"
-    param:  {
-     name:  "p4"
-     type:  {
-      type_ref:  {
-       ref:  {
-        path:  "id"
+  endpoints: {
+   key: "EP3"
+   value: {
+    name: "EP3"
+    param: {
+     name: "p4"
+     type: {
+      type_ref: {
+       ref: {
+        path: "id"
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  24
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 24
+      col: 4
      }
-     end:  {
-      line:  24
-      col:  16
+     end: {
+      line: 24
+      col: 18
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  24
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 24
+      col: 4
      }
-     end:  {
-      line:  24
-      col:  16
+     end: {
+      line: 24
+      col: 18
      }
     }
    }
   }
-  types:  {
-   key:  "Data"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "Browser App"
+  types: {
+   key: "Data"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "Browser App"
          }
-         path:  "Data"
+         path: "Data"
         }
-        ref:  {
-         appname:  {
-          part:  "GO"
-          part:  "Sample"
-          part:  "My Todo App"
+        ref: {
+         appname: {
+          part: "GO"
+          part: "Sample"
+          part: "My Todo App"
          }
-         path:  "Todo"
-         path:  "id"
+         path: "Todo"
+         path: "id"
         }
        }
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  17
-         col:  8
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 17
+         col: 8
         }
-        end:  {
-         line:  17
-         col:  47
+        end: {
+         line: 17
+         col: 49
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  17
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 17
+         col: 8
         }
-        end:  {
-         line:  17
-         col:  47
+        end: {
+         line: 17
+         col: 49
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "id2"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "Browser App"
+     attr_defs: {
+      key: "id2"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "Browser App"
          }
-         path:  "Data"
+         path: "Data"
         }
-        ref:  {
-         appname:  {
-          part:  "Sample"
-          part:  "My Todo App"
+        ref: {
+         appname: {
+          part: "Sample"
+          part: "My Todo App"
          }
-         path:  "Todo"
-         path:  "id"
+         path: "Todo"
+         path: "id"
         }
        }
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  18
-         col:  8
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 18
+         col: 8
         }
-        end:  {
-         line:  18
-         col:  42
+        end: {
+         line: 18
+         col: 44
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  18
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 18
+         col: 8
         }
-        end:  {
-         line:  18
-         col:  42
+        end: {
+         line: 18
+         col: 44
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "id3"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "Browser App"
+     attr_defs: {
+      key: "id3"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "Browser App"
          }
-         path:  "Data"
+         path: "Data"
         }
-        ref:  {
-         appname:  {
-          part:  "My Todo App"
+        ref: {
+         appname: {
+          part: "My Todo App"
          }
-         path:  "Todo"
-         path:  "id"
+         path: "Todo"
+         path: "id"
         }
        }
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  19
-         col:  8
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 19
+         col: 8
         }
-        end:  {
-         line:  19
-         col:  32
+        end: {
+         line: 19
+         col: 34
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  19
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 19
+         col: 8
         }
-        end:  {
-         line:  19
-         col:  32
+        end: {
+         line: 19
+         col: 34
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  16
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 16
+      col: 4
      }
-     end:  {
-      line:  19
-      col:  32
+     end: {
+      line: 19
+      col: 34
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  16
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 16
+      col: 4
      }
-     end:  {
-      line:  19
-      col:  32
+     end: {
+      line: 19
+      col: 34
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test4.sysl"
-   start:  {
-    line:  15
+  source_context: {
+   file: "tests/test4.sysl"
+   start: {
+    line: 15
    }
-   end:  {
-    line:  24
-    col:  16
+   end: {
+    line: 24
+    col: 18
    }
   }
-  source_contexts:  {
-   file:  "tests/test4.sysl"
-   start:  {
-    line:  15
+  source_contexts: {
+   file: "tests/test4.sysl"
+   start: {
+    line: 15
    }
-   end:  {
-    line:  24
-    col:  16
+   end: {
+    line: 24
+    col: 18
    }
   }
  }
 }
-apps:  {
- key:  "GO :: Sample :: My Todo App"
- value:  {
-  name:  {
-   part:  "GO"
-   part:  "Sample"
-   part:  "My Todo App"
+apps: {
+ key: "GO :: Sample :: My Todo App"
+ value: {
+  name: {
+   part: "GO"
+   part: "Sample"
+   part: "My Todo App"
   }
-  types:  {
-   key:  "Todo"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  2
-         col:  8
+  types: {
+   key: "Todo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  2
-         col:  14
+        end: {
+         line: 2
+         col: 17
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  2
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  2
-         col:  14
+        end: {
+         line: 2
+         col: 17
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "note"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  3
-         col:  8
+     attr_defs: {
+      key: "note"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  16
+        end: {
+         line: 3
+         col: 22
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  3
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  16
+        end: {
+         line: 3
+         col: 22
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  16
+     end: {
+      line: 3
+      col: 22
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  16
+     end: {
+      line: 3
+      col: 22
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test4.sysl"
-   start:  {}
-   end:  {
-    line:  3
-    col:  16
+  source_context: {
+   file: "tests/test4.sysl"
+   start: {}
+   end: {
+    line: 3
+    col: 22
    }
   }
-  source_contexts:  {
-   file:  "tests/test4.sysl"
-   start:  {}
-   end:  {
-    line:  3
-    col:  16
+  source_contexts: {
+   file: "tests/test4.sysl"
+   start: {}
+   end: {
+    line: 3
+    col: 22
    }
   }
  }
 }
-apps:  {
- key:  "My Todo App"
- value:  {
-  name:  {
-   part:  "My Todo App"
+apps: {
+ key: "My Todo App"
+ value: {
+  name: {
+   part: "My Todo App"
   }
-  types:  {
-   key:  "Todo"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  12
-         col:  8
+  types: {
+   key: "Todo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 12
+         col: 8
         }
-        end:  {
-         line:  12
-         col:  14
+        end: {
+         line: 12
+         col: 17
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  12
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 12
+         col: 8
         }
-        end:  {
-         line:  12
-         col:  14
+        end: {
+         line: 12
+         col: 17
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "note"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  13
-         col:  8
+     attr_defs: {
+      key: "note"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 13
+         col: 8
         }
-        end:  {
-         line:  13
-         col:  16
+        end: {
+         line: 13
+         col: 22
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  13
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 13
+         col: 8
         }
-        end:  {
-         line:  13
-         col:  16
+        end: {
+         line: 13
+         col: 22
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  11
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 11
+      col: 4
      }
-     end:  {
-      line:  13
-      col:  16
+     end: {
+      line: 13
+      col: 22
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  11
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 11
+      col: 4
      }
-     end:  {
-      line:  13
-      col:  16
+     end: {
+      line: 13
+      col: 22
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test4.sysl"
-   start:  {
-    line:  10
+  source_context: {
+   file: "tests/test4.sysl"
+   start: {
+    line: 10
    }
-   end:  {
-    line:  13
-    col:  16
+   end: {
+    line: 13
+    col: 22
    }
   }
-  source_contexts:  {
-   file:  "tests/test4.sysl"
-   start:  {
-    line:  10
+  source_contexts: {
+   file: "tests/test4.sysl"
+   start: {
+    line: 10
    }
-   end:  {
-    line:  13
-    col:  16
+   end: {
+    line: 13
+    col: 22
    }
   }
  }
 }
-apps:  {
- key:  "Sample :: My Todo App"
- value:  {
-  name:  {
-   part:  "Sample"
-   part:  "My Todo App"
+apps: {
+ key: "Sample :: My Todo App"
+ value: {
+  name: {
+   part: "Sample"
+   part: "My Todo App"
   }
-  types:  {
-   key:  "Todo"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  7
-         col:  8
+  types: {
+   key: "Todo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 7
+         col: 8
         }
-        end:  {
-         line:  7
-         col:  14
+        end: {
+         line: 7
+         col: 17
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  7
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 7
+         col: 8
         }
-        end:  {
-         line:  7
-         col:  14
+        end: {
+         line: 7
+         col: 17
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "note"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  8
-         col:  8
+     attr_defs: {
+      key: "note"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 8
+         col: 8
         }
-        end:  {
-         line:  8
-         col:  16
+        end: {
+         line: 8
+         col: 22
         }
        }
-       source_contexts:  {
-        file:  "tests/test4.sysl"
-        start:  {
-         line:  8
-         col:  8
+       source_contexts: {
+        file: "tests/test4.sysl"
+        start: {
+         line: 8
+         col: 8
         }
-        end:  {
-         line:  8
-         col:  16
+        end: {
+         line: 8
+         col: 22
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  6
-      col:  4
+    source_context: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 6
+      col: 4
      }
-     end:  {
-      line:  8
-      col:  16
+     end: {
+      line: 8
+      col: 22
      }
     }
-    source_contexts:  {
-     file:  "tests/test4.sysl"
-     start:  {
-      line:  6
-      col:  4
+    source_contexts: {
+     file: "tests/test4.sysl"
+     start: {
+      line: 6
+      col: 4
      }
-     end:  {
-      line:  8
-      col:  16
+     end: {
+      line: 8
+      col: 22
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test4.sysl"
-   start:  {
-    line:  5
+  source_context: {
+   file: "tests/test4.sysl"
+   start: {
+    line: 5
    }
-   end:  {
-    line:  8
-    col:  16
+   end: {
+    line: 8
+    col: 22
    }
   }
-  source_contexts:  {
-   file:  "tests/test4.sysl"
-   start:  {
-    line:  5
+  source_contexts: {
+   file: "tests/test4.sysl"
+   start: {
+    line: 5
    }
-   end:  {
-    line:  8
-    col:  16
+   end: {
+    line: 8
+    col: 22
    }
   }
  }

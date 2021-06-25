@@ -1,1056 +1,1520 @@
-apps:  {
- key:  "App"
- value:  {
-  name:  {
-   part:  "App"
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
   }
-  endpoints:  {
-   key:  ".. * <- *"
-   value:  {
-    name:  ".. * <- *"
-    stmt:  {
-     action:  {
-      action:  "Endpoint_One"
+  endpoints: {
+   key: ".. * <- *"
+   value: {
+    name: ".. * <- *"
+    stmt: {
+     action: {
+      action: "Endpoint_One"
      }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "one"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  34
-       col:  8
-      }
-      end:  {
-       line:  34
-       col:  8
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  34
-       col:  8
-      }
-      end:  {
-       line:  34
-       col:  8
-      }
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "Endpoint_Two"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "two"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  35
-       col:  8
-      }
-      end:  {
-       line:  35
-       col:  8
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  35
-       col:  8
-      }
-      end:  {
-       line:  35
-       col:  8
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "Endpoint_One"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "three"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  36
-       col:  8
-      }
-      end:  {
-       line:  36
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  36
-       col:  8
-      }
-      end:  {
-       line:  36
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "Endpoint_Two"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "four"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  37
-       col:  8
-      }
-      end:  {
-       line:  37
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  37
-       col:  8
-      }
-      end:  {
-       line:  37
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "Endpoint_Two"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "final"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  38
-       col:  8
-      }
-      end:  {
-       line:  38
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  38
-       col:  8
-      }
-      end:  {
-       line:  38
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "Endpoint_Three"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "final"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  39
-       col:  8
-      }
-      end:  {
-       line:  39
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  39
-       col:  8
-      }
-      end:  {
-       line:  39
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "POST /1a"
-     }
-     attrs:  {
-      key:  "patterns"
-      value:  {
-       a:  {
-        elt:  {
-         s:  "test"
+     attrs: {
+      key: "id"
+      value: {
+       s: "one"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 34
+         col: 25
+        }
+        end: {
+         line: 34
+         col: 30
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 34
+         col: 25
+        }
+        end: {
+         line: 34
+         col: 30
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  40
-       col:  8
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 34
+       col: 8
       }
-      end:  {
-       line:  40
-       col:  15
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  40
-       col:  8
-      }
-      end:  {
-       line:  40
-       col:  15
+      end: {
+       line: 34
+       col: 20
       }
      }
-    }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  33
-      col:  4
-     }
-     end:  {
-      line:  41
-     }
-    }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  33
-      col:  4
-     }
-     end:  {
-      line:  41
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Endpoint_One"
-   value:  {
-    name:  "Endpoint_One"
-    attrs:  {
-     key:  "id"
-     value:  {
-      s:  "one"
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 34
+       col: 8
       }
-      endpoint:  "Endpoint_One"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "three"
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  13
-       col:  8
-      }
-      end:  {
-       line:  13
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  13
-       col:  8
-      }
-      end:  {
-       line:  13
-       col:  24
+      end: {
+       line: 34
+       col: 20
       }
      }
     }
-    stmt:  {
-     cond:  {
-      test:  "result not ok"
-      stmt:  {
-       call:  {
-        target:  {
-         part:  "My"
-         part:  "Server"
+    stmt: {
+     action: {
+      action: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "two"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 35
+         col: 25
         }
-        endpoint:  "Endpoint_Two"
-       }
-       attrs:  {
-        key:  "id"
-        value:  {
-         s:  "final"
+        end: {
+         line: 35
+         col: 30
         }
        }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "https"
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 35
+         col: 25
+        }
+        end: {
+         line: 35
+         col: 30
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 35
+       col: 8
+      }
+      end: {
+       line: 35
+       col: 20
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 35
+       col: 8
+      }
+      end: {
+       line: 35
+       col: 20
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_One"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "three"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 36
+         col: 41
+        }
+        end: {
+         line: 36
+         col: 48
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 36
+         col: 41
+        }
+        end: {
+         line: 36
+         col: 48
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 36
+       col: 8
+      }
+      end: {
+       line: 36
+       col: 36
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 36
+       col: 8
+      }
+      end: {
+       line: 36
+       col: 36
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "four"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 37
+         col: 41
+        }
+        end: {
+         line: 37
+         col: 47
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 37
+         col: 41
+        }
+        end: {
+         line: 37
+         col: 47
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 37
+       col: 8
+      }
+      end: {
+       line: 37
+       col: 36
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 37
+       col: 8
+      }
+      end: {
+       line: 37
+       col: 36
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "final"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 38
+         col: 41
+        }
+        end: {
+         line: 38
+         col: 48
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 38
+         col: 41
+        }
+        end: {
+         line: 38
+         col: 48
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 38
+       col: 8
+      }
+      end: {
+       line: 38
+       col: 36
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 38
+       col: 8
+      }
+      end: {
+       line: 38
+       col: 36
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Three"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "final"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 39
+         col: 43
+        }
+        end: {
+         line: 39
+         col: 50
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 39
+         col: 43
+        }
+        end: {
+         line: 39
+         col: 50
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 39
+       col: 8
+      }
+      end: {
+       line: 39
+       col: 38
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 39
+       col: 8
+      }
+      end: {
+       line: 39
+       col: 38
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "POST /1a"
+     }
+     attrs: {
+      key: "patterns"
+      value: {
+       a: {
+        elt: {
+         s: "test"
+         source_context: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 40
+           col: 18
+          }
+          end: {
+           line: 40
+           col: 23
+          }
+         }
+         source_contexts: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 40
+           col: 18
+          }
+          end: {
+           line: 40
+           col: 23
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/collector.sysl"
-        start:  {
-         line:  15
-         col:  12
-        }
-        end:  {
-         line:  15
-         col:  28
-        }
-       }
-       source_contexts:  {
-        file:  "tests/collector.sysl"
-        start:  {
-         line:  15
-         col:  12
-        }
-        end:  {
-         line:  15
-         col:  28
-        }
-       }
       }
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  14
-       col:  8
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 40
+       col: 8
       }
-      end:  {
-       line:  16
-       col:  8
+      end: {
+       line: 40
+       col: 23
       }
      }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  14
-       col:  8
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 40
+       col: 8
       }
-      end:  {
-       line:  16
-       col:  8
+      end: {
+       line: 40
+       col: 23
       }
      }
     }
-    stmt:  {
-     group:  {
-      title:  "loop"
-      stmt:  {
-       call:  {
-        target:  {
-         part:  "My"
-         part:  "Server"
-        }
-        endpoint:  "Endpoint_Two"
-       }
-       attrs:  {
-        key:  "id"
-        value:  {
-         s:  "final"
-        }
-       }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "https"
-          }
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/collector.sysl"
-        start:  {
-         line:  17
-         col:  12
-        }
-        end:  {
-         line:  17
-         col:  28
-        }
-       }
-       source_contexts:  {
-        file:  "tests/collector.sysl"
-        start:  {
-         line:  17
-         col:  12
-        }
-        end:  {
-         line:  17
-         col:  28
-        }
-       }
-      }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 33
+      col: 4
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  16
-       col:  8
-      }
-      end:  {
-       line:  17
-       col:  28
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  16
-       col:  8
-      }
-      end:  {
-       line:  17
-       col:  28
-      }
+     end: {
+      line: 41
+      col: 1
      }
     }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  12
-      col:  4
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 33
+      col: 4
      }
-     end:  {
-      line:  17
-      col:  28
-     }
-    }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  12
-      col:  4
-     }
-     end:  {
-      line:  17
-      col:  28
+     end: {
+      line: 41
+      col: 1
      }
     }
    }
   }
-  endpoints:  {
-   key:  "Endpoint_Two"
-   value:  {
-    name:  "Endpoint_Two"
-    attrs:  {
-     key:  "id"
-     value:  {
-      s:  "two"
+  endpoints: {
+   key: "Endpoint_One"
+   value: {
+    name: "Endpoint_One"
+    attrs: {
+     key: "id"
+     value: {
+      s: "one"
+      source_context: {
+       file: "tests/collector.sysl"
+       start: {
+        line: 34
+        col: 25
+       }
+       end: {
+        line: 34
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/collector.sysl"
+       start: {
+        line: 34
+        col: 25
+       }
+       end: {
+        line: 34
+        col: 30
+       }
+      }
      }
     }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
       }
-      endpoint:  "Endpoint_Two"
+      endpoint: "Endpoint_One"
      }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "final"
-      }
-     }
-     attrs:  {
-      key:  "patterns"
-      value:  {
-       a:  {
-        elt:  {
-         s:  "https"
+     attrs: {
+      key: "id"
+      value: {
+       s: "three"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 36
+         col: 41
+        }
+        end: {
+         line: 36
+         col: 48
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 36
+         col: 41
+        }
+        end: {
+         line: 36
+         col: 48
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  21
-       col:  8
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 13
+       col: 8
       }
-      end:  {
-       line:  21
-       col:  24
+      end: {
+       line: 13
+       col: 36
       }
      }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  21
-       col:  8
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 13
+       col: 8
       }
-      end:  {
-       line:  21
-       col:  24
+      end: {
+       line: 13
+       col: 36
       }
      }
     }
-    stmt:  {
-     alt:  {
-      choice:  {
-       cond:  "condition = one"
-       stmt:  {
-        call:  {
-         target:  {
-          part:  "My"
-          part:  "Server"
-         }
-         endpoint:  "Endpoint_Three"
+    stmt: {
+     cond: {
+      test: "result not ok"
+      stmt: {
+       call: {
+        target: {
+         part: "My"
+         part: "Server"
         }
-        attrs:  {
-         key:  "id"
-         value:  {
-          s:  "final"
+        endpoint: "Endpoint_Two"
+       }
+       attrs: {
+        key: "id"
+        value: {
+         s: "final"
+         source_context: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 38
+           col: 41
+          }
+          end: {
+           line: 38
+           col: 48
+          }
+         }
+         source_contexts: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 38
+           col: 41
+          }
+          end: {
+           line: 38
+           col: 48
+          }
          }
         }
-        attrs:  {
-         key:  "patterns"
-         value:  {
-          a:  {
-           elt:  {
-            s:  "https"
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "https"
+           source_context: {
+            file: "tests/collector.sysl"
+            start: {
+             line: 15
+             col: 42
+            }
+            end: {
+             line: 15
+             col: 48
+            }
+           }
+           source_contexts: {
+            file: "tests/collector.sysl"
+            start: {
+             line: 15
+             col: 42
+            }
+            end: {
+             line: 15
+             col: 48
+            }
            }
           }
          }
         }
-        source_context:  {
-         file:  "tests/collector.sysl"
-         start:  {
-          line:  24
-          col:  16
-         }
-         end:  {
-          line:  24
-          col:  32
-         }
+       }
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 15
+         col: 12
         }
-        source_contexts:  {
-         file:  "tests/collector.sysl"
-         start:  {
-          line:  24
-          col:  16
-         }
-         end:  {
-          line:  24
-          col:  32
-         }
+        end: {
+         line: 15
+         col: 48
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 15
+         col: 12
+        }
+        end: {
+         line: 15
+         col: 48
         }
        }
       }
-      choice:  {
-       cond:  "condition two"
-       stmt:  {
-        call:  {
-         target:  {
-          part:  "My"
-          part:  "Server"
-         }
-         endpoint:  "Endpoint_Three"
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 14
+       col: 8
+      }
+      end: {
+       line: 16
+       col: 9
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 14
+       col: 8
+      }
+      end: {
+       line: 16
+       col: 9
+      }
+     }
+    }
+    stmt: {
+     group: {
+      title: "loop"
+      stmt: {
+       call: {
+        target: {
+         part: "My"
+         part: "Server"
         }
-        attrs:  {
-         key:  "id"
-         value:  {
-          s:  "final"
+        endpoint: "Endpoint_Two"
+       }
+       attrs: {
+        key: "id"
+        value: {
+         s: "final"
+         source_context: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 38
+           col: 41
+          }
+          end: {
+           line: 38
+           col: 48
+          }
+         }
+         source_contexts: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 38
+           col: 41
+          }
+          end: {
+           line: 38
+           col: 48
+          }
          }
         }
-        attrs:  {
-         key:  "patterns"
-         value:  {
-          a:  {
-           elt:  {
-            s:  "https"
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "https"
+           source_context: {
+            file: "tests/collector.sysl"
+            start: {
+             line: 17
+             col: 42
+            }
+            end: {
+             line: 17
+             col: 48
+            }
+           }
+           source_contexts: {
+            file: "tests/collector.sysl"
+            start: {
+             line: 17
+             col: 42
+            }
+            end: {
+             line: 17
+             col: 48
+            }
            }
           }
          }
         }
-        source_context:  {
-         file:  "tests/collector.sysl"
-         start:  {
-          line:  26
-          col:  16
-         }
-         end:  {
-          line:  26
-          col:  32
-         }
+       }
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 17
+         col: 12
         }
-        source_contexts:  {
-         file:  "tests/collector.sysl"
-         start:  {
-          line:  26
-          col:  16
-         }
-         end:  {
-          line:  26
-          col:  32
-         }
+        end: {
+         line: 17
+         col: 48
         }
        }
-      }
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  22
-       col:  8
-      }
-      end:  {
-       line:  26
-       col:  32
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  22
-       col:  8
-      }
-      end:  {
-       line:  26
-       col:  32
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  20
-      col:  4
-     }
-     end:  {
-      line:  26
-      col:  32
-     }
-    }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  20
-      col:  4
-     }
-     end:  {
-      line:  26
-      col:  32
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "POST /1a"
-   value:  {
-    name:  "POST /1a"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-       elt:  {
-        s:  "test"
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 17
+         col: 12
+        }
+        end: {
+         line: 17
+         col: 48
+        }
        }
       }
      }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  30
-       col:  12
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 16
+       col: 8
       }
-      end:  {
-       line:  30
-       col:  15
+      end: {
+       line: 17
+       col: 48
       }
      }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  30
-       col:  12
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 16
+       col: 8
       }
-      end:  {
-       line:  30
-       col:  15
+      end: {
+       line: 17
+       col: 48
       }
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/1a"
-    }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  29
-      col:  8
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 12
+      col: 4
      }
-     end:  {
-      line:  32
-      col:  3
+     end: {
+      line: 17
+      col: 48
      }
     }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  29
-      col:  8
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 12
+      col: 4
      }
-     end:  {
-      line:  32
-      col:  3
+     end: {
+      line: 17
+      col: 48
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/collector.sysl"
-   start:  {
-    line:  32
-   }
-   end:  {
-    line:  40
-    col:  15
+  endpoints: {
+   key: "Endpoint_Two"
+   value: {
+    name: "Endpoint_Two"
+    attrs: {
+     key: "id"
+     value: {
+      s: "two"
+      source_context: {
+       file: "tests/collector.sysl"
+       start: {
+        line: 35
+        col: 25
+       }
+       end: {
+        line: 35
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/collector.sysl"
+       start: {
+        line: 35
+        col: 25
+       }
+       end: {
+        line: 35
+        col: 30
+       }
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "Endpoint_Two"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "final"
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 38
+         col: 41
+        }
+        end: {
+         line: 38
+         col: 48
+        }
+       }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 38
+         col: 41
+        }
+        end: {
+         line: 38
+         col: 48
+        }
+       }
+      }
+     }
+     attrs: {
+      key: "patterns"
+      value: {
+       a: {
+        elt: {
+         s: "https"
+         source_context: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 21
+           col: 38
+          }
+          end: {
+           line: 21
+           col: 44
+          }
+         }
+         source_contexts: {
+          file: "tests/collector.sysl"
+          start: {
+           line: 21
+           col: 38
+          }
+          end: {
+           line: 21
+           col: 44
+          }
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 21
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 36
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 21
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 36
+      }
+     }
+    }
+    stmt: {
+     alt: {
+      choice: {
+       cond: "condition = one"
+       stmt: {
+        call: {
+         target: {
+          part: "My"
+          part: "Server"
+         }
+         endpoint: "Endpoint_Three"
+        }
+        attrs: {
+         key: "id"
+         value: {
+          s: "final"
+          source_context: {
+           file: "tests/collector.sysl"
+           start: {
+            line: 39
+            col: 43
+           }
+           end: {
+            line: 39
+            col: 50
+           }
+          }
+          source_contexts: {
+           file: "tests/collector.sysl"
+           start: {
+            line: 39
+            col: 43
+           }
+           end: {
+            line: 39
+            col: 50
+           }
+          }
+         }
+        }
+        attrs: {
+         key: "patterns"
+         value: {
+          a: {
+           elt: {
+            s: "https"
+            source_context: {
+             file: "tests/collector.sysl"
+             start: {
+              line: 24
+              col: 48
+             }
+             end: {
+              line: 24
+              col: 54
+             }
+            }
+            source_contexts: {
+             file: "tests/collector.sysl"
+             start: {
+              line: 24
+              col: 48
+             }
+             end: {
+              line: 24
+              col: 54
+             }
+            }
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 24
+          col: 16
+         }
+         end: {
+          line: 24
+          col: 54
+         }
+        }
+        source_contexts: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 24
+          col: 16
+         }
+         end: {
+          line: 24
+          col: 54
+         }
+        }
+       }
+      }
+      choice: {
+       cond: "condition two"
+       stmt: {
+        call: {
+         target: {
+          part: "My"
+          part: "Server"
+         }
+         endpoint: "Endpoint_Three"
+        }
+        attrs: {
+         key: "id"
+         value: {
+          s: "final"
+          source_context: {
+           file: "tests/collector.sysl"
+           start: {
+            line: 39
+            col: 43
+           }
+           end: {
+            line: 39
+            col: 50
+           }
+          }
+          source_contexts: {
+           file: "tests/collector.sysl"
+           start: {
+            line: 39
+            col: 43
+           }
+           end: {
+            line: 39
+            col: 50
+           }
+          }
+         }
+        }
+        attrs: {
+         key: "patterns"
+         value: {
+          a: {
+           elt: {
+            s: "https"
+            source_context: {
+             file: "tests/collector.sysl"
+             start: {
+              line: 26
+              col: 48
+             }
+             end: {
+              line: 26
+              col: 54
+             }
+            }
+            source_contexts: {
+             file: "tests/collector.sysl"
+             start: {
+              line: 26
+              col: 48
+             }
+             end: {
+              line: 26
+              col: 54
+             }
+            }
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 26
+          col: 16
+         }
+         end: {
+          line: 26
+          col: 54
+         }
+        }
+        source_contexts: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 26
+          col: 16
+         }
+         end: {
+          line: 26
+          col: 54
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 22
+       col: 8
+      }
+      end: {
+       line: 26
+       col: 54
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 22
+       col: 8
+      }
+      end: {
+       line: 26
+       col: 54
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 26
+      col: 54
+     }
+    }
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 26
+      col: 54
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/collector.sysl"
-   start:  {
-    line:  11
-   }
-   end:  {
-    line:  30
-    col:  15
+  endpoints: {
+   key: "POST /1a"
+   value: {
+    name: "POST /1a"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+       elt: {
+        s: "test"
+        source_context: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 40
+          col: 18
+         }
+         end: {
+          line: 40
+          col: 23
+         }
+        }
+        source_contexts: {
+         file: "tests/collector.sysl"
+         start: {
+          line: 40
+          col: 18
+         }
+         end: {
+          line: 40
+          col: 23
+         }
+        }
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 30
+       col: 12
+      }
+      end: {
+       line: 30
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 30
+       col: 12
+      }
+      end: {
+       line: 30
+       col: 15
+      }
+     }
+    }
+    rest_params: {
+     method: POST
+     path: "/1a"
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 29
+      col: 8
+     }
+     end: {
+      line: 32
+      col: 4
+     }
+    }
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 29
+      col: 8
+     }
+     end: {
+      line: 32
+      col: 4
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/collector.sysl"
-   start:  {
-    line:  32
+  source_context: {
+   file: "tests/collector.sysl"
+   start: {
+    line: 32
    }
-   end:  {
-    line:  40
-    col:  15
+   end: {
+    line: 40
+    col: 23
+   }
+  }
+  source_contexts: {
+   file: "tests/collector.sysl"
+   start: {
+    line: 11
+   }
+   end: {
+    line: 30
+    col: 15
+   }
+  }
+  source_contexts: {
+   file: "tests/collector.sysl"
+   start: {
+    line: 32
+   }
+   end: {
+    line: 40
+    col: 23
    }
   }
  }
 }
-apps:  {
- key:  "My :: Server"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Server"
+apps: {
+ key: "My :: Server"
+ value: {
+  name: {
+   part: "My"
+   part: "Server"
   }
-  endpoints:  {
-   key:  "Endpoint_One"
-   value:  {
-    name:  "Endpoint_One"
-    stmt:  {
-     action:  {
-      action:  "process request"
+  endpoints: {
+   key: "Endpoint_One"
+   value: {
+    name: "Endpoint_One"
+    stmt: {
+     action: {
+      action: "process request"
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  2
-       col:  8
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 2
+       col: 8
       }
-      end:  {
-       line:  2
-       col:  23
+      end: {
+       line: 2
+       col: 23
       }
      }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  2
-       col:  8
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 2
+       col: 8
       }
-      end:  {
-       line:  2
-       col:  23
+      end: {
+       line: 2
+       col: 23
       }
      }
     }
-    stmt:  {
-     cond:  {
-      test:  "result ok"
-      stmt:  {
-       action:  {
-        action:  "do further processing"
+    stmt: {
+     cond: {
+      test: "result ok"
+      stmt: {
+       action: {
+        action: "do further processing"
        }
-       source_context:  {
-        file:  "tests/collector.sysl"
-        start:  {
-         line:  4
-         col:  12
+       source_context: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 4
+         col: 12
         }
-        end:  {
-         line:  4
-         col:  33
-        }
-       }
-       source_contexts:  {
-        file:  "tests/collector.sysl"
-        start:  {
-         line:  4
-         col:  12
-        }
-        end:  {
-         line:  4
-         col:  33
+        end: {
+         line: 4
+         col: 33
         }
        }
+       source_contexts: {
+        file: "tests/collector.sysl"
+        start: {
+         line: 4
+         col: 12
+        }
+        end: {
+         line: 4
+         col: 33
+        }
+       }
       }
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  3
-       col:  8
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 3
+       col: 8
       }
-      end:  {
-       line:  4
-       col:  33
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  3
-       col:  8
-      }
-      end:  {
-       line:  4
-       col:  33
+      end: {
+       line: 4
+       col: 33
       }
      }
-    }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  4
-      col:  33
-     }
-    }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  4
-      col:  33
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Endpoint_Three"
-   value:  {
-    name:  "Endpoint_Three"
-    stmt:  {
-     action:  {
-      action:  "process request"
-     }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  10
-       col:  8
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 3
+       col: 8
       }
-      end:  {
-       line:  10
-       col:  23
-      }
-     }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  10
-       col:  8
-      }
-      end:  {
-       line:  10
-       col:  23
+      end: {
+       line: 4
+       col: 33
       }
      }
     }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  9
-      col:  4
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  10
-      col:  23
+     end: {
+      line: 4
+      col: 33
      }
     }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  9
-      col:  4
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  10
-      col:  23
+     end: {
+      line: 4
+      col: 33
      }
     }
    }
   }
-  endpoints:  {
-   key:  "Endpoint_Two"
-   value:  {
-    name:  "Endpoint_Two"
-    stmt:  {
-     action:  {
-      action:  "process request"
+  endpoints: {
+   key: "Endpoint_Three"
+   value: {
+    name: "Endpoint_Three"
+    stmt: {
+     action: {
+      action: "process request"
      }
-     source_context:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  7
-       col:  8
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 10
+       col: 8
       }
-      end:  {
-       line:  7
-       col:  23
+      end: {
+       line: 10
+       col: 23
       }
      }
-     source_contexts:  {
-      file:  "tests/collector.sysl"
-      start:  {
-       line:  7
-       col:  8
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 10
+       col: 8
       }
-      end:  {
-       line:  7
-       col:  23
+      end: {
+       line: 10
+       col: 23
       }
      }
     }
-    source_context:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  6
-      col:  4
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 9
+      col: 4
      }
-     end:  {
-      line:  7
-      col:  23
+     end: {
+      line: 10
+      col: 23
      }
     }
-    source_contexts:  {
-     file:  "tests/collector.sysl"
-     start:  {
-      line:  6
-      col:  4
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 9
+      col: 4
      }
-     end:  {
-      line:  7
-      col:  23
+     end: {
+      line: 10
+      col: 23
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/collector.sysl"
-   start:  {}
-   end:  {
-    line:  10
-    col:  23
+  endpoints: {
+   key: "Endpoint_Two"
+   value: {
+    name: "Endpoint_Two"
+    stmt: {
+     action: {
+      action: "process request"
+     }
+     source_context: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 7
+       col: 8
+      }
+      end: {
+       line: 7
+       col: 23
+      }
+     }
+     source_contexts: {
+      file: "tests/collector.sysl"
+      start: {
+       line: 7
+       col: 8
+      }
+      end: {
+       line: 7
+       col: 23
+      }
+     }
+    }
+    source_context: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 7
+      col: 23
+     }
+    }
+    source_contexts: {
+     file: "tests/collector.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 7
+      col: 23
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/collector.sysl"
-   start:  {}
-   end:  {
-    line:  10
-    col:  23
+  source_context: {
+   file: "tests/collector.sysl"
+   start: {}
+   end: {
+    line: 10
+    col: 23
+   }
+  }
+  source_contexts: {
+   file: "tests/collector.sysl"
+   start: {}
+   end: {
+    line: 10
+    col: 23
    }
   }
  }

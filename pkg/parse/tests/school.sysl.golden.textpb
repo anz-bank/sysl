@@ -1,211 +1,299 @@
-apps:  {
- key:  "School"
- value:  {
-  name:  {
-   part:  "School"
+apps: {
+ key: "School"
+ value: {
+  name: {
+   part: "School"
   }
-  types:  {
-   key:  "Class"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "Id"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+  types: {
+   key: "Class"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "Id"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 19
+            }
+            end: {
+             line: 2
+             col: 22
+            }
+           }
+           source_contexts: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 19
+            }
+            end: {
+             line: 2
+             col: 22
+            }
+           }
           }
-          elt:  {
-           s:  "autoinc"
-          }
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  32
-        }
-       }
-       source_contexts:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  32
-        }
-       }
-      }
-     }
-     primary_key:  {
-      attr_name:  "Id"
-     }
-    }
-    source_context:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  32
-     }
-    }
-    source_contexts:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  32
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Student"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "ClassId"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "School"
-         }
-         path:  "Student"
-        }
-        ref:  {
-         path:  "Class"
-         path:  "Idd"
-        }
-       }
-       source_context:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  25
-        }
-       }
-       source_contexts:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  25
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "Id"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "pk"
+          elt: {
+           s: "autoinc"
+           source_context: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 24
+            }
+            end: {
+             line: 2
+             col: 32
+            }
+           }
+           source_contexts: {
+            file: "tests/school.sysl"
+            start: {
+             line: 2
+             col: 24
+            }
+            end: {
+             line: 2
+             col: 32
+            }
+           }
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  5
-         col:  8
+       source_context: {
+        file: "tests/school.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  22
+        end: {
+         line: 2
+         col: 33
         }
        }
-       source_contexts:  {
-        file:  "tests/school.sysl"
-        start:  {
-         line:  5
-         col:  8
+       source_contexts: {
+        file: "tests/school.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  22
+        end: {
+         line: 2
+         col: 33
         }
        }
       }
      }
-     primary_key:  {
-      attr_name:  "Id"
+     primary_key: {
+      attr_name: "Id"
      }
     }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "describe the table"
+    source_context: {
+     file: "tests/school.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 32
      }
     }
-    source_context:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_contexts: {
+     file: "tests/school.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  6
-      col:  25
-     }
-    }
-    source_contexts:  {
-     file:  "tests/school.sysl"
-     start:  {
-      line:  3
-      col:  4
-     }
-     end:  {
-      line:  6
-      col:  25
+     end: {
+      line: 2
+      col: 32
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/school.sysl"
-   start:  {}
-   end:  {
-    line:  6
-    col:  25
+  types: {
+   key: "Student"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "ClassId"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "School"
+         }
+         path: "Student"
+        }
+        ref: {
+         path: "Class"
+         path: "Idd"
+        }
+       }
+       source_context: {
+        file: "tests/school.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/school.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 28
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "Id"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "pk"
+           source_context: {
+            file: "tests/school.sysl"
+            start: {
+             line: 5
+             col: 19
+            }
+            end: {
+             line: 5
+             col: 22
+            }
+           }
+           source_contexts: {
+            file: "tests/school.sysl"
+            start: {
+             line: 5
+             col: 19
+            }
+            end: {
+             line: 5
+             col: 22
+            }
+           }
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/school.sysl"
+        start: {
+         line: 5
+         col: 8
+        }
+        end: {
+         line: 5
+         col: 23
+        }
+       }
+       source_contexts: {
+        file: "tests/school.sysl"
+        start: {
+         line: 5
+         col: 8
+        }
+        end: {
+         line: 5
+         col: 23
+        }
+       }
+      }
+     }
+     primary_key: {
+      attr_name: "Id"
+     }
+    }
+    attrs: {
+     key: "description"
+     value: {
+      s: "describe the table"
+      source_context: {
+       file: "tests/school.sysl"
+       start: {
+        line: 4
+        col: 23
+       }
+       end: {
+        line: 4
+        col: 43
+       }
+      }
+      source_contexts: {
+       file: "tests/school.sysl"
+       start: {
+        line: 4
+        col: 23
+       }
+       end: {
+        line: 4
+        col: 43
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/school.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 28
+     }
+    }
+    source_contexts: {
+     file: "tests/school.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 28
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/school.sysl"
-   start:  {}
-   end:  {
-    line:  6
-    col:  25
+  source_context: {
+   file: "tests/school.sysl"
+   start: {}
+   end: {
+    line: 6
+    col: 28
+   }
+  }
+  source_contexts: {
+   file: "tests/school.sysl"
+   start: {}
+   end: {
+    line: 6
+    col: 28
    }
   }
  }

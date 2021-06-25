@@ -13,6 +13,28 @@ apps: {
      key: "action"
      value: {
       s: "Delete user"
+      source_context: {
+       file: "dev/sysl/tests/file_merge.sysl"
+       start: {
+        line: 10
+        col: 20
+       }
+       end: {
+        line: 10
+        col: 33
+       }
+      }
+      source_contexts: {
+       file: "dev/sysl/tests/file_merge.sysl"
+       start: {
+        line: 10
+        col: 20
+       }
+       end: {
+        line: 10
+        col: 33
+       }
+      }
      }
     }
     attrs: {
@@ -37,7 +59,7 @@ apps: {
       }
       end: {
        line: 11
-       col: 18
+       col: 31
       }
      }
      source_contexts: {
@@ -48,7 +70,7 @@ apps: {
       }
       end: {
        line: 11
-       col: 18
+       col: 31
       }
      }
     }
@@ -64,7 +86,7 @@ apps: {
      }
      end: {
       line: 12
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -75,7 +97,7 @@ apps: {
      }
      end: {
       line: 12
-      col: 8
+      col: 9
      }
     }
    }
@@ -88,6 +110,28 @@ apps: {
      key: "action"
      value: {
       s: "Get user"
+      source_context: {
+       file: "dev/sysl/tests/file_merge_import.sysl"
+       start: {
+        line: 10
+        col: 20
+       }
+       end: {
+        line: 10
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "dev/sysl/tests/file_merge_import.sysl"
+       start: {
+        line: 10
+        col: 20
+       }
+       end: {
+        line: 10
+        col: 30
+       }
+      }
      }
     }
     attrs: {
@@ -112,7 +156,7 @@ apps: {
       }
       end: {
        line: 11
-       col: 18
+       col: 31
       }
      }
      source_contexts: {
@@ -123,7 +167,7 @@ apps: {
       }
       end: {
        line: 11
-       col: 18
+       col: 31
       }
      }
     }
@@ -139,7 +183,7 @@ apps: {
      }
      end: {
       line: 13
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -150,7 +194,7 @@ apps: {
      }
      end: {
       line: 13
-      col: 4
+      col: 5
      }
     }
    }
@@ -163,6 +207,39 @@ apps: {
      key: "action"
      value: {
       s: "Add user"
+      source_context: {
+       file: "dev/sysl/tests/file_merge.sysl"
+       start: {
+        line: 13
+        col: 20
+       }
+       end: {
+        line: 13
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "dev/sysl/tests/file_merge.sysl"
+       start: {
+        line: 13
+        col: 20
+       }
+       end: {
+        line: 13
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "dev/sysl/tests/file_merge_import.sysl"
+       start: {
+        line: 7
+        col: 20
+       }
+       end: {
+        line: 7
+        col: 30
+       }
+      }
      }
     }
     attrs: {
@@ -190,7 +267,7 @@ apps: {
       }
       end: {
        line: 14
-       col: 18
+       col: 34
       }
      }
      source_contexts: {
@@ -201,7 +278,7 @@ apps: {
       }
       end: {
        line: 14
-       col: 18
+       col: 34
       }
      }
     }
@@ -217,7 +294,7 @@ apps: {
       }
       end: {
        line: 8
-       col: 18
+       col: 31
       }
      }
      source_contexts: {
@@ -228,7 +305,7 @@ apps: {
       }
       end: {
        line: 8
-       col: 18
+       col: 31
       }
      }
     }
@@ -244,7 +321,7 @@ apps: {
      }
      end: {
       line: 9
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -255,7 +332,7 @@ apps: {
      }
      end: {
       line: 16
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -266,7 +343,7 @@ apps: {
      }
      end: {
       line: 9
-      col: 8
+      col: 9
      }
     }
    }
@@ -283,6 +360,28 @@ apps: {
         key: "tag1"
         value: {
          s: "tag1"
+         source_context: {
+          file: "dev/sysl/tests/file_merge.sysl"
+          start: {
+           line: 22
+           col: 20
+          }
+          end: {
+           line: 22
+           col: 26
+          }
+         }
+         source_contexts: {
+          file: "dev/sysl/tests/file_merge.sysl"
+          start: {
+           line: 22
+           col: 20
+          }
+          end: {
+           line: 22
+           col: 26
+          }
+         }
         }
        }
        source_context: {
@@ -293,6 +392,7 @@ apps: {
         }
         end: {
          line: 23
+         col: 1
         }
        }
        source_contexts: {
@@ -303,6 +403,7 @@ apps: {
         }
         end: {
          line: 23
+         col: 1
         }
        }
       }
@@ -319,7 +420,7 @@ apps: {
         }
         end: {
          line: 14
-         col: 14
+         col: 20
         }
        }
        source_contexts: {
@@ -330,7 +431,7 @@ apps: {
         }
         end: {
          line: 14
-         col: 14
+         col: 20
         }
        }
       }
@@ -343,12 +444,56 @@ apps: {
         key: "tag1"
         value: {
          s: "tag1"
+         source_context: {
+          file: "dev/sysl/tests/file_merge.sysl"
+          start: {
+           line: 18
+           col: 20
+          }
+          end: {
+           line: 18
+           col: 26
+          }
+         }
+         source_contexts: {
+          file: "dev/sysl/tests/file_merge.sysl"
+          start: {
+           line: 18
+           col: 20
+          }
+          end: {
+           line: 18
+           col: 26
+          }
+         }
         }
        }
        attrs: {
         key: "tag2"
         value: {
          s: "tag2"
+         source_context: {
+          file: "dev/sysl/tests/file_merge_import.sysl"
+          start: {
+           line: 16
+           col: 20
+          }
+          end: {
+           line: 16
+           col: 26
+          }
+         }
+         source_contexts: {
+          file: "dev/sysl/tests/file_merge_import.sysl"
+          start: {
+           line: 16
+           col: 20
+          }
+          end: {
+           line: 16
+           col: 26
+          }
+         }
         }
        }
        source_context: {
@@ -359,6 +504,7 @@ apps: {
         }
         end: {
          line: 17
+         col: 1
         }
        }
        source_contexts: {
@@ -369,7 +515,7 @@ apps: {
         }
         end: {
          line: 20
-         col: 4
+         col: 5
         }
        }
        source_contexts: {
@@ -380,6 +526,7 @@ apps: {
         }
         end: {
          line: 17
+         col: 1
         }
        }
       }
@@ -392,7 +539,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 17
+      line: 16
+      col: 26
      }
     }
     source_contexts: {
@@ -402,8 +550,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 20
-      col: 4
+      line: 18
+      col: 26
      }
     }
     source_contexts: {
@@ -413,7 +561,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 23
+      line: 22
+      col: 26
      }
     }
     source_contexts: {
@@ -423,7 +572,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 17
+      line: 16
+      col: 26
      }
     }
    }
@@ -444,7 +594,7 @@ apps: {
         }
         end: {
          line: 3
-         col: 14
+         col: 20
         }
        }
        source_contexts: {
@@ -455,7 +605,7 @@ apps: {
         }
         end: {
          line: 3
-         col: 14
+         col: 20
         }
        }
       }
@@ -472,7 +622,7 @@ apps: {
         }
         end: {
          line: 5
-         col: 16
+         col: 22
         }
        }
        source_contexts: {
@@ -483,7 +633,7 @@ apps: {
         }
         end: {
          line: 5
-         col: 16
+         col: 22
         }
        }
       }
@@ -497,7 +647,7 @@ apps: {
      }
      end: {
       line: 3
-      col: 14
+      col: 20
      }
     }
     source_contexts: {
@@ -508,7 +658,7 @@ apps: {
      }
      end: {
       line: 5
-      col: 16
+      col: 22
      }
     }
     source_contexts: {
@@ -519,7 +669,7 @@ apps: {
      }
      end: {
       line: 3
-      col: 14
+      col: 20
      }
     }
    }
@@ -530,7 +680,8 @@ apps: {
     line: 1
    }
    end: {
-    line: 17
+    line: 16
+    col: 26
    }
   }
   source_contexts: {
@@ -539,7 +690,8 @@ apps: {
     line: 3
    }
    end: {
-    line: 23
+    line: 22
+    col: 26
    }
   }
   source_contexts: {
@@ -548,7 +700,8 @@ apps: {
     line: 1
    }
    end: {
-    line: 17
+    line: 16
+    col: 26
    }
   }
  }

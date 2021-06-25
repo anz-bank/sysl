@@ -27,10 +27,9 @@ let attrs = \x
 let annotations =
     let rec resolveVal = \v
         cond v {
-            (a: (:elt)): resolveVal(elt),
-            [...]: v >> resolveVal(.),
-            (:s): resolveVal(s),
-            _: v,
+            (:s, ...):        s,
+            (a: (:elt), ...): elt >> resolveVal(.),
+            _: //error($`unexpected anno value: ${v}`),
         };
     \x attrs(x) where .@ != 'patterns' >> resolveVal(.)
 ;
@@ -400,6 +399,7 @@ let newNormalize = \m
     };
     let [anno, tag, src] = [annoRel, tagRel, srcRel] >> \builder
         //tuple(data >>> \k \v builder(k, v));
+    # TODO: Include source context for all annos and tags.
 
     (
         :app,

@@ -1,275 +1,325 @@
-apps:  {
- key:  "Model"
- value:  {
-  name:  {
-   part:  "Model"
+apps: {
+ key: "Model"
+ value: {
+  name: {
+   part: "Model"
   }
-  types:  {
-   key:  "Error"
-   value:  {
-    primitive:  STRING
-    attrs:  {
-     key:  "comment"
-     value:  {
-      s:  "some description"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "foo"
+  types: {
+   key: "Error"
+   value: {
+    primitive: STRING
+    attrs: {
+     key: "comment"
+     value: {
+      s: "some description"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 2
+        col: 15
+       }
+       end: {
+        line: 2
+        col: 33
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 2
+        col: 15
+       }
+       end: {
+        line: 2
+        col: 33
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  1
-      col:  2
-     }
-     end:  {
-      line:  5
-      col:  2
-     }
-    }
-    source_contexts:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  1
-      col:  2
-     }
-     end:  {
-      line:  5
-      col:  2
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Request"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "requests"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/alias.sysl"
-        start:  {
-         line:  6
-         col:  6
-        }
-        end:  {
-         line:  6
-         col:  18
-        }
-       }
-       source_contexts:  {
-        file:  "tests/alias.sysl"
-        start:  {
-         line:  6
-         col:  6
-        }
-        end:  {
-         line:  6
-         col:  18
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  5
-      col:  2
-     }
-     end:  {
-      line:  6
-      col:  18
-     }
-    }
-    source_contexts:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  5
-      col:  2
-     }
-     end:  {
-      line:  6
-      col:  18
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Response"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "error"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "Model"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "foo"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 1
+          col: 16
          }
-         path:  "Response"
+         end: {
+          line: 1
+          col: 20
+         }
         }
-        ref:  {
-         path:  "Error"
-        }
-       }
-       source_context:  {
-        file:  "tests/alias.sysl"
-        start:  {
-         line:  9
-         col:  6
-        }
-        end:  {
-         line:  9
-         col:  15
-        }
-       }
-       source_contexts:  {
-        file:  "tests/alias.sysl"
-        start:  {
-         line:  9
-         col:  6
-        }
-        end:  {
-         line:  9
-         col:  15
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "response"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/alias.sysl"
-        start:  {
-         line:  10
-         col:  6
-        }
-        end:  {
-         line:  10
-         col:  18
-        }
-       }
-       source_contexts:  {
-        file:  "tests/alias.sysl"
-        start:  {
-         line:  10
-         col:  6
-        }
-        end:  {
-         line:  10
-         col:  18
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 1
+          col: 16
+         }
+         end: {
+          line: 1
+          col: 20
+         }
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  8
-      col:  2
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 1
+      col: 2
      }
-     end:  {
-      line:  10
-      col:  18
+     end: {
+      line: 5
+      col: 3
      }
     }
-    source_contexts:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  8
-      col:  2
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 1
+      col: 2
      }
-     end:  {
-      line:  10
-      col:  18
+     end: {
+      line: 5
+      col: 3
      }
     }
    }
   }
-  types:  {
-   key:  "Terms"
-   value:  {
-    sequence:  {
-     type_ref:  {
-      context:  {
-       appname:  {
-        part:  "Model"
+  types: {
+   key: "Request"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "requests"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/alias.sysl"
+        start: {
+         line: 6
+         col: 6
+        }
+        end: {
+         line: 6
+         col: 24
+        }
        }
-       path:  "Terms"
-      }
-      ref:  {
-       path:  "Term"
-      }
-     }
-     source_context:  {
-      file:  "tests/alias.sysl"
-      start:  {
-       line:  12
-       col:  2
-      }
-      end:  {
-       line:  14
-      }
-     }
-     source_contexts:  {
-      file:  "tests/alias.sysl"
-      start:  {
-       line:  12
-       col:  2
-      }
-      end:  {
-       line:  14
+       source_contexts: {
+        file: "tests/alias.sysl"
+        start: {
+         line: 6
+         col: 6
+        }
+        end: {
+         line: 6
+         col: 24
+        }
+       }
       }
      }
     }
-    source_context:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  12
-      col:  2
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 5
+      col: 2
      }
-     end:  {
-      line:  14
+     end: {
+      line: 6
+      col: 24
      }
     }
-    source_contexts:  {
-     file:  "tests/alias.sysl"
-     start:  {
-      line:  12
-      col:  2
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 5
+      col: 2
      }
-     end:  {
-      line:  14
+     end: {
+      line: 6
+      col: 24
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/alias.sysl"
-   start:  {}
-   end:  {
-    line:  14
+  types: {
+   key: "Response"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "error"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "Model"
+         }
+         path: "Response"
+        }
+        ref: {
+         path: "Error"
+        }
+       }
+       source_context: {
+        file: "tests/alias.sysl"
+        start: {
+         line: 9
+         col: 6
+        }
+        end: {
+         line: 9
+         col: 20
+        }
+       }
+       source_contexts: {
+        file: "tests/alias.sysl"
+        start: {
+         line: 9
+         col: 6
+        }
+        end: {
+         line: 9
+         col: 20
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "response"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/alias.sysl"
+        start: {
+         line: 10
+         col: 6
+        }
+        end: {
+         line: 10
+         col: 24
+        }
+       }
+       source_contexts: {
+        file: "tests/alias.sysl"
+        start: {
+         line: 10
+         col: 6
+        }
+        end: {
+         line: 10
+         col: 24
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 8
+      col: 2
+     }
+     end: {
+      line: 10
+      col: 24
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 8
+      col: 2
+     }
+     end: {
+      line: 10
+      col: 24
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/alias.sysl"
-   start:  {}
-   end:  {
-    line:  14
+  types: {
+   key: "Terms"
+   value: {
+    sequence: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "Terms"
+      }
+      ref: {
+       path: "Term"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 12
+       col: 2
+      }
+      end: {
+       line: 14
+       col: 1
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 12
+       col: 2
+      }
+      end: {
+       line: 14
+       col: 1
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 12
+      col: 2
+     }
+     end: {
+      line: 14
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 12
+      col: 2
+     }
+     end: {
+      line: 14
+      col: 1
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/alias.sysl"
+   start: {}
+   end: {
+    line: 14
+    col: 1
+   }
+  }
+  source_contexts: {
+   file: "tests/alias.sysl"
+   start: {}
+   end: {
+    line: 14
+    col: 1
    }
   }
  }

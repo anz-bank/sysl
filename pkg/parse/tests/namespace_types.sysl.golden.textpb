@@ -1,298 +1,298 @@
-apps:  {
- key:  "First :: App"
- value:  {
-  name:  {
-   part:  "First"
-   part:  "App"
+apps: {
+ key: "First :: App"
+ value: {
+  name: {
+   part: "First"
+   part: "App"
   }
-  types:  {
-   key:  "VeryComplex"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "simpler"
-      value:  {
-       sequence:  {
-        type_ref:  {
-         context:  {
-          appname:  {
-           part:  "First"
-           part:  "App"
+  types: {
+   key: "VeryComplex"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "simpler"
+      value: {
+       sequence: {
+        type_ref: {
+         context: {
+          appname: {
+           part: "First"
+           part: "App"
           }
-          path:  "VeryComplex"
+          path: "VeryComplex"
          }
-         ref:  {
-          path:  "complex"
-         }
-        }
-        source_context:  {
-         file:  "tests/namespace_types.sysl"
-         start:  {
-          line:  2
-          col:  8
-         }
-         end:  {
-          line:  2
-          col:  31
+         ref: {
+          path: "complex"
          }
         }
-        source_contexts:  {
-         file:  "tests/namespace_types.sysl"
-         start:  {
-          line:  2
-          col:  8
+        source_context: {
+         file: "tests/namespace_types.sysl"
+         start: {
+          line: 2
+          col: 8
          }
-         end:  {
-          line:  2
-          col:  31
+         end: {
+          line: 2
+          col: 38
+         }
+        }
+        source_contexts: {
+         file: "tests/namespace_types.sysl"
+         start: {
+          line: 2
+          col: 8
+         }
+         end: {
+          line: 2
+          col: 38
          }
         }
        }
-       source_context:  {
-        file:  "tests/namespace_types.sysl"
-        start:  {
-         line:  2
-         col:  8
+       source_context: {
+        file: "tests/namespace_types.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  2
-         col:  31
-        }
-       }
-       source_contexts:  {
-        file:  "tests/namespace_types.sysl"
-        start:  {
-         line:  2
-         col:  8
-        }
-        end:  {
-         line:  2
-         col:  31
+        end: {
+         line: 2
+         col: 38
         }
        }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/namespace_types.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  31
-     }
-    }
-    source_contexts:  {
-     file:  "tests/namespace_types.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  31
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "complex"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "simple"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/namespace_types.sysl"
-        start:  {
-         line:  5
-         col:  8
+       source_contexts: {
+        file: "tests/namespace_types.sysl"
+        start: {
+         line: 2
+         col: 8
         }
-        end:  {
-         line:  5
-         col:  18
-        }
-       }
-       source_contexts:  {
-        file:  "tests/namespace_types.sysl"
-        start:  {
-         line:  5
-         col:  8
-        }
-        end:  {
-         line:  5
-         col:  18
+        end: {
+         line: 2
+         col: 38
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/namespace_types.sysl"
-     start:  {
-      line:  4
-      col:  4
+    source_context: {
+     file: "tests/namespace_types.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  5
-      col:  18
+     end: {
+      line: 2
+      col: 38
      }
     }
-    source_contexts:  {
-     file:  "tests/namespace_types.sysl"
-     start:  {
-      line:  4
-      col:  4
+    source_contexts: {
+     file: "tests/namespace_types.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  5
-      col:  18
+     end: {
+      line: 2
+      col: 38
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/namespace_types.sysl"
-   start:  {}
-   end:  {
-    line:  5
-    col:  18
+  types: {
+   key: "complex"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "simple"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/namespace_types.sysl"
+        start: {
+         line: 5
+         col: 8
+        }
+        end: {
+         line: 5
+         col: 24
+        }
+       }
+       source_contexts: {
+        file: "tests/namespace_types.sysl"
+        start: {
+         line: 5
+         col: 8
+        }
+        end: {
+         line: 5
+         col: 24
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/namespace_types.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 24
+     }
+    }
+    source_contexts: {
+     file: "tests/namespace_types.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 24
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/namespace_types.sysl"
-   start:  {}
-   end:  {
-    line:  5
-    col:  18
+  source_context: {
+   file: "tests/namespace_types.sysl"
+   start: {}
+   end: {
+    line: 5
+    col: 24
+   }
+  }
+  source_contexts: {
+   file: "tests/namespace_types.sysl"
+   start: {}
+   end: {
+    line: 5
+    col: 24
    }
   }
  }
 }
-apps:  {
- key:  "Second :: App2"
- value:  {
-  name:  {
-   part:  "Second"
-   part:  "App2"
+apps: {
+ key: "Second :: App2"
+ value: {
+  name: {
+   part: "Second"
+   part: "App2"
   }
-  types:  {
-   key:  "KindaComplex"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "lessComplex"
-      value:  {
-       sequence:  {
-        type_ref:  {
-         context:  {
-          appname:  {
-           part:  "Second"
-           part:  "App2"
+  types: {
+   key: "KindaComplex"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "lessComplex"
+      value: {
+       sequence: {
+        type_ref: {
+         context: {
+          appname: {
+           part: "Second"
+           part: "App2"
           }
-          path:  "KindaComplex"
+          path: "KindaComplex"
          }
-         ref:  {
-          appname:  {
-           part:  "First"
-           part:  "App"
+         ref: {
+          appname: {
+           part: "First"
+           part: "App"
           }
-          path:  "VeryComplex"
+          path: "VeryComplex"
          }
         }
-        source_context:  {
-         file:  "tests/namespace_types.sysl"
-         start:  {
-          line:  9
-          col:  8
+        source_context: {
+         file: "tests/namespace_types.sysl"
+         start: {
+          line: 9
+          col: 8
          }
-         end:  {
-          line:  9
-          col:  48
+         end: {
+          line: 9
+          col: 59
          }
         }
-        source_contexts:  {
-         file:  "tests/namespace_types.sysl"
-         start:  {
-          line:  9
-          col:  8
+        source_contexts: {
+         file: "tests/namespace_types.sysl"
+         start: {
+          line: 9
+          col: 8
          }
-         end:  {
-          line:  9
-          col:  48
+         end: {
+          line: 9
+          col: 59
          }
         }
        }
-       source_context:  {
-        file:  "tests/namespace_types.sysl"
-        start:  {
-         line:  9
-         col:  8
+       source_context: {
+        file: "tests/namespace_types.sysl"
+        start: {
+         line: 9
+         col: 8
         }
-        end:  {
-         line:  9
-         col:  48
+        end: {
+         line: 9
+         col: 59
         }
        }
-       source_contexts:  {
-        file:  "tests/namespace_types.sysl"
-        start:  {
-         line:  9
-         col:  8
+       source_contexts: {
+        file: "tests/namespace_types.sysl"
+        start: {
+         line: 9
+         col: 8
         }
-        end:  {
-         line:  9
-         col:  48
+        end: {
+         line: 9
+         col: 59
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/namespace_types.sysl"
-     start:  {
-      line:  8
-      col:  4
+    source_context: {
+     file: "tests/namespace_types.sysl"
+     start: {
+      line: 8
+      col: 4
      }
-     end:  {
-      line:  9
-      col:  48
+     end: {
+      line: 9
+      col: 59
      }
     }
-    source_contexts:  {
-     file:  "tests/namespace_types.sysl"
-     start:  {
-      line:  8
-      col:  4
+    source_contexts: {
+     file: "tests/namespace_types.sysl"
+     start: {
+      line: 8
+      col: 4
      }
-     end:  {
-      line:  9
-      col:  48
+     end: {
+      line: 9
+      col: 59
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/namespace_types.sysl"
-   start:  {
-    line:  7
+  source_context: {
+   file: "tests/namespace_types.sysl"
+   start: {
+    line: 7
    }
-   end:  {
-    line:  9
-    col:  48
+   end: {
+    line: 9
+    col: 59
    }
   }
-  source_contexts:  {
-   file:  "tests/namespace_types.sysl"
-   start:  {
-    line:  7
+  source_contexts: {
+   file: "tests/namespace_types.sysl"
+   start: {
+    line: 7
    }
-   end:  {
-    line:  9
-    col:  48
+   end: {
+    line: 9
+    col: 59
    }
   }
  }

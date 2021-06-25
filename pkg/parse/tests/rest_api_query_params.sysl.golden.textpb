@@ -1,440 +1,482 @@
-apps:  {
- key:  "My :: Server"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Server"
+apps: {
+ key: "My :: Server"
+ value: {
+  name: {
+   part: "My"
+   part: "Server"
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "rest"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "rest"
+      source_context: {
+       file: "tests/rest_api_query_params.sysl"
+       start: {
+        col: 14
+       }
+       end: {
+        col: 19
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_api_query_params.sysl"
+       start: {
+        col: 14
+       }
+       end: {
+        col: 19
+       }
+      }
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /first"
-   value:  {
-    name:  "GET /first"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /first"
+   value: {
+    name: "GET /first"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     action:  {
-      action:  "..."
+    stmt: {
+     action: {
+      action: "..."
      }
-     source_context:  {
-      file:  "tests/rest_api_query_params.sysl"
-      start:  {
-       line:  3
-       col:  12
+     source_context: {
+      file: "tests/rest_api_query_params.sysl"
+      start: {
+       line: 3
+       col: 12
       }
-      end:  {
-       line:  3
-       col:  15
-      }
-     }
-     source_contexts:  {
-      file:  "tests/rest_api_query_params.sysl"
-      start:  {
-       line:  3
-       col:  12
-      }
-      end:  {
-       line:  3
-       col:  15
+      end: {
+       line: 3
+       col: 15
       }
      }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/first"
-     query_param:  {
-      name:  "depth"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  2
-         col:  13
-        }
-        end:  {
-         line:  2
-         col:  19
-        }
-       }
-       source_contexts:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  2
-         col:  13
-        }
-        end:  {
-         line:  2
-         col:  19
-        }
-       }
+     source_contexts: {
+      file: "tests/rest_api_query_params.sysl"
+      start: {
+       line: 3
+       col: 12
       }
-     }
-     query_param:  {
-      name:  "limit"
-      type:  {
-       primitive:  INT
-       opt:  true
-       source_context:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  2
-         col:  23
-        }
-        end:  {
-         line:  2
-         col:  32
-        }
-       }
-       source_contexts:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  2
-         col:  23
-        }
-        end:  {
-         line:  2
-         col:  32
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "offset"
-      type:  {
-       primitive:  INT
-       opt:  true
-       source_context:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  2
-         col:  34
-        }
-        end:  {
-         line:  2
-         col:  44
-        }
-       }
-       source_contexts:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  2
-         col:  34
-        }
-        end:  {
-         line:  2
-         col:  44
-        }
-       }
+      end: {
+       line: 3
+       col: 15
       }
      }
     }
-    source_context:  {
-     file:  "tests/rest_api_query_params.sysl"
-     start:  {
-      line:  2
-      col:  8
+    rest_params: {
+     method: GET
+     path: "/first"
+     query_param: {
+      name: "depth"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 2
+         col: 13
+        }
+        end: {
+         line: 2
+         col: 22
+        }
+       }
+       source_contexts: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 2
+         col: 13
+        }
+        end: {
+         line: 2
+         col: 22
+        }
+       }
+      }
      }
-     end:  {
-      line:  4
-      col:  8
+     query_param: {
+      name: "limit"
+      type: {
+       primitive: INT
+       opt: true
+       source_context: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 2
+         col: 23
+        }
+        end: {
+         line: 2
+         col: 33
+        }
+       }
+       source_contexts: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 2
+         col: 23
+        }
+        end: {
+         line: 2
+         col: 33
+        }
+       }
+      }
+     }
+     query_param: {
+      name: "offset"
+      type: {
+       primitive: INT
+       opt: true
+       source_context: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 2
+         col: 34
+        }
+        end: {
+         line: 2
+         col: 45
+        }
+       }
+       source_contexts: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 2
+         col: 34
+        }
+        end: {
+         line: 2
+         col: 45
+        }
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/rest_api_query_params.sysl"
-     start:  {
-      line:  2
-      col:  8
+    source_context: {
+     file: "tests/rest_api_query_params.sysl"
+     start: {
+      line: 2
+      col: 8
      }
-     end:  {
-      line:  4
-      col:  8
+     end: {
+      line: 4
+      col: 9
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_api_query_params.sysl"
+     start: {
+      line: 2
+      col: 8
+     }
+     end: {
+      line: 4
+      col: 9
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /first/{id}"
-   value:  {
-    name:  "GET /first/{id}"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /first/{id}"
+   value: {
+    name: "GET /first/{id}"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     action:  {
-      action:  "..."
+    stmt: {
+     action: {
+      action: "..."
      }
-     source_context:  {
-      file:  "tests/rest_api_query_params.sysl"
-      start:  {
-       line:  6
-       col:  14
+     source_context: {
+      file: "tests/rest_api_query_params.sysl"
+      start: {
+       line: 6
+       col: 14
       }
-      end:  {
-       line:  6
-       col:  17
+      end: {
+       line: 6
+       col: 17
       }
      }
-     source_contexts:  {
-      file:  "tests/rest_api_query_params.sysl"
-      start:  {
-       line:  6
-       col:  14
+     source_contexts: {
+      file: "tests/rest_api_query_params.sysl"
+      start: {
+       line: 6
+       col: 14
       }
-      end:  {
-       line:  6
-       col:  17
+      end: {
+       line: 6
+       col: 17
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/first/{id}"
-     url_param:  {
-      name:  "id"
-      type:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Server"
+    rest_params: {
+     method: GET
+     path: "/first/{id}"
+     url_param: {
+      name: "id"
+      type: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Server"
          }
         }
-        ref:  {
-         path:  "App"
-         path:  "Token"
+        ref: {
+         path: "App"
+         path: "Token"
         }
        }
-       source_context:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  4
-         col:  9
+       source_context: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 4
+         col: 9
         }
-        end:  {
-         line:  4
-         col:  23
+        end: {
+         line: 4
+         col: 24
         }
        }
-       source_contexts:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  4
-         col:  9
+       source_contexts: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 4
+         col: 9
         }
-        end:  {
-         line:  4
-         col:  23
+        end: {
+         line: 4
+         col: 24
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/rest_api_query_params.sysl"
-     start:  {
-      line:  5
-      col:  10
+    source_context: {
+     file: "tests/rest_api_query_params.sysl"
+     start: {
+      line: 5
+      col: 10
      }
-     end:  {
-      line:  7
-      col:  10
+     end: {
+      line: 7
+      col: 11
      }
     }
-    source_contexts:  {
-     file:  "tests/rest_api_query_params.sysl"
-     start:  {
-      line:  5
-      col:  10
+    source_contexts: {
+     file: "tests/rest_api_query_params.sysl"
+     start: {
+      line: 5
+      col: 10
      }
-     end:  {
-      line:  7
-      col:  10
+     end: {
+      line: 7
+      col: 11
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /first/{id}/second"
-   value:  {
-    name:  "GET /first/{id}/second"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /first/{id}/second"
+   value: {
+    name: "GET /first/{id}/second"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
-       elt:  {
-        s:  "bar"
-       }
-      }
-     }
-    }
-    param:  {
-     name:  "foo"
-     type:  {
-      primitive:  INT
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/rest_api_query_params.sysl"
-      start:  {
-       line:  9
-       col:  18
-      }
-      end:  {
-       line:  9
-       col:  21
-      }
-     }
-     source_contexts:  {
-      file:  "tests/rest_api_query_params.sysl"
-      start:  {
-       line:  9
-       col:  18
-      }
-      end:  {
-       line:  9
-       col:  21
-      }
-     }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/first/{id}/second"
-     query_param:  {
-      name:  "depth"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  8
-         col:  32
-        }
-        end:  {
-         line:  8
-         col:  38
-        }
-       }
-       source_contexts:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  8
-         col:  32
-        }
-        end:  {
-         line:  8
-         col:  38
-        }
-       }
-      }
-     }
-     url_param:  {
-      name:  "id"
-      type:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Server"
+       elt: {
+        s: "bar"
+        source_context: {
+         file: "tests/rest_api_query_params.sysl"
+         start: {
+          line: 8
+          col: 43
+         }
+         end: {
+          line: 8
+          col: 47
          }
         }
-        ref:  {
-         path:  "App"
-         path:  "Token"
-        }
-       }
-       source_context:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  4
-         col:  9
-        }
-        end:  {
-         line:  4
-         col:  23
-        }
-       }
-       source_contexts:  {
-        file:  "tests/rest_api_query_params.sysl"
-        start:  {
-         line:  4
-         col:  9
-        }
-        end:  {
-         line:  4
-         col:  23
+        source_contexts: {
+         file: "tests/rest_api_query_params.sysl"
+         start: {
+          line: 8
+          col: 43
+         }
+         end: {
+          line: 8
+          col: 47
+         }
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/rest_api_query_params.sysl"
-     start:  {
-      line:  8
-      col:  14
-     }
-     end:  {
-      line:  10
+    param: {
+     name: "foo"
+     type: {
+      primitive: INT
      }
     }
-    source_contexts:  {
-     file:  "tests/rest_api_query_params.sysl"
-     start:  {
-      line:  8
-      col:  14
+    stmt: {
+     action: {
+      action: "..."
      }
-     end:  {
-      line:  10
+     source_context: {
+      file: "tests/rest_api_query_params.sysl"
+      start: {
+       line: 9
+       col: 18
+      }
+      end: {
+       line: 9
+       col: 21
+      }
+     }
+     source_contexts: {
+      file: "tests/rest_api_query_params.sysl"
+      start: {
+       line: 9
+       col: 18
+      }
+      end: {
+       line: 9
+       col: 21
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/first/{id}/second"
+     query_param: {
+      name: "depth"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 8
+         col: 32
+        }
+        end: {
+         line: 8
+         col: 41
+        }
+       }
+       source_contexts: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 8
+         col: 32
+        }
+        end: {
+         line: 8
+         col: 41
+        }
+       }
+      }
+     }
+     url_param: {
+      name: "id"
+      type: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Server"
+         }
+        }
+        ref: {
+         path: "App"
+         path: "Token"
+        }
+       }
+       source_context: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 4
+         col: 9
+        }
+        end: {
+         line: 4
+         col: 24
+        }
+       }
+       source_contexts: {
+        file: "tests/rest_api_query_params.sysl"
+        start: {
+         line: 4
+         col: 9
+        }
+        end: {
+         line: 4
+         col: 24
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/rest_api_query_params.sysl"
+     start: {
+      line: 8
+      col: 14
+     }
+     end: {
+      line: 10
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_api_query_params.sysl"
+     start: {
+      line: 8
+      col: 14
+     }
+     end: {
+      line: 10
+      col: 1
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/rest_api_query_params.sysl"
-   start:  {}
-   end:  {
-    line:  9
-    col:  21
+  source_context: {
+   file: "tests/rest_api_query_params.sysl"
+   start: {}
+   end: {
+    line: 9
+    col: 21
    }
   }
-  source_contexts:  {
-   file:  "tests/rest_api_query_params.sysl"
-   start:  {}
-   end:  {
-    line:  9
-    col:  21
+  source_contexts: {
+   file: "tests/rest_api_query_params.sysl"
+   start: {}
+   end: {
+    line: 9
+    col: 21
    }
   }
  }

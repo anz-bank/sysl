@@ -12,7 +12,31 @@
      "name": "DELETE /user",
      "attrs": {
       "action": {
-       "s": "Delete user"
+       "s": "Delete user",
+       "sourceContext": {
+        "file": "dev/sysl/tests/file_merge.sysl",
+        "start": {
+         "line": 10,
+         "col": 20
+        },
+        "end": {
+         "line": 10,
+         "col": 33
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "dev/sysl/tests/file_merge.sysl",
+         "start": {
+          "line": 10,
+          "col": 20
+         },
+         "end": {
+          "line": 10,
+          "col": 33
+         }
+        }
+       ]
       },
       "patterns": {
        "a": {
@@ -37,7 +61,7 @@
         },
         "end": {
          "line": 11,
-         "col": 18
+         "col": 31
         }
        },
        "sourceContexts": [
@@ -49,7 +73,7 @@
          },
          "end": {
           "line": 11,
-          "col": 18
+          "col": 31
          }
         }
        ]
@@ -67,7 +91,7 @@
       },
       "end": {
        "line": 12,
-       "col": 8
+       "col": 9
       }
      },
      "sourceContexts": [
@@ -79,7 +103,7 @@
        },
        "end": {
         "line": 12,
-        "col": 8
+        "col": 9
        }
       }
      ]
@@ -88,7 +112,31 @@
      "name": "GET /user",
      "attrs": {
       "action": {
-       "s": "Get user"
+       "s": "Get user",
+       "sourceContext": {
+        "file": "dev/sysl/tests/file_merge_import.sysl",
+        "start": {
+         "line": 10,
+         "col": 20
+        },
+        "end": {
+         "line": 10,
+         "col": 30
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "start": {
+          "line": 10,
+          "col": 20
+         },
+         "end": {
+          "line": 10,
+          "col": 30
+         }
+        }
+       ]
       },
       "patterns": {
        "a": {
@@ -113,7 +161,7 @@
         },
         "end": {
          "line": 11,
-         "col": 18
+         "col": 31
         }
        },
        "sourceContexts": [
@@ -125,7 +173,7 @@
          },
          "end": {
           "line": 11,
-          "col": 18
+          "col": 31
          }
         }
        ]
@@ -143,7 +191,7 @@
       },
       "end": {
        "line": 13,
-       "col": 4
+       "col": 5
       }
      },
      "sourceContexts": [
@@ -155,7 +203,7 @@
        },
        "end": {
         "line": 13,
-        "col": 4
+        "col": 5
        }
       }
      ]
@@ -164,7 +212,42 @@
      "name": "POST /user",
      "attrs": {
       "action": {
-       "s": "Add user"
+       "s": "Add user",
+       "sourceContext": {
+        "file": "dev/sysl/tests/file_merge.sysl",
+        "start": {
+         "line": 13,
+         "col": 20
+        },
+        "end": {
+         "line": 13,
+         "col": 30
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "dev/sysl/tests/file_merge.sysl",
+         "start": {
+          "line": 13,
+          "col": 20
+         },
+         "end": {
+          "line": 13,
+          "col": 30
+         }
+        },
+        {
+         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "start": {
+          "line": 7,
+          "col": 20
+         },
+         "end": {
+          "line": 7,
+          "col": 30
+         }
+        }
+       ]
       },
       "patterns": {
        "a": {
@@ -192,7 +275,7 @@
         },
         "end": {
          "line": 14,
-         "col": 18
+         "col": 34
         }
        },
        "sourceContexts": [
@@ -204,7 +287,7 @@
          },
          "end": {
           "line": 14,
-          "col": 18
+          "col": 34
          }
         }
        ]
@@ -221,7 +304,7 @@
         },
         "end": {
          "line": 8,
-         "col": 18
+         "col": 31
         }
        },
        "sourceContexts": [
@@ -233,7 +316,7 @@
          },
          "end": {
           "line": 8,
-          "col": 18
+          "col": 31
          }
         }
        ]
@@ -251,7 +334,7 @@
       },
       "end": {
        "line": 9,
-       "col": 8
+       "col": 9
       }
      },
      "sourceContexts": [
@@ -263,7 +346,7 @@
        },
        "end": {
         "line": 16,
-        "col": 4
+        "col": 5
        }
       },
       {
@@ -274,7 +357,7 @@
        },
        "end": {
         "line": 9,
-        "col": 8
+        "col": 9
        }
       }
      ]
@@ -288,7 +371,31 @@
         "primitive": "STRING",
         "attrs": {
          "tag1": {
-          "s": "tag1"
+          "s": "tag1",
+          "sourceContext": {
+           "file": "dev/sysl/tests/file_merge.sysl",
+           "start": {
+            "line": 22,
+            "col": 20
+           },
+           "end": {
+            "line": 22,
+            "col": 26
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "dev/sysl/tests/file_merge.sysl",
+            "start": {
+             "line": 22,
+             "col": 20
+            },
+            "end": {
+             "line": 22,
+             "col": 26
+            }
+           }
+          ]
          }
         },
         "sourceContext": {
@@ -298,7 +405,8 @@
           "col": 8
          },
          "end": {
-          "line": 23
+          "line": 23,
+          "col": 1
          }
         },
         "sourceContexts": [
@@ -309,7 +417,8 @@
            "col": 8
           },
           "end": {
-           "line": 23
+           "line": 23,
+           "col": 1
           }
          }
         ]
@@ -324,7 +433,7 @@
          },
          "end": {
           "line": 14,
-          "col": 14
+          "col": 20
          }
         },
         "sourceContexts": [
@@ -336,7 +445,7 @@
           },
           "end": {
            "line": 14,
-           "col": 14
+           "col": 20
           }
          }
         ]
@@ -345,10 +454,58 @@
         "primitive": "STRING",
         "attrs": {
          "tag1": {
-          "s": "tag1"
+          "s": "tag1",
+          "sourceContext": {
+           "file": "dev/sysl/tests/file_merge.sysl",
+           "start": {
+            "line": 18,
+            "col": 20
+           },
+           "end": {
+            "line": 18,
+            "col": 26
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "dev/sysl/tests/file_merge.sysl",
+            "start": {
+             "line": 18,
+             "col": 20
+            },
+            "end": {
+             "line": 18,
+             "col": 26
+            }
+           }
+          ]
          },
          "tag2": {
-          "s": "tag2"
+          "s": "tag2",
+          "sourceContext": {
+           "file": "dev/sysl/tests/file_merge_import.sysl",
+           "start": {
+            "line": 16,
+            "col": 20
+           },
+           "end": {
+            "line": 16,
+            "col": 26
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "dev/sysl/tests/file_merge_import.sysl",
+            "start": {
+             "line": 16,
+             "col": 20
+            },
+            "end": {
+             "line": 16,
+             "col": 26
+            }
+           }
+          ]
          }
         },
         "sourceContext": {
@@ -358,7 +515,8 @@
           "col": 8
          },
          "end": {
-          "line": 17
+          "line": 17,
+          "col": 1
          }
         },
         "sourceContexts": [
@@ -370,7 +528,7 @@
           },
           "end": {
            "line": 20,
-           "col": 4
+           "col": 5
           }
          },
          {
@@ -380,7 +538,8 @@
            "col": 8
           },
           "end": {
-           "line": 17
+           "line": 17,
+           "col": 1
           }
          }
         ]
@@ -394,7 +553,8 @@
        "col": 4
       },
       "end": {
-       "line": 17
+       "line": 16,
+       "col": 26
       }
      },
      "sourceContexts": [
@@ -405,8 +565,8 @@
         "col": 4
        },
        "end": {
-        "line": 20,
-        "col": 4
+        "line": 18,
+        "col": 26
        }
       },
       {
@@ -416,7 +576,8 @@
         "col": 4
        },
        "end": {
-        "line": 23
+        "line": 22,
+        "col": 26
        }
       },
       {
@@ -426,7 +587,8 @@
         "col": 4
        },
        "end": {
-        "line": 17
+        "line": 16,
+        "col": 26
        }
       }
      ]
@@ -444,7 +606,7 @@
          },
          "end": {
           "line": 3,
-          "col": 14
+          "col": 20
          }
         },
         "sourceContexts": [
@@ -456,7 +618,7 @@
           },
           "end": {
            "line": 3,
-           "col": 14
+           "col": 20
           }
          }
         ]
@@ -471,7 +633,7 @@
          },
          "end": {
           "line": 5,
-          "col": 16
+          "col": 22
          }
         },
         "sourceContexts": [
@@ -483,7 +645,7 @@
           },
           "end": {
            "line": 5,
-           "col": 16
+           "col": 22
           }
          }
         ]
@@ -498,7 +660,7 @@
       },
       "end": {
        "line": 3,
-       "col": 14
+       "col": 20
       }
      },
      "sourceContexts": [
@@ -510,7 +672,7 @@
        },
        "end": {
         "line": 5,
-        "col": 16
+        "col": 22
        }
       },
       {
@@ -521,7 +683,7 @@
        },
        "end": {
         "line": 3,
-        "col": 14
+        "col": 20
        }
       }
      ]
@@ -533,7 +695,8 @@
      "line": 1
     },
     "end": {
-     "line": 17
+     "line": 16,
+     "col": 26
     }
    },
    "sourceContexts": [
@@ -543,7 +706,8 @@
       "line": 3
      },
      "end": {
-      "line": 23
+      "line": 22,
+      "col": 26
      }
     },
     {
@@ -552,7 +716,8 @@
       "line": 1
      },
      "end": {
-      "line": 17
+      "line": 16,
+      "col": 26
      }
     }
    ]

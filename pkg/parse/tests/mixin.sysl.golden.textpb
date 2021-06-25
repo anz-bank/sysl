@@ -1,720 +1,870 @@
-apps:  {
- key:  "API"
- value:  {
-  name:  {
-   part:  "API"
+apps: {
+ key: "API"
+ value: {
+  name: {
+   part: "API"
   }
-  endpoints:  {
-   key:  "Service Call"
-   value:  {
-    name:  "Service Call"
-    source_context:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  15
-      col:  4
+  endpoints: {
+   key: "Service Call"
+   value: {
+    name: "Service Call"
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 15
+      col: 4
      }
-     end:  {
-      line:  15
-      col:  18
+     end: {
+      line: 15
+      col: 21
      }
     }
-    source_contexts:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  15
-      col:  4
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 15
+      col: 4
      }
-     end:  {
-      line:  15
-      col:  18
+     end: {
+      line: 15
+      col: 21
      }
     }
    }
   }
-  types:  {
-   key:  "UberUser"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "user"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "API"
+  types: {
+   key: "UberUser"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "user"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "API"
          }
-         path:  "UberUser"
+         path: "UberUser"
         }
-        ref:  {
-         path:  "User"
-        }
-       }
-       source_context:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  18
-         col:  8
-        }
-        end:  {
-         line:  18
-         col:  16
+        ref: {
+         path: "User"
         }
        }
-       source_contexts:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  18
-         col:  8
+       source_context: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 18
+         col: 8
         }
-        end:  {
-         line:  18
-         col:  16
+        end: {
+         line: 18
+         col: 20
+        }
+       }
+       source_contexts: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 18
+         col: 8
+        }
+        end: {
+         line: 18
+         col: 20
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  17
-      col:  4
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 17
+      col: 4
      }
-     end:  {
-      line:  18
-      col:  16
+     end: {
+      line: 18
+      col: 20
      }
     }
-    source_contexts:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  17
-      col:  4
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 17
+      col: 4
      }
-     end:  {
-      line:  18
-      col:  16
+     end: {
+      line: 18
+      col: 20
      }
     }
    }
   }
-  types:  {
-   key:  "User"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  3
-         col:  8
+  types: {
+   key: "User"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  14
-        }
-       }
-       source_contexts:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  3
-         col:  8
-        }
-        end:  {
-         line:  3
-         col:  14
+        end: {
+         line: 3
+         col: 17
         }
        }
-      }
-     }
-    }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "some description"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "foo"
+       source_contexts: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 3
+         col: 8
+        }
+        end: {
+         line: 3
+         col: 17
+        }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  3
-      col:  14
-     }
-    }
-    source_contexts:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  3
-      col:  14
-     }
-    }
-   }
-  }
-  views:  {
-   key:  "FooTransform"
-   value:  {
-    param:  {
-     name:  "number"
-     type:  {
-      primitive:  INT
-     }
-    }
-    ret_type:  {
-     primitive:  INT
-    }
-    expr:  {
-     transform:  {
-      arg:  {
-       name:  "number"
-       source_context:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  7
-         col:  4
-        }
-        end:  {
-         line:  7
-         col:  4
-        }
+    attrs: {
+     key: "description"
+     value: {
+      s: "some description"
+      source_context: {
+       file: "tests/mixin.sysl"
+       start: {
+        line: 2
+        col: 23
        }
-       source_contexts:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  7
-         col:  4
-        }
-        end:  {
-         line:  7
-         col:  4
-        }
+       end: {
+        line: 2
+        col: 41
        }
       }
-      scopevar:  "."
-      stmt:  {
-       assign:  {
-        name:  "out"
-        expr:  {
-         binexpr:  {
-          op:  ADD
-          lhs:  {
-           name:  "number"
-           source_context:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  12
-            }
-            end:  {
-             line:  8
-             col:  12
-            }
-           }
-           source_contexts:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  12
-            }
-            end:  {
-             line:  8
-             col:  12
-            }
-           }
-          }
-          rhs:  {
-           literal:  {
-            i:  1
-           }
-           type:  {
-            primitive:  INT
-           }
-           source_context:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  21
-            }
-            end:  {
-             line:  8
-             col:  21
-            }
-           }
-           source_contexts:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  21
-            }
-            end:  {
-             line:  8
-             col:  21
-            }
-           }
-          }
+      source_contexts: {
+       file: "tests/mixin.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 41
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "foo"
+        source_context: {
+         file: "tests/mixin.sysl"
+         start: {
+          line: 1
+          col: 17
          }
-         type:  {
-          primitive:  INT
+         end: {
+          line: 1
+          col: 21
          }
-         source_context:  {
-          file:  "tests/mixin.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  21
-          }
-          text:  "out = number + 1"
+        }
+        source_contexts: {
+         file: "tests/mixin.sysl"
+         start: {
+          line: 1
+          col: 17
          }
-         source_contexts:  {
-          file:  "tests/mixin.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  21
-          }
-          text:  "out = number + 1"
+         end: {
+          line: 1
+          col: 21
          }
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/mixin.sysl"
-      start:  {
-       line:  7
-       col:  4
-      }
-      end:  {
-       line:  9
-       col:  5
-      }
+    }
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     source_contexts:  {
-      file:  "tests/mixin.sysl"
-      start:  {
-       line:  7
-       col:  4
-      }
-      end:  {
-       line:  9
-       col:  5
-      }
+     end: {
+      line: 3
+      col: 17
      }
     }
-    source_context:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  6
-      col:  2
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  11
-      col:  3
+     end: {
+      line: 3
+      col: 17
      }
-     text:  "!view FooTransform(number <: int) -> int:"
-    }
-    source_contexts:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  6
-      col:  2
-     }
-     end:  {
-      line:  11
-      col:  3
-     }
-     text:  "!view FooTransform(number <: int) -> int:"
     }
    }
   }
-  mixin2:  {
-   name:  {
-    part:  "Relational Model"
+  views: {
+   key: "FooTransform"
+   value: {
+    param: {
+     name: "number"
+     type: {
+      primitive: INT
+     }
+    }
+    ret_type: {
+     primitive: INT
+    }
+    expr: {
+     transform: {
+      arg: {
+       name: "number"
+       source_context: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 7
+         col: 4
+        }
+        end: {
+         line: 7
+         col: 10
+        }
+       }
+       source_contexts: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 7
+         col: 4
+        }
+        end: {
+         line: 7
+         col: 10
+        }
+       }
+      }
+      scopevar: "."
+      stmt: {
+       assign: {
+        name: "out"
+        expr: {
+         binexpr: {
+          op: ADD
+          lhs: {
+           name: "number"
+           source_context: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 12
+            }
+            end: {
+             line: 8
+             col: 18
+            }
+           }
+           source_contexts: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 12
+            }
+            end: {
+             line: 8
+             col: 18
+            }
+           }
+          }
+          rhs: {
+           literal: {
+            i: 1
+           }
+           type: {
+            primitive: INT
+           }
+           source_context: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 21
+            }
+            end: {
+             line: 8
+             col: 22
+            }
+           }
+           source_contexts: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 21
+            }
+            end: {
+             line: 8
+             col: 22
+            }
+           }
+          }
+         }
+         type: {
+          primitive: INT
+         }
+         source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 22
+          }
+          text: "out = number + 1"
+         }
+         source_contexts: {
+          file: "tests/mixin.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 22
+          }
+          text: "out = number + 1"
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/mixin.sysl"
+      start: {
+       line: 7
+       col: 4
+      }
+      end: {
+       line: 9
+       col: 6
+      }
+     }
+     source_contexts: {
+      file: "tests/mixin.sysl"
+      start: {
+       line: 7
+       col: 4
+      }
+      end: {
+       line: 9
+       col: 6
+      }
+     }
+    }
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 6
+      col: 2
+     }
+     end: {
+      line: 11
+      col: 4
+     }
+     text: "!view FooTransform(number <: int) -> int:"
+    }
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 6
+      col: 2
+     }
+     end: {
+      line: 11
+      col: 4
+     }
+     text: "!view FooTransform(number <: int) -> int:"
+    }
    }
   }
-  mixin2:  {
-   name:  {
-    part:  "TransformApp"
+  mixin2: {
+   name: {
+    part: "Relational Model"
    }
   }
-  source_context:  {
-   file:  "tests/mixin.sysl"
-   start:  {
-    line:  11
-   }
-   end:  {
-    line:  18
-    col:  16
+  mixin2: {
+   name: {
+    part: "TransformApp"
    }
   }
-  source_contexts:  {
-   file:  "tests/mixin.sysl"
-   start:  {
-    line:  11
+  source_context: {
+   file: "tests/mixin.sysl"
+   start: {
+    line: 11
    }
-   end:  {
-    line:  18
-    col:  16
+   end: {
+    line: 18
+    col: 20
+   }
+  }
+  source_contexts: {
+   file: "tests/mixin.sysl"
+   start: {
+    line: 11
+   }
+   end: {
+    line: 18
+    col: 20
    }
   }
  }
 }
-apps:  {
- key:  "Relational Model"
- value:  {
-  name:  {
-   part:  "Relational Model"
+apps: {
+ key: "Relational Model"
+ value: {
+  name: {
+   part: "Relational Model"
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "abstract"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "abstract"
+      source_context: {
+       file: "tests/mixin.sysl"
+       start: {
+        col: 18
+       }
+       end: {
+        col: 27
+       }
+      }
+      source_contexts: {
+       file: "tests/mixin.sysl"
+       start: {
+        col: 18
+       }
+       end: {
+        col: 27
+       }
+      }
      }
     }
    }
   }
-  types:  {
-   key:  "User"
-   value:  {
-    relation:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  3
-         col:  8
+  types: {
+   key: "User"
+   value: {
+    relation: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  14
+        end: {
+         line: 3
+         col: 17
         }
        }
-       source_contexts:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  3
-         col:  8
+       source_contexts: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  14
+        end: {
+         line: 3
+         col: 17
         }
        }
       }
      }
     }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "some description"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "foo"
+    attrs: {
+     key: "description"
+     value: {
+      s: "some description"
+      source_context: {
+       file: "tests/mixin.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 41
+       }
+      }
+      source_contexts: {
+       file: "tests/mixin.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 41
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  3
-      col:  14
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "foo"
+        source_context: {
+         file: "tests/mixin.sysl"
+         start: {
+          line: 1
+          col: 17
+         }
+         end: {
+          line: 1
+          col: 21
+         }
+        }
+        source_contexts: {
+         file: "tests/mixin.sysl"
+         start: {
+          line: 1
+          col: 17
+         }
+         end: {
+          line: 1
+          col: 21
+         }
+        }
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  14
+     end: {
+      line: 3
+      col: 17
+     }
+    }
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 3
+      col: 17
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/mixin.sysl"
-   start:  {}
-   end:  {
-    line:  3
-    col:  14
+  source_context: {
+   file: "tests/mixin.sysl"
+   start: {}
+   end: {
+    line: 3
+    col: 17
    }
   }
-  source_contexts:  {
-   file:  "tests/mixin.sysl"
-   start:  {}
-   end:  {
-    line:  3
-    col:  14
+  source_contexts: {
+   file: "tests/mixin.sysl"
+   start: {}
+   end: {
+    line: 3
+    col: 17
    }
   }
  }
 }
-apps:  {
- key:  "TransformApp"
- value:  {
-  name:  {
-   part:  "TransformApp"
+apps: {
+ key: "TransformApp"
+ value: {
+  name: {
+   part: "TransformApp"
   }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "com.foo.example"
-   }
-  }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "abstract"
+  attrs: {
+   key: "package"
+   value: {
+    s: "com.foo.example"
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 5
+      col: 21
+     }
+     end: {
+      line: 5
+      col: 38
+     }
+    }
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 5
+      col: 21
+     }
+     end: {
+      line: 5
+      col: 38
      }
     }
    }
   }
-  views:  {
-   key:  "FooTransform"
-   value:  {
-    param:  {
-     name:  "number"
-     type:  {
-      primitive:  INT
-     }
-    }
-    ret_type:  {
-     primitive:  INT
-    }
-    expr:  {
-     transform:  {
-      arg:  {
-       name:  "number"
-       source_context:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  7
-         col:  4
-        }
-        end:  {
-         line:  7
-         col:  4
-        }
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "abstract"
+      source_context: {
+       file: "tests/mixin.sysl"
+       start: {
+        line: 5
+        col: 40
        }
-       source_contexts:  {
-        file:  "tests/mixin.sysl"
-        start:  {
-         line:  7
-         col:  4
-        }
-        end:  {
-         line:  7
-         col:  4
-        }
+       end: {
+        line: 5
+        col: 49
        }
       }
-      scopevar:  "."
-      stmt:  {
-       assign:  {
-        name:  "out"
-        expr:  {
-         binexpr:  {
-          op:  ADD
-          lhs:  {
-           name:  "number"
-           source_context:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  12
-            }
-            end:  {
-             line:  8
-             col:  12
-            }
-           }
-           source_contexts:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  12
-            }
-            end:  {
-             line:  8
-             col:  12
-            }
-           }
-          }
-          rhs:  {
-           literal:  {
-            i:  1
-           }
-           type:  {
-            primitive:  INT
-           }
-           source_context:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  21
-            }
-            end:  {
-             line:  8
-             col:  21
-            }
-           }
-           source_contexts:  {
-            file:  "tests/mixin.sysl"
-            start:  {
-             line:  8
-             col:  21
-            }
-            end:  {
-             line:  8
-             col:  21
-            }
-           }
-          }
-         }
-         type:  {
-          primitive:  INT
-         }
-         source_context:  {
-          file:  "tests/mixin.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  21
-          }
-          text:  "out = number + 1"
-         }
-         source_contexts:  {
-          file:  "tests/mixin.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  21
-          }
-          text:  "out = number + 1"
-         }
-        }
+      source_contexts: {
+       file: "tests/mixin.sysl"
+       start: {
+        line: 5
+        col: 40
+       }
+       end: {
+        line: 5
+        col: 49
        }
       }
      }
-     source_context:  {
-      file:  "tests/mixin.sysl"
-      start:  {
-       line:  7
-       col:  4
-      }
-      end:  {
-       line:  9
-       col:  5
-      }
-     }
-     source_contexts:  {
-      file:  "tests/mixin.sysl"
-      start:  {
-       line:  7
-       col:  4
-      }
-      end:  {
-       line:  9
-       col:  5
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  6
-      col:  2
-     }
-     end:  {
-      line:  11
-      col:  3
-     }
-     text:  "!view FooTransform(number <: int) -> int:"
-    }
-    source_contexts:  {
-     file:  "tests/mixin.sysl"
-     start:  {
-      line:  6
-      col:  2
-     }
-     end:  {
-      line:  11
-      col:  3
-     }
-     text:  "!view FooTransform(number <: int) -> int:"
     }
    }
   }
-  source_context:  {
-   file:  "tests/mixin.sysl"
-   start:  {
-    line:  5
-   }
-   end:  {
-    line:  8
-    col:  21
+  views: {
+   key: "FooTransform"
+   value: {
+    param: {
+     name: "number"
+     type: {
+      primitive: INT
+     }
+    }
+    ret_type: {
+     primitive: INT
+    }
+    expr: {
+     transform: {
+      arg: {
+       name: "number"
+       source_context: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 7
+         col: 4
+        }
+        end: {
+         line: 7
+         col: 10
+        }
+       }
+       source_contexts: {
+        file: "tests/mixin.sysl"
+        start: {
+         line: 7
+         col: 4
+        }
+        end: {
+         line: 7
+         col: 10
+        }
+       }
+      }
+      scopevar: "."
+      stmt: {
+       assign: {
+        name: "out"
+        expr: {
+         binexpr: {
+          op: ADD
+          lhs: {
+           name: "number"
+           source_context: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 12
+            }
+            end: {
+             line: 8
+             col: 18
+            }
+           }
+           source_contexts: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 12
+            }
+            end: {
+             line: 8
+             col: 18
+            }
+           }
+          }
+          rhs: {
+           literal: {
+            i: 1
+           }
+           type: {
+            primitive: INT
+           }
+           source_context: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 21
+            }
+            end: {
+             line: 8
+             col: 22
+            }
+           }
+           source_contexts: {
+            file: "tests/mixin.sysl"
+            start: {
+             line: 8
+             col: 21
+            }
+            end: {
+             line: 8
+             col: 22
+            }
+           }
+          }
+         }
+         type: {
+          primitive: INT
+         }
+         source_context: {
+          file: "tests/mixin.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 22
+          }
+          text: "out = number + 1"
+         }
+         source_contexts: {
+          file: "tests/mixin.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 22
+          }
+          text: "out = number + 1"
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/mixin.sysl"
+      start: {
+       line: 7
+       col: 4
+      }
+      end: {
+       line: 9
+       col: 6
+      }
+     }
+     source_contexts: {
+      file: "tests/mixin.sysl"
+      start: {
+       line: 7
+       col: 4
+      }
+      end: {
+       line: 9
+       col: 6
+      }
+     }
+    }
+    source_context: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 6
+      col: 2
+     }
+     end: {
+      line: 11
+      col: 4
+     }
+     text: "!view FooTransform(number <: int) -> int:"
+    }
+    source_contexts: {
+     file: "tests/mixin.sysl"
+     start: {
+      line: 6
+      col: 2
+     }
+     end: {
+      line: 11
+      col: 4
+     }
+     text: "!view FooTransform(number <: int) -> int:"
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/mixin.sysl"
-   start:  {
-    line:  5
+  source_context: {
+   file: "tests/mixin.sysl"
+   start: {
+    line: 5
    }
-   end:  {
-    line:  8
-    col:  21
+   end: {
+    line: 8
+    col: 22
+   }
+  }
+  source_contexts: {
+   file: "tests/mixin.sysl"
+   start: {
+    line: 5
+   }
+   end: {
+    line: 8
+    col: 22
    }
   }
  }

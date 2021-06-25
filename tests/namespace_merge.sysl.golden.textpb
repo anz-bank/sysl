@@ -105,6 +105,7 @@ apps: {
      }
      end: {
       line: 12
+      col: 1
      }
     }
     source_contexts: {
@@ -115,6 +116,7 @@ apps: {
      }
      end: {
       line: 12
+      col: 1
      }
     }
    }
@@ -167,6 +169,7 @@ apps: {
       }
       end: {
        line: 12
+       col: 1
       }
      }
      source_contexts: {
@@ -177,6 +180,7 @@ apps: {
       }
       end: {
        line: 12
+       col: 1
       }
      }
     }

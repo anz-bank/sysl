@@ -20,7 +20,7 @@ apps: {
         }
         end: {
          line: 2
-         col: 13
+         col: 16
         }
        }
        source_contexts: {
@@ -31,7 +31,7 @@ apps: {
         }
         end: {
          line: 2
-         col: 13
+         col: 16
         }
        }
       }
@@ -41,6 +41,28 @@ apps: {
      key: "dataflow"
      value: {
       s: "{'f': 'FooRequest.f'}"
+      source_context: {
+       file: "dev/sysl/tests/type_merge1.sysl"
+       start: {
+        line: 6
+        col: 20
+       }
+       end: {
+        line: 6
+        col: 43
+       }
+      }
+      source_contexts: {
+       file: "dev/sysl/tests/type_merge1.sysl"
+       start: {
+        line: 6
+        col: 20
+       }
+       end: {
+        line: 6
+        col: 43
+       }
+      }
      }
     }
     attrs: {
@@ -49,9 +71,53 @@ apps: {
       a: {
        elt: {
         s: "parent"
+        source_context: {
+         file: "dev/sysl/tests/type_merge1.sysl"
+         start: {
+          line: 1
+          col: 22
+         }
+         end: {
+          line: 1
+          col: 29
+         }
+        }
+        source_contexts: {
+         file: "dev/sysl/tests/type_merge1.sysl"
+         start: {
+          line: 1
+          col: 22
+         }
+         end: {
+          line: 1
+          col: 29
+         }
+        }
        }
        elt: {
         s: "child"
+        source_context: {
+         file: "dev/sysl/tests/type_merge1.sysl"
+         start: {
+          line: 5
+          col: 22
+         }
+         end: {
+          line: 5
+          col: 28
+         }
+        }
+        source_contexts: {
+         file: "dev/sysl/tests/type_merge1.sysl"
+         start: {
+          line: 5
+          col: 22
+         }
+         end: {
+          line: 5
+          col: 28
+         }
+        }
        }
       }
      }
@@ -63,7 +129,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 7
+      line: 6
+      col: 43
      }
     }
     source_contexts: {
@@ -74,7 +141,7 @@ apps: {
      }
      end: {
       line: 2
-      col: 13
+      col: 16
      }
     }
     source_contexts: {
@@ -84,7 +151,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 7
+      line: 6
+      col: 43
      }
     }
    }
@@ -95,7 +163,8 @@ apps: {
     line: 4
    }
    end: {
-    line: 7
+    line: 6
+    col: 43
    }
   }
   source_contexts: {
@@ -103,7 +172,7 @@ apps: {
    start: {}
    end: {
     line: 2
-    col: 13
+    col: 16
    }
   }
   source_contexts: {
@@ -112,7 +181,8 @@ apps: {
     line: 4
    }
    end: {
-    line: 7
+    line: 6
+    col: 43
    }
   }
  }

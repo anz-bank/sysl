@@ -44,9 +44,53 @@ apps: {
        a: {
         elt: {
          s: "https"
+         source_context: {
+          file: "dev/sysl/tests/args.sysl"
+          start: {
+           line: 12
+           col: 33
+          }
+          end: {
+           line: 12
+           col: 39
+          }
+         }
+         source_contexts: {
+          file: "dev/sysl/tests/args.sysl"
+          start: {
+           line: 12
+           col: 33
+          }
+          end: {
+           line: 12
+           col: 39
+          }
+         }
         }
         elt: {
          s: "soap"
+         source_context: {
+          file: "dev/sysl/tests/args.sysl"
+          start: {
+           line: 12
+           col: 41
+          }
+          end: {
+           line: 12
+           col: 46
+          }
+         }
+         source_contexts: {
+          file: "dev/sysl/tests/args.sysl"
+          start: {
+           line: 12
+           col: 41
+          }
+          end: {
+           line: 12
+           col: 46
+          }
+         }
         }
        }
       }
@@ -59,7 +103,7 @@ apps: {
       }
       end: {
        line: 12
-       col: 30
+       col: 31
       }
      }
      source_contexts: {
@@ -70,7 +114,7 @@ apps: {
       }
       end: {
        line: 12
-       col: 30
+       col: 31
       }
      }
     }
@@ -89,7 +133,7 @@ apps: {
       }
       end: {
        line: 13
-       col: 18
+       col: 27
       }
      }
      source_contexts: {
@@ -100,7 +144,7 @@ apps: {
       }
       end: {
        line: 13
-       col: 18
+       col: 27
       }
      }
     }
@@ -122,7 +166,7 @@ apps: {
       }
       end: {
        line: 14
-       col: 31
+       col: 32
       }
      }
      source_contexts: {
@@ -133,7 +177,7 @@ apps: {
       }
       end: {
        line: 14
-       col: 31
+       col: 32
       }
      }
     }
@@ -155,7 +199,7 @@ apps: {
       }
       end: {
        line: 15
-       col: 41
+       col: 42
       }
      }
      source_contexts: {
@@ -166,7 +210,7 @@ apps: {
       }
       end: {
        line: 15
-       col: 41
+       col: 42
       }
      }
     }
@@ -178,7 +222,7 @@ apps: {
      }
      end: {
       line: 15
-      col: 41
+      col: 42
      }
     }
     source_contexts: {
@@ -189,7 +233,7 @@ apps: {
      }
      end: {
       line: 15
-      col: 41
+      col: 42
      }
     }
    }
@@ -201,7 +245,7 @@ apps: {
    }
    end: {
     line: 15
-    col: 41
+    col: 42
    }
   }
   source_contexts: {
@@ -211,7 +255,7 @@ apps: {
    }
    end: {
     line: 15
-    col: 41
+    col: 42
    }
   }
  }
@@ -330,7 +374,7 @@ apps: {
      }
      end: {
       line: 7
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -341,7 +385,7 @@ apps: {
      }
      end: {
       line: 7
-      col: 8
+      col: 9
      }
     }
    }
@@ -399,7 +443,7 @@ apps: {
      }
      end: {
       line: 10
-      col: 6
+      col: 7
      }
     }
     source_contexts: {
@@ -410,7 +454,7 @@ apps: {
      }
      end: {
       line: 10
-      col: 6
+      col: 7
      }
     }
    }

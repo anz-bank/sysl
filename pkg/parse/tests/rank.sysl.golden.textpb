@@ -1,1595 +1,1615 @@
-apps:  {
- key:  "TransformationTest"
- value:  {
-  name:  {
-   part:  "TransformationTest"
+apps: {
+ key: "TransformationTest"
+ value: {
+  name: {
+   part: "TransformationTest"
   }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "io.sysl.test.views"
-   }
-  }
-  views:  {
-   key:  "TestRank"
-   value:  {
-    param:  {
-     name:  "number"
-     type:  {
-      primitive:  INT
+  attrs: {
+   key: "package"
+   value: {
+    s: "io.sysl.test.views"
+    source_context: {
+     file: "tests/rank.sysl"
+     start: {
+      col: 27
+     }
+     end: {
+      col: 47
      }
     }
-    ret_type:  {
-     primitive:  INT
-    }
-    expr:  {
-     transform:  {
-      arg:  {
-       name:  "number"
-       source_context:  {
-        file:  "tests/rank.sysl"
-        start:  {
-         line:  2
-         col:  4
-        }
-        end:  {
-         line:  2
-         col:  4
-        }
-       }
-       source_contexts:  {
-        file:  "tests/rank.sysl"
-        start:  {
-         line:  2
-         col:  4
-        }
-        end:  {
-         line:  2
-         col:  4
-        }
-       }
-      }
-      scopevar:  "."
-      stmt:  {
-       let:  {
-        name:  "out1"
-        expr:  {
-         relexpr:  {
-          op:  RANK
-          target:  {
-           name:  "."
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  3
-             col:  17
-            }
-            end:  {
-             line:  3
-             col:  34
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  3
-             col:  17
-            }
-            end:  {
-             line:  3
-             col:  34
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  3
-             col:  24
-            }
-            end:  {
-             line:  3
-             col:  24
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  3
-             col:  24
-            }
-            end:  {
-             line:  3
-             col:  24
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  3
-             col:  24
-            }
-            end:  {
-             line:  3
-             col:  24
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  3
-             col:  24
-            }
-            end:  {
-             line:  3
-             col:  24
-            }
-           }
-          }
-          scopevar:  "."
-          descending:  false
-          attr_name:  "foo"
-         }
-         type:  {
-          set:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  3
-           col:  6
-          }
-          end:  {
-           line:  3
-           col:  34
-          }
-          text:  "let out1 = . rank(abc as foo)"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  3
-           col:  6
-          }
-          end:  {
-           line:  3
-           col:  34
-          }
-          text:  "let out1 = . rank(abc as foo)"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out2"
-        expr:  {
-         relexpr:  {
-          op:  RANK
-          target:  {
-           get_attr:  {
-            arg:  {
-             name:  "."
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  4
-               col:  17
-              }
-              end:  {
-               line:  4
-               col:  18
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  4
-               col:  17
-              }
-              end:  {
-               line:  4
-               col:  18
-              }
-             }
-            }
-            attr:  "abc"
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  4
-             col:  17
-            }
-            end:  {
-             line:  4
-             col:  18
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  4
-             col:  17
-            }
-            end:  {
-             line:  4
-             col:  18
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  4
-             col:  27
-            }
-            end:  {
-             line:  4
-             col:  27
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  4
-             col:  27
-            }
-            end:  {
-             line:  4
-             col:  27
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  4
-             col:  27
-            }
-            end:  {
-             line:  4
-             col:  27
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  4
-             col:  27
-            }
-            end:  {
-             line:  4
-             col:  27
-            }
-           }
-          }
-          scopevar:  "."
-          descending:  false
-          attr_name:  "foo"
-         }
-         type:  {
-          set:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  4
-           col:  6
-          }
-          end:  {
-           line:  4
-           col:  37
-          }
-          text:  "let out2 = .abc rank(abc as foo)"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  4
-           col:  6
-          }
-          end:  {
-           line:  4
-           col:  37
-          }
-          text:  "let out2 = .abc rank(abc as foo)"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out3"
-        expr:  {
-         relexpr:  {
-          op:  RANK
-          target:  {
-           get_attr:  {
-            arg:  {
-             name:  "input"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  5
-               col:  17
-              }
-              end:  {
-               line:  5
-               col:  17
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  5
-               col:  17
-              }
-              end:  {
-               line:  5
-               col:  17
-              }
-             }
-            }
-            attr:  "abc"
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  5
-             col:  22
-            }
-            end:  {
-             line:  5
-             col:  23
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  5
-             col:  22
-            }
-            end:  {
-             line:  5
-             col:  23
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  5
-             col:  32
-            }
-            end:  {
-             line:  5
-             col:  32
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  5
-             col:  32
-            }
-            end:  {
-             line:  5
-             col:  32
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  5
-             col:  32
-            }
-            end:  {
-             line:  5
-             col:  32
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  5
-             col:  32
-            }
-            end:  {
-             line:  5
-             col:  32
-            }
-           }
-          }
-          scopevar:  "."
-          descending:  false
-          attr_name:  "foo"
-         }
-         type:  {
-          set:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  5
-           col:  6
-          }
-          end:  {
-           line:  5
-           col:  42
-          }
-          text:  "let out3 = input.abc rank(abc as foo)"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  5
-           col:  6
-          }
-          end:  {
-           line:  5
-           col:  42
-          }
-          text:  "let out3 = input.abc rank(abc as foo)"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out4"
-        expr:  {
-         relexpr:  {
-          op:  RANK
-          target:  {
-           literal:  {
-            i:  1
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  6
-             col:  17
-            }
-            end:  {
-             line:  6
-             col:  17
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  6
-             col:  17
-            }
-            end:  {
-             line:  6
-             col:  17
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  6
-             col:  24
-            }
-            end:  {
-             line:  6
-             col:  24
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  6
-             col:  24
-            }
-            end:  {
-             line:  6
-             col:  24
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  6
-             col:  24
-            }
-            end:  {
-             line:  6
-             col:  24
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  6
-             col:  24
-            }
-            end:  {
-             line:  6
-             col:  24
-            }
-           }
-          }
-          scopevar:  "."
-          descending:  false
-          attr_name:  "foo"
-         }
-         type:  {
-          set:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  6
-           col:  6
-          }
-          end:  {
-           line:  6
-           col:  34
-          }
-          text:  "let out4 = 1 rank(abc as foo)"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  6
-           col:  6
-          }
-          end:  {
-           line:  6
-           col:  34
-          }
-          text:  "let out4 = 1 rank(abc as foo)"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out5"
-        expr:  {
-         relexpr:  {
-          op:  RANK
-          target:  {
-           name:  "foo"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  7
-             col:  17
-            }
-            end:  {
-             line:  7
-             col:  17
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  7
-             col:  17
-            }
-            end:  {
-             line:  7
-             col:  17
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  7
-             col:  26
-            }
-            end:  {
-             line:  7
-             col:  26
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  7
-             col:  26
-            }
-            end:  {
-             line:  7
-             col:  26
-            }
-           }
-          }
-          arg:  {
-           name:  "abc"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  7
-             col:  26
-            }
-            end:  {
-             line:  7
-             col:  26
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  7
-             col:  26
-            }
-            end:  {
-             line:  7
-             col:  26
-            }
-           }
-          }
-          scopevar:  "."
-          descending:  false
-          attr_name:  "foo"
-         }
-         type:  {
-          set:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  7
-           col:  6
-          }
-          end:  {
-           line:  7
-           col:  36
-          }
-          text:  "let out5 = foo rank(abc as foo)"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  7
-           col:  6
-          }
-          end:  {
-           line:  7
-           col:  36
-          }
-          text:  "let out5 = foo rank(abc as foo)"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out6"
-        expr:  {
-         get_attr:  {
-          arg:  {
-           relexpr:  {
-            op:  RANK
-            target:  {
-             name:  "foo"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  8
-               col:  17
-              }
-              end:  {
-               line:  8
-               col:  17
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  8
-               col:  17
-              }
-              end:  {
-               line:  8
-               col:  17
-              }
-             }
-            }
-            arg:  {
-             name:  "abc"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  8
-               col:  26
-              }
-              end:  {
-               line:  8
-               col:  26
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  8
-               col:  26
-              }
-              end:  {
-               line:  8
-               col:  26
-              }
-             }
-            }
-            arg:  {
-             name:  "abc"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  8
-               col:  26
-              }
-              end:  {
-               line:  8
-               col:  26
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  8
-               col:  26
-              }
-              end:  {
-               line:  8
-               col:  26
-              }
-             }
-            }
-            scopevar:  "."
-            descending:  false
-            attr_name:  "foo"
-           }
-           type:  {
-            set:  {}
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  8
-             col:  21
-            }
-            end:  {
-             line:  8
-             col:  36
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  8
-             col:  21
-            }
-            end:  {
-             line:  8
-             col:  36
-            }
-           }
-          }
-          attr:  "bar"
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  39
-          }
-          text:  "let out6 = foo rank(abc as foo) .bar"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  39
-          }
-          text:  "let out6 = foo rank(abc as foo) .bar"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out7"
-        expr:  {
-         binexpr:  {
-          op:  TO_MATCHING
-          lhs:  {
-           relexpr:  {
-            op:  RANK
-            target:  {
-             name:  "foo"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  9
-               col:  17
-              }
-              end:  {
-               line:  9
-               col:  17
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  9
-               col:  17
-              }
-              end:  {
-               line:  9
-               col:  17
-              }
-             }
-            }
-            arg:  {
-             name:  "abc"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  9
-               col:  26
-              }
-              end:  {
-               line:  9
-               col:  26
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  9
-               col:  26
-              }
-              end:  {
-               line:  9
-               col:  26
-              }
-             }
-            }
-            arg:  {
-             name:  "abc"
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  9
-               col:  26
-              }
-              end:  {
-               line:  9
-               col:  26
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  9
-               col:  26
-              }
-              end:  {
-               line:  9
-               col:  26
-              }
-             }
-            }
-            scopevar:  "."
-            descending:  false
-            attr_name:  "foo"
-           }
-           type:  {
-            set:  {}
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  9
-             col:  21
-            }
-            end:  {
-             line:  9
-             col:  36
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  9
-             col:  21
-            }
-            end:  {
-             line:  9
-             col:  36
-            }
-           }
-          }
-          rhs:  {
-           name:  "bar"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  9
-             col:  41
-            }
-            end:  {
-             line:  9
-             col:  41
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  9
-             col:  41
-            }
-            end:  {
-             line:  9
-             col:  41
-            }
-           }
-          }
-          attr_name:  "*"
-         }
-         type:  {
-          no_type:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  9
-           col:  6
-          }
-          end:  {
-           line:  9
-           col:  41
-          }
-          text:  "let out7 = foo rank(abc as foo) ~> bar"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  9
-           col:  6
-          }
-          end:  {
-           line:  9
-           col:  41
-          }
-          text:  "let out7 = foo rank(abc as foo) ~> bar"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out8"
-        expr:  {
-         binexpr:  {
-          op:  TO_MATCHING
-          lhs:  {
-           relexpr:  {
-            op:  RANK
-            target:  {
-             get_attr:  {
-              arg:  {
-               name:  "."
-               source_context:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  10
-                 col:  17
-                }
-                end:  {
-                 line:  10
-                 col:  27
-                }
-               }
-               source_contexts:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  10
-                 col:  17
-                }
-                end:  {
-                 line:  10
-                 col:  27
-                }
-               }
-              }
-              attr:  "Pet"
-              setof:  true
-             }
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  10
-               col:  17
-              }
-              end:  {
-               line:  10
-               col:  27
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  10
-               col:  17
-              }
-              end:  {
-               line:  10
-               col:  27
-              }
-             }
-            }
-            arg:  {
-             get_attr:  {
-              arg:  {
-               name:  "."
-               source_context:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  10
-                 col:  36
-                }
-                end:  {
-                 line:  10
-                 col:  37
-                }
-               }
-               source_contexts:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  10
-                 col:  36
-                }
-                end:  {
-                 line:  10
-                 col:  37
-                }
-               }
-              }
-              attr:  "numLegs"
-             }
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  10
-               col:  36
-              }
-              end:  {
-               line:  10
-               col:  37
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  10
-               col:  36
-              }
-              end:  {
-               line:  10
-               col:  37
-              }
-             }
-            }
-            arg:  {
-             get_attr:  {
-              arg:  {
-               name:  "."
-               source_context:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  10
-                 col:  36
-                }
-                end:  {
-                 line:  10
-                 col:  37
-                }
-               }
-               source_contexts:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  10
-                 col:  36
-                }
-                end:  {
-                 line:  10
-                 col:  37
-                }
-               }
-              }
-              attr:  "numLegs"
-             }
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  10
-               col:  36
-              }
-              end:  {
-               line:  10
-               col:  37
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  10
-               col:  36
-              }
-              end:  {
-               line:  10
-               col:  37
-              }
-             }
-            }
-            scopevar:  "."
-            descending:  false
-            attr_name:  "legRank"
-           }
-           type:  {
-            set:  {}
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  10
-             col:  31
-            }
-            end:  {
-             line:  10
-             col:  55
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  10
-             col:  31
-            }
-            end:  {
-             line:  10
-             col:  55
-            }
-           }
-          }
-          rhs:  {
-           name:  "bar"
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  10
-             col:  60
-            }
-            end:  {
-             line:  10
-             col:  60
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  10
-             col:  60
-            }
-            end:  {
-             line:  10
-             col:  60
-            }
-           }
-          }
-          attr_name:  "*"
-         }
-         type:  {
-          no_type:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  10
-           col:  6
-          }
-          end:  {
-           line:  10
-           col:  60
-          }
-          text:  "let out8 = .table of Pet rank(.numLegs as legRank) ~> bar"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  10
-           col:  6
-          }
-          end:  {
-           line:  10
-           col:  60
-          }
-          text:  "let out8 = .table of Pet rank(.numLegs as legRank) ~> bar"
-         }
-        }
-       }
-      }
-      stmt:  {
-       let:  {
-        name:  "out9"
-        expr:  {
-         binexpr:  {
-          op:  TO_MATCHING
-          lhs:  {
-           relexpr:  {
-            op:  RANK
-            target:  {
-             get_attr:  {
-              arg:  {
-               name:  "."
-               source_context:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  11
-                 col:  17
-                }
-                end:  {
-                 line:  11
-                 col:  27
-                }
-               }
-               source_contexts:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  11
-                 col:  17
-                }
-                end:  {
-                 line:  11
-                 col:  27
-                }
-               }
-              }
-              attr:  "Pet"
-              setof:  true
-             }
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  17
-              }
-              end:  {
-               line:  11
-               col:  27
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  17
-              }
-              end:  {
-               line:  11
-               col:  27
-              }
-             }
-            }
-            arg:  {
-             get_attr:  {
-              arg:  {
-               name:  "."
-               source_context:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  11
-                 col:  36
-                }
-                end:  {
-                 line:  11
-                 col:  37
-                }
-               }
-               source_contexts:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  11
-                 col:  36
-                }
-                end:  {
-                 line:  11
-                 col:  37
-                }
-               }
-              }
-              attr:  "numLegs"
-             }
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  36
-              }
-              end:  {
-               line:  11
-               col:  37
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  36
-              }
-              end:  {
-               line:  11
-               col:  37
-              }
-             }
-            }
-            arg:  {
-             get_attr:  {
-              arg:  {
-               name:  "."
-               source_context:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  11
-                 col:  36
-                }
-                end:  {
-                 line:  11
-                 col:  37
-                }
-               }
-               source_contexts:  {
-                file:  "tests/rank.sysl"
-                start:  {
-                 line:  11
-                 col:  36
-                }
-                end:  {
-                 line:  11
-                 col:  37
-                }
-               }
-              }
-              attr:  "numLegs"
-             }
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  36
-              }
-              end:  {
-               line:  11
-               col:  37
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  36
-              }
-              end:  {
-               line:  11
-               col:  37
-              }
-             }
-            }
-            scopevar:  "."
-            descending:  false
-            attr_name:  "legRank"
-           }
-           type:  {
-            set:  {}
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  11
-             col:  31
-            }
-            end:  {
-             line:  11
-             col:  55
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  11
-             col:  31
-            }
-            end:  {
-             line:  11
-             col:  55
-            }
-           }
-          }
-          rhs:  {
-           get_attr:  {
-            arg:  {
-             name:  "."
-             source_context:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  60
-              }
-              end:  {
-               line:  11
-               col:  70
-              }
-             }
-             source_contexts:  {
-              file:  "tests/rank.sysl"
-              start:  {
-               line:  11
-               col:  60
-              }
-              end:  {
-               line:  11
-               col:  70
-              }
-             }
-            }
-            attr:  "Bar"
-            setof:  true
-           }
-           source_context:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  11
-             col:  60
-            }
-            end:  {
-             line:  11
-             col:  70
-            }
-           }
-           source_contexts:  {
-            file:  "tests/rank.sysl"
-            start:  {
-             line:  11
-             col:  60
-            }
-            end:  {
-             line:  11
-             col:  70
-            }
-           }
-          }
-          attr_name:  "*"
-         }
-         type:  {
-          no_type:  {}
-         }
-         source_context:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  11
-           col:  6
-          }
-          end:  {
-           line:  11
-           col:  70
-          }
-          text:  "let out9 = .table of Pet rank(.numLegs as legRank) ~> .table of Bar"
-         }
-         source_contexts:  {
-          file:  "tests/rank.sysl"
-          start:  {
-           line:  11
-           col:  6
-          }
-          end:  {
-           line:  11
-           col:  70
-          }
-          text:  "let out9 = .table of Pet rank(.numLegs as legRank) ~> .table of Bar"
-         }
-        }
-       }
-      }
+    source_contexts: {
+     file: "tests/rank.sysl"
+     start: {
+      col: 27
      }
-     source_context:  {
-      file:  "tests/rank.sysl"
-      start:  {
-       line:  2
-       col:  4
-      }
-      end:  {
-       line:  12
-       col:  5
-      }
+     end: {
+      col: 47
      }
-     source_contexts:  {
-      file:  "tests/rank.sysl"
-      start:  {
-       line:  2
-       col:  4
-      }
-      end:  {
-       line:  12
-       col:  5
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/rank.sysl"
-     start:  {
-      line:  1
-      col:  2
-     }
-     end:  {
-      line:  13
-     }
-     text:  "!view TestRank(number <: int) -> int:"
-    }
-    source_contexts:  {
-     file:  "tests/rank.sysl"
-     start:  {
-      line:  1
-      col:  2
-     }
-     end:  {
-      line:  13
-     }
-     text:  "!view TestRank(number <: int) -> int:"
     }
    }
   }
-  source_context:  {
-   file:  "tests/rank.sysl"
-   start:  {}
-   end:  {
-    line:  11
-    col:  70
+  views: {
+   key: "TestRank"
+   value: {
+    param: {
+     name: "number"
+     type: {
+      primitive: INT
+     }
+    }
+    ret_type: {
+     primitive: INT
+    }
+    expr: {
+     transform: {
+      arg: {
+       name: "number"
+       source_context: {
+        file: "tests/rank.sysl"
+        start: {
+         line: 2
+         col: 4
+        }
+        end: {
+         line: 2
+         col: 10
+        }
+       }
+       source_contexts: {
+        file: "tests/rank.sysl"
+        start: {
+         line: 2
+         col: 4
+        }
+        end: {
+         line: 2
+         col: 10
+        }
+       }
+      }
+      scopevar: "."
+      stmt: {
+       let: {
+        name: "out1"
+        expr: {
+         relexpr: {
+          op: RANK
+          target: {
+           name: "."
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 3
+             col: 17
+            }
+            end: {
+             line: 3
+             col: 35
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 3
+             col: 17
+            }
+            end: {
+             line: 3
+             col: 35
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 3
+             col: 24
+            }
+            end: {
+             line: 3
+             col: 27
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 3
+             col: 24
+            }
+            end: {
+             line: 3
+             col: 27
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 3
+             col: 24
+            }
+            end: {
+             line: 3
+             col: 27
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 3
+             col: 24
+            }
+            end: {
+             line: 3
+             col: 27
+            }
+           }
+          }
+          scopevar: "."
+          descending: false
+          attr_name: "foo"
+         }
+         type: {
+          set: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 3
+           col: 6
+          }
+          end: {
+           line: 3
+           col: 35
+          }
+          text: "let out1 = . rank(abc as foo)"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 3
+           col: 6
+          }
+          end: {
+           line: 3
+           col: 35
+          }
+          text: "let out1 = . rank(abc as foo)"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out2"
+        expr: {
+         relexpr: {
+          op: RANK
+          target: {
+           get_attr: {
+            arg: {
+             name: "."
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 4
+               col: 17
+              }
+              end: {
+               line: 4
+               col: 21
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 4
+               col: 17
+              }
+              end: {
+               line: 4
+               col: 21
+              }
+             }
+            }
+            attr: "abc"
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 4
+             col: 17
+            }
+            end: {
+             line: 4
+             col: 21
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 4
+             col: 17
+            }
+            end: {
+             line: 4
+             col: 21
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 4
+             col: 27
+            }
+            end: {
+             line: 4
+             col: 30
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 4
+             col: 27
+            }
+            end: {
+             line: 4
+             col: 30
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 4
+             col: 27
+            }
+            end: {
+             line: 4
+             col: 30
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 4
+             col: 27
+            }
+            end: {
+             line: 4
+             col: 30
+            }
+           }
+          }
+          scopevar: "."
+          descending: false
+          attr_name: "foo"
+         }
+         type: {
+          set: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 4
+           col: 6
+          }
+          end: {
+           line: 4
+           col: 38
+          }
+          text: "let out2 = .abc rank(abc as foo)"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 4
+           col: 6
+          }
+          end: {
+           line: 4
+           col: 38
+          }
+          text: "let out2 = .abc rank(abc as foo)"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out3"
+        expr: {
+         relexpr: {
+          op: RANK
+          target: {
+           get_attr: {
+            arg: {
+             name: "input"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 5
+               col: 17
+              }
+              end: {
+               line: 5
+               col: 22
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 5
+               col: 17
+              }
+              end: {
+               line: 5
+               col: 22
+              }
+             }
+            }
+            attr: "abc"
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 5
+             col: 22
+            }
+            end: {
+             line: 5
+             col: 26
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 5
+             col: 22
+            }
+            end: {
+             line: 5
+             col: 26
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 5
+             col: 32
+            }
+            end: {
+             line: 5
+             col: 35
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 5
+             col: 32
+            }
+            end: {
+             line: 5
+             col: 35
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 5
+             col: 32
+            }
+            end: {
+             line: 5
+             col: 35
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 5
+             col: 32
+            }
+            end: {
+             line: 5
+             col: 35
+            }
+           }
+          }
+          scopevar: "."
+          descending: false
+          attr_name: "foo"
+         }
+         type: {
+          set: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 5
+           col: 6
+          }
+          end: {
+           line: 5
+           col: 43
+          }
+          text: "let out3 = input.abc rank(abc as foo)"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 5
+           col: 6
+          }
+          end: {
+           line: 5
+           col: 43
+          }
+          text: "let out3 = input.abc rank(abc as foo)"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out4"
+        expr: {
+         relexpr: {
+          op: RANK
+          target: {
+           literal: {
+            i: 1
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 6
+             col: 17
+            }
+            end: {
+             line: 6
+             col: 18
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 6
+             col: 17
+            }
+            end: {
+             line: 6
+             col: 18
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 6
+             col: 24
+            }
+            end: {
+             line: 6
+             col: 27
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 6
+             col: 24
+            }
+            end: {
+             line: 6
+             col: 27
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 6
+             col: 24
+            }
+            end: {
+             line: 6
+             col: 27
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 6
+             col: 24
+            }
+            end: {
+             line: 6
+             col: 27
+            }
+           }
+          }
+          scopevar: "."
+          descending: false
+          attr_name: "foo"
+         }
+         type: {
+          set: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 6
+           col: 6
+          }
+          end: {
+           line: 6
+           col: 35
+          }
+          text: "let out4 = 1 rank(abc as foo)"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 6
+           col: 6
+          }
+          end: {
+           line: 6
+           col: 35
+          }
+          text: "let out4 = 1 rank(abc as foo)"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out5"
+        expr: {
+         relexpr: {
+          op: RANK
+          target: {
+           name: "foo"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 7
+             col: 17
+            }
+            end: {
+             line: 7
+             col: 20
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 7
+             col: 17
+            }
+            end: {
+             line: 7
+             col: 20
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 7
+             col: 26
+            }
+            end: {
+             line: 7
+             col: 29
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 7
+             col: 26
+            }
+            end: {
+             line: 7
+             col: 29
+            }
+           }
+          }
+          arg: {
+           name: "abc"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 7
+             col: 26
+            }
+            end: {
+             line: 7
+             col: 29
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 7
+             col: 26
+            }
+            end: {
+             line: 7
+             col: 29
+            }
+           }
+          }
+          scopevar: "."
+          descending: false
+          attr_name: "foo"
+         }
+         type: {
+          set: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 7
+           col: 6
+          }
+          end: {
+           line: 7
+           col: 37
+          }
+          text: "let out5 = foo rank(abc as foo)"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 7
+           col: 6
+          }
+          end: {
+           line: 7
+           col: 37
+          }
+          text: "let out5 = foo rank(abc as foo)"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out6"
+        expr: {
+         get_attr: {
+          arg: {
+           relexpr: {
+            op: RANK
+            target: {
+             name: "foo"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 8
+               col: 17
+              }
+              end: {
+               line: 8
+               col: 20
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 8
+               col: 17
+              }
+              end: {
+               line: 8
+               col: 20
+              }
+             }
+            }
+            arg: {
+             name: "abc"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 8
+               col: 26
+              }
+              end: {
+               line: 8
+               col: 29
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 8
+               col: 26
+              }
+              end: {
+               line: 8
+               col: 29
+              }
+             }
+            }
+            arg: {
+             name: "abc"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 8
+               col: 26
+              }
+              end: {
+               line: 8
+               col: 29
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 8
+               col: 26
+              }
+              end: {
+               line: 8
+               col: 29
+              }
+             }
+            }
+            scopevar: "."
+            descending: false
+            attr_name: "foo"
+           }
+           type: {
+            set: {}
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 8
+             col: 21
+            }
+            end: {
+             line: 8
+             col: 37
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 8
+             col: 21
+            }
+            end: {
+             line: 8
+             col: 37
+            }
+           }
+          }
+          attr: "bar"
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 42
+          }
+          text: "let out6 = foo rank(abc as foo) .bar"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 42
+          }
+          text: "let out6 = foo rank(abc as foo) .bar"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out7"
+        expr: {
+         binexpr: {
+          op: TO_MATCHING
+          lhs: {
+           relexpr: {
+            op: RANK
+            target: {
+             name: "foo"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 9
+               col: 17
+              }
+              end: {
+               line: 9
+               col: 20
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 9
+               col: 17
+              }
+              end: {
+               line: 9
+               col: 20
+              }
+             }
+            }
+            arg: {
+             name: "abc"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 9
+               col: 26
+              }
+              end: {
+               line: 9
+               col: 29
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 9
+               col: 26
+              }
+              end: {
+               line: 9
+               col: 29
+              }
+             }
+            }
+            arg: {
+             name: "abc"
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 9
+               col: 26
+              }
+              end: {
+               line: 9
+               col: 29
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 9
+               col: 26
+              }
+              end: {
+               line: 9
+               col: 29
+              }
+             }
+            }
+            scopevar: "."
+            descending: false
+            attr_name: "foo"
+           }
+           type: {
+            set: {}
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 9
+             col: 21
+            }
+            end: {
+             line: 9
+             col: 37
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 9
+             col: 21
+            }
+            end: {
+             line: 9
+             col: 37
+            }
+           }
+          }
+          rhs: {
+           name: "bar"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 9
+             col: 41
+            }
+            end: {
+             line: 9
+             col: 44
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 9
+             col: 41
+            }
+            end: {
+             line: 9
+             col: 44
+            }
+           }
+          }
+          attr_name: "*"
+         }
+         type: {
+          no_type: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 9
+           col: 6
+          }
+          end: {
+           line: 9
+           col: 44
+          }
+          text: "let out7 = foo rank(abc as foo) ~> bar"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 9
+           col: 6
+          }
+          end: {
+           line: 9
+           col: 44
+          }
+          text: "let out7 = foo rank(abc as foo) ~> bar"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out8"
+        expr: {
+         binexpr: {
+          op: TO_MATCHING
+          lhs: {
+           relexpr: {
+            op: RANK
+            target: {
+             get_attr: {
+              arg: {
+               name: "."
+               source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 10
+                 col: 17
+                }
+                end: {
+                 line: 10
+                 col: 30
+                }
+               }
+               source_contexts: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 10
+                 col: 17
+                }
+                end: {
+                 line: 10
+                 col: 30
+                }
+               }
+              }
+              attr: "Pet"
+              setof: true
+             }
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 10
+               col: 17
+              }
+              end: {
+               line: 10
+               col: 30
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 10
+               col: 17
+              }
+              end: {
+               line: 10
+               col: 30
+              }
+             }
+            }
+            arg: {
+             get_attr: {
+              arg: {
+               name: "."
+               source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 10
+                 col: 36
+                }
+                end: {
+                 line: 10
+                 col: 44
+                }
+               }
+               source_contexts: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 10
+                 col: 36
+                }
+                end: {
+                 line: 10
+                 col: 44
+                }
+               }
+              }
+              attr: "numLegs"
+             }
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 10
+               col: 36
+              }
+              end: {
+               line: 10
+               col: 44
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 10
+               col: 36
+              }
+              end: {
+               line: 10
+               col: 44
+              }
+             }
+            }
+            arg: {
+             get_attr: {
+              arg: {
+               name: "."
+               source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 10
+                 col: 36
+                }
+                end: {
+                 line: 10
+                 col: 44
+                }
+               }
+               source_contexts: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 10
+                 col: 36
+                }
+                end: {
+                 line: 10
+                 col: 44
+                }
+               }
+              }
+              attr: "numLegs"
+             }
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 10
+               col: 36
+              }
+              end: {
+               line: 10
+               col: 44
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 10
+               col: 36
+              }
+              end: {
+               line: 10
+               col: 44
+              }
+             }
+            }
+            scopevar: "."
+            descending: false
+            attr_name: "legRank"
+           }
+           type: {
+            set: {}
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 10
+             col: 31
+            }
+            end: {
+             line: 10
+             col: 56
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 10
+             col: 31
+            }
+            end: {
+             line: 10
+             col: 56
+            }
+           }
+          }
+          rhs: {
+           name: "bar"
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 10
+             col: 60
+            }
+            end: {
+             line: 10
+             col: 63
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 10
+             col: 60
+            }
+            end: {
+             line: 10
+             col: 63
+            }
+           }
+          }
+          attr_name: "*"
+         }
+         type: {
+          no_type: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 10
+           col: 6
+          }
+          end: {
+           line: 10
+           col: 63
+          }
+          text: "let out8 = .table of Pet rank(.numLegs as legRank) ~> bar"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 10
+           col: 6
+          }
+          end: {
+           line: 10
+           col: 63
+          }
+          text: "let out8 = .table of Pet rank(.numLegs as legRank) ~> bar"
+         }
+        }
+       }
+      }
+      stmt: {
+       let: {
+        name: "out9"
+        expr: {
+         binexpr: {
+          op: TO_MATCHING
+          lhs: {
+           relexpr: {
+            op: RANK
+            target: {
+             get_attr: {
+              arg: {
+               name: "."
+               source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 11
+                 col: 17
+                }
+                end: {
+                 line: 11
+                 col: 30
+                }
+               }
+               source_contexts: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 11
+                 col: 17
+                }
+                end: {
+                 line: 11
+                 col: 30
+                }
+               }
+              }
+              attr: "Pet"
+              setof: true
+             }
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 17
+              }
+              end: {
+               line: 11
+               col: 30
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 17
+              }
+              end: {
+               line: 11
+               col: 30
+              }
+             }
+            }
+            arg: {
+             get_attr: {
+              arg: {
+               name: "."
+               source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 11
+                 col: 36
+                }
+                end: {
+                 line: 11
+                 col: 44
+                }
+               }
+               source_contexts: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 11
+                 col: 36
+                }
+                end: {
+                 line: 11
+                 col: 44
+                }
+               }
+              }
+              attr: "numLegs"
+             }
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 36
+              }
+              end: {
+               line: 11
+               col: 44
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 36
+              }
+              end: {
+               line: 11
+               col: 44
+              }
+             }
+            }
+            arg: {
+             get_attr: {
+              arg: {
+               name: "."
+               source_context: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 11
+                 col: 36
+                }
+                end: {
+                 line: 11
+                 col: 44
+                }
+               }
+               source_contexts: {
+                file: "tests/rank.sysl"
+                start: {
+                 line: 11
+                 col: 36
+                }
+                end: {
+                 line: 11
+                 col: 44
+                }
+               }
+              }
+              attr: "numLegs"
+             }
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 36
+              }
+              end: {
+               line: 11
+               col: 44
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 36
+              }
+              end: {
+               line: 11
+               col: 44
+              }
+             }
+            }
+            scopevar: "."
+            descending: false
+            attr_name: "legRank"
+           }
+           type: {
+            set: {}
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 11
+             col: 31
+            }
+            end: {
+             line: 11
+             col: 56
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 11
+             col: 31
+            }
+            end: {
+             line: 11
+             col: 56
+            }
+           }
+          }
+          rhs: {
+           get_attr: {
+            arg: {
+             name: "."
+             source_context: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 60
+              }
+              end: {
+               line: 11
+               col: 73
+              }
+             }
+             source_contexts: {
+              file: "tests/rank.sysl"
+              start: {
+               line: 11
+               col: 60
+              }
+              end: {
+               line: 11
+               col: 73
+              }
+             }
+            }
+            attr: "Bar"
+            setof: true
+           }
+           source_context: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 11
+             col: 60
+            }
+            end: {
+             line: 11
+             col: 73
+            }
+           }
+           source_contexts: {
+            file: "tests/rank.sysl"
+            start: {
+             line: 11
+             col: 60
+            }
+            end: {
+             line: 11
+             col: 73
+            }
+           }
+          }
+          attr_name: "*"
+         }
+         type: {
+          no_type: {}
+         }
+         source_context: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 11
+           col: 6
+          }
+          end: {
+           line: 11
+           col: 73
+          }
+          text: "let out9 = .table of Pet rank(.numLegs as legRank) ~> .table of Bar"
+         }
+         source_contexts: {
+          file: "tests/rank.sysl"
+          start: {
+           line: 11
+           col: 6
+          }
+          end: {
+           line: 11
+           col: 73
+          }
+          text: "let out9 = .table of Pet rank(.numLegs as legRank) ~> .table of Bar"
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/rank.sysl"
+      start: {
+       line: 2
+       col: 4
+      }
+      end: {
+       line: 12
+       col: 6
+      }
+     }
+     source_contexts: {
+      file: "tests/rank.sysl"
+      start: {
+       line: 2
+       col: 4
+      }
+      end: {
+       line: 12
+       col: 6
+      }
+     }
+    }
+    source_context: {
+     file: "tests/rank.sysl"
+     start: {
+      line: 1
+      col: 2
+     }
+     end: {
+      line: 13
+      col: 1
+     }
+     text: "!view TestRank(number <: int) -> int:"
+    }
+    source_contexts: {
+     file: "tests/rank.sysl"
+     start: {
+      line: 1
+      col: 2
+     }
+     end: {
+      line: 13
+      col: 1
+     }
+     text: "!view TestRank(number <: int) -> int:"
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/rank.sysl"
-   start:  {}
-   end:  {
-    line:  11
-    col:  70
+  source_context: {
+   file: "tests/rank.sysl"
+   start: {}
+   end: {
+    line: 11
+    col: 73
+   }
+  }
+  source_contexts: {
+   file: "tests/rank.sysl"
+   start: {}
+   end: {
+    line: 11
+    col: 73
    }
   }
  }

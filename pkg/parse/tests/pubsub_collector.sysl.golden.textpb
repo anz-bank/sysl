@@ -1,782 +1,938 @@
-apps:  {
- key:  "Another :: Publisher"
- value:  {
-  name:  {
-   part:  "Another"
-   part:  "Publisher"
+apps: {
+ key: "Another :: Publisher"
+ value: {
+  name: {
+   part: "Another"
+   part: "Publisher"
   }
-  endpoints:  {
-   key:  ".. * <- *"
-   value:  {
-    name:  ".. * <- *"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Subscriber"
+  endpoints: {
+   key: ".. * <- *"
+   value: {
+    name: ".. * <- *"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
       }
-      endpoint:  "Another :: Publisher -> BusinessEvent"
+      endpoint: "Another :: Publisher -> BusinessEvent"
      }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "two"
-      }
-     }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  29
-       col:  8
-      }
-      end:  {
-       line:  29
-       col:  28
-      }
-     }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  29
-       col:  8
-      }
-      end:  {
-       line:  29
-       col:  28
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  28
-      col:  4
-     }
-     end:  {
-      line:  31
-      col:  3
-     }
-    }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  28
-      col:  4
-     }
-     end:  {
-      line:  31
-      col:  3
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "BusinessEvent"
-   value:  {
-    name:  "BusinessEvent"
-    is_pubsub:  true
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Subscriber"
-      }
-      endpoint:  "Another :: Publisher -> BusinessEvent"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "two"
+     attrs: {
+      key: "id"
+      value: {
+       s: "two"
+       source_context: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 29
+         col: 70
+        }
+        end: {
+         line: 29
+         col: 75
+        }
+       }
+       source_contexts: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 29
+         col: 70
+        }
+        end: {
+         line: 29
+         col: 75
+        }
+       }
       }
      }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  17
-       col:  4
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 29
+       col: 8
       }
-      end:  {
-       line:  20
-       col:  4
+      end: {
+       line: 29
+       col: 75
       }
      }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  17
-       col:  4
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 29
+       col: 8
       }
-      end:  {
-       line:  20
-       col:  4
+      end: {
+       line: 29
+       col: 75
       }
      }
     }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  7
-      col:  4
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 28
+      col: 4
      }
-     end:  {
-      line:  7
-      col:  23
+     end: {
+      line: 31
+      col: 4
      }
     }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  7
-      col:  4
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 28
+      col: 4
      }
-     end:  {
-      line:  7
-      col:  23
+     end: {
+      line: 31
+      col: 4
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  27
-   }
-   end:  {
-    line:  29
-    col:  28
-   }
-  }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  6
-   }
-   end:  {
-    line:  7
-    col:  23
-   }
-  }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  27
-   }
-   end:  {
-    line:  29
-    col:  28
-   }
-  }
- }
-}
-apps:  {
- key:  "External"
- value:  {
-  name:  {
-   part:  "External"
-  }
-  endpoints:  {
-   key:  "Endpoint"
-   value:  {
-    name:  "Endpoint"
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  4
-      col:  4
+  endpoints: {
+   key: "BusinessEvent"
+   value: {
+    name: "BusinessEvent"
+    is_pubsub: true
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
+      }
+      endpoint: "Another :: Publisher -> BusinessEvent"
      }
-     end:  {
-      line:  4
-      col:  14
+     attrs: {
+      key: "id"
+      value: {
+       s: "two"
+       source_context: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 29
+         col: 70
+        }
+        end: {
+         line: 29
+         col: 75
+        }
+       }
+       source_contexts: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 29
+         col: 70
+        }
+        end: {
+         line: 29
+         col: 75
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 17
+       col: 4
+      }
+      end: {
+       line: 20
+       col: 5
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 17
+       col: 4
+      }
+      end: {
+       line: 20
+       col: 5
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  4
-      col:  4
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 7
+      col: 4
      }
-     end:  {
-      line:  4
-      col:  14
+     end: {
+      line: 7
+      col: 26
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 7
+      col: 4
+     }
+     end: {
+      line: 7
+      col: 26
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  3
+  source_context: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 27
    }
-   end:  {
-    line:  4
-    col:  14
+   end: {
+    line: 29
+    col: 75
    }
   }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  3
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 6
    }
-   end:  {
-    line:  4
-    col:  14
+   end: {
+    line: 7
+    col: 26
+   }
+  }
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 27
+   }
+   end: {
+    line: 29
+    col: 75
    }
   }
  }
 }
-apps:  {
- key:  "My :: Subscriber"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Subscriber"
+apps: {
+ key: "External"
+ value: {
+  name: {
+   part: "External"
   }
-  endpoints:  {
-   key:  "Another :: Publisher -> BusinessEvent"
-   value:  {
-    name:  "Another :: Publisher -> BusinessEvent"
-    source:  {
-     part:  "Another"
-     part:  "Publisher"
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "External"
-      }
-      endpoint:  "Endpoint"
+  endpoints: {
+   key: "Endpoint"
+   value: {
+    name: "Endpoint"
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 4
+      col: 4
      }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  18
-       col:  8
-      }
-      end:  {
-       line:  18
-       col:  20
-      }
-     }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  18
-       col:  8
-      }
-      end:  {
-       line:  18
-       col:  20
-      }
+     end: {
+      line: 4
+      col: 17
      }
     }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  17
-      col:  4
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 4
+      col: 4
      }
-     end:  {
-      line:  20
-      col:  4
-     }
-    }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  17
-      col:  4
-     }
-     end:  {
-      line:  20
-      col:  4
+     end: {
+      line: 4
+      col: 17
      }
     }
    }
   }
-  endpoints:  {
-   key:  "Publisher -> BusinessEvent"
-   value:  {
-    name:  "Publisher -> BusinessEvent"
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "Handle BusinessEvent"
-     }
-    }
-    source:  {
-     part:  "Publisher"
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "External"
-      }
-      endpoint:  "Endpoint"
-     }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  15
-       col:  8
-      }
-      end:  {
-       line:  15
-       col:  20
-      }
-     }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  15
-       col:  8
-      }
-      end:  {
-       line:  15
-       col:  20
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  13
-      col:  4
-     }
-     end:  {
-      line:  17
-      col:  4
-     }
-    }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  13
-      col:  4
-     }
-     end:  {
-      line:  17
-      col:  4
-     }
-    }
+  source_context: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 3
+   }
+   end: {
+    line: 4
+    col: 17
    }
   }
-  endpoints:  {
-   key:  "Yet :: Another :: Publisher -> BusinessEvent"
-   value:  {
-    name:  "Yet :: Another :: Publisher -> BusinessEvent"
-    source:  {
-     part:  "Yet"
-     part:  "Another"
-     part:  "Publisher"
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "External"
-      }
-      endpoint:  "Endpoint"
-     }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  21
-       col:  8
-      }
-      end:  {
-       line:  21
-       col:  20
-      }
-     }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  21
-       col:  8
-      }
-      end:  {
-       line:  21
-       col:  20
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  20
-      col:  4
-     }
-     end:  {
-      line:  23
-      col:  9
-     }
-    }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  20
-      col:  4
-     }
-     end:  {
-      line:  23
-      col:  9
-     }
-    }
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 3
    }
-  }
-  source_context:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  12
-   }
-   end:  {
-    line:  21
-    col:  20
-   }
-  }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  12
-   }
-   end:  {
-    line:  21
-    col:  20
+   end: {
+    line: 4
+    col: 17
    }
   }
  }
 }
-apps:  {
- key:  "Publisher"
- value:  {
-  name:  {
-   part:  "Publisher"
+apps: {
+ key: "My :: Subscriber"
+ value: {
+  name: {
+   part: "My"
+   part: "Subscriber"
   }
-  endpoints:  {
-   key:  ".. * <- *"
-   value:  {
-    name:  ".. * <- *"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Subscriber"
+  endpoints: {
+   key: "Another :: Publisher -> BusinessEvent"
+   value: {
+    name: "Another :: Publisher -> BusinessEvent"
+    source: {
+     part: "Another"
+     part: "Publisher"
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "External"
       }
-      endpoint:  "Publisher -> BusinessEvent"
+      endpoint: "Endpoint"
      }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "one"
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 18
+       col: 8
       }
-     }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  25
-       col:  8
-      }
-      end:  {
-       line:  25
-       col:  28
+      end: {
+       line: 18
+       col: 28
       }
      }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  25
-       col:  8
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 18
+       col: 8
       }
-      end:  {
-       line:  25
-       col:  28
+      end: {
+       line: 18
+       col: 28
       }
      }
     }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  24
-      col:  4
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 17
+      col: 4
      }
-     end:  {
-      line:  27
-      col:  7
+     end: {
+      line: 20
+      col: 5
      }
     }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  24
-      col:  4
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 17
+      col: 4
      }
-     end:  {
-      line:  27
-      col:  7
+     end: {
+      line: 20
+      col: 5
      }
     }
    }
   }
-  endpoints:  {
-   key:  "BusinessEvent"
-   value:  {
-    name:  "BusinessEvent"
-    is_pubsub:  true
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Subscriber"
+  endpoints: {
+   key: "Publisher -> BusinessEvent"
+   value: {
+    name: "Publisher -> BusinessEvent"
+    attrs: {
+     key: "description"
+     value: {
+      s: "Handle BusinessEvent"
+      source_context: {
+       file: "tests/pubsub_collector.sysl"
+       start: {
+        line: 14
+        col: 23
+       }
+       end: {
+        line: 14
+        col: 45
+       }
       }
-      endpoint:  "Publisher -> BusinessEvent"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "one"
-      }
-     }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  13
-       col:  4
-      }
-      end:  {
-       line:  17
-       col:  4
-      }
-     }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  13
-       col:  4
-      }
-      end:  {
-       line:  17
-       col:  4
+      source_contexts: {
+       file: "tests/pubsub_collector.sysl"
+       start: {
+        line: 14
+        col: 23
+       }
+       end: {
+        line: 14
+        col: 45
+       }
       }
      }
     }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source: {
+     part: "Publisher"
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "External"
+      }
+      endpoint: "Endpoint"
      }
-     end:  {
-      line:  1
-      col:  23
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 15
+       col: 8
+      }
+      end: {
+       line: 15
+       col: 28
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 15
+       col: 8
+      }
+      end: {
+       line: 15
+       col: 28
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 13
+      col: 4
      }
-     end:  {
-      line:  1
-      col:  23
+     end: {
+      line: 17
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 13
+      col: 4
+     }
+     end: {
+      line: 17
+      col: 5
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  23
-   }
-   end:  {
-    line:  25
-    col:  28
+  endpoints: {
+   key: "Yet :: Another :: Publisher -> BusinessEvent"
+   value: {
+    name: "Yet :: Another :: Publisher -> BusinessEvent"
+    source: {
+     part: "Yet"
+     part: "Another"
+     part: "Publisher"
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "External"
+      }
+      endpoint: "Endpoint"
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 21
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 28
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 21
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 28
+      }
+     }
+    }
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 23
+      col: 10
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 23
+      col: 10
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {}
-   end:  {
-    line:  1
-    col:  23
+  source_context: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 12
+   }
+   end: {
+    line: 21
+    col: 28
    }
   }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  23
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 12
    }
-   end:  {
-    line:  25
-    col:  28
+   end: {
+    line: 21
+    col: 28
    }
   }
  }
 }
-apps:  {
- key:  "Yet :: Another :: Publisher"
- value:  {
-  name:  {
-   part:  "Yet"
-   part:  "Another"
-   part:  "Publisher"
+apps: {
+ key: "Publisher"
+ value: {
+  name: {
+   part: "Publisher"
   }
-  endpoints:  {
-   key:  ".. * <- *"
-   value:  {
-    name:  ".. * <- *"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Subscriber"
+  endpoints: {
+   key: ".. * <- *"
+   value: {
+    name: ".. * <- *"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
       }
-      endpoint:  "Yet :: Another :: Publisher -> BusinessEvent"
+      endpoint: "Publisher -> BusinessEvent"
      }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "three"
-      }
-     }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  33
-       col:  8
-      }
-      end:  {
-       line:  33
-       col:  28
-      }
-     }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  33
-       col:  8
-      }
-      end:  {
-       line:  33
-       col:  28
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  32
-      col:  4
-     }
-     end:  {
-      line:  35
-     }
-    }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  32
-      col:  4
-     }
-     end:  {
-      line:  35
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "BusinessEvent"
-   value:  {
-    name:  "BusinessEvent"
-    is_pubsub:  true
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Subscriber"
-      }
-      endpoint:  "Yet :: Another :: Publisher -> BusinessEvent"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "three"
+     attrs: {
+      key: "id"
+      value: {
+       s: "one"
+       source_context: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 25
+         col: 59
+        }
+        end: {
+         line: 25
+         col: 64
+        }
+       }
+       source_contexts: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 25
+         col: 59
+        }
+        end: {
+         line: 25
+         col: 64
+        }
+       }
       }
      }
-     source_context:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  20
-       col:  4
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 25
+       col: 8
       }
-      end:  {
-       line:  23
-       col:  9
+      end: {
+       line: 25
+       col: 64
       }
      }
-     source_contexts:  {
-      file:  "tests/pubsub_collector.sysl"
-      start:  {
-       line:  20
-       col:  4
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 25
+       col: 8
       }
-      end:  {
-       line:  23
-       col:  9
+      end: {
+       line: 25
+       col: 64
       }
      }
     }
-    source_context:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  10
-      col:  4
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 24
+      col: 4
      }
-     end:  {
-      line:  10
-      col:  23
+     end: {
+      line: 27
+      col: 8
      }
     }
-    source_contexts:  {
-     file:  "tests/pubsub_collector.sysl"
-     start:  {
-      line:  10
-      col:  4
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 24
+      col: 4
      }
-     end:  {
-      line:  10
-      col:  23
+     end: {
+      line: 27
+      col: 8
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  31
-   }
-   end:  {
-    line:  33
-    col:  28
+  endpoints: {
+   key: "BusinessEvent"
+   value: {
+    name: "BusinessEvent"
+    is_pubsub: true
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
+      }
+      endpoint: "Publisher -> BusinessEvent"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "one"
+       source_context: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 25
+         col: 59
+        }
+        end: {
+         line: 25
+         col: 64
+        }
+       }
+       source_contexts: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 25
+         col: 59
+        }
+        end: {
+         line: 25
+         col: 64
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 13
+       col: 4
+      }
+      end: {
+       line: 17
+       col: 5
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 13
+       col: 4
+      }
+      end: {
+       line: 17
+       col: 5
+      }
+     }
+    }
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 1
+      col: 26
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 1
+      col: 26
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  9
+  source_context: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 23
    }
-   end:  {
-    line:  10
-    col:  23
+   end: {
+    line: 25
+    col: 64
    }
   }
-  source_contexts:  {
-   file:  "tests/pubsub_collector.sysl"
-   start:  {
-    line:  31
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {}
+   end: {
+    line: 1
+    col: 26
    }
-   end:  {
-    line:  33
-    col:  28
+  }
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 23
+   }
+   end: {
+    line: 25
+    col: 64
+   }
+  }
+ }
+}
+apps: {
+ key: "Yet :: Another :: Publisher"
+ value: {
+  name: {
+   part: "Yet"
+   part: "Another"
+   part: "Publisher"
+  }
+  endpoints: {
+   key: ".. * <- *"
+   value: {
+    name: ".. * <- *"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
+      }
+      endpoint: "Yet :: Another :: Publisher -> BusinessEvent"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "three"
+       source_context: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 33
+         col: 77
+        }
+        end: {
+         line: 33
+         col: 84
+        }
+       }
+       source_contexts: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 33
+         col: 77
+        }
+        end: {
+         line: 33
+         col: 84
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 33
+       col: 8
+      }
+      end: {
+       line: 33
+       col: 84
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 33
+       col: 8
+      }
+      end: {
+       line: 33
+       col: 84
+      }
+     }
+    }
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 32
+      col: 4
+     }
+     end: {
+      line: 35
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 32
+      col: 4
+     }
+     end: {
+      line: 35
+      col: 1
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "BusinessEvent"
+   value: {
+    name: "BusinessEvent"
+    is_pubsub: true
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
+      }
+      endpoint: "Yet :: Another :: Publisher -> BusinessEvent"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "three"
+       source_context: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 33
+         col: 77
+        }
+        end: {
+         line: 33
+         col: 84
+        }
+       }
+       source_contexts: {
+        file: "tests/pubsub_collector.sysl"
+        start: {
+         line: 33
+         col: 77
+        }
+        end: {
+         line: 33
+         col: 84
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 20
+       col: 4
+      }
+      end: {
+       line: 23
+       col: 10
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 20
+       col: 4
+      }
+      end: {
+       line: 23
+       col: 10
+      }
+     }
+    }
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 26
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 26
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 31
+   }
+   end: {
+    line: 33
+    col: 84
+   }
+  }
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 9
+   }
+   end: {
+    line: 10
+    col: 26
+   }
+  }
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 31
+   }
+   end: {
+    line: 33
+    col: 84
    }
   }
  }

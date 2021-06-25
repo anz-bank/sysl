@@ -1,672 +1,828 @@
-apps:  {
- key:  "App"
- value:  {
-  name:  {
-   part:  "App"
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
   }
-  endpoints:  {
-   key:  ".. * <- *"
-   value:  {
-    name:  ".. * <- *"
-    stmt:  {
-     action:  {
-      action:  "POST /more/stuff.endpoint/{id}"
+  endpoints: {
+   key: ".. * <- *"
+   value: {
+    name: ".. * <- *"
+    stmt: {
+     action: {
+      action: "POST /more/stuff.endpoint/{id}"
      }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "one"
-      }
-     }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  24
-       col:  8
-      }
-      end:  {
-       line:  24
-       col:  39
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  24
-       col:  8
-      }
-      end:  {
-       line:  24
-       col:  39
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "App"
-      }
-      endpoint:  "GET /serve.html"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "doesn't matter"
-      }
-     }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  25
-       col:  8
-      }
-      end:  {
-       line:  25
-       col:  15
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  25
-       col:  8
-      }
-      end:  {
-       line:  25
-       col:  15
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /serve.html"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "doesn't matter"
-      }
-     }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  26
-       col:  8
-      }
-      end:  {
-       line:  26
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  26
-       col:  8
-      }
-      end:  {
-       line:  26
-       col:  24
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  23
-      col:  4
-     }
-     end:  {
-      line:  27
-     }
-    }
-    source_contexts:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  23
-      col:  4
-     }
-     end:  {
-      line:  27
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "GET /serve.html"
-   value:  {
-    name:  "GET /serve.html"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+     attrs: {
+      key: "id"
+      value: {
+       s: "one"
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 24
+         col: 47
+        }
+        end: {
+         line: 24
+         col: 52
+        }
        }
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /serve.html"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "doesn't matter"
-      }
-     }
-     attrs:  {
-      key:  "patterns"
-      value:  {
-       a:  {
-        elt:  {
-         s:  "https"
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 24
+         col: 47
+        }
+        end: {
+         line: 24
+         col: 52
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  17
-       col:  12
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 24
+       col: 8
       }
-      end:  {
-       line:  17
-       col:  28
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  17
-       col:  12
-      }
-      end:  {
-       line:  17
-       col:  28
+      end: {
+       line: 24
+       col: 40
       }
      }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: Response"
-     }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  18
-       col:  12
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 24
+       col: 8
       }
-      end:  {
-       line:  18
-       col:  18
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  18
-       col:  12
-      }
-      end:  {
-       line:  18
-       col:  18
+      end: {
+       line: 24
+       col: 40
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/serve.html"
-    }
-    source_context:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  16
-      col:  8
-     }
-     end:  {
-      line:  20
-      col:  4
-     }
-    }
-    source_contexts:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  16
-      col:  8
-     }
-     end:  {
-      line:  20
-      col:  4
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "POST /more/stuff.endpoint/{id}"
-   value:  {
-    name:  "POST /more/stuff.endpoint/{id}"
-    attrs:  {
-     key:  "id"
-     value:  {
-      s:  "one"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
+    stmt: {
+     call: {
+      target: {
+       part: "App"
       }
+      endpoint: "GET /serve.html"
      }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "App"
-      }
-      endpoint:  "GET /serve.html"
-     }
-     attrs:  {
-      key:  "id"
-      value:  {
-       s:  "doesn't matter"
-      }
-     }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  12
-       col:  12
-      }
-      end:  {
-       line:  12
-       col:  16
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  12
-       col:  12
-      }
-      end:  {
-       line:  12
-       col:  16
-      }
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: Response"
-     }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  13
-       col:  12
-      }
-      end:  {
-       line:  13
-       col:  18
-      }
-     }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  13
-       col:  12
-      }
-      end:  {
-       line:  13
-       col:  18
-      }
-     }
-    }
-    rest_params:  {
-     method:  POST
-     path:  "/more/stuff.endpoint/{id}"
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/endpoints.sysl"
-        start:  {
-         line:  10
-         col:  27
+     attrs: {
+      key: "id"
+      value: {
+       s: "doesn't matter"
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 25
+         col: 37
         }
-        end:  {
-         line:  10
-         col:  40
+        end: {
+         line: 25
+         col: 53
         }
        }
-       source_contexts:  {
-        file:  "tests/endpoints.sysl"
-        start:  {
-         line:  10
-         col:  27
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 25
+         col: 37
         }
-        end:  {
-         line:  10
-         col:  40
+        end: {
+         line: 25
+         col: 53
         }
        }
       }
      }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 25
+       col: 8
+      }
+      end: {
+       line: 25
+       col: 32
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 25
+       col: 8
+      }
+      end: {
+       line: 25
+       col: 32
+      }
+     }
     }
-    source_context:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  11
-      col:  8
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /serve.html"
      }
-     end:  {
-      line:  15
-      col:  4
+     attrs: {
+      key: "id"
+      value: {
+       s: "doesn't matter"
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 26
+         col: 46
+        }
+        end: {
+         line: 26
+         col: 62
+        }
+       }
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 26
+         col: 46
+        }
+        end: {
+         line: 26
+         col: 62
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 26
+       col: 8
+      }
+      end: {
+       line: 26
+       col: 62
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 26
+       col: 8
+      }
+      end: {
+       line: 26
+       col: 62
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  11
-      col:  8
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 23
+      col: 4
      }
-     end:  {
-      line:  15
-      col:  4
+     end: {
+      line: 27
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 23
+      col: 4
+     }
+     end: {
+      line: 27
+      col: 1
      }
     }
    }
   }
-  types:  {
-   key:  "Response"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "response"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/endpoints.sysl"
-        start:  {
-         line:  21
-         col:  8
+  endpoints: {
+   key: "GET /serve.html"
+   value: {
+    name: "GET /serve.html"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /serve.html"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "doesn't matter"
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 26
+         col: 46
         }
-        end:  {
-         line:  21
-         col:  20
+        end: {
+         line: 26
+         col: 62
         }
        }
-       source_contexts:  {
-        file:  "tests/endpoints.sysl"
-        start:  {
-         line:  21
-         col:  8
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 26
+         col: 46
         }
-        end:  {
-         line:  21
-         col:  20
+        end: {
+         line: 26
+         col: 62
+        }
+       }
+      }
+     }
+     attrs: {
+      key: "patterns"
+      value: {
+       a: {
+        elt: {
+         s: "https"
+         source_context: {
+          file: "tests/endpoints.sysl"
+          start: {
+           line: 17
+           col: 47
+          }
+          end: {
+           line: 17
+           col: 53
+          }
+         }
+         source_contexts: {
+          file: "tests/endpoints.sysl"
+          start: {
+           line: 17
+           col: 47
+          }
+          end: {
+           line: 17
+           col: 53
+          }
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 17
+       col: 12
+      }
+      end: {
+       line: 17
+       col: 45
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 17
+       col: 12
+      }
+      end: {
+       line: 17
+       col: 45
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok <: Response"
+     }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 18
+       col: 12
+      }
+      end: {
+       line: 18
+       col: 33
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 18
+       col: 12
+      }
+      end: {
+       line: 18
+       col: 33
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/serve.html"
+    }
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 16
+      col: 8
+     }
+     end: {
+      line: 20
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 16
+      col: 8
+     }
+     end: {
+      line: 20
+      col: 5
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "POST /more/stuff.endpoint/{id}"
+   value: {
+    name: "POST /more/stuff.endpoint/{id}"
+    attrs: {
+     key: "id"
+     value: {
+      s: "one"
+      source_context: {
+       file: "tests/endpoints.sysl"
+       start: {
+        line: 24
+        col: 47
+       }
+       end: {
+        line: 24
+        col: 52
+       }
+      }
+      source_contexts: {
+       file: "tests/endpoints.sysl"
+       start: {
+        line: 24
+        col: 47
+       }
+       end: {
+        line: 24
+        col: 52
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "App"
+      }
+      endpoint: "GET /serve.html"
+     }
+     attrs: {
+      key: "id"
+      value: {
+       s: "doesn't matter"
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 25
+         col: 37
+        }
+        end: {
+         line: 25
+         col: 53
+        }
+       }
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 25
+         col: 37
+        }
+        end: {
+         line: 25
+         col: 53
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 12
+       col: 12
+      }
+      end: {
+       line: 12
+       col: 33
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 12
+       col: 12
+      }
+      end: {
+       line: 12
+       col: 33
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok <: Response"
+     }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 13
+       col: 12
+      }
+      end: {
+       line: 13
+       col: 33
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 13
+       col: 12
+      }
+      end: {
+       line: 13
+       col: 33
+      }
+     }
+    }
+    rest_params: {
+     method: POST
+     path: "/more/stuff.endpoint/{id}"
+     url_param: {
+      name: "id"
+      type: {
+       primitive: STRING
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 10
+         col: 27
+        }
+        end: {
+         line: 10
+         col: 41
+        }
+       }
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 10
+         col: 27
+        }
+        end: {
+         line: 10
+         col: 41
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  20
-      col:  4
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 11
+      col: 8
      }
-     end:  {
-      line:  21
-      col:  20
-     }
-    }
-    source_contexts:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  20
-      col:  4
-     }
-     end:  {
-      line:  21
-      col:  20
+     end: {
+      line: 15
+      col: 5
      }
     }
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 11
+      col: 8
+     }
+     end: {
+      line: 15
+      col: 5
+     }
+    }
    }
   }
-  source_context:  {
-   file:  "tests/endpoints.sysl"
-   start:  {
-    line:  22
-   }
-   end:  {
-    line:  26
-    col:  24
+  types: {
+   key: "Response"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "response"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 21
+         col: 8
+        }
+        end: {
+         line: 21
+         col: 26
+        }
+       }
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 21
+         col: 8
+        }
+        end: {
+         line: 21
+         col: 26
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 21
+      col: 26
+     }
+    }
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 21
+      col: 26
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/endpoints.sysl"
-   start:  {
-    line:  9
+  source_context: {
+   file: "tests/endpoints.sysl"
+   start: {
+    line: 22
    }
-   end:  {
-    line:  21
-    col:  20
+   end: {
+    line: 26
+    col: 62
    }
   }
-  source_contexts:  {
-   file:  "tests/endpoints.sysl"
-   start:  {
-    line:  22
+  source_contexts: {
+   file: "tests/endpoints.sysl"
+   start: {
+    line: 9
    }
-   end:  {
-    line:  26
-    col:  24
+   end: {
+    line: 21
+    col: 26
+   }
+  }
+  source_contexts: {
+   file: "tests/endpoints.sysl"
+   start: {
+    line: 22
+   }
+   end: {
+    line: 26
+    col: 62
    }
   }
  }
 }
-apps:  {
- key:  "My :: Server"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Server"
+apps: {
+ key: "My :: Server"
+ value: {
+  name: {
+   part: "My"
+   part: "Server"
   }
-  endpoints:  {
-   key:  "GET /serve.html"
-   value:  {
-    name:  "GET /serve.html"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /serve.html"
+   value: {
+    name: "GET /serve.html"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: App.Response"
+    stmt: {
+     ret: {
+      payload: "ok <: App.Response"
      }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  3
-       col:  12
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 3
+       col: 12
       }
-      end:  {
-       line:  3
-       col:  18
+      end: {
+       line: 3
+       col: 37
       }
      }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  3
-       col:  12
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 3
+       col: 12
       }
-      end:  {
-       line:  3
-       col:  18
+      end: {
+       line: 3
+       col: 37
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/serve.html"
+    rest_params: {
+     method: GET
+     path: "/serve.html"
     }
-    source_context:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  2
-      col:  8
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 2
+      col: 8
      }
-     end:  {
-      line:  5
-      col:  4
+     end: {
+      line: 5
+      col: 5
      }
     }
-    source_contexts:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  2
-      col:  8
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 2
+      col: 8
      }
-     end:  {
-      line:  5
-      col:  4
+     end: {
+      line: 5
+      col: 5
      }
     }
    }
   }
-  endpoints:  {
-   key:  "POST /more/stuff.endpoint/{id}"
-   value:  {
-    name:  "POST /more/stuff.endpoint/{id}"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /more/stuff.endpoint/{id}"
+   value: {
+    name: "POST /more/stuff.endpoint/{id}"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: App.Response"
+    stmt: {
+     ret: {
+      payload: "ok <: App.Response"
      }
-     source_context:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  7
-       col:  12
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 7
+       col: 12
       }
-      end:  {
-       line:  7
-       col:  18
+      end: {
+       line: 7
+       col: 37
       }
      }
-     source_contexts:  {
-      file:  "tests/endpoints.sysl"
-      start:  {
-       line:  7
-       col:  12
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 7
+       col: 12
       }
-      end:  {
-       line:  7
-       col:  18
+      end: {
+       line: 7
+       col: 37
       }
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/more/stuff.endpoint/{id}"
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/endpoints.sysl"
-        start:  {
-         line:  5
-         col:  27
+    rest_params: {
+     method: POST
+     path: "/more/stuff.endpoint/{id}"
+     url_param: {
+      name: "id"
+      type: {
+       primitive: STRING
+       source_context: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 5
+         col: 27
         }
-        end:  {
-         line:  5
-         col:  40
+        end: {
+         line: 5
+         col: 41
         }
        }
-       source_contexts:  {
-        file:  "tests/endpoints.sysl"
-        start:  {
-         line:  5
-         col:  27
+       source_contexts: {
+        file: "tests/endpoints.sysl"
+        start: {
+         line: 5
+         col: 27
         }
-        end:  {
-         line:  5
-         col:  40
+        end: {
+         line: 5
+         col: 41
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  6
-      col:  8
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 6
+      col: 8
      }
-     end:  {
-      line:  9
-      col:  3
+     end: {
+      line: 9
+      col: 4
      }
     }
-    source_contexts:  {
-     file:  "tests/endpoints.sysl"
-     start:  {
-      line:  6
-      col:  8
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 6
+      col: 8
      }
-     end:  {
-      line:  9
-      col:  3
+     end: {
+      line: 9
+      col: 4
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/endpoints.sysl"
-   start:  {}
-   end:  {
-    line:  7
-    col:  18
+  source_context: {
+   file: "tests/endpoints.sysl"
+   start: {}
+   end: {
+    line: 7
+    col: 37
    }
   }
-  source_contexts:  {
-   file:  "tests/endpoints.sysl"
-   start:  {}
-   end:  {
-    line:  7
-    col:  18
+  source_contexts: {
+   file: "tests/endpoints.sysl"
+   start: {}
+   end: {
+    line: 7
+    col: 37
    }
   }
  }

@@ -1,145 +1,147 @@
-apps:  {
- key:  "codegen"
- value:  {
-  name:  {
-   part:  "codegen"
+apps: {
+ key: "codegen"
+ value: {
+  name: {
+   part: "codegen"
   }
-  views:  {
-   key:  "Foo"
-   value:  {
-    param:  {
-     name:  "bar"
-     type:  {
-      primitive:  STRING
-      opt:  true
+  views: {
+   key: "Foo"
+   value: {
+    param: {
+     name: "bar"
+     type: {
+      primitive: STRING
+      opt: true
      }
     }
-    ret_type:  {
-     primitive:  STRING
-     opt:  true
+    ret_type: {
+     primitive: STRING
+     opt: true
     }
-    expr:  {
-     transform:  {
-      arg:  {
-       name:  "bar"
-       source_context:  {
-        file:  "tests/optional_params_view.sysl"
-        start:  {
-         line:  2
-         col:  4
+    expr: {
+     transform: {
+      arg: {
+       name: "bar"
+       source_context: {
+        file: "tests/optional_params_view.sysl"
+        start: {
+         line: 2
+         col: 4
         }
-        end:  {
-         line:  2
-         col:  4
+        end: {
+         line: 2
+         col: 7
         }
        }
-       source_contexts:  {
-        file:  "tests/optional_params_view.sysl"
-        start:  {
-         line:  2
-         col:  4
+       source_contexts: {
+        file: "tests/optional_params_view.sysl"
+        start: {
+         line: 2
+         col: 4
         }
-        end:  {
-         line:  2
-         col:  4
+        end: {
+         line: 2
+         col: 7
         }
        }
       }
-      scopevar:  "."
-      stmt:  {
-       assign:  {
-        name:  "out"
-        expr:  {
-         name:  "bar"
-         source_context:  {
-          file:  "tests/optional_params_view.sysl"
-          start:  {
-           line:  3
-           col:  8
+      scopevar: "."
+      stmt: {
+       assign: {
+        name: "out"
+        expr: {
+         name: "bar"
+         source_context: {
+          file: "tests/optional_params_view.sysl"
+          start: {
+           line: 3
+           col: 8
           }
-          end:  {
-           line:  3
-           col:  14
+          end: {
+           line: 3
+           col: 17
           }
-          text:  "out = bar"
+          text: "out = bar"
          }
-         source_contexts:  {
-          file:  "tests/optional_params_view.sysl"
-          start:  {
-           line:  3
-           col:  8
+         source_contexts: {
+          file: "tests/optional_params_view.sysl"
+          start: {
+           line: 3
+           col: 8
           }
-          end:  {
-           line:  3
-           col:  14
+          end: {
+           line: 3
+           col: 17
           }
-          text:  "out = bar"
+          text: "out = bar"
          }
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/optional_params_view.sysl"
-      start:  {
-       line:  2
-       col:  4
+     source_context: {
+      file: "tests/optional_params_view.sysl"
+      start: {
+       line: 2
+       col: 4
       }
-      end:  {
-       line:  4
-       col:  5
+      end: {
+       line: 4
+       col: 6
       }
      }
-     source_contexts:  {
-      file:  "tests/optional_params_view.sysl"
-      start:  {
-       line:  2
-       col:  4
+     source_contexts: {
+      file: "tests/optional_params_view.sysl"
+      start: {
+       line: 2
+       col: 4
       }
-      end:  {
-       line:  4
-       col:  5
+      end: {
+       line: 4
+       col: 6
       }
      }
     }
-    source_context:  {
-     file:  "tests/optional_params_view.sysl"
-     start:  {
-      line:  1
-      col:  2
+    source_context: {
+     file: "tests/optional_params_view.sysl"
+     start: {
+      line: 1
+      col: 2
      }
-     end:  {
-      line:  5
+     end: {
+      line: 5
+      col: 1
      }
-     text:  "!view Foo(bar <: string?) -> string?:"
+     text: "!view Foo(bar <: string?) -> string?:"
     }
-    source_contexts:  {
-     file:  "tests/optional_params_view.sysl"
-     start:  {
-      line:  1
-      col:  2
+    source_contexts: {
+     file: "tests/optional_params_view.sysl"
+     start: {
+      line: 1
+      col: 2
      }
-     end:  {
-      line:  5
+     end: {
+      line: 5
+      col: 1
      }
-     text:  "!view Foo(bar <: string?) -> string?:"
+     text: "!view Foo(bar <: string?) -> string?:"
     }
    }
   }
-  source_context:  {
-   file:  "tests/optional_params_view.sysl"
-   start:  {}
-   end:  {
-    line:  3
-    col:  14
+  source_context: {
+   file: "tests/optional_params_view.sysl"
+   start: {}
+   end: {
+    line: 3
+    col: 17
    }
   }
-  source_contexts:  {
-   file:  "tests/optional_params_view.sysl"
-   start:  {}
-   end:  {
-    line:  3
-    col:  14
+  source_contexts: {
+   file: "tests/optional_params_view.sysl"
+   start: {}
+   end: {
+    line: 3
+    col: 17
    }
   }
  }

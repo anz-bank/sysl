@@ -1,588 +1,632 @@
-apps:  {
- key:  "Request"
- value:  {
-  name:  {
-   part:  "Request"
+apps: {
+ key: "Request"
+ value: {
+  name: {
+   part: "Request"
   }
-  types:  {
-   key:  "Input"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "field1"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  21
-         col:  8
+  types: {
+   key: "Input"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "field1"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 21
+         col: 8
         }
-        end:  {
-         line:  21
-         col:  18
+        end: {
+         line: 21
+         col: 21
         }
        }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  21
-         col:  8
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 21
+         col: 8
         }
-        end:  {
-         line:  21
-         col:  18
+        end: {
+         line: 21
+         col: 21
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  20
-      col:  4
+    source_context: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 20
+      col: 4
      }
-     end:  {
-      line:  21
-      col:  18
+     end: {
+      line: 21
+      col: 21
      }
     }
-    source_contexts:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  20
-      col:  4
+    source_contexts: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 20
+      col: 4
      }
-     end:  {
-      line:  21
-      col:  18
+     end: {
+      line: 21
+      col: 21
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test2.sysl"
-   start:  {
-    line:  19
+  source_context: {
+   file: "tests/test2.sysl"
+   start: {
+    line: 19
    }
-   end:  {
-    line:  21
-    col:  18
+   end: {
+    line: 21
+    col: 21
    }
   }
-  source_contexts:  {
-   file:  "tests/test2.sysl"
-   start:  {
-    line:  19
+  source_contexts: {
+   file: "tests/test2.sysl"
+   start: {
+    line: 19
    }
-   end:  {
-    line:  21
-    col:  18
+   end: {
+    line: 21
+    col: 21
    }
   }
  }
 }
-apps:  {
- key:  "Response"
- value:  {
-  name:  {
-   part:  "Response"
+apps: {
+ key: "Response"
+ value: {
+  name: {
+   part: "Response"
   }
-  types:  {
-   key:  "Output"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "field1"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "Response"
+  types: {
+   key: "Output"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "field1"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "Response"
          }
-         path:  "Output"
+         path: "Output"
         }
-        ref:  {
-         path:  "Request"
-        }
-       }
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  25
-         col:  8
-        }
-        end:  {
-         line:  25
-         col:  18
+        ref: {
+         path: "Request"
         }
        }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  25
-         col:  8
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 25
+         col: 8
         }
-        end:  {
-         line:  25
-         col:  18
+        end: {
+         line: 25
+         col: 25
+        }
+       }
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 25
+         col: 8
+        }
+        end: {
+         line: 25
+         col: 25
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  24
-      col:  4
+    source_context: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 24
+      col: 4
      }
-     end:  {
-      line:  25
-      col:  18
+     end: {
+      line: 25
+      col: 25
      }
     }
-    source_contexts:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  24
-      col:  4
+    source_contexts: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 24
+      col: 4
      }
-     end:  {
-      line:  25
-      col:  18
+     end: {
+      line: 25
+      col: 25
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test2.sysl"
-   start:  {
-    line:  23
+  source_context: {
+   file: "tests/test2.sysl"
+   start: {
+    line: 23
    }
-   end:  {
-    line:  25
-    col:  18
+   end: {
+    line: 25
+    col: 25
    }
   }
-  source_contexts:  {
-   file:  "tests/test2.sysl"
-   start:  {
-    line:  23
+  source_contexts: {
+   file: "tests/test2.sysl"
+   start: {
+    line: 23
    }
-   end:  {
-    line:  25
-    col:  18
+   end: {
+    line: 25
+    col: 25
    }
   }
  }
 }
-apps:  {
- key:  "Tuple Model"
- value:  {
-  name:  {
-   part:  "Tuple Model"
+apps: {
+ key: "Tuple Model"
+ value: {
+  name: {
+   part: "Tuple Model"
   }
-  types:  {
-   key:  "Foo"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  3
-         col:  8
+  types: {
+   key: "Foo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  14
+        end: {
+         line: 3
+         col: 17
         }
        }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  3
-         col:  8
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  3
-         col:  14
+        end: {
+         line: 3
+         col: 17
         }
        }
       }
      }
     }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "some description"
+    attrs: {
+     key: "description"
+     value: {
+      s: "some description"
+      source_context: {
+       file: "tests/test2.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 41
+       }
+      }
+      source_contexts: {
+       file: "tests/test2.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 41
+       }
+      }
      }
     }
-    source_context:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_context: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  14
+     end: {
+      line: 3
+      col: 17
      }
     }
-    source_contexts:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_contexts: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  14
+     end: {
+      line: 3
+      col: 17
      }
     }
    }
   }
-  types:  {
-   key:  "PersonName"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "first_name"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  15
-         col:  8
+  types: {
+   key: "PersonName"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "first_name"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 15
+         col: 8
         }
-        end:  {
-         line:  15
-         col:  22
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  15
-         col:  8
-        }
-        end:  {
-         line:  15
-         col:  22
+        end: {
+         line: 15
+         col: 28
         }
        }
-      }
-     }
-     attr_defs:  {
-      key:  "last_name"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  17
-         col:  8
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 15
+         col: 8
         }
-        end:  {
-         line:  17
-         col:  21
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  17
-         col:  8
-        }
-        end:  {
-         line:  17
-         col:  21
+        end: {
+         line: 15
+         col: 28
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "middle_name"
-      value:  {
-       list:  {
-        type:  {
-         primitive:  STRING
-         source_context:  {
-          file:  "tests/test2.sysl"
-          start:  {
-           line:  16
-           col:  8
+     attr_defs: {
+      key: "last_name"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 17
+         col: 8
+        }
+        end: {
+         line: 17
+         col: 27
+        }
+       }
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 17
+         col: 8
+        }
+        end: {
+         line: 17
+         col: 27
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "middle_name"
+      value: {
+       list: {
+        type: {
+         primitive: STRING
+         source_context: {
+          file: "tests/test2.sysl"
+          start: {
+           line: 16
+           col: 8
           }
-          end:  {
-           line:  16
-           col:  29
+          end: {
+           line: 16
+           col: 35
           }
          }
-         source_contexts:  {
-          file:  "tests/test2.sysl"
-          start:  {
-           line:  16
-           col:  8
+         source_contexts: {
+          file: "tests/test2.sysl"
+          start: {
+           line: 16
+           col: 8
           }
-          end:  {
-           line:  16
-           col:  29
+          end: {
+           line: 16
+           col: 35
           }
          }
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "title"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  14
-         col:  8
+     attr_defs: {
+      key: "title"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 14
+         col: 8
         }
-        end:  {
-         line:  14
-         col:  17
+        end: {
+         line: 14
+         col: 23
         }
        }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  14
-         col:  8
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 14
+         col: 8
         }
-        end:  {
-         line:  14
-         col:  17
+        end: {
+         line: 14
+         col: 23
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  13
-      col:  4
+    source_context: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 13
+      col: 4
      }
-     end:  {
-      line:  17
-      col:  21
+     end: {
+      line: 17
+      col: 27
      }
     }
-    source_contexts:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  13
-      col:  4
+    source_contexts: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 13
+      col: 4
      }
-     end:  {
-      line:  17
-      col:  21
+     end: {
+      line: 17
+      col: 27
      }
     }
    }
   }
-  types:  {
-   key:  "TableName"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "fieldname"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  9
-         col:  8
+  types: {
+   key: "TableName"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "fieldname"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 9
+         col: 8
         }
-        end:  {
-         line:  9
-         col:  21
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  9
-         col:  8
-        }
-        end:  {
-         line:  9
-         col:  21
+        end: {
+         line: 9
+         col: 27
         }
        }
-      }
-     }
-     attr_defs:  {
-      key:  "fieldname2"
-      value:  {
-       set:  {
-        primitive:  STRING
-        source_context:  {
-         file:  "tests/test2.sysl"
-         start:  {
-          line:  10
-          col:  8
-         }
-         end:  {
-          line:  10
-          col:  29
-         }
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 9
+         col: 8
         }
-        source_contexts:  {
-         file:  "tests/test2.sysl"
-         start:  {
-          line:  10
-          col:  8
-         }
-         end:  {
-          line:  10
-          col:  29
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  10
-         col:  8
-        }
-        end:  {
-         line:  10
-         col:  29
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  10
-         col:  8
-        }
-        end:  {
-         line:  10
-         col:  29
+        end: {
+         line: 9
+         col: 27
         }
        }
       }
      }
-     attr_defs:  {
-      key:  "ids"
-      value:  {
-       set:  {
-        type_ref:  {
-         context:  {
-          appname:  {
-           part:  "Tuple Model"
+     attr_defs: {
+      key: "fieldname2"
+      value: {
+       set: {
+        primitive: STRING
+        source_context: {
+         file: "tests/test2.sysl"
+         start: {
+          line: 10
+          col: 8
+         }
+         end: {
+          line: 10
+          col: 35
+         }
+        }
+        source_contexts: {
+         file: "tests/test2.sysl"
+         start: {
+          line: 10
+          col: 8
+         }
+         end: {
+          line: 10
+          col: 35
+         }
+        }
+       }
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 10
+         col: 8
+        }
+        end: {
+         line: 10
+         col: 35
+        }
+       }
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 10
+         col: 8
+        }
+        end: {
+         line: 10
+         col: 35
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "ids"
+      value: {
+       set: {
+        type_ref: {
+         context: {
+          appname: {
+           part: "Tuple Model"
           }
-          path:  "TableName"
+          path: "TableName"
          }
-         ref:  {
-          path:  "Foo"
-         }
-        }
-        source_context:  {
-         file:  "tests/test2.sysl"
-         start:  {
-          line:  11
-          col:  8
-         }
-         end:  {
-          line:  11
-          col:  22
+         ref: {
+          path: "Foo"
          }
         }
-        source_contexts:  {
-         file:  "tests/test2.sysl"
-         start:  {
-          line:  11
-          col:  8
+        source_context: {
+         file: "tests/test2.sysl"
+         start: {
+          line: 11
+          col: 8
          }
-         end:  {
-          line:  11
-          col:  22
+         end: {
+          line: 11
+          col: 25
          }
         }
-       }
-       source_context:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  11
-         col:  8
-        }
-        end:  {
-         line:  11
-         col:  22
+        source_contexts: {
+         file: "tests/test2.sysl"
+         start: {
+          line: 11
+          col: 8
+         }
+         end: {
+          line: 11
+          col: 25
+         }
         }
        }
-       source_contexts:  {
-        file:  "tests/test2.sysl"
-        start:  {
-         line:  11
-         col:  8
+       source_context: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 11
+         col: 8
         }
-        end:  {
-         line:  11
-         col:  22
+        end: {
+         line: 11
+         col: 25
+        }
+       }
+       source_contexts: {
+        file: "tests/test2.sysl"
+        start: {
+         line: 11
+         col: 8
+        }
+        end: {
+         line: 11
+         col: 25
         }
        }
       }
      }
     }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "Multi-line annotation\n statement\n"
+    attrs: {
+     key: "description"
+     value: {
+      s: "Multi-line annotation\n statement\n"
+      source_context: {
+       file: "tests/test2.sysl"
+       start: {
+        line: 6
+        col: 22
+       }
+       end: {
+        line: 9
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/test2.sysl"
+       start: {
+        line: 6
+        col: 22
+       }
+       end: {
+        line: 9
+        col: 9
+       }
+      }
      }
     }
-    source_context:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  5
-      col:  4
+    source_context: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 5
+      col: 4
      }
-     end:  {
-      line:  11
-      col:  22
+     end: {
+      line: 11
+      col: 25
      }
     }
-    source_contexts:  {
-     file:  "tests/test2.sysl"
-     start:  {
-      line:  5
-      col:  4
+    source_contexts: {
+     file: "tests/test2.sysl"
+     start: {
+      line: 5
+      col: 4
      }
-     end:  {
-      line:  11
-      col:  22
+     end: {
+      line: 11
+      col: 25
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test2.sysl"
-   start:  {}
-   end:  {
-    line:  17
-    col:  21
+  source_context: {
+   file: "tests/test2.sysl"
+   start: {}
+   end: {
+    line: 17
+    col: 27
    }
   }
-  source_contexts:  {
-   file:  "tests/test2.sysl"
-   start:  {}
-   end:  {
-    line:  17
-    col:  21
+  source_contexts: {
+   file: "tests/test2.sysl"
+   start: {}
+   end: {
+    line: 17
+    col: 27
    }
   }
  }

@@ -1,197 +1,481 @@
-apps:  {
- key:  "App"
- value:  {
-  name:  {
-   part:  "App"
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
   }
-  attrs:  {
-   key:  "a"
-   value:  {
-    s:  "a"
+  attrs: {
+   key: "a"
+   value: {
+    s: "a"
+    source_context: {
+     file: "tests/anno_merge.sysl"
+     start: {
+      line: 3
+      col: 9
+     }
+     end: {
+      line: 3
+      col: 12
+     }
+    }
+    source_contexts: {
+     file: "tests/anno_merge.sysl"
+     start: {
+      line: 3
+      col: 9
+     }
+     end: {
+      line: 3
+      col: 12
+     }
+    }
+    source_contexts: {
+     file: "tests/anno_merge_import.sysl"
+     start: {
+      line: 1
+      col: 9
+     }
+     end: {
+      line: 1
+      col: 12
+     }
+    }
    }
   }
-  types:  {
-   key:  "Type"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "a"
-      value:  {
-       primitive:  INT
-       attrs:  {
-        key:  "c"
-        value:  {
-         s:  "c"
-        }
-       }
-       attrs:  {
-        key:  "d"
-        value:  {
-         s:  "d"
-        }
-       }
-       attrs:  {
-        key:  "multiline1"
-        value:  {
-         s:  "line1\n line2\n"
-        }
-       }
-       source_context:  {
-        file:  "tests/anno_merge_import.sysl"
-        start:  {
-         line:  4
-         col:  8
-        }
-        end:  {
-         line:  10
-         col:  8
-        }
-       }
-       source_contexts:  {
-        file:  "tests/anno_merge.sysl"
-        start:  {
-         line:  6
-         col:  8
-        }
-        end:  {
-         line:  12
-         col:  8
-        }
-       }
-       source_contexts:  {
-        file:  "tests/anno_merge_import.sysl"
-        start:  {
-         line:  4
-         col:  8
-        }
-        end:  {
-         line:  10
-         col:  8
-        }
-       }
-      }
-     }
-     attr_defs:  {
-      key:  "b"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "e"
-        value:  {
-         s:  "e"
-        }
-       }
-       attrs:  {
-        key:  "multiline2"
-        value:  {
-         s:  "line1\n\n\n\n\n\n\nline2"
-        }
-       }
-       attrs:  {
-        key:  "patterns"
-        value:  {
-         a:  {
-          elt:  {
-           s:  "tag1"
+  types: {
+   key: "Type"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "a"
+      value: {
+       primitive: INT
+       attrs: {
+        key: "c"
+        value: {
+         s: "c"
+         source_context: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 7
+           col: 17
           }
-          elt:  {
-           s:  "tag2"
+          end: {
+           line: 7
+           col: 20
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 7
+           col: 17
+          }
+          end: {
+           line: 7
+           col: 20
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 5
+           col: 17
+          }
+          end: {
+           line: 5
+           col: 20
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/anno_merge_import.sysl"
-        start:  {
-         line:  10
-         col:  8
-        }
-        end:  {
-         line:  14
+       attrs: {
+        key: "d"
+        value: {
+         s: "d"
+         source_context: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 6
+           col: 17
+          }
+          end: {
+           line: 6
+           col: 20
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 6
+           col: 17
+          }
+          end: {
+           line: 6
+           col: 20
+          }
+         }
         }
        }
-       source_contexts:  {
-        file:  "tests/anno_merge.sysl"
-        start:  {
-         line:  12
-         col:  8
-        }
-        end:  {
-         line:  20
+       attrs: {
+        key: "multiline1"
+        value: {
+         s: "line1\n line2\n"
+         source_context: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 9
+           col: 25
+          }
+          end: {
+           line: 12
+           col: 9
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 9
+           col: 25
+          }
+          end: {
+           line: 12
+           col: 9
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 7
+           col: 25
+          }
+          end: {
+           line: 10
+           col: 9
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 7
+           col: 25
+          }
+          end: {
+           line: 10
+           col: 9
+          }
+         }
         }
        }
-       source_contexts:  {
-        file:  "tests/anno_merge_import.sysl"
-        start:  {
-         line:  10
-         col:  8
+       source_context: {
+        file: "tests/anno_merge_import.sysl"
+        start: {
+         line: 4
+         col: 8
         }
-        end:  {
-         line:  14
+        end: {
+         line: 10
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/anno_merge.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 12
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/anno_merge_import.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 10
+         col: 9
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "b"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "e"
+        value: {
+         s: "e"
+         source_context: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 13
+           col: 17
+          }
+          end: {
+           line: 13
+           col: 20
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 13
+           col: 17
+          }
+          end: {
+           line: 13
+           col: 20
+          }
+         }
+        }
+       }
+       attrs: {
+        key: "multiline2"
+        value: {
+         s: "line1\n\n\n\n\n\n\nline2"
+         source_context: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 14
+           col: 25
+          }
+          end: {
+           line: 20
+           col: 1
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge.sysl"
+          start: {
+           line: 14
+           col: 25
+          }
+          end: {
+           line: 20
+           col: 1
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 11
+           col: 25
+          }
+          end: {
+           line: 14
+           col: 1
+          }
+         }
+         source_contexts: {
+          file: "tests/anno_merge_import.sysl"
+          start: {
+           line: 11
+           col: 25
+          }
+          end: {
+           line: 14
+           col: 1
+          }
+         }
+        }
+       }
+       attrs: {
+        key: "patterns"
+        value: {
+         a: {
+          elt: {
+           s: "tag1"
+           source_context: {
+            file: "tests/anno_merge.sysl"
+            start: {
+             line: 12
+             col: 21
+            }
+            end: {
+             line: 12
+             col: 26
+            }
+           }
+           source_contexts: {
+            file: "tests/anno_merge.sysl"
+            start: {
+             line: 12
+             col: 21
+            }
+            end: {
+             line: 12
+             col: 26
+            }
+           }
+          }
+          elt: {
+           s: "tag2"
+           source_context: {
+            file: "tests/anno_merge_import.sysl"
+            start: {
+             line: 10
+             col: 21
+            }
+            end: {
+             line: 10
+             col: 26
+            }
+           }
+           source_contexts: {
+            file: "tests/anno_merge_import.sysl"
+            start: {
+             line: 10
+             col: 21
+            }
+            end: {
+             line: 10
+             col: 26
+            }
+           }
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/anno_merge_import.sysl"
+        start: {
+         line: 10
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 1
+        }
+       }
+       source_contexts: {
+        file: "tests/anno_merge.sysl"
+        start: {
+         line: 12
+         col: 8
+        }
+        end: {
+         line: 20
+         col: 1
+        }
+       }
+       source_contexts: {
+        file: "tests/anno_merge_import.sysl"
+        start: {
+         line: 10
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 1
         }
        }
       }
      }
     }
-    attrs:  {
-     key:  "b"
-     value:  {
-      s:  "b"
+    attrs: {
+     key: "b"
+     value: {
+      s: "b"
+      source_context: {
+       file: "tests/anno_merge.sysl"
+       start: {
+        line: 5
+        col: 13
+       }
+       end: {
+        line: 5
+        col: 16
+       }
+      }
+      source_contexts: {
+       file: "tests/anno_merge.sysl"
+       start: {
+        line: 5
+        col: 13
+       }
+       end: {
+        line: 5
+        col: 16
+       }
+      }
+      source_contexts: {
+       file: "tests/anno_merge_import.sysl"
+       start: {
+        line: 3
+        col: 13
+       }
+       end: {
+        line: 3
+        col: 16
+       }
+      }
      }
     }
-    source_context:  {
-     file:  "tests/anno_merge_import.sysl"
-     start:  {
-      line:  2
-      col:  4
+    source_context: {
+     file: "tests/anno_merge_import.sysl"
+     start: {
+      line: 2
+      col: 4
      }
-     end:  {
-      line:  14
-     }
-    }
-    source_contexts:  {
-     file:  "tests/anno_merge.sysl"
-     start:  {
-      line:  4
-      col:  4
-     }
-     end:  {
-      line:  20
+     end: {
+      line: 14
+      col: 1
      }
     }
-    source_contexts:  {
-     file:  "tests/anno_merge_import.sysl"
-     start:  {
-      line:  2
-      col:  4
+    source_contexts: {
+     file: "tests/anno_merge.sysl"
+     start: {
+      line: 4
+      col: 4
      }
-     end:  {
-      line:  14
+     end: {
+      line: 20
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/anno_merge_import.sysl"
+     start: {
+      line: 2
+      col: 4
+     }
+     end: {
+      line: 14
+      col: 1
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/anno_merge_import.sysl"
-   start:  {}
-   end:  {
-    line:  14
+  source_context: {
+   file: "tests/anno_merge_import.sysl"
+   start: {}
+   end: {
+    line: 14
+    col: 1
    }
   }
-  source_contexts:  {
-   file:  "tests/anno_merge.sysl"
-   start:  {
-    line:  2
+  source_contexts: {
+   file: "tests/anno_merge.sysl"
+   start: {
+    line: 2
    }
-   end:  {
-    line:  20
+   end: {
+    line: 20
+    col: 1
    }
   }
-  source_contexts:  {
-   file:  "tests/anno_merge_import.sysl"
-   start:  {}
-   end:  {
-    line:  14
+  source_contexts: {
+   file: "tests/anno_merge_import.sysl"
+   start: {}
+   end: {
+    line: 14
+    col: 1
    }
   }
  }

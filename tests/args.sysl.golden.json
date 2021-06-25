@@ -55,10 +55,58 @@
          "a": {
           "elt": [
            {
-            "s": "https"
+            "s": "https",
+            "sourceContext": {
+             "file": "dev/sysl/tests/args.sysl",
+             "start": {
+              "line": 12,
+              "col": 33
+             },
+             "end": {
+              "line": 12,
+              "col": 39
+             }
+            },
+            "sourceContexts": [
+             {
+              "file": "dev/sysl/tests/args.sysl",
+              "start": {
+               "line": 12,
+               "col": 33
+              },
+              "end": {
+               "line": 12,
+               "col": 39
+              }
+             }
+            ]
            },
            {
-            "s": "soap"
+            "s": "soap",
+            "sourceContext": {
+             "file": "dev/sysl/tests/args.sysl",
+             "start": {
+              "line": 12,
+              "col": 41
+             },
+             "end": {
+              "line": 12,
+              "col": 46
+             }
+            },
+            "sourceContexts": [
+             {
+              "file": "dev/sysl/tests/args.sysl",
+              "start": {
+               "line": 12,
+               "col": 41
+              },
+              "end": {
+               "line": 12,
+               "col": 46
+              }
+             }
+            ]
            }
           ]
          }
@@ -72,7 +120,7 @@
         },
         "end": {
          "line": 12,
-         "col": 30
+         "col": 31
         }
        },
        "sourceContexts": [
@@ -84,7 +132,7 @@
          },
          "end": {
           "line": 12,
-          "col": 30
+          "col": 31
          }
         }
        ]
@@ -106,7 +154,7 @@
         },
         "end": {
          "line": 13,
-         "col": 18
+         "col": 27
         }
        },
        "sourceContexts": [
@@ -118,7 +166,7 @@
          },
          "end": {
           "line": 13,
-          "col": 18
+          "col": 27
          }
         }
        ]
@@ -145,7 +193,7 @@
         },
         "end": {
          "line": 14,
-         "col": 31
+         "col": 32
         }
        },
        "sourceContexts": [
@@ -157,7 +205,7 @@
          },
          "end": {
           "line": 14,
-          "col": 31
+          "col": 32
          }
         }
        ]
@@ -184,7 +232,7 @@
         },
         "end": {
          "line": 15,
-         "col": 41
+         "col": 42
         }
        },
        "sourceContexts": [
@@ -196,7 +244,7 @@
          },
          "end": {
           "line": 15,
-          "col": 41
+          "col": 42
          }
         }
        ]
@@ -210,7 +258,7 @@
       },
       "end": {
        "line": 15,
-       "col": 41
+       "col": 42
       }
      },
      "sourceContexts": [
@@ -222,7 +270,7 @@
        },
        "end": {
         "line": 15,
-        "col": 41
+        "col": 42
        }
       }
      ]
@@ -235,7 +283,7 @@
     },
     "end": {
      "line": 15,
-     "col": 41
+     "col": 42
     }
    },
    "sourceContexts": [
@@ -246,7 +294,7 @@
      },
      "end": {
       "line": 15,
-      "col": 41
+      "col": 42
      }
     }
    ]
@@ -372,7 +420,7 @@
       },
       "end": {
        "line": 7,
-       "col": 8
+       "col": 9
       }
      },
      "sourceContexts": [
@@ -384,7 +432,7 @@
        },
        "end": {
         "line": 7,
-        "col": 8
+        "col": 9
        }
       }
      ]
@@ -445,7 +493,7 @@
       },
       "end": {
        "line": 10,
-       "col": 6
+       "col": 7
       }
      },
      "sourceContexts": [
@@ -457,7 +505,7 @@
        },
        "end": {
         "line": 10,
-        "col": 6
+        "col": 7
        }
       }
      ]

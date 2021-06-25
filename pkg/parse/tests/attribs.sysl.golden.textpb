@@ -1,152 +1,512 @@
-apps:  {
- key:  "App"
- value:  {
-  name:  {
-   part:  "App"
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
   }
-  attrs:  {
-   key:  "arrays"
-   value:  {
-    a:  {
-     elt:  {
-      a:  {
-       elt:  {
-        s:  "a"
+  attrs: {
+   key: "arrays"
+   value: {
+    a: {
+     elt: {
+      a: {
+       elt: {
+        s: "a"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 34
+         }
+         end: {
+          col: 37
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 34
+         }
+         end: {
+          col: 37
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 33
+       }
+       end: {
+        col: 38
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 33
+       }
+       end: {
+        col: 38
        }
       }
      }
-     elt:  {
-      a:  {
-       elt:  {
-        s:  "b"
+     elt: {
+      a: {
+       elt: {
+        s: "b"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 41
+         }
+         end: {
+          col: 44
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 41
+         }
+         end: {
+          col: 44
+         }
+        }
        }
-       elt:  {
-        s:  "c"
+       elt: {
+        s: "c"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 46
+         }
+         end: {
+          col: 49
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 46
+         }
+         end: {
+          col: 49
+         }
+        }
        }
       }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 40
+       }
+       end: {
+        col: 50
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 40
+       }
+       end: {
+        col: 50
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 32
+     }
+     end: {
+      col: 51
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 32
+     }
+     end: {
+      col: 51
      }
     }
    }
   }
-  attrs:  {
-   key:  "at_arrays"
-   value:  {
-    a:  {
-     elt:  {
-      a:  {
-       elt:  {
-        s:  "a"
+  attrs: {
+   key: "at_arrays"
+   value: {
+    a: {
+     elt: {
+      a: {
+       elt: {
+        s: "a"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 2
+          col: 19
+         }
+         end: {
+          line: 2
+          col: 22
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 2
+          col: 19
+         }
+         end: {
+          line: 2
+          col: 22
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 2
+        col: 18
+       }
+       end: {
+        line: 2
+        col: 23
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 2
+        col: 18
+       }
+       end: {
+        line: 2
+        col: 23
        }
       }
      }
-     elt:  {
-      a:  {
-       elt:  {
-        s:  "b"
+     elt: {
+      a: {
+       elt: {
+        s: "b"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 2
+          col: 26
+         }
+         end: {
+          line: 2
+          col: 29
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 2
+          col: 26
+         }
+         end: {
+          line: 2
+          col: 29
+         }
+        }
        }
-       elt:  {
-        s:  "c"
+       elt: {
+        s: "c"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 2
+          col: 31
+         }
+         end: {
+          line: 2
+          col: 34
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 2
+          col: 31
+         }
+         end: {
+          line: 2
+          col: 34
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 2
+        col: 25
+       }
+       end: {
+        line: 2
+        col: 35
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 2
+        col: 25
+       }
+       end: {
+        line: 2
+        col: 35
        }
       }
      }
     }
-   }
-  }
-  attrs:  {
-   key:  "at_strings"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "a"
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 2
+      col: 17
      }
-     elt:  {
-      s:  "b"
+     end: {
+      line: 2
+      col: 36
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 2
+      col: 17
+     }
+     end: {
+      line: 2
+      col: 36
      }
     }
    }
   }
-  attrs:  {
-   key:  "strings"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "a"
-     }
-     elt:  {
-      s:  "b"
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Endpoint"
-   value:  {
-    name:  "Endpoint"
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/attribs.sysl"
-      start:  {
-       line:  4
-       col:  8
+  attrs: {
+   key: "at_strings"
+   value: {
+    a: {
+     elt: {
+      s: "a"
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 1
+        col: 19
+       }
+       end: {
+        line: 1
+        col: 22
+       }
       }
-      end:  {
-       line:  4
-       col:  11
-      }
-     }
-     source_contexts:  {
-      file:  "tests/attribs.sysl"
-      start:  {
-       line:  4
-       col:  8
-      }
-      end:  {
-       line:  4
-       col:  11
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 1
+        col: 19
+       }
+       end: {
+        line: 1
+        col: 22
+       }
       }
      }
+     elt: {
+      s: "b"
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 1
+        col: 24
+       }
+       end: {
+        line: 1
+        col: 27
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 1
+        col: 24
+       }
+       end: {
+        line: 1
+        col: 27
+       }
+      }
+     }
     }
-    source_context:  {
-     file:  "tests/attribs.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 1
+      col: 18
      }
-     end:  {
-      line:  4
-      col:  11
+     end: {
+      line: 1
+      col: 28
      }
     }
-    source_contexts:  {
-     file:  "tests/attribs.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 1
+      col: 18
      }
-     end:  {
-      line:  4
-      col:  11
+     end: {
+      line: 1
+      col: 28
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/attribs.sysl"
-   start:  {}
-   end:  {
-    line:  4
-    col:  11
+  attrs: {
+   key: "strings"
+   value: {
+    a: {
+     elt: {
+      s: "a"
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 14
+       }
+       end: {
+        col: 17
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 14
+       }
+       end: {
+        col: 17
+       }
+      }
+     }
+     elt: {
+      s: "b"
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 19
+       }
+       end: {
+        col: 22
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 19
+       }
+       end: {
+        col: 22
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 13
+     }
+     end: {
+      col: 23
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 13
+     }
+     end: {
+      col: 23
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/attribs.sysl"
-   start:  {}
-   end:  {
-    line:  4
-    col:  11
+  endpoints: {
+   key: "Endpoint"
+   value: {
+    name: "Endpoint"
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/attribs.sysl"
+      start: {
+       line: 4
+       col: 8
+      }
+      end: {
+       line: 4
+       col: 11
+      }
+     }
+     source_contexts: {
+      file: "tests/attribs.sysl"
+      start: {
+       line: 4
+       col: 8
+      }
+      end: {
+       line: 4
+       col: 11
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 11
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 3
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 11
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/attribs.sysl"
+   start: {}
+   end: {
+    line: 4
+    col: 11
+   }
+  }
+  source_contexts: {
+   file: "tests/attribs.sysl"
+   start: {}
+   end: {
+    line: 4
+    col: 11
    }
   }
  }

@@ -1,105 +1,153 @@
-apps:  {
- key:  "app"
- value:  {
-  name:  {
-   part:  "app"
+apps: {
+ key: "app"
+ value: {
+  name: {
+   part: "app"
   }
-  types:  {
-   key:  "enum3"
-   value:  {
-    enum:  {
-     items:  {
-      key:  "bar"
-      value:  2
+  types: {
+   key: "enum3"
+   value: {
+    enum: {
+     items: {
+      key: "bar"
+      value: 2
      }
-     items:  {
-      key:  "foo"
-      value:  1
-     }
-    }
-    source_context:  {
-     file:  "tests/enum.sysl"
-     start:  {
-      line:  4
-      col:  4
-     }
-     end:  {
-      line:  7
-      col:  4
+     items: {
+      key: "foo"
+      value: 1
      }
     }
-    source_contexts:  {
-     file:  "tests/enum.sysl"
-     start:  {
-      line:  4
-      col:  4
+    source_context: {
+     file: "tests/enum.sysl"
+     start: {
+      line: 4
+      col: 4
      }
-     end:  {
-      line:  7
-      col:  4
+     end: {
+      line: 7
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/enum.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 7
+      col: 5
      }
     }
    }
   }
-  types:  {
-   key:  "enum4"
-   value:  {
-    enum:  {
-     items:  {
-      key:  "baz"
-      value:  1
+  types: {
+   key: "enum4"
+   value: {
+    enum: {
+     items: {
+      key: "baz"
+      value: 1
      }
     }
-    attrs:  {
-     key:  "attr"
-     value:  {
-      s:  "val"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "pattern"
+    attrs: {
+     key: "attr"
+     value: {
+      s: "val"
+      source_context: {
+       file: "tests/enum.sysl"
+       start: {
+        line: 7
+        col: 22
+       }
+       end: {
+        line: 7
+        col: 27
+       }
+      }
+      source_contexts: {
+       file: "tests/enum.sysl"
+       start: {
+        line: 7
+        col: 22
+       }
+       end: {
+        line: 7
+        col: 27
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/enum.sysl"
-     start:  {
-      line:  7
-      col:  4
-     }
-     end:  {
-      line:  9
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "pattern"
+        source_context: {
+         file: "tests/enum.sysl"
+         start: {
+          line: 7
+          col: 29
+         }
+         end: {
+          line: 7
+          col: 37
+         }
+        }
+        source_contexts: {
+         file: "tests/enum.sysl"
+         start: {
+          line: 7
+          col: 29
+         }
+         end: {
+          line: 7
+          col: 37
+         }
+        }
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/enum.sysl"
-     start:  {
-      line:  7
-      col:  4
+    source_context: {
+     file: "tests/enum.sysl"
+     start: {
+      line: 7
+      col: 4
      }
-     end:  {
-      line:  9
+     end: {
+      line: 9
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/enum.sysl"
+     start: {
+      line: 7
+      col: 4
+     }
+     end: {
+      line: 9
+      col: 1
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/enum.sysl"
-   start:  {}
-   end:  {
-    line:  9
+  source_context: {
+   file: "tests/enum.sysl"
+   start: {}
+   end: {
+    line: 7
+    col: 37
    }
   }
-  source_contexts:  {
-   file:  "tests/enum.sysl"
-   start:  {}
-   end:  {
-    line:  9
+  source_contexts: {
+   file: "tests/enum.sysl"
+   start: {}
+   end: {
+    line: 7
+    col: 37
    }
   }
  }

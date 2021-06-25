@@ -835,7 +835,6 @@ export SYSL_SSH_PASSPHRASE="abcdef"
 
 Setting `SYSL_SSH_PRIVATE_KEY` with filepath to your [SSH private key](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for sysl to import specifications from private source via SSH.
 
-
 ### Non-sysl file
 
 When you import a sysl file, you can omit the `.sysl` file extension.

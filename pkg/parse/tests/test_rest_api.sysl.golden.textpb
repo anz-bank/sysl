@@ -1,1722 +1,2268 @@
-apps:  {
- key:  "BrowserApp"
- value:  {
-  name:  {
-   part:  "BrowserApp"
+apps: {
+ key: "BrowserApp"
+ value: {
+  name: {
+   part: "BrowserApp"
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "ajax"
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "HomePage"
-   value:  {
-    name:  "HomePage"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  48
-       col:  8
-      }
-      end:  {
-       line:  48
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  48
-       col:  8
-      }
-      end:  {
-       line:  48
-       col:  24
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  47
-      col:  4
-     }
-     end:  {
-      line:  48
-      col:  24
-     }
-    }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  47
-      col:  4
-     }
-     end:  {
-      line:  48
-      col:  24
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "On Click"
-   value:  {
-    name:  "On Click"
-    stmt:  {
-     action:  {
-      action:  "| Comment On click, initiate a server call"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  59
-       col:  8
-      }
-      end:  {
-       line:  59
-       col:  9
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  59
-       col:  8
-      }
-      end:  {
-       line:  59
-       col:  9
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /first/{id}"
-     }
-     attrs:  {
-      key:  "patterns"
-      value:  {
-       a:  {
-        elt:  {
-         s:  "pattern+foo"
-        }
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "ajax"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 40
+        col: 12
+       }
+       end: {
+        line: 40
+        col: 17
        }
       }
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  60
-       col:  8
-      }
-      end:  {
-       line:  60
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  60
-       col:  8
-      }
-      end:  {
-       line:  60
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "BrowserApp"
-      }
-      endpoint:  "Show Success"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  61
-       col:  8
-      }
-      end:  {
-       line:  61
-       col:  12
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  61
-       col:  8
-      }
-      end:  {
-       line:  61
-       col:  12
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  58
-      col:  4
-     }
-     end:  {
-      line:  61
-      col:  12
-     }
-    }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  58
-      col:  4
-     }
-     end:  {
-      line:  61
-      col:  12
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Show Foo"
-   value:  {
-    name:  "Show Foo"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /foo"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  51
-       col:  8
-      }
-      end:  {
-       line:  51
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  51
-       col:  8
-      }
-      end:  {
-       line:  51
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /foo/"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  52
-       col:  8
-      }
-      end:  {
-       line:  52
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  52
-       col:  8
-      }
-      end:  {
-       line:  52
-       col:  24
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  50
-      col:  4
-     }
-     end:  {
-      line:  52
-      col:  24
-     }
-    }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  50
-      col:  4
-     }
-     end:  {
-      line:  52
-      col:  24
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Show Success"
-   value:  {
-    name:  "Show Success"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "My"
-       part:  "Server"
-      }
-      endpoint:  "GET /first-level/{id}/second/third"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  55
-       col:  8
-      }
-      end:  {
-       line:  55
-       col:  24
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  55
-       col:  8
-      }
-      end:  {
-       line:  55
-       col:  24
-      }
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "200 ok"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  56
-       col:  8
-      }
-      end:  {
-       line:  56
-       col:  14
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  56
-       col:  8
-      }
-      end:  {
-       line:  56
-       col:  14
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  54
-      col:  4
-     }
-     end:  {
-      line:  56
-      col:  14
-     }
-    }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  54
-      col:  4
-     }
-     end:  {
-      line:  56
-      col:  14
-     }
-    }
-   }
-  }
-  types:  {
-   key:  "Request"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "val"
-      value:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  45
-         col:  8
-        }
-        end:  {
-         line:  45
-         col:  15
-        }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 40
+        col: 12
        }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  45
-         col:  8
-        }
-        end:  {
-         line:  45
-         col:  15
-        }
+       end: {
+        line: 40
+        col: 17
        }
       }
      }
     }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "Multi line comment 1\n Multi line comment 2\n"
+   }
+  }
+  endpoints: {
+   key: "HomePage"
+   value: {
+    name: "HomePage"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 48
+       col: 8
+      }
+      end: {
+       line: 48
+       col: 29
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 48
+       col: 8
+      }
+      end: {
+       line: 48
+       col: 29
+      }
      }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  41
-      col:  4
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 47
+      col: 4
      }
-     end:  {
-      line:  45
-      col:  15
+     end: {
+      line: 48
+      col: 29
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  41
-      col:  4
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 47
+      col: 4
      }
-     end:  {
-      line:  45
-      col:  15
+     end: {
+      line: 48
+      col: 29
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test_rest_api.sysl"
-   start:  {
-    line:  40
-   }
-   end:  {
-    line:  61
-    col:  12
+  endpoints: {
+   key: "On Click"
+   value: {
+    name: "On Click"
+    stmt: {
+     action: {
+      action: "| Comment On click, initiate a server call"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 59
+       col: 8
+      }
+      end: {
+       line: 59
+       col: 50
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 59
+       col: 8
+      }
+      end: {
+       line: 59
+       col: 50
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /first/{id}"
+     }
+     attrs: {
+      key: "patterns"
+      value: {
+       a: {
+        elt: {
+         s: "pattern+foo"
+         source_context: {
+          file: "tests/test_rest_api.sysl"
+          start: {
+           line: 60
+           col: 41
+          }
+          end: {
+           line: 60
+           col: 53
+          }
+         }
+         source_contexts: {
+          file: "tests/test_rest_api.sysl"
+          start: {
+           line: 60
+           col: 41
+          }
+          end: {
+           line: 60
+           col: 53
+          }
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 60
+       col: 8
+      }
+      end: {
+       line: 60
+       col: 39
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 60
+       col: 8
+      }
+      end: {
+       line: 60
+       col: 39
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "BrowserApp"
+      }
+      endpoint: "Show Success"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 61
+       col: 8
+      }
+      end: {
+       line: 61
+       col: 24
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 61
+       col: 8
+      }
+      end: {
+       line: 61
+       col: 24
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 58
+      col: 4
+     }
+     end: {
+      line: 61
+      col: 24
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 58
+      col: 4
+     }
+     end: {
+      line: 61
+      col: 24
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/test_rest_api.sysl"
-   start:  {
-    line:  40
+  endpoints: {
+   key: "Show Foo"
+   value: {
+    name: "Show Foo"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /foo"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 51
+       col: 8
+      }
+      end: {
+       line: 51
+       col: 32
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 51
+       col: 8
+      }
+      end: {
+       line: 51
+       col: 32
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /foo/"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 52
+       col: 8
+      }
+      end: {
+       line: 52
+       col: 33
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 52
+       col: 8
+      }
+      end: {
+       line: 52
+       col: 33
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 50
+      col: 4
+     }
+     end: {
+      line: 52
+      col: 33
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 50
+      col: 4
+     }
+     end: {
+      line: 52
+      col: 33
+     }
+    }
    }
-   end:  {
-    line:  61
-    col:  12
+  }
+  endpoints: {
+   key: "Show Success"
+   value: {
+    name: "Show Success"
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Server"
+      }
+      endpoint: "GET /first-level/{id}/second/third"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 55
+       col: 8
+      }
+      end: {
+       line: 55
+       col: 58
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 55
+       col: 8
+      }
+      end: {
+       line: 55
+       col: 58
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "200 ok"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 56
+       col: 8
+      }
+      end: {
+       line: 56
+       col: 21
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 56
+       col: 8
+      }
+      end: {
+       line: 56
+       col: 21
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 54
+      col: 4
+     }
+     end: {
+      line: 56
+      col: 21
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 54
+      col: 4
+     }
+     end: {
+      line: 56
+      col: 21
+     }
+    }
+   }
+  }
+  types: {
+   key: "Request"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "val"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 45
+         col: 8
+        }
+        end: {
+         line: 45
+         col: 21
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 45
+         col: 8
+        }
+        end: {
+         line: 45
+         col: 21
+        }
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "description"
+     value: {
+      s: "Multi line comment 1\n Multi line comment 2\n"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 42
+        col: 22
+       }
+       end: {
+        line: 45
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 42
+        col: 22
+       }
+       end: {
+        line: 45
+        col: 9
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 41
+      col: 4
+     }
+     end: {
+      line: 45
+      col: 21
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 41
+      col: 4
+     }
+     end: {
+      line: 45
+      col: 21
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/test_rest_api.sysl"
+   start: {
+    line: 40
+   }
+   end: {
+    line: 61
+    col: 24
+   }
+  }
+  source_contexts: {
+   file: "tests/test_rest_api.sysl"
+   start: {
+    line: 40
+   }
+   end: {
+    line: 61
+    col: 24
    }
   }
  }
 }
-apps:  {
- key:  "My :: Server"
- value:  {
-  name:  {
-   part:  "My"
-   part:  "Server"
+apps: {
+ key: "My :: Server"
+ value: {
+  name: {
+   part: "My"
+   part: "Server"
   }
-  attrs:  {
-   key:  "patterns"
-   value:  {
-    a:  {
-     elt:  {
-      s:  "rest"
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "rest"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        col: 14
+       }
+       end: {
+        col: 19
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        col: 14
+       }
+       end: {
+        col: 19
+       }
+      }
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /"
-   value:  {
-    name:  "GET /"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /"
+   value: {
+    name: "GET /"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     action:  {
-      action:  "..."
+    stmt: {
+     action: {
+      action: "..."
      }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  3
-       col:  12
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 3
+       col: 12
       }
-      end:  {
-       line:  3
-       col:  15
+      end: {
+       line: 3
+       col: 15
       }
      }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  3
-       col:  12
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 3
+       col: 12
       }
-      end:  {
-       line:  3
-       col:  15
+      end: {
+       line: 3
+       col: 15
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/"
+    rest_params: {
+     method: GET
+     path: "/"
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  2
-      col:  8
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 2
+      col: 8
      }
-     end:  {
-      line:  4
-      col:  4
+     end: {
+      line: 4
+      col: 5
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  2
-      col:  8
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 2
+      col: 8
      }
-     end:  {
-      line:  4
-      col:  4
+     end: {
+      line: 4
+      col: 5
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /first"
-   value:  {
-    name:  "GET /first"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /first"
+   value: {
+    name: "GET /first"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
-       elt:  {
-        s:  "deprecated"
-       }
-       elt:  {
-        s:  "rest"
-       }
-       elt:  {
-        s:  "https"
-       }
-      }
-     }
-    }
-    param:  {}
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  20
-       col:  12
-      }
-      end:  {
-       line:  20
-       col:  15
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  20
-       col:  12
-      }
-      end:  {
-       line:  20
-       col:  15
-      }
-     }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/first"
-    }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  19
-      col:  8
-     }
-     end:  {
-      line:  21
-      col:  8
-     }
-    }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  19
-      col:  8
-     }
-     end:  {
-      line:  21
-      col:  8
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "GET /first-level/{id}/second/third"
-   value:  {
-    name:  "GET /first-level/{id}/second/third"
-    docstring:  " Multi line statement - 1 Multi line statement - 2 Multi line statement - 3"
-    attrs:  {
-     key:  "id"
-     value:  {
-      s:  "id01"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-      }
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "200 ok"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  38
-       col:  12
-      }
-      end:  {
-       line:  38
-       col:  18
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  38
-       col:  12
-      }
-      end:  {
-       line:  38
-       col:  18
-      }
-     }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/first-level/{id}/second/third"
-     query_param:  {
-      name:  "q"
-      type:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Server"
+       elt: {
+        s: "deprecated"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
          }
         }
-        ref:  {
-         path:  "queryTerms"
-        }
-       }
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  34
-         col:  13
-        }
-        end:  {
-         line:  34
-         col:  26
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  34
-         col:  13
-        }
-        end:  {
-         line:  34
-         col:  26
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "limit"
-      type:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Server"
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
          }
         }
-        ref:  {
-         path:  "pageSize"
-        }
        }
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  34
-         col:  28
-        }
-        end:  {
-         line:  34
-         col:  43
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  34
-         col:  28
-        }
-        end:  {
-         line:  34
-         col:  43
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "offset"
-      type:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "My"
-          part:  "Server"
+       elt: {
+        s: "rest"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 19
+          col: 25
+         }
+         end: {
+          line: 19
+          col: 30
          }
         }
-        ref:  {
-         path:  "startingRecord"
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 19
+          col: 25
+         }
+         end: {
+          line: 19
+          col: 30
+         }
         }
        }
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  34
-         col:  45
+       elt: {
+        s: "https"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 19
+          col: 32
+         }
+         end: {
+          line: 19
+          col: 38
+         }
         }
-        end:  {
-         line:  34
-         col:  67
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  34
-         col:  45
-        }
-        end:  {
-         line:  34
-         col:  67
-        }
-       }
-      }
-     }
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  33
-         col:  17
-        }
-        end:  {
-         line:  33
-         col:  25
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  33
-         col:  17
-        }
-        end:  {
-         line:  33
-         col:  25
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 19
+          col: 32
+         }
+         end: {
+          line: 19
+          col: 38
+         }
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  34
-      col:  8
+    param: {}
+    stmt: {
+     action: {
+      action: "..."
      }
-     end:  {
-      line:  40
-      col:  10
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 20
+       col: 12
+      }
+      end: {
+       line: 20
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 20
+       col: 12
+      }
+      end: {
+       line: 20
+       col: 15
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  34
-      col:  8
+    rest_params: {
+     method: GET
+     path: "/first"
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 19
+      col: 8
      }
-     end:  {
-      line:  40
-      col:  10
+     end: {
+      line: 21
+      col: 9
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 19
+      col: 8
+     }
+     end: {
+      line: 21
+      col: 9
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /first/{id}"
-   value:  {
-    name:  "GET /first/{id}"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /first-level/{id}/second/third"
+   value: {
+    name: "GET /first-level/{id}/second/third"
+    docstring: " Multi line statement - 1 Multi line statement - 2 Multi line statement - 3"
+    attrs: {
+     key: "id"
+     value: {
+      s: "id01"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 34
+        col: 73
        }
-       elt:  {
-        s:  "deprecated"
+       end: {
+        line: 34
+        col: 79
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 34
+        col: 73
+       }
+       end: {
+        line: 34
+        col: 79
        }
       }
      }
     }
-    attrs:  {
-     key:  "system_id"
-     value:  {
-      s:  "001"
-     }
-    }
-    attrs:  {
-     key:  "uber"
-     value:  {
-      s:  "value"
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  23
-       col:  16
-      }
-      end:  {
-       line:  23
-       col:  19
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  23
-       col:  16
-      }
-      end:  {
-       line:  23
-       col:  19
-      }
-     }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/first/{id}"
-     query_param:  {
-      name:  "depth"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  22
-         col:  17
-        }
-        end:  {
-         line:  22
-         col:  23
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  22
-         col:  17
-        }
-        end:  {
-         line:  22
-         col:  23
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "limit"
-      type:  {
-       primitive:  INT
-       opt:  true
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  22
-         col:  27
-        }
-        end:  {
-         line:  22
-         col:  36
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  22
-         col:  27
-        }
-        end:  {
-         line:  22
-         col:  36
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "offset"
-      type:  {
-       primitive:  INT
-       opt:  true
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  22
-         col:  38
-        }
-        end:  {
-         line:  22
-         col:  48
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  22
-         col:  38
-        }
-        end:  {
-         line:  22
-         col:  48
-        }
-       }
-      }
-     }
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  22
-      col:  12
+    stmt: {
+     ret: {
+      payload: "200 ok"
      }
-     end:  {
-      line:  24
-      col:  12
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 38
+       col: 12
+      }
+      end: {
+       line: 38
+       col: 25
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 38
+       col: 12
+      }
+      end: {
+       line: 38
+       col: 25
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  22
-      col:  12
+    rest_params: {
+     method: GET
+     path: "/first-level/{id}/second/third"
+     query_param: {
+      name: "q"
+      type: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Server"
+         }
+        }
+        ref: {
+         path: "queryTerms"
+        }
+       }
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 34
+         col: 13
+        }
+        end: {
+         line: 34
+         col: 27
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 34
+         col: 13
+        }
+        end: {
+         line: 34
+         col: 27
+        }
+       }
+      }
      }
-     end:  {
-      line:  24
-      col:  12
+     query_param: {
+      name: "limit"
+      type: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Server"
+         }
+        }
+        ref: {
+         path: "pageSize"
+        }
+       }
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 34
+         col: 28
+        }
+        end: {
+         line: 34
+         col: 44
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 34
+         col: 28
+        }
+        end: {
+         line: 34
+         col: 44
+        }
+       }
+      }
+     }
+     query_param: {
+      name: "offset"
+      type: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "My"
+          part: "Server"
+         }
+        }
+        ref: {
+         path: "startingRecord"
+        }
+       }
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 34
+         col: 45
+        }
+        end: {
+         line: 34
+         col: 68
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 34
+         col: 45
+        }
+        end: {
+         line: 34
+         col: 68
+        }
+       }
+      }
+     }
+     url_param: {
+      name: "id"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 33
+         col: 17
+        }
+        end: {
+         line: 33
+         col: 26
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 33
+         col: 17
+        }
+        end: {
+         line: 33
+         col: 26
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 34
+      col: 8
+     }
+     end: {
+      line: 40
+      col: 11
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 34
+      col: 8
+     }
+     end: {
+      line: 40
+      col: 11
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /foo"
-   value:  {
-    name:  "GET /foo"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /first/{id}"
+   value: {
+    name: "GET /first/{id}"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+       elt: {
+        s: "deprecated"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
+        }
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
+        }
        }
       }
      }
     }
-    attrs:  {
-     key:  "zero"
-     value:  {
-      s:  "0"
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  6
-       col:  12
+    attrs: {
+     key: "system_id"
+     value: {
+      s: "001"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 22
+        col: 61
+       }
+       end: {
+        line: 22
+        col: 66
+       }
       }
-      end:  {
-       line:  6
-       col:  15
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  6
-       col:  12
-      }
-      end:  {
-       line:  6
-       col:  15
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 22
+        col: 61
+       }
+       end: {
+        line: 22
+        col: 66
+       }
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/foo"
+    attrs: {
+     key: "uber"
+     value: {
+      s: "value"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
+      }
+     }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  5
-      col:  8
+    stmt: {
+     action: {
+      action: "..."
      }
-     end:  {
-      line:  7
-      col:  8
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 23
+       col: 16
+      }
+      end: {
+       line: 23
+       col: 19
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 23
+       col: 16
+      }
+      end: {
+       line: 23
+       col: 19
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  5
-      col:  8
+    rest_params: {
+     method: GET
+     path: "/first/{id}"
+     query_param: {
+      name: "depth"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 22
+         col: 17
+        }
+        end: {
+         line: 22
+         col: 26
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 22
+         col: 17
+        }
+        end: {
+         line: 22
+         col: 26
+        }
+       }
+      }
      }
-     end:  {
-      line:  7
-      col:  8
+     query_param: {
+      name: "limit"
+      type: {
+       primitive: INT
+       opt: true
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 22
+         col: 27
+        }
+        end: {
+         line: 22
+         col: 37
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 22
+         col: 27
+        }
+        end: {
+         line: 22
+         col: 37
+        }
+       }
+      }
+     }
+     query_param: {
+      name: "offset"
+      type: {
+       primitive: INT
+       opt: true
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 22
+         col: 38
+        }
+        end: {
+         line: 22
+         col: 49
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 22
+         col: 38
+        }
+        end: {
+         line: 22
+         col: 49
+        }
+       }
+      }
+     }
+     url_param: {
+      name: "id"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 22
+      col: 12
+     }
+     end: {
+      line: 24
+      col: 13
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 22
+      col: 12
+     }
+     end: {
+      line: 24
+      col: 13
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /foo/"
-   value:  {
-    name:  "GET /foo/"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /foo"
+   value: {
+    name: "GET /foo"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    attrs:  {
-     key:  "zero"
-     value:  {
-      s:  "0"
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  9
-       col:  16
+    attrs: {
+     key: "zero"
+     value: {
+      s: "0"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
       }
-      end:  {
-       line:  9
-       col:  19
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  9
-       col:  16
-      }
-      end:  {
-       line:  9
-       col:  19
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/foo/"
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 6
+       col: 12
+      }
+      end: {
+       line: 6
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 6
+       col: 12
+      }
+      end: {
+       line: 6
+       col: 15
+      }
+     }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  8
-      col:  12
+    rest_params: {
+     method: GET
+     path: "/foo"
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 5
+      col: 8
      }
-     end:  {
-      line:  10
-      col:  8
+     end: {
+      line: 7
+      col: 9
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  8
-      col:  12
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 5
+      col: 8
      }
-     end:  {
-      line:  10
-      col:  8
+     end: {
+      line: 7
+      col: 9
      }
     }
    }
   }
-  endpoints:  {
-   key:  "GET /foo/blah"
-   value:  {
-    name:  "GET /foo/blah"
-    attrs:  {
-     key:  "four"
-     value:  {
-      s:  "4"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /foo/"
+   value: {
+    name: "GET /foo/"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    attrs:  {
-     key:  "zero"
-     value:  {
-      s:  "0"
-     }
-    }
-    param:  {
-     name:  "str"
-     type:  {
-      primitive:  STRING
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  17
-       col:  16
+    attrs: {
+     key: "zero"
+     value: {
+      s: "0"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
       }
-      end:  {
-       line:  17
-       col:  19
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  17
-       col:  16
-      }
-      end:  {
-       line:  17
-       col:  19
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/foo/blah"
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 9
+       col: 16
+      }
+      end: {
+       line: 9
+       col: 19
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 9
+       col: 16
+      }
+      end: {
+       line: 9
+       col: 19
+      }
+     }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  16
-      col:  12
+    rest_params: {
+     method: GET
+     path: "/foo/"
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 8
+      col: 12
      }
-     end:  {
-      line:  18
-      col:  4
+     end: {
+      line: 10
+      col: 9
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  16
-      col:  12
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 8
+      col: 12
      }
-     end:  {
-      line:  18
-      col:  4
+     end: {
+      line: 10
+      col: 9
      }
     }
    }
   }
-  endpoints:  {
-   key:  "POST /first/{id}/another-second"
-   value:  {
-    name:  "POST /first/{id}/another-second"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /foo/blah"
+   value: {
+    name: "GET /foo/blah"
+    attrs: {
+     key: "four"
+     value: {
+      s: "4"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 15
+        col: 20
        }
-       elt:  {
-        s:  "deprecated"
+       end: {
+        line: 15
+        col: 23
        }
       }
-     }
-    }
-    attrs:  {
-     key:  "uber"
-     value:  {
-      s:  "value"
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  32
-       col:  20
-      }
-      end:  {
-       line:  32
-       col:  23
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  32
-       col:  20
-      }
-      end:  {
-       line:  32
-       col:  23
-      }
-     }
-    }
-    rest_params:  {
-     method:  POST
-     path:  "/first/{id}/another-second"
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 15
+        col: 20
        }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
+       end: {
+        line: 15
+        col: 23
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  31
-      col:  16
-     }
-     end:  {
-      line:  33
-      col:  4
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  31
-      col:  16
+    attrs: {
+     key: "zero"
+     value: {
+      s: "0"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
+      }
      }
-     end:  {
-      line:  33
-      col:  4
+    }
+    param: {
+     name: "str"
+     type: {
+      primitive: STRING
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 17
+       col: 16
+      }
+      end: {
+       line: 17
+       col: 19
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 17
+       col: 16
+      }
+      end: {
+       line: 17
+       col: 19
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/foo/blah"
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 16
+      col: 12
+     }
+     end: {
+      line: 18
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 16
+      col: 12
+     }
+     end: {
+      line: 18
+      col: 5
      }
     }
    }
   }
-  endpoints:  {
-   key:  "POST /first/{id}/second/third"
-   value:  {
-    name:  "POST /first/{id}/second/third"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /first/{id}/another-second"
+   value: {
+    name: "POST /first/{id}/another-second"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
-       elt:  {
-        s:  "deprecated"
-       }
-      }
-     }
-    }
-    attrs:  {
-     key:  "uber"
-     value:  {
-      s:  "value"
-     }
-    }
-    param:  {
-     name:  "value"
-     type:  {
-      type_ref:  {
-       ref:  {
-        appname:  {
-         part:  "Request"
+       elt: {
+        s: "deprecated"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
         }
-        path:  "val"
-       }
-      }
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  29
-       col:  24
-      }
-      end:  {
-       line:  29
-       col:  27
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  29
-       col:  24
-      }
-      end:  {
-       line:  29
-       col:  27
-      }
-     }
-    }
-    rest_params:  {
-     method:  POST
-     path:  "/first/{id}/second/third"
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
-       }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  28
-      col:  20
-     }
-     end:  {
-      line:  30
-      col:  12
+    attrs: {
+     key: "uber"
+     value: {
+      s: "value"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  28
-      col:  20
+    stmt: {
+     action: {
+      action: "..."
      }
-     end:  {
-      line:  30
-      col:  12
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 32
+       col: 20
+      }
+      end: {
+       line: 32
+       col: 23
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 32
+       col: 20
+      }
+      end: {
+       line: 32
+       col: 23
+      }
+     }
+    }
+    rest_params: {
+     method: POST
+     path: "/first/{id}/another-second"
+     url_param: {
+      name: "id"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 31
+      col: 16
+     }
+     end: {
+      line: 33
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 31
+      col: 16
+     }
+     end: {
+      line: 33
+      col: 5
      }
     }
    }
   }
-  endpoints:  {
-   key:  "POST /foo/bar/baz"
-   value:  {
-    name:  "POST /foo/bar/baz"
-    docstring:  "\"Create\" an item"
-    attrs:  {
-     key:  "one"
-     value:  {
-      s:  "1"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /first/{id}/second/third"
+   value: {
+    name: "POST /first/{id}/second/third"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+       elt: {
+        s: "deprecated"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
+        }
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
+        }
        }
       }
      }
     }
-    attrs:  {
-     key:  "three"
-     value:  {
-      s:  "3"
-     }
-    }
-    attrs:  {
-     key:  "two"
-     value:  {
-      s:  "2"
-     }
-    }
-    attrs:  {
-     key:  "zero"
-     value:  {
-      s:  "0"
-     }
-    }
-    stmt:  {
-     action:  {
-      action:  "..."
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  14
-       col:  20
+    attrs: {
+     key: "uber"
+     value: {
+      s: "value"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
       }
-      end:  {
-       line:  14
-       col:  23
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  14
-       col:  20
-      }
-      end:  {
-       line:  14
-       col:  23
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
       }
      }
     }
-    rest_params:  {
-     method:  POST
-     path:  "/foo/bar/baz"
-    }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  12
-      col:  16
-     }
-     end:  {
-      line:  15
-      col:  8
+    param: {
+     name: "value"
+     type: {
+      type_ref: {
+       ref: {
+        appname: {
+         part: "Request"
+        }
+        path: "val"
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  12
-      col:  16
+    stmt: {
+     action: {
+      action: "..."
      }
-     end:  {
-      line:  15
-      col:  8
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 29
+       col: 24
+      }
+      end: {
+       line: 29
+       col: 27
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 29
+       col: 24
+      }
+      end: {
+       line: 29
+       col: 27
+      }
+     }
+    }
+    rest_params: {
+     method: POST
+     path: "/first/{id}/second/third"
+     url_param: {
+      name: "id"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 28
+      col: 20
+     }
+     end: {
+      line: 30
+      col: 13
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 28
+      col: 20
+     }
+     end: {
+      line: 30
+      col: 13
      }
     }
    }
   }
-  endpoints:  {
-   key:  "PUT /first/{id}/second"
-   value:  {
-    name:  "PUT /first/{id}/second"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "POST /foo/bar/baz"
+   value: {
+    name: "POST /foo/bar/baz"
+    docstring: "\"Create\" an item"
+    attrs: {
+     key: "one"
+     value: {
+      s: "1"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 10
+        col: 18
        }
-       elt:  {
-        s:  "deprecated"
+       end: {
+        line: 10
+        col: 21
        }
       }
-     }
-    }
-    attrs:  {
-     key:  "uber"
-     value:  {
-      s:  "value"
-     }
-    }
-    stmt:  {
-     ret:  {
-      payload:  "200 ok"
-     }
-     source_context:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  26
-       col:  20
-      }
-      end:  {
-       line:  26
-       col:  26
-      }
-     }
-     source_contexts:  {
-      file:  "tests/test_rest_api.sysl"
-      start:  {
-       line:  26
-       col:  20
-      }
-      end:  {
-       line:  26
-       col:  26
-      }
-     }
-    }
-    rest_params:  {
-     method:  PUT
-     path:  "/first/{id}/second"
-     url_param:  {
-      name:  "id"
-      type:  {
-       primitive:  INT
-       source_context:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 10
+        col: 18
        }
-       source_contexts:  {
-        file:  "tests/test_rest_api.sysl"
-        start:  {
-         line:  21
-         col:  9
-        }
-        end:  {
-         line:  21
-         col:  17
-        }
+       end: {
+        line: 10
+        col: 21
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  25
-      col:  16
-     }
-     end:  {
-      line:  27
-      col:  16
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
      }
     }
-    source_contexts:  {
-     file:  "tests/test_rest_api.sysl"
-     start:  {
-      line:  25
-      col:  16
+    attrs: {
+     key: "three"
+     value: {
+      s: "3"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 10
+        col: 38
+       }
+       end: {
+        line: 10
+        col: 41
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 10
+        col: 38
+       }
+       end: {
+        line: 10
+        col: 41
+       }
+      }
      }
-     end:  {
-      line:  27
-      col:  16
+    }
+    attrs: {
+     key: "two"
+     value: {
+      s: "2"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 10
+        col: 27
+       }
+       end: {
+        line: 10
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 10
+        col: 27
+       }
+       end: {
+        line: 10
+        col: 30
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "zero"
+     value: {
+      s: "0"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 4
+        col: 15
+       }
+       end: {
+        line: 4
+        col: 18
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 14
+       col: 20
+      }
+      end: {
+       line: 14
+       col: 23
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 14
+       col: 20
+      }
+      end: {
+       line: 14
+       col: 23
+      }
+     }
+    }
+    rest_params: {
+     method: POST
+     path: "/foo/bar/baz"
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 12
+      col: 16
+     }
+     end: {
+      line: 15
+      col: 9
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 12
+      col: 16
+     }
+     end: {
+      line: 15
+      col: 9
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/test_rest_api.sysl"
-   start:  {}
-   end:  {
-    line:  38
-    col:  18
+  endpoints: {
+   key: "PUT /first/{id}/second"
+   value: {
+    name: "PUT /first/{id}/second"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+       elt: {
+        s: "deprecated"
+        source_context: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
+        }
+        source_contexts: {
+         file: "tests/test_rest_api.sysl"
+         start: {
+          line: 18
+          col: 12
+         }
+         end: {
+          line: 18
+          col: 23
+         }
+        }
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "uber"
+     value: {
+      s: "value"
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 21
+        col: 25
+       }
+       end: {
+        line: 21
+        col: 32
+       }
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "200 ok"
+     }
+     source_context: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 26
+       col: 20
+      }
+      end: {
+       line: 26
+       col: 33
+      }
+     }
+     source_contexts: {
+      file: "tests/test_rest_api.sysl"
+      start: {
+       line: 26
+       col: 20
+      }
+      end: {
+       line: 26
+       col: 33
+      }
+     }
+    }
+    rest_params: {
+     method: PUT
+     path: "/first/{id}/second"
+     url_param: {
+      name: "id"
+      type: {
+       primitive: INT
+       source_context: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+       source_contexts: {
+        file: "tests/test_rest_api.sysl"
+        start: {
+         line: 21
+         col: 9
+        }
+        end: {
+         line: 21
+         col: 18
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 25
+      col: 16
+     }
+     end: {
+      line: 27
+      col: 17
+     }
+    }
+    source_contexts: {
+     file: "tests/test_rest_api.sysl"
+     start: {
+      line: 25
+      col: 16
+     }
+     end: {
+      line: 27
+      col: 17
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/test_rest_api.sysl"
-   start:  {}
-   end:  {
-    line:  38
-    col:  18
+  source_context: {
+   file: "tests/test_rest_api.sysl"
+   start: {}
+   end: {
+    line: 38
+    col: 25
+   }
+  }
+  source_contexts: {
+   file: "tests/test_rest_api.sysl"
+   start: {}
+   end: {
+    line: 38
+    col: 25
    }
   }
  }

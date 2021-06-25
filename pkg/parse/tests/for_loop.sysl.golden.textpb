@@ -1,611 +1,611 @@
-apps:  {
- key:  "Car Models"
- value:  {
-  name:  {
-   part:  "Car Models"
+apps: {
+ key: "Car Models"
+ value: {
+  name: {
+   part: "Car Models"
   }
-  endpoints:  {
-   key:  "Get All Makes"
-   value:  {
-    name:  "Get All Makes"
-    param:  {
-     name:  "year"
-     type:  {
-      no_type:  {}
+  endpoints: {
+   key: "Get All Makes"
+   value: {
+    name: "Get All Makes"
+    param: {
+     name: "year"
+     type: {
+      no_type: {}
      }
     }
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  2
-      col:  4
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 2
+      col: 4
      }
-     end:  {
-      line:  2
-      col:  19
+     end: {
+      line: 2
+      col: 23
      }
     }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  2
-      col:  4
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 2
+      col: 4
      }
-     end:  {
-      line:  2
-      col:  19
+     end: {
+      line: 2
+      col: 23
      }
     }
    }
   }
-  endpoints:  {
-   key:  "Get All Models"
-   value:  {
-    name:  "Get All Models"
-    param:  {
-     name:  "year"
-     type:  {
-      no_type:  {}
+  endpoints: {
+   key: "Get All Models"
+   value: {
+    name: "Get All Models"
+    param: {
+     name: "year"
+     type: {
+      no_type: {}
      }
     }
-    param:  {
-     name:  "make"
-     type:  {
-      no_type:  {}
+    param: {
+     name: "make"
+     type: {
+      no_type: {}
      }
     }
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 3
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  26
-     }
-    }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  3
-      col:  4
-     }
-     end:  {
-      line:  3
-      col:  26
+     end: {
+      line: 3
+      col: 30
      }
     }
-   }
-  }
-  endpoints:  {
-   key:  "Get All Series"
-   value:  {
-    name:  "Get All Series"
-    param:  {
-     name:  "year"
-     type:  {
-      no_type:  {}
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 3
+      col: 4
      }
-    }
-    param:  {
-     name:  "make"
-     type:  {
-      no_type:  {}
-     }
-    }
-    param:  {
-     name:  "model"
-     type:  {
-      no_type:  {}
-     }
-    }
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  4
-      col:  4
-     }
-     end:  {
-      line:  4
-      col:  32
-     }
-    }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  4
-      col:  4
-     }
-     end:  {
-      line:  4
-      col:  32
+     end: {
+      line: 3
+      col: 30
      }
     }
    }
   }
-  endpoints:  {
-   key:  "Get All Years"
-   value:  {
-    name:  "Get All Years"
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  1
-      col:  19
+  endpoints: {
+   key: "Get All Series"
+   value: {
+    name: "Get All Series"
+    param: {
+     name: "year"
+     type: {
+      no_type: {}
      }
     }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  1
-      col:  4
+    param: {
+     name: "make"
+     type: {
+      no_type: {}
      }
-     end:  {
-      line:  1
-      col:  19
+    }
+    param: {
+     name: "model"
+     type: {
+      no_type: {}
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 37
+     }
+    }
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 37
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/for_loop.sysl"
-   start:  {}
-   end:  {
-    line:  4
-    col:  32
+  endpoints: {
+   key: "Get All Years"
+   value: {
+    name: "Get All Years"
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 1
+      col: 22
+     }
+    }
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 1
+      col: 22
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/for_loop.sysl"
-   start:  {}
-   end:  {
-    line:  4
-    col:  32
+  source_context: {
+   file: "tests/for_loop.sysl"
+   start: {}
+   end: {
+    line: 4
+    col: 37
+   }
+  }
+  source_contexts: {
+   file: "tests/for_loop.sysl"
+   start: {}
+   end: {
+    line: 4
+    col: 37
    }
   }
  }
 }
-apps:  {
- key:  "Other App"
- value:  {
-  name:  {
-   part:  "Other App"
+apps: {
+ key: "Other App"
+ value: {
+  name: {
+   part: "Other App"
   }
-  endpoints:  {
-   key:  "FOO"
-   value:  {
-    name:  "FOO"
-    stmt:  {
-     call:  {
-      target:  {
-       part:  "Car Models"
+  endpoints: {
+   key: "FOO"
+   value: {
+    name: "FOO"
+    stmt: {
+     call: {
+      target: {
+       part: "Car Models"
       }
-      endpoint:  "Get All Years"
+      endpoint: "Get All Years"
      }
-     source_context:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  8
-       col:  8
+     source_context: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 8
+       col: 8
       }
-      end:  {
-       line:  8
-       col:  22
-      }
-     }
-     source_contexts:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  8
-       col:  8
-      }
-      end:  {
-       line:  8
-       col:  22
+      end: {
+       line: 8
+       col: 35
       }
      }
-    }
-    stmt:  {
-     group:  {
-      title:  "for all series"
-      stmt:  {
-       action:  {
-        action:  "evaluate series pricing"
-       }
-       source_context:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  10
-         col:  12
-        }
-        end:  {
-         line:  10
-         col:  35
-        }
-       }
-       source_contexts:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  10
-         col:  12
-        }
-        end:  {
-         line:  10
-         col:  35
-        }
-       }
+     source_contexts: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 8
+       col: 8
       }
-      stmt:  {
-       cond:  {
-        test:  "has pricing"
-        stmt:  {
-         action:  {
-          action:  "select series"
-         }
-         source_context:  {
-          file:  "tests/for_loop.sysl"
-          start:  {
-           line:  12
-           col:  16
-          }
-          end:  {
-           line:  12
-           col:  29
-          }
-         }
-         source_contexts:  {
-          file:  "tests/for_loop.sysl"
-          start:  {
-           line:  12
-           col:  16
-          }
-          end:  {
-           line:  12
-           col:  29
-          }
-         }
-        }
-       }
-       source_context:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  11
-         col:  12
-        }
-        end:  {
-         line:  13
-         col:  12
-        }
-       }
-       source_contexts:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  11
-         col:  12
-        }
-        end:  {
-         line:  13
-         col:  12
-        }
-       }
-      }
-      stmt:  {
-       action:  {
-        action:  "dump pricing information"
-       }
-       source_context:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  13
-         col:  12
-        }
-        end:  {
-         line:  13
-         col:  36
-        }
-       }
-       source_contexts:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  13
-         col:  12
-        }
-        end:  {
-         line:  13
-         col:  36
-        }
-       }
-      }
-     }
-     source_context:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  9
-       col:  8
-      }
-      end:  {
-       line:  13
-       col:  36
-      }
-     }
-     source_contexts:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  9
-       col:  8
-      }
-      end:  {
-       line:  13
-       col:  36
+      end: {
+       line: 8
+       col: 35
       }
      }
     }
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  7
-      col:  4
-     }
-     end:  {
-      line:  13
-      col:  36
-     }
-    }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  7
-      col:  4
-     }
-     end:  {
-      line:  13
-      col:  36
-     }
-    }
-   }
-  }
-  endpoints:  {
-   key:  "Profit"
-   value:  {
-    name:  "Profit"
-    stmt:  {
-     foreach:  {
-      collection:  "year"
-      stmt:  {
-       action:  {
-        action:  "calculate profit"
+    stmt: {
+     group: {
+      title: "for all series"
+      stmt: {
+       action: {
+        action: "evaluate series pricing"
        }
-       source_context:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  16
-         col:  12
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 10
+         col: 12
         }
-        end:  {
-         line:  16
-         col:  28
+        end: {
+         line: 10
+         col: 35
         }
        }
-       source_contexts:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  16
-         col:  12
+       source_contexts: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 10
+         col: 12
         }
-        end:  {
-         line:  16
-         col:  28
+        end: {
+         line: 10
+         col: 35
         }
        }
       }
-      stmt:  {
-       group:  {
-        title:  "Loop \"n times\""
-        stmt:  {
-         action:  {
-          action:  "run simulation"
+      stmt: {
+       cond: {
+        test: "has pricing"
+        stmt: {
+         action: {
+          action: "select series"
          }
-         source_context:  {
-          file:  "tests/for_loop.sysl"
-          start:  {
-           line:  18
-           col:  18
+         source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+           line: 12
+           col: 16
           }
-          end:  {
-           line:  18
-           col:  32
+          end: {
+           line: 12
+           col: 29
           }
          }
-         source_contexts:  {
-          file:  "tests/for_loop.sysl"
-          start:  {
-           line:  18
-           col:  18
+         source_contexts: {
+          file: "tests/for_loop.sysl"
+          start: {
+           line: 12
+           col: 16
           }
-          end:  {
-           line:  18
-           col:  32
+          end: {
+           line: 12
+           col: 29
           }
          }
         }
        }
-       source_context:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  17
-         col:  12
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 11
+         col: 12
         }
-        end:  {
-         line:  18
-         col:  32
+        end: {
+         line: 13
+         col: 13
         }
        }
-       source_contexts:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  17
-         col:  12
+       source_contexts: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 11
+         col: 12
         }
-        end:  {
-         line:  18
-         col:  32
+        end: {
+         line: 13
+         col: 13
+        }
+       }
+      }
+      stmt: {
+       action: {
+        action: "dump pricing information"
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 13
+         col: 12
+        }
+        end: {
+         line: 13
+         col: 36
+        }
+       }
+       source_contexts: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 13
+         col: 12
+        }
+        end: {
+         line: 13
+         col: 36
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  15
-       col:  8
+     source_context: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 9
+       col: 8
       }
-      end:  {
-       line:  18
-       col:  32
+      end: {
+       line: 13
+       col: 36
       }
      }
-     source_contexts:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  15
-       col:  8
+     source_contexts: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 9
+       col: 8
       }
-      end:  {
-       line:  18
-       col:  32
+      end: {
+       line: 13
+       col: 36
       }
      }
     }
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  14
-      col:  4
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 7
+      col: 4
      }
-     end:  {
-      line:  18
-      col:  32
+     end: {
+      line: 13
+      col: 36
      }
     }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  14
-      col:  4
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 7
+      col: 4
      }
-     end:  {
-      line:  18
-      col:  32
+     end: {
+      line: 13
+      col: 36
      }
     }
    }
   }
-  endpoints:  {
-   key:  "WhileTest"
-   value:  {
-    name:  "WhileTest"
-    stmt:  {
-     loop:  {
-      mode:  WHILE
-      criterion:  "condition not true"
-      stmt:  {
-       action:  {
-        action:  "\"wait for 5 secs\""
+  endpoints: {
+   key: "Profit"
+   value: {
+    name: "Profit"
+    stmt: {
+     foreach: {
+      collection: "year"
+      stmt: {
+       action: {
+        action: "calculate profit"
        }
-       source_context:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  21
-         col:  12
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 16
+         col: 12
         }
-        end:  {
-         line:  21
-         col:  29
+        end: {
+         line: 16
+         col: 28
         }
        }
-       source_contexts:  {
-        file:  "tests/for_loop.sysl"
-        start:  {
-         line:  21
-         col:  12
+       source_contexts: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 16
+         col: 12
         }
-        end:  {
-         line:  21
-         col:  29
+        end: {
+         line: 16
+         col: 28
+        }
+       }
+      }
+      stmt: {
+       group: {
+        title: "Loop \"n times\""
+        stmt: {
+         action: {
+          action: "run simulation"
+         }
+         source_context: {
+          file: "tests/for_loop.sysl"
+          start: {
+           line: 18
+           col: 18
+          }
+          end: {
+           line: 18
+           col: 32
+          }
+         }
+         source_contexts: {
+          file: "tests/for_loop.sysl"
+          start: {
+           line: 18
+           col: 18
+          }
+          end: {
+           line: 18
+           col: 32
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 17
+         col: 12
+        }
+        end: {
+         line: 18
+         col: 32
+        }
+       }
+       source_contexts: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 17
+         col: 12
+        }
+        end: {
+         line: 18
+         col: 32
         }
        }
       }
      }
-     source_context:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  20
-       col:  8
+     source_context: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 15
+       col: 8
       }
-      end:  {
-       line:  21
-       col:  29
+      end: {
+       line: 18
+       col: 32
       }
      }
-     source_contexts:  {
-      file:  "tests/for_loop.sysl"
-      start:  {
-       line:  20
-       col:  8
+     source_contexts: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 15
+       col: 8
       }
-      end:  {
-       line:  21
-       col:  29
+      end: {
+       line: 18
+       col: 32
       }
      }
     }
-    source_context:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  19
-      col:  4
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 14
+      col: 4
      }
-     end:  {
-      line:  21
-      col:  29
+     end: {
+      line: 18
+      col: 32
      }
     }
-    source_contexts:  {
-     file:  "tests/for_loop.sysl"
-     start:  {
-      line:  19
-      col:  4
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 14
+      col: 4
      }
-     end:  {
-      line:  21
-      col:  29
+     end: {
+      line: 18
+      col: 32
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/for_loop.sysl"
-   start:  {
-    line:  6
-   }
-   end:  {
-    line:  21
-    col:  29
+  endpoints: {
+   key: "WhileTest"
+   value: {
+    name: "WhileTest"
+    stmt: {
+     loop: {
+      mode: WHILE
+      criterion: "condition not true"
+      stmt: {
+       action: {
+        action: "\"wait for 5 secs\""
+       }
+       source_context: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 21
+         col: 12
+        }
+        end: {
+         line: 21
+         col: 29
+        }
+       }
+       source_contexts: {
+        file: "tests/for_loop.sysl"
+        start: {
+         line: 21
+         col: 12
+        }
+        end: {
+         line: 21
+         col: 29
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 20
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 29
+      }
+     }
+     source_contexts: {
+      file: "tests/for_loop.sysl"
+      start: {
+       line: 20
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 29
+      }
+     }
+    }
+    source_context: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 19
+      col: 4
+     }
+     end: {
+      line: 21
+      col: 29
+     }
+    }
+    source_contexts: {
+     file: "tests/for_loop.sysl"
+     start: {
+      line: 19
+      col: 4
+     }
+     end: {
+      line: 21
+      col: 29
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/for_loop.sysl"
-   start:  {
-    line:  6
+  source_context: {
+   file: "tests/for_loop.sysl"
+   start: {
+    line: 6
    }
-   end:  {
-    line:  21
-    col:  29
+   end: {
+    line: 21
+    col: 29
+   }
+  }
+  source_contexts: {
+   file: "tests/for_loop.sysl"
+   start: {
+    line: 6
+   }
+   end: {
+    line: 21
+    col: 29
    }
   }
  }

@@ -11,6 +11,28 @@ apps: {
     a: {
      elt: {
       s: "abstract"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 2
+        col: 20
+       }
+       end: {
+        line: 2
+        col: 29
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 2
+        col: 20
+       }
+       end: {
+        line: 2
+        col: 29
+       }
+      }
      }
     }
    }
@@ -41,7 +63,7 @@ apps: {
       }
       end: {
        line: 267
-       col: 4
+       col: 5
       }
      }
      source_contexts: {
@@ -52,7 +74,7 @@ apps: {
       }
       end: {
        line: 267
-       col: 4
+       col: 5
       }
      }
     }
@@ -65,7 +87,7 @@ apps: {
    }
    end: {
     line: 2
-    col: 29
+    col: 30
    }
   }
   source_contexts: {
@@ -75,7 +97,7 @@ apps: {
    }
    end: {
     line: 2
-    col: 29
+    col: 30
    }
   }
  }
@@ -102,7 +124,7 @@ apps: {
    }
    end: {
     line: 15
-    col: 27
+    col: 41
    }
   }
   source_contexts: {
@@ -112,7 +134,7 @@ apps: {
    }
    end: {
     line: 15
-    col: 27
+    col: 41
    }
   }
  }
@@ -127,12 +149,56 @@ apps: {
    key: "annotation"
    value: {
     s: "annotation"
+    source_context: {
+     file: "all.sysl"
+     start: {
+      line: 6
+      col: 18
+     }
+     end: {
+      line: 6
+      col: 30
+     }
+    }
+    source_contexts: {
+     file: "all.sysl"
+     start: {
+      line: 6
+      col: 18
+     }
+     end: {
+      line: 6
+      col: 30
+     }
+    }
    }
   }
   attrs: {
    key: "annotation1"
    value: {
     s: "you can do string annotation like this"
+    source_context: {
+     file: "all.sysl"
+     start: {
+      line: 7
+      col: 19
+     }
+     end: {
+      line: 7
+      col: 59
+     }
+    }
+    source_contexts: {
+     file: "all.sysl"
+     start: {
+      line: 7
+      col: 19
+     }
+     end: {
+      line: 7
+      col: 59
+     }
+    }
    }
   }
   attrs: {
@@ -141,15 +207,125 @@ apps: {
     a: {
      elt: {
       s: "or"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 20
+       }
+       end: {
+        line: 8
+        col: 24
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 20
+       }
+       end: {
+        line: 8
+        col: 24
+       }
+      }
      }
      elt: {
       s: "in"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 26
+       }
+       end: {
+        line: 8
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 26
+       }
+       end: {
+        line: 8
+        col: 30
+       }
+      }
      }
      elt: {
       s: "an"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 32
+       }
+       end: {
+        line: 8
+        col: 36
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 32
+       }
+       end: {
+        line: 8
+        col: 36
+       }
+      }
      }
      elt: {
       s: "array"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 38
+       }
+       end: {
+        line: 8
+        col: 45
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 8
+        col: 38
+       }
+       end: {
+        line: 8
+        col: 45
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "all.sysl"
+     start: {
+      line: 8
+      col: 19
+     }
+     end: {
+      line: 8
+      col: 46
+     }
+    }
+    source_contexts: {
+     file: "all.sysl"
+     start: {
+      line: 8
+      col: 19
+     }
+     end: {
+      line: 8
+      col: 46
      }
     }
    }
@@ -158,6 +334,28 @@ apps: {
    key: "annotation3"
    value: {
     s: "you can also do\n multiline annotations\n like this\n"
+    source_context: {
+     file: "all.sysl"
+     start: {
+      line: 9
+      col: 18
+     }
+     end: {
+      line: 13
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "all.sysl"
+     start: {
+      line: 9
+      col: 18
+     }
+     end: {
+      line: 13
+      col: 5
+     }
+    }
    }
   }
   endpoints: {
@@ -172,7 +370,8 @@ apps: {
     line: 5
    }
    end: {
-    line: 5
+    line: 13
+    col: 5
    }
   }
   source_contexts: {
@@ -181,7 +380,8 @@ apps: {
     line: 5
    }
    end: {
-    line: 5
+    line: 13
+    col: 5
    }
   }
  }
@@ -200,6 +400,28 @@ apps: {
      key: "annotations"
      value: {
       s: "annotation"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 263
+        col: 30
+       }
+       end: {
+        line: 263
+        col: 42
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 263
+        col: 30
+       }
+       end: {
+        line: 263
+        col: 42
+       }
+      }
      }
     }
     source: {
@@ -240,7 +462,7 @@ apps: {
      }
      end: {
       line: 267
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -251,7 +473,7 @@ apps: {
      }
      end: {
       line: 267
-      col: 4
+      col: 5
      }
     }
    }
@@ -264,6 +486,28 @@ apps: {
      key: "annotations"
      value: {
       s: "annotation"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 252
+        col: 27
+       }
+       end: {
+        line: 252
+        col: 39
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 252
+        col: 27
+       }
+       end: {
+        line: 252
+        col: 39
+       }
+      }
      }
     }
     is_pubsub: true
@@ -279,7 +523,7 @@ apps: {
       }
       end: {
        line: 254
-       col: 14
+       col: 27
       }
      }
      source_contexts: {
@@ -290,7 +534,7 @@ apps: {
       }
       end: {
        line: 254
-       col: 14
+       col: 27
       }
      }
     }
@@ -302,7 +546,7 @@ apps: {
      }
      end: {
       line: 259
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -313,7 +557,7 @@ apps: {
      }
      end: {
       line: 259
-      col: 4
+      col: 5
      }
     }
    }
@@ -364,7 +608,7 @@ apps: {
      }
      end: {
       line: 263
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -375,7 +619,7 @@ apps: {
      }
      end: {
       line: 263
-      col: 4
+      col: 5
      }
     }
    }
@@ -466,7 +710,7 @@ apps: {
      }
      end: {
       line: 52
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -477,7 +721,7 @@ apps: {
      }
      end: {
       line: 52
-      col: 4
+      col: 5
      }
     }
    }
@@ -542,7 +786,7 @@ apps: {
      }
      end: {
       line: 91
-      col: 5
+      col: 6
      }
     }
     source_contexts: {
@@ -553,7 +797,7 @@ apps: {
      }
      end: {
       line: 91
-      col: 5
+      col: 6
      }
     }
    }
@@ -611,7 +855,7 @@ apps: {
      }
      end: {
       line: 43
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -622,7 +866,7 @@ apps: {
      }
      end: {
       line: 43
-      col: 8
+      col: 9
      }
     }
    }
@@ -680,7 +924,7 @@ apps: {
      }
      end: {
       line: 58
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -691,7 +935,7 @@ apps: {
      }
      end: {
       line: 58
-      col: 4
+      col: 5
      }
     }
    }
@@ -749,7 +993,7 @@ apps: {
      }
      end: {
       line: 64
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -760,7 +1004,7 @@ apps: {
      }
      end: {
       line: 64
-      col: 4
+      col: 5
      }
     }
    }
@@ -819,7 +1063,7 @@ apps: {
      }
      end: {
       line: 77
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -830,7 +1074,7 @@ apps: {
      }
      end: {
       line: 77
-      col: 8
+      col: 9
      }
     }
    }
@@ -891,7 +1135,7 @@ apps: {
         }
         end: {
          line: 64
-         col: 32
+         col: 33
         }
        }
        source_contexts: {
@@ -902,7 +1146,7 @@ apps: {
         }
         end: {
          line: 64
-         col: 32
+         col: 33
         }
        }
       }
@@ -916,7 +1160,7 @@ apps: {
      }
      end: {
       line: 68
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -927,7 +1171,7 @@ apps: {
      }
      end: {
       line: 68
-      col: 4
+      col: 5
      }
     }
    }
@@ -988,7 +1232,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 19
+         col: 25
         }
        }
        source_contexts: {
@@ -999,7 +1243,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 19
+         col: 25
         }
        }
       }
@@ -1015,7 +1259,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 28
+         col: 32
         }
        }
        source_contexts: {
@@ -1026,7 +1270,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 28
+         col: 32
         }
        }
       }
@@ -1052,7 +1296,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 44
+         col: 45
         }
        }
        source_contexts: {
@@ -1063,7 +1307,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 44
+         col: 45
         }
        }
       }
@@ -1081,7 +1325,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 61
+         col: 62
         }
        }
        source_contexts: {
@@ -1092,7 +1336,7 @@ apps: {
         }
         end: {
          line: 69
-         col: 61
+         col: 62
         }
        }
       }
@@ -1106,7 +1350,7 @@ apps: {
      }
      end: {
       line: 72
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -1117,7 +1361,7 @@ apps: {
      }
      end: {
       line: 72
-      col: 4
+      col: 5
      }
     }
    }
@@ -1175,7 +1419,7 @@ apps: {
      }
      end: {
       line: 49
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -1186,7 +1430,7 @@ apps: {
      }
      end: {
       line: 49
-      col: 8
+      col: 9
      }
     }
    }
@@ -1222,6 +1466,28 @@ apps: {
         a: {
          elt: {
           s: "body"
+          source_context: {
+           file: "all.sysl"
+           start: {
+            line: 77
+            col: 32
+           }
+           end: {
+            line: 77
+            col: 37
+           }
+          }
+          source_contexts: {
+           file: "all.sysl"
+           start: {
+            line: 77
+            col: 32
+           }
+           end: {
+            line: 77
+            col: 37
+           }
+          }
          }
         }
        }
@@ -1267,7 +1533,7 @@ apps: {
      }
      end: {
       line: 82
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -1278,7 +1544,7 @@ apps: {
      }
      end: {
       line: 82
-      col: 8
+      col: 9
      }
     }
    }
@@ -1336,7 +1602,7 @@ apps: {
      }
      end: {
       line: 45
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -1347,7 +1613,7 @@ apps: {
      }
      end: {
       line: 45
-      col: 8
+      col: 9
      }
     }
    }
@@ -1411,7 +1677,7 @@ apps: {
      }
      end: {
       line: 85
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -1422,7 +1688,7 @@ apps: {
      }
      end: {
       line: 85
-      col: 8
+      col: 9
      }
     }
    }
@@ -1480,7 +1746,7 @@ apps: {
      }
      end: {
       line: 47
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -1491,7 +1757,7 @@ apps: {
      }
      end: {
       line: 47
-      col: 8
+      col: 9
      }
     }
    }
@@ -1566,7 +1832,7 @@ apps: {
          }
          end: {
           line: 85
-          col: 117
+          col: 120
          }
         }
         source_contexts: {
@@ -1577,7 +1843,7 @@ apps: {
          }
          end: {
           line: 85
-          col: 117
+          col: 120
          }
         }
        }
@@ -1623,7 +1889,7 @@ apps: {
      }
      end: {
       line: 88
-      col: 8
+      col: 9
      }
     }
     source_contexts: {
@@ -1634,7 +1900,7 @@ apps: {
      }
      end: {
       line: 88
-      col: 8
+      col: 9
      }
     }
    }
@@ -1655,7 +1921,7 @@ apps: {
         }
         end: {
          line: 38
-         col: 13
+         col: 16
         }
        }
        source_contexts: {
@@ -1666,7 +1932,7 @@ apps: {
         }
         end: {
          line: 38
-         col: 13
+         col: 16
         }
        }
       }
@@ -1680,7 +1946,7 @@ apps: {
      }
      end: {
       line: 38
-      col: 13
+      col: 16
      }
     }
     source_contexts: {
@@ -1691,7 +1957,7 @@ apps: {
      }
      end: {
       line: 38
-      col: 13
+      col: 16
      }
     }
    }
@@ -1787,6 +2053,28 @@ apps: {
      key: "annotation"
      value: {
       s: "annotation"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 33
+        col: 40
+       }
+       end: {
+        line: 33
+        col: 52
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 33
+        col: 40
+       }
+       end: {
+        line: 33
+        col: 52
+       }
+      }
      }
     }
     stmt: {
@@ -1900,7 +2188,7 @@ apps: {
          }
          end: {
           line: 30
-          col: 127
+          col: 130
          }
         }
         source_contexts: {
@@ -1911,7 +2199,7 @@ apps: {
          }
          end: {
           line: 30
-          col: 127
+          col: 130
          }
         }
        }
@@ -2134,6 +2422,28 @@ apps: {
       key: "annotation"
       value: {
        s: "annotation can be added for any statement as a string"
+       source_context: {
+        file: "all.sysl"
+        start: {
+         line: 222
+         col: 38
+        }
+        end: {
+         line: 222
+         col: 93
+        }
+       }
+       source_contexts: {
+        file: "all.sysl"
+        start: {
+         line: 222
+         col: 38
+        }
+        end: {
+         line: 222
+         col: 93
+        }
+       }
       }
      }
      source_context: {
@@ -2144,7 +2454,7 @@ apps: {
       }
       end: {
        line: 222
-       col: 12
+       col: 24
       }
      }
      source_contexts: {
@@ -2155,7 +2465,7 @@ apps: {
       }
       end: {
        line: 222
-       col: 12
+       col: 24
       }
      }
     }
@@ -2171,7 +2481,7 @@ apps: {
       }
       end: {
        line: 223
-       col: 14
+       col: 62
       }
      }
      source_contexts: {
@@ -2182,7 +2492,7 @@ apps: {
       }
       end: {
        line: 223
-       col: 14
+       col: 62
       }
      }
     }
@@ -2198,12 +2508,100 @@ apps: {
          a: {
           elt: {
            s: "or"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 34
+            }
+            end: {
+             line: 224
+             col: 38
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 34
+            }
+            end: {
+             line: 224
+             col: 38
+            }
+           }
           }
           elt: {
            s: "as"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 40
+            }
+            end: {
+             line: 224
+             col: 44
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 40
+            }
+            end: {
+             line: 224
+             col: 44
+            }
+           }
           }
           elt: {
            s: "an"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 46
+            }
+            end: {
+             line: 224
+             col: 50
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 46
+            }
+            end: {
+             line: 224
+             col: 50
+            }
+           }
+          }
+         }
+         source_context: {
+          file: "all.sysl"
+          start: {
+           line: 224
+           col: 33
+          }
+          end: {
+           line: 224
+           col: 51
+          }
+         }
+         source_contexts: {
+          file: "all.sysl"
+          start: {
+           line: 224
+           col: 33
+          }
+          end: {
+           line: 224
+           col: 51
           }
          }
         }
@@ -2211,14 +2609,124 @@ apps: {
          a: {
           elt: {
            s: "array"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 54
+            }
+            end: {
+             line: 224
+             col: 61
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 54
+            }
+            end: {
+             line: 224
+             col: 61
+            }
+           }
           }
           elt: {
            s: "of"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 63
+            }
+            end: {
+             line: 224
+             col: 67
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 63
+            }
+            end: {
+             line: 224
+             col: 67
+            }
+           }
           }
           elt: {
            s: "arrays"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 69
+            }
+            end: {
+             line: 224
+             col: 77
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 224
+             col: 69
+            }
+            end: {
+             line: 224
+             col: 77
+            }
+           }
           }
          }
+         source_context: {
+          file: "all.sysl"
+          start: {
+           line: 224
+           col: 53
+          }
+          end: {
+           line: 224
+           col: 78
+          }
+         }
+         source_contexts: {
+          file: "all.sysl"
+          start: {
+           line: 224
+           col: 53
+          }
+          end: {
+           line: 224
+           col: 78
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "all.sysl"
+        start: {
+         line: 224
+         col: 32
+        }
+        end: {
+         line: 224
+         col: 79
+        }
+       }
+       source_contexts: {
+        file: "all.sysl"
+        start: {
+         line: 224
+         col: 32
+        }
+        end: {
+         line: 224
+         col: 79
         }
        }
       }
@@ -2231,7 +2739,7 @@ apps: {
       }
       end: {
        line: 224
-       col: 19
+       col: 78
       }
      }
      source_contexts: {
@@ -2242,7 +2750,7 @@ apps: {
       }
       end: {
        line: 224
-       col: 19
+       col: 78
       }
      }
     }
@@ -2254,7 +2762,7 @@ apps: {
      }
      end: {
       line: 224
-      col: 19
+      col: 78
      }
     }
     source_contexts: {
@@ -2265,7 +2773,7 @@ apps: {
      }
      end: {
       line: 224
-      col: 19
+      col: 78
      }
     }
    }
@@ -2278,6 +2786,28 @@ apps: {
      key: "annotation1"
      value: {
       s: "you can do string annotation like this"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 214
+        col: 23
+       }
+       end: {
+        line: 214
+        col: 63
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 214
+        col: 23
+       }
+       end: {
+        line: 214
+        col: 63
+       }
+      }
      }
     }
     attrs: {
@@ -2286,15 +2816,125 @@ apps: {
       a: {
        elt: {
         s: "or"
+        source_context: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 24
+         }
+         end: {
+          line: 215
+          col: 28
+         }
+        }
+        source_contexts: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 24
+         }
+         end: {
+          line: 215
+          col: 28
+         }
+        }
        }
        elt: {
         s: "in"
+        source_context: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 30
+         }
+         end: {
+          line: 215
+          col: 34
+         }
+        }
+        source_contexts: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 30
+         }
+         end: {
+          line: 215
+          col: 34
+         }
+        }
        }
        elt: {
         s: "an"
+        source_context: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 36
+         }
+         end: {
+          line: 215
+          col: 40
+         }
+        }
+        source_contexts: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 36
+         }
+         end: {
+          line: 215
+          col: 40
+         }
+        }
        }
        elt: {
         s: "array"
+        source_context: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 42
+         }
+         end: {
+          line: 215
+          col: 49
+         }
+        }
+        source_contexts: {
+         file: "all.sysl"
+         start: {
+          line: 215
+          col: 42
+         }
+         end: {
+          line: 215
+          col: 49
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 215
+        col: 23
+       }
+       end: {
+        line: 215
+        col: 50
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 215
+        col: 23
+       }
+       end: {
+        line: 215
+        col: 50
        }
       }
      }
@@ -2303,6 +2943,28 @@ apps: {
      key: "annotation3"
      value: {
       s: "you can also do\n multiline annotations\n like this\n"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 216
+        col: 22
+       }
+       end: {
+        line: 221
+        col: 5
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 216
+        col: 22
+       }
+       end: {
+        line: 221
+        col: 5
+       }
+      }
      }
     }
     source_context: {
@@ -2313,7 +2975,7 @@ apps: {
      }
      end: {
       line: 221
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -2324,7 +2986,7 @@ apps: {
      }
      end: {
       line: 221
-      col: 4
+      col: 5
      }
     }
    }
@@ -2348,7 +3010,7 @@ apps: {
       }
       end: {
        line: 189
-       col: 12
+       col: 19
       }
      }
      source_contexts: {
@@ -2359,7 +3021,7 @@ apps: {
       }
       end: {
        line: 189
-       col: 12
+       col: 19
       }
      }
     }
@@ -2378,7 +3040,7 @@ apps: {
       }
       end: {
        line: 192
-       col: 24
+       col: 34
       }
      }
      source_contexts: {
@@ -2389,7 +3051,7 @@ apps: {
       }
       end: {
        line: 192
-       col: 24
+       col: 34
       }
      }
     }
@@ -2401,7 +3063,7 @@ apps: {
      }
      end: {
       line: 192
-      col: 24
+      col: 34
      }
     }
     source_contexts: {
@@ -2412,7 +3074,7 @@ apps: {
      }
      end: {
       line: 192
-      col: 24
+      col: 34
      }
     }
    }
@@ -2439,7 +3101,7 @@ apps: {
         }
         end: {
          line: 211
-         col: 16
+         col: 31
         }
        }
        source_contexts: {
@@ -2450,7 +3112,7 @@ apps: {
         }
         end: {
          line: 211
-         col: 16
+         col: 31
         }
        }
       }
@@ -2463,7 +3125,7 @@ apps: {
       }
       end: {
        line: 211
-       col: 16
+       col: 31
       }
      }
      source_contexts: {
@@ -2474,7 +3136,7 @@ apps: {
       }
       end: {
        line: 211
-       col: 16
+       col: 31
       }
      }
     }
@@ -2486,7 +3148,7 @@ apps: {
      }
      end: {
       line: 211
-      col: 16
+      col: 31
      }
     }
     source_contexts: {
@@ -2497,7 +3159,7 @@ apps: {
      }
      end: {
       line: 211
-      col: 16
+      col: 31
      }
     }
    }
@@ -2521,7 +3183,7 @@ apps: {
         }
         end: {
          line: 154
-         col: 18
+         col: 31
         }
        }
        source_contexts: {
@@ -2532,7 +3194,7 @@ apps: {
         }
         end: {
          line: 154
-         col: 18
+         col: 31
         }
        }
       }
@@ -2545,7 +3207,7 @@ apps: {
       }
       end: {
        line: 155
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2556,7 +3218,7 @@ apps: {
       }
       end: {
        line: 155
-       col: 8
+       col: 9
       }
      }
     }
@@ -2578,7 +3240,7 @@ apps: {
         }
         end: {
          line: 157
-         col: 16
+         col: 22
         }
        }
        source_contexts: {
@@ -2589,7 +3251,7 @@ apps: {
         }
         end: {
          line: 157
-         col: 16
+         col: 22
         }
        }
       }
@@ -2602,7 +3264,7 @@ apps: {
       }
       end: {
        line: 158
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2613,7 +3275,7 @@ apps: {
       }
       end: {
        line: 158
-       col: 8
+       col: 9
       }
      }
     }
@@ -2738,7 +3400,7 @@ apps: {
       }
       end: {
        line: 166
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2749,7 +3411,7 @@ apps: {
       }
       end: {
        line: 166
-       col: 8
+       col: 9
       }
      }
     }
@@ -2793,7 +3455,7 @@ apps: {
       }
       end: {
        line: 169
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2804,7 +3466,7 @@ apps: {
       }
       end: {
        line: 169
-       col: 8
+       col: 9
       }
      }
     }
@@ -2847,7 +3509,7 @@ apps: {
       }
       end: {
        line: 172
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2858,7 +3520,7 @@ apps: {
       }
       end: {
        line: 172
-       col: 8
+       col: 9
       }
      }
     }
@@ -2901,7 +3563,7 @@ apps: {
       }
       end: {
        line: 175
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2912,7 +3574,7 @@ apps: {
       }
       end: {
        line: 175
-       col: 8
+       col: 9
       }
      }
     }
@@ -2955,7 +3617,7 @@ apps: {
       }
       end: {
        line: 178
-       col: 8
+       col: 9
       }
      }
      source_contexts: {
@@ -2966,7 +3628,7 @@ apps: {
       }
       end: {
        line: 178
-       col: 8
+       col: 9
       }
      }
     }
@@ -3065,7 +3727,7 @@ apps: {
       }
       end: {
        line: 227
-       col: 9
+       col: 40
       }
      }
      source_contexts: {
@@ -3076,7 +3738,7 @@ apps: {
       }
       end: {
        line: 227
-       col: 9
+       col: 40
       }
      }
     }
@@ -3178,7 +3840,7 @@ apps: {
          }
          end: {
           line: 198
-          col: 22
+          col: 35
          }
         }
         source_contexts: {
@@ -3189,7 +3851,7 @@ apps: {
          }
          end: {
           line: 198
-          col: 22
+          col: 35
          }
         }
        }
@@ -3208,7 +3870,7 @@ apps: {
          }
          end: {
           line: 201
-          col: 22
+          col: 32
          }
         }
         source_contexts: {
@@ -3219,7 +3881,7 @@ apps: {
          }
          end: {
           line: 201
-          col: 22
+          col: 32
          }
         }
        }
@@ -3238,7 +3900,7 @@ apps: {
          }
          end: {
           line: 204
-          col: 22
+          col: 39
          }
         }
         source_contexts: {
@@ -3249,7 +3911,7 @@ apps: {
          }
          end: {
           line: 204
-          col: 22
+          col: 39
          }
         }
        }
@@ -3267,7 +3929,7 @@ apps: {
          }
          end: {
           line: 206
-          col: 22
+          col: 38
          }
         }
         source_contexts: {
@@ -3278,7 +3940,7 @@ apps: {
          }
          end: {
           line: 206
-          col: 22
+          col: 38
          }
         }
        }
@@ -3292,7 +3954,7 @@ apps: {
       }
       end: {
        line: 206
-       col: 22
+       col: 38
       }
      }
      source_contexts: {
@@ -3303,7 +3965,7 @@ apps: {
       }
       end: {
        line: 206
-       col: 22
+       col: 38
       }
      }
     }
@@ -3315,7 +3977,7 @@ apps: {
      }
      end: {
       line: 206
-      col: 22
+      col: 38
      }
     }
     source_contexts: {
@@ -3326,7 +3988,7 @@ apps: {
      }
      end: {
       line: 206
-      col: 22
+      col: 38
      }
     }
    }
@@ -3347,7 +4009,7 @@ apps: {
       }
       end: {
        line: 183
-       col: 14
+       col: 27
       }
      }
      source_contexts: {
@@ -3358,7 +4020,7 @@ apps: {
       }
       end: {
        line: 183
-       col: 14
+       col: 27
       }
      }
     }
@@ -3374,7 +4036,7 @@ apps: {
       }
       end: {
        line: 184
-       col: 14
+       col: 31
       }
      }
      source_contexts: {
@@ -3385,7 +4047,7 @@ apps: {
       }
       end: {
        line: 184
-       col: 14
+       col: 31
       }
      }
     }
@@ -3401,7 +4063,7 @@ apps: {
       }
       end: {
        line: 185
-       col: 14
+       col: 34
       }
      }
      source_contexts: {
@@ -3412,7 +4074,7 @@ apps: {
       }
       end: {
        line: 185
-       col: 14
+       col: 34
       }
      }
     }
@@ -3424,7 +4086,7 @@ apps: {
      }
      end: {
       line: 185
-      col: 14
+      col: 34
      }
     }
     source_contexts: {
@@ -3435,7 +4097,7 @@ apps: {
      }
      end: {
       line: 185
-      col: 14
+      col: 34
      }
     }
    }
@@ -3480,7 +4142,7 @@ apps: {
      }
      end: {
       line: 138
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -3491,7 +4153,7 @@ apps: {
      }
      end: {
       line: 138
-      col: 4
+      col: 5
      }
     }
    }
@@ -3521,7 +4183,7 @@ apps: {
      }
      end: {
       line: 147
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -3532,7 +4194,7 @@ apps: {
      }
      end: {
       line: 147
-      col: 4
+      col: 5
      }
     }
    }
@@ -3563,7 +4225,7 @@ apps: {
       }
       end: {
        line: 150
-       col: 10
+       col: 11
       }
      }
      source_contexts: {
@@ -3574,7 +4236,7 @@ apps: {
       }
       end: {
        line: 150
-       col: 10
+       col: 11
       }
      }
     }
@@ -3586,7 +4248,7 @@ apps: {
      }
      end: {
       line: 150
-      col: 10
+      col: 11
      }
     }
     source_contexts: {
@@ -3597,7 +4259,7 @@ apps: {
      }
      end: {
       line: 150
-      col: 10
+      col: 11
      }
     }
    }
@@ -3624,7 +4286,7 @@ apps: {
      }
      end: {
       line: 144
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -3635,7 +4297,7 @@ apps: {
      }
      end: {
       line: 144
-      col: 4
+      col: 5
      }
     }
    }
@@ -3653,7 +4315,7 @@ apps: {
       }
       end: {
        line: 141
-       col: 4
+       col: 5
       }
      }
      source_contexts: {
@@ -3664,7 +4326,7 @@ apps: {
       }
       end: {
        line: 141
-       col: 4
+       col: 5
       }
      }
     }
@@ -3676,7 +4338,7 @@ apps: {
      }
      end: {
       line: 141
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -3687,7 +4349,7 @@ apps: {
      }
      end: {
       line: 141
-      col: 4
+      col: 5
      }
     }
    }
@@ -3713,6 +4375,28 @@ apps: {
      key: "annotation"
      value: {
       s: "annotation"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 123
+        col: 27
+       }
+       end: {
+        line: 123
+        col: 39
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 123
+        col: 27
+       }
+       end: {
+        line: 123
+        col: 39
+       }
+      }
      }
     }
     attrs: {
@@ -3721,6 +4405,28 @@ apps: {
       a: {
        elt: {
         s: "tag"
+        source_context: {
+         file: "all.sysl"
+         start: {
+          line: 123
+          col: 41
+         }
+         end: {
+          line: 123
+          col: 45
+         }
+        }
+        source_contexts: {
+         file: "all.sysl"
+         start: {
+          line: 123
+          col: 41
+         }
+         end: {
+          line: 123
+          col: 45
+         }
+        }
        }
       }
      }
@@ -3733,7 +4439,7 @@ apps: {
      }
      end: {
       line: 128
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -3744,7 +4450,7 @@ apps: {
      }
      end: {
       line: 128
-      col: 4
+      col: 5
      }
     }
    }
@@ -3772,7 +4478,7 @@ apps: {
         }
         end: {
          line: 116
-         col: 45
+         col: 46
         }
        }
        source_contexts: {
@@ -3783,7 +4489,7 @@ apps: {
         }
         end: {
          line: 116
-         col: 45
+         col: 46
         }
        }
       }
@@ -3804,7 +4510,7 @@ apps: {
         }
         end: {
          line: 123
-         col: 4
+         col: 5
         }
        }
        source_contexts: {
@@ -3815,7 +4521,7 @@ apps: {
         }
         end: {
          line: 123
-         col: 4
+         col: 5
         }
        }
       }
@@ -3832,7 +4538,7 @@ apps: {
         }
         end: {
          line: 109
-         col: 27
+         col: 33
         }
        }
        source_contexts: {
@@ -3843,7 +4549,7 @@ apps: {
         }
         end: {
          line: 109
-         col: 27
+         col: 33
         }
        }
       }
@@ -3861,7 +4567,7 @@ apps: {
         }
         end: {
          line: 111
-         col: 26
+         col: 27
         }
        }
        source_contexts: {
@@ -3872,7 +4578,7 @@ apps: {
         }
         end: {
          line: 111
-         col: 26
+         col: 27
         }
        }
       }
@@ -3887,6 +4593,28 @@ apps: {
          a: {
           elt: {
            s: "pk"
+           source_context: {
+            file: "all.sysl"
+            start: {
+             line: 108
+             col: 30
+            }
+            end: {
+             line: 108
+             col: 33
+            }
+           }
+           source_contexts: {
+            file: "all.sysl"
+            start: {
+             line: 108
+             col: 30
+            }
+            end: {
+             line: 108
+             col: 33
+            }
+           }
           }
          }
         }
@@ -3899,7 +4627,7 @@ apps: {
         }
         end: {
          line: 108
-         col: 33
+         col: 34
         }
        }
        source_contexts: {
@@ -3910,7 +4638,7 @@ apps: {
         }
         end: {
          line: 108
-         col: 33
+         col: 34
         }
        }
       }
@@ -3940,7 +4668,7 @@ apps: {
         }
         end: {
          line: 110
-         col: 34
+         col: 38
         }
        }
        source_contexts: {
@@ -3951,7 +4679,7 @@ apps: {
         }
         end: {
          line: 110
-         col: 34
+         col: 38
         }
        }
       }
@@ -3969,7 +4697,7 @@ apps: {
          }
          end: {
           line: 113
-          col: 32
+          col: 38
          }
         }
         source_contexts: {
@@ -3980,7 +4708,7 @@ apps: {
          }
          end: {
           line: 113
-          col: 32
+          col: 38
          }
         }
        }
@@ -3992,7 +4720,7 @@ apps: {
         }
         end: {
          line: 113
-         col: 32
+         col: 38
         }
        }
        source_contexts: {
@@ -4003,7 +4731,7 @@ apps: {
         }
         end: {
          line: 113
-         col: 32
+         col: 38
         }
        }
       }
@@ -4021,7 +4749,7 @@ apps: {
          }
          end: {
           line: 112
-          col: 22
+          col: 28
          }
         }
         source_contexts: {
@@ -4032,7 +4760,7 @@ apps: {
          }
          end: {
           line: 112
-          col: 22
+          col: 28
          }
         }
        }
@@ -4044,7 +4772,7 @@ apps: {
         }
         end: {
          line: 112
-         col: 22
+         col: 28
         }
        }
        source_contexts: {
@@ -4055,7 +4783,7 @@ apps: {
         }
         end: {
          line: 112
-         col: 22
+         col: 28
         }
        }
       }
@@ -4077,7 +4805,7 @@ apps: {
         }
         end: {
          line: 117
-         col: 41
+         col: 42
         }
        }
        source_contexts: {
@@ -4088,7 +4816,7 @@ apps: {
         }
         end: {
          line: 117
-         col: 41
+         col: 42
         }
        }
       }
@@ -4110,7 +4838,7 @@ apps: {
         }
         end: {
          line: 118
-         col: 47
+         col: 48
         }
        }
        source_contexts: {
@@ -4121,7 +4849,7 @@ apps: {
         }
         end: {
          line: 118
-         col: 47
+         col: 48
         }
        }
       }
@@ -4134,6 +4862,28 @@ apps: {
         key: "annotation"
         value: {
          s: "this is an annotation"
+         source_context: {
+          file: "all.sysl"
+          start: {
+           line: 115
+           col: 26
+          }
+          end: {
+           line: 115
+           col: 49
+          }
+         }
+         source_contexts: {
+          file: "all.sysl"
+          start: {
+           line: 115
+           col: 26
+          }
+          end: {
+           line: 115
+           col: 49
+          }
+         }
         }
        }
        source_context: {
@@ -4144,7 +4894,7 @@ apps: {
         }
         end: {
          line: 116
-         col: 8
+         col: 9
         }
        }
        source_contexts: {
@@ -4155,7 +4905,7 @@ apps: {
         }
         end: {
          line: 116
-         col: 8
+         col: 9
         }
        }
       }
@@ -4170,6 +4920,28 @@ apps: {
       a: {
        elt: {
         s: "tag"
+        source_context: {
+         file: "all.sysl"
+         start: {
+          line: 107
+          col: 18
+         }
+         end: {
+          line: 107
+          col: 22
+         }
+        }
+        source_contexts: {
+         file: "all.sysl"
+         start: {
+          line: 107
+          col: 18
+         }
+         end: {
+          line: 107
+          col: 22
+         }
+        }
        }
       }
      }
@@ -4182,7 +4954,7 @@ apps: {
      }
      end: {
       line: 121
-      col: 17
+      col: 20
      }
     }
     source_contexts: {
@@ -4193,7 +4965,7 @@ apps: {
      }
      end: {
       line: 121
-      col: 17
+      col: 20
      }
     }
    }
@@ -4214,7 +4986,7 @@ apps: {
         }
         end: {
          line: 120
-         col: 17
+         col: 23
         }
        }
        source_contexts: {
@@ -4225,7 +4997,7 @@ apps: {
         }
         end: {
          line: 120
-         col: 17
+         col: 23
         }
        }
       }
@@ -4242,7 +5014,7 @@ apps: {
         }
         end: {
          line: 121
-         col: 17
+         col: 20
         }
        }
        source_contexts: {
@@ -4253,7 +5025,7 @@ apps: {
         }
         end: {
          line: 121
-         col: 17
+         col: 20
         }
        }
       }
@@ -4287,7 +5059,7 @@ apps: {
         }
         end: {
          line: 100
-         col: 25
+         col: 30
         }
        }
        source_contexts: {
@@ -4298,7 +5070,7 @@ apps: {
         }
         end: {
          line: 100
-         col: 25
+         col: 30
         }
        }
       }
@@ -4319,7 +5091,7 @@ apps: {
         }
         end: {
          line: 107
-         col: 4
+         col: 5
         }
        }
        source_contexts: {
@@ -4330,7 +5102,7 @@ apps: {
         }
         end: {
          line: 107
-         col: 4
+         col: 5
         }
        }
       }
@@ -4347,7 +5119,7 @@ apps: {
         }
         end: {
          line: 95
-         col: 27
+         col: 33
         }
        }
        source_contexts: {
@@ -4358,7 +5130,7 @@ apps: {
         }
         end: {
          line: 95
-         col: 27
+         col: 33
         }
        }
       }
@@ -4376,7 +5148,7 @@ apps: {
         }
         end: {
          line: 97
-         col: 26
+         col: 27
         }
        }
        source_contexts: {
@@ -4387,7 +5159,7 @@ apps: {
         }
         end: {
          line: 97
-         col: 26
+         col: 27
         }
        }
       }
@@ -4417,7 +5189,7 @@ apps: {
         }
         end: {
          line: 96
-         col: 34
+         col: 38
         }
        }
        source_contexts: {
@@ -4428,7 +5200,7 @@ apps: {
         }
         end: {
          line: 96
-         col: 34
+         col: 38
         }
        }
       }
@@ -4446,7 +5218,7 @@ apps: {
          }
          end: {
           line: 99
-          col: 32
+          col: 38
          }
         }
         source_contexts: {
@@ -4457,7 +5229,7 @@ apps: {
          }
          end: {
           line: 99
-          col: 32
+          col: 38
          }
         }
        }
@@ -4469,7 +5241,7 @@ apps: {
         }
         end: {
          line: 99
-         col: 32
+         col: 38
         }
        }
        source_contexts: {
@@ -4480,7 +5252,7 @@ apps: {
         }
         end: {
          line: 99
-         col: 32
+         col: 38
         }
        }
       }
@@ -4498,7 +5270,7 @@ apps: {
          }
          end: {
           line: 98
-          col: 22
+          col: 28
          }
         }
         source_contexts: {
@@ -4509,7 +5281,7 @@ apps: {
          }
          end: {
           line: 98
-          col: 22
+          col: 28
          }
         }
        }
@@ -4521,7 +5293,7 @@ apps: {
         }
         end: {
          line: 98
-         col: 22
+         col: 28
         }
        }
        source_contexts: {
@@ -4532,7 +5304,7 @@ apps: {
         }
         end: {
          line: 98
-         col: 22
+         col: 28
         }
        }
       }
@@ -4545,6 +5317,28 @@ apps: {
         key: "annotation"
         value: {
          s: "this is an annotation"
+         source_context: {
+          file: "all.sysl"
+          start: {
+           line: 102
+           col: 26
+          }
+          end: {
+           line: 102
+           col: 49
+          }
+         }
+         source_contexts: {
+          file: "all.sysl"
+          start: {
+           line: 102
+           col: 26
+          }
+          end: {
+           line: 102
+           col: 49
+          }
+         }
         }
        }
        source_context: {
@@ -4555,7 +5349,7 @@ apps: {
         }
         end: {
          line: 103
-         col: 8
+         col: 9
         }
        }
        source_contexts: {
@@ -4566,7 +5360,7 @@ apps: {
         }
         end: {
          line: 103
-         col: 8
+         col: 9
         }
        }
       }
@@ -4576,6 +5370,28 @@ apps: {
      key: "annotation"
      value: {
       s: "annotation"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 92
+        col: 27
+       }
+       end: {
+        line: 92
+        col: 39
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 92
+        col: 27
+       }
+       end: {
+        line: 92
+        col: 39
+       }
+      }
      }
     }
     source_context: {
@@ -4586,7 +5402,7 @@ apps: {
      }
      end: {
       line: 105
-      col: 17
+      col: 20
      }
     }
     source_contexts: {
@@ -4597,7 +5413,7 @@ apps: {
      }
      end: {
       line: 105
-      col: 17
+      col: 20
      }
     }
    }
@@ -4618,7 +5434,7 @@ apps: {
         }
         end: {
          line: 104
-         col: 17
+         col: 23
         }
        }
        source_contexts: {
@@ -4629,7 +5445,7 @@ apps: {
         }
         end: {
          line: 104
-         col: 17
+         col: 23
         }
        }
       }
@@ -4646,7 +5462,7 @@ apps: {
         }
         end: {
          line: 105
-         col: 17
+         col: 20
         }
        }
        source_contexts: {
@@ -4657,7 +5473,7 @@ apps: {
         }
         end: {
          line: 105
-         col: 17
+         col: 20
         }
        }
       }
@@ -4679,7 +5495,7 @@ apps: {
        }
        end: {
         line: 132
-        col: 8
+        col: 11
        }
       }
       source_contexts: {
@@ -4690,7 +5506,7 @@ apps: {
        }
        end: {
         line: 132
-        col: 8
+        col: 11
        }
       }
      }
@@ -4704,7 +5520,7 @@ apps: {
        }
        end: {
         line: 133
-        col: 8
+        col: 14
        }
       }
       source_contexts: {
@@ -4715,7 +5531,7 @@ apps: {
        }
        end: {
         line: 133
-        col: 8
+        col: 14
        }
       }
      }
@@ -4724,6 +5540,28 @@ apps: {
      key: "annotation"
      value: {
       s: "annotation"
+      source_context: {
+       file: "all.sysl"
+       start: {
+        line: 128
+        col: 29
+       }
+       end: {
+        line: 128
+        col: 41
+       }
+      }
+      source_contexts: {
+       file: "all.sysl"
+       start: {
+        line: 128
+        col: 29
+       }
+       end: {
+        line: 128
+        col: 41
+       }
+      }
      }
     }
     source_context: {
@@ -4734,7 +5572,7 @@ apps: {
      }
      end: {
       line: 135
-      col: 4
+      col: 5
      }
     }
     source_contexts: {
@@ -4745,7 +5583,7 @@ apps: {
      }
      end: {
       line: 135
-      col: 4
+      col: 5
      }
     }
    }
@@ -4757,7 +5595,7 @@ apps: {
    }
    end: {
     line: 150
-    col: 10
+    col: 11
    }
   }
   source_contexts: {
@@ -4767,7 +5605,7 @@ apps: {
    }
    end: {
     line: 150
-    col: 10
+    col: 11
    }
   }
  }

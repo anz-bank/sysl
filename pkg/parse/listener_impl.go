@@ -46,7 +46,7 @@ type TreeShapeListener struct {
 	fieldname             []string
 	urlPrefixes           PathStack
 	app_name              PathStack
-	annotation            string
+	annotation_name       string
 	typemap               map[string]*sysl.Type
 	prevLineEmpty         bool
 	pendingDocString      bool
@@ -95,7 +95,7 @@ func (s *TreeShapeListener) currentApp() *sysl.Application {
 	return s.app
 }
 
-func (s *TreeShapeListener) getSrcCtx(ctx *antlr.BaseParserRuleContext) *sysl.SourceContext {
+func (s *TreeShapeListener) getSrcCtx(ctx antlr.ParserRuleContext) *sysl.SourceContext {
 	return s.getSrcCtxFor(ctx.GetStart(), ctx.GetStop())
 }
 
@@ -302,7 +302,11 @@ func fromQString(str string) string {
 
 // EnterAnnotation_value is called when production annotation_value is entered.
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
-	attr := &sysl.Attribute{}
+	sc := s.getSrcCtx(ctx.BaseParserRuleContext)
+	attr := &sysl.Attribute{
+		SourceContext:  sc,
+		SourceContexts: []*sysl.SourceContext{sc},
+	}
 	switch {
 	case ctx.Multi_line_docstring() != nil:
 		attr.Attribute = &sysl.Attribute_S{}
@@ -312,25 +316,28 @@ func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueCo
 		}
 	case ctx.Array_of_strings() != nil:
 		attr.Attribute = &sysl.Attribute_A{
-			A: makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext)).GetA(),
+			A: s.makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext)).GetA(),
 		}
 	case ctx.Array_of_arrays() != nil:
 		attr.Attribute = &sysl.Attribute_A{
-			A: makeArrayOfArraysAttribute(ctx.Array_of_arrays().(*parser.Array_of_arraysContext)).GetA(),
+			A: s.makeArrayOfArraysAttribute(ctx.Array_of_arrays().(*parser.Array_of_arraysContext)).GetA(),
 		}
 	default:
 		panic("unexpected annotation value")
 	}
-	addAttrWithPrecendence(s.peekAttrs(), s.annotation, attr)
+	addAttrWithPrecedence(s.peekAttrs(), s.annotation_name, attr)
 }
 
 // ExitAnnotation_value is called when production annotation_value is exited.
 func (s *TreeShapeListener) ExitAnnotation_value(ctx *parser.Annotation_valueContext) {
+	sc := s.getSrcCtx(ctx.BaseParserRuleContext)
 	if ctx.Multi_line_docstring() != nil {
-		addAttrWithPrecendence(s.peekAttrs(), s.annotation, &sysl.Attribute{
+		addAttrWithPrecedence(s.peekAttrs(), s.annotation_name, &sysl.Attribute{
 			Attribute: &sysl.Attribute_S{
 				S: strings.TrimLeft(s.currentMultiLineAnno, " "),
 			},
+			SourceContext:  sc,
+			SourceContexts: []*sysl.SourceContext{sc},
 		})
 		s.currentMultiLineAnno = ""
 	}
@@ -346,12 +353,12 @@ func (s *TreeShapeListener) EnterAnnotation(ctx *parser.AnnotationContext) {
 	if v, exists := attrs[attr_name]; !exists || v.Attribute == nil {
 		attrs[attr_name] = &sysl.Attribute{}
 	}
-	s.annotation = attr_name
+	s.annotation_name = attr_name
 }
 
 // ExitAnnotation is called when production annotation is exited.
 func (s *TreeShapeListener) ExitAnnotation(*parser.AnnotationContext) {
-	s.annotation = ""
+	s.annotation_name = ""
 }
 
 // EnterField_type is called when production field_type is entered.
@@ -360,7 +367,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		type1.Attrs = mergeAttrsWithPrecendence(type1.Attrs, makeAttributeArray(attribs))
+		type1.Attrs = mergeAttrsWithPrecendence(type1.Attrs, s.makeAttributeArray(attribs))
 	}
 
 	if ctx.QN() != nil {
@@ -498,42 +505,53 @@ func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*
 	return c
 }
 
-func makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) *sysl.Attribute {
+func (s *TreeShapeListener) makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) *sysl.Attribute {
 	arr := make([]*sysl.Attribute, len(array_strings.AllQuoted_string()))
 	for i, ars := range array_strings.AllQuoted_string() {
 		str := ars.(*parser.Quoted_stringContext)
+		sc := s.getSrcCtx(str.BaseParserRuleContext)
 
 		arr[i] = &sysl.Attribute{
 			Attribute: &sysl.Attribute_S{
 				S: fromQString(str.QSTRING().GetText()),
 			},
+			SourceContext:  sc,
+			SourceContexts: []*sysl.SourceContext{sc},
 		}
 	}
+
+	sc := s.getSrcCtx(array_strings.BaseParserRuleContext)
 	return &sysl.Attribute{
 		Attribute: &sysl.Attribute_A{
 			A: &sysl.Attribute_Array{
 				Elt: arr,
 			},
 		},
+		SourceContext:  sc,
+		SourceContexts: []*sysl.SourceContext{sc},
 	}
 }
 
-func makeArrayOfArraysAttribute(array_arrays *parser.Array_of_arraysContext) *sysl.Attribute {
+func (s *TreeShapeListener) makeArrayOfArraysAttribute(array_arrays *parser.Array_of_arraysContext) *sysl.Attribute {
 	arr := make([]*sysl.Attribute, len(array_arrays.AllArray_of_strings()))
 	for i, arrCtx := range array_arrays.AllArray_of_strings() {
 		aosCtx := arrCtx.(*parser.Array_of_stringsContext)
-		arr[i] = makeArrayOfStringsAttribute(aosCtx)
+		arr[i] = s.makeArrayOfStringsAttribute(aosCtx)
 	}
+
+	sc := s.getSrcCtx(array_arrays.BaseParserRuleContext)
 	return &sysl.Attribute{
 		Attribute: &sysl.Attribute_A{
 			A: &sysl.Attribute_Array{
 				Elt: arr,
 			},
 		},
+		SourceContext:  sc,
+		SourceContexts: []*sysl.SourceContext{sc},
 	}
 }
 
-func addAttrWithPrecendence(
+func addAttrWithPrecedence(
 	attrs map[string]*sysl.Attribute,
 	key string, attr *sysl.Attribute,
 ) map[string]*sysl.Attribute {
@@ -551,10 +569,12 @@ func addAttrWithPrecendence(
 		switch x := v.Attribute.(type) {
 		case *sysl.Attribute_S:
 			if x.S != "" {
+				v.SourceContexts = append(v.SourceContexts, attr.SourceContexts...)
 				return attrs
 			}
 		case *sysl.Attribute_A:
 			if len(x.A.GetElt()) > 0 {
+				v.SourceContexts = append(v.SourceContexts, attr.SourceContexts...)
 				return attrs
 			}
 		}
@@ -568,12 +588,12 @@ func mergeAttrsWithPrecendence(currentAttrs, newAttrs map[string]*sysl.Attribute
 		currentAttrs = make(map[string]*sysl.Attribute)
 	}
 	for k, v := range newAttrs {
-		currentAttrs = addAttrWithPrecendence(currentAttrs, k, v)
+		currentAttrs = addAttrWithPrecedence(currentAttrs, k, v)
 	}
 	return currentAttrs
 }
 
-func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]*sysl.Attribute {
+func (s *TreeShapeListener) makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]*sysl.Attribute {
 	patterns := []*sysl.Attribute{}
 	attributes := map[string]*sysl.Attribute{}
 
@@ -583,22 +603,26 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 			switch {
 			case nvp.Quoted_string() != nil:
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
+				sc := s.getSrcCtx(qs.BaseParserRuleContext)
 				attributes[nvp.Name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
 						S: fromQString(qs.QSTRING().GetText()),
 					},
+					SourceContext:  sc,
+					SourceContexts: []*sysl.SourceContext{sc},
 				}
 			case nvp.Array_of_strings() != nil:
 				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
-				attributes[nvp.Name().GetText()] = makeArrayOfStringsAttribute(array_strings)
+				attributes[nvp.Name().GetText()] = s.makeArrayOfStringsAttribute(array_strings)
 			case nvp.Array_of_arrays() != nil:
 				arr := nvp.Array_of_arrays().(*parser.Array_of_arraysContext)
+				sc := s.getSrcCtx(arr.BaseParserRuleContext)
 				attrArray := sysl.Attribute_Array{
 					Elt: []*sysl.Attribute{},
 				}
 				for _, astrings := range arr.AllArray_of_strings() {
 					array_strings := astrings.(*parser.Array_of_stringsContext)
-					elt := makeArrayOfStringsAttribute(array_strings)
+					elt := s.makeArrayOfStringsAttribute(array_strings)
 					attrArray.Elt = append(attrArray.Elt, elt)
 				}
 
@@ -606,13 +630,18 @@ func makeAttributeArray(attribs *parser.Attribs_or_modifiersContext) map[string]
 					Attribute: &sysl.Attribute_A{
 						A: &attrArray,
 					},
+					SourceContext:  sc,
+					SourceContexts: []*sysl.SourceContext{sc},
 				}
 			}
 		} else if mod, ok := entry.Modifier().(*parser.ModifierContext); ok {
+			sc := s.getSrcCtx(mod.BaseParserRuleContext)
 			patterns = append(patterns, &sysl.Attribute{
 				Attribute: &sysl.Attribute_S{
 					S: mod.GetText()[1:],
 				},
+				SourceContext:  sc,
+				SourceContexts: []*sysl.SourceContext{sc},
 			})
 		}
 	}
@@ -723,7 +752,7 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
 	type1 := s.currentApp().Types[s.currentTypePath.Get()]
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		if attrs := makeAttributeArray(attribs); type1.Attrs == nil {
+		if attrs := s.makeAttributeArray(attribs); type1.Attrs == nil {
 			type1.Attrs = attrs
 		} else {
 			for k, v := range attrs {
@@ -875,7 +904,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 
 	type1 := types[s.currentTypePath.Get()]
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		type1.Attrs = makeAttributeArray(attribs)
+		type1.Attrs = s.makeAttributeArray(attribs)
 	}
 	if ctx.Annotation(0) != nil {
 		if type1.Attrs == nil {
@@ -942,7 +971,7 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 	}
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		attrs := makeAttributeArray(attribs)
+		attrs := s.makeAttributeArray(attribs)
 		if s.currentApp().Attrs == nil {
 			s.currentApp().Attrs = attrs
 		} else {
@@ -1512,7 +1541,7 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 func (s *TreeShapeListener) ExitStatements(ctx *parser.StatementsContext) {
 	if ctx.Attribs_or_modifiers() != nil {
 		stmt := s.lastStatement()
-		stmt.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		stmt.Attrs = s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 }
 
@@ -1692,7 +1721,7 @@ func (s *TreeShapeListener) EnterMethod_def(ctx *parser.Method_defContext) {
 	}
 
 	if ctx.Attribs_or_modifiers() != nil {
-		mergeAttrs(makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext)), attrs)
+		mergeAttrs(s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext)), attrs)
 	}
 
 	if restEndpoint.Attrs == nil {
@@ -1782,7 +1811,7 @@ func (s *TreeShapeListener) EnterSimple_endpoint(ctx *parser.Simple_endpointCont
 	}
 
 	if ctx.Attribs_or_modifiers() != nil {
-		attrs := makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		attrs := s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		if ep.Attrs == nil {
 			ep.Attrs = attrs
 		} else {
@@ -1827,7 +1856,7 @@ func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext)
 	s.rest_urlparams_len = append(s.rest_urlparams_len, len(s.rest_urlparams))
 
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		s.rest_attrs = append(s.rest_attrs, makeAttributeArray(attribs))
+		s.rest_attrs = append(s.rest_attrs, s.makeAttributeArray(attribs))
 	} else {
 		s.rest_attrs = append(s.rest_attrs, nil)
 	}
@@ -1922,7 +1951,7 @@ func (s *TreeShapeListener) EnterCollector_action_stmt(ctx *parser.Collector_act
 func (s *TreeShapeListener) ExitCollector_stmts(ctx *parser.Collector_stmtsContext) {
 	if ctx.Attribs_or_modifiers() != nil {
 		stmt := s.lastStatement()
-		stmt.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		stmt.Attrs = s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 }
 
@@ -1977,7 +2006,7 @@ func (s *TreeShapeListener) EnterEvent(ctx *parser.EventContext) {
 			s.currentApp().Endpoints[s.endpointName] = ep
 		}
 		if ctx.Attribs_or_modifiers() != nil {
-			ep.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+			ep.Attrs = s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 		if ctx.Statements(0) != nil && ep.Stmt == nil {
 			ep.Stmt = []*sysl.Statement{}
@@ -2017,7 +2046,7 @@ func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 			SourceContexts: []*sysl.SourceContext{s.getSrcCtx(ctx.BaseParserRuleContext)},
 		}
 		if ctx.Attribs_or_modifiers() != nil {
-			typeEndpoint.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+			typeEndpoint.Attrs = s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 		}
 		if ctx.Statements(0) != nil {
 			typeEndpoint.Stmt = []*sysl.Statement{}
@@ -3174,7 +3203,7 @@ func (s *TreeShapeListener) EnterView(ctx *parser.ViewContext) {
 	}
 	if ctx.Attribs_or_modifiers() != nil {
 		v := s.currentApp().Views[s.viewName]
-		v.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		v.Attrs = s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 
 	s.fieldname = []string{}
@@ -3193,18 +3222,14 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 	if ctx.Abstract_view() == nil {
 		view.Expr = s.popExpr()
 	} else {
-		attributes := map[string]*sysl.Attribute{}
-		patterns := []*sysl.Attribute{}
-		patterns = append(patterns, &sysl.Attribute{
-			Attribute: &sysl.Attribute_S{
-				S: "abstract",
-			},
-		})
-
-		attributes[patternsKey] = &sysl.Attribute{
-			Attribute: &sysl.Attribute_A{
-				A: &sysl.Attribute_Array{
-					Elt: patterns,
+		attributes := map[string]*sysl.Attribute{
+			patternsKey: {
+				Attribute: &sysl.Attribute_A{
+					A: &sysl.Attribute_Array{
+						Elt: []*sysl.Attribute{
+							{Attribute: &sysl.Attribute_S{S: "abstract"}},
+						},
+					},
 				},
 			},
 		}
@@ -3254,7 +3279,7 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 		SourceContexts: []*sysl.SourceContext{s.getSrcCtx(ctx.BaseParserRuleContext)},
 	}
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
-		enumType.Attrs = makeAttributeArray(attribs)
+		enumType.Attrs = s.makeAttributeArray(attribs)
 	}
 	s.currentApp().Types[s.currentTypePath.Get()] = enumType
 }
@@ -3271,7 +3296,7 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 	s.currentApp().Types[s.currentTypePath.Get()] = type1
 
 	if ctx.Attribs_or_modifiers() != nil {
-		type1.Attrs = makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
+		type1.Attrs = s.makeAttributeArray(ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext))
 	}
 	if ctx.Annotation(0) != nil {
 		if type1.Attrs == nil {

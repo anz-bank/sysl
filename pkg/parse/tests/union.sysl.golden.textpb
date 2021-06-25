@@ -1,483 +1,485 @@
-apps:  {
- key:  "Test"
- value:  {
-  name:  {
-   part:  "Test"
+apps: {
+ key: "Test"
+ value: {
+  name: {
+   part: "Test"
   }
-  types:  {
-   key:  "A"
-   value:  {
-    source_context:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  1
-      col:  4
+  types: {
+   key: "A"
+   value: {
+    source_context: {
+     file: "tests/union.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  1
-      col:  13
+     end: {
+      line: 1
+      col: 16
      }
     }
-    source_contexts:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  1
-      col:  4
+    source_contexts: {
+     file: "tests/union.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  1
-      col:  13
+     end: {
+      line: 1
+      col: 16
      }
     }
    }
   }
-  types:  {
-   key:  "B"
-   value:  {
-    source_context:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  2
-      col:  4
+  types: {
+   key: "B"
+   value: {
+    source_context: {
+     file: "tests/union.sysl"
+     start: {
+      line: 2
+      col: 4
      }
-     end:  {
-      line:  2
-      col:  13
-     }
-    }
-    source_contexts:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  2
-      col:  4
-     }
-     end:  {
-      line:  2
-      col:  13
+     end: {
+      line: 2
+      col: 16
      }
     }
-   }
-  }
-  types:  {
-   key:  "C"
-   value:  {
-    source_context:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  3
-      col:  4
+    source_contexts: {
+     file: "tests/union.sysl"
+     start: {
+      line: 2
+      col: 4
      }
-     end:  {
-      line:  3
-      col:  13
-     }
-    }
-    source_contexts:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  3
-      col:  4
-     }
-     end:  {
-      line:  3
-      col:  13
+     end: {
+      line: 2
+      col: 16
      }
     }
    }
   }
-  types:  {
-   key:  "Mixed"
-   value:  {
-    one_of:  {
-     type:  {
-      primitive:  INT
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  11
-        col:  8
-       }
-       end:  {
-        line:  11
-        col:  8
-       }
-      }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  11
-        col:  8
-       }
-       end:  {
-        line:  11
-        col:  8
-       }
-      }
+  types: {
+   key: "C"
+   value: {
+    source_context: {
+     file: "tests/union.sysl"
+     start: {
+      line: 3
+      col: 4
      }
-     type:  {
-      primitive:  STRING
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  12
-        col:  8
-       }
-       end:  {
-        line:  12
-        col:  8
-       }
-      }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  12
-        col:  8
-       }
-       end:  {
-        line:  12
-        col:  8
-       }
-      }
-     }
-     type:  {
-      sequence:  {
-       primitive:  STRING
-       source_context:  {
-        file:  "tests/union.sysl"
-        start:  {
-         line:  13
-         col:  8
-        }
-        end:  {
-         line:  13
-         col:  20
-        }
-       }
-       source_contexts:  {
-        file:  "tests/union.sysl"
-        start:  {
-         line:  13
-         col:  8
-        }
-        end:  {
-         line:  13
-         col:  20
-        }
-       }
-      }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  13
-        col:  8
-       }
-       end:  {
-        line:  13
-        col:  20
-       }
-      }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  13
-        col:  8
-       }
-       end:  {
-        line:  13
-        col:  20
-       }
-      }
-     }
-     type:  {
-      set:  {
-       primitive:  BYTES
-       source_context:  {
-        file:  "tests/union.sysl"
-        start:  {
-         line:  14
-         col:  8
-        }
-        end:  {
-         line:  14
-         col:  15
-        }
-       }
-       source_contexts:  {
-        file:  "tests/union.sysl"
-        start:  {
-         line:  14
-         col:  8
-        }
-        end:  {
-         line:  14
-         col:  15
-        }
-       }
-      }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  14
-        col:  8
-       }
-       end:  {
-        line:  14
-        col:  15
-       }
-      }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  14
-        col:  8
-       }
-       end:  {
-        line:  14
-        col:  15
-       }
-      }
-     }
-     type:  {
-      type_ref:  {
-       context:  {
-        appname:  {
-         part:  "Test"
-        }
-        path:  "Mixed"
-       }
-       ref:  {
-        path:  "A"
-       }
-      }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  15
-        col:  8
-       }
-       end:  {
-        line:  15
-        col:  8
-       }
-      }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  15
-        col:  8
-       }
-       end:  {
-        line:  15
-        col:  8
-       }
-      }
-     }
-     type:  {
-      type_ref:  {
-       context:  {
-        appname:  {
-         part:  "Test"
-        }
-        path:  "Mixed"
-       }
-       ref:  {
-        path:  "U"
-       }
-      }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  16
-        col:  8
-       }
-       end:  {
-        line:  16
-        col:  8
-       }
-      }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  16
-        col:  8
-       }
-       end:  {
-        line:  16
-        col:  8
-       }
-      }
+     end: {
+      line: 3
+      col: 16
      }
     }
-    source_context:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  10
-      col:  4
+    source_contexts: {
+     file: "tests/union.sysl"
+     start: {
+      line: 3
+      col: 4
      }
-     end:  {
-      line:  17
-     }
-    }
-    source_contexts:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  10
-      col:  4
-     }
-     end:  {
-      line:  17
+     end: {
+      line: 3
+      col: 16
      }
     }
    }
   }
-  types:  {
-   key:  "U"
-   value:  {
-    one_of:  {
-     type:  {
-      type_ref:  {
-       context:  {
-        appname:  {
-         part:  "Test"
-        }
-        path:  "U"
+  types: {
+   key: "Mixed"
+   value: {
+    one_of: {
+     type: {
+      primitive: INT
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 11
+        col: 8
        }
-       ref:  {
-        path:  "A"
-       }
-      }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  6
-        col:  8
-       }
-       end:  {
-        line:  6
-        col:  8
+       end: {
+        line: 11
+        col: 11
        }
       }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  6
-        col:  8
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 11
+        col: 8
        }
-       end:  {
-        line:  6
-        col:  8
+       end: {
+        line: 11
+        col: 11
        }
       }
      }
-     type:  {
-      type_ref:  {
-       context:  {
-        appname:  {
-         part:  "Test"
-        }
-        path:  "U"
+     type: {
+      primitive: STRING
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 12
+        col: 8
        }
-       ref:  {
-        path:  "B"
-       }
-      }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  7
-        col:  8
-       }
-       end:  {
-        line:  7
-        col:  8
+       end: {
+        line: 12
+        col: 14
        }
       }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  7
-        col:  8
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 12
+        col: 8
        }
-       end:  {
-        line:  7
-        col:  8
+       end: {
+        line: 12
+        col: 14
        }
       }
      }
-     type:  {
-      type_ref:  {
-       context:  {
-        appname:  {
-         part:  "Test"
+     type: {
+      sequence: {
+       primitive: STRING
+       source_context: {
+        file: "tests/union.sysl"
+        start: {
+         line: 13
+         col: 8
         }
-        path:  "U"
+        end: {
+         line: 13
+         col: 26
+        }
        }
-       ref:  {
-        path:  "C"
+       source_contexts: {
+        file: "tests/union.sysl"
+        start: {
+         line: 13
+         col: 8
+        }
+        end: {
+         line: 13
+         col: 26
+        }
        }
       }
-      source_context:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  8
-        col:  8
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 13
+        col: 8
        }
-       end:  {
-        line:  8
-        col:  8
+       end: {
+        line: 13
+        col: 26
        }
       }
-      source_contexts:  {
-       file:  "tests/union.sysl"
-       start:  {
-        line:  8
-        col:  8
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 13
+        col: 8
        }
-       end:  {
-        line:  8
-        col:  8
+       end: {
+        line: 13
+        col: 26
+       }
+      }
+     }
+     type: {
+      set: {
+       primitive: BYTES
+       source_context: {
+        file: "tests/union.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 20
+        }
+       }
+       source_contexts: {
+        file: "tests/union.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 20
+        }
+       }
+      }
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 14
+        col: 8
+       }
+       end: {
+        line: 14
+        col: 20
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 14
+        col: 8
+       }
+       end: {
+        line: 14
+        col: 20
+       }
+      }
+     }
+     type: {
+      type_ref: {
+       context: {
+        appname: {
+         part: "Test"
+        }
+        path: "Mixed"
+       }
+       ref: {
+        path: "A"
+       }
+      }
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 15
+        col: 8
+       }
+       end: {
+        line: 15
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 15
+        col: 8
+       }
+       end: {
+        line: 15
+        col: 9
+       }
+      }
+     }
+     type: {
+      type_ref: {
+       context: {
+        appname: {
+         part: "Test"
+        }
+        path: "Mixed"
+       }
+       ref: {
+        path: "U"
+       }
+      }
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 16
+        col: 8
+       }
+       end: {
+        line: 16
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 16
+        col: 8
+       }
+       end: {
+        line: 16
+        col: 9
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  5
-      col:  4
+    source_context: {
+     file: "tests/union.sysl"
+     start: {
+      line: 10
+      col: 4
      }
-     end:  {
-      line:  10
-      col:  4
+     end: {
+      line: 17
+      col: 1
      }
     }
-    source_contexts:  {
-     file:  "tests/union.sysl"
-     start:  {
-      line:  5
-      col:  4
+    source_contexts: {
+     file: "tests/union.sysl"
+     start: {
+      line: 10
+      col: 4
      }
-     end:  {
-      line:  10
-      col:  4
+     end: {
+      line: 17
+      col: 1
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/union.sysl"
-   start:  {}
-   end:  {
-    line:  16
-    col:  8
+  types: {
+   key: "U"
+   value: {
+    one_of: {
+     type: {
+      type_ref: {
+       context: {
+        appname: {
+         part: "Test"
+        }
+        path: "U"
+       }
+       ref: {
+        path: "A"
+       }
+      }
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 6
+        col: 8
+       }
+       end: {
+        line: 6
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 6
+        col: 8
+       }
+       end: {
+        line: 6
+        col: 9
+       }
+      }
+     }
+     type: {
+      type_ref: {
+       context: {
+        appname: {
+         part: "Test"
+        }
+        path: "U"
+       }
+       ref: {
+        path: "B"
+       }
+      }
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 7
+        col: 8
+       }
+       end: {
+        line: 7
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 7
+        col: 8
+       }
+       end: {
+        line: 7
+        col: 9
+       }
+      }
+     }
+     type: {
+      type_ref: {
+       context: {
+        appname: {
+         part: "Test"
+        }
+        path: "U"
+       }
+       ref: {
+        path: "C"
+       }
+      }
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 8
+        col: 8
+       }
+       end: {
+        line: 8
+        col: 9
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 8
+        col: 8
+       }
+       end: {
+        line: 8
+        col: 9
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/union.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/union.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 5
+     }
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/union.sysl"
-   start:  {}
-   end:  {
-    line:  16
-    col:  8
+  source_context: {
+   file: "tests/union.sysl"
+   start: {}
+   end: {
+    line: 16
+    col: 9
+   }
+  }
+  source_contexts: {
+   file: "tests/union.sysl"
+   start: {}
+   end: {
+    line: 16
+    col: 9
    }
   }
  }

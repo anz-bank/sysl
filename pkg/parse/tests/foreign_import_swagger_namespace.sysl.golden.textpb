@@ -1,438 +1,578 @@
-apps:  {
- key:  "com :: foo :: bar :: app"
- value:  {
-  name:  {
-   part:  "com"
-   part:  "foo"
-   part:  "bar"
-   part:  "app"
+apps: {
+ key: "com :: foo :: bar :: app"
+ value: {
+  name: {
+   part: "com"
+   part: "foo"
+   part: "bar"
+   part: "app"
   }
-  long_name:  "Simple"
-  attrs:  {
-   key:  "description"
-   value:  {
-    s:  "No description.\n"
+  long_name: "Simple"
+  attrs: {
+   key: "description"
+   value: {
+    s: "No description.\n"
+    source_context: {
+     file: "tests/foreign_import_swagger.yaml"
+     start: {
+      line: 7
+      col: 18
+     }
+     end: {
+      line: 10
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/foreign_import_swagger.yaml"
+     start: {
+      line: 7
+      col: 18
+     }
+     end: {
+      line: 10
+      col: 5
+     }
+    }
    }
   }
-  endpoints:  {
-   key:  "GET /test"
-   value:  {
-    name:  "GET /test"
-    docstring:  "No description."
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
+  endpoints: {
+   key: "GET /test"
+   value: {
+    name: "GET /test"
+    docstring: "No description."
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
        }
       }
      }
     }
-    stmt:  {
-     ret:  {
-      payload:  "ok <: SimpleObj [mediatype=\"application/json\"]"
+    stmt: {
+     ret: {
+      payload: "ok <: SimpleObj [mediatype=\"application/json\"]"
      }
-     source_context:  {
-      file:  "tests/foreign_import_swagger.yaml"
-      start:  {
-       line:  13
-       col:  12
+     source_context: {
+      file: "tests/foreign_import_swagger.yaml"
+      start: {
+       line: 13
+       col: 12
       }
-      end:  {
-       line:  13
-       col:  18
+      end: {
+       line: 13
+       col: 65
       }
      }
-     source_contexts:  {
-      file:  "tests/foreign_import_swagger.yaml"
-      start:  {
-       line:  13
-       col:  12
+     source_contexts: {
+      file: "tests/foreign_import_swagger.yaml"
+      start: {
+       line: 13
+       col: 12
       }
-      end:  {
-       line:  13
-       col:  18
+      end: {
+       line: 13
+       col: 65
       }
      }
     }
-    rest_params:  {
-     method:  GET
-     path:  "/test"
+    rest_params: {
+     method: GET
+     path: "/test"
     }
-    source_context:  {
-     file:  "tests/foreign_import_swagger.yaml"
-     start:  {
-      line:  11
-      col:  8
+    source_context: {
+     file: "tests/foreign_import_swagger.yaml"
+     start: {
+      line: 11
+      col: 8
      }
-     end:  {
-      line:  18
-      col:  4
+     end: {
+      line: 18
+      col: 5
      }
     }
-    source_contexts:  {
-     file:  "tests/foreign_import_swagger.yaml"
-     start:  {
-      line:  11
-      col:  8
+    source_contexts: {
+     file: "tests/foreign_import_swagger.yaml"
+     start: {
+      line: 11
+      col: 8
      }
-     end:  {
-      line:  18
-      col:  4
+     end: {
+      line: 18
+      col: 5
      }
     }
    }
   }
-  types:  {
-   key:  "SimpleObj"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "name"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "json_tag"
-        value:  {
-         s:  "name"
+  types: {
+   key: "SimpleObj"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "name"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "json_tag"
+        value: {
+         s: "name"
+         source_context: {
+          file: "tests/foreign_import_swagger.yaml"
+          start: {
+           line: 20
+           col: 24
+          }
+          end: {
+           line: 20
+           col: 30
+          }
+         }
+         source_contexts: {
+          file: "tests/foreign_import_swagger.yaml"
+          start: {
+           line: 20
+           col: 24
+          }
+          end: {
+           line: 20
+           col: 30
+          }
+         }
         }
        }
-       opt:  true
-       source_context:  {
-        file:  "tests/foreign_import_swagger.yaml"
-        start:  {
-         line:  19
-         col:  8
+       opt: true
+       source_context: {
+        file: "tests/foreign_import_swagger.yaml"
+        start: {
+         line: 19
+         col: 8
         }
-        end:  {
-         line:  21
+        end: {
+         line: 21
+         col: 1
         }
        }
-       source_contexts:  {
-        file:  "tests/foreign_import_swagger.yaml"
-        start:  {
-         line:  19
-         col:  8
+       source_contexts: {
+        file: "tests/foreign_import_swagger.yaml"
+        start: {
+         line: 19
+         col: 8
         }
-        end:  {
-         line:  21
+        end: {
+         line: 21
+         col: 1
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/foreign_import_swagger.yaml"
-     start:  {
-      line:  18
-      col:  4
+    source_context: {
+     file: "tests/foreign_import_swagger.yaml"
+     start: {
+      line: 18
+      col: 4
      }
-     end:  {
-      line:  21
+     end: {
+      line: 20
+      col: 30
      }
     }
-    source_contexts:  {
-     file:  "tests/foreign_import_swagger.yaml"
-     start:  {
-      line:  18
-      col:  4
+    source_contexts: {
+     file: "tests/foreign_import_swagger.yaml"
+     start: {
+      line: 18
+      col: 4
      }
-     end:  {
-      line:  21
+     end: {
+      line: 20
+      col: 30
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/foreign_import_swagger.yaml"
-   start:  {
-    line:  6
+  source_context: {
+   file: "tests/foreign_import_swagger.yaml"
+   start: {
+    line: 6
    }
-   end:  {
-    line:  21
+   end: {
+    line: 20
+    col: 30
    }
   }
-  source_contexts:  {
-   file:  "tests/foreign_import_swagger.yaml"
-   start:  {
-    line:  6
+  source_contexts: {
+   file: "tests/foreign_import_swagger.yaml"
+   start: {
+    line: 6
    }
-   end:  {
-    line:  21
+   end: {
+    line: 20
+    col: 30
    }
   }
  }
 }
-apps:  {
- key:  "testapp"
- value:  {
-  name:  {
-   part:  "testapp"
+apps: {
+ key: "testapp"
+ value: {
+  name: {
+   part: "testapp"
   }
-  long_name:  "Goat CRUD API"
-  attrs:  {
-   key:  "description"
-   value:  {
-    s:  "No description.\n"
-   }
-  }
-  attrs:  {
-   key:  "host"
-   value:  {
-    s:  "goat.example.com"
-   }
-  }
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "package_foo"
-   }
-  }
-  attrs:  {
-   key:  "version"
-   value:  {
-    s:  "1.2.3"
-   }
-  }
-  endpoints:  {
-   key:  "GET /first"
-   value:  {
-    name:  "GET /first"
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "rest"
-       }
-      }
+  long_name: "Goat CRUD API"
+  attrs: {
+   key: "description"
+   value: {
+    s: "No description.\n"
+    source_context: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 11
+      col: 18
+     }
+     end: {
+      line: 14
+      col: 5
      }
     }
-    stmt:  {
-     action:  {
-      action:  "..."
+    source_contexts: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 11
+      col: 18
      }
-     source_context:  {
-      file:  "tests/foreign_import_swagger_namespace.sysl"
-      start:  {
-       line:  19
-       col:  12
-      }
-      end:  {
-       line:  19
-       col:  15
-      }
-     }
-     source_contexts:  {
-      file:  "tests/foreign_import_swagger_namespace.sysl"
-      start:  {
-       line:  19
-       col:  12
-      }
-      end:  {
-       line:  19
-       col:  15
-      }
-     }
-    }
-    rest_params:  {
-     method:  GET
-     path:  "/first"
-     query_param:  {
-      name:  "depth"
-      type:  {
-       source_context:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  18
-         col:  13
-        }
-        end:  {
-         line:  18
-         col:  19
-        }
-       }
-       source_contexts:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  18
-         col:  13
-        }
-        end:  {
-         line:  18
-         col:  19
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "limit"
-      type:  {
-       primitive:  INT
-       opt:  true
-       source_context:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  18
-         col:  29
-        }
-        end:  {
-         line:  18
-         col:  38
-        }
-       }
-       source_contexts:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  18
-         col:  29
-        }
-        end:  {
-         line:  18
-         col:  38
-        }
-       }
-      }
-     }
-     query_param:  {
-      name:  "offset"
-      type:  {
-       primitive:  INT
-       opt:  true
-       source_context:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  18
-         col:  40
-        }
-        end:  {
-         line:  18
-         col:  50
-        }
-       }
-       source_contexts:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  18
-         col:  40
-        }
-        end:  {
-         line:  18
-         col:  50
-        }
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/foreign_import_swagger_namespace.sysl"
-     start:  {
-      line:  18
-      col:  8
-     }
-     end:  {
-      line:  21
-     }
-    }
-    source_contexts:  {
-     file:  "tests/foreign_import_swagger_namespace.sysl"
-     start:  {
-      line:  18
-      col:  8
-     }
-     end:  {
-      line:  21
+     end: {
+      line: 14
+      col: 5
      }
     }
    }
   }
-  types:  {
-   key:  "Something"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "import"
-      value:  {
-       type_ref:  {
-        context:  {
-         appname:  {
-          part:  "testapp"
+  attrs: {
+   key: "host"
+   value: {
+    s: "goat.example.com"
+    source_context: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 10
+      col: 12
+     }
+     end: {
+      line: 10
+      col: 30
+     }
+    }
+    source_contexts: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 10
+      col: 12
+     }
+     end: {
+      line: 10
+      col: 30
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "package"
+   value: {
+    s: "package_foo"
+    source_context: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 8
+      col: 33
+     }
+     end: {
+      line: 8
+      col: 46
+     }
+    }
+    source_contexts: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 8
+      col: 33
+     }
+     end: {
+      line: 8
+      col: 46
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "version"
+   value: {
+    s: "1.2.3"
+    source_context: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 9
+      col: 15
+     }
+     end: {
+      line: 9
+      col: 22
+     }
+    }
+    source_contexts: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 9
+      col: 15
+     }
+     end: {
+      line: 9
+      col: 22
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /first"
+   value: {
+    name: "GET /first"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/foreign_import_swagger_namespace.sysl"
+      start: {
+       line: 19
+       col: 12
+      }
+      end: {
+       line: 19
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/foreign_import_swagger_namespace.sysl"
+      start: {
+       line: 19
+       col: 12
+      }
+      end: {
+       line: 19
+       col: 15
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/first"
+     query_param: {
+      name: "depth"
+      type: {
+       source_context: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 18
+         col: 13
+        }
+        end: {
+         line: 18
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 18
+         col: 13
+        }
+        end: {
+         line: 18
+         col: 28
+        }
+       }
+      }
+     }
+     query_param: {
+      name: "limit"
+      type: {
+       primitive: INT
+       opt: true
+       source_context: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 18
+         col: 29
+        }
+        end: {
+         line: 18
+         col: 39
+        }
+       }
+       source_contexts: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 18
+         col: 29
+        }
+        end: {
+         line: 18
+         col: 39
+        }
+       }
+      }
+     }
+     query_param: {
+      name: "offset"
+      type: {
+       primitive: INT
+       opt: true
+       source_context: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 18
+         col: 40
+        }
+        end: {
+         line: 18
+         col: 51
+        }
+       }
+       source_contexts: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 18
+         col: 40
+        }
+        end: {
+         line: 18
+         col: 51
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 18
+      col: 8
+     }
+     end: {
+      line: 21
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 18
+      col: 8
+     }
+     end: {
+      line: 21
+      col: 1
+     }
+    }
+   }
+  }
+  types: {
+   key: "Something"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "import"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "testapp"
          }
-         path:  "Something"
+         path: "Something"
         }
-        ref:  {
-         path:  "FooBar"
-        }
-       }
-       opt:  true
-       source_context:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  15
-         col:  8
-        }
-        end:  {
-         line:  15
-         col:  24
+        ref: {
+         path: "FooBar"
         }
        }
-       source_contexts:  {
-        file:  "tests/foreign_import_swagger_namespace.sysl"
-        start:  {
-         line:  15
-         col:  8
+       opt: true
+       source_context: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 15
+         col: 8
         }
-        end:  {
-         line:  15
-         col:  24
+        end: {
+         line: 15
+         col: 25
+        }
+       }
+       source_contexts: {
+        file: "tests/foreign_import_swagger_namespace.sysl"
+        start: {
+         line: 15
+         col: 8
+        }
+        end: {
+         line: 15
+         col: 25
         }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/foreign_import_swagger_namespace.sysl"
-     start:  {
-      line:  14
-      col:  4
+    source_context: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 14
+      col: 4
      }
-     end:  {
-      line:  15
-      col:  24
+     end: {
+      line: 15
+      col: 25
      }
     }
-    source_contexts:  {
-     file:  "tests/foreign_import_swagger_namespace.sysl"
-     start:  {
-      line:  14
-      col:  4
+    source_contexts: {
+     file: "tests/foreign_import_swagger_namespace.sysl"
+     start: {
+      line: 14
+      col: 4
      }
-     end:  {
-      line:  15
-      col:  24
+     end: {
+      line: 15
+      col: 25
      }
     }
    }
   }
-  source_context:  {
-   file:  "tests/foreign_import_swagger_namespace.sysl"
-   start:  {
-    line:  8
+  source_context: {
+   file: "tests/foreign_import_swagger_namespace.sysl"
+   start: {
+    line: 8
    }
-   end:  {
-    line:  19
-    col:  15
+   end: {
+    line: 19
+    col: 15
    }
   }
-  source_contexts:  {
-   file:  "tests/foreign_import_swagger_namespace.sysl"
-   start:  {
-    line:  8
+  source_contexts: {
+   file: "tests/foreign_import_swagger_namespace.sysl"
+   start: {
+    line: 8
    }
-   end:  {
-    line:  19
-    col:  15
+   end: {
+    line: 19
+    col: 15
    }
   }
  }

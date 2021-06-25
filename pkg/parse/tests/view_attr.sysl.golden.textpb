@@ -1,148 +1,240 @@
-apps:  {
- key:  "App"
- value:  {
-  name:  {
-   part:  "App"
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
   }
-  types:  {
-   key:  "A"
-   value:  {
-    tuple:  {
-     attr_defs:  {
-      key:  "id"
-      value:  {
-       primitive:  STRING
-       attrs:  {
-        key:  "desc"
-        value:  {
-         s:  "field id"
+  types: {
+   key: "A"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "id"
+      value: {
+       primitive: STRING
+       attrs: {
+        key: "desc"
+        value: {
+         s: "field id"
+         source_context: {
+          file: "tests/view_attr.sysl"
+          start: {
+           line: 4
+           col: 20
+          }
+          end: {
+           line: 4
+           col: 30
+          }
+         }
+         source_contexts: {
+          file: "tests/view_attr.sysl"
+          start: {
+           line: 4
+           col: 20
+          }
+          end: {
+           line: 4
+           col: 30
+          }
+         }
         }
        }
-       source_context:  {
-        file:  "tests/view_attr.sysl"
-        start:  {
-         line:  3
-         col:  8
+       source_context: {
+        file: "tests/view_attr.sysl"
+        start: {
+         line: 3
+         col: 8
         }
-        end:  {
-         line:  6
-         col:  4
-        }
-       }
-       source_contexts:  {
-        file:  "tests/view_attr.sysl"
-        start:  {
-         line:  3
-         col:  8
-        }
-        end:  {
-         line:  6
-         col:  4
+        end: {
+         line: 6
+         col: 5
         }
        }
-      }
-     }
-    }
-    attrs:  {
-     key:  "desc"
-     value:  {
-      s:  "type A"
-     }
-    }
-    source_context:  {
-     file:  "tests/view_attr.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  6
-      col:  4
-     }
-    }
-    source_contexts:  {
-     file:  "tests/view_attr.sysl"
-     start:  {
-      line:  1
-      col:  4
-     }
-     end:  {
-      line:  6
-      col:  4
-     }
-    }
-   }
-  }
-  views:  {
-   key:  "getAccountUuid"
-   value:  {
-    param:  {
-     name:  "accountNumber"
-     type:  {
-      primitive:  STRING
-     }
-    }
-    ret_type:  {
-     primitive:  STRING
-    }
-    attrs:  {
-     key:  "description"
-     value:  {
-      s:  "Generate a universal unique identifier for the given account number."
-     }
-    }
-    attrs:  {
-     key:  "name"
-     value:  {
-      s:  "getAccountUuid"
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "abstract"
+       source_contexts: {
+        file: "tests/view_attr.sysl"
+        start: {
+         line: 3
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 5
+        }
        }
       }
      }
     }
-    source_context:  {
-     file:  "tests/view_attr.sysl"
-     start:  {
-      line:  6
-      col:  4
+    attrs: {
+     key: "desc"
+     value: {
+      s: "type A"
+      source_context: {
+       file: "tests/view_attr.sysl"
+       start: {
+        line: 2
+        col: 16
+       }
+       end: {
+        line: 2
+        col: 24
+       }
+      }
+      source_contexts: {
+       file: "tests/view_attr.sysl"
+       start: {
+        line: 2
+        col: 16
+       }
+       end: {
+        line: 2
+        col: 24
+       }
+      }
      }
-     end:  {
-      line:  9
-     }
-     text:  "!view getAccountUuid(accountNumber <: string) -> string [~abstract]:"
     }
-    source_contexts:  {
-     file:  "tests/view_attr.sysl"
-     start:  {
-      line:  6
-      col:  4
+    source_context: {
+     file: "tests/view_attr.sysl"
+     start: {
+      line: 1
+      col: 4
      }
-     end:  {
-      line:  9
+     end: {
+      line: 4
+      col: 30
      }
-     text:  "!view getAccountUuid(accountNumber <: string) -> string [~abstract]:"
+    }
+    source_contexts: {
+     file: "tests/view_attr.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 4
+      col: 30
+     }
     }
    }
   }
-  source_context:  {
-   file:  "tests/view_attr.sysl"
-   start:  {}
-   end:  {
-    line:  9
+  views: {
+   key: "getAccountUuid"
+   value: {
+    param: {
+     name: "accountNumber"
+     type: {
+      primitive: STRING
+     }
+    }
+    ret_type: {
+     primitive: STRING
+    }
+    attrs: {
+     key: "description"
+     value: {
+      s: "Generate a universal unique identifier for the given account number."
+      source_context: {
+       file: "tests/view_attr.sysl"
+       start: {
+        line: 8
+        col: 27
+       }
+       end: {
+        line: 8
+        col: 97
+       }
+      }
+      source_contexts: {
+       file: "tests/view_attr.sysl"
+       start: {
+        line: 8
+        col: 27
+       }
+       end: {
+        line: 8
+        col: 97
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "name"
+     value: {
+      s: "getAccountUuid"
+      source_context: {
+       file: "tests/view_attr.sysl"
+       start: {
+        line: 7
+        col: 18
+       }
+       end: {
+        line: 7
+        col: 34
+       }
+      }
+      source_contexts: {
+       file: "tests/view_attr.sysl"
+       start: {
+        line: 7
+        col: 18
+       }
+       end: {
+        line: 7
+        col: 34
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "abstract"
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/view_attr.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 9
+      col: 1
+     }
+     text: "!view getAccountUuid(accountNumber <: string) -> string [~abstract]:"
+    }
+    source_contexts: {
+     file: "tests/view_attr.sysl"
+     start: {
+      line: 6
+      col: 4
+     }
+     end: {
+      line: 9
+      col: 1
+     }
+     text: "!view getAccountUuid(accountNumber <: string) -> string [~abstract]:"
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/view_attr.sysl"
-   start:  {}
-   end:  {
-    line:  9
+  source_context: {
+   file: "tests/view_attr.sysl"
+   start: {}
+   end: {
+    line: 8
+    col: 97
+   }
+  }
+  source_contexts: {
+   file: "tests/view_attr.sysl"
+   start: {}
+   end: {
+    line: 8
+    col: 97
    }
   }
  }

@@ -1,370 +1,412 @@
-apps:  {
- key:  "TransformApp"
- value:  {
-  name:  {
-   part:  "TransformApp"
+apps: {
+ key: "TransformApp"
+ value: {
+  name: {
+   part: "TransformApp"
   }
-  long_name:  "The \"App\""
-  attrs:  {
-   key:  "package"
-   value:  {
-    s:  "io.sysl.demo.petshop.views"
-   }
-  }
-  views:  {
-   key:  "NoArgTransform"
-   value:  {
-    param:  {
-     name:  "number1"
-     type:  {
-      primitive:  INT
+  long_name: "The \"App\""
+  attrs: {
+   key: "package"
+   value: {
+    s: "io.sysl.demo.petshop.views"
+    source_context: {
+     file: "tests/strings_expr.sysl"
+     start: {
+      col: 36
+     }
+     end: {
+      col: 64
      }
     }
-    param:  {
-     name:  "foo"
-     type:  {
-      type_ref:  {
-       ref:  {
-        appname:  {
-         part:  "Some"
-        }
-        path:  "Type"
-       }
-      }
+    source_contexts: {
+     file: "tests/strings_expr.sysl"
+     start: {
+      col: 36
      }
-    }
-    ret_type:  {
-     type_ref:  {
-      ref:  {
-       appname:  {
-        part:  "Model"
-       }
-       path:  "Type"
-      }
+     end: {
+      col: 64
      }
-    }
-    expr:  {
-     transform:  {
-      arg:  {
-       name:  "."
-       source_context:  {
-        file:  "tests/strings_expr.sysl"
-        start:  {
-         line:  2
-         col:  4
-        }
-        end:  {
-         line:  12
-         col:  5
-        }
-       }
-       source_contexts:  {
-        file:  "tests/strings_expr.sysl"
-        start:  {
-         line:  2
-         col:  4
-        }
-        end:  {
-         line:  12
-         col:  5
-        }
-       }
-      }
-      scopevar:  "scopeVar"
-      stmt:  {
-       assign:  {
-        name:  "out"
-        expr:  {
-         literal:  {
-          s:  "abc"
-         }
-         type:  {
-          primitive:  STRING
-         }
-         source_context:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  3
-           col:  6
-          }
-          end:  {
-           line:  3
-           col:  12
-          }
-          text:  "out = \"abc\""
-         }
-         source_contexts:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  3
-           col:  6
-          }
-          end:  {
-           line:  3
-           col:  12
-          }
-          text:  "out = \"abc\""
-         }
-        }
-       }
-      }
-      stmt:  {
-       assign:  {
-        name:  "out1"
-        expr:  {
-         literal:  {
-          s:  "'abc'"
-         }
-         type:  {
-          primitive:  STRING
-         }
-         source_context:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  4
-           col:  6
-          }
-          end:  {
-           line:  4
-           col:  13
-          }
-          text:  "out1 = \"'abc'\""
-         }
-         source_contexts:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  4
-           col:  6
-          }
-          end:  {
-           line:  4
-           col:  13
-          }
-          text:  "out1 = \"'abc'\""
-         }
-        }
-       }
-      }
-      stmt:  {
-       assign:  {
-        name:  "out2"
-        expr:  {
-         literal:  {
-          s:  "\"On\nMultiple\nLines\""
-         }
-         type:  {
-          primitive:  STRING
-         }
-         source_context:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  5
-           col:  6
-          }
-          end:  {
-           line:  5
-           col:  13
-          }
-          text:  "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
-         }
-         source_contexts:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  5
-           col:  6
-          }
-          end:  {
-           line:  5
-           col:  13
-          }
-          text:  "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
-         }
-        }
-       }
-      }
-      stmt:  {
-       assign:  {
-        name:  "out3"
-        expr:  {
-         literal:  {
-          s:  "\"abc\""
-         }
-         type:  {
-          primitive:  STRING
-         }
-         source_context:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  7
-           col:  6
-          }
-          end:  {
-           line:  7
-           col:  13
-          }
-          text:  "out3 = '\"abc\"'"
-         }
-         source_contexts:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  7
-           col:  6
-          }
-          end:  {
-           line:  7
-           col:  13
-          }
-          text:  "out3 = '\"abc\"'"
-         }
-        }
-       }
-      }
-      stmt:  {
-       assign:  {
-        name:  "out4"
-        expr:  {
-         literal:  {
-          s:  "abc"
-         }
-         type:  {
-          primitive:  STRING
-         }
-         source_context:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  13
-          }
-          text:  "out4 = 'abc'"
-         }
-         source_contexts:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  8
-           col:  6
-          }
-          end:  {
-           line:  8
-           col:  13
-          }
-          text:  "out4 = 'abc'"
-         }
-        }
-       }
-      }
-      stmt:  {
-       assign:  {
-        name:  "out5"
-        expr:  {
-         literal:  {
-          s:  "\"abc\\ndef\""
-         }
-         type:  {
-          primitive:  STRING
-         }
-         source_context:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  11
-           col:  6
-          }
-          end:  {
-           line:  11
-           col:  13
-          }
-          text:  "out5 = '\"abc\\ndef\"'"
-         }
-         source_contexts:  {
-          file:  "tests/strings_expr.sysl"
-          start:  {
-           line:  11
-           col:  6
-          }
-          end:  {
-           line:  11
-           col:  13
-          }
-          text:  "out5 = '\"abc\\ndef\"'"
-         }
-        }
-       }
-      }
-     }
-     source_context:  {
-      file:  "tests/strings_expr.sysl"
-      start:  {
-       line:  2
-       col:  4
-      }
-      end:  {
-       line:  12
-       col:  5
-      }
-     }
-     source_contexts:  {
-      file:  "tests/strings_expr.sysl"
-      start:  {
-       line:  2
-       col:  4
-      }
-      end:  {
-       line:  12
-       col:  5
-      }
-     }
-    }
-    attrs:  {
-     key:  "patterns"
-     value:  {
-      a:  {
-       elt:  {
-        s:  "partial"
-       }
-      }
-     }
-    }
-    source_context:  {
-     file:  "tests/strings_expr.sysl"
-     start:  {
-      line:  1
-      col:  2
-     }
-     end:  {
-      line:  13
-     }
-     text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
-    }
-    source_contexts:  {
-     file:  "tests/strings_expr.sysl"
-     start:  {
-      line:  1
-      col:  2
-     }
-     end:  {
-      line:  13
-     }
-     text:  "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
     }
    }
   }
-  source_context:  {
-   file:  "tests/strings_expr.sysl"
-   start:  {}
-   end:  {
-    line:  12
-    col:  5
+  views: {
+   key: "NoArgTransform"
+   value: {
+    param: {
+     name: "number1"
+     type: {
+      primitive: INT
+     }
+    }
+    param: {
+     name: "foo"
+     type: {
+      type_ref: {
+       ref: {
+        appname: {
+         part: "Some"
+        }
+        path: "Type"
+       }
+      }
+     }
+    }
+    ret_type: {
+     type_ref: {
+      ref: {
+       appname: {
+        part: "Model"
+       }
+       path: "Type"
+      }
+     }
+    }
+    expr: {
+     transform: {
+      arg: {
+       name: "."
+       source_context: {
+        file: "tests/strings_expr.sysl"
+        start: {
+         line: 2
+         col: 4
+        }
+        end: {
+         line: 12
+         col: 6
+        }
+       }
+       source_contexts: {
+        file: "tests/strings_expr.sysl"
+        start: {
+         line: 2
+         col: 4
+        }
+        end: {
+         line: 12
+         col: 6
+        }
+       }
+      }
+      scopevar: "scopeVar"
+      stmt: {
+       assign: {
+        name: "out"
+        expr: {
+         literal: {
+          s: "abc"
+         }
+         type: {
+          primitive: STRING
+         }
+         source_context: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 3
+           col: 6
+          }
+          end: {
+           line: 3
+           col: 17
+          }
+          text: "out = \"abc\""
+         }
+         source_contexts: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 3
+           col: 6
+          }
+          end: {
+           line: 3
+           col: 17
+          }
+          text: "out = \"abc\""
+         }
+        }
+       }
+      }
+      stmt: {
+       assign: {
+        name: "out1"
+        expr: {
+         literal: {
+          s: "'abc'"
+         }
+         type: {
+          primitive: STRING
+         }
+         source_context: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 4
+           col: 6
+          }
+          end: {
+           line: 4
+           col: 20
+          }
+          text: "out1 = \"'abc'\""
+         }
+         source_contexts: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 4
+           col: 6
+          }
+          end: {
+           line: 4
+           col: 20
+          }
+          text: "out1 = \"'abc'\""
+         }
+        }
+       }
+      }
+      stmt: {
+       assign: {
+        name: "out2"
+        expr: {
+         literal: {
+          s: "\"On\nMultiple\nLines\""
+         }
+         type: {
+          primitive: STRING
+         }
+         source_context: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 5
+           col: 6
+          }
+          end: {
+           line: 5
+           col: 38
+          }
+          text: "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
+         }
+         source_contexts: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 5
+           col: 6
+          }
+          end: {
+           line: 5
+           col: 38
+          }
+          text: "out2 = \"\\\"On\\nMultiple\\nLines\\\"\""
+         }
+        }
+       }
+      }
+      stmt: {
+       assign: {
+        name: "out3"
+        expr: {
+         literal: {
+          s: "\"abc\""
+         }
+         type: {
+          primitive: STRING
+         }
+         source_context: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 7
+           col: 6
+          }
+          end: {
+           line: 7
+           col: 20
+          }
+          text: "out3 = '\"abc\"'"
+         }
+         source_contexts: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 7
+           col: 6
+          }
+          end: {
+           line: 7
+           col: 20
+          }
+          text: "out3 = '\"abc\"'"
+         }
+        }
+       }
+      }
+      stmt: {
+       assign: {
+        name: "out4"
+        expr: {
+         literal: {
+          s: "abc"
+         }
+         type: {
+          primitive: STRING
+         }
+         source_context: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 18
+          }
+          text: "out4 = 'abc'"
+         }
+         source_contexts: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 8
+           col: 6
+          }
+          end: {
+           line: 8
+           col: 18
+          }
+          text: "out4 = 'abc'"
+         }
+        }
+       }
+      }
+      stmt: {
+       assign: {
+        name: "out5"
+        expr: {
+         literal: {
+          s: "\"abc\\ndef\""
+         }
+         type: {
+          primitive: STRING
+         }
+         source_context: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 11
+           col: 6
+          }
+          end: {
+           line: 11
+           col: 25
+          }
+          text: "out5 = '\"abc\\ndef\"'"
+         }
+         source_contexts: {
+          file: "tests/strings_expr.sysl"
+          start: {
+           line: 11
+           col: 6
+          }
+          end: {
+           line: 11
+           col: 25
+          }
+          text: "out5 = '\"abc\\ndef\"'"
+         }
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/strings_expr.sysl"
+      start: {
+       line: 2
+       col: 4
+      }
+      end: {
+       line: 12
+       col: 6
+      }
+     }
+     source_contexts: {
+      file: "tests/strings_expr.sysl"
+      start: {
+       line: 2
+       col: 4
+      }
+      end: {
+       line: 12
+       col: 6
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "partial"
+        source_context: {
+         file: "tests/strings_expr.sysl"
+         start: {
+          line: 1
+          col: 73
+         }
+         end: {
+          line: 1
+          col: 81
+         }
+        }
+        source_contexts: {
+         file: "tests/strings_expr.sysl"
+         start: {
+          line: 1
+          col: 73
+         }
+         end: {
+          line: 1
+          col: 81
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/strings_expr.sysl"
+     start: {
+      line: 1
+      col: 2
+     }
+     end: {
+      line: 13
+      col: 1
+     }
+     text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
+    }
+    source_contexts: {
+     file: "tests/strings_expr.sysl"
+     start: {
+      line: 1
+      col: 2
+     }
+     end: {
+      line: 13
+      col: 1
+     }
+     text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type [~partial]:"
+    }
    }
   }
-  source_contexts:  {
-   file:  "tests/strings_expr.sysl"
-   start:  {}
-   end:  {
-    line:  12
-    col:  5
+  source_context: {
+   file: "tests/strings_expr.sysl"
+   start: {}
+   end: {
+    line: 12
+    col: 6
+   }
+  }
+  source_contexts: {
+   file: "tests/strings_expr.sysl"
+   start: {}
+   end: {
+    line: 12
+    col: 6
    }
   }
  }

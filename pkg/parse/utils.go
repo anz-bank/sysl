@@ -36,6 +36,9 @@ func (s *sourceCtxHelper) get(start, end antlr.Token) *sysl.SourceContext {
 		},
 		Version: s.version,
 	}
+	if text := end.GetText(); text != "" {
+		ctx.End.Col += int32(len(text))
+	}
 	return ctx
 }
 
