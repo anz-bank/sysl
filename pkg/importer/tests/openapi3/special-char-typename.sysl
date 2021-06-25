@@ -12,7 +12,7 @@ TestApp "Simple" [package="com.example.package"]:
         GET:
             | No description.
             return error
-            return ok <: SimpleObj%3AWithColon
+            return ok <: SimpleObj%3AWithColon [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

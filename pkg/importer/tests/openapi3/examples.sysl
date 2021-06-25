@@ -12,12 +12,13 @@ TestApp "Examples" [package="com.example.package"]:
     /example:
         POST (PropertyLevelExampleRequest <: PropertyLevelExample [mediatype="application/json", ~body]):
             | No description.
-            return ok <: ReusedExample
+            return error <: string [examples=[["","Internal Server Error"]], mediatype="application/json"]
+            return ok <: _example_ok
 
     /examples:
-        POST (ObjectLevelExampleRequest <: ObjectLevelExample [mediatype="application/json", examples=[["Jessica","{\"value\":{\"id\":10,\"name\":\"Jessica Smith\"}}"],["Ron","{\"value\":{\"id\":11,\"name\":\"Ron Stewart\"}}"]], ~body]):
+        POST (ObjectLevelExampleRequest <: ObjectLevelExample [mediatype="application/json", examples=[["Jessica","{\"id\":10,\"name\":\"Jessica Smith\"}"],["Ron","{\"id\":11,\"name\":\"Ron Stewart\"}"]], ~body]):
             | No description.
-            return ok <: ObjectLevelExample
+            return ok <: ReusedExample [mediatype="application/json", examples=[["registered","{\"authId\":\"string\",\"nextStages\":[\"verify_pin\"]}"],["unregistered","{\"authId\":\"string\",\"nextStages\":[\"create_prospect\"]}"]]]
 
     #---------------------------------------------------------------------------
     # definitions
@@ -41,3 +42,9 @@ TestApp "Examples" [package="com.example.package"]:
             @json_tag = "authId"
         nextStages <: sequence of string?:
             @json_tag = "nextStages"
+
+    !type _example_ok:
+        Location <: string [~header]:
+            @json_tag = "Location"
+        ObjectLevelExample <: ObjectLevelExample [mediatype="application/json", examples=[["","{\"id\":12,\"name\":\"Paul Smith\"}"]]]:
+            @json_tag = "ObjectLevelExample"

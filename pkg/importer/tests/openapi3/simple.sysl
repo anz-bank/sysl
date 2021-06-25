@@ -12,8 +12,8 @@ TestApp "Simple" [package="com.example.package"]:
         GET:
             | No description.
             return error
-            return error <: bytes
-            return ok <: SimpleObj
+            return error <: bytes [mediatype="application/json"]
+            return ok <: SimpleObj [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

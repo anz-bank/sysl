@@ -14,7 +14,7 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
     /goat/get-goats:
         GET:
             | Gotta get goats.
-            return ok <: sequence of Goat
+            return ok <: sequence of Goat [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

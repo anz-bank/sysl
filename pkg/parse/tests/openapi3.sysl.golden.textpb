@@ -201,7 +201,7 @@ apps:  {
     }
     stmt:  {
      ret:  {
-      payload:  "ok <: Preferences"
+      payload:  "ok <: Preferences [mediatype=\"application/json\"]"
      }
      source_context:  {
       file:  "tests/preference.yaml"

@@ -34,7 +34,7 @@ apps:  {
     }
     stmt:  {
      ret:  {
-      payload:  "ok <: SimpleObj"
+      payload:  "ok <: SimpleObj [mediatype=\"application/json\"]"
      }
      source_context:  {
       file:  "tests/foreign_import_swagger.yaml"

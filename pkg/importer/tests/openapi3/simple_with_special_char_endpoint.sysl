@@ -11,28 +11,28 @@ TestApp "Simple" [package="com.example.package"]:
     /deep/deeeeeeep/test%2Estuff:
         GET:
             | No description.
-            return ok <: SimpleObj
+            return ok <: SimpleObj [mediatype="application/json"]
 
     /test%2Bplus:
         GET:
             | No description.
-            return ok <: SimpleObj
+            return ok <: SimpleObj [mediatype="application/json"]
 
     /test%2Estuff:
         GET:
             | No description.
-            return ok <: SimpleObj
+            return ok <: SimpleObj [mediatype="application/json"]
 
     /test%3Acolon:
         GET:
             | No description.
-            return ok <: SimpleObj
+            return ok <: SimpleObj [mediatype="application/json"]
 
     /withHeaders%3AandSpecialChars:
         GET:
             | No description.
             return error <: _withHeaders%3AandSpecialChars_error
-            return ok <: SimpleObj
+            return ok <: SimpleObj [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

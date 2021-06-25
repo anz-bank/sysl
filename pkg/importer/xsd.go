@@ -82,8 +82,8 @@ func (i *XSDImporter) WithPackage(pkg string) Importer {
 
 func makeNamespacedType(name xml.Name, target Type) Type {
 	return &ImportedBuiltInAlias{
-		name:   fmt.Sprintf("%s:%s", name.Space, name.Local),
-		Target: target,
+		baseType: baseType{name: fmt.Sprintf("%s:%s", name.Space, name.Local)},
+		Target:   target,
 	}
 }
 
@@ -118,7 +118,7 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 	}
 	for swaggerName, syslName := range xsdToSyslMappings {
 		from := xml.Name{Space: "http://www.w3.org/2001/XMLSchema", Local: swaggerName}
-		to := &SyslBuiltIn{syslName}
+		to := &SyslBuiltIn{name: syslName}
 		types.Add(makeNamespacedType(from, to))
 	}
 
@@ -161,8 +161,8 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 				}
 			}
 			x := t.(*StandardType)
-			if !utils.Contains("~xml_root", x.Attrs) {
-				x.Attrs = append(x.Attrs, "~xml_root")
+			if !utils.Contains("~xml_root", x.Attributes()) {
+				x.AddAttributes([]string{"~xml_root"})
 			}
 		} else if t := findType(data, &types); t == nil {
 			types.Add(makeType(name, data, &types, logger))
@@ -228,7 +228,7 @@ func makeComplexType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus
 	}
 
 	item := &StandardType{
-		name: from.Name.Local,
+		baseType: baseType{name: from.Name.Local},
 	}
 
 	for _, child := range getAllElements(from) {
@@ -279,8 +279,8 @@ func makeSizeSpecFromAttrs(attrs []xml.Attr) *sizeSpec {
 
 func makeSimpleType(from *xsd.SimpleType, knownTypes *TypeList, logger *logrus.Logger) Type {
 	item := &Alias{
-		name:   from.Name.Local,
-		Target: makeType(from.Name, from.Base, knownTypes, logger),
+		baseType: baseType{name: from.Name.Local},
+		Target:   makeType(from.Name, from.Base, knownTypes, logger),
 	}
 
 	return item

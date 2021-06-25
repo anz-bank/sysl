@@ -256,13 +256,13 @@ func (w *writer) writeEndpoint(method string, endpoint Endpoint) {
 		var outs []string
 		for _, resp := range endpoint.Responses {
 			newline := "return "
-			typ := resp.Type
+			typ := getSyslTypeName(resp.Type)
 			text := resp.Text
 			switch {
-			case typ != nil && text != "":
-				newline += fmt.Sprintf("%s <: %s", text, getSyslTypeName(typ))
-			case typ != nil:
-				newline += getSyslTypeName(typ)
+			case typ != "" && text != "":
+				newline += fmt.Sprintf("%s <: %s", text, appendAttrsString(typ, resp.Type.Attributes()))
+			case typ != "":
+				newline += appendAttrsString(typ, resp.Type.Attributes())
 			default:
 				newline += text
 			}
@@ -307,7 +307,7 @@ func (w *writer) writeDefinitions(types TypeList) {
 }
 
 func (w *writer) writeDefinition(t *StandardType) {
-	w.writeLines(fmt.Sprintf("!type %s:", appendAttrsString(getSyslTypeName(t), t.Attrs)))
+	w.writeLines(fmt.Sprintf("!type %s:", appendAttrsString(getSyslTypeName(t), t.Attributes())))
 	for _, prop := range t.Properties {
 		suffix := ""
 		if prop.Optional {
@@ -350,15 +350,15 @@ func (w *writer) writeExternalAlias(item Type) {
 		}
 	case *ExternalAlias:
 		aliasType = getSyslTypeName(t.Target)
-		attrs = appendAttrsString("", t.Attrs)
+		attrs = appendAttrsString("", t.Attributes())
 	case *Alias:
 		aliasType = getSyslTypeName(t.Target)
-		attrs = appendAttrsString("", t.Attrs)
+		attrs = appendAttrsString("", t.Attributes())
 	case *Array:
 		aliasType = getSyslTypeName(item)
 		aliasName = t.name
 	case *Enum:
-		attrs = appendAttrsString("", t.Attrs)
+		attrs = appendAttrsString("", t.Attributes())
 	}
 	w.writeLines(fmt.Sprintf("!alias %s%s:", aliasName, attrs),
 		PushIndent, aliasType, PopIndent)

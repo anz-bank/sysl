@@ -23,7 +23,10 @@ func Test_OpenAPI3Importer_loadTypeSchema(t *testing.T) {
 	dogType := &SyslBuiltIn{
 		name: "Dog",
 	}
-	expected := &Union{name: "Pet", Options: []Field{{Name: "Cat", Type: catType}, {Name: "Dog", Type: dogType}}}
+	expected := &Union{
+		baseType: baseType{name: "Pet"},
+		Options:  []Field{{Name: "Cat", Type: catType}, {Name: "Dog", Type: dogType}},
+	}
 	if got := o.loadTypeSchema("Pet", schema.Components.Schemas["Pet"].Value); !reflect.DeepEqual(got, expected) {
 		t.Errorf("OpenAPI3Importer.loadTypeSchema() = %v, want %v", got, expected)
 	}

@@ -45,17 +45,17 @@ func isExternalAlias(item Type) bool {
 }
 
 func getSyslTypeName(item Type) string {
+	if item == nil {
+		return ""
+	}
+
 	switch t := item.(type) {
 	case *Array:
 		return "sequence of " + getSyslTypeName(t.Items)
-	case *Enum:
+	case *Enum, *Alias, *Union:
 		return item.Name()
 	case *ImportedBuiltInAlias:
 		return getSyslTypeName(t.Target)
-	case *Alias:
-		return t.Name()
-	case *Union:
-		return t.Name()
 	}
 	if isExternalAlias(item) {
 		return "EXTERNAL_" + item.Name()

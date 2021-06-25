@@ -11,7 +11,7 @@ TestApp "Simple" [package="com.example.package"]:
     /test:
         POST (VeryAdvObjRequest <: VeryAdvObj [mediatype="application/json", ~body], key <: int? [~header, name="key"], min_date <: date [~header, name="min_date"]):
             | No description.
-            return ok <: AdvObj
+            return ok <: AdvObj [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

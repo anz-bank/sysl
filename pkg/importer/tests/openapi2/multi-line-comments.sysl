@@ -36,7 +36,7 @@ TestApp "Simple" [package="com.example.package"]:
             | porta, metus lacus lacinia arcu, eu rutrum ex libero at augue. Sed
             | maximus, est sit amet pretium commodo, tellus arcu facilisis
             | massa, vitae feugiat felis dui ac ipsum.
-            return ok <: SimpleObj
+            return ok <: SimpleObj [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

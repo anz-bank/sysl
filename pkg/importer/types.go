@@ -12,25 +12,35 @@ type Func func(args OutputData, text string, logger *logrus.Logger) (out string,
 
 type Type interface {
 	Name() string
+	Attributes() []string
+	AddAttributes([]string) []string
+}
+
+type baseType struct {
+	name  string
+	attrs []string
+}
+
+func (s *baseType) Name() string         { return s.name }
+func (s *baseType) Attributes() []string { return s.attrs }
+func (s *baseType) AddAttributes(attrs []string) []string {
+	s.attrs = append(s.attrs, attrs...)
+	return s.Attributes()
 }
 
 type StandardType struct {
-	name       string
+	baseType
 	Properties FieldList
-	Attrs      []string
 }
-
-func (s *StandardType) Name() string { return s.name }
 
 // Union represents a union type https://sysl.io/docs/lang-spec#union
 type Union struct {
-	name    string
+	baseType
 	Options FieldList
 }
 
-func (u *Union) Name() string { return u.name }
-
 type SyslBuiltIn struct {
+	baseType
 	name syslutil.BuiltInType
 }
 
@@ -40,50 +50,40 @@ var StringAlias = &SyslBuiltIn{name: syslutil.Type_STRING}
 
 // !alias type without the EXTERNAL_ prefix
 type Alias struct {
-	name   string
+	baseType
 	Target Type
-	Attrs  []string
 }
 
-func (s *Alias) Name() string { return s.name }
-
 type ExternalAlias struct {
-	name   string
+	baseType
 	Target Type
-	Attrs  []string
 }
 
 func NewStringAlias(name string, attrs ...string) Type {
 	return &ExternalAlias{
-		name:   name,
+		baseType: baseType{
+			name:  name,
+			attrs: attrs,
+		},
 		Target: StringAlias,
-		Attrs:  attrs,
 	}
 }
 
 func (s *ExternalAlias) Name() string { return s.name }
 
 type ImportedBuiltInAlias struct {
-	name   string // input language type name
-	Target Type
+	baseType // name is the input language type name
+	Target   Type
 }
-
-func (s *ImportedBuiltInAlias) Name() string { return s.name }
 
 type Array struct {
-	name  string
+	baseType
 	Items Type
-	Attrs []string
 }
-
-func (s *Array) Name() string { return s.name }
 
 type Enum struct {
-	name  string
-	Attrs []string
+	baseType
 }
-
-func (s *Enum) Name() string { return s.name }
 
 type maxType int
 

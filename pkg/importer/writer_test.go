@@ -15,7 +15,7 @@ func Test_writer_writeUnion(t *testing.T) {
 		expected string
 	}{
 		{"writeUnion",
-			&Union{name: "TestUnion", Options: FieldList{{Name: "Apple"}, {Name: "Orange"}}},
+			&Union{baseType: baseType{name: "TestUnion"}, Options: FieldList{{Name: "Apple"}, {Name: "Orange"}}},
 			"!union TestUnion:\n    Apple\n    Orange\n",
 		},
 	}

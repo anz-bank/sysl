@@ -40,26 +40,26 @@ TestApp "Swagger Petstore" [package="com.example.package"]:
             | nisi. Fusce sollicitudin massa ut lacinia mattis. Sed vel eleifend
             | lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod
             | sapien.
-            return error <: Error
-            return ok <: sequence of Pet
+            return error <: Error [mediatype="application/json"]
+            return ok <: sequence of Pet [mediatype="application/json"]
 
     /pets/{id<:int64}:
         GET:
             | Returns a user based on a single ID, if the user does not have
             | access to the pet
-            return error <: Error
-            return ok <: Pet
+            return error <: Error [mediatype="application/json"]
+            return ok <: Pet [mediatype="application/json"]
 
     /pets:
         POST (NewPetRequest <: NewPet [mediatype="application/json", ~body]):
             | Creates a new pet in the store. Duplicates are allowed
-            return error <: Error
-            return ok <: Pet
+            return error <: Error [mediatype="application/json"]
+            return ok <: Pet [mediatype="application/json"]
 
     /pets/{id<:int64}:
         DELETE:
             | deletes a single pet based on the ID supplied
-            return error <: Error
+            return error <: Error [mediatype="application/json"]
             return ok
 
     #---------------------------------------------------------------------------

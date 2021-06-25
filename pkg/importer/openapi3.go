@@ -364,12 +364,11 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		} else {
 			items = o.typeAliasForSchema(schema.Items)
 		}
-		return &Array{name: name, Items: items, Attrs: getAttrs(schema)}
+
+		return &Array{baseType: baseType{name: name, attrs: getAttrs(schema)}, Items: items}
 	case OpenAPI_OBJECT, OpenAPI_EMPTY:
 		obj := &StandardType{
-			name:       name,
-			Properties: nil,
-			Attrs:      getAttrs(schema),
+			baseType: baseType{name: name, attrs: getAttrs(schema)},
 		}
 
 		if len(schema.OneOf) != 0 {
@@ -379,8 +378,8 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 				fields = append(fields, field)
 			}
 			return &Union{
-				name:    name,
-				Options: fields,
+				baseType: baseType{name: name},
+				Options:  fields,
 			}
 		}
 
@@ -406,10 +405,10 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		return obj
 	default:
 		if schema.Type == OpenAPI_STRING && schema.Enum != nil {
-			return &Enum{name: name, Attrs: attrsForStrings(schema)}
+			return &Enum{baseType{name: name, attrs: attrsForStrings(schema)}}
 		}
 		if t, ok := checkBuiltInTypes(mapOpenAPITypeAndFormatToType(schema.Type, schema.Format, o.logger)); ok {
-			return &Alias{name: name, Target: t}
+			return &Alias{baseType: baseType{name: name}, Target: t}
 		}
 		o.logger.Warnf("unknown scheme type: %s", schema.Type)
 		return NewStringAlias(name)
@@ -454,7 +453,9 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 			}
 
 			respType := &StandardType{
-				name:       typePrefix + text,
+				baseType: baseType{
+					name: typePrefix + text,
+				},
 				Properties: FieldList{},
 			}
 
@@ -472,16 +473,17 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 				}
 				respType.Properties = append(respType.Properties, f)
 			}
+
 			r := Response{Text: text}
-			if len(respType.Properties) > 0 {
-				if len(respType.Properties) == 1 && respType.Properties[0].Attrs[0] != "~header" {
-					r.Type = respType.Properties[0].Type
-				} else {
-					respType.Properties.Sort()
-					o.types.Add(respType)
-					r.Type = respType
-				}
+			if len(respType.Properties) == 1 && respType.Properties[0].Attrs[0] != "~header" {
+				r.Type = respType.Properties[0].Type
+				r.Type.AddAttributes(respType.Properties[0].Attrs)
+			} else if len(respType.Properties) > 0 {
+				respType.Properties.Sort()
+				o.types.Add(respType)
+				r.Type = respType
 			}
+
 			ep.Responses = append(ep.Responses, r)
 		}
 
@@ -504,7 +506,7 @@ func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) Parameters {
 		}
 		// Avoid putting sequences into the params
 		if a, ok := p.Field.Type.(*Array); ok {
-			p.Field.Type = o.types.AddAndRet(&Alias{name: item.Value.Name, Target: a})
+			p.Field.Type = o.types.AddAndRet(&Alias{baseType: baseType{name: item.Value.Name}, Target: a})
 		}
 		p.Optional = !item.Value.Required
 		out.Add(p)
@@ -520,7 +522,7 @@ func (o *OpenAPI3Importer) fieldForMediaType(mediatype string, mediaObj *openapi
 		o.types.Add(o.loadTypeSchema(tname, schema.Value))
 	}
 	if a, ok := field.Type.(*Array); ok && typeSuffix == "Request" {
-		field.Type = o.types.AddAndRet(&Alias{name: field.Name, Target: a})
+		field.Type = o.types.AddAndRet(&Alias{baseType: baseType{name: field.Name}, Target: a})
 	}
 
 	if mediatype != "" {
@@ -574,7 +576,7 @@ func examplesAttr(examples map[string]*openapi3.ExampleRef) string {
 
 	examplesStr := make(map[string]string)
 	for k, e := range examples {
-		examplesStr[k] = exampleAttrStr(e.Value)
+		examplesStr[k] = exampleAttrStr(e.Value.Value)
 	}
 
 	return examplesAttrStr(examplesStr)
