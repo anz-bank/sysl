@@ -682,7 +682,7 @@ func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
 	s.fieldname = append(s.fieldname, fieldName)
 	type1, has := s.typemap[fieldName]
 	if has {
-		logrus.Warnf("%s) %s.%s defined multiple times, merging field definitions",
+		logrus.Debugf("%s) %s.%s defined multiple times, merging field definitions",
 			s.sc.filename, s.currentTypePath.Get(), fieldName)
 	} else {
 		type1 = &sysl.Type{}
@@ -922,7 +922,7 @@ func (s *TreeShapeListener) EnterUnion_type(ctx *parser.Union_typeContext) {
 	s.fieldname = append(s.fieldname, fieldName)
 	dataType, has := s.typemap[fieldName]
 	if has {
-		logrus.Warnf("%s) %s.(%s) defined multiple times, redefinition ignored",
+		logrus.Debugf("%s) %s.(%s) defined multiple times, redefinition ignored",
 			s.sc.filename, s.currentTypePath.Get(), fieldName)
 	} else {
 		dataType = &sysl.Type{}
