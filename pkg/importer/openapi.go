@@ -80,7 +80,7 @@ func mapOpenAPITypeAndFormatToType(typeName, format string, logger *logrus.Logge
 		if result, ok := formatMap[format]; ok {
 			return result
 		}
-		logger.Warnf("Unhandled (type, format) -> (%s, %s), ignoring...\n", typeName, format)
+		logger.Debugf("Unhandled (type, format) -> (%s, %s), ignoring...\n", typeName, format)
 		return mapOpenAPITypeAndFormatToType(typeName, "", logger)
 	}
 
