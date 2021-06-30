@@ -82,7 +82,7 @@ type StatementReturn struct {
 
 type StatementReturnAttrs struct {
 	Modifier []string
-	Nvp      map[interface{}]interface{}
+	Nvp      map[string]interface{}
 }
 
 type Type struct {
@@ -200,6 +200,8 @@ type ParamAnnotation struct {
 	AppName        []string
 	EpName         string
 	ParamName      string
+	ParamLoc       string // enum
+	ParamIndex     int
 	ParamAnnoName  string
 	ParamAnnoValue interface{} // string, number, array of self
 }
@@ -260,10 +262,12 @@ type EndpointTag struct {
 }
 
 type ParamTag struct {
-	AppName   []string
-	EpName    string
-	ParamName string
-	ParamTag  string
+	AppName    []string
+	EpName     string
+	ParamName  string
+	ParamLoc   string // enum
+	ParamIndex int
+	ParamTag   string
 }
 
 type StatementTag struct {
@@ -321,11 +325,13 @@ type EndpointContext struct {
 }
 
 type ParamContext struct {
-	AppName   []string
-	EpName    string
-	ParamName string
-	ParamSrc  SourceContext
-	ParamSrcs []SourceContext
+	AppName    []string
+	EpName     string
+	ParamName  string
+	ParamLoc   string // enum
+	ParamIndex int
+	ParamSrc   SourceContext
+	ParamSrcs  []SourceContext
 }
 
 type StatementContext struct {

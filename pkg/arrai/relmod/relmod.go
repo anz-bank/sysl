@@ -233,7 +233,7 @@ func parseReturnPayload(ctx context.Context, payload string, appName []string) (
 		Status: status,
 		Attr: StatementReturnAttrs{
 			Modifier: arrai.ToStrings(t.MustGet("modifier").Export(ctx)),
-			Nvp:      arrai.ToInterfaceMap(t.MustGet("nvp").Export(ctx)),
+			Nvp:      arrai.ToStringInterfaceMap(t.MustGet("nvp").Export(ctx)),
 		},
 	}
 

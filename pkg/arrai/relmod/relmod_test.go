@@ -122,7 +122,7 @@ func TestParseReturnPayload(t *testing.T) {
 			Type:   TypePrimitive{"int"},
 			Attr: StatementReturnAttrs{
 				Modifier: []string{"tag"},
-				Nvp: map[interface{}]interface{}{
+				Nvp: map[string]interface{}{
 					"k":  "v",
 					"ak": map[string]interface{}{"a": []interface{}{"a1", "a2"}},
 				},
@@ -136,7 +136,7 @@ func TestParseReturnPayload(t *testing.T) {
 			Status: "ok",
 			Type:   TypePrimitive{"string"},
 			Attr: StatementReturnAttrs{
-				Nvp: map[interface{}]interface{}{
+				Nvp: map[string]interface{}{
 					"annotation": map[string]interface{}{
 						"a": []interface{}{"as", "an", "array"},
 					},
@@ -151,7 +151,7 @@ func TestParseReturnPayload(t *testing.T) {
 			Status: "ok",
 			Type:   TypePrimitive{"string"},
 			Attr: StatementReturnAttrs{
-				Nvp: map[interface{}]interface{}{
+				Nvp: map[string]interface{}{
 					"annotation": map[string]interface{}{
 						"a": []interface{}{
 							map[string]interface{}{"a": []interface{}{"or", "as", "an"}},

@@ -285,7 +285,7 @@ func normalizeParam(
 		param.ParamType = parseFieldType(app.Name.Part, paramType)
 		param.ParamOpt = paramType.Opt
 
-		normalizeParamMeta(s, app, ep, paramName, paramType)
+		normalizeParamMeta(s, app, ep, paramName, paramType, paramLoc, paramIndex)
 	}
 
 	s.Param = append(s.Param, param)
@@ -531,14 +531,24 @@ func normalizeStatementMeta(
 	}
 }
 
-func normalizeParamMeta(s *Schema, app *sysl.Application, ep *sysl.Endpoint, paramName string, param *sysl.Type) {
+func normalizeParamMeta(
+	s *Schema,
+	app *sysl.Application,
+	ep *sysl.Endpoint,
+	paramName string,
+	param *sysl.Type,
+	loc string,
+	index int,
+) {
 	tags := tags(param.Attrs)
 	for _, tag := range tags {
 		s.Tag.Param = append(s.Tag.Param, ParamTag{
-			AppName:   app.Name.Part,
-			EpName:    ep.Name,
-			ParamName: paramName,
-			ParamTag:  tag,
+			AppName:    app.Name.Part,
+			EpName:     ep.Name,
+			ParamName:  paramName,
+			ParamLoc:   loc,
+			ParamIndex: index,
+			ParamTag:   tag,
 		})
 	}
 
@@ -548,6 +558,8 @@ func normalizeParamMeta(s *Schema, app *sysl.Application, ep *sysl.Endpoint, par
 			AppName:        app.Name.Part,
 			EpName:         ep.Name,
 			ParamName:      paramName,
+			ParamLoc:       loc,
+			ParamIndex:     index,
 			ParamAnnoName:  annoName,
 			ParamAnnoValue: annoValue,
 		})
@@ -555,11 +567,13 @@ func normalizeParamMeta(s *Schema, app *sysl.Application, ep *sysl.Endpoint, par
 
 	if len(param.SourceContexts) > 0 {
 		s.Src.Param = append(s.Src.Param, ParamContext{
-			AppName:   app.Name.Part,
-			EpName:    ep.Name,
-			ParamName: paramName,
-			ParamSrc:  relmodSourceContext(param.SourceContexts[0]),
-			ParamSrcs: relmodSourceContexts(param.SourceContexts),
+			AppName:    app.Name.Part,
+			EpName:     ep.Name,
+			ParamName:  paramName,
+			ParamLoc:   loc,
+			ParamIndex: index,
+			ParamSrc:   relmodSourceContext(param.SourceContexts[0]),
+			ParamSrcs:  relmodSourceContexts(param.SourceContexts),
 		})
 	}
 }

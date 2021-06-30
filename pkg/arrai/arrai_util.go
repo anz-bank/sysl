@@ -125,25 +125,24 @@ func ToStrings(x interface{}) []string {
 	}
 }
 
-func ToInterfaceMap(x interface{}) map[interface{}]interface{} {
+func ToStringInterfaceMap(x interface{}) map[string]interface{} {
 	switch t := x.(type) {
 	case nil:
 		return nil
-	case map[interface{}]interface{}:
+	case map[string]interface{}:
 		return t
-	// TODO: Remove once Dict exports this properly.
 	case frozen.Map:
-		m := make(map[interface{}]interface{}, t.Count())
+		m := make(map[string]interface{}, t.Count())
 		ctx := context.Background()
 		for i := t.Range(); i.Next(); {
 			k, v := i.Entry()
-			m[k.(rel.Value).Export(ctx)] = v.(rel.Value).Export(ctx)
+			m[k.(rel.Value).String()] = v.(rel.Value).Export(ctx)
 		}
 		return m
-	case map[string]interface{}:
-		m := make(map[interface{}]interface{}, len(t))
+	case map[interface{}]interface{}:
+		m := make(map[string]interface{}, len(t))
 		for k, v := range t {
-			m[k] = v
+			m[fmt.Sprintf("%s", k)] = v
 		}
 		return m
 	default:
