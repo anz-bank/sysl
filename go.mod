@@ -11,9 +11,9 @@ require (
 	github.com/anz-bank/gop v0.25.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.38
-	github.com/arr-ai/arrai v0.272.0
+	github.com/arr-ai/arrai v0.273.0
 	github.com/arr-ai/frozen v0.19.0
-	github.com/arr-ai/wbnf v0.33.0
+	github.com/arr-ai/wbnf v0.34.0
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
