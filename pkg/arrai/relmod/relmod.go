@@ -109,7 +109,7 @@ func buildPayloadParser() (rel.Expr, error) {
 	parse := `
 		\payload //grammar.parse({://grammar.lang.wbnf:
 			payload -> (status ("<:" type)? | (status "<:")? type) attr?;
-			type		-> sequence | set | PRIMITIVE | ref $ | raw $;
+			type		-> sequence | set | PRIMITIVE | ref (?="[") | ref $ | raw $;
 			sequence	-> "sequence of " type;
 			set			-> "set of " type;
 			ref			-> (app=([^\s.:]+):"::" ".")? type=[^\s.]+;
