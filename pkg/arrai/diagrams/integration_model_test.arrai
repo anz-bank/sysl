@@ -1,0 +1,21 @@
+let sysl = //{/pkg/arrai/sysl};
+let (:appIntegrationModel, ...) = //{./integration_model};
+let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/integration-model.sysl.pb}));
+
+(
+    # Test the integration model.
+    integration_model: (
+        let actual = appIntegrationModel(rel, ());
+        let expected = (
+            edges: {(data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep1-A :: B2/Ep2', label: {}, toId: 'A :: B2', visible: true),
+            (data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep1/0-A :: B2/Ep1', label: {}, toId: 'A :: B2', visible: true),
+            (data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep1/1-A :: B2/Ep1', label: {}, toId: 'A :: B2', visible: true),
+            (data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep2-A :: B2/Ep2', label: {}, toId: 'A :: B2', visible: true)},
+
+            nodes: {(childId: {}, data: {}, expanded: true, id: 'A :: B1', label: 'B1', parentId: 'A', visible: true),
+            (childId: {}, data: {}, expanded: true, id: 'A :: B2', label: 'B2', parentId: 'A', visible: true),
+            (childId: [['A', 'B1'], ['A', 'B2']], data: {}, expanded: true, id: 'A', label: 'A', parentId: {}, visible: true)}
+        );
+        //test.assert.equal(expected, actual)
+    ),
+)

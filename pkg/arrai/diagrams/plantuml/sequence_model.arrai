@@ -1,0 +1,79 @@
+let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
+
+let allCalls = \m
+  //rel.union(m.apps => \(@:appName, @value:app)
+    //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
+      ep.stmt?:{} where .@item.call?:{} =>
+        (
+          index: .@,
+          from: (
+            :appName,
+            :epName,
+          ),
+          to: (
+            appName: partsToAppName(.@item.call.target.part),
+            epName: .@item.call.endpoint,
+          ),
+        )
+    )
+  )
+;
+
+let allReturns = \m
+  //rel.union(m.apps => \(@:appName, @value:app)
+    //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
+      ep.stmt?:{} where .@item.ret?:{} =>
+        (
+          index: .@,
+          :appName,
+          :epName,
+          ret: .@item.ret
+        )
+    )
+  )
+;
+
+let getType = \payload //seq.split(" [", payload)(0);
+
+let rec transitiveSequence = \appName \epName \allCalls \allReturns \visited
+  let calls = allCalls where .from.appName = appName && .from.epName = epName;
+  let returns = allReturns <&- {(:appName, :epName)};
+  $`
+    ${calls orderby .index >> $`
+      "${appName}" -> "${.to.appName}": "${.to.epName}"
+      activate "${.to.appName}"
+      ${
+        let v = cond visited {
+          {}: {},
+          _: visited => .@item
+        };
+        cond {
+          (:.to.appName, :.to.epName) !<: v:
+            transitiveSequence(.to.appName, .to.epName, allCalls, allReturns, [(:.to.appName, :.to.epName)] ++ visited)
+        }
+      }
+      ${returns orderby .index >> \(:ret, ...) $`
+        "${appName}" <-- "${.to.appName}": "${getType(ret.payload)}"
+      `::\n}
+      deactivate "${.to.appName}"
+    `::\n}
+  `
+;
+
+let sequence = \m \appName \epName
+  let allCalls = allCalls(m);
+  let allReturns = allReturns(m);
+  appName && epName && $`
+    @startuml
+    [-> "${appName}": "${epName}"
+    activate "${appName}"
+    ${transitiveSequence(appName, epName, allCalls, allReturns, [(:appName, :epName)])}
+    [<-- "${appName}"
+    deactivate "${appName}"
+    @enduml
+  `
+;
+
+(
+  :sequence
+)

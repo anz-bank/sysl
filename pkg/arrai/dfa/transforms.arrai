@@ -1,56 +1,32 @@
 \apps (
     let unpackType = //{/pkg/arrai/util}.unpackType;
-    apps => (
-        let app = .@;
-        .@value.endpoints?:{} => (
-            let ep = .@;
-            let ret = .@value.stmt?:{} where .@item.ret?:false;
+    apps => \(@: app, @value: (?:endpoints:{}, ...)) (
+        endpoints => \(@: ep, @value: (?:stmt:{}, ...)) (
+            let ret = stmt where .@item.ret?:false;
             (
                 ret => let currType = unpackType(.@item.ret.payload.type);
                     (:app, :ep, from: currType, to: currType, desc: '1:1 transform')
             ) | (
                     (
                         ret =>
-                        let payload = .@item.ret.payload;
-                        let currType = unpackType(payload.type);
-                        let dataflow = payload.attr?.nvp?('dataflow')?:{};
-                        let desc = payload.attr?.nvp?('description')?:'';
-                        cond dataflow {
-                            (a: val): val => (
-                                                    :app,
-                                                    :ep,
-                                                    from: unpackType(.@item),
-                                                    to: currType,
-                                                    :desc,
-                                                ),
-                            (d: val): val => (
-                                let to = unpackType(.@);
-                                cond .@value {
-                                    (a: froms): (
-                                        froms => (
-                                            :app,
-                                            :ep,
-                                            from: unpackType(.@item),
-                                            :to,
-                                            :desc,
-                                        )
-                                    )
-                                    ,
-                                    # TODO: add string check
-                                    _: {(
-                                        :app,
-                                        :ep,
-                                        from: unpackType(.@value),
-                                        :to,
-                                        :desc,
-                                    )}
-                                }
-                            ) -> //rel.union(.),
-                            _: {}
-                        }
+                            let payload = .@item.ret.payload;
+                            let currType = unpackType(payload.type);
+                            let dataflow = payload.attr?.nvp?('dataflow')?:{};
+                            let desc = payload.attr?.nvp?('description')?:'';
+                            cond dataflow {
+                                (a: val): val => (:app, :ep, from: unpackType(.@item), to: currType, :desc),
+                                (d: val): val => (
+                                    let to = unpackType(.@);
+                                    cond .@value {
+                                        (a: froms): (froms => (:app, :ep, from: unpackType(.@item), :to, :desc)),
 
-                ) -> //rel.union(.)
-            )
-        ) -> //rel.union(.)
+                                        # TODO: add string check
+                                        _: {(:app, :ep, from: unpackType(.@value), :to, :desc)}
+                                    }
+                                ) -> //rel.union(.),
+                            }
+                    ) -> //rel.union(.)
+                )
+        )
     ) -> //rel.union(.)
 )

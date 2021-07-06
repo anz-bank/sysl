@@ -70,7 +70,7 @@ let _app = (
             let result = newNormalize(_model);
             //test.assert.unequal((), result),
         all:
-            let _all = loadBytes(//{./out/all.pb});
+            let _all = loadBytes(//[//encoding.bytes]{./out/all.pb});
             let expected = //{./out/all_normalize};
             let result = newNormalize(_all);
             # //test.assert.equal(expected, result),

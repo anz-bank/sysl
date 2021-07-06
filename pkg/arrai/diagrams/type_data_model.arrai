@@ -1,0 +1,113 @@
+let (:fieldTypeLabel, :referredType, :nodeId, ...) = //{./util};
+
+# Returns the edge data for a given source type and field.
+let edgeTypes = \appName \typeName \fieldType
+  let to = referredType(fieldType);
+  to && ( from: (:appName, :typeName), :to)
+;
+
+# Accumulates all nodes and edges that are transitively related to the input type's fields.
+let rec gatherTypes = \rel \acc \fields
+  let appTypes = fields => referredType(.fieldType) where .;
+  let newTypes = appTypes &~ acc.nodes;
+  let newFields = rel.field <&- appTypes;
+  let newEdges = fields => edgeTypes(.appName, .typeName, .fieldType) where .;
+  cond newTypes {
+    {}: acc,
+    _:
+      let nodes = acc.nodes | newTypes;
+      let edges = acc.edges | newEdges;
+      gatherTypes(rel, (:nodes, :edges), newFields)
+  }
+;
+
+# Template for edge tuples.
+let edgeTemplate = \from \to
+  (
+    key: $`${from}-${to}`,
+    :from,
+    :to,
+    category: 'type'
+  )
+;
+
+# Gets one node from the accumulated nodes and returns tuples that represents that node.
+let node = \field \node
+  cond {node} -&> field nest ~|appName, typeName|fields {
+    {nested}: (
+      key: nodeId(nested.appName, nested.typeName),
+      label: nested.typeName,
+      fields: nested.fields => (
+        name: .fieldName,
+        type: fieldTypeLabel(.fieldType),
+      )
+    )
+  }
+;
+
+# Gets the accumulated edge data and returns tuples that represents edges.
+let edge = \(
+  from: (appName: fromAppName, typeName: fromTypeName),
+  to:   (appName: toAppName, typeName: toTypeName),
+) edgeTemplate(
+  nodeId(fromAppName, fromTypeName),
+  nodeId(toAppName, toTypeName),
+);
+
+# Calls the accumulator, gathers raw type data and returns nodes and edges.
+let nodesAndEdges = \rel \appName \typeName
+  let fields = rel.field <&- {(:appName, :typeName)};
+  let exploredGraph = gatherTypes(rel, (nodes: {(:appName, :typeName)}, edges: {}), fields);
+  (
+    nodes: exploredGraph.nodes => node(rel.field, .) where .,
+    edges: exploredGraph.edges => edge(.) where .
+  )
+;
+
+# Returns a set of node tuples for the given fields.
+let nodes = \fields
+  let appTypes = fields nest ~|appName, typeName|fields;
+  appTypes => (
+    key: nodeId(.appName, .typeName),
+    label: .typeName,
+    fields: .fields => (
+      name: .fieldName,
+      type: fieldTypeLabel(.fieldType),
+    )
+  )
+;
+
+# Returns a set of edge tuples for the given fields.
+let edges = \fields
+  fields => (
+    cond referredType(.fieldType) {
+      {}: {},
+      type:
+        edgeTemplate(
+          nodeId(.appName, .typeName),
+          nodeId(type.appName, type.typeName),
+        )
+    }
+  ) where .
+;
+
+# Main function to return nodes and edges.
+let recursiveTypeData = \rel \appName \typeName (
+  nodesAndEdges(rel, appName, typeName)
+);
+
+# Returns nodes and edges of all types for a given app.
+let typeData = \rel \appName
+  let types = {(:appName)} <&> rel.type;
+  let types = types &~ (types <&- rel.table);
+  let fields = types <&> rel.field;
+  (
+    nodes: nodes(fields),
+    edges: edges(fields)
+  )
+;
+
+(
+  :typeData,
+  :recursiveTypeData
+)

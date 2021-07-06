@@ -1,0 +1,77 @@
+let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
+
+let allCalls = \m
+  //rel.union(m.apps => \(@:appName, @value:app)
+    //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
+      ep.stmt?:{} where .@item.call?:{} =>
+        (
+          index: .@,
+          from: (
+            :appName,
+            :epName,
+          ),
+          to: (
+            appName: partsToAppName(.@item.call.target.part),
+            epName: .@item.call.endpoint,
+          ),
+        )
+    )
+  )
+;
+
+let allReturns = \m
+  //rel.union(m.apps => \(@:appName, @value:app)
+    //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
+      ep.stmt?:{} where .@item.ret?:{} =>
+        (
+          index: .@,
+          :appName,
+          :epName,
+          ret: .@item.ret
+        )
+    )
+  )
+;
+
+# TODO: this is a hack, use proper payload parsing
+let getType = \payload //seq.split(" [", payload)(0);
+
+let rec transitiveSequence = \appName \epName \allCalls \allReturns \visited
+  let ep = (:appName, :epName);
+  let calls = allCalls <&- {(from: ep)};
+  let returns = allReturns <&- {ep};
+  $`
+    ${calls orderby .index >> $`
+      "${appName}" -> "${.to.appName}": "${.to.epName}"
+      activate "${.to.appName}"
+      ${visited && visited => .@item};
+        cond {
+          (:.to.appName, :.to.epName) !<: v:
+            transitiveSequence(.to.appName, .to.epName, allCalls, allReturns, [(:.to.appName, :.to.epName)] ++ visited)
+        }
+      }
+      ${returns orderby .index >> \(:ret, ...) $`
+        "${appName}" <-- "${.to.appName}": "${getType(ret.payload)}"
+      `::\n}
+      deactivate "${.to.appName}"
+    `::\n}
+  `
+;
+
+let sequence = \m \appName \epName
+  let allCalls = allCalls(m);
+  let allReturns = allReturns(m);
+  appName && epName && $`
+    @startuml
+    [-> "${appName}": "${epName}"
+    activate "${appName}"
+    ${transitiveSequence(appName, epName, allCalls, allReturns, [(:appName, :epName)])}
+    [<-- "${appName}"
+    deactivate "${appName}"
+    @enduml
+  `
+;
+
+(
+  :sequence
+)

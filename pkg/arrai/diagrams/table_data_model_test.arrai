@@ -1,0 +1,42 @@
+let sysl = //{/pkg/arrai/sysl};
+let (:tableData, ...) = //{./table_data_model};
+let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/example.sysl.pb}));
+
+(
+    # Test the table data model.
+    table_data_model: (
+      let actual = tableData(rel, ['Namespace', 'B', 'App']);
+      let expected = (
+        edges: {
+          (key: 'Namespace :: B :: App.Card-Namespace :: B :: App.Person', from: 'Namespace :: B :: App.Card', to: 'Namespace :: B :: App.Person', category: 'table'),
+          # Bug in relational model maps types to apps and fields to types, hence the `to` below is invalid
+          (key: 'Namespace :: B :: App.MultipleCards-Namespace :: B :: App.cnumber', from: 'Namespace :: B :: App.MultipleCards', to: 'Namespace :: B :: App.cnumber', category: 'table'),
+          (key: 'Namespace :: B :: App.Person-Namespace :: B :: App.Account', from: 'Namespace :: B :: App.Person', to: 'Namespace :: B :: App.Account', category: 'table')
+        },
+        nodes: {
+          (
+            key: 'Namespace :: B :: App.Card',
+            label: 'Card',
+            fields: {(name: 'cnumber', pk: true, type: 'string'), (name: 'fk', pk: {}, type: 'Person.id')}
+          ),
+          (
+            key: 'Namespace :: B :: App.Person',
+            label: 'Person',
+            fields: {(name: 'fk', pk: {}, type: 'Account.number'), (name: 'id', pk: true, type: 'string'), (name: 'name', pk: {}, type: 'string')}
+          ),
+          (
+            key: 'Namespace :: B :: App.Account',
+            label: 'Account',
+            fields: {(name: 'number', pk: true, type: 'string')}
+          ),
+          # Same bug mentioned above causes the field to appear individually as the type is mapped to app, it should have been Cards.cnumber
+          (
+            key: 'Namespace :: B :: App.MultipleCards',
+            label: 'MultipleCards',
+            fields: {(name: 'pk', pk: true, type: 'sequence of cnumber')}
+          )
+        }
+      );
+      //test.assert.equal(expected, actual)
+    ),
+)

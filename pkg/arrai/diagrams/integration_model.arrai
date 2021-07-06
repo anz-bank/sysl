@@ -1,0 +1,234 @@
+let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
+
+# The Integration Model is a data structure used to represent an integration diagram containing nodes
+# and edges. The model is a tuple with the format `(:nodes, :edges)` where `nodes` and `edges` are
+# sets containing `node` and `edge` items respectively.
+#
+# A `node` is a tuple with the following items:
+# `id`: The unique string identifier for the node. Required.
+# `parentId`: The id of the parent node to which this node is a child. Optional, empty if node has no parent.
+# `label`: The textual label to display on the node.
+# `visible`: Whether the node is visible within the diagram.
+# `expanded`: Whether the node, when containing children, is expanded to display those children.
+# `data`: A dictionary containing key/value pairs for additional diagram customisation.
+#
+# An `edge` is a tuple with the following items:
+# `fromId`: The node identifier of the edge source. Required.
+# `toId`: The node identifier of the edge destination. Required.
+# `label`: The textual label to display on the edge.
+# `visible`: Whether the edge is visible.
+# `data`: A dictionary containing key/value pairs for additional diagram customisation.
+
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
+# some variables use the older relational model where the name is contained in `part`
+let extractedAppName = \name cond name {(:part): part, _: name};
+
+# `appSourceFiles` returns the set of source files that the given application can be found in.
+# This method exists to work around an issue whereby an element can only be represented with a
+# single source context. The workaround for this issue is to approximate these files based on the
+# presence of other application sub-elements.
+# https://github.com/anzx/sysl/issues/437
+let appSourceFiles = \rel \appName
+    (rel.src.app <&- {(:appName)} => .appSrc.file) | (rel.src.ep <&- {(:appName)} => .epSrc.file);
+
+# `appNodes` returns the set of nodes for a given application name where a `node` is
+# a tuple with the following properties:
+# `name`: The node represented by this value. For example: ['Org', 'Platform'].
+# `parentName`: The name of the parent node, or {} if the node has no parent.
+# `childNames`: The names of nodes that descend from this node.
+# `appName`: The name of the application if this node represents an application.
+let appNodes = \appName
+    let appName = extractedAppName(appName);
+    let indices = appName => .@;
+    let maxPartIndex = appName count - 1;
+    indices => \index (
+        name: appName where .@ <= index,
+        parentName: appName where .@ < index,
+        childNames: cond {
+            index != maxPartIndex: [appName where .@ <= (index + 1)],
+        },
+        appName: cond {
+            index = maxPartIndex: appName where .@ <= index,
+        });
+
+# `modelNodes` returns the set of nodes for the given relational model where a `node` is
+# a tuple with the following properties:
+# `name`: The node represented by this value. For example: ['Org', 'Platform'].
+# `parentName`: The name of the parent node, or {} if the node has no parent.
+# `childNames`: The names of nodes that descend from this node.
+# `appName`: The name of the application if this node represents an application.
+let modelNodes = \rel
+    let callNodes = rel.stmt where .stmtCall => appNodes(.stmtCall.appName);
+    let nodes = rel.app => appNodes(.appName);
+    let nodes = nodes|callNodes;
+    let nodes = reduce(nodes orderby ., \val \item val | item, {});
+    let addNode = \nodes \node
+        let conflict = nodes where .name = node.name;
+        nodes &~ conflict | cond conflict {
+            {}: {node},
+            _ : {(
+                name:node.name,
+                parentName:node.parentName,
+                childNames:(conflict single).childNames ++ node.childNames,
+                appName:(conflict single).appName | node.appName )},
+        };
+    reduce(nodes orderby ., addNode, {});
+
+# `modelNodeAncestors` returns the given model nodes such that only nodes that are an ancestor
+# of one of the given descendants are included.
+# `nodes` is the set of nodes as returned from `modelNodes`.
+# `descendants` is a subset of nodes to return the ancestors of.
+let modelNodeAncestors = \nodes \descendants
+    (nodes where \mn
+        (descendants where //seq.has_prefix(mn.name, .name) && true)) &~ descendants;
+
+# `modelNodesWithAppTags` returns the given model nodes such that only nodes with one of the given
+# tags on its application are included.
+# `nodes` is the set of nodes as returned from `modelNodes`.
+# `rel` is the relational model from which the nodes were derived.
+# `tags` is the set of tags to filter by.
+let modelNodesWithAppTags = \nodes \rel \tags
+    nodes where \mn
+        (rel.tag.app where mn.name = .appName && .appTag <: tags) && true;
+
+# `modelNodesWithStmtAnnos` returns the given model nodes such that only nodes with one of the given
+# annotations on one of its statements are included.
+# `nodes` is the set of nodes as returned from `modelNodes`.
+# `rel` is the relational model from which the nodes were derived.
+# `annos` is the set of annotation names to filter by.
+let modelNodesWithStmtAnnos = \nodes \rel \annos
+    nodes where \mn
+        (rel.anno.stmt where mn.name = .appName && .stmtAnnoName <: annos) && true;
+
+# `modelNodesInFiles` returns the given model nodes such that only nodes that have an application
+# in one of the given are included.
+# `nodes` is the set of nodes as returned from `modelNodes`.
+# `rel` is the relational model from which the nodes were derived.
+# `files` is the set of file names (/foo/bar.sysl) to filter by.
+let modelNodesInFiles = \nodes \rel \files
+    let fs = \appName
+        appSourceFiles(rel, appName);
+    nodes where \mn
+        (rel.app where mn.name = .appName && (fs(.appName) & files)) && true;
+
+# `appIntegrationModeConfig` is a tuple containing methods suitable for modifying the config value
+# as passed in to `appIntegrationModel`.
+let appIntegrationModelConfig =
+
+    # `withStandardModelNodes` takes a configuration and ensures that the model nodes returned are:
+    # 1. Nodes that can be found in the given file, or
+    # 2. Ancestors of any of the above nodes.
+    let withStandardModelNodes = \config \file
+        let fn = \rel
+            let nodes = modelNodes(rel);
+            let descendants = modelNodesInFiles(nodes, rel, {file});
+            descendants | modelNodeAncestors(nodes, descendants);
+        config +> (modelNodes: fn);
+
+    # `withModelNodesInFile` takes a configuration and ensures that the model nodes returned are:
+    # 1. Nodes that can be found in the given file.
+    let withModelNodesInFile = \config \file
+        let fn = \rel
+            let nodes = modelNodes(rel);
+            modelNodesInFiles(nodes, rel, {file});
+        config +> (modelNodes: fn);
+
+    # `plusOnNode` takes a configuration and ensures the given `onNode` function is applied in
+    # addition to any existing `onNode` function defined.
+    let plusOnNode = \config \onNode
+        let fn = \mn \node
+            let configs = //dict(config);
+            let existing = configs('onNode')?:\_ \node node;
+            reduce([existing] ++ [onNode], \n \item item(mn, n), node);
+        config +> (onNode: fn);
+
+    # `plusOnEdge` takes a configuration and ensures the given `onEdge` function is applied in
+    # addition to any existing `onEdge` function defined.
+    let plusOnEdge = \config \onEdge
+        let fn = \stmt \edge
+            let configs = //dict(config);
+            let existing = configs('onEdge')?:\_ \edge edge;
+            reduce([existing] ++ [onEdge], \e \item item(stmt, e), edge);
+        config +> (onEdge: fn);
+
+    (
+        :withStandardModelNodes,
+        :withModelNodesInFile,
+        :plusOnNode,
+        :plusOnEdge,
+    )
+;
+
+# `appIntegrationModel` converts a relational model into an integration model with the following properties:
+# 1.  Nodes are placed in a hierarchy based on the application name. For example, the `Org :: Platform`
+#     application will result in two nodes, the parent `Org` and its child `Platform`
+# 2.  The model descends to the granularity of application. For example, it's possible to create an
+#     integration diagram where individual endpoints are components within an application. The
+#     integration diagram created here stops at the level of application and collapses edges accordingly.
+# `rel` is the relation model to convert.
+# `config` is a tuple that contains the following optional values:
+#
+# `modelNodes` is a function that converts the relational model into a set of model nodes. If this
+#     value is not provided then the `modelNodes` function within this file is used. This
+#     configuration is particularly valueable if the output should only contain a subset of nodes
+#     available within the graph whereby the given function first calls the `modelNodes` function
+#     then filters the returned nodes based on a given criteria.
+# `onNode` is the function used to configure a node within the diagram. The function takes the
+#     following arguments `\mn \node` and returns the (potentially modified) node.
+#     `mn` is the value from `modelNodes` that corresponds to this node.
+#     `node` is the tuple representing the node as constructed within this method.
+# `onEdge` is the function used to configure an edge within the diagram. The function takes the
+#     following arguments `\stmt \edge` and returns the (potentially modified) edge.
+#     `stmts` is the set of `stmts` values from the relational model that corresponds to this edge.
+#     `edge` is the tuple representing the edge as constructed within this method.
+let appIntegrationModel = \rel \config
+    let configs = //dict(config);
+    let modelNodes = configs('modelNodes')?:modelNodes;
+    let onNode = configs('onNode')?:\_ \node node;
+    let onEdge = configs('onEdge')?:\_ \edge edge;
+
+    let nodes = modelNodes(rel);
+    let stmtCallId = \stmt
+        $`${partsToAppName(stmt.appName)}-${partsToAppName(extractedAppName(stmt.stmtCall.appName))}`;
+
+    let nodes = nodes => \node onNode(node, (
+        id: partsToAppName(node.name),
+        parentId: partsToAppName(node.parentName),
+        childId: node.childNames,
+        label: let [...ns, name] = node.name; name,
+        visible: true,
+        expanded: true,
+        data: {},
+    ));
+
+    let edges = rel.stmt where .stmtCall => (:.appName, :.epName, :.stmtCall, :.stmtIndex) => \e
+        let stmts = rel.stmt <&- {(:e.appName, :e.epName, :e.stmtCall)};
+        let fromId = partsToAppName((stmts => .appName) single);
+        let toId = partsToAppName(extractedAppName((stmts => .stmtCall.appName) single));
+        let id = cond stmts {
+            {_}: $`${fromId}/${e.epName}-${toId}/${e.stmtCall.epName}`,
+            _: $`${fromId}/${e.epName}/${e.stmtIndex}-${toId}/${e.stmtCall.epName}`,
+        };
+        onEdge(stmts, (
+            fromId: fromId,
+            toId: toId,
+            id: id,
+            label: '',
+            visible: true,
+            data: {},
+        ));
+
+    (:nodes, :edges);
+
+(
+    :modelNodes,
+
+    :modelNodeAncestors,
+    :modelNodesWithAppTags,
+    :modelNodesWithStmtAnnos,
+    :modelNodesInFiles,
+
+    :appIntegrationModel,
+    :appIntegrationModelConfig,
+)

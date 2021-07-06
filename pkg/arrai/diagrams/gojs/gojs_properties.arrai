@@ -1,0 +1,97 @@
+
+# `node.key` contains the standard set of keys found in a GoJS json node to represent styles
+# supported within integration diagrams.
+#
+# `node.category` contains valid values for the the `'category'` key.
+#
+# Category:
+# The category property is used to indicate that the node is of a fundamentally different type to the
+# standard node being rendered. For example, if the renderer knows how to render both a standard
+# looking node and a node in an infralogical diagram, then the category property can be used to
+# differentiate between them. If no category is provided then the category is regarded as being 'standard'.
+#
+# Color:
+# All color values will be strings in the form of 24 or 32 bit RGB or RGBA hex value.
+# For example, "#FF0000" represents a solid red colour and "#00FF0088" represents a semi-transparent
+# green.
+let node = (
+    key: (
+        category:                   'category',                 # The category of node being rendered. Standard rendering if not provided.
+
+        key:                        'key',                      # The unique id of the node
+
+        group:                      'group',                    # The parent key
+        isGroup:                    'isGroup',                  # Whether the node contains children
+
+        visible:                    'visible',                  # Whether the node is visible in the graph
+
+        expanded:                   'expanded',                 # Whether the (group) node is expanded to show its children
+        expandable:                 'expandable',               # Whether the node can be expanded. True if not provided.
+
+        label:                      'label',                    # The textual label of the node
+        labelExpanded:              'labelExpanded',            # Overrides label when expanded
+        labelColor:                 'labelColor',               # The colour of the textual label
+        labelColorExpanded:         'labelColorExpanded',       # Overrides labelColor when expanded
+
+        bgColor:                    'bgColor',                  # The background color
+        bgColorExpanded:            'bgColorExpanded',          # Overrides bgColor when expanded
+
+        headingColor:               'headingColor',             # The colour of the heading background (when expanded)
+
+        highlightColorPrimary:      'highlightColorPrimary',    # The primary colour used to highlight during selection
+        highlightColorSecondary:    'highlightColorSecondary',
+
+        tooltip:                    'tooltip',                  # The tooltip to display on the node
+
+    ),
+
+    category: (
+        standard:                   'standard',                 # The category value that indicates this a standard node
+    ),
+);
+
+# `link.key` contains the standard set of keys found in a GoJS json link to represent styles
+# supported within integration diagrams.
+#
+# `link.category` contains valid values for the the `'category'` key.
+#
+# Category:
+# The category property is used to indicate that the link is of a fundamentally different type to the
+# standard link being rendered. For example, if the renderer knows how to render both a standard
+# looking link and a crow's foot link, then the category property can be used to differentiate between
+# them. If no category is provided then the category is regarded as being 'standard'.
+#
+# Color:
+# All color values will be strings in the form of 24 or 32 bit RGB or RGBA hex value.
+# For example, "#FF0000" represents a solid red colour and "#00FF0088" represents a semi-transparent
+# green.
+let link = (key: (
+    category:                   'category',                 # The category of link being rendered. Standard rendering if not provided.
+
+    key:                        'key',                      # The unique id of the link
+
+    from:                       'from',                     # The node id the link goes from
+    to:                         'to',                       # The node id the link goes to
+
+    visible:                    'visible',                  # Whether the link is visible in the graph
+
+    color:                      'color',                    # The colour of the link
+
+    label:                      'label',                    # The textual label to display on the link
+    labelColor:                 'labelColor',               # The colour of the link label
+
+    highlightColorPrimary:      'highlightColorPrimary',    # The primary colour used to highlight during selection
+    highlightColorSecondary:    'highlightColorSecondary',
+
+    group:                      'group',                    # The group the link belongs to. Links with the same group are highlighted together.
+
+    tooltip:                    'tooltip',                  # The tooltip to display on the link
+
+), category: (
+    standard:                   'standard',                 # The category value that indicates this a standard link
+));
+
+(
+    :node,
+    :link,
+)

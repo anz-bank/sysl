@@ -1,0 +1,41 @@
+Namespace::A::App:
+  Ep:
+    Namespace::B::App <- Ep
+    Namespace::B::App <- Ep
+    
+  !type foo:
+    a <: string
+    b <: bar
+    c <: baz
+
+  !type bar:
+    d <: string
+
+  !type baz:
+    e <: Namespace::A::App.bar
+    f <: Namespace::B::App.foobar
+
+Namespace::B::App:
+  Ep:
+    ...
+  
+  !type foobar:
+    g <: string
+
+  !table Account:
+    number <: string[~pk] 
+  
+  !table Person:
+    id <: string[~pk]
+    name <: string
+    fk <: Account.number
+    
+  !table Card:
+    cnumber <: string[~pk]
+    fk <: Person.id
+
+  !table MultipleCards:
+    pk <: sequence of Card.cnumber[~pk]
+
+EmptyApp:
+  ...

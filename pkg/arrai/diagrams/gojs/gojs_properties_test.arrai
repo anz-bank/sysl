@@ -1,0 +1,8 @@
+let properties = //{./gojs_properties};
+
+(
+    nodeKeyCategory: //test.assert.equal('category', properties.node.key.category),
+    nodeCategoryStandard: //test.assert.equal('standard', properties.node.category.standard),
+    linkKeyColor: //test.assert.equal('color', properties.link.key.color),
+    linkCategoryStandard: //test.assert.equal('standard', properties.link.category.standard),
+)

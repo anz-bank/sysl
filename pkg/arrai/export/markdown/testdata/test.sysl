@@ -1,0 +1,31 @@
+A :: App[~db]:
+  @description = "An app."
+
+  !table Customer:
+    @description = "A customer."
+    id <: int [~pk]
+
+  !table Account:
+    @description = "An account"
+    id <: int [~pk]:
+      @description = "ID of account"
+    customerId <: Customer.id?
+    customer <: Customer?
+    extra <: sequence of string?
+    constraint <: string(1..2)?
+
+  !type Message:
+    m <: string
+
+  !type Req:
+    a <: string
+    b <: Message
+
+  !type Res:
+    x <: int
+    y <: Message
+
+
+  Ep(param <: Req):
+    @description = "An endpoint."
+    return ok <: Res

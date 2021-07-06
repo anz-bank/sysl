@@ -1,0 +1,5 @@
+let isDb = \rel \appName rel.tag.app --- {(appTag: 'db', :appName)};
+
+(
+    :isDb,
+)

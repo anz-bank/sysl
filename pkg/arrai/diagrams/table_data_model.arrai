@@ -1,0 +1,54 @@
+let (:fieldTypeLabel, :referredTypeName, :nodeId, ...) = //{./util};
+
+# Returns true if the field has a primary key tag.
+let pk = \m \field {field} --- (m.tag.field <&- {(fieldTag: 'pk')});
+
+# Transforms a relation model into a set of table specs.
+let toTables = \m
+    (m.table <&> m.field) => (. +> (pk: pk(m, .))) nest ~|appName, typeName|columns;
+
+# Helper function to template from and to types.
+let findEdges = \fieldTypes fieldTypes => \field
+    let toType = referredTypeName(field.fieldType);
+    let from = nodeId(field.appName, field.typeName);
+    let to = nodeId(field.appName, toType);
+    toType && (
+        :from,
+        :to,
+        key: $`${from}-${to}`,
+        category: 'table'
+    )
+;
+
+# Returns nodes for each of the type within the specified application.
+let nodes = \rel \appName
+    let appTables = toTables(rel) <&- {(:appName)};
+    let cleanColumn = \c c.|fieldName, pk| +> (fieldType: fieldTypeLabel(c.fieldType));
+    let cleanTables = appTables => . +> (fields: .columns => cleanColumn(.));
+    let nodes = cleanTables => (
+        key: nodeId(.appName, .typeName),
+        label: .typeName,
+        fields: .fields => (
+            name: .fieldName,
+            type: .fieldType,
+            pk: .pk
+        )
+    );
+    nodes
+;
+
+# Returns edges between two tables within an application.
+let edges = \rel \appName
+    let fieldTypes = {(:appName)} <&> rel.field;
+    findEdges(fieldTypes <&- rel.table) where .
+;
+
+# Main function to return nodes and edges.
+let tableData = \rel \appName (
+    nodes: nodes(rel, appName),
+    edges: edges(rel, appName),
+);
+
+(
+    :tableData
+)

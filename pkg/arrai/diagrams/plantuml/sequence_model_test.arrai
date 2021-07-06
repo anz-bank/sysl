@@ -1,0 +1,77 @@
+let sysl = //{github.com/anz-bank/sysl/pkg/arrai/sysl};
+let (:sequence, ...) = //{./sequence_model.arrai};
+let m = sysl.loadBytes(//[//encoding.bytes]{/pkg/arrai/out/model.pb});
+
+(
+  # Test the sequence model.
+  sequence_basic: (
+    let actual = sequence(m, 'A', 'Fetch');
+    let expected = $`
+      @startuml
+      [-> "A": "Fetch"
+      activate "A"
+      "A" -> "Source": "Read"
+      activate "Source"
+      "A" <-- "Source": "ok <: A.FetchResponse"
+      deactivate "Source"
+      [<-- "A"
+      deactivate "A"
+      @enduml
+    `;
+    //test.assert.equal(expected, actual)
+  ),
+  sequence_transitive: (
+    let actual = sequence(m, 'C', 'Fetch');
+    let expected = $`
+      @startuml
+      [-> "C": "Fetch"
+      activate "C"
+      "C" -> "C": "FetchA"
+      activate "C"
+      "C" -> "A": "Fetch"
+      activate "A"
+      "A" -> "Source": "Read"
+      activate "Source"
+      "A" <-- "Source": "ok <: A.FetchResponse"
+      deactivate "Source"
+      "C" <-- "A": "ok <: C.FetchResponse"
+      deactivate "A"
+      "C" <-- "C": "ok <: C.FetchResponse"
+      deactivate "C"
+      "C" -> "C": "FetchB"
+      activate "C"
+      "C" -> "B": "Fetch"
+      activate "B"
+      "B" -> "Source": "Read"
+      activate "Source"
+      "B" <-- "Source": "ok <: B.FetchResponse"
+      deactivate "Source"
+      "C" <-- "B": "ok <: C.FetchResponse"
+      deactivate "B"
+      "C" <-- "C": "ok <: C.FetchResponse"
+      deactivate "C"
+      [<-- "C"
+      deactivate "C"
+      @enduml
+    `;
+    //test.assert.equal(expected, actual)
+  ),
+  sequence_undefined: (
+    # If an endpoint doesn't exist in a model, it should return one app sequence diagram.
+    let actual = sequence(m, 'Undefined', 'Undefined');
+    let expected = $`
+      @startuml
+      [-> "Undefined": "Undefined"
+      activate "Undefined"
+      [<-- "Undefined"
+      deactivate "Undefined"
+      @enduml
+    `;
+    //test.assert.equal(expected, actual)
+  ),
+  empty_app_ep: (
+    let actual = sequence(m, '', '');
+    let expected = {};
+    //test.assert.equal(expected, actual)
+  )
+)

@@ -1,0 +1,101 @@
+let (:appNameToParts, ...) = //{/pkg/arrai/tools/appname};
+
+# `diagram` constructs a PlantUML diagram from the given integration model.
+# The resulting diagram does not include nodes that are either not `visible` or are a descendent of
+# a node that is not `expanded`. Likewise, links that reference nodes that are not present within
+# the final diagram are also not included.
+let diagram = \im
+
+    # alias constructs an alias for a given id
+    let alias = \id //seq.join('_', appNameToParts(id));
+
+    # nodeWithId returns the node from the model with the given id or `{}` if not found
+    let nodeWithId = \nodes \id (nodes <&- {(:id)} orderby .id)(0)?:{};
+
+    # hasChildren returns whether a given node has children.
+    let hasChildren = \nodes \node (nodes <&- {(parentId: node.id)}) != {};
+
+    # isNodeVisible returns whether a given node is visible due to visibility (iff itself and all ancestors are visible)
+    let rec isNodeVisible = \nodes \node node.visible
+        && (!node.parentId || isNodeVisible(nodes, nodeWithId(nodes, node.parentId)));
+
+    # isNodeVisibleExpansion returns whether a given node is visible due to expansion (iff all ancestors are expanded)
+    let rec isNodeVisibleExpansion = \nodes \node
+        !node.parentId || (let parent = nodeWithId(nodes, node.parentId); parent.expanded && isNodeVisibleExpansion(nodes, parent));
+
+    # edgeTarget returns the node that an edge should target considering visibility and expansion
+    let rec edgeTarget = \nodes \node cond {
+        !node.visible: {},
+        node.visibleExpansion: node,
+        _: node.parentId && edgeTarget(nodes, nodeWithId(nodes, node.parentId)),
+    };
+
+    # nodeBlock constructs a diagram block representing a node
+    let rec nodeBlock = \nodes \node
+        cond node.package {
+            {}: $`[${node.label}] as ${alias(node.id)}`,
+            _: $`
+                package "${node.label}" as ${alias(node.id)} {
+                    ${nodes where .parentId = node.id orderby [!.package, .label] >> \child $`
+                        ${nodeBlock(nodes, child)}
+                    `::\i}
+                }
+            `,
+        };
+
+    let (:nodes, :edges, ...) = im;
+
+    let nodes = nodes => . +> (
+        # Modify nodes to include the `package` attribute
+        package: hasChildren(nodes, .),
+
+        # Modify nodes to push visibility down from ancestors
+        visible: isNodeVisible(nodes, .),
+
+        # Modify nodes to add the `visibleExpansion` attribute
+        visibleExpansion: isNodeVisibleExpansion(nodes, .),
+    );
+
+    # Modify edges to target the correct node
+    let edges = edges => \edge edge +> (
+        fromId: cond edgeTarget(nodes, nodeWithId(nodes, edge.fromId)) {(:id, ...): id},
+        toId: cond edgeTarget(nodes, nodeWithId(nodes, edge.toId)) {(:id, ...): id},
+    );
+
+    # Remove nodes and edges that are not visible
+    let nodes = nodes where .visible && .visibleExpansion;
+    let edges = edges where .visible;
+
+    # Remove edges that do not have valid and distinct targets
+    let edges = edges where .fromId && .toId && .fromId != .toId;
+
+    $`
+        @startuml
+
+        ${let roots = nodes where !.parentId;
+        roots orderby [!.package, .label] >> $`${nodeBlock(nodes, .)}`::\i}
+
+        ${edges => $`${alias(.fromId)} --> ${alias(.toId)}` orderby .::\i}
+
+        @enduml
+    `;
+
+let simpleDiagram = \(:nodes, :edges) $`
+    @startuml
+    ${nodes orderby . >>
+        $`
+            entity "${.label}" as ${.key}
+            {
+                ${.fields orderby . >> $`${.name}: ${.type}`::\n}
+            }
+        `
+    ::\n}
+    ${edges orderby . >> $`"${.from}" }o--o| "${.to}"`::\n}
+    @enduml
+`
+;
+
+(
+    :diagram,
+    :simpleDiagram,
+)

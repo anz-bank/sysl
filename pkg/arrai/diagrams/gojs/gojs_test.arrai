@@ -1,0 +1,65 @@
+let gojs = //{./gojs};
+let sysl = //{/pkg/arrai/sysl};
+let (:appIntegrationModel, ...) = //{/pkg/arrai/diagrams/integration_model};
+let rel = sysl.newNormalize(
+    sysl.loadBytes(//[//encoding.bytes]{/pkg/arrai/diagrams/testdata/node-edge-hierarchy.sysl.pb}),
+);
+
+(
+    # Test the complete diagram.
+    complete: (
+        let im = appIntegrationModel(rel, ());
+        let actual = gojs.diagram(im, gojs.stdJsonNode, gojs.stdJsonLink);
+        let expected = (
+            jsonNodes: //encoding.json.decode($`
+                [
+                    { "key": "A", "label": "A", "expanded": true, "visible": true, "isGroup": true },
+                    { "group": "A", "key": "A :: B1", "label": "B1", "expanded": true, "visible": true, "isGroup": true },
+                    { "group": "A :: B1", "key": "A :: B1 :: C1", "label": "C1", "expanded": true, "visible": true, "isGroup": false },
+                    { "group": "A", "key": "A :: B2", "label": "B2", "expanded": true, "visible": true, "isGroup": true },
+                    { "group": "A :: B2", "key": "A :: B2 :: C2", "label": "C2", "expanded": true, "visible": true, "isGroup": false }
+                ]
+            `),
+            jsonLinks: //encoding.json.decode($`
+                [
+                    { "from": "A :: B1 :: C1", "key": "A :: B1 :: C1/Ep/0-A :: B2 :: C2/Ep", "label": "", "to": "A :: B2 :: C2", "visible": true },
+                    { "from": "A :: B1 :: C1", "key": "A :: B1 :: C1/Ep/1-A :: B2 :: C2/Ep", "label": "", "to": "A :: B2 :: C2", "visible": true }
+                ]
+            `)
+        );
+        let actual = actual +> (jsonNodes: actual.jsonNodes +> (a: actual.jsonNodes.a orderby . => .@item));
+        let actual = actual +> (jsonLinks: actual.jsonLinks +> (a: actual.jsonLinks.a orderby . => .@item));
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a model containing data is included in the nodes and edges.
+    data: (
+        let im = appIntegrationModel(rel, (
+            onNode: \_ \node node +> (data: node.data +> {'type': 'node'}),
+            onEdge: \_ \edge edge +> (data: edge.data +> {'type': 'edge'}))
+        );
+        let actual = gojs.diagram(im,
+            \imNode gojs.stdJsonNode(imNode) +> (imNode.data => (:.@, @value:(s:.@value))),
+            \imEdge gojs.stdJsonLink(imEdge) +> (imEdge.data => (:.@, @value:(s:.@value))));
+        let expected = (
+            jsonNodes: //encoding.json.decode($`
+                [
+                    { "key": "A", "label": "A", "expanded": true, "visible": true, "type": "node", "isGroup": true },
+                    { "group": "A", "key": "A :: B1", "label": "B1", "expanded": true, "visible": true, "type": "node", "isGroup": true },
+                    { "group": "A :: B1", "key": "A :: B1 :: C1", "label": "C1", "expanded": true, "visible": true, "type": "node" , "isGroup": false},
+                    { "group": "A", "key": "A :: B2", "label": "B2", "expanded": true, "visible": true, "type": "node", "isGroup": true },
+                    { "group": "A :: B2", "key": "A :: B2 :: C2", "label": "C2", "expanded": true, "visible": true, "type": "node" , "isGroup": false}
+                ]
+            `),
+            jsonLinks: //encoding.json.decode($`
+                [
+                    { "from": "A :: B1 :: C1", "key": "A :: B1 :: C1/Ep/0-A :: B2 :: C2/Ep", "label": "", "to": "A :: B2 :: C2", "visible": true, "type": "edge" },
+                    { "from": "A :: B1 :: C1", "key": "A :: B1 :: C1/Ep/1-A :: B2 :: C2/Ep", "label": "", "to": "A :: B2 :: C2", "visible": true, "type": "edge" }
+                ]
+            `)
+        );
+        let actual = actual +> (jsonNodes: actual.jsonNodes +> (a: actual.jsonNodes.a orderby . => .@item));
+        let actual = actual +> (jsonLinks: actual.jsonLinks +> (a: actual.jsonLinks.a orderby . => .@item));
+        //test.assert.equal(expected, actual)
+    ),
+)

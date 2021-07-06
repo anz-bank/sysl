@@ -1,0 +1,107 @@
+let sysl = //{/pkg/arrai/sysl};
+let (:recursiveTypeData, :typeData,...) = //{./type_data_model};
+let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/example.sysl.pb}));
+
+(
+    # Test the type data model.
+    recursive_type: (
+        let actual = recursiveTypeData(rel, ['Namespace', 'A', 'App'], 'foo');
+        let expected = (
+            edges: {
+                (key: 'Namespace :: A :: App.baz-Namespace :: A :: App.bar' , from: 'Namespace :: A :: App.baz', to: 'Namespace :: A :: App.bar', category: 'type'),
+                (key: 'Namespace :: A :: App.baz-Namespace :: B :: App.foobar' , from: 'Namespace :: A :: App.baz', to: 'Namespace :: B :: App.foobar', category: 'type'),
+                (key: 'Namespace :: A :: App.foo-Namespace :: A :: App.bar' , from: 'Namespace :: A :: App.foo', to: 'Namespace :: A :: App.bar', category: 'type'),
+                (key: 'Namespace :: A :: App.foo-Namespace :: A :: App.baz' , from: 'Namespace :: A :: App.foo', to: 'Namespace :: A :: App.baz', category: 'type')
+            },
+            nodes: {
+                (
+                    key: 'Namespace :: A :: App.foo',
+                    label: 'foo',
+                    fields: {(name: 'a', type: 'string'), (name: 'b', type: 'bar'), (name: 'c', type: 'baz')}
+                ),
+                (
+                    key: 'Namespace :: A :: App.bar',
+                    label: 'bar',
+                    fields: {(name: 'd', type: 'string')}
+                ),
+                (
+                    key: 'Namespace :: A :: App.baz',
+                    label: 'baz',
+                    fields: {(name: 'e', type: 'bar'), (name: 'f', type: 'foobar')}
+                ),
+                (
+                    key: 'Namespace :: B :: App.foobar',
+                    label: 'foobar',
+                    fields: {(name: 'g', type: 'string')}
+                )
+            }
+        );
+        //test.assert.equal(expected, actual)
+    ),
+    recursive_type_single_node: (
+        let actual = recursiveTypeData(rel, ['Namespace', 'A', 'App'], 'bar');
+        let expected = (
+            edges: {},
+            nodes: {
+                (
+                    key: 'Namespace :: A :: App.bar',
+                    label: 'bar',
+                    fields: {(name: 'd', type: 'string')}
+                )
+            }
+        );
+        //test.assert.equal(expected, actual)
+    ),
+    type: (
+        let actual = typeData(rel, ['Namespace', 'A', 'App']);
+        let expected = (
+            edges: {
+                (key: 'Namespace :: A :: App.baz-Namespace :: A :: App.bar', from: 'Namespace :: A :: App.baz', to: 'Namespace :: A :: App.bar', category: 'type'),
+                (key: 'Namespace :: A :: App.baz-Namespace :: B :: App.foobar', from: 'Namespace :: A :: App.baz', to: 'Namespace :: B :: App.foobar', category: 'type'),
+                (key: 'Namespace :: A :: App.foo-Namespace :: A :: App.bar', from: 'Namespace :: A :: App.foo', to: 'Namespace :: A :: App.bar', category: 'type'),
+                (key: 'Namespace :: A :: App.foo-Namespace :: A :: App.baz', from: 'Namespace :: A :: App.foo', to: 'Namespace :: A :: App.baz', category: 'type')
+            },
+            nodes: {
+                (
+                    key: 'Namespace :: A :: App.foo',
+                    label: 'foo',
+                    fields: {(name: 'a', type: 'string'), (name: 'b', type: 'bar'), (name: 'c', type: 'baz')}
+                ),
+                (
+                key: 'Namespace :: A :: App.bar',
+                label: 'bar',
+                fields: {(name: 'd', type: 'string')}
+                ),
+                (
+                    key: 'Namespace :: A :: App.baz',
+                    label: 'baz',
+                    fields: {(name: 'e', type: 'bar'), (name: 'f', type: 'foobar')}
+                )
+            }
+        );
+        //test.assert.equal(expected, actual)
+    ),
+    # Edges should be found for either tables or types, not for everything.
+    empty_type_edge: (
+        let actual = typeData(rel, ['Namespace', 'B', 'App']);
+        let expected = (
+            edges: {},
+            nodes: {
+                (
+                    key: 'Namespace :: B :: App.foobar',
+                    label: 'foobar',
+                    fields: {(name: 'g', type: 'string')}
+                )
+            }
+        );
+        //test.assert.equal(expected, actual)
+    ),
+    type_empty: (
+        let actual = typeData(rel, ['EmptyApp']);
+        let expected = (
+            edges: {},
+            nodes: {}
+        );
+        //test.assert.equal(expected, actual)
+    )
+)

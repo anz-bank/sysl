@@ -1,0 +1,14 @@
+# Splits keys of dict on sep and nests the values like a file system.
+let rec splitNest = \sep \dict
+    let entries = dict => cond //seq.split(sep, .@) {
+        [file]: .,
+        [dir, ...path]: (:dir, @: //seq.join(sep, path), :.@value),
+    };
+    let files = entries where !(.).dir?:'';
+    let dirs = entries where (.).dir?:'' nest ~|dir|subs => (@: .dir, @value: splitNest(sep, .subs));
+    files | dirs
+;
+
+(
+    :splitNest,
+)

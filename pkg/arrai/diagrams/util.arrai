@@ -1,0 +1,32 @@
+let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
+
+# Field label for a field in type.
+let rec fieldTypeLabel = \fieldType cond fieldType {
+    (primitive:p, ...): //str.lower(p),
+    (:typePath, ...): $`${typePath::.}`,
+    (:sequence, ...): $`sequence of ${fieldTypeLabel(sequence)}`,
+    (:set, ...): $`set of ${fieldTypeLabel(set)}`,
+    _: '?',
+};
+
+# A recurssive function that returns an app and a type that is referred within for a field type.
+let rec referredType = \fieldType cond fieldType {
+  (typePath: [typeName], :appName, ...): (:appName, :typeName),
+  (typePath: [typeName, fieldName], :appName, ...): (:appName, :typeName),
+  (:sequence, ...): referredType(sequence),
+  (:set, ...): referredType(set),
+};
+
+let referredTypeName = \fieldType
+    cond referredType(fieldType) {(:typeName, ...): typeName}
+;
+
+# Template for a node ID.
+let nodeId = \appName \typeName $`${partsToAppName(appName)}.${typeName}`;
+
+(
+    :fieldTypeLabel,
+    :referredType,
+    :referredTypeName,
+    :nodeId,
+)

@@ -1,0 +1,167 @@
+let (:appIntegrationModel, ...) = //{/pkg/arrai/diagrams/integration_model};
+let puml = //{/pkg/arrai/diagrams/plantuml/plantuml};
+let (:sequence, ...) = //{/pkg/arrai/diagrams/plantuml/sequence_model};
+let (:isDb, ...) = //{/pkg/arrai/tools/database};
+let (:partsToAppName, :appNameToParts, ...) = //{/pkg/arrai/tools/appname};
+
+let renderers = \(:rel, :proto)
+    let tableDiagram = //{/pkg/arrai/diagrams/table_data_model}.tableData(rel);
+    let typeDiagram = //{/pkg/arrai/diagrams/type_data_model}.recursiveTypeData(rel);
+
+    let tail = \arr arr(arr count - 1);
+
+    let renderType = \type
+        let annos = {type} --> rel.anno.type => (@: .typeAnnoName, @value: .typeAnnoValue);
+        $`
+            ${annos('description')?:''}
+
+            ${puml.simpleDiagram(typeDiagram(type.appName, type.typeName))}
+        `
+    ;
+
+    let renderEndpoint = \ep
+        let annos = {ep} --> rel.anno.ep => (@: .epAnnoName, @value: .epAnnoValue);
+        let refs = \types types => cond . {(:appName, :typePath): (:appName, typeName: typePath(0))} where .;
+        let req = refs({ep} -&> rel.param => .paramType);
+        let res = refs({ep} <&> rel.stmt => (.).stmtRet?.type?:());
+        $`
+            ### ${tail(ep.appName)} ${ep.epName}
+
+            ${sequence(proto, partsToAppName(ep.appName), ep.epName)}
+
+            ${annos('description')?:''}
+
+            #### Request types
+
+            ${cond req {
+                {}: ['No request types'],
+                _: req => renderType(.) orderby .
+            }::\n}
+
+            #### Response types
+
+            ${cond res {
+                {}: ['No response types'],
+                _: res => renderType(.) orderby .
+            }::\n}
+        `
+    ;
+
+    let renderAppEndpoints = \app
+        let annos = {app} --> rel.anno.app => (@: .appAnnoName, @value: .appAnnoValue);
+        let eps = {app} -&> rel.ep orderby .epName;
+
+        $`
+            ## ${partsToAppName(app.appName)}
+
+            ${annos('description')?:''}
+
+            ${cond eps {
+                {}: ['No endpoints'],
+                _: eps >> renderEndpoint(.)
+            }::\n}
+        `
+    ;
+
+    let renderDb = \app
+    $`
+        ## ${partsToAppName(app.appName)}
+
+        ${puml.simpleDiagram(tableDiagram(app.appName))}
+    `
+    ;
+
+    let renderAppTypes = \app
+        let annos = {app} --> rel.anno.app => (@: .appAnnoName, @value: .appAnnoValue);
+        let typeDesc = {app} -&> rel.anno.type <-- {(typeAnnoName: 'description')} =>
+            (@: (:.appName, :.typeName), @value: .typeAnnoValue);
+
+        let tables = {app} -&> rel.type <&- rel.table;
+        let types = {app} -&> rel.type &~ tables;
+
+        let row = \type
+            let diagram = typeDiagram(type.appName, type.typeName);
+            let cells = [
+                $`${tail(type.appName)}.<br />${type.typeName}`,
+                $`${
+                    let nodeOfInterest = {(key: $`${partsToAppName(type.appName)}.${type.typeName}`)} -&> diagram.nodes;
+                    $`${puml.simpleDiagram((nodes: nodeOfInterest, edges: {}))}`
+                }`,
+                //seq.sub("\n", "<br />", typeDesc(type.|appName, typeName|)?:''),
+                $`[Link](${puml.simpleDiagram(diagram)})`
+            ];
+            $`${cells::|}`
+        ;
+
+        $`
+            ${isDb(rel, app.appName) && puml.simpleDiagram(tableDiagram(app.appName))}
+
+            |App Name|Diagram|Description|Full Diagram|
+            |--------|-------|-----------|------------|
+            ${types => row(.) orderby .::\n}
+        `
+    ;
+
+    let renderIntegrationDiagram = \r
+    $`
+        ## Integration Diagram
+
+        ${puml.diagram(appIntegrationModel(r, ()))}
+    `;
+
+    let renderApp = \prefix
+        let ofInterest = \appName //seq.has_prefix(prefix, appName);
+        let apps = rel.app where ofInterest(.appName);
+
+        let epApps = apps <&- rel.ep orderby [isDb(rel, .appName), .appName];
+        let dataApps = apps <&- rel.type orderby [isDb(rel, .appName), .appName];
+
+        let stmtsOfInterest = rel.stmt where .stmtCall && ofInterest(.stmtCall.appName);
+        let appsOfInterest = //rel.union(stmtsOfInterest => {.appName, .stmtCall.appName});
+        let appRel = rel +> (
+            app: rel.app where .appName <: appsOfInterest,
+            stmt: stmtsOfInterest,
+        );
+
+        $'
+            # Documentation
+
+            ${renderIntegrationDiagram(appRel)}
+
+            > Namespace: `${partsToAppName(prefix)}`
+
+            ${epApps >> renderAppEndpoints(.)::\n\n}
+
+            # Types
+
+            ${dataApps >> cond {
+                isDb(rel, .appName): renderDb(.),
+                _: renderAppTypes(.),
+            }::\n\n}
+        '
+    ;
+
+    let renderApps =  \appNames
+        appNames => \appName
+            let alias = //seq.join('_', appName);
+            (@: alias, @value: {$`${//seq.sub('/', '_', alias)}.md`: renderApp(appName)})
+    ;
+
+    (
+        :renderApp,
+        :renderApps,
+        :renderAppEndpoints,
+        :renderAppTypes,
+        :renderDb,
+        :renderEndpoint,
+        :renderIntegrationDiagram,
+        :renderType,
+    )
+;
+
+let renderAll = \ctx renderers(ctx).renderApps(ctx.rel.app => .appName);
+
+(
+    :renderers,
+    :renderAll,
+)

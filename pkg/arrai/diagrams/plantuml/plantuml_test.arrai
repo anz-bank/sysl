@@ -1,0 +1,161 @@
+let (:diagram, ...) = //{./plantuml};
+let sysl = //{/pkg/arrai/sysl};
+let (:appIntegrationModel, ...) = //{/pkg/arrai/diagrams/integration_model};
+let relSimple = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{/pkg/arrai/diagrams/testdata/node-edge.sysl.pb}));
+let relHierarchy = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{/pkg/arrai/diagrams/testdata/node-edge-hierarchy.sysl.pb}));
+
+(
+    # Test a complete diagram with a hierarchy.
+    complete: (
+        let im = appIntegrationModel(relHierarchy, ());
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            package "A" as A {
+                package "B1" as A_B1 {
+                    [C1] as A_B1_C1
+                }
+                package "B2" as A_B2 {
+                    [C2] as A_B2_C2
+                }
+            }
+
+            A_B1_C1 --> A_B2_C2
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a diagram with an invisible edge doesn't include the edge.
+    edgeInvisible: (
+        let im = appIntegrationModel(relSimple, (
+            onEdge: \_ \edge edge +> (visible: false)));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            [A] as A
+            [B] as B
+
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a diagram with an invisible node doesn't include the node or edge.
+    nodeInvisible: (
+        let im = appIntegrationModel(relSimple, (
+            onNode: \_ \node cond { node.label = 'A': node +> (visible: false), _: node }));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            [B] as B
+
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a diagram with a invisible node containing children doesn't include the children.
+    parentNodeInvisible: (
+        let im = appIntegrationModel(relHierarchy, (
+            onNode: \_ \node cond { node.label = 'B1': node +> (visible: false), _: node }));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            package "A" as A {
+                package "B2" as A_B2 {
+                    [C2] as A_B2_C2
+                }
+            }
+
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a diagram with a collapsed node containing children doesn't include the children.
+    parentNodeCollapsed: (
+        let im = appIntegrationModel(relHierarchy, (
+            onNode: \_ \node cond { node.label = 'B1': node +> (expanded: false), _: node }));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            package "A" as A {
+                package "B1" as A_B1 {
+                }
+                package "B2" as A_B2 {
+                    [C2] as A_B2_C2
+                }
+            }
+
+            A_B1 --> A_B2_C2
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a diagram with an edge that references collapsed nodes is promoted to its parents.
+    edgePromoted: (
+        let im = appIntegrationModel(relHierarchy, (
+            onNode: \_ \node cond { node.label <: {'B1','B2'}: node +> (expanded: false), _: node }));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            package "A" as A {
+                package "B1" as A_B1 {
+                }
+                package "B2" as A_B2 {
+                }
+            }
+
+            A_B1 --> A_B2
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test that a diagram with an edge that references collapsed nodes is not displayed if the
+    # edge targets the same node (i.e. it was promoted to a common ancestor).
+    edgePromotedToCommonAncestor: (
+        let im = appIntegrationModel(relHierarchy, (
+            onNode: \_ \node cond { node.label = 'A': node +> (expanded: false), _: node }));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+            package "A" as A {
+            }
+
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+
+    # Test a completely invisible diagram.
+    invisibleDiagram: (
+        let im = appIntegrationModel(relHierarchy, (
+            onNode: \_ \node cond { node.label = 'A': node +> (visible: false), _: node }));
+        let actual = diagram(im);
+        let expected = $`
+            @startuml
+
+
+
+            @enduml
+        `;
+        //test.assert.equal(expected, actual)
+    ),
+)

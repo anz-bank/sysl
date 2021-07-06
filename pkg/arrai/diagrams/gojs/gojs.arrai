@@ -1,0 +1,75 @@
+let properties = //{./gojs_properties};
+
+# `diagram` constructs a GoJS diagram from the given integration model.
+# This method returns a tuple with the following structure `(:jsonNodes, :jsonEdges)` where
+# `jsonNodes` is a JSON encoded array of `node data` and `jsonLinks` is a JSON encoded array of
+# `link data`, both of which being suitable for use within a GoJS `GraphLinksModel`.
+# `jsonNode` is a function that maps an integration model `node` to the JSON dictionary
+# representation of the `node` in the `GraphLinksModel`.
+# `jsonLink` is a function that maps an integration model `edge` to the JSON dictionary
+# representation of the `link` in the `GraphLinksModel`.
+let diagram = \im \jsonNode \jsonLink
+    (
+        jsonNodes: (a: im.nodes => jsonNode(.) orderby .('key')?:.),
+        jsonLinks: (a: im.edges => jsonLink(.) orderby .('key')?:.),
+    );
+
+# `stdJsonNode` returns is a pseudo-standard JSON encoding of a `Node` within a `GraphLinksModel`
+# from the given integration model `node`. The output from this function is a dictionary that
+# represents the node. Standard top-level items from the integration model are all represented as
+# known key/value pairs in the output. The key/value pairs from the integration model `data` object
+# are ignored.
+let stdJsonNode = \imNode {
+        properties.node.key.key: (s: imNode.id),
+        properties.node.key.label: (s: imNode.label),
+        properties.node.key.visible: (b: imNode.visible),
+        properties.node.key.expanded: (b: imNode.expanded),
+        properties.node.key.isGroup: (b: imNode.childId count > 0),
+    } +> (imNode.parentId && {properties.node.key.group: (s: imNode.parentId) });
+
+# `stdJsonLink` returns is a pseudo-standard JSON encoding of a `Link` within a `GraphLinksModel`
+# from the given integration model `edge`. The output from this function is a dictionary that
+# represents the link. Standard top-level items from the integration model are all represented as
+# known key/value pairs in the output. The key/value pairs from the integration model `data` object
+# are ignored.
+let stdJsonLink = \imEdge {
+    properties.link.key.from: (s: imEdge.fromId),
+    properties.link.key.to: (s: imEdge.toId),
+    properties.link.key.key: (s: imEdge.id),
+    properties.link.key.label: (s: imEdge.label),
+    properties.link.key.visible: (b: imEdge.visible),
+};
+
+# `stdNode` returns is a pseudo-standard encoding of a `Node` within a `GraphLinksModel`
+# from the given integration model `node`. The output from this function is a dictionary that
+# represents the node. Standard top-level items from the integration model are all represented as
+# known key/value pairs in the output. The key/value pairs from the integration model `data` object
+# are ignored.
+let stdNode = \imNode {
+    properties.node.key.key: imNode.id,
+    properties.node.key.label: imNode.label,
+    properties.node.key.visible: imNode.visible,
+    properties.node.key.expanded: imNode.expanded,
+    properties.node.key.isGroup: imNode.childId count > 0,
+} +> (imNode.parentId && {properties.node.key.group: imNode.parentId});
+
+# `stdLink` returns is a pseudo-standard encoding of a `Link` within a `GraphLinksModel`
+# from the given integration model `edge`. The output from this function is a dictionary that
+# represents the link. Standard top-level items from the integration model are all represented as
+# known key/value pairs in the output. The key/value pairs from the integration model `data` object
+# are ignored.
+let stdLink = \imEdge {
+    properties.link.key.from: imEdge.fromId,
+    properties.link.key.to: imEdge.toId,
+    properties.link.key.key: imEdge.id,
+    properties.link.key.label: imEdge.label,
+    properties.link.key.visible: imEdge.visible,
+};
+
+(
+    :diagram,
+    :stdJsonNode,
+    :stdJsonLink,
+    :stdNode,
+    :stdLink,
+)

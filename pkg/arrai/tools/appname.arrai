@@ -1,0 +1,8 @@
+let partsToAppName = //seq.join(' :: ');
+
+let appNameToParts = \name //re.compile(`\s*::\s*`).sub('::', name) -> //seq.split('::', .);
+
+(
+    :partsToAppName,
+    :appNameToParts,
+)
