@@ -65,31 +65,32 @@ let node = (
 # All color values will be strings in the form of 24 or 32 bit RGB or RGBA hex value.
 # For example, "#FF0000" represents a solid red colour and "#00FF0088" represents a semi-transparent
 # green.
-let link = (key: (
-    category:                   'category',                 # The category of link being rendered. Standard rendering if not provided.
+let link = (
+    key: (
+        category:                   'category',                 # The category of link being rendered. Standard rendering if not provided.
 
-    key:                        'key',                      # The unique id of the link
+        key:                        'key',                      # The unique id of the link
 
-    from:                       'from',                     # The node id the link goes from
-    to:                         'to',                       # The node id the link goes to
+        from:                       'from',                     # The node id the link goes from
+        to:                         'to',                       # The node id the link goes to
 
-    visible:                    'visible',                  # Whether the link is visible in the graph
+        visible:                    'visible',                  # Whether the link is visible in the graph
 
-    color:                      'color',                    # The colour of the link
+        color:                      'color',                    # The colour of the link
 
-    label:                      'label',                    # The textual label to display on the link
-    labelColor:                 'labelColor',               # The colour of the link label
+        label:                      'label',                    # The textual label to display on the link
+        labelColor:                 'labelColor',               # The colour of the link label
 
-    highlightColorPrimary:      'highlightColorPrimary',    # The primary colour used to highlight during selection
-    highlightColorSecondary:    'highlightColorSecondary',
+        highlightColorPrimary:      'highlightColorPrimary',    # The primary colour used to highlight during selection
+        highlightColorSecondary:    'highlightColorSecondary',
 
-    group:                      'group',                    # The group the link belongs to. Links with the same group are highlighted together.
+        tooltip:                    'tooltip',                  # The tooltip to display on the link
 
-    tooltip:                    'tooltip',                  # The tooltip to display on the link
-
-), category: (
-    standard:                   'standard',                 # The category value that indicates this a standard link
-));
+    ),
+    category: (
+        standard:                   'standard',                 # The category value that indicates this a standard link
+    ),
+);
 
 (
     :node,

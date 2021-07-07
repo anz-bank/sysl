@@ -8,11 +8,15 @@ let properties = //{./gojs_properties};
 # representation of the `node` in the `GraphLinksModel`.
 # `jsonLink` is a function that maps an integration model `edge` to the JSON dictionary
 # representation of the `link` in the `GraphLinksModel`.
-let diagram = \im \jsonNode \jsonLink
-    (
-        jsonNodes: (a: im.nodes => jsonNode(.) orderby .('key')?:.),
-        jsonLinks: (a: im.edges => jsonLink(.) orderby .('key')?:.),
-    );
+let jsonDiagram = \im \jsonNode \jsonLink (
+    jsonNodes: (a: im.nodes => jsonNode(.) orderby .),
+    jsonLinks: (a: im.edges => jsonLink(.) orderby .),
+);
+
+let diagram = \im \jsonNode \jsonLink (
+    jsonNodes: im.nodes => jsonNode(.) orderby .,
+    jsonLinks: im.edges => jsonLink(.) orderby .,
+);
 
 # `stdJsonNode` returns is a pseudo-standard JSON encoding of a `Node` within a `GraphLinksModel`
 # from the given integration model `node`. The output from this function is a dictionary that
@@ -35,7 +39,7 @@ let stdJsonNode = \imNode {
 let stdJsonLink = \imEdge {
     properties.link.key.from: (s: imEdge.fromId),
     properties.link.key.to: (s: imEdge.toId),
-    properties.link.key.key: (s: imEdge.id),
+    properties.link.key.key: (s: $`${imEdge.fromId}-${imEdge.toId}`),
     properties.link.key.label: (s: imEdge.label),
     properties.link.key.visible: (b: imEdge.visible),
 };
@@ -61,12 +65,13 @@ let stdNode = \imNode {
 let stdLink = \imEdge {
     properties.link.key.from: imEdge.fromId,
     properties.link.key.to: imEdge.toId,
-    properties.link.key.key: imEdge.id,
+    properties.link.key.key: $`${imEdge.fromId}-${imEdge.toId}`,
     properties.link.key.label: imEdge.label,
     properties.link.key.visible: imEdge.visible,
 };
 
 (
+    :jsonDiagram,
     :diagram,
     :stdJsonNode,
     :stdJsonLink,
