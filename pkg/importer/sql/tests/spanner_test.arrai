@@ -45,10 +45,11 @@ let interleaved = applyStmt(parseDdl('
             stmt: 'create_table',
             data: (
                 name: 'foo',
-                attributes: [(name: 'a', type: 'int64', array: {}, length: 0, nullable: true, options: {}, scale: {})],
+                attributes: [(name: 'a', type: 'int64', length: 0, nullable: true, options: {}, scale: 0)],
                 primary_key: ['a'],
                 foreign_keys: {},
                 unique_keys: {},
+                name_prefix: '',
                 cluster: {},
             ),
         ),
@@ -58,7 +59,7 @@ let interleaved = applyStmt(parseDdl('
                 table_name: 'foo',
                 alterations: [(
                     type: 'add_column',
-                    alteration: (name: 'b', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                    alteration: (name: 'b', type: 'int64', nullable: true, options: {}, length: 0, scale: 0),
                 )],
             ),
         ),
@@ -78,7 +79,7 @@ let interleaved = applyStmt(parseDdl('
                 table_name: 'foo',
                 alterations: [(
                     type: 'alter_column',
-                    alteration: (name: 'b', type: 'int64', nullable: false, options: {}, array: {}, length: 0, scale: {}),
+                    alteration: (name: 'b', type: 'int64', nullable: false, options: {}, length: 0, scale: 0),
                 )],
             ),
         ),
@@ -116,11 +117,12 @@ let interleaved = applyStmt(parseDdl('
         foo: foo.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', array: {}, length: 0, nullable: true, options: {}, type: 'int64', scale: {}),
+                (name: 'a', length: 0, nullable: true, options: {}, type: 'int64', scale: 0),
             ],
             primary_key: ['a'],
             foreign_keys: {},
             unique_keys: {},
+            name_prefix: '',
             cluster: {},
         )}
     ),
@@ -145,24 +147,26 @@ let interleaved = applyStmt(parseDdl('
         addCol: foo_b.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
-                (name: 'b', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'a', type: 'int64', nullable: true, options: {}, length: 0, scale: 0),
+                (name: 'b', type: 'int64', nullable: true, options: {}, length: 0, scale: 0),
             ],
             primary_key: ['a'],
             foreign_keys: {},
             unique_keys: {},
+            name_prefix: '',
             cluster: {},
         )},
 
         alterCol: foo_b2.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', type: 'int64', nullable: true, options: {}, array: {}, length: 0, scale: {}),
-                (name: 'b', type: 'int64', nullable: false, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'a', type: 'int64', nullable: true, options: {}, length: 0, scale: 0),
+                (name: 'b', type: 'int64', nullable: false, options: {}, length: 0, scale: 0),
             ],
             primary_key: ['a'],
             foreign_keys: {},
             unique_keys: {},
+            name_prefix: '',
             cluster: {},
         )},
 
@@ -171,13 +175,13 @@ let interleaved = applyStmt(parseDdl('
 
     applyStmt: (
         interleaved:
-            let a = (name: 'a', type: 'int64', array: {}, length: 0, nullable: true, options: {}, scale: {});
-            let t = (name: 't', type: 'datetime', array: {}, length: 0, nullable: true, options: {'allow_commit_timestamp': 'true'}, scale: {});
+            let a = (name: 'a', type: 'int64', length: 0, nullable: true, options: {}, scale: 0);
+            let t = (name: 't', type: 'datetime', length: 0, nullable: true, options: {'allow_commit_timestamp': 'true'}, scale: 0);
             interleaved = (
                 entities: {
-                    |name , attributes, primary_key, foreign_keys, unique_keys, cluster                                 |
-                    ('foo', [a]       , ['a']      , {}          , {}         , {}                                      ),
-                    ('bar', [a, t]    , ['a', 't'] , {}          , {}         , [(interleaved_in: 'foo', on_delete: {})]),
+                    |name , attributes, primary_key, foreign_keys, unique_keys, name_prefix, cluster                                 |
+                    ('foo', [a]       , ['a']      , {}          , {}         , ''         , {}                                      ),
+                    ('bar', [a, t]    , ['a', 't'] , {}          , {}         , ''         , [(interleaved_in: 'foo', on_delete: {})]),
                 },
                 indexes: {},
                 schema: {(name: 'test')},

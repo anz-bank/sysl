@@ -33,6 +33,7 @@ var Formats = []Format{
 	PostgresDir,
 	MySQL,
 	MySQLDir,
+	BigQuery,
 }
 
 // Factory takes in an absolute path and its contents (if path is a file) and returns an importer
@@ -90,6 +91,9 @@ func Factory(path string, isDir bool, format string, content []byte, logger *log
 		return MakeSQLImporter(logger), nil
 	case MySQLDir.Name:
 		logger.Debugln("Detected MySQL directory")
+		return MakeSQLImporter(logger), nil
+	case BigQuery.Name:
+		logger.Debugln("Detected BigQuery")
 		return MakeSQLImporter(logger), nil
 	default:
 		return nil, fmt.Errorf("an importer does not exist for %s", fileType.Name)

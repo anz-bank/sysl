@@ -37,10 +37,11 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
             stmt: 'create_table',
             data: (
                 name: 'foo',
-                attributes: [(name: 'a', type: 'int', array: {}, length: 0, nullable: true, options: {}, scale: {})],
+                attributes: [(name: 'a', type: 'int', length: 0, nullable: true, options: {}, scale: 0)],
                 primary_key: ['a'],
                 foreign_keys: {},
                 unique_keys: {},
+                name_prefix: '',
                 cluster: {},
             ),
         ),
@@ -51,7 +52,7 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
                 table_name: 'foo',
                 alterations: [(
                     type: 'add_column',
-                    alteration: (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                    alteration: (name: 'b', type: 'int', nullable: true, options: {}, length: 0, scale: 0),
                 )],
             ),
         ),
@@ -88,7 +89,7 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
             stmt: 'create_table',
             data: (
                 name: 't',
-                attributes: [(name: 'x', type: 'int', array: {}, length: 0, nullable: true, options: {}, scale: {})],
+                attributes: [(name: 'x', type: 'int', length: 0, nullable: true, options: {}, scale: 0)],
                 primary_key: {},
                 foreign_keys: {(
                     foreign_keys: {
@@ -99,6 +100,7 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
                     on_update: {},
                 )},
                 unique_keys: {},
+                name_prefix: '',
                 cluster: {},
             ),
         )],
@@ -115,11 +117,12 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
         foo: foo.entities = {(
             name: 'foo',
             attributes: [
-                (array: {}, length: 0, name: 'a', nullable: true, options: {}, scale: {}, type: 'int'),
+                (length: 0, name: 'a', nullable: true, options: {}, scale: 0, type: 'int'),
             ],
             primary_key: ['a'],
             foreign_keys: {},
             unique_keys: {},
+            name_prefix: '',
             cluster: {},
         )}
     ),
@@ -144,24 +147,26 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
         addCol: foo_b.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
-                (name: 'b', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'a', type: 'int', nullable: true, options: {}, length: 0, scale: 0),
+                (name: 'b', type: 'int', nullable: true, options: {}, length: 0, scale: 0),
             ],
             primary_key: ['a'],
             foreign_keys: {},
             unique_keys: {},
+            name_prefix: '',
             cluster: {},
         )},
 
         alterCol: foo_b2.entities = {(
             name: 'foo',
             attributes: [
-                (name: 'a', type: 'int', nullable: true, options: {}, array: {}, length: 0, scale: {}),
-                (name: 'b', type: 'int', nullable: false, options: {}, array: {}, length: 0, scale: {}),
+                (name: 'a', type: 'int', nullable: true, options: {}, length: 0, scale: 0),
+                (name: 'b', type: 'int', nullable: false, options: {}, length: 0, scale: 0),
             ],
             primary_key: ['a'],
             foreign_keys: {},
             unique_keys: {},
+            name_prefix: '',
             cluster: {},
         )},
 

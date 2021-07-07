@@ -14,7 +14,7 @@ customeraccounts:
         LastUpdated <: datetime?
         AddressLine1 <: bytes? [~max]
         AddressLine2 <: string(100)? [~hex]
-        AddressLine3 <: bytes? [length="100"]
+        AddressLine3 <: bytes(100)?
 
     !table Customer [indexes=[["name:CustomerByEmail","unique:true","key_parts:Email,Mobile(desc)"]]]:
         CustomerID <: string(36) [~pk]

@@ -26,7 +26,7 @@ Currently, the supported formats include:
 - OpenAPI 3.0
 - XSD
 - Avro (Kafka)
-- SQL (Spanner, PostgreSQL, MySQL)
+- SQL (Spanner, PostgreSQL, MySQL, BigQuery)
 - A directory of SQL migration scripts
 
 ## Required Flags

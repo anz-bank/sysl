@@ -1,4 +1,4 @@
-let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
+let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
 
 (
     macro:
@@ -12,10 +12,11 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
             indexes: {},
             entities: {(
                 name: 'foo',
-                attributes: [(array: {}, length: 0, name: 'a', nullable: true, options: {}, scale: {}, type: 'int')],
+                attributes: [(length: 0, name: 'a', nullable: true, options: {}, scale: 0, type: 'int')],
                 primary_key: ['a'],
                 foreign_keys: {},
                 unique_keys: {},
+                name_prefix: '',
                 cluster: {},
             )}
         )
@@ -30,14 +31,14 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
             {:macro:CREATE TABLE t (c INT64):}.entities
             --- {(
                 name: 't',
-                attributes: [(name: 'c', array: {}, length: 0, nullable: true, options: {}, type: 'int64', scale: {})],
+                attributes: [(name: 'c', type: 'int64', nullable: true, length: 0, scale: 0, options: {})],
             )}
         ,
         pk:
             {:macro:CREATE TABLE t (c INT64) PRIMARY KEY(c):}.entities
             --- {(
                 name: 't',
-                attributes: [(name: 'c', array: {}, length: 0, nullable: true, options: {}, type: 'int64', scale: {})],
+                attributes: [(name: 'c', type: 'int64', nullable: true, length: 0, scale: 0, options: {})],
                 primary_key: ['c']
             )}
         ,
@@ -73,6 +74,10 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
                 {:macro:CREATE TABLE t (c INT64) PRIMARY KEY(c), INTERLEAVE IN PARENT p ON DELETE CASCADE:}.entities
                 --- {(cluster: [(interleaved_in: 'p', on_delete: 'cascade')])},
         ),
+        namespaced:
+                {:macro:CREATE TABLE namespace.t (c INT64):}.entities
+                --- {(name_prefix: 'namespace', name: 't')}
+        ,
     ),
 
     index: (
@@ -94,66 +99,84 @@ let (:macro, :applyStmt, :emptyModel, ...) = //{./sql};
 
     scalar_types:
         let colType = \m (m.entities single).attributes(0);
-        # Map of Sysl types to single-column tables with equivalent SQL types.
-        {
-            (type: 'bool'): [
-                {:macro:CREATE TABLE t (c BOOL):},
-                {:macro:CREATE TABLE t (c BOOLEAN):},
-            ],
-            (type: 'int'): [
-                {:macro:CREATE TABLE t (c INT):},
-                {:macro:CREATE TABLE t (c INTEGER):},
-            ],
-            (type: 'int64'): [
-                {:macro:CREATE TABLE t (c BIGINT):},
-                {:macro:CREATE TABLE t (c INT64):},
-            ],
-            (type: 'float'): [
-                {:macro:CREATE TABLE t (c FLOAT):}
-            ],
-            (type: 'float64'): [
-                {:macro:CREATE TABLE t (c DOUBLE):},
-                {:macro:CREATE TABLE t (c FLOAT64):},
-            ],
-            (type: 'decimal', length: 38, scale: 9): [
-                {:macro:CREATE TABLE t (c DECIMAL):},
-                {:macro:CREATE TABLE t (c DEC):},
-                {:macro:CREATE TABLE t (c FIXED):},
-                {:macro:CREATE TABLE t (c NUMERIC):},
-            ],
-            (type: 'decimal', length: 4, scale: 2): [
-                {:macro:CREATE TABLE t (c DECIMAL(4, 2)):},
-            ],
-            (type: 'date'): [
-                {:macro:CREATE TABLE t (c DATE):}
-            ],
-            (type: 'datetime'): [
-                {:macro:CREATE TABLE t (c DATETIME):},
-                {:macro:CREATE TABLE t (c TIMESTAMP):},
-            ],
-            (type: 'string'): [
-                {:macro:CREATE TABLE t (c TEXT):},
-                {:macro:CREATE TABLE t (c STRING):},
-                {:macro:CREATE TABLE t (c VARCHAR):},
-                # TODO: Capture UUID-ness as well.
+        (
+            # Map of DB model types to single-column tables with equivalent SQL types.
+            scalar: {
+                (type: 'bool'): [
+                    {:macro:CREATE TABLE t (c BOOL):},
+                    {:macro:CREATE TABLE t (c BOOLEAN):},
+                ],
+                (type: 'int'): [
+                    {:macro:CREATE TABLE t (c INT):},
+                {:macro:CREATE TABLE t (c INTEGER):},],
+                (type: 'int64'): [
+                    {:macro:CREATE TABLE t (c BIGINT):},
+                    {:macro:CREATE TABLE t (c INT64):},
+                ],
+                (type: 'float'): [
+                    {:macro:CREATE TABLE t (c FLOAT):}
+                ],
+                (type: 'float64'): [
+                    {:macro:CREATE TABLE t (c DOUBLE):},
+                    {:macro:CREATE TABLE t (c FLOAT64):},
+                ],
+                (type: 'decimal', length: 38, scale: 9): [
+                    {:macro:CREATE TABLE t (c DECIMAL):},
+                    {:macro:CREATE TABLE t (c DEC):},
+                    {:macro:CREATE TABLE t (c FIXED):},
+                    {:macro:CREATE TABLE t (c NUMERIC):},
+                ],
+                (type: 'decimal', length: 4, scale: 2): [
+                    {:macro:CREATE TABLE t (c DECIMAL(4, 2)):},
+                ],
+                (type: 'date'): [
+                    {:macro:CREATE TABLE t (c DATE):}
+                ],
+                (type: 'datetime'): [
+                    {:macro:CREATE TABLE t (c DATETIME):},
+                    {:macro:CREATE TABLE t (c TIMESTAMP):},
+                ],
+                (type: 'string'): [
+                    {:macro:CREATE TABLE t (c TEXT):},
+                    {:macro:CREATE TABLE t (c STRING):},
+                    {:macro:CREATE TABLE t (c VARCHAR):},# TODO: Capture UUID-ness as well.
                 {:macro:CREATE TABLE t (c UUID):},
-            ],
-            (type: 'string', length: 42): [
-                {:macro:CREATE TABLE t (c STRING(42)):},
-                {:macro:CREATE TABLE t (c VARCHAR(42)):},
-            ],
-            (type: 'bytes'): [
-                {:macro:CREATE TABLE t (c BYTES):},
-                {:macro:CREATE TABLE t (c BLOB):},
-                {:macro:CREATE TABLE t (c LONGBLOB):},
-            ],
-            (type: 'bytes', length: 42): [
-                {:macro:CREATE TABLE t (c BYTES(42)):}
-            ],
-            (type: 'bytes', length: 'MAX'): [
-                {:macro:CREATE TABLE t (c BYTES(MAX)):},
-            ],
-        } >>> \k \v v >> {k} --- {colType(.)}
+                ],
+                (type: 'string', length: 42): [
+                    {:macro:CREATE TABLE t (c STRING(42)):},
+                    {:macro:CREATE TABLE t (c VARCHAR(42)):},
+                ],
+                (type: 'bytes'): [
+                    {:macro:CREATE TABLE t (c BYTES):},
+                    {:macro:CREATE TABLE t (c BLOB):},
+                    {:macro:CREATE TABLE t (c LONGBLOB):},
+                ],
+                (type: 'bytes', length: 42): [
+                    {:macro:CREATE TABLE t (c BYTES(42)):}
+                ],
+                (type: 'bytes', length: 'MAX'): [
+                    {:macro:CREATE TABLE t (c BYTES(MAX)):},
+                ],
+            } >>> \k \v v >> {k} --- {colType(.)},
+
+            array: (
+                int: [
+                    {:macro:CREATE TABLE t (c ARRAY<INT>):},
+                    {:macro:CREATE TABLE t (c INT[]):},
+                ] >> colType(.).array.type = 'int',
+
+                'int[42]': [
+                    {:macro:CREATE TABLE t (c INT[42]):},
+                ] >> colType(.) = (name: 'c', length: 42, options: {},
+                                    array: (type: 'int', nullable: true, length: 0, scale: 0)),
+            ),
+            struct: (
+                int: {:macro:CREATE TABLE t (c STRUCT<a INT>):} ->
+                    (colType(.).struct(0) -> .name = 'a' && .type.type = 'int' && .type.nullable = true),
+                int_notnull: {:macro:CREATE TABLE t (c STRUCT<a INT NOT NULL>):} ->
+                    (colType(.).struct(0) -> .name = 'a' && .type.type = 'int' && .type.nullable = false),
+            ),
+        )
     ,
 
     values:

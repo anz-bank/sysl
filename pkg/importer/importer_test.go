@@ -176,6 +176,15 @@ func TestLoadMySQLDirFromTestFiles(t *testing.T) {
 	})
 }
 
+func TestLoadBigQueryFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadBigQueryFromTestFiles",
+		testDir:       "sql/tests/bigquery",
+		testExtension: ".sql",
+		format:        "bigquery",
+	})
+}
+
 /*
 func TestLoadGrammarFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{

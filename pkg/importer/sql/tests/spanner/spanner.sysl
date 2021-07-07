@@ -14,7 +14,7 @@ customeraccounts:
         LastUpdated <: datetime? [allow_commit_timestamp="true", ~pk]
         AddressLine1 <: bytes? [~max]
         AddressLine2 <: string(100)? [~hex]
-        AddressLine3 <: bytes? [length="100"]
+        AddressLine3 <: bytes(100)?
 
     !table Customer [indexes=[["name:CustomerByEmail","unique:true","null_filtered:true","key_parts:Email,Mobile(desc)","storing:Email,Mobile","interleave_in:Customer"],["name:InterleaveIndex","key_parts:AccountNum,CustomerID","interleave_in:Account"],["name:StoringIndex","key_parts:CustomerID","storing:NetWorth"]]]:
         CustomerID <: string(36) [~pk]

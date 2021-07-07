@@ -38,12 +38,9 @@ let attributePatterns = \entity \attr
             $`~pk${cond {sortingOrder(entity, attr):$`, ~${sortingOrder(entity, attr) ::}`}}`
     };
     let fk = cond { matchingFKs(entity, attr): '~fk' };
-    let length = cond { attr.length = 'MAX': '~max' };
-    let hexPrefix = cond { //seq.has_prefix('0x', attr.length): '~hex' };
-    let byteLength = cond {
-        attr.type = 'bytes' && attr.length > 0 && attr.length != 'MAX': $`length="${attr.length}"`
-    };
-    [attrName, options, byteLength, pk, fk, length, hexPrefix] where .@item;
+    let length = cond { attr.length?:'' = 'MAX': '~max' };
+    let hexPrefix = cond { //seq.has_prefix('0x', attr.length?:''): '~hex' };
+    [attrName, options, pk, fk, length, hexPrefix] where .@item;
 
 # entityPatterns generates the patterns for an entity.
 let entityPatterns = \entity \model
@@ -80,8 +77,12 @@ let entityPatternsString = \entity \model cond entityPatterns(entity, model) {[]
 # attributePatternsString returns the annotation for an attribute's patterns.
 let attributePatternsString = \entity \attr cond attributePatterns(entity, attr) {[]: '', aPats: $`[${aPats ::, }]`};
 
+let nestedTypeName = \entity \attr
+    $`${entity.name}_${attr.name}`
+;
+
 # typeInfo generates the type info for an attribute.
-let typeInfo = \entities \entity \attr
+let rec typeInfo = \entities \entity \attr
     let interleavedType =
         let parents = entities where .name <: (entity.cluster => .@item.interleaved_in);
         cond parents {
@@ -89,29 +90,68 @@ let typeInfo = \entities \entity \attr
         }
     ;
     cond {
-        interleavedType: interleavedType,
+        interleavedType: interleavedType ++ (attr.nullable && '?'),
         _:
-            let type = attr.type ++ cond {attr.type != 'bytes': size(attr)};
-            let isArray = attr.array;
-            let fks = matchingFKs(entity, attr);
-            let fkAttr = fks => .reference_attribute;
-            let fkTable = fks => .reference_table;
-            cond {
-                fkAttr && fkTable: $`${fkTable orderby . ::}.${fkAttr orderby . ::}`,
-                isArray: $`sequence of ${type}`,
-                _: type,
+            let toString = \a
+                let type = cond matchingFKs(entity, a) {
+                    {fk}: $`${fk.reference_table}.${fk.reference_attribute}`,
+                    _: cond a {
+                        (:type, ...): a.type ++ size(a),
+                        (:struct, ...): nestedTypeName(entity, attr),
+                    }
+                };
+                $`${type}${a.nullable && '?'}`
+            ;
+            cond attr {
+                (:array, ...): $`sequence of ${toString(array +> (:attr.name))}`,
+                _: toString(attr),
             }
-    } ++ cond {attr.nullable: '?'}
+    }
 ;
 
+let rec nestedEntities = \entity
+    //rel.union(entity.attributes => \(@item: attr, ...)
+        cond attr.array?:(attr) {
+            (:struct, ...):
+                let nested = (
+                    name: nestedTypeName(entity, attr),
+                    attributes: struct >> .type +> (:.name),
+                    primary_key: [],
+                    foreign_keys: [],
+                    cluster: {},
+                );
+                {nested} | nestedEntities(nested),
+        }
+    )
+;
+
+let entities = \model
+    model.entities | //rel.union(model.entities => nestedEntities(.))
+;
 
 # Trim trailing whitespace.
 let trim = \str
     let re = //re.compile(`^(.*[^\s])\s*$`);
     $`${//seq.split('\n', str) >> cond re.match(.) {[[_, s]]: s, _: ''}::\n}`;
 
+let renderEntity = \kind \model \entity
+    let eps = //seq.sub(", , ", ", ", entityPatternsString(entity, model));
+    $`
+        !${kind} ${entity.name}${cond{eps: ' ' ++ eps}}:
+            ${entity.attributes >>
+                let aps = //seq.sub(", , ", ", ", attributePatternsString(entity, .));
+                let name = util.resolveValidIdentifier(//seq.sub("`", "", .name));
+                let type = typeInfo(model.entities, entity, .);
+                $`
+                    ${name} <: ${type} ${aps}
+                `
+            ::\n}
+    `
+;
+
 # transformModel translates the empty model into sysl file.
 let transformModel = \model
+    let nested = //rel.union(model.entities => nestedEntities(.));
     # Sysl specification:
     # https://github.com/anz-bank/sysl/blob/master/pkg/sysl/sysl.proto
     trim($`
@@ -119,19 +159,8 @@ let transformModel = \model
 
         ${model.schema orderby . >> $`
             ${.name}:
-                ${model.entities orderby .name >> \entity
-                    let eps = //seq.sub(", , ", ", ", entityPatternsString(entity, model));
-                    $`
-                        !table ${entity.name}${cond{eps: ' ' ++ eps}}:
-                            ${entity.attributes >>
-                                let aps = //seq.sub(", , ", ", ", attributePatternsString(entity, .));
-                                let name = util.resolveValidIdentifier(//seq.sub("`", "", .name));
-                                let type = typeInfo(model.entities, entity, .);
-                                $`
-                                    ${name} <: ${type} ${aps}
-                                `
-                            ::\n}
-                    `
+                ${model.entities orderby .name >> renderEntity('table', model, .)::\n\i}${
+                    nested && ['\n'] ++ (nested orderby .name >> renderEntity('type', model, .))
                 ::\n\i}
         `::\i:\n}
     `)

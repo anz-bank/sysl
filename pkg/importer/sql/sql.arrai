@@ -28,11 +28,14 @@ ddl                 -> stmt=(create_database
 
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
-create_table        -> "CREATE" "TABLE" table_name "("(
+
+table_prefix        -> ('`' name=[^`]+ '`' | name=[^(.]+) "."; //'
+create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name "("(
                               attr=(column_name attr_type generated? options_def? pk?)
                             | table_constraint
                             | pks=(pk "(" key_parts ")")
                         ):"," ","? ")"
+                        options_def?
                         pks_outer=(pk "(" key_parts ")")?
                         ("," cluster)*; //# Spanner
 table_constraint    -> ("CONSTRAINT" constraint_name)? (unique | fk);
@@ -124,19 +127,20 @@ set                 -> "SET" name "=" value;
 select              -> "SELECT" [^;:]*;
 
 //# Spanner
-options_def         -> "OPTIONS" "("(option):",",? ")";
-option              -> k="allow_commit_timestamp" "=" v=("true"|"false");
+options_def         -> "OPTIONS" "(" (option):",",? ")";
+option              -> k=[^=\s]* "=" v=value ;
 
 key_parts            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
-attr_type           -> (ARRAY_TYPE|SCALAR_TYPE) (NULL | NOT_NULL)? default?;
+attr_type           -> (ARRAY_TYPE | SCALAR_TYPE | STRUCT_TYPE) (NULL | NOT_NULL)? default?;
 default             -> "DEFAULT" value;
 generated           -> "GENERATED" "ALWAYS" "AS" expr ("VIRTUAL" | "STORED");
 expr                -> [^()]* "(" [^()]* expr? [^()]* ")";
 if_exists           -> "IF" "EXISTS";
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
-ARRAY_TYPE          -> SCALAR_TYPE "[" size=\d* "]"
-                     | "ARRAY<" SCALAR_TYPE ">"; //# Spanner
+ARRAY_TYPE          -> SCALAR_TYPE "[" length? "]"
+                     | "ARRAY" "<" attr_type ">"; //# Spanner
+STRUCT_TYPE         -> "STRUCT" "<" fields=(column_name attr_type):"," ">"; //# BigQuery
 
 SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | INT64     = ("BIGINT" | "INT64")
@@ -166,9 +170,11 @@ value               -> int_value
                      | string_value
                      | time_value
                      | id_value
+                     | pair_value
+                     | array_value
                      | NULL
                      | CURRENT_TIMESTAMP;
-int_value           -> hex_value|decimal_value;
+int_value           -> hex_value | decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
 bool_value          -> "TRUE" | "FALSE";
@@ -180,6 +186,8 @@ id_value            -> ("NEWID" "(" ")")
 NULL                -> "NULL";
 NOT_NULL            -> "NOT" NULL;
 CURRENT_TIMESTAMP   -> "CURRENT_TIMESTAMP";
+pair_value          -> "(" value "," value ")"; //# Spanner
+array_value         -> "[" value:"," "]"; //# Spanner
 
 // All tokens are case-insensitive and may be preceded by comments or whitespace.
 .wrapRE -> /{(?i)(--[^\n]*(?:\n|\z)|/\*[^*]*\*/|\s)*()};
@@ -202,42 +210,73 @@ let evalLength = \l cond l {
 };
 
 # evalType turns an attr_type parse node into an attribute type
-let evalType = \parsed
-    let data = cond parsed {
-        (SCALAR_TYPE: scalar, ...):                    (scalar: scalar, array: false),
-        (ARRAY_TYPE: (SCALAR_TYPE: scalar, ...), ...): (scalar: scalar, array: true),
-    };
-    let type = cond data.scalar {
-        (BOOLEAN: x, ...):  (type: "bool", length: 0),
-        (INT: x, ...):      (type: "int", length: 0),
-        (INT64: x, ...):    (type: "int64", length: 0),
-        (FLOAT: x, ...):    (type: "float", length: 0),
-        (FLOAT64: x, ...):  (type: "float64", length: 0),
-        (DECIMAL: x, ...):  (type: "decimal", length: evalLength(x.precision?:38), scale: evalLength(x.scale?:9)),
-        (DATE: x, ...):     (type: "date", length: 0),
-        (DATETIME: x, ...): (type: "datetime", length: evalLength(x.length?:0)),
-        (STRING: x, ...):   (type: "string", length: evalLength(x.length?:0)),
-        (BYTES: x, ...):    (type: "bytes", length: evalLength(x.length?:0)),
-        # TODO: Tag with ~uuid.
-        (UUID: x, ...):     (type: "string", length: evalLength(x.length?:0)),
-        _:                  //error($`unknown type: ${//fmt.pretty(data.scalar)}`)
-    };
-    (
-        type: type.type,
-        length: type.length,
-        scale: type.scale?:{},
-        array: data.array,
-        nullable: cond parsed {(:NOT_NULL, ...): false, _: true},
-    );
+let rec evalType = \parsed
+    let nullable = cond parsed {(:NOT_NULL, ...): false, _: true};
 
-let t = \x x.'' rank (:.@);
+    cond parsed {
+        (ARRAY_TYPE: a, ...):
+            cond a {
+                (:SCALAR_TYPE, ...): (array: evalType(a), length: evalLength(a.length?:0)),
+                (:attr_type, ...): (array: evalType(attr_type)),
+            }
+        ,
+        (SCALAR_TYPE: scalar, ...):
+            let type = cond scalar {
+                (BOOLEAN: x, ...):  (type: "bool", length: 0),
+                (INT: x, ...):      (type: "int", length: 0),
+                (INT64: x, ...):    (type: "int64", length: 0),
+                (FLOAT: x, ...):    (type: "float", length: 0),
+                (FLOAT64: x, ...):  (type: "float64", length: 0),
+                (DECIMAL: x, ...):  (type: "decimal", length: evalLength(x.precision?:38), scale: evalLength(x.scale?:9)),
+                (DATE: x, ...):     (type: "date", length: 0),
+                (DATETIME: x, ...): (type: "datetime", length: evalLength(x.length?:0)),
+                (STRING: x, ...):   (type: "string", length: evalLength(x.length?:0)),
+                (BYTES: x, ...):    (type: "bytes", length: evalLength(x.length?:0)),
+                # TODO: Tag with ~uuid.
+                (UUID: x, ...):     (type: "string", length: evalLength(x.length?:0)),
+                _:                  //error($`unknown type: ${//fmt.pretty(data.scalar)}`)
+            };
+            (
+                type: type.type,
+                length: type.length,
+                scale: type.scale?:0,
+                :nullable,
+            )
+        ,
+        (STRUCT_TYPE: struct, ...):
+            (
+                struct: struct.fields >> (
+                    name: .column_name.'' rank (:.@),
+                    type: evalType(.attr_type),
+                ),
+                :nullable,
+            )
+        ,
+        _: //error($`unknown type: ${//fmt.pretty(parsed)}`)
+    }
+;
+
+# evalValue turns a value node into a representative string.
+let evalValue = \parsed
+    cond parsed {
+        (:int_value, ...): evalInt(int_value),
+        (:bool_value, ...): bool_value.'' rank (:.@),
+        (:string_value, ...): string_value.'' rank (:.@),
+        (:time_value, ...): time_value.'' rank (:.@),
+        (:id_value, ...): id_value.'' rank (:.@),
+        (:pair_value, ...): pair_value.'' rank (:.@),
+        (:array_value, ...): array_value.'' rank (:.@),
+        (:NULL, ...): 'NULL',
+        (:CURRENT_TIMESTAMP, ...): 'CURRENT_TIMESTAMP',
+    }
+;
 
 # evalAttribute turns an attr node into an attribute of a relation
 let evalAttribute = \parsed
     let attr = (
         name: parsed.column_name.'' rank (:.@),
         options: parsed.options_def?.option?:[] => \(@item: (:k, :v, ...), ...)
-            (@: k.''rank (:.@), @value: v.''rank (:.@))
+            (@: k.''rank (:.@), @value: evalValue(v.value))
     );
 
     attr +> cond parsed {
@@ -353,6 +392,9 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
             stmt: "create_table",
             data: (
                 name: val.table_name.'' rank (:.@),
+                name_prefix: cond val {
+                    (:table_prefix, ...): table_prefix.name.'' rank (:.@),
+                },
                 attributes: attributes,
                 foreign_keys: cond val {
                     (table_constraint: [...constraints], ...):
