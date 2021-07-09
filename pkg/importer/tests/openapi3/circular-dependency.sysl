@@ -12,7 +12,7 @@ TestApp "simple" [package="com.example.package"]:
     /api/v0%2E1/simple:
         POST (MerchantRequest <: Merchant [mediatype="application/json", ~body]):
             | No description.
-            return ok <: Merchant [mediatype="application/json"]
+            return 200 <: Merchant [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

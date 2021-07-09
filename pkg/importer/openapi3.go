@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"sort"
 	"strconv"
@@ -426,6 +427,9 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 	}
 
 	commonParams := o.buildParams(item.Parameters)
+	supportedCode := regexp.MustCompile("^ok|error|[1-5][0-9][0-9]$")
+	errType := regexp.MustCompile("^Error|error$")
+
 	for method, op := range ops {
 		if op == nil {
 			continue
@@ -447,10 +451,7 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 		}
 		typePrefix := getSyslSafeName(convertToSyslSafe(cleanEndpointPath(path))) + "_"
 		for statusCode, resp := range op.Responses {
-			text := "error"
-			if statusCode[0] == '2' {
-				text = "ok"
-			}
+			text := statusCode
 
 			respType := &StandardType{
 				baseType: baseType{
@@ -474,7 +475,8 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 				respType.Properties = append(respType.Properties, f)
 			}
 
-			r := Response{Text: text}
+			r := Response{}
+
 			if len(respType.Properties) == 1 && respType.Properties[0].Attrs[0] != "~header" {
 				r.Type = respType.Properties[0].Type
 				r.Type.AddAttributes(respType.Properties[0].Attrs)
@@ -483,6 +485,18 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 				o.types.Add(respType)
 				r.Type = respType
 			}
+
+			match := supportedCode.MatchString(text)
+			if !match {
+				o.logger.Warnf("Custom response code %s is not supported", text)
+				text = "ok"
+				if r.Type != nil {
+					if match = errType.MatchString(r.Type.Name()); match {
+						text = "error"
+					}
+				}
+			}
+			r.Text = text
 
 			ep.Responses = append(ep.Responses, r)
 		}

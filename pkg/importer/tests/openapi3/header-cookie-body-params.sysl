@@ -11,7 +11,7 @@ TestApp "Simple" [package="com.example.package"]:
     /test:
         POST (SimpleObjRequest <: SimpleObj [mediatype="application/json", ~body], key <: int? [~header, name="key"], min_date <: string [~header, name="min_date"], csrftoken <: string? [~cookie, name="csrftoken"]):
             | No description.
-            return ok
+            return 200
 
     #---------------------------------------------------------------------------
     # definitions

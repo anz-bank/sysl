@@ -11,7 +11,7 @@ TestApp "Simple" [package="com.example.package"]:
     /test:
         GET ?key=string?&min_date=date:
             | No description.
-            return ok
+            return 200
 
     #---------------------------------------------------------------------------
     # definitions

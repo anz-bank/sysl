@@ -11,12 +11,12 @@ TestApp "Simple" [package="com.example.package"]:
     /test:
         POST (SimpleObjRequest <: SimpleObj [mediatype="application/json", ~body], key <: int? [~header, name="key"], min_date <: date [~header, name="min_date"]):
             | No description.
-            return ok
+            return 200
 
     /test2:
         POST (accountIDRequest <: accountID [mediatype="application/json", ~body]):
             | No description.
-            return ok
+            return 200
 
     #---------------------------------------------------------------------------
     # definitions

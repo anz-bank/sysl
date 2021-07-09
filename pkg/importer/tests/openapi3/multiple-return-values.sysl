@@ -11,8 +11,12 @@ TestApp "Simple" [package="com.example.package"]:
     /test:
         GET:
             | No description.
-            return error
-            return ok <: _test_ok
+            return 200 <: _test_200
+            return 400
+            return 401
+            return 500
+            return 503
+            return 504
 
     #---------------------------------------------------------------------------
     # definitions
@@ -25,7 +29,7 @@ TestApp "Simple" [package="com.example.package"]:
         name <: SimpleObj?:
             @json_tag = "name"
 
-    !type _test_ok:
+    !type _test_200:
         SimpleObj <: SimpleObj [mediatype="application/json"]:
             @json_tag = "SimpleObj"
         bytes_ <: bytes [mediatype="application/pdf"]:

@@ -11,8 +11,9 @@ TestApp "Simple" [package="com.example.package"]:
     /simple:
         PUT (DocumentRequest <: DocumentRequest [mediatype="application/json", ~body]):
             | No description.
-            return error
-            return ok
+            return 204
+            return 400
+            return 401
 
     #---------------------------------------------------------------------------
     # definitions

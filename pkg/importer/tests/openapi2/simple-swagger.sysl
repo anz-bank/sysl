@@ -11,7 +11,7 @@ TestApp "Simple" [package="com.example.package"]:
     /test:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

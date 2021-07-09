@@ -11,7 +11,7 @@ TestApp "Simple" [package="com.example.package"]:
     /pets:
         PATCH (objectRequest <: EXTERNAL_objectRequest [mediatype="application/json", ~body]):
             | No description.
-            return ok
+            return 200
 
     #---------------------------------------------------------------------------
     # definitions

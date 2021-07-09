@@ -14,7 +14,7 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
     /goat/create-goat:
         POST ?name=string&birthday=string:
             | Creates a goat.
-            return ok
+            return 201
 
     #---------------------------------------------------------------------------
     # definitions

@@ -12,7 +12,7 @@ TestApp "Sample API" [package="com.example.package"]:
     /users/{id<:int}:
         GET (request_id <: string [~header, name="request-id"]) ?metadata=bool?:
             | No description.
-            return ok
+            return 200
 
     #---------------------------------------------------------------------------
     # definitions

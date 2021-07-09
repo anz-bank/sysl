@@ -53,7 +53,7 @@ apps: {
     }
     stmt: {
      ret: {
-      payload: "ok <: SimpleObj [mediatype=\"application/json\"]"
+      payload: "200 <: SimpleObj [mediatype=\"application/json\"]"
      }
      source_context: {
       file: "tests/foreign_import_swagger.yaml"
@@ -63,7 +63,7 @@ apps: {
       }
       end: {
        line: 13
-       col: 65
+       col: 66
       }
      }
      source_contexts: {
@@ -74,7 +74,7 @@ apps: {
       }
       end: {
        line: 13
-       col: 65
+       col: 66
       }
      }
     }

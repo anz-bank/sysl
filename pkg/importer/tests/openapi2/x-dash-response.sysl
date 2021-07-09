@@ -14,7 +14,7 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
     /goat/status:
         GET:
             | Check goat status
-            return error
+            return ok
 
     #---------------------------------------------------------------------------
     # definitions

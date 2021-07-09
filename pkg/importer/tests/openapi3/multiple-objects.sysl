@@ -14,12 +14,12 @@ TestApp "Twilio - Conversations" [package="com.example.package"]:
     /v1/Conversations:
         GET ?PageSize=int?:
             | Retrieve a list of conversations in your account's default service
-            return ok <: ListConversationResponse [mediatype="application/json"]
+            return 200 <: ListConversationResponse [mediatype="application/json"]
 
     /v1/Conversations/{ConversationSid<:string}/Messages:
         GET ?PageSize=int?:
             | Retrieve a list of all messages in the conversation
-            return ok <: ListConversationMessageResponse [mediatype="application/json"]
+            return 200 <: ListConversationMessageResponse [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

@@ -14,7 +14,7 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
     /goat/create-goat:
         POST (GoatRequest <: Goat [mediatype="application/json", ~body]):
             | Creates a goat.
-            return ok
+            return 201
 
     #---------------------------------------------------------------------------
     # definitions

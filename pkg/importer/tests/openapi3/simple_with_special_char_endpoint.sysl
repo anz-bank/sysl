@@ -11,28 +11,28 @@ TestApp "Simple" [package="com.example.package"]:
     /deep/deeeeeeep/test%2Estuff:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     /test%2Bplus:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     /test%2Estuff:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     /test%3Acolon:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     /withHeaders%3AandSpecialChars:
         GET:
             | No description.
-            return error <: _withHeaders%3AandSpecialChars_error
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
+            return 404 <: _withHeaders%3AandSpecialChars_404
 
     #---------------------------------------------------------------------------
     # definitions
@@ -51,7 +51,7 @@ TestApp "Simple" [package="com.example.package"]:
         name <: SimpleObj?:
             @json_tag = "name"
 
-    !type _withHeaders%3AandSpecialChars_error:
+    !type _withHeaders%3AandSpecialChars_404:
         Error <: Error [mediatype="application/json"]:
             @json_tag = "Error"
         content-type <: string [~header]:

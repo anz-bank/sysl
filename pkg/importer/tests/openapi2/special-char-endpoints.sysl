@@ -11,12 +11,12 @@ TestApp "Simple" [package="com.example.package"]:
     /deep/deeeeeep/test%2Estuff:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     /test%2Estuff:
         GET:
             | No description.
-            return ok <: SimpleObj [mediatype="application/json"]
+            return 200 <: SimpleObj [mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions

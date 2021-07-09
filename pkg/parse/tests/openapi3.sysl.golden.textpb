@@ -317,7 +317,7 @@ apps: {
     }
     stmt: {
      ret: {
-      payload: "ok <: Preferences [mediatype=\"application/json\"]"
+      payload: "200 <: Preferences [mediatype=\"application/json\"]"
      }
      source_context: {
       file: "tests/preference.yaml"
@@ -327,7 +327,7 @@ apps: {
       }
       end: {
        line: 14
-       col: 67
+       col: 68
       }
      }
      source_contexts: {
@@ -338,7 +338,7 @@ apps: {
       }
       end: {
        line: 14
-       col: 67
+       col: 68
       }
      }
     }
