@@ -1,0 +1,24 @@
+App%3A :: Test%3A [~abstract]:
+    !type Test%3A:
+        test%3Afield <: Test%3A
+        test%3Atoo   <: string
+
+    /endpoint%3Atest:
+        GET:
+            return ok <: 200
+
+App2:
+    !type Test2:
+        field <: App%3A::Test%3A.Test%3A
+
+    /endpoint:
+        GET:
+            App%3A::Test%3A <- GET /endpoint%3Atest
+
+    <-> Event:
+        return ok <: string
+
+    App%3A :: Test%3A -> Event:
+        ...
+
+    -|> App%3A :: Test%3A

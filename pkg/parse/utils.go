@@ -170,10 +170,19 @@ func (p *PathStack) update() string {
 }
 
 // MustUnescape will escape URL escaped characters.
-func MustUnescape(endpoint string) string {
-	s, err := url.PathUnescape(endpoint)
+func MustUnescape(str string) string {
+	s, err := url.PathUnescape(str)
 	if err != nil {
 		panic(err)
 	}
 	return strings.TrimSpace(s)
+}
+
+// MustUnescapeStrings will escape URL escaped characters in an array of strings.
+func MustUnescapeStrings(strs []string) []string {
+	escaped := make([]string, 0, len(strs))
+	for _, str := range strs {
+		escaped = append(escaped, MustUnescape(str))
+	}
+	return escaped
 }

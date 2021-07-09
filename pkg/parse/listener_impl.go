@@ -269,7 +269,7 @@ func (s *TreeShapeListener) EnterUser_defined_type(ctx *parser.User_defined_type
 
 	context_app_part := s.currentApp().Name.Part
 	context_path := s.currentTypePath.Parts()
-	ref_path := []string{ctx.GetText()}
+	ref_path := []string{MustUnescape(ctx.GetText())}
 
 	type1.Type = &sysl.Type_TypeRef{
 		TypeRef: &sysl.ScopedRef{
@@ -394,10 +394,10 @@ func makeScope(app_name []string, ctx *parser.ReferenceContext) *sysl.Scope {
 
 	if appComponentCount > 0 {
 		scope.Appname = &sysl.AppName{
-			Part: app_name[:appComponentCount],
+			Part: MustUnescapeStrings(app_name[:appComponentCount]),
 		}
 	}
-	scope.Path = app_name[appComponentCount:]
+	scope.Path = MustUnescapeStrings(app_name[appComponentCount:])
 	return scope
 }
 
@@ -678,7 +678,7 @@ func (s *TreeShapeListener) ExitInplace_tuple(*parser.Inplace_tupleContext) {
 
 // EnterField is called when production field is entered.
 func (s *TreeShapeListener) EnterField(ctx *parser.FieldContext) {
-	fieldName := ctx.Name_str().GetText()
+	fieldName := MustUnescape(ctx.Name_str().GetText())
 	s.fieldname = append(s.fieldname, fieldName)
 	type1, has := s.typemap[fieldName]
 	if has {
@@ -773,7 +773,7 @@ func (s *TreeShapeListener) EnterTable_def(ctx *parser.Table_defContext) {
 
 // EnterTable is called when production table is entered.
 func (s *TreeShapeListener) EnterTable(ctx *parser.TableContext) {
-	s.currentTypePath.Push(ctx.Name_str().GetText())
+	s.currentTypePath.Push(MustUnescape(ctx.Name_str().GetText()))
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.currentApp().Types
@@ -958,7 +958,7 @@ func (s *TreeShapeListener) EnterApp_name(*parser.App_nameContext) {
 
 // EnterName_with_attribs is called when production name_with_attribs is entered.
 func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribsContext) {
-	appName := syslutil.CleanAppName(ctx.App_name().GetText())
+	appName := MustUnescape(syslutil.CleanAppName(ctx.App_name().GetText()))
 	if _, has := s.module.Apps[appName]; !has {
 		s.module.Apps[appName] = &sysl.Application{
 			Name: &sysl.AppName{},
@@ -986,7 +986,7 @@ func (s *TreeShapeListener) EnterName_with_attribs(ctx *parser.Name_with_attribs
 
 // ExitName_with_attribs is called when production name_with_attribs is exited.
 func (s *TreeShapeListener) ExitName_with_attribs(*parser.Name_with_attribsContext) {
-	s.currentApp().Name.Part = s.app_name.Parts()
+	s.currentApp().Name.Part = MustUnescapeStrings(s.app_name.Parts())
 }
 
 // EnterModel_name is called when production model_name is entered.
@@ -1165,7 +1165,7 @@ func (s *TreeShapeListener) EnterTarget(*parser.TargetContext) {
 
 // ExitTarget is called when production target is exited.
 func (s *TreeShapeListener) ExitTarget(*parser.TargetContext) {
-	s.lastStatement().GetCall().Target.Part = s.app_name.Parts()
+	s.lastStatement().GetCall().Target.Part = MustUnescapeStrings(s.app_name.Parts())
 	s.app_name.Reset()
 }
 
@@ -1187,7 +1187,7 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 		name = s.getFullAppName()
 	} else {
 		//TODO: handle target with sub packages
-		name = ctx.Target().GetText()
+		name = MustUnescape(ctx.Target().GetText())
 	}
 	endpoint := MustUnescape(ctx.Target_endpoint().GetText())
 	methodRe := regexp.MustCompile(`^[ \t]*(GET|POST|DELETE|PUT|PATCH)[ \t]*`)
@@ -1460,7 +1460,7 @@ func (s *TreeShapeListener) EnterMixin(*parser.MixinContext) {
 func (s *TreeShapeListener) ExitMixin(*parser.MixinContext) {
 	s.currentApp().Mixin2 = append(s.currentApp().Mixin2, &sysl.Application{
 		Name: &sysl.AppName{
-			Part: s.app_name.Parts(),
+			Part: MustUnescapeStrings(s.app_name.Parts()),
 		},
 	})
 }
@@ -2029,11 +2029,12 @@ func (s *TreeShapeListener) ExitEvent(ctx *parser.EventContext) {
 func (s *TreeShapeListener) EnterSubscribe(ctx *parser.SubscribeContext) {
 	if ctx.App_name() != nil {
 		eventName := ctx.Name_str().GetText()
-		s.endpointName = syslutil.CleanAppName(ctx.App_name().GetText()) + ctx.ARROW_RIGHT().GetText() + eventName
+		s.endpointName = syslutil.CleanAppName(MustUnescape(ctx.App_name().GetText())) +
+			ctx.ARROW_RIGHT().GetText() + eventName
 		// fmt.Printf("\t%s Subscriber: %s\n", s.appName, s.endpointName)
 		str := strings.Split(ctx.App_name().GetText(), "::")
 		for i := range str {
-			str[i] = strings.TrimSpace(str[i])
+			str[i] = MustUnescape(strings.TrimSpace(str[i]))
 		}
 		app_src := &sysl.AppName{
 			Part: str,

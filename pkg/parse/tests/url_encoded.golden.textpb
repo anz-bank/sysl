@@ -1,0 +1,644 @@
+apps: {
+ key: "App2"
+ value: {
+  name: {
+   part: "App2"
+  }
+  endpoints: {
+   key: "App: :: Test: -> Event"
+   value: {
+    name: "App: :: Test: -> Event"
+    source: {
+     part: "App:"
+     part: "Test:"
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 21
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 11
+      }
+     }
+     source_contexts: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 21
+       col: 8
+      }
+      end: {
+       line: 21
+       col: 11
+      }
+     }
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 23
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 20
+      col: 4
+     }
+     end: {
+      line: 23
+      col: 5
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Event"
+   value: {
+    name: "Event"
+    is_pubsub: true
+    stmt: {
+     ret: {
+      payload: "ok <: string"
+     }
+     source_context: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 18
+       col: 8
+      }
+      end: {
+       line: 18
+       col: 27
+      }
+     }
+     source_contexts: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 18
+       col: 8
+      }
+      end: {
+       line: 18
+       col: 27
+      }
+     }
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 17
+      col: 4
+     }
+     end: {
+      line: 20
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 17
+      col: 4
+     }
+     end: {
+      line: 20
+      col: 5
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /endpoint"
+   value: {
+    name: "GET /endpoint"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     call: {
+      target: {
+       part: "App:"
+       part: "Test:"
+      }
+      endpoint: "GET /endpoint:test"
+     }
+     source_context: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 15
+       col: 12
+      }
+      end: {
+       line: 15
+       col: 51
+      }
+     }
+     source_contexts: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 15
+       col: 12
+      }
+      end: {
+       line: 15
+       col: 51
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/endpoint"
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 14
+      col: 8
+     }
+     end: {
+      line: 17
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 14
+      col: 8
+     }
+     end: {
+      line: 17
+      col: 5
+     }
+    }
+   }
+  }
+  types: {
+   key: "Test2"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "field"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "App2"
+         }
+         path: "Test2"
+        }
+        ref: {
+         appname: {
+          part: "App:"
+          part: "Test:"
+         }
+         path: "Test:"
+        }
+       }
+       source_context: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 11
+         col: 8
+        }
+        end: {
+         line: 11
+         col: 40
+        }
+       }
+       source_contexts: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 11
+         col: 8
+        }
+        end: {
+         line: 11
+         col: 40
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 11
+      col: 40
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 11
+      col: 40
+     }
+    }
+   }
+  }
+  types: {
+   key: "Test:"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "test:field"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "App:"
+          part: "Test:"
+         }
+         path: "Test:"
+        }
+        ref: {
+         path: "Test:"
+        }
+       }
+       source_context: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 31
+        }
+       }
+       source_contexts: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 31
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "test:too"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 3
+         col: 8
+        }
+        end: {
+         line: 3
+         col: 30
+        }
+       }
+       source_contexts: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 3
+         col: 8
+        }
+        end: {
+         line: 3
+         col: 30
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 3
+      col: 30
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 3
+      col: 30
+     }
+    }
+   }
+  }
+  mixin2: {
+   name: {
+    part: "App:"
+    part: "Test:"
+   }
+  }
+  source_context: {
+   file: "tests/url_encoded.sysl"
+   start: {
+    line: 9
+   }
+   end: {
+    line: 21
+    col: 11
+   }
+  }
+  source_contexts: {
+   file: "tests/url_encoded.sysl"
+   start: {
+    line: 9
+   }
+   end: {
+    line: 21
+    col: 11
+   }
+  }
+ }
+}
+apps: {
+ key: "App: :: Test:"
+ value: {
+  name: {
+   part: "App:"
+   part: "Test:"
+  }
+  attrs: {
+   key: "patterns"
+   value: {
+    a: {
+     elt: {
+      s: "abstract"
+      source_context: {
+       file: "tests/url_encoded.sysl"
+       start: {
+        col: 19
+       }
+       end: {
+        col: 28
+       }
+      }
+      source_contexts: {
+       file: "tests/url_encoded.sysl"
+       start: {
+        col: 19
+       }
+       end: {
+        col: 28
+       }
+      }
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Event"
+   value: {
+    name: "Event"
+    is_pubsub: true
+    stmt: {
+     call: {
+      target: {
+       part: "App2"
+      }
+      endpoint: "App: :: Test: -> Event"
+     }
+     source_context: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 20
+       col: 4
+      }
+      end: {
+       line: 23
+       col: 5
+      }
+     }
+     source_contexts: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 20
+       col: 4
+      }
+      end: {
+       line: 23
+       col: 5
+      }
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /endpoint:test"
+   value: {
+    name: "GET /endpoint:test"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     ret: {
+      payload: "ok <: 200"
+     }
+     source_context: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 7
+       col: 12
+      }
+      end: {
+       line: 7
+       col: 28
+      }
+     }
+     source_contexts: {
+      file: "tests/url_encoded.sysl"
+      start: {
+       line: 7
+       col: 12
+      }
+      end: {
+       line: 7
+       col: 28
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/endpoint:test"
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 6
+      col: 8
+     }
+     end: {
+      line: 9
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 6
+      col: 8
+     }
+     end: {
+      line: 9
+      col: 5
+     }
+    }
+   }
+  }
+  types: {
+   key: "Test:"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "test:field"
+      value: {
+       type_ref: {
+        context: {
+         appname: {
+          part: "App:"
+          part: "Test:"
+         }
+         path: "Test:"
+        }
+        ref: {
+         path: "Test:"
+        }
+       }
+       source_context: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 31
+        }
+       }
+       source_contexts: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 31
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "test:too"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 3
+         col: 8
+        }
+        end: {
+         line: 3
+         col: 30
+        }
+       }
+       source_contexts: {
+        file: "tests/url_encoded.sysl"
+        start: {
+         line: 3
+         col: 8
+        }
+        end: {
+         line: 3
+         col: 30
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 3
+      col: 30
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 3
+      col: 30
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/url_encoded.sysl"
+   start: {}
+   end: {
+    line: 7
+    col: 28
+   }
+  }
+  source_contexts: {
+   file: "tests/url_encoded.sysl"
+   start: {}
+   end: {
+    line: 7
+    col: 28
+   }
+  }
+ }
+}
