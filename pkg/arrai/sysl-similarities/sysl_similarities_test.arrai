@@ -44,6 +44,7 @@ let empty = (
     param: {},
     stmt:  {},
     view:  {},
+    alias: {},
 );
 
 let (:model, :modified, ...) = //{/pkg/arrai/sysl-diff/test_cases};

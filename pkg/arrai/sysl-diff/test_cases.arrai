@@ -183,6 +183,10 @@ let model = (
         |appName, viewName, viewType|
         (['part1', 'part2', 'part3'], 'view', 'INT'),
     },
+    alias: {
+        |appName, typeName, aliasType|
+        (['part1', 'part2', 'part3'], 'alias', 'INT'),
+    },
 );
 
 let modSrc = (
@@ -369,6 +373,10 @@ let modified = (
     view: {
         |appName, viewName, viewType|
         (['part1', 'part2', 'part3'], 'view', 'STRING'), # change type
+    },
+    alias: {
+        |appName, typeName, aliasType|
+        (['part1', 'part2', 'part3'], 'alias', 'STRING'), # change type
     },
 );
 

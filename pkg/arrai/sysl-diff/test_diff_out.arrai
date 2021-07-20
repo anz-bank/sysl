@@ -1420,4 +1420,17 @@
       viewName: 'view',
     ),
   },
+  alias: {
+    (
+      appName: ['part1', 'part2', 'part3'],
+      change: 'modified',
+      new: (
+        aliasType: 'STRING',
+      ),
+      old: (
+        aliasType: 'INT',
+      ),
+      typeName: 'alias',
+    ),
+  }
 )

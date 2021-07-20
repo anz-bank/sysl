@@ -14,6 +14,8 @@
         table?: lhsTable:{},
         type?:  lhsType:{},
         view?:  lhsView:{},
+        alias?: lhsAlias:{},
+        ...
     ) = lhs;
     let (
         app?:   lhsAnnoApp:{},
@@ -25,6 +27,7 @@
         stmt?:  lhsAnnoStmt:{},
         type?:  lhsAnnoType:{},
         view?:  lhsAnnoView:{},
+        ...
     ) = lhsAnno;
     let (
         app?:   lhsSrcApp:{},
@@ -36,6 +39,7 @@
         stmt?:  lhsSrcStmt:{},
         type?:  lhsSrcType:{},
         view?:  lhsSrcView:{},
+        ...
     ) = lhsSrc;
     let (
         app?:   lhsTagApp:{},
@@ -47,6 +51,7 @@
         stmt?:  lhsTagStmt:{},
         type?:  lhsTagType:{},
         view?:  lhsTagView:{},
+        ...
     ) = lhsTag;
 
     let (
@@ -64,6 +69,8 @@
         table?: rhsTable:{},
         type?:  rhsType:{},
         view?:  rhsView:{},
+        alias?: rhsAlias:{},
+        ...
     ) = rhs;
     let (
         app?:   rhsAnnoApp:{},
@@ -75,6 +82,7 @@
         stmt?:  rhsAnnoStmt:{},
         type?:  rhsAnnoType:{},
         view?:  rhsAnnoView:{},
+        ...
     ) = rhsAnno;
     let (
         app?:   rhsSrcApp:{},
@@ -86,6 +94,7 @@
         stmt?:  rhsSrcStmt:{},
         type?:  rhsSrcType:{},
         view?:  rhsSrcView:{},
+        ...
     ) = rhsSrc;
     let (
         app?:   rhsTagApp:{},
@@ -97,6 +106,7 @@
         stmt?:  rhsTagStmt:{},
         type?:  rhsTagType:{},
         view?:  rhsTagView:{},
+        ...
     ) = rhsTag;
 
     (
@@ -144,4 +154,5 @@
         param: lhsParam & rhsParam,
         stmt:  lhsStmt  & rhsStmt,
         view:  lhsView  & rhsView,
+        alias: lhsAlias & rhsAlias,
     )
