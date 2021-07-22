@@ -26,7 +26,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         simple: {:macro:CREATE DATABASE db:}.schema = {(name: 'db')},
     ),
 
-    table: (
+    create_table: (
         simple:
             {:macro:CREATE TABLE t (c INT64):}.entities
             --- {(
@@ -45,6 +45,17 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         fk: (
             simple:
                 {:macro:CREATE TABLE t (c INT, FOREIGN KEY (c) REFERENCES ft (fc)):}.entities
+                --- {(
+                    foreign_keys: {(
+                        constraint_name: {},
+                        foreign_keys: {(attribute: 'c', reference_table: 'ft', reference_attribute: 'fc')},
+                        on_update: {},
+                        on_delete: {},
+                    )}
+                )}
+            ,
+            namespaced:
+                {:macro:CREATE TABLE t (c INT, FOREIGN KEY (c) REFERENCES namespace.ft (fc)):}.entities
                 --- {(
                     foreign_keys: {(
                         constraint_name: {},
@@ -80,14 +91,26 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         ,
     ),
 
+    alter_table: (
+        owner_to: let s = {:macro:ALTER TABLE t OWNER TO local:}; s = emptyModel
+    ),
+
     index: (
         simple:
             {:macro:CREATE INDEX ix ON t1(id):}.indexes
             --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
         ,
+        namespaced:
+            {:macro:CREATE INDEX ix ON namespace.t1(id):}.indexes
+            --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
+        ,
         interleaved:
             {:macro:CREATE INDEX ix ON t1(id) STORING (id), INTERLEAVE IN t2:}.indexes
             --- {(name: 'ix', table_name: 't1', key_parts: ['id'], storing_col: ['id'], interleaved_table: 't2')}
+        ,
+        using:
+            {:macro:CREATE INDEX ix ON t1 USING btree (id):}.indexes
+            --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
         ,
     ),
 
@@ -135,6 +158,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                 (type: 'datetime'): [
                     {:macro:CREATE TABLE t (c DATETIME):},
                     {:macro:CREATE TABLE t (c TIMESTAMP):},
+                    {:macro:CREATE TABLE t (c TIMESTAMP WITH TIME ZONE):},
                 ],
                 (type: 'string'): [
                     {:macro:CREATE TABLE t (c TEXT):},
@@ -193,6 +217,14 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         let select = {:macro:SELECT a FROM b NATURAL JOIN c; SELECT;:};
         select = emptyModel
     ,
+
+    set: [
+        {:macro:SET foo = 0:},
+        {:macro:SET standard_conforming_strings = on:},
+        {:macro:SET xmloption = content:},
+        {:macro:SET client_min_messages = warning:},
+        {:macro:SET row_security = off:},
+    ] >> . = emptyModel,
 
     delete: (
         bare:

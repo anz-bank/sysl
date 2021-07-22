@@ -1,5 +1,19 @@
 CREATE DATABASE customeraccounts;
 
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('foo_bar', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
 CREATE TABLE PayID (
     PayID   VARCHAR(23) NOT NULL PRIMARY KEY,
     BSB     VARCHAR(6)  NOT NULL,
@@ -52,3 +66,14 @@ CREATE TABLE AccountAddress (
     AddressLine3    BYTES(100),
     PRIMARY KEY (AccountNum, AddressPostCode)
 );
+
+CREATE SEQUENCE AccountNumSeq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER TABLE Account OWNER TO local;
+ALTER SEQUENCE AccountNumSeq OWNED BY Account.AccountNum;
+ALTER TABLE ONLY Account ALTER COLUMN AccountNum SET DEFAULT nextval('AccountNumSeq'::regclass);

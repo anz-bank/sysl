@@ -199,5 +199,5 @@ let foo_c = applyAlterTable(renameCol.data, foo_b);
         dropCol: foo_bx = foo,
     ),
 
-    testFile: parseDdl($`${//[//encoding.bytes]{./postgresql/postgresql.sql}}`) count = 9
+    testFile: parseDdl($`${//[//encoding.bytes]{./postgresql/postgresql.sql}}`) != {}
 )
