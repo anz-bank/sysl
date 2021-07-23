@@ -19,6 +19,7 @@ ddl                 -> stmt=(create_database
                             |comment_on_extension
                             |alter_table
                             |alter_sequence
+                            |alter_function
                             |update_table
                             |drop_table
                             |drop_index
@@ -61,7 +62,7 @@ create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED"
 storing_clause      -> "STORING" "(" column_name:",",? ")";
 interleaving_clause -> "INTERLEAVE" "IN" table_name;
 
-create_view         -> "CREATE" ("OR" "REPLACE")? "VIEW" view_name "AS" select;
+create_view         -> "CREATE" ("OR" "REPLACE")? "VIEW" table_prefix? view_name "AS" select;
 
 create_sequence     -> "CREATE" "SEQUENCE" if_not_exists? table_prefix? sequence_name sequence_opt*;
 sequence_opt        -> "START" "WITH" \d+
@@ -72,9 +73,11 @@ sequence_opt        -> "START" "WITH" \d+
                      | "NO" "CYCLE";
 
 alter_sequence      -> "ALTER" "SEQUENCE" table_prefix? sequence_name "OWNED" "BY" dotted_name;
+alter_function      -> "ALTER" "FUNCTION" table_prefix? function_name=name "(" ")" "OWNER" "TO" owner_name=name;
 
-create_function     -> "CREATE" "FUNCTION" function_name=name "(" ")" "RETURNS" var_name=name "AS"
-                       "$BODY$" [^$]+ "$BODY$" function_opt*;
+create_function     -> "CREATE" "FUNCTION" table_prefix? function_name=name "(" ")" "RETURNS" var_name=name
+                       ("LANGUAGE" name)?
+                       "AS" /{\$\w*\$.*?\$\w*\$} function_opt*;
 function_opt        -> "LANGUAGE" lang_name=name
                      | "VOLATILE"
                      | "COST" cost=\d+;
@@ -105,7 +108,9 @@ update_table        -> "UPDATE" table_name
                        "SET" update_item:","
                        ("WHERE" condition)?;
 update_item         -> column_name "=" (value | "DEFAULT");
-condition           -> column_name (("IS" "NOT"? NULL) | comparison value);
+condition           -> @:("AND"|"OR")
+                     > "(" @ ")"
+                     | column_name (("IS" "NOT"? NULL) | comparison value);
 comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
 
 
@@ -133,16 +138,17 @@ right               -> "USAGE"
 use                 -> "USE" name;
 set                 -> "SET" name "=" value;
 
-select              -> "SELECT" [^;:]*;
+//# FIXME: [^:] is required to prevent macro from consuming `:}` closing tag.
+select              -> "SELECT" ("::" | [^:;])*;
 
 //# Spanner
 options_def         -> "OPTIONS" "(" (option):",",? ")";
-option              -> k=[^=\s]* "=" v=value ;
+option              -> k=[^=\s]* "=" v=value;
 
 key_parts            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
-attr_type           -> (ARRAY_TYPE | SCALAR_TYPE | STRUCT_TYPE) (NULL | NOT_NULL)? default?;
-default             -> "DEFAULT" value;
-generated           -> "GENERATED" "ALWAYS" "AS" expr ("VIRTUAL" | "STORED");
+attr_type           -> (ARRAY_TYPE | SCALAR_TYPE | STRUCT_TYPE) (NULL | NOT_NULL | default | generated)*;
+default             -> "DEFAULT" value ("::" cast=attr_type)?;
+generated           -> ("GENERATED" "ALWAYS")? "AS" expr ("VIRTUAL" | "STORED");
 expr                -> [^()]* "(" [^()]* expr? [^()]* ")";
 if_exists           -> "IF" "EXISTS";
 if_not_exists       -> "IF" "NOT" "EXISTS";
@@ -157,10 +163,10 @@ SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | FLOAT64   = ("FLOAT64" | "DOUBLE")
                      | FLOAT     = "FLOAT"
                      | DECIMAL   = (("DECIMAL" | "DEC" | "FIXED" | "NUMERIC") ("(" precision=int_value "," scale=int_value ")")?)
-                     | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP" ("WITH" "TIME" "ZONE")?)
+                     | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP" (("WITHOUT" | "WITH") "TIME" "ZONE")?)
                      | DATE      = "DATE"
-                     | STRING    = (("TEXT" | "VARCHAR" | "STRING") ("(" length ")")?)
-                     | BYTES     = ("BYTES" ("(" length ")")? | "BLOB" | "LONGBLOB")
+                     | STRING    = (("TEXT" | "VARCHAR" | "STRING" | "CHARACTER" "VARYING"?) ("(" length ")")?)
+                     | BYTES     = ("BYTES" ("(" length ")")? | "BYTEA" | "BLOB" | "LONGBLOB")
                      | UUID      = "UUID"
                      ;
 
@@ -185,10 +191,7 @@ value               -> int_value
                      | function_value
                      | NULL
                      | CURRENT_TIMESTAMP
-                     | "ON"
-                     | "OFF"
-                     | "CONTENT"
-                     | "WARNING";
+                     | keyword_value;
 int_value           -> hex_value | decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
@@ -198,6 +201,7 @@ time_value          -> "NOW" "(" ")" ("at" "time" "zone" string_value)?;
 id_value            -> ("NEWID" "(" ")")
                      | ("uuid_generate_v1" "(" ")" | "uuid_generate_v4" "(" ")");
 function_value      -> name "(" value ("::" name)? ")";
+keyword_value       -> name;
 
 NULL                -> "NULL";
 NOT_NULL            -> "NOT" NULL;
@@ -507,6 +511,8 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
     (:comment_on_extension, ...): {},
     (:create_sequence, ...): {},
     (:alter_sequence, ...): {},
+    (:create_function, ...): {},
+    (:alter_function, ...): {},
     (:select, ...): {},
     (:insert, ...): {},
     (:delete, ...): {},

@@ -89,6 +89,10 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                 {:macro:CREATE TABLE namespace.t (c INT64):}.entities
                 --- {(name_prefix: 'namespace', name: 't')}
         ,
+        generated:
+            {:macro:CREATE TABLE t (c INT64 AS (IF(X,Y,Z)) STORED):}
+            = {:macro:CREATE TABLE t (c INT64):}
+        ,
     ),
 
     alter_table: (
@@ -159,19 +163,24 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     {:macro:CREATE TABLE t (c DATETIME):},
                     {:macro:CREATE TABLE t (c TIMESTAMP):},
                     {:macro:CREATE TABLE t (c TIMESTAMP WITH TIME ZONE):},
+                    {:macro:CREATE TABLE t (c TIMESTAMP WITHOUT TIME ZONE):},
                 ],
                 (type: 'string'): [
                     {:macro:CREATE TABLE t (c TEXT):},
                     {:macro:CREATE TABLE t (c STRING):},
-                    {:macro:CREATE TABLE t (c VARCHAR):},# TODO: Capture UUID-ness as well.
-                {:macro:CREATE TABLE t (c UUID):},
+                    {:macro:CREATE TABLE t (c VARCHAR):},
+                    {:macro:CREATE TABLE t (c CHARACTER):},
+                    {:macro:CREATE TABLE t (c CHARACTER VARYING):},
+                    {:macro:CREATE TABLE t (c UUID):}, # TODO: Capture UUID-ness as well.
                 ],
                 (type: 'string', length: 42): [
                     {:macro:CREATE TABLE t (c STRING(42)):},
                     {:macro:CREATE TABLE t (c VARCHAR(42)):},
+                    {:macro:CREATE TABLE t (c CHARACTER VARYING(42)):},
                 ],
                 (type: 'bytes'): [
                     {:macro:CREATE TABLE t (c BYTES):},
+                    # {:macro:CREATE TABLE t (c BYTEA):},
                     {:macro:CREATE TABLE t (c BLOB):},
                     {:macro:CREATE TABLE t (c LONGBLOB):},
                 ],
@@ -182,6 +191,14 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     {:macro:CREATE TABLE t (c BYTES(MAX)):},
                 ],
             } >>> \k \v v >> {k} --- {colType(.)},
+
+            multipleNullDefaultCast: [
+                {:macro:CREATE TABLE t (c INT DEFAULT 1 NOT NULL):},
+                {:macro:CREATE TABLE t (c INT NOT NULL DEFAULT 1):},
+                {:macro:CREATE TABLE t (c INT DEFAULT 1 NULL):},
+                {:macro:CREATE TABLE t (c INT NULL DEFAULT 1):},
+                {:macro:CREATE TABLE t (c INT DEFAULT 1::ARRAY<STRING> NOT NULL):},
+            ] >> (.entities single).attributes(0).type = "int",
 
             array: (
                 int: [
@@ -231,9 +248,28 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             let delete = {:macro:DELETE FROM t:};
             delete = emptyModel
         ,
-        where:
-            let delete = {:macro:DELETE FROM t WHERE c = 'x':};
-            delete = emptyModel
-        ,
+        conditions: [
+            parseDdl(`DELETE FROM t WHERE c = 'x'`),
+            parseDdl(`DELETE FROM t WHERE c IS NULL`),
+            parseDdl(`DELETE FROM t WHERE c IS NOT NULL`),
+            parseDdl(`DELETE FROM t WHERE c = 'x' AND d IS NULL`),
+            parseDdl(`DELETE FROM t WHERE c = 'x' OR c = 'y'`),
+            parseDdl(`DELETE FROM t WHERE (c = 'x') OR (c = 'y' AND (d=1)) AND (d IS NULL)`),
+        ] >> . = [{}],
+    ),
+
+    functions: (
+        create: [
+            {:macro:CREATE FUNCTION public.newid() RETURNS uuid AS $BODY$ foo $BODY$:},
+            {:macro:
+                CREATE FUNCTION public.newid() RETURNS uuid
+                LANGUAGE sql
+                AS $$select md5(random()::text || clock_timestamp()::text)::uuid$$;
+            :},
+        ] >> . = emptyModel,
+
+        alter: [
+            {:macro:ALTER FUNCTION public.newid() OWNER TO foo:},
+        ] >> . = emptyModel,
     ),
 )
