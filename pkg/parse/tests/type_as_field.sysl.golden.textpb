@@ -1,0 +1,81 @@
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
+  }
+  types: {
+   key: "Type"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "xml"
+      value: {
+       primitive: STRING
+       source_context: {
+        file: "tests/type_as_field.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 21
+        }
+       }
+       source_contexts: {
+        file: "tests/type_as_field.sysl"
+        start: {
+         line: 2
+         col: 8
+        }
+        end: {
+         line: 2
+         col: 21
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/type_as_field.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 21
+     }
+    }
+    source_contexts: {
+     file: "tests/type_as_field.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 21
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/type_as_field.sysl"
+   start: {}
+   end: {
+    line: 2
+    col: 21
+   }
+  }
+  source_contexts: {
+   file: "tests/type_as_field.sysl"
+   start: {}
+   end: {
+    line: 2
+    col: 21
+   }
+  }
+ }
+}

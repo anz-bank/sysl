@@ -333,6 +333,12 @@ func TestArgs(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/args.sysl")
 }
 
+func TestTypeAsFieldName(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/type_as_field.sysl")
+}
+
 func TestSimpleEPWithSpaces(t *testing.T) {
 	t.Parallel()
 

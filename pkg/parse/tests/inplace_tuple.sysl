@@ -33,7 +33,6 @@ My :: Tuple Model:
             value <: int(1..)
             data <: string_8(0..30)
             footer <: string(0..)
-            XMLDoc <: xml
 
     !type TopLevelPayload:
         data <: string(500)
