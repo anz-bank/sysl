@@ -1,0 +1,14 @@
+# renderSections is a util function which renders sections except empty sections. All sections are joined by delimiter.
+let renderSections = \delimiter \sections //seq.join(delimiter, sections where .@item rank (:.@));
+
+# renderInlineSections renders multiple sections separated by one whitespace.
+let renderInlineSections = renderSections(' ');
+
+# renderMultilineSections renders multiple sections separated by two newlines.
+let renderMultilineSections = renderSections('\n\n');
+
+(
+    :renderSections,
+    :renderInlineSections,
+    :renderMultilineSections,
+)

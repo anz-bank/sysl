@@ -1,0 +1,344 @@
+let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (
+    :renderInlineSections,
+    :renderMultilineSections,
+    ...
+) = //{./util};
+
+
+let inCurly = //re.compile(`^{(\w+)}$`).match;
+let trimPrefixWS = //re.compile(`^\s*`).sub('');
+
+# attrsToTagsAndAnno is a util function which splits attrs into two dictionaries, a dictionary with just patterns key
+# and another dictionary of other annotations.
+let attrsToTagsAndAnno = \attrs
+    let anno = attrs where .@ != 'patterns';
+    let tags = attrs &~ anno;
+    (:tags, :anno)
+;
+
+let renderLongName = \name name && $`"${name}"`;
+
+let rec renderInlineAnnoValue = \v
+    cond v {
+        (a: (:elt, ...), ...): $`[${elt >> renderInlineAnnoValue(.)::, }]`,
+        (:s, ...): $`"${s}"`,
+        _: //error(v),
+    }
+;
+
+let renderAnnoStmts = \anno
+    $`
+        ${(
+            anno => \(@: name, @value: value)
+                $`
+                    @${name} = ${
+                        cond value {
+                            (a: (elt: _, ...), ...): renderInlineAnnoValue(value),
+                            (:s, ...): cond {
+                                //seq.contains('\n', s):
+                                    let s = ' ' ++ //seq.trim_suffix('\n', trimPrefixWS(s));
+                                    $`
+                                        :
+                                            ${//seq.split('\n', s) >> '|' ++ .::\i:}
+                                    `,
+                                _: renderInlineAnnoValue(value),
+                            }
+                        }
+                    }
+                `
+        ) orderby .::\i}
+    `
+;
+
+let renderInlineAnnoAndTags = \attrs
+    let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+    let tags = tags && (tags('patterns').a.elt rank (@: .@item)) >> $`~${.s}`;
+    let anno = anno && (anno => $`${.@}=${renderInlineAnnoValue(.@value)}`) orderby .;
+    let combined = tags ++ anno;
+    combined && $`[${combined::, :}]`
+;
+
+let renderTypeUsage = \type
+    let rec typeStr = \type cond type {
+        (type_ref: (ref: (?:appname:(), :path), ...), ...):
+            let appName = partsToAppName(appname.part?:[]);
+            let appName = appName && appName ++ '.';
+            $`${appName}${path::.:}`,
+
+        (:primitive, ...): //str.lower(primitive),
+        (:sequence, ...):  $`sequence of ${typeStr(sequence)}`,
+        (:set, ...):       $`set of ${typeStr(set)}`,
+    };
+    # FIXME handle constraint
+    let (?:opt:false, ?:constraints:{}, ...) = type;
+
+    $`${typeStr(type)}${opt && '?'}`
+;
+
+# renderTypeUsageWithInlineAnno is to be used for types usage in parameters, assignments, or
+# aliases. It does not handle type definitions.
+let renderTypeUsageWithInlineAnno = \type
+    let (?:attrs:{}, ...) = type;
+    $`${renderTypeUsage(type)}${attrs && ' ' ++ renderInlineAnnoAndTags(attrs)}`
+;
+
+let renderRegularParam = \(:name, :type) $`${name} <: ${renderTypeUsageWithInlineAnno(type)}`;
+
+let renderRegularParams = \params params && $`(${params >> renderRegularParam(.)::, :})`;
+
+let renderQueryParams = \params params &&
+    let renderParamTypeUsage = \type cond type {
+        (primitive:_, ...): renderTypeUsage(type),
+        _:                  $`{${renderTypeUsage(type)}}`,
+    };
+    $`?${params >> \(:name, :type) $`${name}=${renderParamTypeUsage(type)}`::&:}`
+;
+
+let renderParameterizedPath = \path \urlParam
+    let renderedParamType = urlParam => \(@item: (:name, :type), ...) (@: name, @value: renderTypeUsage(type));
+    let segments = //seq.split('/', path) >> cond inCurly(.) {
+        [[_, name]]: $`{${name} <: ${renderedParamType(name rank (:.@))}}`,
+        _: .,
+    };
+    $`${segments::/}`
+;
+
+let rec stmtRenderers = (
+    renderStmt: \stmt
+        let stmtStr = cond stmt {
+            (action: (:action), ...): action,
+            (call: (target: (part: appName), :endpoint, ?:arg:[], ...), ...): $`
+                ${partsToAppName(appName) || '.'} <- ${endpoint}${arg && $`(${arg >> .name::, })`}
+            `,
+
+            # FIXME: cond statements seems to only contain `if` and not the `else` predicates.
+            ('cond': (:test, :stmt), ...): $`
+                if ${test}:
+                    ${stmtRenderers.renderStmts(stmt)}
+            `,
+
+            # All loops seem to be parsed as groups
+            (loop: (:mode, :criterion, :stmt), ...): $`
+                ${//str.lower(mode)}${criterion && ' ' ++ criterion}:
+                    ${stmtRenderers.renderStmts(stmt)}
+            `,
+
+            # loop_n seems to not be used
+            # (:loop_n, ...): ,
+            (foreach: (:collection, :stmt), ...): $`
+                for each ${collection}:
+                    ${stmtRenderers.renderStmts(stmt)}
+            `,
+            (alt: (:choice), ...):
+                # FIXME: `cond` isn't always populated by the sysl pb
+                $`
+                    ${choice >> \(cond?:condition:'', :stmt) $`
+                        alt${condition && ' ' ++ condition}:
+                            ${stmtRenderers.renderStmts(stmt)}
+                    `::\i}
+                `,
+
+            (group: (:title, :stmt), ...): $`
+                ${title}:
+                    ${stmtRenderers.renderStmts(stmt)}
+            `,
+            (ret: (:payload), ...): $`return ${payload}`,
+            _: //error($`unrecognised statement: ${stmt}`),
+        };
+        let attrs = stmt.attrs?:{};
+
+        $`${stmtStr}${attrs && ' ' ++ renderInlineAnnoAndTags(attrs)}`,
+
+    renderStmts: \stmts $`${stmts >> stmtRenderers.renderStmt(.) ::\i}` || '...',
+);
+
+let (:renderStmt, :renderStmts) = stmtRenderers;
+
+let renderRestEndpoints = \restEps
+    let restEpsRel = (
+        restEps =>
+            let (
+                rest_params: (:path, :method, query_param?:queryParam:[], url_param?:urlParam:[], ...),
+                param?:regParam:[],
+                ?:attrs:{},
+                ?:stmt:[],
+                ...
+            ) = .@value;
+            let regParam = regParam where .@item; # remove empty tuple, this happens in params like `GET(Types.Type)`.
+            (:path, :urlParam, :method, :queryParam, :regParam, :attrs, :stmt)
+    ) nest ~|path, urlParam|methods # urlParam is shared by all methods
+    => \ep
+            # group common attrs
+            let (:path, :methods, ...) = ep;
+            ep +>
+                let commonAttrs = cond ((methods => .attrs) orderby .) {
+                    [first, ...attrs]: reduce(attrs, \acc \value acc & value, first),
+                    _: {},
+                };
+
+                # removed 'rest'
+                let cleanedAttrs = cond commonAttrs {
+                    {'patterns': (a: (elt: [(s: 'rest')])), ...tail}: tail,
+                    {'patterns': (a: (:elt)), ...}:
+                        commonAttrs +> {'patterns': (a: (elt: elt where .@item != (s: 'rest')))},
+                    _: commonAttrs,
+                };
+
+                (
+                    attrs: cleanedAttrs,
+                    methods: (methods => \m m +> (attrs: m.attrs &~ commonAttrs)) orderby .method,
+                )
+    ;
+    $`
+        ${restEpsRel orderby .path >> \(:path, :methods, :urlParam, :attrs)
+            $`
+                ${renderParameterizedPath(path, urlParam)}${attrs && ' ' ++ renderInlineAnnoAndTags(attrs)}:
+                    ${methods >> \(:queryParam, :regParam, :attrs, :method, :stmt)
+                        let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+                        let tags = renderInlineAnnoAndTags(tags);
+                        let regParam = renderRegularParams(regParam);
+                        let queryParam = renderQueryParams(queryParam);
+                        $`
+                            ${method}${renderInlineSections([regParam, queryParam, tags])}:
+                                ${renderAnnoStmts(anno)}
+                                ${renderStmts(stmt)}
+                        `
+                    ::\i}
+            `
+        ::\i\n}
+    `
+;
+
+let renderEndpoint = \ep
+    let (:name, long_name?:longName:'', ?:attrs:{}, ?:param:[], ?:stmt:[], ...) = ep;
+    let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+    let sections = [name, renderLongName(longName), renderRegularParams(param), renderInlineAnnoAndTags(tags)];
+    $`
+        ${renderInlineSections(sections)}:
+            ${renderAnnoStmts(anno)}
+            ${renderStmts(stmt)}
+    `
+;
+
+let renderEndpoints = \eps $`${eps => .@value orderby .name >> renderEndpoint(.) ::\n\n:}`;
+
+let renderAllEndpoints = \eps
+    let pubsubs = eps where .@value.is_pubsub?:false;
+    let rest = eps where .@value.rest_params?:false;
+    let regularEp = eps &~ (pubsubs | rest);
+    cond regularEp {
+        {'...': (name: '...')}: '...',
+
+        # FIXME: render pubsubs
+        _:
+            $`
+                ${renderMultilineSections([renderEndpoints(regularEp), renderRestEndpoints(rest)])}
+            `
+    }
+;
+
+let renderEnum = \(:name, type: (?:attrs:{}, enum: (:items), ...))
+    # FIXME: enums don't seem to allow annotation statements
+    $`
+        !enum ${renderInlineSections([name, renderInlineAnnoAndTags(attrs)])}:
+            ${items orderby .@value >> \(@: name, @value: i) $`${name} : ${i}` ::\i}
+    `
+;
+
+let renderAlias = \(:name, :type)
+    let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
+    $`
+        !alias ${renderInlineSections([name, renderInlineAnnoAndTags(tags)])}:
+            ${renderAnnoStmts(anno)}
+            ${renderTypeUsage(type)}
+    `
+;
+
+let renderTypeOrTable = \(:name, :type)
+    cond {
+        # FIXME: handle inplace type definitions on fields
+        //seq.contains('.', name): '',
+        _:
+            let attrs = type.attrs?:{};
+            let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+            let [kind, fields] = cond type {
+                (tuple: (attr_defs: fields, ...), ...):    ['type', fields],
+                (relation: (attr_defs: fields, ...), ...): ['table', fields],
+                _: //error($`renderTypeOrTable: unrecognised type ${type}`),
+            };
+            $`
+                !${renderInlineSections([kind, name, renderInlineAnnoAndTags(tags)])}:
+                    ${renderAnnoStmts(anno)}
+                    ${fields orderby .@ >> \(@: name, @value: type)
+                        let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
+                        $`
+                            ${name} <: ${renderTypeUsage(type)}${tags && ' ' ++ renderInlineAnnoAndTags(tags)}${
+                                anno && $`
+                                    :
+                                        ${renderAnnoStmts(anno)}
+                                `
+                            }
+                        `
+                    ::\i}
+            `
+    }
+;
+
+# FIXME: handle union
+let renderAllType = \t
+    cond t.type {
+        (tuple: _, ...):    renderTypeOrTable(t),
+        (relation: _, ...): renderTypeOrTable(t),
+        (enum: _, ...):     renderEnum(t),
+        _:                  renderAlias(t),
+    }
+;
+
+let renderTypes = \types
+    let types = types => (name: .@, type: .@value);
+    $`${renderMultilineSections(types orderby .name >> renderAllType(.))}`
+;
+
+# FIXME: render imports
+let renderApp = \app
+    let (
+        name: (part: appName),
+        long_name?:longName:'',
+        ?:attrs:{},
+        ?:endpoints:{},
+        ?:types:{},
+        # FIXME: handle mixin
+        ...
+    ) = app;
+    let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+    let appID = [partsToAppName(appName), renderLongName(longName), renderInlineAnnoAndTags(tags)];
+    let sections = [renderAnnoStmts(anno), renderAllEndpoints(endpoints), renderTypes(types)];
+
+    $`
+        ${renderInlineSections(appID)}:
+            ${renderMultilineSections(sections)}
+        `
+;
+
+(
+    :renderAnnoStmts,
+    :renderInlineAnnoAndTags,
+    :renderTypeUsage,
+    :renderTypeUsageWithInlineAnno,
+    :renderRegularParam,
+    :renderRegularParams,
+    :renderQueryParams,
+    :renderParameterizedPath,
+    :renderRestEndpoints,
+    :renderEndpoint,
+    :renderEndpoints,
+    :renderAllEndpoints,
+    :renderEnum,
+    :renderAlias,
+    :renderTypeOrTable,
+    :renderAllType,
+    :renderTypes,
+    :renderApp,
+)

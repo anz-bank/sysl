@@ -1,0 +1,29 @@
+let (:renderApp, ...) = //{./sysl_mod_renderers};
+let (
+    :renderMultilineSections,
+    ...
+) = //{./util};
+
+# renderBasedOnApps returns a dictionary with the key being the application name
+# and the value be the rendered application.
+let renderBasedOnApps = \m m.apps >> renderApp(.);
+
+# renderAllInOne returns sysl source as string with all the applications sorted
+# by the application name.
+let renderAllInOne = \m $`${renderMultilineSections(m.apps orderby .@ >> renderApp(.@value))}`;
+
+# FIXME: only accounts for filename, not the order of the apps based on source
+# contexts.
+# renderPerFile returns a dictionary with the key being the filepath for a set
+# applications are defined and the value being the content of that file.
+let renderPerFile = \m
+    # divide the apps in the module based on the filename.
+    let files = (m.apps => (:.@value.source_contexts(0).file, apps: .)) nest apps;
+    files => (@: .file, @value: renderAllInOne((:.apps)))
+;
+
+(
+    :renderBasedOnApps,
+    :renderAllInOne,
+    :renderPerFile,
+)

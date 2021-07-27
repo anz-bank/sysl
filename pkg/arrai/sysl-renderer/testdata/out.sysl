@@ -1,0 +1,198 @@
+App "display name" [~abstract]:
+    ...
+
+App :: with :: subpackages "display name":
+    ...
+
+AppWithAnnotation:
+    @annotation = "annotation"
+    @annotation1 = "you can do string annotation like this"
+    @annotation2 = ["or", "in", "an", "array"]
+    @annotation3 = :
+        | you can also do
+        | multiline annotations
+        | like this
+    
+    ...
+
+EventAndSubscriber:
+    App -> Event:
+        @annotations = "annotation"
+        ...
+
+RestEndpoint:
+    /:
+        DELETE:
+            ...
+        GET:
+            ...
+        PATCH:
+            ...
+        POST:
+            ...
+        PUT:
+            ...
+    
+    /nested1/nested2/nested3:
+        GET:
+            ...
+    
+    /notnested:
+        GET:
+            ...
+    
+    /param:
+        DELETE(with_string <: int):
+            ...
+        GET:
+            ...
+        PATCH(t <: Types.Type [~body]):
+            ...
+        POST(native <: string):
+            ...
+        PUT(unlimited <: string, limited <: string, num <: int, limited_num <: int, x <: ):
+            ...
+    
+    /pathwithtype/{native <: int}:
+        GET:
+            ...
+    
+    /query:
+        GET?native=string&t={}&curly={Type}&optional=string?:
+            ...
+    
+    !type Type:
+        x <: int
+
+SimpleEndpoint:
+    SimpleEp:
+        ...
+    
+    SimpleEpWithAnnotations:
+        @annotation = "annotation"
+        ...
+    
+    SimpleEpWithArray (unlimited <: string, limited <: string, num <: int, limited_num <: int, x <: ):
+        ...
+    
+    SimpleEpWithParamsRef (Types.type <: ):
+        ...
+    
+    SimpleEpWithTypes (native <: string):
+        ...
+
+Statements:
+    AnnotatedStatements:
+        Statements <- Miscellanous [annotation="annotation can be added for any statement as a string"]
+        return ok <: string [annotation=["as", "an", "array"]]
+        "statement" [annotation=[["or", "as", "an"], ["array", "of", "arrays"]]]
+    
+    Annotations:
+        @annotation1 = "you can do string annotation like this"
+        @annotation2 = ["or", "in", "an", "array"]
+        @annotation3 = :
+            | you can also do
+            | multiline annotations
+            | like this
+        ...
+    
+    Calls:
+        Statements <- Returns
+        RestEndpoint <- GET /param
+    
+    GroupStatements:
+        grouped:
+            Statements <- GroupStatements
+    
+    IfStmt:
+        if predicate1:
+            return ok <: string
+        else if predicate2:
+            Statements <- IfStmt
+        else:
+            ...
+    
+    Loops:
+        alt predicate:
+            ...
+        until predicate:
+            ...
+        for each predicate:
+            ...
+        for predicate:
+            ...
+        loop predicate:
+            ...
+        while predicate:
+            ...
+    
+    Miscellanous:
+        | you can add comments like this
+        "string statements"
+        SimpleEndpoint -> SimpleEp
+    
+    OneOfStatements:
+        alt case1:
+            return ok <: string
+        alt case number 2:
+            return ok <: int
+        alt "case 3":
+            return ok <: Types.Type
+        alt:
+            return error <: string
+    
+    Returns:
+        return ok <: string
+        return ok <: Types.Type
+        return error <: Types.Type
+
+Types:
+    !alias Alias:
+        int
+    
+    !alias AliasForeignRef:
+        RestEndpoint.Type
+    
+    !alias AliasForeignRefSet:
+        set of RestEndpoint.Type
+    
+    !alias AliasRef:
+        Type
+    
+    !alias AliasSequence:
+        sequence of string
+    
+    !enum Enum [~tag, annotation="annotation"]:
+        ENUM_1 : 1
+        ENUM_2 : 2
+        ENUM_3 : 3
+    
+    !table Table [~tag]:
+        decimal_with_precision <: decimal
+        inplace <: inplace
+        nativeTypeField <: string
+        optional <: string?
+        primaryKey <: string [~pk]
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        string_max_constraint <: string
+        string_range_constraint <: string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+    
+    !type Type:
+        @annotation = "annotation"
+        aliasSequence <: Alias
+        inplace <: inplace
+        nativeTypeField <: string
+        optional <: string?
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+    
+    !alias Union:
+        @annotation = "annotation"
+    
