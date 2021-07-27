@@ -1,0 +1,11 @@
+Foo:
+    Endpoint:
+        Bar <- Endpoint
+
+Bar:
+    Endpoint:
+        Baz <- Endpoint
+
+Baz:
+    Endpoint:
+        Baz <- Endpoint

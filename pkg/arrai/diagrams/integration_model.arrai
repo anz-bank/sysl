@@ -24,14 +24,6 @@ let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 # some variables use the older relational model where the name is contained in `part`
 let extractedAppName = \name cond name {(:part): part, _: name};
 
-# `appSourceFiles` returns the set of source files that the given application can be found in.
-# This method exists to work around an issue whereby an element can only be represented with a
-# single source context. The workaround for this issue is to approximate these files based on the
-# presence of other application sub-elements.
-# https://github.com/anzx/sysl/issues/437
-let appSourceFiles = \rel \appName
-    (rel.src.app <&- {(:appName)} => .appSrc.file) | (rel.src.ep <&- {(:appName)} => .epSrc.file);
-
 # `appNodes` returns the set of nodes for a given application name where a `node` is
 # a tuple with the following properties:
 # `name`: The node represented by this value. For example: ['Org', 'Platform'].
@@ -102,15 +94,13 @@ let modelNodesWithStmtAnnos = \nodes \rel \annos
         (rel.anno.stmt where mn.name = .appName && .stmtAnnoName <: annos) && true;
 
 # `modelNodesInFiles` returns the given model nodes such that only nodes that have an application
-# in one of the given are included.
+# in one of the given files are included.
 # `nodes` is the set of nodes as returned from `modelNodes`.
 # `rel` is the relational model from which the nodes were derived.
 # `files` is the set of file names (/foo/bar.sysl) to filter by.
 let modelNodesInFiles = \nodes \rel \files
-    let fs = \appName
-        appSourceFiles(rel, appName);
     nodes where \mn
-        (rel.app where mn.name = .appName && (fs(.appName) & files)) && true;
+        //rel.union(rel.src.app <-- {(appName: mn.name)} => .appSrcs => \srcs (srcs => .@item.file)) & files;
 
 # `appIntegrationModeConfig` is a tuple containing methods suitable for modifying the config value
 # as passed in to `appIntegrationModel`.

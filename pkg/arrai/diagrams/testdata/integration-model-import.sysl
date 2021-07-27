@@ -1,0 +1,8 @@
+import integration-model-imported
+
+Foo:
+    Endpoint:
+        Bar <- Endpoint
+
+Bar:
+    ...

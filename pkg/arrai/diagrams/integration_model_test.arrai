@@ -1,6 +1,7 @@
 let sysl = //{/pkg/arrai/sysl};
-let (:appIntegrationModel, ...) = //{./integration_model};
+let (:appIntegrationModel, :appIntegrationModelConfig, ...) = //{./integration_model};
 let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/integration-model.sysl.pb}));
+let relImport = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/integration-model-import.sysl.pb}));
 
 (
     # Test the integration model.
@@ -18,4 +19,15 @@ let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/integ
         );
         //test.assert.equal(expected, actual)
     ),
+
+    # Test the modelNodesInFile.
+    model_nodes_in_files: (
+        let config = appIntegrationModelConfig.withModelNodesInFile((), 'diagrams/testdata/integration-model-import.sysl');
+        let actual = config.modelNodes(relImport);
+        let expected = {|appName, childNames, name, parentName|
+            (['Bar'], {}, ['Bar'], {}),
+            (['Foo'], {}, ['Foo'], {})
+        };
+        //test.assert.equal(expected, actual)
+    )
 )
