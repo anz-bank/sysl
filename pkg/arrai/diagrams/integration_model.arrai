@@ -172,13 +172,18 @@ let appIntegrationModelConfig =
 #     following arguments `\stmt \edge` and returns the (potentially modified) edge.
 #     `stmts` is the set of `stmts` values from the relational model that corresponds to this edge.
 #     `edge` is the tuple representing the edge as constructed within this method.
+# `stmts` is a function that takes the relational model and returns the set of statements to consider.
+#     If not provided, then all statements within the model are considered.
 let appIntegrationModel = \rel \config
     let configs = //dict(config);
     let modelNodes = configs('modelNodes')?:modelNodes;
+    let stmts = configs('stmts')?:\rel rel.stmt;
     let onNode = configs('onNode')?:\_ \node node;
     let onEdge = configs('onEdge')?:\_ \edge edge;
 
     let nodes = modelNodes(rel);
+    let stmts = stmts(rel);
+
     let stmtCallId = \stmt
         $`${partsToAppName(stmt.appName)}-${partsToAppName(extractedAppName(stmt.stmtCall.appName))}`;
 
@@ -192,8 +197,8 @@ let appIntegrationModel = \rel \config
         data: {},
     ));
 
-    let edges = rel.stmt where .stmtCall => (:.appName, :.epName, :.stmtCall, :.stmtIndex) => \e
-        let stmts = rel.stmt <&- {(:e.appName, :e.epName, :e.stmtCall)};
+    let edges = stmts where .stmtCall => (:.appName, :.epName, :.stmtCall, :.stmtIndex) => \e
+        let stmts = stmts <&- {(:e.appName, :e.epName, :e.stmtCall)};
         let fromId = partsToAppName((stmts => .appName) single);
         let toId = partsToAppName(extractedAppName((stmts => .stmtCall.appName) single));
         let id = cond stmts {
