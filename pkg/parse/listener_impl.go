@@ -426,7 +426,7 @@ func makeTypeConstraint(t *sysl.Type, size_spec *parser.Size_specContext) []*sys
 
 	bitWidth := getBitWidth(t)
 	switch t.GetPrimitive() {
-	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING:
+	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_STRING, sysl.Type_BYTES:
 		val1 := size_spec.DIGITS(0).GetText()
 		if l, err = strconv.ParseInt(val1, 10, 0); err == nil {
 			if bitWidth > 0 {
@@ -469,7 +469,7 @@ func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*
 
 	bitWidth := getBitWidth(t)
 	switch t.GetPrimitive() {
-	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING:
+	case sysl.Type_DATE, sysl.Type_DATETIME, sysl.Type_INT, sysl.Type_DECIMAL, sysl.Type_STRING, sysl.Type_BYTES:
 		var ct *sysl.Type_Constraint
 		if bitWidth > 0 {
 			ct = &sysl.Type_Constraint{

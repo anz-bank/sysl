@@ -13,6 +13,9 @@ My :: Browser :: Client Model:
         foo <: decimal(10)
         bar <: decimal(10..9999)
         baz <: decimal(10.2)
+        byte <: bytes
+        byte_length <: bytes(10)
+        byte_range <: bytes(10..9999)
 
 Model:
     !type Request:

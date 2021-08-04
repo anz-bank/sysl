@@ -21,22 +21,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 18
+         line: 21
          col: 8
         }
         end: {
-         line: 18
+         line: 21
          col: 32
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 18
+         line: 21
          col: 8
         }
         end: {
-         line: 18
+         line: 21
          col: 32
         }
        }
@@ -46,22 +46,22 @@ apps: {
     source_context: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 17
+      line: 20
       col: 4
      }
      end: {
-      line: 18
+      line: 21
       col: 32
      }
     }
     source_contexts: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 17
+      line: 20
       col: 4
      }
      end: {
-      line: 18
+      line: 21
       col: 32
      }
     }
@@ -70,20 +70,20 @@ apps: {
   source_context: {
    file: "tests/inplace_tuple.sysl"
    start: {
-    line: 16
+    line: 19
    }
    end: {
-    line: 18
+    line: 21
     col: 32
    }
   }
   source_contexts: {
    file: "tests/inplace_tuple.sysl"
    start: {
-    line: 16
+    line: 19
    }
    end: {
-    line: 18
+    line: 21
     col: 32
    }
   }
@@ -171,6 +171,101 @@ apps: {
       }
      }
      attr_defs: {
+      key: "byte"
+      value: {
+       primitive: BYTES
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 15
+         col: 8
+        }
+        end: {
+         line: 15
+         col: 21
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 15
+         col: 8
+        }
+        end: {
+         line: 15
+         col: 21
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "byte_length"
+      value: {
+       primitive: BYTES
+       constraint: {
+        length: {
+         max: 10
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 16
+         col: 8
+        }
+        end: {
+         line: 16
+         col: 32
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 16
+         col: 8
+        }
+        end: {
+         line: 16
+         col: 32
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "byte_range"
+      value: {
+       primitive: BYTES
+       constraint: {
+        length: {
+         min: 10
+         max: 9999
+        }
+       }
+       source_context: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 17
+         col: 8
+        }
+        end: {
+         line: 17
+         col: 37
+        }
+       }
+       source_contexts: {
+        file: "tests/inplace_tuple.sysl"
+        start: {
+         line: 17
+         col: 8
+        }
+        end: {
+         line: 17
+         col: 37
+        }
+       }
+      }
+     }
+     attr_defs: {
       key: "foo"
       value: {
        primitive: DECIMAL
@@ -211,8 +306,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 14
-      col: 28
+      line: 17
+      col: 37
      }
     }
     source_contexts: {
@@ -222,8 +317,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 14
-      col: 28
+      line: 17
+      col: 37
      }
     }
    }
@@ -234,8 +329,8 @@ apps: {
     line: 10
    }
    end: {
-    line: 14
-    col: 28
+    line: 17
+    col: 37
    }
   }
   source_contexts: {
@@ -244,8 +339,8 @@ apps: {
     line: 10
    }
    end: {
-    line: 14
-    col: 28
+    line: 17
+    col: 37
    }
   }
  }
@@ -582,22 +677,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 54
+         line: 57
          col: 8
         }
         end: {
-         line: 65
+         line: 68
          col: 1
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 54
+         line: 57
          col: 8
         }
         end: {
-         line: 65
+         line: 68
          col: 1
         }
        }
@@ -614,22 +709,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 47
+         line: 50
          col: 8
         }
         end: {
-         line: 54
+         line: 57
          col: 9
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 47
+         line: 50
          col: 8
         }
         end: {
-         line: 54
+         line: 57
          col: 9
         }
        }
@@ -639,22 +734,22 @@ apps: {
     source_context: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 46
+      line: 49
       col: 4
      }
      end: {
-      line: 64
+      line: 67
       col: 26
      }
     }
     source_contexts: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 46
+      line: 49
       col: 4
      }
      end: {
-      line: 64
+      line: 67
       col: 26
      }
     }
@@ -671,22 +766,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 56
+         line: 59
          col: 12
         }
         end: {
-         line: 56
+         line: 59
          col: 23
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 56
+         line: 59
          col: 12
         }
         end: {
-         line: 56
+         line: 59
          col: 23
         }
        }
@@ -699,22 +794,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 57
+         line: 60
          col: 12
         }
         end: {
-         line: 57
+         line: 60
          col: 30
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 57
+         line: 60
          col: 12
         }
         end: {
-         line: 57
+         line: 60
          col: 30
         }
        }
@@ -727,22 +822,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 55
+         line: 58
          col: 12
         }
         end: {
-         line: 55
+         line: 58
          col: 27
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 55
+         line: 58
          col: 12
         }
         end: {
-         line: 55
+         line: 58
          col: 27
         }
        }
@@ -761,22 +856,22 @@ apps: {
          source_context: {
           file: "tests/inplace_tuple.sysl"
           start: {
-           line: 58
+           line: 61
            col: 12
           }
           end: {
-           line: 62
+           line: 65
            col: 13
           }
          }
          source_contexts: {
           file: "tests/inplace_tuple.sysl"
           start: {
-           line: 58
+           line: 61
            col: 12
           }
           end: {
-           line: 62
+           line: 65
            col: 13
           }
          }
@@ -797,22 +892,22 @@ apps: {
          source_context: {
           file: "tests/inplace_tuple.sysl"
           start: {
-           line: 62
+           line: 65
            col: 12
           }
           end: {
-           line: 65
+           line: 68
            col: 1
           }
          }
          source_contexts: {
           file: "tests/inplace_tuple.sysl"
           start: {
-           line: 62
+           line: 65
            col: 12
           }
           end: {
-           line: 65
+           line: 68
            col: 1
           }
          }
@@ -834,22 +929,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 60
+         line: 63
          col: 16
         }
         end: {
-         line: 60
+         line: 63
          col: 20
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 60
+         line: 63
          col: 16
         }
         end: {
-         line: 60
+         line: 63
          col: 20
         }
        }
@@ -862,22 +957,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 59
+         line: 62
          col: 16
         }
         end: {
-         line: 59
+         line: 62
          col: 24
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 59
+         line: 62
          col: 16
         }
         end: {
-         line: 59
+         line: 62
          col: 24
         }
        }
@@ -890,22 +985,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 61
+         line: 64
          col: 16
         }
         end: {
-         line: 61
+         line: 64
          col: 22
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 61
+         line: 64
          col: 16
         }
         end: {
-         line: 61
+         line: 64
          col: 22
         }
        }
@@ -925,22 +1020,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 63
+         line: 66
          col: 16
         }
         end: {
-         line: 63
+         line: 66
          col: 27
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 63
+         line: 66
          col: 16
         }
         end: {
-         line: 63
+         line: 66
          col: 27
         }
        }
@@ -953,22 +1048,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 64
+         line: 67
          col: 16
         }
         end: {
-         line: 64
+         line: 67
          col: 26
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 64
+         line: 67
          col: 16
         }
         end: {
-         line: 64
+         line: 67
          col: 26
         }
        }
@@ -988,22 +1083,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 49
+         line: 52
          col: 12
         }
         end: {
-         line: 49
+         line: 52
          col: 18
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 49
+         line: 52
          col: 12
         }
         end: {
-         line: 49
+         line: 52
          col: 18
         }
        }
@@ -1016,22 +1111,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 51
+         line: 54
          col: 12
         }
         end: {
-         line: 51
+         line: 54
          col: 27
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 51
+         line: 54
          col: 12
         }
         end: {
-         line: 51
+         line: 54
          col: 27
         }
        }
@@ -1044,22 +1139,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 50
+         line: 53
          col: 12
         }
         end: {
-         line: 50
+         line: 53
          col: 25
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 50
+         line: 53
          col: 12
         }
         end: {
-         line: 50
+         line: 53
          col: 25
         }
        }
@@ -1072,22 +1167,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 52
+         line: 55
          col: 12
         }
         end: {
-         line: 52
+         line: 55
          col: 18
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 52
+         line: 55
          col: 12
         }
         end: {
-         line: 52
+         line: 55
          col: 18
         }
        }
@@ -1116,22 +1211,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 48
+         line: 51
          col: 12
         }
         end: {
-         line: 48
+         line: 51
          col: 53
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 48
+         line: 51
          col: 12
         }
         end: {
-         line: 48
+         line: 51
          col: 53
         }
        }
@@ -1162,22 +1257,22 @@ apps: {
          source_context: {
           file: "tests/inplace_tuple.sysl"
           start: {
-           line: 53
+           line: 56
            col: 12
           }
           end: {
-           line: 53
+           line: 56
            col: 62
           }
          }
          source_contexts: {
           file: "tests/inplace_tuple.sysl"
           start: {
-           line: 53
+           line: 56
            col: 12
           }
           end: {
-           line: 53
+           line: 56
            col: 62
           }
          }
@@ -1204,22 +1299,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 25
+         line: 28
          col: 8
         }
         end: {
-         line: 25
+         line: 28
          col: 28
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 25
+         line: 28
          col: 8
         }
         end: {
-         line: 25
+         line: 28
          col: 28
         }
        }
@@ -1237,22 +1332,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 26
+         line: 29
          col: 8
         }
         end: {
-         line: 26
+         line: 29
          col: 31
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 26
+         line: 29
          col: 8
         }
         end: {
-         line: 26
+         line: 29
          col: 31
         }
        }
@@ -1270,22 +1365,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 23
+         line: 26
          col: 8
         }
         end: {
-         line: 23
+         line: 26
          col: 28
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 23
+         line: 26
          col: 8
         }
         end: {
-         line: 23
+         line: 26
          col: 28
         }
        }
@@ -1304,22 +1399,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 24
+         line: 27
          col: 8
         }
         end: {
-         line: 24
+         line: 27
          col: 32
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 24
+         line: 27
          col: 8
         }
         end: {
-         line: 24
+         line: 27
          col: 32
         }
        }
@@ -1343,22 +1438,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 28
+         line: 31
          col: 8
         }
         end: {
-         line: 28
+         line: 31
          col: 25
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 28
+         line: 31
          col: 8
         }
         end: {
-         line: 28
+         line: 31
          col: 25
         }
        }
@@ -1376,22 +1471,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 22
+         line: 25
          col: 8
         }
         end: {
-         line: 22
+         line: 25
          col: 32
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 22
+         line: 25
          col: 8
         }
         end: {
-         line: 22
+         line: 25
          col: 32
         }
        }
@@ -1415,22 +1510,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 27
+         line: 30
          col: 8
         }
         end: {
-         line: 27
+         line: 30
          col: 35
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 27
+         line: 30
          col: 8
         }
         end: {
-         line: 27
+         line: 30
          col: 35
         }
        }
@@ -1440,22 +1535,22 @@ apps: {
     source_context: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 21
+      line: 24
       col: 4
      }
      end: {
-      line: 34
+      line: 37
       col: 33
      }
     }
     source_contexts: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 21
+      line: 24
       col: 4
      }
      end: {
-      line: 34
+      line: 37
       col: 33
      }
     }
@@ -1472,22 +1567,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 31
+         line: 34
          col: 12
         }
         end: {
-         line: 31
+         line: 34
          col: 23
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 31
+         line: 34
          col: 12
         }
         end: {
-         line: 31
+         line: 34
          col: 23
         }
        }
@@ -1512,22 +1607,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 33
+         line: 36
          col: 12
         }
         end: {
-         line: 33
+         line: 36
          col: 35
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 33
+         line: 36
          col: 12
         }
         end: {
-         line: 33
+         line: 36
          col: 35
         }
        }
@@ -1543,22 +1638,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 34
+         line: 37
          col: 12
         }
         end: {
-         line: 34
+         line: 37
          col: 33
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 34
+         line: 37
          col: 12
         }
         end: {
-         line: 34
+         line: 37
          col: 33
         }
        }
@@ -1576,22 +1671,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 32
+         line: 35
          col: 12
         }
         end: {
-         line: 32
+         line: 35
          col: 29
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 32
+         line: 35
          col: 12
         }
         end: {
-         line: 32
+         line: 35
          col: 29
         }
        }
@@ -1601,22 +1696,22 @@ apps: {
     source_context: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 30
+      line: 33
       col: 8
      }
      end: {
-      line: 34
+      line: 37
       col: 33
      }
     }
     source_contexts: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 30
+      line: 33
       col: 8
      }
      end: {
-      line: 34
+      line: 37
       col: 33
      }
     }
@@ -1649,22 +1744,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 42
+         line: 45
          col: 8
         }
         end: {
-         line: 42
+         line: 45
          col: 51
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 42
+         line: 45
          col: 8
         }
         end: {
-         line: 42
+         line: 45
          col: 51
         }
        }
@@ -1682,22 +1777,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 37
+         line: 40
          col: 8
         }
         end: {
-         line: 37
+         line: 40
          col: 27
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 37
+         line: 40
          col: 8
         }
         end: {
-         line: 37
+         line: 40
          col: 27
         }
        }
@@ -1716,22 +1811,22 @@ apps: {
         source_context: {
          file: "tests/inplace_tuple.sysl"
          start: {
-          line: 38
+          line: 41
           col: 8
          }
          end: {
-          line: 38
+          line: 41
           col: 35
          }
         }
         source_contexts: {
          file: "tests/inplace_tuple.sysl"
          start: {
-          line: 38
+          line: 41
           col: 8
          }
          end: {
-          line: 38
+          line: 41
           col: 35
          }
         }
@@ -1739,22 +1834,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 38
+         line: 41
          col: 8
         }
         end: {
-         line: 38
+         line: 41
          col: 35
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 38
+         line: 41
          col: 8
         }
         end: {
-         line: 38
+         line: 41
          col: 35
         }
        }
@@ -1782,22 +1877,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 40
+         line: 43
          col: 8
         }
         end: {
-         line: 40
+         line: 43
          col: 38
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 40
+         line: 43
          col: 8
         }
         end: {
-         line: 40
+         line: 43
          col: 38
         }
        }
@@ -1827,22 +1922,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 41
+         line: 44
          col: 8
         }
         end: {
-         line: 41
+         line: 44
          col: 65
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 41
+         line: 44
          col: 8
         }
         end: {
-         line: 41
+         line: 44
          col: 65
         }
        }
@@ -1870,22 +1965,22 @@ apps: {
         source_context: {
          file: "tests/inplace_tuple.sysl"
          start: {
-          line: 43
+          line: 46
           col: 8
          }
          end: {
-          line: 43
+          line: 46
           col: 35
          }
         }
         source_contexts: {
          file: "tests/inplace_tuple.sysl"
          start: {
-          line: 43
+          line: 46
           col: 8
          }
          end: {
-          line: 43
+          line: 46
           col: 35
          }
         }
@@ -1893,22 +1988,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 43
+         line: 46
          col: 8
         }
         end: {
-         line: 43
+         line: 46
          col: 35
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 43
+         line: 46
          col: 8
         }
         end: {
-         line: 43
+         line: 46
          col: 35
         }
        }
@@ -1933,22 +2028,22 @@ apps: {
         source_context: {
          file: "tests/inplace_tuple.sysl"
          start: {
-          line: 44
+          line: 47
           col: 8
          }
          end: {
-          line: 44
+          line: 47
           col: 38
          }
         }
         source_contexts: {
          file: "tests/inplace_tuple.sysl"
          start: {
-          line: 44
+          line: 47
           col: 8
          }
          end: {
-          line: 44
+          line: 47
           col: 38
          }
         }
@@ -1956,22 +2051,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 44
+         line: 47
          col: 8
         }
         end: {
-         line: 44
+         line: 47
          col: 38
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 44
+         line: 47
          col: 8
         }
         end: {
-         line: 44
+         line: 47
          col: 38
         }
        }
@@ -1996,22 +2091,22 @@ apps: {
        source_context: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 39
+         line: 42
          col: 8
         }
         end: {
-         line: 39
+         line: 42
          col: 33
         }
        }
        source_contexts: {
         file: "tests/inplace_tuple.sysl"
         start: {
-         line: 39
+         line: 42
          col: 8
         }
         end: {
-         line: 39
+         line: 42
          col: 33
         }
        }
@@ -2021,22 +2116,22 @@ apps: {
     source_context: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 36
+      line: 39
       col: 4
      }
      end: {
-      line: 44
+      line: 47
       col: 38
      }
     }
     source_contexts: {
      file: "tests/inplace_tuple.sysl"
      start: {
-      line: 36
+      line: 39
       col: 4
      }
      end: {
-      line: 44
+      line: 47
       col: 38
      }
     }
@@ -2045,20 +2140,20 @@ apps: {
   source_context: {
    file: "tests/inplace_tuple.sysl"
    start: {
-    line: 20
+    line: 23
    }
    end: {
-    line: 64
+    line: 67
     col: 26
    }
   }
   source_contexts: {
    file: "tests/inplace_tuple.sysl"
    start: {
-    line: 20
+    line: 23
    }
    end: {
-    line: 64
+    line: 67
     col: 26
    }
   }
