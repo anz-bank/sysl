@@ -1,4 +1,4 @@
-//nolint:golint,stylecheck,funlen
+//nolint:revive,stylecheck,funlen
 package parse // SyslParser
 
 import (
@@ -3374,9 +3374,7 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	if filepath.Ext(path) == "" {
 		path += syslExt
 	}
-	if strings.HasPrefix(path, "//") {
-		path = strings.TrimPrefix(path, "//")
-	}
+	path = strings.TrimPrefix(path, "//")
 	if !strings.Contains(path, "@") && s.version != "" {
 		path += "@" + s.version
 	}

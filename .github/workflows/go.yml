@@ -18,7 +18,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.13
+          go-version: 1.16
 
       - uses: actions/cache@v2
         with:
@@ -62,7 +62,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.13
+        go-version: 1.16
 
     - uses: actions/cache@v2
       with:
@@ -92,7 +92,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.13
+        go-version: 1.16
 
     - uses: actions/cache@v2
       with:
@@ -144,10 +144,10 @@ jobs:
     name: Builds the sysl docker image
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Go 1.13
+      - name: Set up Go 1.16
         uses: actions/setup-go@v2
         with:
-          go-version: 1.13
+          go-version: 1.16
 
       - name: Install go-bindata
         run: go get github.com/anz-bank/go-bindata/...
@@ -177,13 +177,13 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.13
+          go-version: 1.16
 
       - name: Check out code
         uses: actions/checkout@v2
 
       - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/... && go mod tidy
+        run: go get github.com/anz-bank/go-bindata/...
 
       - name: Generate intermediate files
         run: make generate

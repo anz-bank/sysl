@@ -2,6 +2,7 @@ package importer
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/afero"
 
@@ -10,17 +11,19 @@ import (
 
 // Importer is an interface implemented by all sysl importers
 type Importer interface {
-	// Load reads in a file from path and returns the generated Sysl.
+	// LoadFile reads in a file from path and returns the generated Sysl.
 	LoadFile(path string) (string, error)
 	// Load takes in a string in a format supported by an the importer
 	// It returns the converted Sysl as a string.
-	Load(file string) (string, error)
-	// WithAppName allows the exported Sysl application name to be specified.
+	Load(content string) (string, error)
+	// WithAppName allows the imported Sysl application name to be specified.
 	WithAppName(appName string) Importer
-	// WithPackage allows the exported Sysl package attribute to be specified.
+	// WithPackage allows the imported Sysl package attribute to be specified.
 	WithPackage(packageName string) Importer
 }
 
+// Formats lists all supported import formats
+// TODO: Add all transform imports dynamically
 var Formats = []Format{
 	Grammar,
 	OpenAPI3,
@@ -34,31 +37,43 @@ var Formats = []Format{
 	MySQL,
 	MySQLDir,
 	BigQuery,
+	JSONSchema,
 }
 
 // Factory takes in an absolute path and its contents (if path is a file) and returns an importer
 // for the detected file type.
-func Factory(path string, isDir bool, format string, content []byte, logger *logrus.Logger) (Importer, error) {
-	var fileType Format
-	if format != "" {
+func Factory(path string, isDir bool, formatName string, content []byte, logger *logrus.Logger) (Importer, error) {
+	var format Format
+	if formatName != "" {
 		for _, f := range Formats {
-			if format == f.Name {
-				fileType = f
+			if strings.EqualFold(formatName, f.Name) {
+				format = f
 				break
 			}
 		}
-		if fileType.Name == "" {
-			return nil, fmt.Errorf("an importer does not exist for %s", format)
+		if format.Name == "" {
+			return nil, fmt.Errorf("an importer does not exist for %s", formatName)
 		}
 	} else {
+		// TODO: Get rid of format autodetection
 		ft, err := GuessFileType(path, isDir, content, Formats)
 		if err != nil {
 			return nil, err
 		}
-		fileType = ft
+		format = ft
 	}
 
-	switch fileType.Name {
+	for _, f := range Formats {
+		if f.Name != format.Name {
+			continue
+		}
+
+		logger.Debugln("Detected " + f.Name)
+
+		break
+	}
+
+	switch format.Name {
 	case OpenAPI2.Name:
 		logger.Debugln("Detected OpenAPI2")
 		return MakeOpenAPI2Importer(logger, "", path), nil
@@ -70,32 +85,15 @@ func Factory(path string, isDir bool, format string, content []byte, logger *log
 		return MakeXSDImporter(logger), nil
 	case Grammar.Name:
 		logger.Debugln("Detected grammar file")
-		return nil, fmt.Errorf("importer disabled for: %s", fileType.Name)
+		return nil, fmt.Errorf("importer disabled for: %s", format.Name)
 	case Avro.Name:
 		logger.Debugln("Detected Avro")
 		return NewAvroImporter(logger), nil
-	case SpannerSQL.Name:
-		logger.Debugln("Detected Spanner SQL file")
-		return MakeSQLImporter(logger), nil
-	case SpannerSQLDir.Name:
-		logger.Debugln("Detected Spanner SQL directory")
-		return MakeSQLImporter(logger), nil
-	case Postgres.Name:
-		logger.Debugln("Detected PostgreSQL file")
-		return MakeSQLImporter(logger), nil
-	case PostgresDir.Name:
-		logger.Debugln("Detected PostgreSQL directory")
-		return MakeSQLImporter(logger), nil
-	case MySQL.Name:
-		logger.Debugln("Detected MySQL file")
-		return MakeSQLImporter(logger), nil
-	case MySQLDir.Name:
-		logger.Debugln("Detected MySQL directory")
-		return MakeSQLImporter(logger), nil
-	case BigQuery.Name:
-		logger.Debugln("Detected BigQuery")
+	case SpannerSQL.Name, SpannerSQLDir.Name, Postgres.Name, PostgresDir.Name, MySQL.Name, MySQLDir.Name, BigQuery.Name:
+		logger.Debugln("Detected SQL")
 		return MakeSQLImporter(logger), nil
 	default:
-		return nil, fmt.Errorf("an importer does not exist for %s", fileType.Name)
+		logger.Debugln("Defaulting to transform-based importing")
+		return MakeTransformImporter(logger, format.Name), nil
 	}
 }

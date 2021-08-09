@@ -23,7 +23,7 @@ import "os"
 type VAR int
 
 /* Use iotas instead of maps because this is thread safe */
-//nolint:stylecheck,golint
+//nolint:stylecheck,revive
 const (
 	SYSL_MODULES VAR = iota
 	SYSL_PLANTUML

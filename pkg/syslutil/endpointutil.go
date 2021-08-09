@@ -2,7 +2,7 @@ package syslutil
 
 import "github.com/anz-bank/sysl/pkg/sysl"
 
-// nolint:golint,stylecheck
+// nolint:revive,stylecheck
 var (
 	Method_GET    = sysl.Endpoint_RestParams_GET.String()
 	Method_PUT    = sysl.Endpoint_RestParams_PUT.String()

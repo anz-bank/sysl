@@ -37,9 +37,7 @@ func (v *ScriptView) writeCreateSQLForATable(
 		tableData += s
 	}
 	tableData = v.addConstraints(tableData, tableName, foreignKeyConstraints, primaryKeys)
-	if strings.HasSuffix(tableData, ",") {
-		tableData = tableData[:len(tableData)-1]
-	}
+	tableData = strings.TrimSuffix(tableData, ",")
 	v.stringBuilder.WriteString(tableData)
 	v.stringBuilder.WriteString("\n);\n")
 }

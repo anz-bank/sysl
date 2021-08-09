@@ -1,0 +1,58 @@
+{
+  "objects": [
+    {
+      "name": "user",
+      "schema": {
+        "$schema": "http://forgerock.org/json-schema#",
+        "type": "object",
+        "title": "Person",
+        "description": "User object",
+        "required": ["requiredNullableField", "userName"],
+        "icon": "fa-user",
+        "properties": {
+          "userName": {
+            "title": "Username",
+            "description": "Username",
+            "viewable": true,
+            "type": "string",
+            "searchable": true,
+            "userEditable": true,
+            "usageDescription": null,
+            "isPersonal": true,
+            "isVirtual": false,
+            "scope": "private",
+            "policies": [
+              {
+                "policyId": "valid-username"
+              },
+              {
+                "policyId": "cannot-contain-characters",
+                "params": {
+                  "forbiddenChars": ["/"]
+                }
+              },
+              {
+                "policyId": "minimum-length",
+                "params": {
+                  "minLength": 1
+                }
+              },
+              {
+                "policyId": "maximum-length",
+                "params": {
+                  "maxLength": 255
+                }
+              }
+            ]
+          },
+          "requiredNullableField": {
+            "type": ["string", null]
+          },
+          "optionalNullableField": {
+            "type": ["string", "null"]
+          }
+        }
+      }
+    }
+  ]
+}

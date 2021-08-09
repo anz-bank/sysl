@@ -87,10 +87,7 @@ func (g *graph) recordMethod(appName, endpoint, method, location string) error {
 func (g *graph) recordAsCall(appName, endpoint, method, location string) error {
 	g.recordApp(appName, "") //nolint:errcheck
 	if method == "" {
-		if err := g.recordEndpoint(appName, endpoint, location); err != nil {
-			return err
-		}
-		return nil
+		return g.recordEndpoint(appName, endpoint, location)
 	}
 	g.recordEndpoint(appName, endpoint, location) //nolint:errcheck
 	if err := g.recordMethod(appName, endpoint, method, location); err != nil {

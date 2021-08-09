@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -19,8 +18,8 @@ import (
 type importCmd struct {
 	importer.OutputData
 	filename string
-	outfile  string
 	format   string
+	outFile  string
 }
 
 func (p *importCmd) Name() string       { return "import" }
@@ -29,36 +28,34 @@ func (p *importCmd) MaxSyslModule() int { return 0 }
 func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	optsText := buildOptionsText(importer.Formats)
 	cmd := app.Command(p.Name(), "Import foreign type to Sysl. Supported types: ["+optsText+"]")
-	cmd.Flag("input", "input filename").Short('i').Required().StringVar(&p.filename)
+	cmd.Flag("input", "path of file to import").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
 		"name of the Sysl app to define in Sysl model.").Required().Short('a').StringVar(&p.AppName)
 	cmd.Flag("package",
 		"name of the Sysl package to define in Sysl model.").Short('p').StringVar(&p.Package)
-	cmd.Flag("output", "output filename").Default("output.sysl").Short('o').StringVar(&p.outfile)
-	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]."+
-		"Formats are autodetected, but this can force the use of a particular importer.", optsText)).StringVar(&p.format)
+	cmd.Flag("output", "path of file to write the imported sysl, writes to stdout when not specified").
+		Short('o').StringVar(&p.outFile)
+	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]. "+
+		"Formats are autodetected, but this can force the use of a particular importer.", optsText)).Short('f').
+		StringVar(&p.format)
 	return cmd
 }
 
 func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
-	info, err := os.Stat(p.filename)
-	if os.IsNotExist(err) {
+	content, err := afero.ReadFile(args.Filesystem, p.filename)
+	if err != nil {
 		return err
 	}
-	var data []byte
-	if !info.IsDir() {
-		data, err = ioutil.ReadFile(p.filename)
-		if err != nil {
-			return err
-		}
-	}
-
 	var imp importer.Importer
 	inputFilePath, err := filepath.Abs(p.filename)
 	if err != nil {
 		return err
 	}
-	imp, err = importer.Factory(inputFilePath, info.IsDir(), p.format, data, logrus.New())
+	isDir, err := afero.IsDir(args.Filesystem, p.filename)
+	if err != nil {
+		return err
+	}
+	imp, err = importer.Factory(inputFilePath, isDir, p.format, content, logrus.New())
 	if err != nil {
 		return err
 	}
@@ -70,13 +67,17 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	case *importer.ArraiImporter:
 		output, err = imp.LoadFile(inputFilePath)
 	default:
-		output, err = imp.Load(string(data))
+		output, err = imp.Load(string(content))
 	}
 	if err != nil {
 		return err
 	}
 
-	return afero.WriteFile(args.Filesystem, p.outfile, []byte(output), os.ModePerm)
+	if p.outFile != "" {
+		return afero.WriteFile(args.Filesystem, p.outFile, []byte(output), os.ModePerm)
+	}
+	_, err = fmt.Println(output)
+	return err
 }
 
 func buildOptionsText(opts []importer.Format) string {

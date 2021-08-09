@@ -85,7 +85,7 @@ func (am *AppMapper) BuildApplication(a *sysl.Application) *App {
 // Creates a map of all types
 // TODO Check if colon is valid in typename
 func (am *AppMapper) IndexTypes() map[string]*sysl.Type {
-	var typeIndex map[string]*sysl.Type = make(map[string]*sysl.Type, 10)
+	var typeIndex = make(map[string]*sysl.Type, 10)
 	for appName, app := range am.Module.Apps {
 		for typeName, typeVal := range app.Types {
 			typeIndex[appName+"."+typeName] = typeVal

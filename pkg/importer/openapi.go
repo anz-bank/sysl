@@ -8,7 +8,7 @@ import (
 )
 
 // OpenAPI Data Types: https://swagger.io/docs/specification/data-models/data-types/
-// nolint:golint,stylecheck
+// nolint:revive,stylecheck
 const (
 	OpenAPI_EMPTY   = ""
 	OpenAPI_STRING  = "string"
@@ -20,7 +20,7 @@ const (
 )
 
 // OpenAPI string formats: https://swagger.io/docs/specification/data-models/data-types/ -> String Formats
-// nolint:gochecknoglobals,golint,stylecheck
+// nolint:gochecknoglobals,revive,stylecheck
 var OpenAPIFormats = []OpenAPIFormat{
 	OpenAPIFormat_INT32,
 	OpenAPIFormat_INT64,
@@ -35,7 +35,7 @@ var OpenAPIFormats = []OpenAPIFormat{
 
 type OpenAPIFormat = string
 
-// nolint:golint,stylecheck
+// nolint:revive,stylecheck
 const (
 	OpenAPIFormat_INT32    OpenAPIFormat = "int32"
 	OpenAPIFormat_INT64    OpenAPIFormat = "int64"

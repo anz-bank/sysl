@@ -1,0 +1,15 @@
+# Test data for unit tests
+
+Namespace1 :: App1:
+    !table Table1:
+        Column1 <: string [~pk]
+        Column2 <: string(42) [~bk]
+    !table View1 [~view]:
+        Column1 <: int
+    !type WebService1:
+        Field1 <: datetime
+        Field2 <: bool
+Namespace1 :: App2:
+    !table Table1:
+        Column1 <: float [~pk]
+        Column2 <: sequence of string

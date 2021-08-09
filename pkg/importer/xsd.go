@@ -87,7 +87,7 @@ func makeNamespacedType(name xml.Name, target Type) Type {
 	}
 }
 
-// nolint:golint,stylecheck
+// nolint:revive,stylecheck
 var (
 	XSD_BOOLEAN  = strings.ToLower(xsd.Boolean.String())
 	XSD_BYTE     = strings.ToLower(xsd.Byte.String())

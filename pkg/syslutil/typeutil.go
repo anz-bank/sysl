@@ -65,7 +65,7 @@ var BuiltInTypes = []BuiltInType{
 	Type_UUID,
 }
 
-// nolint:golint,stylecheck
+// nolint:revive,stylecheck
 var (
 	Type_NO_Primitive BuiltInType = GetTypePrimitiveName(sysl.Type_NO_Primitive)
 	Type_EMPTY        BuiltInType = GetTypePrimitiveName(sysl.Type_EMPTY)

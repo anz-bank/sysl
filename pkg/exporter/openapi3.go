@@ -142,7 +142,7 @@ func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.Swa
 
 func (s *OpenAPI3Exporter) exportType(t *syslwrapper.Type) *openapi3.SchemaRef {
 	var ref string
-	var value *openapi3.Schema = openapi3.NewSchema()
+	var value = openapi3.NewSchema()
 	if t == nil {
 		return nil
 	}

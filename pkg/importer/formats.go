@@ -98,6 +98,12 @@ var OpenAPI2 = Format{
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
+var JSONSchema = Format{
+	Name:      "jsonschema",
+	Signature: "$schema",
+	FileExt:   []string{".json"},
+}
+
 // GuessFileType detects the file based on the filename extension and the file itself.
 // It returns the detected format if successful, or an error if not.
 // It first tries to match the file extensions before checking the files for signatures such as

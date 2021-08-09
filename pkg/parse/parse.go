@@ -51,7 +51,7 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	p.BuildParseTrees = true
 	tree := p.Sysl_file()
 	if errorListener.hasErrors {
-		return nil, Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
+		return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
 	}
 	return tree, nil
 }
@@ -85,15 +85,15 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		imp.WithAppName(def.appname).WithPackage(def.pkg)
 		if err != nil {
-			return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
 		}
 		output, err := imp.Load(file)
 		if err != nil {
-			return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
 		}
 		return antlr.NewInputStream(output), nil
 	default:
-		return nil, Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+		return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
 	}
 }
 
@@ -141,7 +141,7 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 
 	repo, resource, version, err := gop.ProcessRequest(resource)
 	if err != nil {
-		return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", resource, err))
+		return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", resource, err))
 	}
 	if !strings.HasSuffix(resource, syslExt) {
 		resource += syslExt
@@ -155,11 +155,11 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 		logrus.Debugf("Parsing: " + filename)
 		_, resource, version, err := gop.ProcessRequest(filename)
 		if err != nil {
-			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
 		}
 		res, _, err := retriever.Retrieve(filename)
 		if err != nil {
-			return nil, Exitf(ImportError, fmt.Sprintf("error parsing %#v: \n%v\n", filename, err))
+			return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error parsing %#v: \n%v\n", filename, err))
 		}
 		fsinput := &fsFileStream{antlr.NewInputStream(string(res)), filename}
 
@@ -223,7 +223,7 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 			listener.imports = listener.imports[1:]
 			if _, has := imported[source.filename]; !has {
 				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
-					return nil, Exitf(2,
+					return nil, syslutil.Exitf(2,
 						"error importing: importing outside current directory is only allowed when root is defined")
 				}
 				break

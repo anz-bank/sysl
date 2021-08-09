@@ -25,7 +25,7 @@ lint-docker: generate
 		-e GOCACHE=/cache/go \
 		-v ${GOPATH}/pkg:/go/pkg \
 		-w /app \
-		golangci/golangci-lint:v1.30.0 \
+		golangci/golangci-lint:v1.41.1 \
 			golangci-lint run -v
 
 tidy:
@@ -44,7 +44,7 @@ test-arrai:
 	$(ARRAI) test
 
 coverage: generate
-	./scripts/test-with-coverage.sh 80
+	./scripts/test-with-coverage.sh 75
 
 # Updates golden test files in pkg/parse.
 golden: generate

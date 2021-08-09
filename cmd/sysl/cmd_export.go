@@ -103,7 +103,7 @@ func (p *exportCmd) determineOperationMode(filename string) (string, error) {
 	case yamlMode:
 		return yamlMode, nil
 	default:
-		return "", fmt.Errorf("invalid output file format %s", fileExtn)
+		return "", fmt.Errorf("could not determine output format from specified output file extension '%s'", fileExtn)
 	}
 }
 

@@ -8,7 +8,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/arrai"
 
 	"github.com/anz-bank/sysl/pkg/cfg"
-	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -92,12 +91,22 @@ func main2(
 			logger.Debugln(err)
 			logger.Errorln(arraiErr.ShortMsg)
 		} else {
-			logger.Errorln(err.Error())
+			var exitCode = 1
+			if err, ok := err.(syslutil.Exit); ok {
+				exitCode = err.Code
+			}
+
+			switch exitCode {
+			case 0:
+				logger.Infoln(err.Error())
+			case 2:
+				logger.Warnln(err.Error())
+			default:
+				logger.Errorln(err.Error())
+			}
+
+			return exitCode
 		}
-		if err, ok := err.(parse.Exit); ok {
-			return err.Code
-		}
-		return 1
 	}
 	return 0
 }

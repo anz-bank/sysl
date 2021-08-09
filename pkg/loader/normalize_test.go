@@ -1,4 +1,4 @@
-package relmod
+package loader
 
 import (
 	"context"
@@ -7,7 +7,10 @@ import (
 	"testing"
 
 	"github.com/alecthomas/assert"
+	"github.com/anz-bank/sysl/pkg/arrai/relmod"
 	"github.com/arr-ai/arrai/syntax"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/arr-ai/arrai/rel"
@@ -19,16 +22,18 @@ func TestNormalize(t *testing.T) {
 
 	ctx := context.Background()
 
-	m, err := NormalizeSpec(ctx, "..", "all.sysl")
+	x, _, err := LoadSyslModule("../arrai", "all.sysl", afero.NewOsFs(), logrus.StandardLogger())
+	require.NoError(t, err)
+	m, err := relmod.Normalize(ctx, x)
 	require.NoError(t, err)
 	v, err := rel.NewValue(m)
 	require.NoError(t, err)
 	actual, err := syntax.PrettifyString(v, 0)
 	require.NoError(t, err)
 
-	expected, err := ioutil.ReadFile("../out/all_normalize.arrai")
+	expected, err := ioutil.ReadFile("../arrai/out/all_normalize.arrai")
 	require.NoError(t, err)
-	err = ioutil.WriteFile("../out/tmp_all_normalize.arrai", []byte(actual), os.ModePerm)
+	err = ioutil.WriteFile("../arrai/out/tmp_all_normalize.arrai", []byte(actual), os.ModePerm)
 	require.NoError(t, err)
 
 	// TODO: Test that the output is correct. For now just test that it didn't error out.
@@ -44,7 +49,7 @@ func TestNormalize_serializeApp(t *testing.T) {
 		Name: &sysl.AppName{Part: appName},
 	}}}
 
-	assertNormalizes(t, m, Schema{App: []App{{AppName: appName}}})
+	assertNormalizes(t, m, relmod.Schema{App: []relmod.App{{AppName: appName}}})
 }
 
 func TestNormalize_serializeStmtAction(t *testing.T) {
@@ -54,10 +59,10 @@ func TestNormalize_serializeStmtAction(t *testing.T) {
 	action := sysl.Statement_Action{Action: &sysl.Action{Action: "action"}}
 	m := buildStmt(appName, &sysl.Statement{Stmt: &action})
 
-	assertNormalizes(t, m, Schema{
-		App:  []App{{AppName: appName}},
-		Ep:   []Endpoint{{AppName: appName, EpName: "ep"}},
-		Stmt: []Statement{{AppName: appName, EpName: "ep", StmtAction: "action", StmtIndex: []int{0}}},
+	assertNormalizes(t, m, relmod.Schema{
+		App:  []relmod.App{{AppName: appName}},
+		Ep:   []relmod.Endpoint{{AppName: appName, EpName: "ep"}},
+		Stmt: []relmod.Statement{{AppName: appName, EpName: "ep", StmtAction: "action", StmtIndex: []int{0}}},
 	})
 }
 
@@ -72,10 +77,10 @@ func TestNormalize_serializeStmtCall(t *testing.T) {
 		Endpoint: targetEp,
 	}}})
 
-	assertNormalizes(t, m, Schema{
-		App: []App{{AppName: appName}},
-		Ep:  []Endpoint{{AppName: appName, EpName: "ep"}},
-		Stmt: []Statement{{AppName: appName, EpName: "ep", StmtIndex: []int{0}, StmtCall: tuple{
+	assertNormalizes(t, m, relmod.Schema{
+		App: []relmod.App{{AppName: appName}},
+		Ep:  []relmod.Endpoint{{AppName: appName, EpName: "ep"}},
+		Stmt: []relmod.Statement{{AppName: appName, EpName: "ep", StmtIndex: []int{0}, StmtCall: map[string]interface{}{
 			"appName": targetApp,
 			"epName":  targetEp,
 		}}},
@@ -111,14 +116,14 @@ func TestNormalize_serializeStmtAlt(t *testing.T) {
 		}},
 	}}}
 
-	assertNormalizes(t, m, Schema{
-		App: []App{{AppName: appName}},
-		Ep:  []Endpoint{{AppName: appName, EpName: "ep"}},
-		Stmt: []Statement{
-			{AppName: appName, EpName: "ep", StmtAlt: tuple{"choice": "if"}, StmtIndex: []int{0, 0}},
+	assertNormalizes(t, m, relmod.Schema{
+		App: []relmod.App{{AppName: appName}},
+		Ep:  []relmod.Endpoint{{AppName: appName, EpName: "ep"}},
+		Stmt: []relmod.Statement{
+			{AppName: appName, EpName: "ep", StmtAlt: map[string]interface{}{"choice": "if"}, StmtIndex: []int{0, 0}},
 			{AppName: appName, EpName: "ep", StmtAction: "0.0", StmtIndex: []int{0, 0, 0}},
 			{AppName: appName, EpName: "ep", StmtAction: "0.1", StmtIndex: []int{0, 0, 1}},
-			{AppName: appName, EpName: "ep", StmtAlt: tuple{"choice": "else"}, StmtIndex: []int{0, 1}},
+			{AppName: appName, EpName: "ep", StmtAlt: map[string]interface{}{"choice": "else"}, StmtIndex: []int{0, 1}},
 			{AppName: appName, EpName: "ep", StmtAction: "1.0", StmtIndex: []int{0, 1, 0}},
 			{AppName: appName, EpName: "ep", StmtAction: "1.1", StmtIndex: []int{0, 1, 1}},
 		},
@@ -135,10 +140,10 @@ func buildStmt(appName []string, stmt *sysl.Statement) *sysl.Module {
 	}}}
 }
 
-func assertNormalizes(t *testing.T, m *sysl.Module, s Schema) {
+func assertNormalizes(t *testing.T, m *sysl.Module, s relmod.Schema) {
 	ctx := context.Background()
 
-	out, err := Normalize(ctx, m)
+	out, err := relmod.Normalize(ctx, m)
 	require.NoError(t, err)
 	actual, err := rel.NewValue(out)
 	require.NoError(t, err)

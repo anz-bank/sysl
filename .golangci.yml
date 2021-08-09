@@ -22,16 +22,15 @@ linters:
     - gocyclo
     - gofmt
     - goimports
-    - golint
+    - revive
     - gosec
     - gosimple
     - govet
     - ineffassign
-    - interfacer
     - lll
     - misspell
     - nakedret
-    - scopelint
+    - exportloopref
     - staticcheck
     - structcheck
     - stylecheck

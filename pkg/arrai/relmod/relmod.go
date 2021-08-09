@@ -5,16 +5,12 @@ import (
 	"fmt"
 
 	"github.com/anz-bank/sysl/pkg/arrai"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/arr-ai/arrai/pkg/arraictx"
+	"github.com/arr-ai/arrai/rel"
 	"github.com/arr-ai/arrai/syntax"
 	"github.com/arr-ai/wbnf/parser"
 	"github.com/pkg/errors"
-
-	"github.com/anz-bank/sysl/pkg/loader"
-	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/arr-ai/arrai/rel"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 )
 
 const tagAttr = "patterns"
@@ -25,15 +21,6 @@ type ctxKey int
 const (
 	payloadParseKey ctxKey = iota
 )
-
-// NormalizeSpec returns a relational form of a Sysl module loaded from a Sysl spec.
-func NormalizeSpec(ctx context.Context, root, path string) (*Schema, error) {
-	m, _, err := loader.LoadSyslModule(root, path, afero.NewOsFs(), logrus.StandardLogger())
-	if err != nil {
-		return nil, err
-	}
-	return Normalize(ctx, m)
-}
 
 // withPayloadParser precompiles the arr.ai function for parsing return statement payloads.
 func withPayloadParser(ctx context.Context) (context.Context, error) {
@@ -191,8 +178,7 @@ func buildPayloadParser() (rel.Expr, error) {
 	return rel.NewCallExprCurry(scanner, wrapFn, parseFn, txFn), nil
 }
 
-func unpackType(typ rel.Tuple, appName []string) interface{} {
-	tuple := typ.(rel.Tuple)
+func unpackType(tuple rel.Tuple, appName []string) interface{} {
 	//nolint:gocritic
 	if name, ok := tuple.Get("primitive"); ok {
 		return TypePrimitive{Primitive: name.String()}
@@ -211,7 +197,7 @@ func unpackType(typ rel.Tuple, appName []string) interface{} {
 			TypePath: arrai.ToStrings(tuple.MustGet("typePath").Export(ctx)),
 		}
 	} else {
-		panic(fmt.Errorf("unknown type: %T %s", typ, typ))
+		panic(fmt.Errorf("unknown type: %T %s", tuple, tuple))
 	}
 }
 
@@ -284,8 +270,8 @@ func parseRestPath(p *sysl.Endpoint_RestParams) (Rest, error) {
 
 func relmodSourceContexts(contexts []*sysl.SourceContext) []SourceContext {
 	var srcs []SourceContext
-	for _, context := range contexts {
-		srcs = append(srcs, relmodSourceContext(context))
+	for _, ctx := range contexts {
+		srcs = append(srcs, relmodSourceContext(ctx))
 	}
 	return srcs
 }

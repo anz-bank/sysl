@@ -1,4 +1,4 @@
-package parse
+package syslutil
 
 import (
 	"fmt"

@@ -4,8 +4,8 @@
 #
 # The produced image is published to https://hub.docker.com/r/anzbank/sysl
 
-ARG go_ver=1.13.8
-ARG alpine_ver=3.11
+ARG go_ver=1.16.6
+ARG alpine_ver=3.14
 
 FROM golang:${go_ver}-alpine${alpine_ver} as builder
 

@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -13,7 +14,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
-	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
@@ -68,12 +68,12 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	// In order to make sure file value can be the same in all environments, add this code to reset file
 	// value as "" in runtime.
 	if strings.HasSuffix(golden, ".json") {
-		reg := regexp.MustCompile(`"file": *\"[^,\n]*\"`)
+		reg := regexp.MustCompile(`"file": *"[^,\n]*"`)
 		expectedStr := reg.ReplaceAllString(string(expected), `"file": ""`)
 		actualStr := reg.ReplaceAllString(string(actual), `"file": ""`)
 		assert.Equal(t, expectedStr, actualStr)
 	} else if strings.HasSuffix(golden, ".textpb") {
-		reg := regexp.MustCompile(`file: *\"[^,\n]*\"`)
+		reg := regexp.MustCompile(`file: *"[^,\n]*"`)
 		expectedStr := reg.ReplaceAllString(string(expected), `file: ""`)
 		actualStr := reg.ReplaceAllString(string(actual), `file: ""`)
 		// In protobuf text file, the space in case like `apps: {` is not fixed, it can be `apps: {` or
@@ -407,7 +407,7 @@ func TestMain2Fatal(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	assert.Equal(t, 42, main2(nil, nil, logger, func(_ []string, _ afero.Fs, _ *logrus.Logger) error {
-		return parse.Exitf(42, "Exit error")
+		return syslutil.Exitf(42, "Exit error")
 	}))
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 }
@@ -729,9 +729,7 @@ func TestMain2WithDataMultipleRelationships(t *testing.T) {
 
 func TestMain2WithBinaryInfoCmd(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	exitCode := main2([]string{"sysl", "info"}, nil, logger, main3)
-	assert.Equal(t, 0, exitCode)
+	runSysl(t, 0, "info")
 }
 
 func TestSwaggerExportCurrentDir(t *testing.T) {
@@ -745,26 +743,14 @@ func TestSwaggerExportCurrentDir(t *testing.T) {
 
 func TestSwaggerExportTargetDir(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	tmp1, err := ioutil.TempDir("", "tmp1")
-	assert.NoError(t, err)
-	main2([]string{"sysl", "export", "-o", tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml", "-a", "testapp",
-		syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
-	_, err = ioutil.ReadFile(tmp1 + "/SIMPLE_SWAGGER_EXAMPLE1.yaml")
-	assert.NoError(t, err)
-	os.RemoveAll(tmp1)
+	runSyslWithOutput(t, ".yaml",
+		"export", "-a", "testapp", path.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"))
 }
 
 func TestSwaggerExportJson(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	tmp2, err := ioutil.TempDir("", "tmp2")
-	assert.NoError(t, err)
-	main2([]string{"sysl", "export", "-o", tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json",
-		"-a", "testapp", syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, afero.NewOsFs(), logger, main3)
-	_, err = ioutil.ReadFile(tmp2 + "/SIMPLE_SWAGGER_EXAMPLE2.json")
-	assert.NoError(t, err)
-	os.RemoveAll(tmp2)
+	runSyslWithOutput(t, ".json",
+		"export", "-a", "testapp", path.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"))
 }
 
 func TestSwaggerExportInvalid(t *testing.T) {
@@ -772,36 +758,26 @@ func TestSwaggerExportInvalid(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
-		syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, main3)
+		path.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")}, fs, logger, main3)
 	assert.True(t, errInt == 1)
 }
 
 func TestSwaggerAppExportNoDir(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	main2([]string{"sysl", "export", "-o", "out/%(appname).yaml",
-		syslDir + "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"},
-		afero.NewOsFs(), logger, main3)
-	for _, file := range []string{"out/single.yaml", "out/multiple.yaml"} {
-		_, err := ioutil.ReadFile(file)
-		assert.NoError(t, err)
-	}
-	os.RemoveAll("out")
+	outputDir := path.Join(t.TempDir(), "dirYetToBeCreated")
+	runSysl(t, 0, "export", "-o", path.Join(outputDir, "%(appname).yaml"),
+		path.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
+	assert.FileExists(t, path.Join(outputDir, "single.yaml"))
+	assert.FileExists(t, path.Join(outputDir, "multiple.yaml"))
 }
 
 func TestSwaggerAppExportDirExists(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	tmp3, err := ioutil.TempDir("", "tmp3")
-	assert.NoError(t, err)
-	main2([]string{"sysl", "export", "-o", tmp3 + "/%(appname).yaml",
-		syslDir + "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"},
-		afero.NewOsFs(), logger, main3)
-	for _, file := range []string{tmp3 + "/single.yaml", tmp3 + "/multiple.yaml"} {
-		_, err := ioutil.ReadFile(file)
-		assert.NoError(t, err)
-	}
-	os.RemoveAll(tmp3)
+	outputDir := t.TempDir()
+	runSysl(t, 0, "export", "-o", path.Join(outputDir, "%(appname).yaml"),
+		path.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
+	assert.FileExists(t, path.Join(outputDir, "single.yaml"))
+	assert.FileExists(t, path.Join(outputDir, "multiple.yaml"))
 }
 
 func TestHandleProjectRoot(t *testing.T) {
@@ -1000,49 +976,87 @@ func TestTemplating(t *testing.T) {
 
 func TestSpannerSQLImport(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	tmp1, err := ioutil.TempDir("", "tmp1")
-	assert.NoError(t, err)
-	ret := main2([]string{"sysl", "import",
-		"--input", "../../pkg/importer/sql/tests/spanner/spanner.sql",
-		"--app-name", "customeraccounts",
-		"--package", "retail",
-		"--format", "spannerSQL",
-		"--output", filepath.Join(tmp1, "/accounts.sysl")}, afero.NewOsFs(), logger, main3)
-	assert.Equal(t, 0, ret)
-	_, err = ioutil.ReadFile(filepath.Join(tmp1, "/accounts.sysl"))
-	assert.NoError(t, err)
-	os.RemoveAll(tmp1)
+	runSyslWithOutput(t, "",
+		"import", "--input", "../../pkg/importer/sql/tests/spanner/spanner.sql", "--app-name", "customeraccounts",
+		"--package", "retail", "--format", "spannerSQL")
 }
 
 func TestSpannerSQLImportWithoutPackage(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	tmp1, err := ioutil.TempDir("", "tmp1")
-	assert.NoError(t, err)
-	ret := main2([]string{"sysl", "import",
-		"--input", "../../pkg/importer/sql/tests/spanner/spanner.sql",
-		"--app-name", "customeraccounts",
-		"--format", "spannerSQL",
-		"--output", filepath.Join(tmp1, "/accounts.sysl")}, afero.NewOsFs(), logger, main3)
-	assert.Equal(t, 0, ret)
-	_, err = ioutil.ReadFile(filepath.Join(tmp1, "/accounts.sysl"))
-	assert.NoError(t, err)
-	os.RemoveAll(tmp1)
+	runSyslWithOutput(t, "",
+		"import", "--input", "../../pkg/importer/sql/tests/spanner/spanner.sql", "--app-name", "customeraccounts",
+		"--format", "spannerSQL")
 }
 
 func TestSpannerSQLImportDefOut(t *testing.T) {
 	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	ret := main2([]string{"sysl", "import",
-		"--input", "../../pkg/importer/sql/tests/spanner/spanner.sql",
-		"--app-name", "customeraccounts",
-		"--format", "spannerSQL",
-		"--package", "retail"}, afero.NewOsFs(), logger, main3)
-	assert.Equal(t, 0, ret)
-	_, err := ioutil.ReadFile("output.sysl")
-	assert.NoError(t, err)
-	os.RemoveAll("output.sysl")
+	runSyslWithOutput(t, "",
+		"import", "--input", "../../pkg/importer/sql/tests/spanner/spanner.sql", "--app-name", "customeraccounts",
+		"--format", "spannerSQL", "--package", "retail")
+}
+
+func TestJsonSchemaImport(t *testing.T) {
+	t.Parallel()
+	runSyslWithExpectedOutput(t, "transforms/importers/jsonschema/expected.sysl",
+		"import",
+		"--input", "../../transforms/importers/jsonschema/input.json",
+		"--app-name", "TestNamespace::TestApp",
+		"--format", "JSONSchema")
+}
+
+func TestTransform(t *testing.T) {
+	t.Parallel()
+	scriptPath := path.Join(t.TempDir(), "transform.arrai")
+	err := os.WriteFile(scriptPath, []byte("\\input (output: input.models(0).rel.app => .appName(1))"), 0600)
+	require.NoError(t, err)
+	output := runSyslWithOutput(t, ".sysl",
+		"transform", "../../tests/simple.sysl", "--script", scriptPath)
+	assert.Equal(t, "{'App1', 'App2'}", output)
+}
+
+// runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch
+// with a file directed at a temporary output directory. The content of the file are verified to be identical to the
+// file specified in the expectedPathFromRepoRoot parameter (no need for "../../" in its path).
+func runSyslWithExpectedOutput(t *testing.T, expectedPathFromRepoRoot string, args ...string) {
+	expectedBytes, err := ioutil.ReadFile(path.Join("..", "..", expectedPathFromRepoRoot))
+	require.NoError(t, err)
+	expected := string(expectedBytes)
+
+	actual := runSyslWithOutput(t, path.Ext(expectedPathFromRepoRoot), args...)
+	assert.Equal(t, expected, actual)
+}
+
+// runSyslWithOutput runs the Sysl command line tool with the specified arguments and adds an --output switch with a
+// file directed at a temporary output directory with the specified file extension (if empty, '.out' is used). This file
+// is then read and its contents are returned.
+func runSyslWithOutput(t *testing.T, outFileExt string, args ...string) string {
+	if outFileExt == "" {
+		outFileExt = ".out"
+	}
+	outputPath := filepath.Join(t.TempDir(), "output"+outFileExt)
+	args = append(args, "--output", outputPath)
+	runSysl(t, 0, args...)
+	require.FileExists(t, outputPath)
+	output, err := ioutil.ReadFile(outputPath)
+	require.NoError(t, err)
+	return string(output)
+}
+
+// runSysl runs the Sysl command line tool with the specified arguments (without needing 'sysl' as the first argument)
+// and then ensures it completed with the specified return code.
+func runSysl(t *testing.T, expectedRet int, args ...string) {
+	logger, hook := test.NewNullLogger()
+	if args[0] != "sysl" {
+		args = append([]string{"sysl"}, args...)
+	}
+	ret := main2(args, afero.NewOsFs(), logger, main3)
+
+	lastEntry := hook.LastEntry()
+	var lastMessage string
+	if lastEntry != nil {
+		lastMessage = lastEntry.Message
+	}
+	require.Equal(t, expectedRet, ret, lastMessage)
 }
 
 func TestMain3(t *testing.T) {
@@ -1072,17 +1086,14 @@ func TestMain(m *testing.M) {
 func TestAvroImport(t *testing.T) {
 	t.Parallel()
 	logger, _ := test.NewNullLogger()
-	tmp, err := ioutil.TempDir("", "tmp")
-	assert.NoError(t, err)
+	outputPath := filepath.Join(t.TempDir(), "output.sysl")
 	ret := main2([]string{"sysl", "import",
 		"--input", filepath.Join(testDir, "/simple_avro.avsc"),
 		"--app-name", "testapp",
 		"--package", "test",
-		"--output", filepath.Join(tmp, "/simple_avro.sysl")}, afero.NewOsFs(), logger, main3)
+		"--output", outputPath}, afero.NewOsFs(), logger, main3)
 	assert.Equal(t, 0, ret)
-	_, err = ioutil.ReadFile(filepath.Join(tmp, "/simple_avro.sysl"))
-	assert.NoError(t, err)
-	os.RemoveAll(tmp)
+	assert.FileExists(t, outputPath)
 }
 
 // Validate all test Sysl files with `sysl validate`.
