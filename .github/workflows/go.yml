@@ -183,7 +183,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/...
+        run: go get github.com/anz-bank/go-bindata/... && go mod tidy
 
       - name: Generate intermediate files
         run: make generate
