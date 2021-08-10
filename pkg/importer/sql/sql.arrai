@@ -401,7 +401,7 @@ let concatOffset = \str1 \str2
 
 # parseKeyParts parses the primary_key generated from spanner sql
 let parseKeyParts = \t
-    t.column_def >> \def
+    t.column_def?:[] >> \def
         let name = def.column_name.'' rank (:.@);
         cond def {
             (:sort_by, ...): $`${name}(${//str.lower(sort_by.'')})`,
