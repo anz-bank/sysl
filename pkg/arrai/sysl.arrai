@@ -67,7 +67,10 @@ let srcRel = \type \rel
     rel =>
         let t = //dict(.);
         let names = t where //seq.has_suffix('Name', .@);
-        //tuple(names | {$`${type}Src`: t(type).source_context?:{}, $`${type}Srcs`: t(type).source_contexts?:{}})
+        let src_type = t(type).@item?:{};
+        let src_type = cond src_type { {}: t(type), _: src_type};
+        let res = //tuple(names | {$`${type}Src`: src_type.source_context?:{}, $`${type}Srcs`: src_type.source_contexts?:{}});
+        res +> cond type { 'stmt': ('stmtIndex': t('stmt').@), _: ()} # adds stmtIndex to rel.src.stmt
     ;
 
 # A macro to convert `ret` statement payload string to structured tuples.
