@@ -802,6 +802,7 @@ func TestAppDoesNotExistLint(t *testing.T) {
 		"tests/invalid_call_simple_app.sysl",
 		`lint tests/invalid_call_simple_app.sysl:3:8: Application 'Call' does not exist for call 'Call <- End'`,
 	)
+	assertLintLogs(t, "tests/app_names_with_spaces.sysl", ``)
 }
 
 func assertLintLogs(t *testing.T, file, logMsg string) {

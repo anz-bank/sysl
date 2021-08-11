@@ -179,6 +179,8 @@ func (s *TreeShapeListener) lintEndpoint() {
 		logrus.Warnf("lint %s: Application '%s' does not exist for call '%s'", location, appName, call)
 	}
 	lint := func(appName, endpoint, method, call string, locations map[string]bool) {
+		replacer := strings.NewReplacer(" ", "", "\t", "")
+		appName = replacer.Replace(appName)
 		for location := range locations {
 			apps, exists := s.linter.apps[strings.ToLower(appName)]
 			if !exists {

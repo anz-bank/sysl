@@ -1,0 +1,7 @@
+Simple :: Client:
+    Endpoint:
+        Simple :: Server <- Endpoint
+
+Simple :: Server:
+    Endpoint:
+        ...
