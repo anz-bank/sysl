@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/anz-bank/sysl/pkg/env"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/mod"
@@ -36,6 +37,15 @@ type Parser struct {
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
 	allowAbsoluteImport bool
+}
+
+func NewParser() *Parser {
+	return &Parser{
+		AssignTypes:         map[string]TypeData{},
+		LetTypes:            map[string]TypeData{},
+		Messages:            map[string][]msg.Msg{},
+		allowAbsoluteImport: true,
+	}
 }
 
 func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
@@ -746,8 +756,51 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 		}
 		p.inferTypes(mod, appName)
 		collectorPubSubCalls(appName, app)
+		renestTypes(app)
 	}
 	checkEndpointCalls(mod)
+}
+
+func renestTypes(app *sysl.Application) {
+	mode := env.SYSL_DEV_RENEST_FLATTENED_TYPES.Value()
+	if mode == "off" {
+		return
+	}
+
+	typeNames := make([]string, 0, len(app.Types))
+	for typeName := range app.Types {
+		typeNames = append(typeNames, typeName)
+	}
+	sort.Strings(typeNames)
+
+	for _, typeName := range typeNames {
+		path := strings.Split(typeName, ".")
+		if len(path) > 1 && injectType(app.Types[typeName], app.Types, path) {
+			if mode == "move" {
+				delete(app.Types, typeName)
+			}
+		}
+	}
+}
+
+func injectType(leaf *sysl.Type, attrs map[string]*sysl.Type, path []string) bool {
+	if attrs == nil {
+		return false
+	}
+	if len(path) > 1 {
+		return injectType(leaf, subTuple(attrs, path[0]), path[1:])
+	}
+	attrs[path[0]] = leaf
+	return true
+}
+
+func subTuple(attrs map[string]*sysl.Type, elem string) map[string]*sysl.Type {
+	if attr, has := attrs[elem]; has {
+		if tuple, is := attr.Type.(*sysl.Type_Tuple_); is {
+			return tuple.Tuple.AttrDefs
+		}
+	}
+	return nil
 }
 
 func valueTypeToSysl(value *sysl.Value) *sysl.Type {
@@ -797,13 +850,4 @@ func (p *Parser) GetLets() map[string]TypeData {
 
 func (p *Parser) GetMessages() map[string][]msg.Msg {
 	return p.Messages
-}
-
-func NewParser() *Parser {
-	return &Parser{
-		AssignTypes:         map[string]TypeData{},
-		LetTypes:            map[string]TypeData{},
-		Messages:            map[string][]msg.Msg{},
-		allowAbsoluteImport: true,
-	}
 }

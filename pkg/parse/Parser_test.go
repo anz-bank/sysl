@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -16,6 +17,7 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
+	"github.com/anz-bank/sysl/pkg/env"
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -184,6 +186,8 @@ func checkSyslEqual(model1 *sysl.Module, model2 *sysl.Module) bool {
 	return false
 }
 
+var textProtoExtraSpaceAfterColonRE = regexp.MustCompile(`^([ \t]*: ) `)
+
 func parseAndCompare(
 	filename, root, golden string,
 	goldenProto protoreflect.ProtoMessage,
@@ -207,9 +211,11 @@ func parseAndCompare(
 	if err = pbutil.FTextPB(&actual, module); err != nil {
 		return false, err
 	}
+	expectedBytes := textProtoExtraSpaceAfterColonRE.ReplaceAll(expected.Bytes(), []byte(`$1`))
+	actualBytes := textProtoExtraSpaceAfterColonRE.ReplaceAll(actual.Bytes(), []byte(`$1`))
 	diff, err := difflib.GetUnifiedDiffString(difflib.UnifiedDiff{
-		A:        difflib.SplitLines(expected.String()),
-		B:        difflib.SplitLines(actual.String()),
+		A:        difflib.SplitLines(string(expectedBytes)),
+		B:        difflib.SplitLines(string(actualBytes)),
 		FromFile: "Expected: " + golden,
 		FromDate: "",
 		ToFile:   "Actual",
@@ -218,6 +224,13 @@ func parseAndCompare(
 	})
 	if err != nil {
 		return false, err
+	}
+	if env.SYSL_DEV_UPDATE_GOLDEN_TESTS.On() {
+		if err := ioutil.WriteFile(golden, actualBytes, 0600); err != nil {
+			logrus.Errorf("Error updating golden file %q: %v", golden, err)
+		} else {
+			logrus.Errorf("Updated golden file %q", golden)
+		}
 	}
 	return false, errors.New(diff)
 }

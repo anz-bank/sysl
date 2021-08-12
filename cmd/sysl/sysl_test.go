@@ -1100,7 +1100,8 @@ func TestAvroImport(t *testing.T) {
 func TestSyslSyntaxValidate(t *testing.T) {
 	t.Parallel()
 
-	dirs := []string{"../../pkg/importer/avro/tests",
+	dirs := []string{
+		"../../pkg/importer/avro/tests",
 		"../../pkg/importer/tests/grammar",
 		"../../pkg/importer/tests/openapi3",
 		"../../pkg/importer/tests/openapi2",

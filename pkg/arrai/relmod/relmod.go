@@ -230,13 +230,13 @@ func parseReturnPayload(ctx context.Context, payload string, appName []string) (
 }
 
 func parseFieldType(appName []string, t *sysl.Type) interface{} {
-	switch t.Type.(type) {
+	switch t := t.Type.(type) {
 	case *sysl.Type_Primitive_:
-		return TypePrimitive{Primitive: t.GetPrimitive().String()}
+		return TypePrimitive{Primitive: t.Primitive.String()}
 	case *sysl.Type_Tuple_:
-		return TypeTuple{Tuple: t.GetTuple()}
+		return TypeTuple{Tuple: t.Tuple}
 	case *sysl.Type_TypeRef:
-		ref := t.GetTypeRef()
+		ref := t.TypeRef
 		if ref.Ref.Appname != nil {
 			return TypeRef{AppName: ref.Ref.Appname.Part, TypePath: ref.Ref.Path}
 		} else if ref.Context != nil {
@@ -244,15 +244,15 @@ func parseFieldType(appName []string, t *sysl.Type) interface{} {
 		}
 		return TypeRef{AppName: appName, TypePath: ref.Ref.Path}
 	case *sysl.Type_Set:
-		ft := parseFieldType(appName, t.GetSet())
+		ft := parseFieldType(appName, t.Set)
 		return TypeSet{Set: ft}
 	case *sysl.Type_Sequence:
-		ft := parseFieldType(appName, t.GetSequence())
+		ft := parseFieldType(appName, t.Sequence)
 		return TypeSequence{Sequence: ft}
 	case *sysl.Type_NoType_:
 		return nil
 	case *sysl.Type_List_:
-		return parseFieldType(appName, t.GetList().Type)
+		return parseFieldType(appName, t.List.Type)
 	default:
 		return nil
 	}
