@@ -22,7 +22,7 @@ testapp "foo" [package="package_foo"]:
     /testDots:
         GET:
             | No description.
-            return Empty
+            return 200 <: Empty
 
     !type Empty:
         ...

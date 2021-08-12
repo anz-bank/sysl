@@ -6,9 +6,9 @@ Bananatree [package="bananatree"]:
   /banana:
     /{id<:int}:
       GET:
-        return Banana
+        return ok <: Banana
 
   /morebanana:
     /{id<:int}:
       GET:
-        return Banana
+        return ok <: Banana

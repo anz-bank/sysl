@@ -15,12 +15,12 @@ testapp "Goat CRUD API" [package="package_foo"]:
         /goat/get-seq-goats:
             GET:
                 | Gotta get goats.
-                return sequence of Goat
+                return 200 <: sequence of Goat
 
         /goat/get-set-goats:
             GET:
                 | Gotta get goats.
-                return set of Goat                
+                return 200 <: set of Goat                
 
     #---------------------------------------------------------------------------
     # definitions

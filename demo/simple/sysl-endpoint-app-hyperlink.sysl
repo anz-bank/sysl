@@ -10,4 +10,4 @@ MobileApp:
         message <: string
 Server:
     LoginRequest(data <: MobileApp.LoginData):
-        return MobileApp.LoginResponse
+        return ok <: MobileApp.LoginResponse

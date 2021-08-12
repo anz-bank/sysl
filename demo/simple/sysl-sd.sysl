@@ -1,18 +1,18 @@
 # sysl sd -a Project -o "sysl-sd-%(epname)".png /sysl-sd
 Database[~db]:
     QueryUser (user_id):
-        Return User
+        return ok <: User
 
 Api:
     /users/{user_id<:int}/profile:
         GET:
                 Database <- QueryUser(user_id)
-                Return UserProfile
+                return ok <: UserProfile
 
 WebFrontend:
     RequestProfile:
         Api <- GET /users/{user_id}/profile
-        Return Profile Page
+        return ok <: Profile Page
 
 Project [seqtitle="Profile"]:
     _:

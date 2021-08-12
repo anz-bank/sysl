@@ -2,7 +2,7 @@ import bank
 
 Bank :: Integrations [title="%(epname)", appfmt="%(@gaf22?//%(@gaf22)//\n|%(needs_fc?<color red>(missing FC%)</color>\n))**%(appname)**", highlight_color="aqua", indirect_arrow_color="silver"]:
 
-    APIs [page="Bank CSP Overview"]:
+    APIs [page="Bank CSP Overview", exclude=["COD"]]:
         BankDatabase
         CustomerApi
         AccountTransactionApi

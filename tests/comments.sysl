@@ -11,16 +11,16 @@ Foo:
 
         # POST endpoint foo
         POST (newPost <: string [~body]):
-            return string
+            return ok <: string
         GET (newPost <: string):
             | Get newPost
             | ...
-            return string
+            return ok <: string
 
     /bar: # Indented comment
         GET (newBar <: string):
             | Get newBar
-            return string
+            return ok <: string
 
     #--------------------------------------------------------
 

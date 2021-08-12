@@ -20,7 +20,7 @@ testapp "Simple" [package="package_foo"]:
     /tests:
         GET:
             | No description.
-            return set of SimpleObj        
+            return ok <: set of SimpleObj        
 
     #---------------------------------------------------------------------------
     # definitions

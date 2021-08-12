@@ -9,7 +9,7 @@ App:
 SecondApp:
     # Any calls to Endpoint3 will be hidden in diagram generation, but whatever calls it contains will still exist
     Endpoint3[~hidden]:
-        return whatever
+        return ok <: whatever
     Endpoint2:
         ...
 ThirdApp:

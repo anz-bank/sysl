@@ -20,7 +20,7 @@ single "Single" [package="package_foo"]:
     /tests:
         GET:
             | No description.
-            return set of SimpleObj
+            return 200 <: set of SimpleObj
 
     #---------------------------------------------------------------------------
     # definitions
@@ -45,7 +45,7 @@ multiple "Multiple" [package="package_bar"]:
     /tests:
         GET:
             | No description.
-            return set of SimpleObj
+            return 200 <: set of SimpleObj
 
     #---------------------------------------------------------------------------
     # definitions

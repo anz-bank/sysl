@@ -6,12 +6,12 @@ Dep [package="dep"]:
   /dep:
     /{id<:int}:
       GET:
-        return Dep
+        return ok <: Dep
 
   /moredep:
     /{id<:int}:
       GET:
-        return Dep
+        return ok <: Dep
 
 Dep2 [package="dep2"]:
   !type Dep2:
@@ -21,4 +21,4 @@ Dep2 [package="dep2"]:
   /dep2:
     /{id<:int}:
       GET:
-        return Dep2
+        return ok <: Dep2

@@ -187,6 +187,7 @@ func (s *TreeShapeListener) lintEndpoint() {
 				appNotExistLog(location, appName, call)
 				continue
 			}
+
 			if app, exists := (*apps)[appName]; exists {
 				if endpoints, exists := (*app.rec)[endpoint]; exists {
 					// if method is empty string, it is linting simple endpoint, not REST endpoint

@@ -14,32 +14,32 @@ DragonEater:
             norhinf
         else:
             go back to normal
-        return Firebreath
+        return ok <: Firebreath
 HouseLannister:
     FirstResponse:
         DenyEverything
         loop until further notice:
             Actions <- SilenceLittleBirds
             Actions <- BuildTemplesVeryQuickly
-        return Nothing
+        return ok <: Nothing
     SecondResponse:
         if Firebreath still exists:
             Lockdown
-        return Insult
+        return ok <: Insult
 Actions:
     SilenceLittleBirds:
         ...
     EatDragon:
-        return Firebreath
+        return ok <: Firebreath
     SpreadFirebreath:
         TheWorld <- WTFBro
         HouseLannister <- FirstResponse
         HouseLannister <- SecondResponse
         TheWorld <- WereScrewed
-        return Firebreath
+        return ok <: Firebreath
     BuildTemplesVeryQuickly:
         HowdYouDoThat
-        return Temple
+        return ok <: Temple
     Giveup:
         LearnArchery
         FeedTheWolves

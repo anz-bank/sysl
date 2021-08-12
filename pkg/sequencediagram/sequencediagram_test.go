@@ -359,7 +359,8 @@ skinparam maxMessageSize 250
   _2 -> _2 : do input validation
    _2->_3 :  <color green>Save</color>
    _2->_4 : Publish
-  _1<--_2 : success or failure
+  _1<--_2 : ok
+  _1<--_2 : error
   deactivate _2
  deactivate _1
  _0->_1 : Check Balance
@@ -421,7 +422,8 @@ skinparam maxMessageSize 250
   _2 -> _2 : do input validation
    _2->_3 :  <color green>Save</color>
    _2->_4 : Publish
-  _1<--_2 : success or failure
+  _1<--_2 : ok
+  _1<--_2 : error
   deactivate _2
  deactivate _1
  _0->_1 : Check Balance

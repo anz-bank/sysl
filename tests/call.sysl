@@ -5,7 +5,7 @@ MobileApp[owner="client"]:
 APIGateway[owner="client"]:
   Login:
     Server <- Login
-    return APIGateway.LoginResponse
+    return ok <: APIGateway.LoginResponse
 
   !type LoginResponse:
     message <: string
@@ -15,7 +15,7 @@ Server[owner="server"]:
     build query
     DB <- Query
     check result
-    return Server.LoginResponse
+    return ok <: Server.LoginResponse
 
   !type LoginData:
     username <: string
@@ -27,14 +27,14 @@ Server[owner="server"]:
 DB[owner="server"]:
   Query:
     lookup data
-    return data
+    return ok <: data
   Save:
     ...
 
 DBAAA[owner="server"]:
   Query:
     lookup data
-    return data
+    return ok <: data
   Save:
     ...
 

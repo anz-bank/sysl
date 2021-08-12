@@ -12,4 +12,4 @@ ModelWithDeps [package="model"]:
         Dep <- GET /dep/{id}
         Dep <- GET /moredep/{id}
         Dep2 <- GET /dep2/{id}
-        return Response
+        return ok <: Response

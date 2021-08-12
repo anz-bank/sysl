@@ -14,7 +14,8 @@ Server:
     do input validation
     DB <- Save
     AuditTopic <- Publish
-    return success or failure
+    return ok
+    return error
 
   Read User Balance:
     DB <- Load
