@@ -42,16 +42,19 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 }
 
 func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
-	content, err := afero.ReadFile(args.Filesystem, p.filename)
+	isDir, err := afero.IsDir(args.Filesystem, p.filename)
 	if err != nil {
 		return err
+	}
+	var content []byte
+	if !isDir {
+		content, err = afero.ReadFile(args.Filesystem, p.filename)
+		if err != nil {
+			return err
+		}
 	}
 	var imp importer.Importer
 	inputFilePath, err := filepath.Abs(p.filename)
-	if err != nil {
-		return err
-	}
-	isDir, err := afero.IsDir(args.Filesystem, p.filename)
 	if err != nil {
 		return err
 	}

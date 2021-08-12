@@ -1004,6 +1004,15 @@ func TestJsonSchemaImport(t *testing.T) {
 		"--format", "JSONSchema")
 }
 
+func TestSpannerDirImport(t *testing.T) {
+	t.Parallel()
+	runSyslWithExpectedOutput(t, "pkg/importer/sql/tests/spanner/migrations/migrations.sysl",
+		"import",
+		"--input", "../../pkg/importer/sql/tests/spanner/migrations",
+		"--app-name", "TestApp",
+		"--format", "spannerSQLdir")
+}
+
 func TestTransform(t *testing.T) {
 	t.Parallel()
 	scriptPath := path.Join(t.TempDir(), "transform.arrai")
