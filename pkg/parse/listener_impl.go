@@ -3379,6 +3379,10 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		filename += syslExt
 	}
 
+	if !strings.Contains(filename, "@") && s.version != "" {
+		filename += "@" + s.version
+	}
+
 	id := importDef{
 		filename: filename,
 	}

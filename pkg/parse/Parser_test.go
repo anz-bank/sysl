@@ -1013,15 +1013,20 @@ App:
 }
 
 type mockReader struct {
-	contents map[string]string
+	contents map[string]mockContent
+}
+
+type mockContent struct {
+	content string
+	hash    retriever.Hash
 }
 
 func (r mockReader) Read(ctx context.Context, resource string) ([]byte, error) {
-	return []byte(r.contents[resource]), nil
+	return []byte(r.contents[resource].content), nil
 }
 
 func (r mockReader) ReadHash(ctx context.Context, resource string) ([]byte, retriever.Hash, error) {
-	return []byte(r.contents[resource]), retriever.ZeroHash, nil
+	return []byte(r.contents[resource].content), r.contents[resource].hash, nil
 }
 
 /* TestParseSyslRetriever tests that a file can be imported */
@@ -1040,10 +1045,10 @@ NotTwo:
 	...
 `
 
-	r := mockReader{contents: map[string]string{
-		"./one.sysl": one,
-		"two.sysl":   two,
-		"./two.sysl": nottwo,
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl": {one, retriever.ZeroHash},
+		"two.sysl":   {two, retriever.ZeroHash},
+		"./two.sysl": {nottwo, retriever.ZeroHash},
 	}}
 
 	p := NewParser()
@@ -1073,10 +1078,10 @@ Three:
 		...
 `
 
-	r := mockReader{contents: map[string]string{
-		"./one.sysl":                            one,
-		"//github.com/org/repo/two.sysl@master": two,
-		`3.sysl`:                                three,
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl":                            {one, retriever.ZeroHash},
+		"//github.com/org/repo/two.sysl@master": {two, retriever.ZeroHash},
+		`3.sysl`:                                {three, retriever.ZeroHash},
 	}}
 
 	p := NewParser()
@@ -1106,10 +1111,13 @@ Three:
 	...
 `
 
-	r := mockReader{contents: map[string]string{
-		"./one.sysl":                            one,
-		"//github.com/org/repo/two.sysl@master": two,
-		"//github.com/org/repo/three.sysl":      three,
+	sha := "1e7c4cecaaa8f76e3c668cebc411f1b03174501f"
+	h, err := retriever.NewHash(sha)
+	require.NoError(t, err)
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl":                              {one, retriever.ZeroHash},
+		"//github.com/org/repo/two.sysl@master":   {two, h},
+		"//github.com/org/repo/three.sysl@" + sha: {three, h},
 	}}
 
 	p := NewParser()
