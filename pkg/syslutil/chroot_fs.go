@@ -132,6 +132,10 @@ func (fs *ChrootFs) Chtimes(name string, atime time.Time, mtime time.Time) error
 	})
 }
 
+func (fs *ChrootFs) Root() string {
+	return fs.root
+}
+
 func (fs *ChrootFs) openAllowed(fullPath string) error {
 	relativePath, err := filepath.Rel(fs.root, fullPath)
 	if err != nil {

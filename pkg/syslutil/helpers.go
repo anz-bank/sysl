@@ -69,3 +69,7 @@ func IsSameApp(a *sysl.AppName, b *sysl.AppName) bool {
 func IsSameCall(a *sysl.Call, b *sysl.Call) bool {
 	return IsSameApp(a.Target, b.Target) && a.Endpoint == b.Endpoint
 }
+
+func IsRemoteImport(path string) bool {
+	return strings.HasPrefix(path, "//")
+}

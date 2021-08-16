@@ -11,25 +11,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-//  SYSL_CACHE
-//      Cache location in current directory, defaults to "sysl_modules" if
-//      SYSL_MODULES is enabled
-//  SYSL_MODULES
-//      Whether the sysl modules is enabled.
-//      Enable by default, set to "off" to disable sysl modules.
 //  SYSL_PLANTUML
-//      URL of PlantUML server. Sysl depends upon
-//      [PlantUML](http://plantuml.com/) for diagram generation.
-//  SYSL_PROXY
-//      Proxy service to use, won't use SYSL_PROXY if not set
-//  SYSL_SSH_PASSPHRASE
-// 	    Passphrase for SSH private key file if there's any
-//  SYSL_SSH_PRIVATE_KEY
-//      SSH private key file path for git/github credentials + domains to use
-//      them on
+//  	URL of PlantUML server. Sysl depends upon
+//  	[PlantUML](http://plantuml.com/) for diagram generation.
+//  SYSL_SSH_KEYS
+//  	SSH private key file path and passphrase for git/github credentials + domains to use them on
+//      e.g. SYSL_SSH_KEYS=github.com:keypatha:1234,gitlab.com:keypathb:5678
 //  SYSL_TOKENS
-//      Tokens to use for git/github credentials + domains to use them on
-//      eg: SYSL_TOKENS=github.com:1234,gitlab.com:567
+//  	Tokens to use for git/github credentials + domains to use them on
+//  	e.g. SYSL_TOKENS=github.com:1234,gitlab.com:567
 //
 //  The following development-only vars will only be reported by sysl env if
 //  their values differ from their defaults...
@@ -43,13 +33,10 @@ type Var string
 
 //nolint:revive,stylecheck
 const (
-	SYSL_MODULES         Var = "SYSL_MODULES"
-	SYSL_PLANTUML        Var = "SYSL_PLANTUML"
-	SYSL_TOKENS          Var = "SYSL_TOKENS" //nolint:gosec
-	SYSL_CACHE           Var = "SYSL_CACHE"
-	SYSL_PROXY           Var = "SYSL_PROXY"
-	SYSL_SSH_PRIVATE_KEY Var = "SYSL_SSH_PRIVATE_KEY"
-	SYSL_SSH_PASSPHRASE  Var = "SYSL_SSH_PASSPHRASE" //nolint:gosec
+	SYSL_MODULES  Var = "SYSL_MODULES"
+	SYSL_PLANTUML Var = "SYSL_PLANTUML"
+	SYSL_SSH_KEYS Var = "SYSL_SSH_KEYS"
+	SYSL_TOKENS   Var = "SYSL_TOKENS" //nolint:gosec
 
 	// Development-only vars
 	SYSL_DEV_RENEST_FLATTENED_TYPES Var = "SYSL_DEV_RENEST_FLATTENED_TYPES"
@@ -57,13 +44,10 @@ const (
 )
 
 var entries = map[Var]*entry{
-	SYSL_CACHE:           newEntry("sysl_modules"),
-	SYSL_MODULES:         newEntry("on", "off"),
-	SYSL_PLANTUML:        newEntry("https://plantuml.com/plantuml"),
-	SYSL_PROXY:           newEntry(""),
-	SYSL_SSH_PASSPHRASE:  newEntry(""),
-	SYSL_SSH_PRIVATE_KEY: newEntry(""),
-	SYSL_TOKENS:          newEntry(""),
+	SYSL_MODULES:  newEntry("on", "off"),
+	SYSL_PLANTUML: newEntry("https://plantuml.com/plantuml"),
+	SYSL_SSH_KEYS: newEntry(""),
+	SYSL_TOKENS:   newEntry(""),
 
 	SYSL_DEV_RENEST_FLATTENED_TYPES: newEntry("off", "retain", "move"),
 	SYSL_DEV_UPDATE_GOLDEN_TESTS:    newEntry("off", "on"),

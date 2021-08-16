@@ -7,26 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestFileExists(t *testing.T) {
-	t.Parallel()
-
-	// I think, therefore I am.
-	assert.True(t, fileExists("fs_test.go", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
-}
-
-func TestFileExistsBadFile(t *testing.T) {
-	t.Parallel()
-
-	assert.False(t, fileExists("x", syslutil.NewChrootFs(afero.NewOsFs(), "/non-existent.dir")))
-	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
-	assert.False(t, fileExists("non-existent.file", syslutil.NewChrootFs(afero.NewOsFs(), ".")))
-}
 
 type flappyFile struct {
 	data    []byte

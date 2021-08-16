@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/sirupsen/logrus"
@@ -21,7 +22,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const currentWorkingDirectory = "."
+const (
+	currentWorkingDirectory = "."
+	syslRootMarker          = parse.SyslRootMarker
+)
 
 type folderTestStructure struct {
 	name,
@@ -1123,9 +1127,11 @@ func TestSyslSyntaxValidate(t *testing.T) {
 		assert.NoError(t, err)
 		for _, file := range files {
 			if strings.HasSuffix(file.Name(), ".sysl") {
-				ret := main2([]string{"sysl", "validate",
-					filepath.Join(dir, file.Name())}, afero.NewOsFs(), logger, main3)
-				assert.Equal(t, 0, ret)
+				t.Run(file.Name(), func(t *testing.T) {
+					ret := main2([]string{"sysl", "validate",
+						filepath.Join(dir, file.Name())}, afero.NewOsFs(), logger, main3)
+					assert.Equal(t, 0, ret)
+				})
 			}
 		}
 	}

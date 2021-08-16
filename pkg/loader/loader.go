@@ -15,8 +15,6 @@ import (
 	"github.com/spf13/afero"
 )
 
-const syslRootMarker = ".sysl"
-
 type ProjectConfiguration struct {
 	Module, Root string
 	RootIsFound  bool
@@ -110,7 +108,7 @@ func FindRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
 	// Keep walking up the directories to find nearest root marker
 	for {
 		currentPath = filepath.Dir(currentPath)
-		exists, err := afero.Exists(fs, filepath.Join(currentPath, syslRootMarker))
+		exists, err := afero.Exists(fs, filepath.Join(currentPath, parse.SyslRootMarker))
 		reachedRoot := currentPath == systemRoot || (err != nil && os.IsPermission(err))
 		switch {
 		case exists:

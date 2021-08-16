@@ -2,6 +2,7 @@ package parse
 
 import (
 	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -13,6 +14,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/golden-retriever/retriever"
 	"github.com/pmezard/go-difflib/difflib"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -651,6 +653,7 @@ func TestImportProtoJSONConflict(t *testing.T) {
 
 	testParseAgainstGolden(t, "tests/import_proto_JSON_conflict.sysl", "")
 }
+
 func TestImportProtoJSONMerge(t *testing.T) {
 	t.Parallel()
 
@@ -711,7 +714,16 @@ func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	parser := NewParser()
 	parser.RestrictToLocalImport()
 	_, err := parser.ParseFromFs("absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
-	require.EqualError(t, err, "error importing: importing outside current directory is only allowed when root is defined")
+	assert.NoError(t, err)
+}
+
+func TestOutsideOfRootImport(t *testing.T) {
+	t.Parallel()
+
+	parser := NewParser()
+	parser.RestrictToLocalImport()
+	_, err := parser.ParseFromFs("outsideroot_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
+	require.EqualError(t, err, "error reading \"../alias.sysl\": \npermission denied, file outside root\n")
 }
 
 func TestDuplicateImport(t *testing.T) {
@@ -1000,84 +1012,114 @@ App:
 	assert.Nil(t, err)
 }
 
-type retriever struct {
+type mockReader struct {
 	contents map[string]string
-	res      map[string]string
 }
 
-func (r retriever) Retrieve(resource string) (res []byte, cached bool, err error) {
-	r.res[resource] = r.contents[resource]
-	return []byte(r.contents[resource]), false, nil
+func (r mockReader) Read(ctx context.Context, resource string) ([]byte, error) {
+	return []byte(r.contents[resource]), nil
+}
+
+func (r mockReader) ReadHash(ctx context.Context, resource string) ([]byte, retriever.Hash, error) {
+	return []byte(r.contents[resource]), retriever.ZeroHash, nil
 }
 
 /* TestParseSyslRetriever tests that a file can be imported */
 func TestParseSyslRetriever(t *testing.T) {
-	r := retriever{res: map[string]string{}, contents: map[string]string{
-		"./one.sysl": `
+	one := `
 import two.sysl
-App:
+One:
 	_:
-		...`,
-		"./two.sysl": `
+		...`
+	two := `
 Two:
 	...
-`}}
+`
+	nottwo := `
+NotTwo:
+	...
+`
+
+	r := mockReader{contents: map[string]string{
+		"./one.sysl": one,
+		"two.sysl":   two,
+		"./two.sysl": nottwo,
+	}}
+
 	p := NewParser()
 
-	_, err := p.Parse("./one", r)
+	c, err := p.Parse("./one", r)
 	require.NoError(t, err)
+	require.Equal(t, 2, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
 }
 
 /* TestParseSyslRetrieverRemote tests a remote import */
 func TestParseSyslRetrieverRemote(t *testing.T) {
-	r := retriever{res: map[string]string{}, contents: map[string]string{
-		"./one.sysl": `
-import //github.com/one/two/three.sysl@1234
+	one := `
+import //github.com/org/repo/two.sysl@master
 import 3.sysl
-App:
+One:
 	_:
-		...`,
-		"github.com/one/two/three.sysl@1234": `
+		...`
+	two := `
 Two:
 	...
-`, `./3.sysl`: `
-blah:
+`
+	three := `
+Three:
 	_:
 		...
-`,
+`
+
+	r := mockReader{contents: map[string]string{
+		"./one.sysl":                            one,
+		"//github.com/org/repo/two.sysl@master": two,
+		`3.sysl`:                                three,
 	}}
+
 	p := NewParser()
 
-	_, err := p.Parse("./one", r)
+	c, err := p.Parse("./one", r)
 	require.NoError(t, err)
-	for filename, e := range r.contents {
-		require.Equal(t, e, r.res[filename])
-	}
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
 }
 
 /* TestParseSyslRetrieverRemoteImport tests that a remote file that imports from it's own repository */
 func TestParseSyslRetrieverRemoteImport(t *testing.T) {
-	r := retriever{res: map[string]string{}, contents: map[string]string{
-		"./one.sysl": `
-import //github.com/one/two/three.sysl@1234
-App:
+	one := `
+import //github.com/org/repo/two.sysl@master
+One:
 	_:
-		...`,
-		"github.com/one/two/three.sysl@1234": `
-import four.sysl
+		...`
+	two := `
+import three.sysl
 Two:
 	...
-`, "github.com/one/two/four.sysl@1234": `
-App:
+`
+	three := `
+Three:
 	...
-`}}
+`
+
+	r := mockReader{contents: map[string]string{
+		"./one.sysl":                            one,
+		"//github.com/org/repo/two.sysl@master": two,
+		"//github.com/org/repo/three.sysl":      three,
+	}}
+
 	p := NewParser()
 
-	_, err := p.Parse("./one", r)
+	c, err := p.Parse("./one", r)
 	require.NoError(t, err)
-	for filename, e := range r.contents {
-		require.Equal(t, e, r.res[filename])
-	}
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
 }
 
 func TestFixTypeRefScope(t *testing.T) {

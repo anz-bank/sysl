@@ -15,8 +15,6 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const syslRootMarker = ".sysl"
-
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
 func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {

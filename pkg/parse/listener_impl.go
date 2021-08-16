@@ -4,6 +4,7 @@ package parse // SyslParser
 import (
 	"encoding/json"
 	"fmt"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -18,8 +19,6 @@ import (
 )
 
 const patternsKey = "patterns"
-
-var _ = fmt.Println
 
 type importDef struct {
 	filename string
@@ -3367,20 +3366,21 @@ func (s *TreeShapeListener) ExitApp_decl(ctx *parser.App_declContext) {
 
 // EnterImport_stmt is called when production import_stmt is entered.
 func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
-	path := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
-	if !strings.HasPrefix(path, "/") {
-		path = filepath.ToSlash(s.base) + "/" + path
+	filename := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
+
+	if !syslutil.IsRemoteImport(filename) {
+		filename = path.Join(s.base, filename)
+		if syslutil.IsRemoteImport(s.base) {
+			filename = "/" + filename
+		}
 	}
-	if filepath.Ext(path) == "" {
-		path += syslExt
-	}
-	path = strings.TrimPrefix(path, "//")
-	if !strings.Contains(path, "@") && s.version != "" {
-		path += "@" + s.version
+
+	if filepath.Ext(filename) == "" {
+		filename += syslExt
 	}
 
 	id := importDef{
-		filename: path,
+		filename: filename,
 	}
 
 	if ctx.AS() != nil {

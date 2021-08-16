@@ -66,7 +66,6 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&importCmd{},
 		&infoCmd{},
 		&intsCmd{},
-		&modCmd{},
 		&modDatabaseScriptCmd{},
 		&protobuf{},
 		&replCmd{},

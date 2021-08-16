@@ -1,22 +1,22 @@
 package parse
 
 import (
+	"context"
 	"fmt"
-	"path/filepath"
+	"path"
 	"sort"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/env"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/importer"
-	"github.com/anz-bank/sysl/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/anz-bank/gop/pkg/gop"
-	pkgmod "github.com/anz-bank/pkg/mod"
+	"github.com/anz-bank/golden-retriever/reader"
+	"github.com/anz-bank/pkg/mod"
 	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -81,7 +81,7 @@ func importSyslProto(fsinput antlr.CharStream) (*sysl.Module, error) {
 
 func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
 	logger := logrus.StandardLogger()
-	fileName, _ := pkgmod.ExtractVersion(def.filename)
+	fileName, _ := mod.ExtractVersion(def.filename)
 	file := input.GetText(0, input.Size())
 	fileType, err := detectFileType(fileName, []byte(file))
 	if err != nil {
@@ -136,48 +136,45 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 
 // ParseFromFs parses a sysl definition from an afero filesystem
 func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error) {
-	retriever, err := mod.Retriever(fs)
+	reader, err := NewReader(fs)
 	if err != nil {
 		return nil, err
 	}
-	return p.Parse(filename, retriever)
+	return p.Parse(filename, reader)
 }
 
 // Parse parses a sysl definition from an retriever interface
-func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, error) { //nolint:funlen
+func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, error) { //nolint:funlen
 	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 	listener.lint()
 
-	repo, resource, version, err := gop.ProcessRequest(resource)
-	if err != nil {
-		return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", resource, err))
-	}
 	if !strings.HasSuffix(resource, syslExt) {
 		resource += syslExt
 	}
+
 	source := importDef{filename: resource}
-	if version != "" {
-		source.filename = fmt.Sprintf("%s/%s@%s", repo, resource, version)
-	}
+
 	for {
 		filename := source.filename
 		logrus.Debugf("Parsing: " + filename)
-		_, resource, version, err := gop.ProcessRequest(filename)
+
+		content, hash, err := reader.ReadHash(context.Background(), filename)
 		if err != nil {
-			return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error parsing %#v: %v\n", filename, err))
+			return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error reading %#v: \n%v\n", filename, err))
 		}
-		res, _, err := retriever.Retrieve(filename)
-		if err != nil {
-			return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error parsing %#v: \n%v\n", filename, err))
-		}
-		fsinput := &fsFileStream{antlr.NewInputStream(string(res)), filename}
+		fsinput := &fsFileStream{antlr.NewInputStream(string(content)), filename}
+		version := hash.String()
 
 		listener.sc = sourceCtxHelper{source.filename, version}
-		listener.base = filepath.Dir(filename)
+		listener.base = path.Dir(filename)
+		if syslutil.IsRemoteImport(filename) {
+			listener.base = "/" + listener.base
+		}
 		listener.version = version
+
 		// Import Sysl Proto
-		if strings.HasSuffix(resource, ".sysl.pb.json") {
+		if strings.HasSuffix(filename, ".sysl.pb.json") {
 			syslProtoImport, err := importSyslProto(fsinput)
 			if err != nil {
 				return nil, fmt.Errorf("error parsing %s: %w", filename, err)
@@ -202,10 +199,11 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 			return nil, err
 		}
 
+		// FIXME
 		localListener := NewTreeShapeListener()
-		localListener.sc = sourceCtxHelper{source.filename, version}
-		localListener.base = filepath.Dir(filename)
-		localListener.version = version
+		localListener.sc = listener.sc
+		localListener.base = listener.base
+		localListener.version = listener.version
 		walker := antlr.NewParseTreeWalker()
 		walker.Walk(localListener, tree)
 		walker.Walk(listener, tree)
@@ -232,7 +230,7 @@ func (p *Parser) Parse(resource string, retriever gop.Retriever) (*sysl.Module, 
 			source = listener.imports[0]
 			listener.imports = listener.imports[1:]
 			if _, has := imported[source.filename]; !has {
-				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") {
+				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") && !syslutil.IsRemoteImport(source.filename) {
 					return nil, syslutil.Exitf(2,
 						"error importing: importing outside current directory is only allowed when root is defined")
 				}
