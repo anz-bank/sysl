@@ -50,7 +50,7 @@ RestEndpoint:
             ...
         POST(native <: string):
             ...
-        PUT(unlimited <: string, limited <: string, num <: int, limited_num <: int, x <: ):
+        PUT(unlimited <: string, limited <: string(10), num <: int(5), limited_num <: int(5), x <: ):
             ...
     
     /pathwithtype/{native <: int}:
@@ -72,7 +72,7 @@ SimpleEndpoint:
         @annotation = "annotation"
         ...
     
-    SimpleEpWithArray (unlimited <: string, limited <: string, num <: int, limited_num <: int, x <: ):
+    SimpleEpWithArray (unlimited <: string, limited <: string(10), num <: int(5), limited_num <: int(5), x <: ):
         ...
     
     SimpleEpWithParamsRef (Types.type <: ):
@@ -176,15 +176,17 @@ Types:
         reference <: RestEndpoint.Type
         sequence <: sequence of string
         set <: set of string
-        string_max_constraint <: string
-        string_range_constraint <: string
+        string_max_constraint <: string(5)
+        string_range_constraint <: string(10)
         with_anno <: string:
             @annotation = "this is an annotation"
     
     !type Type:
         @annotation = "annotation"
         aliasSequence <: Alias
-        inplace <: inplace
+        inplace <:
+            a <: string
+            b <: int
         nativeTypeField <: string
         optional <: string?
         reference <: RestEndpoint.Type
@@ -193,6 +195,7 @@ Types:
         with_anno <: string:
             @annotation = "this is an annotation"
     
-    !alias Union:
+    !union Union:
         @annotation = "annotation"
-    
+        int
+        string

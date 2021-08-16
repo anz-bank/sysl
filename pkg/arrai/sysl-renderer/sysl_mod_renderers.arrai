@@ -23,7 +23,7 @@ let renderLongName = \name name && $`"${name}"`;
 let rec renderInlineAnnoValue = \v
     cond v {
         (a: (:elt, ...), ...): $`[${elt >> renderInlineAnnoValue(.)::, }]`,
-        (:s, ...): $`"${s}"`,
+        (:s, ...): $`"${//re.compile('"').sub(`\"`, $`${s}`)}"`,
         _: //error(v),
     }
 ;
@@ -71,10 +71,20 @@ let renderTypeUsage = \type
         (:sequence, ...):  $`sequence of ${typeStr(sequence)}`,
         (:set, ...):       $`set of ${typeStr(set)}`,
     };
-    # FIXME handle constraint
-    let (?:opt:false, ?:constraints:{}, ...) = type;
+    let (?:opt:false, ?:constraint:{}, ...) = type;
 
-    $`${typeStr(type)}${opt && '?'}`
+    # FIXME handle precision
+    let constraintStr = cond constraint {
+        [(length: ('max': maxLength, 'min': minLength))]: $`(${minLength}..${maxLength})`,
+        [(length: ('max': maxLength))]: $`(${maxLength})`,
+        [(length: ('min': minLength))]: $`(${minLength}..)`,
+    };
+
+    let bitWidth = cond constraint {
+        [(:bit_width, ...)]: bit_width <: {32, 64} && bit_width
+    };
+
+    $`${typeStr(type)}${bitWidth}${constraintStr}${opt && '?'}`
 ;
 
 # renderTypeUsageWithInlineAnno is to be used for types usage in parameters, assignments, or
@@ -256,6 +266,27 @@ let renderAlias = \(:name, :type)
     `
 ;
 
+let rec renderFieldDefinition = \(:name, :type)
+    let typeUsage = cond type {
+        (tuple: (attr_defs: fields, ...), ...): $`
+            :
+                ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
+        `,
+        _:
+            let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
+            ': ' ++ $`
+                ${renderTypeUsage(type)}${tags && ' ' ++ renderInlineAnnoAndTags(tags)}${
+                    anno && $`
+                        :
+                            ${renderAnnoStmts(anno)}
+                    `
+                }
+            `
+    };
+    # colon is in typeUsage to help with nested tuple indentations
+    $`${name} <${typeUsage}`
+;
+
 let renderTypeOrTable = \(:name, :type)
     cond {
         # FIXME: handle inplace type definitions on fields
@@ -271,19 +302,18 @@ let renderTypeOrTable = \(:name, :type)
             $`
                 !${renderInlineSections([kind, name, renderInlineAnnoAndTags(tags)])}:
                     ${renderAnnoStmts(anno)}
-                    ${fields orderby .@ >> \(@: name, @value: type)
-                        let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
-                        $`
-                            ${name} <: ${renderTypeUsage(type)}${tags && ' ' ++ renderInlineAnnoAndTags(tags)}${
-                                anno && $`
-                                    :
-                                        ${renderAnnoStmts(anno)}
-                                `
-                            }
-                        `
-                    ::\i}
+                    ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
             `
     }
+;
+
+let renderUnion = \(:name, type: (one_of: (type: union, ...), ?:attrs:{}, ...))
+    let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+    $`
+        !union ${renderInlineSections([name, renderInlineAnnoAndTags(tags)])}:
+            ${renderAnnoStmts(anno)}
+            ${union >> renderTypeUsage(.)::\i}
+    `
 ;
 
 # FIXME: handle union
@@ -292,6 +322,7 @@ let renderAllType = \t
         (tuple: _, ...):    renderTypeOrTable(t),
         (relation: _, ...): renderTypeOrTable(t),
         (enum: _, ...):     renderEnum(t),
+        (one_of: _, ...):   renderUnion(t),
         _:                  renderAlias(t),
     }
 ;
@@ -337,6 +368,7 @@ let renderApp = \app
     :renderAllEndpoints,
     :renderEnum,
     :renderAlias,
+    :renderFieldDefinition,
     :renderTypeOrTable,
     :renderAllType,
     :renderTypes,
