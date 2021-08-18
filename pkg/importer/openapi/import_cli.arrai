@@ -1,0 +1,2 @@
+let (:importSpecFile, :importString, ...) = //{./openapi_importer};
+//{/pkg/importer/cli}((importPath: importSpecFile, importSpec: importString))

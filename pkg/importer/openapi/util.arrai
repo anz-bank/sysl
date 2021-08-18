@@ -1,0 +1,45 @@
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
+let unescape =
+    let chars = {
+        |char, replace|
+        (`.`, `%2E`),
+        (`:`, `%3A`),
+        (`+`, `%2B`),
+        (`$`, `%24`),
+    };
+    let chars = chars orderby . >> //seq.sub(.char, .replace);
+    reduce(chars, \acc \replace replace(acc))
+;
+
+let syslSafeName = \name
+    let name = unescape(//re.compile('[-/{} ]+').sub('_', name));
+    let keywords = {
+        'int',
+        'int32',
+        'int64',
+        'float',
+        'float32',
+        'float64',
+        'decimal',
+        'string',
+        'date',
+        'datetime',
+        'bool',
+        'bytes',
+        'any',
+    };
+    cond {name <: keywords: $`${name}_`, _: name}
+;
+
+# special attr that the openapi_to_sysl_proto.arrai can use to get additional attributes
+let syslAttrs = '_attrs';
+
+let httpVerbs = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'};
+
+(
+    :syslSafeName,
+    :syslAttrs,
+    :httpVerbs,
+    :unescape,
+)

@@ -4,14 +4,9 @@
 ##                                      ##
 ##########################################
 
-TestApp "Fruit API" [package="com.example.package"]:
+TestApp "Fruit API":
     @version = "1.0.0"
-    @description =:
-        | No description.
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type Basket:
         fruit <: Fruit?:
             @json_tag = "fruit"
@@ -19,7 +14,7 @@ TestApp "Fruit API" [package="com.example.package"]:
             @json_tag = "id"
         veggies <: Veggies?:
             @json_tag = "veggies"
-
+    
     !type Details:
         month <: string?:
             @json_tag = "month"
@@ -27,7 +22,7 @@ TestApp "Fruit API" [package="com.example.package"]:
             @json_tag = "monthlyTotal"
         transDet <: sequence of string?:
             @json_tag = "transDet"
-
+    
     !type Fruit:
         details <: sequence of Details?:
             @json_tag = "details"
@@ -37,7 +32,7 @@ TestApp "Fruit API" [package="com.example.package"]:
             @json_tag = "id"
         name <: string?:
             @json_tag = "name"
-
+    
     !type Veggies:
         details <: sequence of Details?:
             @json_tag = "details"

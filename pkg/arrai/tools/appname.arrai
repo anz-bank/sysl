@@ -2,7 +2,10 @@ let partsToAppName = //seq.join(' :: ');
 
 let appNameToParts = \name //re.compile(`\s*::\s*`).sub('::', name) -> //seq.split('::', .);
 
+let appNameToAppNameMessage = \name (part: appNameToParts(name));
+
 (
     :partsToAppName,
     :appNameToParts,
+    :appNameToAppNameMessage,
 )

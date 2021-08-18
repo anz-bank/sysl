@@ -4,38 +4,27 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple" [package="com.example.package"]:
-    @description =:
-        | No description.
-
+TestApp "Simple":
     /pets:
-        PATCH (objectRequest <: objectRequest [mediatype="application/json", ~body]):
-            | No description.
+        PATCH(patch_pets_req_body <: patch_pets_req_body_type? [~body, mediatype="application/json"]):
             return 200
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type Cat:
         age <: int?:
             @json_tag = "age"
         hunts <: bool?:
             @json_tag = "hunts"
-
+    
     !type Dog:
         bark <: bool?:
             @json_tag = "bark"
         breed <: string?:
             @json_tag = "breed"
-
+    
     !union Pet:
         Cat
         Dog
-
-    !union object:
-        Cat
-        Dog
-
-    !union objectRequest:
+    
+    !union patch_pets_req_body_type:
         Cat
         Dog

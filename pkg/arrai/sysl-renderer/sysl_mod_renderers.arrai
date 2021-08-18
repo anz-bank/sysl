@@ -101,7 +101,10 @@ let renderRegularParams = \params params && $`(${params >> renderRegularParam(.)
 let renderQueryParams = \params params &&
     let renderParamTypeUsage = \type cond type {
         (primitive:_, ...): renderTypeUsage(type),
-        _:                  $`{${renderTypeUsage(type)}}`,
+        _:
+            let isOpt = type.opt?:false;
+            let type = type +> (opt: false); # always change it to false to avoid rendering `?` in type
+            $`{${renderTypeUsage(type)}}${isOpt && '?'}`,
     };
     $`?${params >> \(:name, :type) $`${name}=${renderParamTypeUsage(type)}`::&:}`
 ;
@@ -166,6 +169,29 @@ let rec stmtRenderers = (
 
 let (:renderStmt, :renderStmts) = stmtRenderers;
 
+let renderEndpointDocstring = \(:docstring, ?:maxLength:80)
+    # to account for the `| ` prefix
+    let maxLength = maxLength - 2;
+    let renderLine = \lines \word
+        cond lines {
+            [...first, currLine]: cond {
+                # maxLength-1 for the space between line and new word.
+                (currLine count + word count) > maxLength-1: lines ++ [word],
+
+                _: first ++ [$`${currLine} ${word}`],
+            },
+            []: [word],
+        }
+    ;
+    let splitPerLine = //seq.split('\n', docstring) >> reduce(//seq.split(' ', .), renderLine, []);
+
+    # flatten arrays
+    let splitPerLine = reduce(splitPerLine, \acc \head acc ++ head, []) where .@item;
+    $`
+        ${splitPerLine >> $`| ${.}`::\i:}
+    `
+;
+
 let renderRestEndpoints = \restEps
     let restEpsRel = (
         restEps =>
@@ -174,10 +200,11 @@ let renderRestEndpoints = \restEps
                 param?:regParam:[],
                 ?:attrs:{},
                 ?:stmt:[],
+                ?:docstring:{},
                 ...
             ) = .@value;
             let regParam = regParam where .@item; # remove empty tuple, this happens in params like `GET(Types.Type)`.
-            (:path, :urlParam, :method, :queryParam, :regParam, :attrs, :stmt)
+            (:path, :urlParam, :method, :queryParam, :regParam, :attrs, :stmt, :docstring)
     ) nest ~|path, urlParam|methods # urlParam is shared by all methods
     => \ep
             # group common attrs
@@ -202,16 +229,17 @@ let renderRestEndpoints = \restEps
                 )
     ;
     $`
-        ${restEpsRel orderby .path >> \(:path, :methods, :urlParam, :attrs)
+        ${restEpsRel orderby [.path, .urlParam, .attrs] >> \(:path, :methods, :urlParam, :attrs)
             $`
                 ${renderParameterizedPath(path, urlParam)}${attrs && ' ' ++ renderInlineAnnoAndTags(attrs)}:
-                    ${methods >> \(:queryParam, :regParam, :attrs, :method, :stmt)
+                    ${methods >> \(:queryParam, :regParam, :attrs, :method, :stmt, :docstring)
                         let (:tags, :anno) = attrsToTagsAndAnno(attrs);
                         let tags = renderInlineAnnoAndTags(tags);
                         let regParam = renderRegularParams(regParam);
                         let queryParam = renderQueryParams(queryParam);
                         $`
                             ${method}${renderInlineSections([regParam, queryParam, tags])}:
+                                ${docstring && renderEndpointDocstring((:docstring))}
                                 ${renderAnnoStmts(anno)}
                                 ${renderStmts(stmt)}
                         `
@@ -222,11 +250,12 @@ let renderRestEndpoints = \restEps
 ;
 
 let renderEndpoint = \ep
-    let (:name, long_name?:longName:'', ?:attrs:{}, ?:param:[], ?:stmt:[], ...) = ep;
+    let (:name, long_name?:longName:'', ?:docstring:{}, ?:attrs:{}, ?:param:[], ?:stmt:[], ...) = ep;
     let (:tags, :anno) = attrsToTagsAndAnno(attrs);
     let sections = [name, renderLongName(longName), renderRegularParams(param), renderInlineAnnoAndTags(tags)];
     $`
         ${renderInlineSections(sections)}:
+            ${docstring && renderEndpointDocstring((:docstring))}
             ${renderAnnoStmts(anno)}
             ${renderStmts(stmt)}
     `

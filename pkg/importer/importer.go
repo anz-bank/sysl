@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/spf13/afero"
-
 	"github.com/sirupsen/logrus"
 )
 
@@ -79,7 +77,7 @@ func Factory(path string, isDir bool, formatName string, content []byte, logger 
 		return MakeOpenAPI2Importer(logger, "", path), nil
 	case OpenAPI3.Name:
 		logger.Debugln("Detected OpenAPI3")
-		return NewOpenAPIV3Importer(logger, afero.NewOsFs()), nil
+		return NewOpenAPIV3Importer(logger), nil
 	case XSD.Name:
 		logger.Debugln("Detected XSD")
 		return MakeXSDImporter(logger), nil

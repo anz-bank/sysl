@@ -4,51 +4,67 @@
 ##                                      ##
 ##########################################
 
-TestApp "Examples" [package="com.example.package"]:
+TestApp "Examples":
     @version = "1.2.3"
-    @description =:
-        | No description.
-
+    
     /example:
-        POST (PropertyLevelExampleRequest <: PropertyLevelExample [mediatype="application/json", ~body]):
-            | No description.
-            return 200 <: _example_200
-            return 500 <: string [examples=[["","Internal Server Error"]], mediatype="application/json"]
-
+        POST(post_example_req_body <: post_example_req_body_type [~body, mediatype="application/json"]):
+            return 200 <: post_example_200_resp_type
+            return 500 <: string [examples="Internal Server Error", mediatype="application/json"]
+    
     /examples:
-        POST (ObjectLevelExampleRequest <: ObjectLevelExample [mediatype="application/json", examples=[["Jessica","{\"id\":10,\"name\":\"Jessica Smith\"}"],["Ron","{\"id\":11,\"name\":\"Ron Stewart\"}"]], ~body]):
-            | No description.
-            return 200 <: ReusedExample [mediatype="application/json", examples=[["registered","{\"authId\":\"string\",\"nextStages\":[\"verify_pin\"]}"],["unregistered","{\"authId\":\"string\",\"nextStages\":[\"create_prospect\"]}"]]]
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+        POST(post_examples_req_body <: post_examples_req_body_type [~body, mediatype="application/json"]):
+            return 200 <: post_examples_200_resp_type
+    
     !type ObjectLevelExample:
         id <: int64?:
             @json_tag = "id"
         name <: string?:
             @json_tag = "name"
-
+    
     !type PropertyLevelExample:
-        registered <: bool? [examples=[["","true"]]]:
+        registered <: bool?:
             @json_tag = "registered"
-        response <: string? [examples=[["","[{\"assertions\":[{\"assertionScheme\":\"test\"}]}]"]]]:
+        response <: string?:
             @json_tag = "response"
-        responseCode <: int? [examples=[["","1200"]]]:
+        responseCode <: int?:
             @json_tag = "responseCode"
-        responseDetail <: sequence of float? [examples=[["","[\"11.22\",\"7.8\",\"8.9\"]"]]]:
+        responseDetail <: sequence of float?:
             @json_tag = "responseDetail"
-        responseMsg <: string? [examples=[["","Completed"]]]:
+        responseMsg <: string?:
             @json_tag = "responseMsg"
-
+    
     !type ReusedExample:
         authId <: string?:
             @json_tag = "authId"
         nextStages <: sequence of string?:
             @json_tag = "nextStages"
-
-    !type _example_200:
-        Location <: string [~header]:
+    
+    !type post_example_200_resp_type:
+        body <: post_example_200_resp_type_body?:
+            @json_tag = "body"
+        header <: post_example_200_resp_type_header?:
+            @json_tag = "header"
+    
+    !alias post_example_200_resp_type_body:
+        @examples = [["id", "12"], ["name", "Paul Smith"]]
+        ObjectLevelExample
+    
+    !type post_example_200_resp_type_header:
+        Location <: string?:
             @json_tag = "Location"
-        ObjectLevelExample <: ObjectLevelExample [mediatype="application/json", examples=[["","{\"id\":12,\"name\":\"Paul Smith\"}"]]]:
-            @json_tag = "ObjectLevelExample"
+    
+    !alias post_example_req_body_type:
+        PropertyLevelExample
+    
+    !type post_examples_200_resp_type:
+        body <: post_examples_200_resp_type_body?:
+            @json_tag = "body"
+    
+    !alias post_examples_200_resp_type_body:
+        @examples = [["registered", "{'$ref': '#/components/examples/resp_verify_pin'}"], ["unregistered", "{'$ref': '#/components/examples/resp_create_prospect'}"]]
+        ReusedExample
+    
+    !alias post_examples_req_body_type:
+        @examples = [["Jessica", "{'value': {'id': 10, 'name': 'Jessica Smith'}}"], ["Ron", "{'value': {'id': 11, 'name': 'Ron Stewart'}}"]]
+        ObjectLevelExample

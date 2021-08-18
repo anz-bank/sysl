@@ -57,7 +57,20 @@ func (i *ArraiImporter) LoadFile(path string) (string, error) {
 	return val.String(), nil
 }
 
-// Load generates a Sysl spec given the content of an input file. This is not implemented.
+// Load generates a Sysl spec given the content of an input file.
 func (i *ArraiImporter) Load(content string) (string, error) {
-	panic("not implemented")
+	b, err := arrai2.Asset(i.asset)
+	if err != nil {
+		return "", err
+	}
+	// TODO: Make the appname optional
+	val, err := arrai.EvaluateBundle(b, `--app-name`, i.appName, `--spec`, content)
+	if err != nil {
+		return "", errors.Wrap(arrai.ExecutionError{
+			Context:  fmt.Sprintf("AppName: %s, Content: %s", i.appName, content),
+			Err:      err,
+			ShortMsg: err.Error(),
+		}, "Executing arr.ai transform failed")
+	}
+	return val.String(), nil
 }

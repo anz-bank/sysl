@@ -4,25 +4,27 @@
 ##                                      ##
 ##########################################
 
-TestApp "Goat CRUD API" [package="com.example.package"]:
+TestApp "Goat CRUD API":
     @version = "1.2.3"
-    @description =:
-        | No description.
-
+    
     /goat/create-goat:
-        POST (GoatRequest <: Goat [mediatype="application/json", ~body]):
+        POST(post_goat_create_goat_req_body <: post_goat_create_goat_req_body_type? [~body, mediatype="application/json"]):
             | Creates a goat.
-            return 201 <: _goat_create_goat_201
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+            return 201 <: post_goat_create_goat_201_resp_type
+    
     !type Goat:
         birthday <: date?:
             @json_tag = "birthday"
         name <: string?:
             @json_tag = "name"
-
-    !type _goat_create_goat_201:
-        Location <: string [~header]:
+    
+    !type post_goat_create_goat_201_resp_type:
+        header <: post_goat_create_goat_201_resp_type_header?:
+            @json_tag = "header"
+    
+    !type post_goat_create_goat_201_resp_type_header:
+        Location <: string?:
             @json_tag = "Location"
+    
+    !alias post_goat_create_goat_req_body_type:
+        Goat

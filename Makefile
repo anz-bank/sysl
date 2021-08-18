@@ -82,7 +82,8 @@ build-sysl-version-diff-docker: generate
 
 internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \
-		pkg/importer/sql/import_cli.arraiz
+		pkg/importer/sql/import_cli.arraiz \
+		pkg/importer/openapi/import_cli.arraiz
 	go-bindata -version
 	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
 	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-clean failed.

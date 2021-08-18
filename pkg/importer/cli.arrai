@@ -1,0 +1,18 @@
+let config = {
+    'app-name': (type: 'string', alias: 'a', default: 'App', usage: 'Name of the imported app'),
+    'input': (type: 'string', alias: 'i', usage: 'Path to the file or directory to import'),
+    'spec': (type: 'string', alias: 's', usage: 'content of the spec file'),
+};
+
+let args = //flag.parser(config).parse(//os.args);
+
+\(?:importPath:{}, ?:importSpec:{})
+    cond args {
+        (flags: {'input': input, 'app-name': appName, ...}, ...): importPath(appName, input),
+        (flags: {'spec': spec, 'app-name': appName, ...}, ...): importSpec(appName, spec),
+        _: $`
+            Usage:  import_cli [options]
+
+            ${//flag.help(config)}
+        `
+    }

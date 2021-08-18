@@ -1,0 +1,283 @@
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (:syslSafeName, :syslAttrs, :httpVerbs, ...) = //{./util};
+
+let schemaRef = \typeName {'$ref': (s: $`#/components/schemas/${typeName}`)};
+let singleSyslStrTag = \tag {'patterns': (a: (elt: [(s: tag)]))};
+let schemaSyslTag = \tag {syslAttrs: singleSyslStrTag(tag)};
+let isNativeType = \type type <: {'boolean', 'integer', 'number', 'string'};
+
+# FIXME: handle content type on paths, they have precedence rule (e.g. text/* > text/plain)
+# FIXME: handle non verbs in path
+
+# simplifiedParams moves top level parameters from a path and move it into all operation objects in a path.
+let simplifiedParams =
+    let mergeParams = \top \bottom
+        cond bottom {
+            {}: top,
+            _:
+                let nested = \(a: arr)
+                    let mergeNestedParams = \acc \param
+                        let key = (name: param('name'), in: param('in'));
+                        cond {
+                            acc(key)?:{} = {}: acc +> {key: param},
+                            _: //error($`duplicate parameters found ${//fmt.pretty(param)}`),
+                        }
+                    ;
+                    reduce(arr, mergeNestedParams, {})
+                ;
+
+                (nested(top) +> nested(bottom)) => .@value orderby .,
+        }
+    ;
+
+    \oapi
+        oapi +> {
+            'paths': oapi('paths')?:{} >> cond . {
+                {'parameters': top, ...verbs}: verbs >> . +> {'parameters': (a: mergeParams(top, .('parameters')?:{}))},
+                _: .,
+            }
+        }
+;
+
+
+# FIXME: handle external references
+
+# simplifiedInplaceTypeDefinitions takes in an openapi spec and tries to find all the inplace type definitions and move
+# them into #/components/schemas in the openapi spec.
+let simplifiedInplaceTypeDefinitions = \oapi
+    let empty = (schemas: {}, paths: {});
+    let contentToSchemas = \content \typeName
+        let withExamples = \v
+            let examples = v('example')?:{} || v('examples')?:{};
+            examples && {'example': examples}
+        ;
+        cond content {
+            # single media type becomes one type
+            {(@: _, @value: {'schema': schema, ...})}: {
+                typeName: schema +> withExamples((content single).@value)
+            },
+
+            # multiple media types become a union type and each media types become its own type
+            _:
+                # turn every mediatype into its own type
+                let typesFromFields = content => (
+                    @: syslSafeName($`${typeName}_${.@}`),
+                    @value: .@value('schema')?:{} +>
+                        {syslAttrs: {'mediatype': (s: .@)}} +>
+                        withExamples(.@value)
+                    ,
+                );
+                # wrapped all the fields into a one of object
+                let oneOf = {
+                    typeName: {'type': (s: 'object'), 'oneOf': (a: typesFromFields => schemaRef(.@) orderby .)}
+                };
+                typesFromFields | oneOf
+        }
+    ;
+    let contentIsComplex = \content
+        content count > 1 || ((content count = 1) && !isNativeType((content single).@value('schema', 'type')?.s:{}))
+    ;
+
+    # TODO: remove this once sysl support types in endpoints
+    let simplifiedTypeDefsInRequestBody = \oapi
+        # each method is flattened to avoid deeply nested reduce functions.
+        let flattened = (
+            oapi('paths')?:{} => \(@: epName, @value: ep) ep => \(@: method, @value: config) (:epName, :method, :config)
+        ) -> //rel.union(.);
+        let newSchemasAndParamsFromReqBody =
+            \acc \ep
+                let (:epName, :method, :config) = ep;
+                let default = (paths: {ep});
+                let (?:schemas:{}, ?:paths:{}) = cond {
+                    (method <: httpVerbs):
+                        let content = config('requestBody', 'content')?:{};
+                        cond {
+                            # turn complex requestBody into its own type
+                            contentIsComplex(content):
+                                let epName = //seq.trim_prefix('/', epName);
+                                let typeName = syslSafeName($`${method}_${epName}_req_body_type`);
+                                let newMediaType = content count = 1 && (content single).@;
+                                let newEp = ep +> (
+                                    config+>: {
+                                        'requestBody'+>: {'content': {newMediaType: {'schema': schemaRef(typeName)}}}
+                                    }
+                                );
+                                let newSchemas = contentToSchemas(content, typeName);
+                                (paths: {newEp}, schemas: newSchemas)
+                            ,
+                            _: default,
+                        }
+                    ,
+                    _: default,
+                };
+                acc +> (schemas|: schemas, paths|: paths)
+        ;
+        let (:schemas, :paths) = reduce(flattened  orderby ., newSchemasAndParamsFromReqBody, empty);
+        let paths = paths nest ~|epName|methods => (@: .epName, @value: .methods => (@: .method, @value: .config));
+        oapi +> {
+            'components'+>: {'schemas'+>: schemas},
+            'paths'+>: paths
+        }
+    ;
+
+    # TODO: remove this once sysl support types in endpoints
+    let simplifiedTypesFromResponses = \oapi
+        # each status and response is flattened to avoid deeply nested reduce functions.
+        let flattened = (
+            (
+                oapi('paths') => \(@: epName, @value: ep) (
+                    ep => \(@: method, @value: config)
+                        # retain non http-verbs config so that they are retained after deflattening process.
+                        let responses = cond config {{'responses': responses, ...}: responses, _: {}};
+                        responses => \(@: status, @value: response) (:epName, :method, :config, :status, :response)
+                ) -> //rel.union(.)
+            ) -> //rel.union(.)
+        );
+        let newSchemasAndParamsFromResponses =
+            \acc \ep
+                let (:epName, :method, :status, :response, ...) = ep;
+                let default = (paths: {ep});
+                let (?:schemas:{}, ?:paths:{}) = cond {
+                    (method <: httpVerbs):
+                        let epName = //seq.trim_prefix('/', epName);
+                        let typeName = syslSafeName($`${method}_${epName}_${status}_resp_type`);
+                        let body = response('content')?:{};
+                        let headers = response('headers')?:{};
+
+                        cond {
+                            # turn complex response into its own type
+                            (headers || contentIsComplex(body)):
+                                let headerTypeName = headers && $`${typeName}_header`;
+                                let headerSchema = headers && {
+                                    headerTypeName: {
+                                        'type': (s: 'object'),
+                                        'properties': headers >>
+                                            .('schema')?:{} +>
+                                            let desc = .('description')?:{};
+                                            desc && {syslAttrs: {'description': desc}}
+                                        ,
+                                    }
+                                };
+                                let bodyTypeName = body && $`${typeName}_body`;
+                                let bodySchema = body && contentToSchemas(body, bodyTypeName);
+                                let responseSchema =
+                                    let header = headerSchema && {
+                                        'header': schemaRef(headerTypeName) +> schemaSyslTag('header')
+                                    };
+                                    let body = bodySchema && {'body': schemaRef(bodyTypeName) +> schemaSyslTag('body')};
+                                    {typeName: {'type': (s: 'object'),'properties': header +> body}}
+                                ;
+                                # move the new type to content.
+                                let newEp = ep +> (
+                                    response+>: {'header': {}, 'content': {'': {'schema': schemaRef(typeName)}}}
+                                );
+                                (paths: {newEp}, schemas: headerSchema | bodySchema | responseSchema)
+                            ,
+                            _: default,
+                        }
+                    ,
+                    _: default,
+                };
+                acc +> (schemas|: schemas, paths|: paths)
+        ;
+
+        let (:schemas, :paths) = reduce(flattened orderby ., newSchemasAndParamsFromResponses, empty);
+        # unflatten the flattened paths
+        let paths = paths nest ~|epName|configs => (
+            @: .epName,
+            @value: .configs nest ~|method, config|responses => (
+                @: .method,
+                @value: .config +> cond {
+                    .config('responses')?:{}: {'responses': .responses => (@: .status, @value: .response)},
+                },
+            ),
+        );
+
+        oapi +> {'components'+>: {'schemas'+>: schemas}, 'paths'+>: paths}
+    ;
+
+    # TODO: remove this once sysl support types in endpoints
+    let simplifiedTypesFromParameters = \oapi
+        # each status and response is flattened to avoid deeply nested reduce functions.
+        let flattened = (
+            (
+                oapi('paths') => \(@: epName, @value: ep) (
+                    ep => \(@: method, @value: config)
+                        # retain non http-verbs config so that they are retained after deflattening process.
+                        let parameters = cond config {{'parameters': (a: parameters), ...}: parameters};
+                        parameters => (:epName, :method, :config, index: .@, param: .@item)
+                ) -> //rel.union(.)
+            ) -> //rel.union(.)
+        );
+        let newSchemasAndParamsFromParams =
+            \acc \ep
+                let (:epName, :method, :config, :index, :param) = ep;
+                let default = (paths: {ep});
+
+                let (?:paths:{}, ?:schemas:{}) =
+                    let typeName = syslSafeName($`${method}_${//seq.trim_prefix('/', epName)}_${param('name').s}`);
+                    let newEpWithSchema = \schema
+                        (
+                            paths: {ep +> (param+>: {'schema': schemaRef(typeName)})},
+                            schemas: {typeName: schema},
+                        )
+                    ;
+                    cond param('schema')?:{} {
+                        {'items': items, ...}: newEpWithSchema({'type': (s: 'array'), 'items': items}),
+                        {'properties': properties, ...}: newEpWithSchema({
+                            'type': (s: 'object'),
+                            'properties': properties,
+                        }),
+                        {'oneOf': oneOf, ...}: newEpWithSchema({'oneOf': oneOf}),
+                        {'allOf': allOf, ...}: newEpWithSchema({'allOf': allOf}),
+                        _: default,
+                    };
+                acc +> (schemas|: schemas, paths|: paths)
+        ;
+
+        let (?:paths:{}, ?:schemas:{}) = reduce(flattened orderby ., newSchemasAndParamsFromParams, empty);
+        # unflatten the flattened paths
+        let paths = paths nest ~|epName|configs => (
+            @: .epName,
+            @value: .configs nest ~|method, config|params => (
+                @: .method,
+                @value: .config +> cond {
+                    .config('parameters')?:{}: {'parameters': (a: .params => (@: .index, @item: .param))},
+                },
+            ),
+        );
+        oapi +> {'components'+>: {'schemas'+>: schemas}, 'paths'+>: paths}
+    ;
+
+    let flattenArrays = \oapi
+        let schemas = oapi('components', 'schemas')?:{};
+        let divideComplexArrays =
+            \acc \schema
+                let (@: name, @value: type) = schema;
+                # complex array is an array with inline object definitions.
+                cond type {
+                    {'type': (s: 'array'), 'items': {'properties': _, ...}, ...}:
+                        let objName = syslSafeName($`${name}_obj`);
+                        acc +> {
+                            name: type +> {'items': schemaRef(objName)},
+                            objName: type('items'),
+                        },
+                    _: acc +> {schema},
+                }
+        ;
+        let newSchemas = reduce(schemas orderby ., divideComplexArrays, {});
+        oapi +> {'components'+>: {'schemas': newSchemas}}
+    ;
+
+    oapi
+        -> simplifiedTypeDefsInRequestBody(.)
+        -> simplifiedTypesFromResponses(.)
+        -> simplifiedTypesFromParameters(.)
+        -> flattenArrays(.)
+;
+
+# this function will transform the openapi spec into its simplified form.
+\oapi
+    oapi
+        -> simplifiedParams(.)
+        -> simplifiedInplaceTypeDefinitions(.)
