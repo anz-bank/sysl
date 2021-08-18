@@ -3369,7 +3369,12 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	filename := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
 
 	if !syslutil.IsRemoteImport(filename) {
-		filename = path.Join(s.base, filename)
+		base := s.base
+		if strings.HasPrefix(filename, "/") {
+			base = "."
+		}
+		filename = path.Join(base, filename)
+
 		if syslutil.IsRemoteImport(s.base) {
 			filename = "/" + filename
 		}

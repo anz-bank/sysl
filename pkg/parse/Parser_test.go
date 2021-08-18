@@ -717,6 +717,16 @@ func TestUndefinedRootAbsoluteImport(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestDefinedRootAbsoluteImport(t *testing.T) {
+	t.Parallel()
+
+	parser := NewParser()
+	parser.RestrictToLocalImport()
+
+	_, err := parser.ParseFromFs("subfolder/absolute_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
+	require.NoError(t, err)
+}
+
 func TestOutsideOfRootImport(t *testing.T) {
 	t.Parallel()
 
