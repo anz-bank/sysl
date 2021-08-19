@@ -1,59 +1,29 @@
 let gojs = //{./gojs};
 let sysl = //{/pkg/arrai/sysl};
-let (:appIntegrationModel, ...) = //{/pkg/arrai/diagrams/integration_model};
+let (:integrationModel, ...) = //{/pkg/arrai/diagrams/integration_model};
 let rel = sysl.newNormalize(sysl.loadBytes(//{/pkg/arrai/diagrams/testdata/node-edge-hierarchy.sysl.pb}));
 
 (
     # Test the complete diagram.
     complete: (
-        let im = appIntegrationModel(rel, ());
+        let im = integrationModel(rel, ());
         let actual = gojs.jsonDiagram(im, gojs.stdJsonNode, gojs.stdJsonLink);
-        let expected = (
-            jsonNodes: //encoding.json.decode($`
-                [
-                    { "group": "A", "key": "A :: B1", "label": "B1", "expanded": true, "visible": true, "isGroup": true },
-                    { "group": "A", "key": "A :: B2", "label": "B2", "expanded": true, "visible": true, "isGroup": true },
-                    { "group": "A :: B1", "key": "A :: B1 :: C1", "label": "C1", "expanded": true, "visible": true, "isGroup": false },
-                    { "group": "A :: B2", "key": "A :: B2 :: C2", "label": "C2", "expanded": true, "visible": true, "isGroup": false },
-                    { "key": "A", "label": "A", "expanded": true, "visible": true, "isGroup": true }
-                ]
-            `),
-            jsonLinks: //encoding.json.decode($`
-                [
-                    { "from": "A :: B1 :: C1", "key": "A :: B1 :: C1-A :: B2 :: C2", "label": "", "to": "A :: B2 :: C2", "visible": true }
-                ]
-            `)
-        );
-        //test.assert.equal(expected, actual)
-    ),
+        let expectedNodes = {|key, group, isGroup, label, visible, expanded| 
+            ( (s: 'A'),             (s: {}),            (b: true),      (s: "A"),       (b: true),      (b: true)),
+            ( (s: 'A :: B1'),       (s: 'A'),           (b: true),      (s: "B1"),      (b: true),      (b: true)),
+            ( (s: 'A :: B1 :: C1'), (s: 'A :: B1'),     (b: false),     (s: "C1"),      (b: true),      (b: false)),
+            ( (s: 'A :: B2'),       (s: 'A'),           (b: true),      (s: "B2"),      (b: true),      (b: true)),
+            ( (s: 'A :: B2 :: C2'), (s: 'A :: B2'),     (b: false),     (s: "C2"),      (b: true),      (b: false)),
+        } => cond .group { (s: {}): (:.key, :.isGroup, :.label, :.visible, :.expanded), _: . }; # Remove empty groups
+        let actualNodes = actual.jsonNodes.a => .@item => //tuple(.);
 
-    # Test that a model containing data is included in the nodes and edges.
-    data: (
-        let im = appIntegrationModel(
-            rel, (
-                onNode: \_ \node node +> (data: node.data +> {'type': 'node'}),
-                onEdge: \_ \edge edge +> (data: edge.data +> {'type': 'edge'}),
-            )
-        );
-        let actual = gojs.jsonDiagram(im,
-            \imNode gojs.stdJsonNode(imNode) +> (imNode.data => (:.@, @value:(s:.@value))),
-            \imEdge gojs.stdJsonLink(imEdge) +> (imEdge.data => (:.@, @value:(s:.@value))));
-        let expected = (
-            jsonNodes: //encoding.json.decode($`
-                [
-                    { "group": "A", "key": "A :: B1", "label": "B1", "expanded": true, "visible": true, "type": "node", "isGroup": true },
-                    { "group": "A", "key": "A :: B2", "label": "B2", "expanded": true, "visible": true, "type": "node", "isGroup": true },
-                    { "group": "A :: B1", "key": "A :: B1 :: C1", "label": "C1", "expanded": true, "visible": true, "type": "node" , "isGroup": false},
-                    { "group": "A :: B2", "key": "A :: B2 :: C2", "label": "C2", "expanded": true, "visible": true, "type": "node" , "isGroup": false},
-                    { "key": "A", "label": "A", "expanded": true, "visible": true, "type": "node", "isGroup": true }
-                ]
-            `),
-            jsonLinks: //encoding.json.decode($`
-                [
-                    { "from": "A :: B1 :: C1", "key": "A :: B1 :: C1-A :: B2 :: C2", "label": "", "to": "A :: B2 :: C2", "visible": true, "type": "edge" }
-                ]
-            `)
-        );
-        //test.assert.equal(expected, actual)
+        let expectedLinks = {|key, from, to, label, visible| 
+            ( (s: 'A :: B1 :: C1-A :: B2 :: C2'), (s: 'A :: B1 :: C1'), (s: 'A :: B2 :: C2'), (s: ''), (b: true)) };
+        let actualLinks = actual.jsonLinks.a => .@item => //tuple(.);
+        
+        (
+            links: //test.assert.equal(expectedNodes, actualNodes),
+            nodes: //test.assert.equal(expectedLinks, actualLinks)
+        )
     ),
 )

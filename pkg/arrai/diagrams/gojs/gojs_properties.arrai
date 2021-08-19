@@ -84,6 +84,8 @@ let link = (
         highlightColorPrimary:      'highlightColorPrimary',    # The primary colour used to highlight during selection
         highlightColorSecondary:    'highlightColorSecondary',
 
+        group:                      'group',                    # The group the link belongs to. Links with the same group are highlighted together.
+
         tooltip:                    'tooltip',                  # The tooltip to display on the link
 
     ),

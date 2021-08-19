@@ -1,23 +1,86 @@
 let sysl = //{/pkg/arrai/sysl};
-let (:appIntegrationModel, :appIntegrationModelConfig, ...) = //{./integration_model};
+let (:appIntegrationModel, :appIntegrationModelConfig, :integrationModel, :appNodes, :appEdges, ...) = //{./integration_model};
 let rel = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/integration-model.sysl.pb}));
 let relImport = sysl.newNormalize(sysl.loadBytes(//[//encoding.bytes]{./testdata/integration-model-import.sysl.pb}));
 
 (
     # Test the integration model.
-    integration_model: (
-        let actual = appIntegrationModel(rel, ());
-        let expected = (
-            edges: {(data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep1-A :: B2/Ep2', label: {}, toId: 'A :: B2', visible: true),
-            (data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep1/0-A :: B2/Ep1', label: {}, toId: 'A :: B2', visible: true),
-            (data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep1/1-A :: B2/Ep1', label: {}, toId: 'A :: B2', visible: true),
-            (data: {}, fromId: 'A :: B1', id: 'A :: B1/Ep2-A :: B2/Ep2', label: {}, toId: 'A :: B2', visible: true)},
+    integrationModel: (
 
-            nodes: {(childId: {}, data: {}, expanded: true, id: 'A :: B1', label: 'B1', parentId: 'A', visible: true),
-            (childId: {}, data: {}, expanded: true, id: 'A :: B2', label: 'B2', parentId: 'A', visible: true),
-            (childId: [['A', 'B1'], ['A', 'B2']], data: {}, expanded: true, id: 'A', label: 'A', parentId: {}, visible: true)}
-        );
-        //test.assert.equal(expected, actual)
+        appIntegrationModel:
+            let actual = appIntegrationModel(rel, ());
+            let expected = (
+                edges: {(fromId: 'A :: B1', id: 'A :: B1/Ep1-A :: B2/Ep2', label: {}, toId: 'A :: B2', visible: true),
+                (fromId: 'A :: B1', id: 'A :: B1/Ep1/0-A :: B2/Ep1', label: {}, toId: 'A :: B2', visible: true),
+                (fromId: 'A :: B1', id: 'A :: B1/Ep1/1-A :: B2/Ep1', label: {}, toId: 'A :: B2', visible: true),
+                (fromId: 'A :: B1', id: 'A :: B1/Ep2-A :: B2/Ep2', label: {}, toId: 'A :: B2', visible: true)},
+
+                nodes: {(group: false, expanded: true, id: 'A :: B1', label: 'B1', parentId: 'A', visible: true),
+                (group: false, expanded: true, id: 'A :: B2', label: 'B2', parentId: 'A', visible: true),
+                (group: true, expanded: true, id: 'A', label: 'A', parentId: {}, visible: true)}
+            );
+            //test.assert.equal(expected, actual),
+
+        integrationModel: (
+            app:
+                let expected = (
+                    nodes: {|id, parentId, label, group| 
+                        ('A', {}, 'A', true),
+                        ('A :: B1', 'A', 'B1', false),
+                        ('A :: B2', 'A', 'B2', false),
+                    },
+                    edges: {|id, fromId, toId| 
+                        ('A :: B1-A :: B2', 'A :: B1', 'A :: B2'), 
+                    },
+                );
+
+                let (:nodes, :edges) = integrationModel(rel, ());
+                let nodes = nodes => (:.id, :.parentId, :.label, :.group);
+                let edges = edges => (:.id, :.fromId, :.toId);
+                let actual = (:nodes, :edges);
+                //test.assert.equal(expected, actual),
+
+            ep:
+                let expected = (
+                    nodes: {|id, parentId, label, group| 
+                        ('A', {}, 'A', true),
+                        ('A :: B1', 'A', 'B1', false),
+                        ('A :: B2', 'A', 'B2', false),
+                    },
+                    edges: {|id, fromId, toId| 
+                        ('A :: B1/Ep1-A :: B2/Ep1', 'A :: B1', 'A :: B2'), 
+                        ('A :: B1/Ep1-A :: B2/Ep2', 'A :: B1', 'A :: B2'), 
+                        ('A :: B1/Ep2-A :: B2/Ep2', 'A :: B1', 'A :: B2')
+                    },
+                );
+
+                let (:nodes, :edges) = integrationModel(rel, (edges: \rel appEdges(rel.stmt, 'ep')));
+                let nodes = nodes => (:.id, :.parentId, :.label, :.group);
+                let edges = edges => (:.id, :.fromId, :.toId);
+                let actual = (:nodes, :edges);
+                //test.assert.equal(expected, actual),
+
+            stmt:
+                let expected = (
+                    nodes: {|id, parentId, label, group| 
+                        ('A', {}, 'A', true),
+                        ('A :: B1', 'A', 'B1', false),
+                        ('A :: B2', 'A', 'B2', false),
+                    },
+                    edges: {|id, fromId, toId| 
+                        ('A :: B1/Ep1/0-A :: B2/Ep1', 'A :: B1', 'A :: B2'), 
+                        ('A :: B1/Ep1/1-A :: B2/Ep1', 'A :: B1', 'A :: B2'), 
+                        ('A :: B1/Ep1/2-A :: B2/Ep2', 'A :: B1', 'A :: B2'), 
+                        ('A :: B1/Ep2/0-A :: B2/Ep2', 'A :: B1', 'A :: B2')
+                    },
+                );
+
+                let (:nodes, :edges) = integrationModel(rel, (edges: \rel appEdges(rel.stmt, 'stmt')));
+                let nodes = nodes => (:.id, :.parentId, :.label, :.group);
+                let edges = edges => (:.id, :.fromId, :.toId);
+                let actual = (:nodes, :edges);
+                //test.assert.equal(expected, actual),
+        ),
     ),
 
     # Test the modelNodesInFile.

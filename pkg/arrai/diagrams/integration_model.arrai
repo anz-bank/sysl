@@ -9,15 +9,15 @@ let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
 # `parentId`: The id of the parent node to which this node is a child. Optional, empty if node has no parent.
 # `label`: The textual label to display on the node.
 # `visible`: Whether the node is visible within the diagram.
+# `group`: Whether the node expects to contain children.
 # `expanded`: Whether the node, when containing children, is expanded to display those children.
-# `data`: A dictionary containing key/value pairs for additional diagram customisation.
 #
 # An `edge` is a tuple with the following items:
+# `id`: The identifer of the edge.
 # `fromId`: The node identifier of the edge source. Required.
 # `toId`: The node identifier of the edge destination. Required.
 # `label`: The textual label to display on the edge.
 # `visible`: Whether the edge is visible.
-# `data`: A dictionary containing key/value pairs for additional diagram customisation.
 
 let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 
@@ -30,7 +30,9 @@ let extractedAppName = \name cond name {(:part): part, _: name};
 # `parentName`: The name of the parent node, or {} if the node has no parent.
 # `childNames`: The names of nodes that descend from this node.
 # `appName`: The name of the application if this node represents an application.
-let appNodes = \appName
+# 
+# Deprecated. Use `integrationModel`.
+let modelAppNodes = \appName
     let appName = extractedAppName(appName);
     let indices = appName => .@;
     let maxPartIndex = appName count - 1;
@@ -51,8 +53,8 @@ let appNodes = \appName
 # `childNames`: The names of nodes that descend from this node.
 # `appName`: The name of the application if this node represents an application.
 let modelNodes = \rel
-    let callNodes = rel.stmt where .stmtCall => appNodes(.stmtCall.appName);
-    let nodes = rel.app => appNodes(.appName);
+    let callNodes = rel.stmt where .stmtCall => modelAppNodes(.stmtCall.appName);
+    let nodes = rel.app => modelAppNodes(.appName);
     let nodes = nodes|callNodes;
     let nodes = reduce(nodes orderby ., \val \item val | item, {});
     let addNode = \nodes \node
@@ -150,6 +152,57 @@ let appIntegrationModelConfig =
     )
 ;
 
+# `appNodes` returns the set of nodes, starting at the application level, climbing the 
+# hierarchy of the application name. For example, a model with applications `A :: B :: C` and 
+# `A :: B :: D` will return the root node `A` that contains `B` that contains `C` and `D`.
+# 
+# `appNames` is the set of application names to consider.
+let appNodes = \appNames
+    let rec ids = \name \group cond name { []: {}, [...hs, _]: {(:name, :group)} | ids(hs, true) };
+    let ids = //rel.union(appNames => ids(., false));
+    ids nest group => \(:name, :group) 
+        let group = true <: group;
+        let [...parents, label] = name;
+        (
+            id:         partsToAppName(name),
+            parentId:   parents && partsToAppName(parents),
+            :label,
+            :group,
+            visible:    true,
+            expanded:   group,
+        );
+
+# `appEdges` returns the set of edges derived from the given statements, terminating at the 
+# application.
+# 
+# `stmts` is the set of relational model statements to consider.
+# `level` is the level of information to include in the id. One of ['app', 'ep', 'index']:
+#         `app`     Creates links between applications.
+#         `ep`      Creates links between applications for each uniquely linked pair of endpoints.
+#         `stmt`    Creates links between applications for each unique statement.
+let appEdges = \stmts \level
+    let stmts = stmts where .stmtCall;
+    cond {
+        level = 'app':  stmts => (:.appName, stmtCall:(:.stmtCall.appName)),
+        level = 'ep':   stmts => (:.appName, :.epName, :.stmtCall),
+        level = 'stmt': stmts => (:.appName, :.epName, :.stmtCall, :.stmtIndex),
+    } => \stmt
+        let fromId = partsToAppName(stmt.appName);
+        let toId = partsToAppName(stmt.stmtCall.appName);
+        let id = cond level {
+            'app':  $`${fromId}-${toId}`,
+            'ep':   $`${fromId}/${stmt.epName}-${toId}/${stmt.stmtCall.epName}`,
+            'stmt': $`${fromId}/${stmt.epName}/${stmt.stmtIndex}-${toId}/${stmt.stmtCall.epName}`,
+        };
+        (
+            :id,
+            :fromId,
+            :toId,
+            label: '',
+            visible: true,
+        );
+    
+
 # `appIntegrationModel` converts a relational model into an integration model with the following properties:
 # 1.  Nodes are placed in a hierarchy based on the application name. For example, the `Org :: Platform`
 #     application will result in two nodes, the parent `Org` and its child `Platform`
@@ -174,6 +227,8 @@ let appIntegrationModelConfig =
 #     `edge` is the tuple representing the edge as constructed within this method.
 # `stmts` is a function that takes the relational model and returns the set of statements to consider.
 #     If not provided, then all statements within the model are considered.
+# 
+# Deprecated. Use `integrationModel`.
 let appIntegrationModel = \rel \config
     let configs = //dict(config);
     let modelNodes = configs('modelNodes')?:modelNodes;
@@ -190,11 +245,10 @@ let appIntegrationModel = \rel \config
     let nodes = nodes => \node onNode(node, (
         id: partsToAppName(node.name),
         parentId: partsToAppName(node.parentName),
-        childId: node.childNames,
+        group: node.childNames count > 0,
         label: let [...ns, name] = node.name; name,
         visible: true,
         expanded: true,
-        data: {},
     ));
 
     let edges = stmts where .stmtCall => (:.appName, :.epName, :.stmtCall, :.stmtIndex) => \e
@@ -211,8 +265,23 @@ let appIntegrationModel = \rel \config
             id: id,
             label: '',
             visible: true,
-            data: {},
         ));
+
+    (:nodes, :edges);
+
+# `integrationModel` converts a relational model into an integration model.
+# 
+# `rel` is the relation model to convert.
+# `config` is a tuple that contains the following optional values:
+# 
+# `nodes` is a function that converts the relational model into a set of model nodes.
+# `edges` is a function that converts the relational model into a set of model edges.
+let integrationModel = \rel \config
+    let fnNodes = config.nodes?: \rel appNodes(rel.app => .appName);
+    let fnEdges = config.edges?: \rel appEdges(rel.stmt, 'app');
+    
+    let nodes = fnNodes(rel);
+    let edges = fnEdges(rel);
 
     (:nodes, :edges);
 
@@ -226,4 +295,9 @@ let appIntegrationModel = \rel \config
 
     :appIntegrationModel,
     :appIntegrationModelConfig,
+
+    :appNodes,
+    :appEdges,
+
+    :integrationModel,
 )
