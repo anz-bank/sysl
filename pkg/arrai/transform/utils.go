@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/arr-ai/arrai/pkg/arraictx"
@@ -13,6 +14,8 @@ import (
 	"github.com/arr-ai/wbnf/parser"
 	"github.com/spf13/afero"
 )
+
+var errNotClosure = fmt.Errorf("supplied transform script is not a function")
 
 // EvalFileWithParam returns the result of evaluating the function in the specified file, passing in the specified
 // parameter.
@@ -48,6 +51,18 @@ func ExprFileWithParam(fs afero.Fs, scriptPath string, param rel.Value) (rel.Exp
 		return nil, err
 	}
 
+	if filepath.Ext(scriptPath) == ".arraiz" {
+		closure, err := syntax.EvaluateBundle(scriptBytes)
+		if err != nil {
+			return nil, err
+		}
+
+		if _, is := closure.(rel.Closure); !is {
+			return nil, errNotClosure
+		}
+
+		return rel.NewCallExpr(*parser.NewScanner(""), closure, param), nil
+	}
 	return ExprWithParam(string(scriptBytes), scriptPath, param)
 }
 
@@ -60,7 +75,7 @@ func ExprWithParam(script string, scriptPath string, param rel.Value) (rel.Expr,
 	}
 
 	if _, is := closure.(rel.Closure); !is {
-		return nil, fmt.Errorf("supplied transform script is not a function")
+		return nil, errNotClosure
 	}
 
 	return rel.NewCallExpr(*parser.NewScanner(""), closure, param), nil

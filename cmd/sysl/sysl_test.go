@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -8,12 +10,16 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/arr-ai/arrai/pkg/bundle"
+	"github.com/arr-ai/arrai/pkg/ctxfs"
+	"github.com/arr-ai/arrai/pkg/ctxrootcache"
 
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -1017,14 +1023,43 @@ func TestSpannerDirImport(t *testing.T) {
 		"--format", "spannerSQLdir")
 }
 
+const (
+	transformScript = `\input (output: input.models(0).rel.app => .appName(1))`
+	transformOutput = "{'App1', 'App2'}"
+)
+
 func TestTransform(t *testing.T) {
 	t.Parallel()
 	scriptPath := path.Join(t.TempDir(), "transform.arrai")
-	err := os.WriteFile(scriptPath, []byte("\\input (output: input.models(0).rel.app => .appName(1))"), 0600)
+	err := os.WriteFile(scriptPath, []byte(transformScript), 0600)
 	require.NoError(t, err)
 	output := runSyslWithOutput(t, ".sysl",
 		"transform", "../../tests/simple.sysl", "--script", scriptPath)
-	assert.Equal(t, "{'App1', 'App2'}", output)
+	assert.Equal(t, transformOutput, output)
+}
+
+func TestTransformArraiz(t *testing.T) {
+	t.Parallel()
+
+	// FIXME: windows CI test times out in this test.
+	if runtime.GOOS == "windows" {
+		return
+	}
+
+	scriptPath := path.Join(t.TempDir(), "transform.arrai")
+	err := os.WriteFile(scriptPath, []byte(transformScript), 0600)
+	require.NoError(t, err)
+
+	ctx := ctxfs.SourceFsOnto(context.Background(), afero.NewOsFs())
+	ctx = ctxrootcache.WithRootCache(ctx)
+
+	b := &bytes.Buffer{}
+	bundledScriptsPath := path.Join(t.TempDir(), "transform.arraiz")
+	require.NoError(t, bundle.BundledScriptsTo(ctx, scriptPath, b, bundledScriptsPath))
+
+	output := runSyslWithOutput(t, ".sysl",
+		"transform", "../../tests/simple.sysl", "--script", bundledScriptsPath)
+	assert.Equal(t, transformOutput, output)
 }
 
 // runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch
