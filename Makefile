@@ -35,7 +35,7 @@ tidy:
 	make -C docs tidy
 
 # Generates intermediate files for build.
-generate: internal/arrai/bindata.go
+generate: internal/arrai/bindata.go plugins
 gen: generate
 
 test: test-arrai coverage
@@ -79,6 +79,10 @@ build-sysl-version-diff-docker: generate
 # Assumes that every arr.ai script depends on every other arr.ai script.
 %.arraiz: %.arrai $(shell find . -name '*.arrai')
 	$(ARRAI) bundle $< > $@
+
+.PHONY: plugins
+plugins: \
+		pkg/plugins/integration_model_plugin.arraiz
 
 internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \

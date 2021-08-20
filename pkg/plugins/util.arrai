@@ -1,0 +1,51 @@
+let mergeRelMod = \mod1 \mod2
+    mod1 +> (
+        anno+>: (
+            app   |: mod2.anno?.app?:{},
+            ep    |: mod2.anno?.ep?:{},
+            event |: mod2.anno?.event?:{},
+            field |: mod2.anno?.field?:{},
+            param |: mod2.anno?.param?:{},
+            mixin |: mod2.anno?.mixin?:{},
+            stmt  |: mod2.anno?.stmt?:{},
+            type  |: mod2.anno?.type?:{},
+            view  |: mod2.anno?.view?:{},
+        ),
+        src+>: (
+            app   |: mod2.src?.app?:{},
+            ep    |: mod2.src?.ep?:{},
+            event |: mod2.src?.event?:{},
+            field |: mod2.src?.field?:{},
+            param |: mod2.src?.param?:{},
+            mixin |: mod2.src?.mixin?:{},
+            stmt  |: mod2.src?.stmt?:{},
+            type  |: mod2.src?.type?:{},
+            view  |: mod2.src?.view?:{},
+        ),
+        tag+>: (
+            app   |: mod2.tag?.app?:{},
+            ep    |: mod2.tag?.ep?:{},
+            event |: mod2.tag?.event?:{},
+            field |: mod2.tag?.field?:{},
+            param |: mod2.tag?.param?:{},
+            mixin |: mod2.tag?.mixin?:{},
+            stmt  |: mod2.tag?.stmt?:{},
+            type  |: mod2.tag?.type?:{},
+            view  |: mod2.tag?.view?:{},
+        ),
+        app   |: mod2.app?:{},
+        enum  |: mod2.enum?:{},
+        ep    |: mod2.ep?:{},
+        event |: mod2.event?:{},
+        field |: mod2.field?:{},
+        mixin |: mod2.mixin?:{},
+        param |: mod2.param?:{},
+        stmt  |: mod2.stmt?:{},
+        table |: mod2.table?:{},
+        type  |: mod2.type?:{},
+        view  |: mod2.view?:{},
+        alias |: mod2.alias?:{},
+    )
+;
+
+(:mergeRelMod)

@@ -1,0 +1,11 @@
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+
+let (:mergeRelMod, ...) = //{./util};
+
+let (:integrationModel, ...) = //{/pkg/arrai/diagrams/integration_model};
+
+\(:models, ...)
+    let mergedRelMods = reduce(models, \acc \(?:rel:(), ...) mergeRelMod(acc, rel), ());
+    let (:nodes, :edges) = integrationModel(mergedRelMods, ());
+    let nodes = nodes => \(:id, :parentId, ...rest) (rest +> (key: id, group: parentId));
+    (output: //encoding.json.encoder((strict: false, indent: '  '))((:nodes, :edges)))
