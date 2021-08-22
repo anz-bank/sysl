@@ -6,7 +6,7 @@ let (:renderTypeUsageWithInlineAnno, ...) = //{/pkg/arrai/sysl-renderer/sysl_mod
 let primitive = \p (primitive: p);
 let typeRef = \(?:appName:'', ?:path:[]) (type_ref: (ref: (appname: appNameToAppNameMessage(appName), :path)));
 
-let (:syslSafeName, :syslAttrs, :unescape, ...) = //{./util};
+let (:syslSafeName, :syslAttrs, :shallowEscape, :syslSafePath, ...) = //{./util};
 
 let rec schemaToTypeMessage = \t
     let type = cond t {
@@ -49,7 +49,7 @@ let rec schemaToTypeMessage = \t
             # FIXME: allows more types of references
             cond //seq.split('/', ref) {
                 # only define local types so no need for appName in the ref
-                ['#', 'components', 'schemas', type]: typeRef((path: [unescape(type)])),
+                ['#', 'components', 'schemas', type]: typeRef((path: [shallowEscape(type)])),
             },
         _: primitive('STRING'),
     };
@@ -195,7 +195,7 @@ let pathToEndpointMessage = \(:pathName, :verb, :ep)
         docstring: ep('description')?.s:{},
         rest_params: (
             method: //str.upper(verb),
-            path: //seq.trim_suffix('/', unescape(pathName)),
+            path: //seq.trim_suffix('/', syslSafePath(pathName)),
             url_param: path,
             query_param: query,
         )
@@ -210,7 +210,7 @@ let pathsToEndpointMessages = \paths (
 ) -> //rel.union(.)
 ;
 
-let componentsSchemasToTypesMessages = \schemas schemas => (@: unescape(.@), @value: schemaToTypeMessage(.@value));
+let componentsSchemasToTypesMessages = \schemas schemas => (@: shallowEscape(.@), @value: schemaToTypeMessage(.@value));
 
 # TODO: handle other types definitions outside of schemas.
 let oapiToTypesMessages = \oapi

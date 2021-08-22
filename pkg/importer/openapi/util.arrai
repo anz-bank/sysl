@@ -1,19 +1,69 @@
 let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 
+# TODO: put this in arrai/contrib or in stdlib.
+let asciiToHex = \char
+    let _ = (char < 0 || char > 127) && //error($`${char} not between 0 and 127`);
+    let hex = \num
+        cond {
+            (0 <= num <= 9): $`${num}`, # 0-9
+            (10 <= num <= 15): {(@: 0, @char: 55 + num)}, # A-F
+            _: //error($`${num} not between 0 and 15`),
+        }
+    ;
+    $`${hex(char // 16)}${hex(char % 16)}`
+;
+
+let hexToAscii = \hexCode
+    let hexCode = //seq.trim_prefix('%', hexCode rank (:.@));
+    let _ = cond {hexCode count != 2: //error($`hex code must be 2 digits ${hexCode}`)};
+    let dec = \hexDigitInAscii
+        cond {
+            65 <= hexDigitInAscii <= 70: hexDigitInAscii - 55, # A - F in ascii
+            48 <= hexDigitInAscii <= 57: hexDigitInAscii - 48, # 0 - 9 in ascii
+            _:                           //error($`incorrect hex code: ${{(@: 0, @char: hexDigitInAscii)}}`),
+        }
+    ;
+    16 * dec(hexCode(0)) + dec(hexCode(1))
+;
+
+let escape =
+    let nonSpecialChar = //re.compile(`[-a-zA-Z0-9_]`).match;
+    let escapedURL = \acc \(:@char, ...)
+        let char = {(@: 0, :@char)};
+        let newChar = cond {
+            nonSpecialChar(char): char,
+            _:                    $`%${asciiToHex(@char)}`,
+        };
+        acc ++ newChar
+    ;
+    \chars reduce(chars orderby ., escapedURL, '')
+;
+
 let unescape =
-    let chars = {
-        |char, replace|
-        (`.`, `%2E`),
-        (`:`, `%3A`),
-        (`+`, `%2B`),
-        (`$`, `%24`),
-    };
-    let chars = chars orderby . >> //seq.sub(.char, .replace);
-    reduce(chars, \acc \replace replace(acc))
+    //re.compile(`%[0-9a-fA-F][0-9a-fA-F]`).subf(\match {(@: 0, @char: hexToAscii(match))});
+
+# shallowEscape only escapes all characters while ignoring url encoded characters.
+let shallowEscape = \str escape(unescape(str));
+
+# syslSafePath converts escapedURL openapi path back to sysl safe path. Retains
+# `/`, `{`, and `}`.
+let syslSafePath =
+    let sub =
+        let charsToKeep = {
+            |char, replace|
+            (`%7B`, '{'),
+            (`%7D`, '}'),
+            (`%2F`, '/'),
+        };
+        reduce(charsToKeep orderby ., \acc \(:char, :replace) //seq.sub(char, replace, acc))
+    ;
+    \path sub(shallowEscape(path))
 ;
 
 let syslSafeName = \name
-    let name = unescape(//re.compile('[-/{} ]+').sub('_', name));
+    let name = //re.compile('[-/{} ]+').sub('_', name);
+    # this is to avoid double escaping.
+    let name = shallowEscape(name);
     let keywords = {
         'int',
         'int32',
@@ -41,5 +91,10 @@ let httpVerbs = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'tr
     :syslSafeName,
     :syslAttrs,
     :httpVerbs,
+    :escape,
     :unescape,
+    :shallowEscape,
+    :asciiToHex,
+    :hexToAscii,
+    :syslSafePath,
 )

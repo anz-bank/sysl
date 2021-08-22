@@ -44,7 +44,16 @@ TestApp "Simple":
         body <: get_deep_deeeeeeep_test%2Estuff_200_resp_type_body?:
             @json_tag = "body"
     
-    !alias get_deep_deeeeeeep_test%2Estuff_200_resp_type_body:
+    !union get_deep_deeeeeeep_test%2Estuff_200_resp_type_body:
+        get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_%2A
+        get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_json
+    
+    !alias get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_%2A:
+        @mediatype = "application/*"
+        SimpleObj2
+    
+    !alias get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_json:
+        @mediatype = "application/json"
         SimpleObj
     
     !type get_test%2Bplus_200_resp_type:

@@ -35,6 +35,9 @@ paths:
         200:
           description: "200 OK"
           content:
+            application/*:
+              schema:
+                $ref: "#/components/schemas/SimpleObj2"
             application/json:
               schema:
                 $ref: "#/components/schemas/SimpleObj"
