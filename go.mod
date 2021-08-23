@@ -9,7 +9,7 @@ require (
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20210521184019-c5ad59b459ec
 	github.com/anz-bank/go-bindata v3.22.0+incompatible
-	github.com/anz-bank/golden-retriever v0.5.0
+	github.com/anz-bank/golden-retriever v0.6.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.38
 	github.com/arr-ai/arrai v0.283.0

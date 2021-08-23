@@ -89,6 +89,8 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 		pc.RootIsFound = false
 	}
 
+	logrus.Debugf("root is set to: %s\n", pc.Root)
+
 	pc.Fs = syslutil.NewChrootFs(fs, pc.Root)
 
 	return nil
