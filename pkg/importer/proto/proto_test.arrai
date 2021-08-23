@@ -1,0 +1,252 @@
+let (:evalConstant, :parseFile, ...) = //{./proto};
+
+(
+    constant: (
+        string: 
+            let constant = (strLit: ('': [153\'"', 154\'test', 231\'"']));
+            let expected = (s: "test");
+            let actual = evalConstant(constant);
+            //test.assert.equal(expected, actual),
+        decimal:
+            let constant = (decimalLit: ('': 231\'2'));
+            let expected = (d: 2);
+            let actual = evalConstant(constant);
+            //test.assert.equal(expected, actual),
+        octal:
+            let constant = (octalLit: ('': 181\'0'));
+            let expected = (o: 0);
+            let actual = evalConstant(constant);
+            //test.assert.equal(expected, actual),
+        bool:
+            let constant = (boolLit: ('': 321\'true'));
+            let expected = (b: true);
+            let actual = evalConstant(constant);
+            //test.assert.equal(expected, actual),
+        object:
+            let constant = (object: (objectField: [('': 1390\':', objectKey: (constant: (fullIdent: (ident: [('': [1387\'g', 1388\'et'])]))), objectValue: (constant: (strLit: ('': [1392\'"', 1393\'/api/accounts', 1415\'"']))))]));
+            let expected = (fields: {"get": (s: "/api/accounts")});
+            let actual = evalConstant(constant);
+            //test.assert.equal(expected, actual),
+        array:
+            let constant = (array: ('': [1497\'[', 1543\']'], arrayItem: [(constant: (strLit: ('': [1498\'"', 1499\'string', 1542\'"']))), (constant: (intLit: (decimalLit: ('': 235\'2'))))]));
+            let expected = [(s: "string"), (d: 2)];
+            let actual = evalConstant(constant);
+            //test.assert.equal(expected, actual),
+    ),
+
+    parse: (
+
+        package: (
+            simple:
+                let file = parseFile(`syntax = "proto3"; package foo.bar.baz;`);
+                let expected = 'foo.bar.baz';
+                let actual = file.package;
+                //test.assert.equal(expected, actual),
+
+            none:
+                let file = parseFile(`syntax = "proto3";`);
+                let expected = {};
+                let actual = file.package;
+                //test.assert.equal(expected, actual),
+        ),
+
+        imports: (
+            single: 
+                let file = parseFile(`syntax = "proto3"; import "other.proto";`);
+                let expected = {'other.proto':()};
+                let actual = file.imports;
+                //test.assert.equal(expected, actual),
+
+            multiple:
+                let file = parseFile(`syntax = "proto3"; import public "one.proto"; import "two.proto";`);
+                let expected = {'one.proto': ( modifier:'public'), 'two.proto': ()};
+                let actual = file.imports;
+                //test.assert.equal(expected, actual),
+        ),
+
+        options: (
+            single: 
+                let file = parseFile(`syntax = "proto3"; option java_package = "com.example.foo";`);
+                let expected = {'java_package': (s: 'com.example.foo')};
+                let actual = file.options;
+                //test.assert.equal(expected, actual),
+
+            full: 
+                let file = parseFile(`syntax = "proto3"; option (foo.java_package).bar = "com.example.foo"; option (foo.java_package).baz = "true";`);
+                let expected = {'(foo.java_package).bar': (s: 'com.example.foo'), '(foo.java_package).baz': (s: 'true')};
+                let actual = file.options;
+                //test.assert.equal(expected, actual),
+
+        ),
+
+        enum: (
+            single: 
+                let file = parseFile(`syntax = "proto3"; enum something { option java_package = "com.example.foo"; }`);
+                let expected = {'something': (options: {"java_package": (s: "com.example.foo")})};
+                let actual = file.enums;
+                //test.assert.equal(expected, actual),
+        ),
+
+        messages: (
+            single:
+                let file = parseFile(`syntax = "proto3"; message Outer { option (my_option).a = true; }`);
+                let expected = {"Outer": (options: {"(my_option).a": (b: true)})};
+                let actual = file.messages;
+                //test.assert.equal(expected, actual),
+
+            nested:
+                let file = parseFile(`syntax = "proto3"; message Outer { option (my_option).a = true; message Inner { int64 ival = 1; } }`);
+                let expected = {
+                        "Outer": (messages: {"Inner": (fields: {"ival":( type: "int64", value: (d: 1))})}, options: {"(my_option).a": (b: true)})
+                    };                
+                let actual = file.messages;
+                //test.assert.equal(expected, actual),
+        ),
+
+        services: (
+            rpcWithoutOptions:
+                let file = parseFile(`syntax = "proto3"; service SearchService { rpc Search (SearchRequest) returns (SearchResponse); }`);
+                let expected = {
+                            "SearchService": (
+                                rpcs: {
+                                    "Search": (
+                                        in: "SearchRequest",
+                                        out: "SearchResponse"
+                                    )
+                                }
+                            )
+                    };      
+                let actual = file.services;
+                //test.assert.equal(expected, actual),
+            rpcWithOptions:
+                let file = parseFile(`syntax = "proto3"; service Example {rpc Search(SearchRequest) returns (SearchResponse) {
+                                        option (google.api.http) = {get: "/example/search"};}}`);
+                let expected = {
+                           "Example": (
+                                rpcs: {
+                                    "Search": (
+                                        in: "SearchRequest",
+                                        options: {
+                                            "(google.api.http)": (fields: {"get": (s: "/example/search")})
+                                        },
+                                        out: "SearchResponse"
+                                    )
+                                }
+                           )
+                    };      
+                let actual = file.services;
+                //test.assert.equal(expected, actual),
+        ),
+        file: (
+            proto2:
+                let actual = parseFile(`
+                                        syntax = "proto2";
+                                        import public "other.proto";
+                                        option java_package = "com.example.foo";
+                                        enum EnumAllowingAlias {
+                                        option allow_alias = true;
+                                            UNKNOWN = 0;
+                                            STARTED = 1;
+                                            RUNNING = 2 [(custom_option) = "hello world"];
+                                        }
+                                        message Outer {
+                                            option (my_option).a = true;
+                                            message Inner {   // Level 2
+                                                required int64 ival = 1;
+                                            }
+                                            repeated Inner inner_message = 2;
+                                            optional EnumAllowingAlias enum_field = 3;
+                                            map<int32, string> my_map = 4;
+                                            extensions 20 to 30;
+                                        }`);
+                let expected =  (
+                                    enums: {
+                                        'EnumAllowingAlias': (
+                                            fields: {
+                                                'RUNNING': (
+                                                    options: {'(custom_option)': (s: 'hello world')},
+                                                    value: (d: 2,),
+                                                ),
+                                                'STARTED': (value: (d: 1)),
+                                                'UNKNOWN': (value: (o: 0,))
+                                            },
+                                            options: {'allow_alias': (b: true)}
+                                        )
+                                    },
+                                    imports: {'other.proto': (modifier: 'public')},
+                                    messages: {
+                                        'Outer': (
+                                            fields: {
+                                                'enum_field': (type: 'EnumAllowingAlias',value: (d: 3)),
+                                                'inner_message': (type: 'Inner',value: (d: 2)),
+                                            },
+                                            mapFields: {'my_map': (keyType: 'int32', type: 'string', value: (d: 4))},
+                                            messages: {'Inner': (fields: {'ival': (type: 'int64', value: (d: 1))}),},
+                                            options: {'(my_option).a': ( b: true)}
+                                        ),
+                                    },
+                                    options: {'java_package': (s: 'com.example.foo')},
+                                    package: {},
+                                    services: {},
+                                    syntax: 'proto2',
+                                );
+                //test.assert.equal(expected, actual),
+            proto3:
+                let actual = parseFile(`
+                                        syntax = "proto3";
+                                        import public "other.proto";
+                                        option java_package = "com.example.foo";
+                                        enum EnumAllowingAlias {
+                                        option allow_alias = true;
+                                        UNKNOWN = 0;
+                                        STARTED = 1;
+                                        RUNNING = 2 [(custom_option) = "hello world"];
+                                        }
+                                        message Outer {
+                                        option (my_option).a = true;
+                                        message Inner {   // Level 2
+                                            int64 ival = 1;
+                                        }
+                                        repeated Inner inner_message = 2;
+                                        EnumAllowingAlias enum_field =3;
+                                        map<int32, string> my_map = 4;
+                                        }`);
+                let expected =  (
+                                    enums: {
+                                        'EnumAllowingAlias': (
+                                            fields: {
+                                                'RUNNING': (
+                                                    options: {'(custom_option)': (s: 'hello world')},
+                                                    value: (d: 2)
+                                                ),
+                                                'STARTED': (value: (d: 1)),
+                                                'UNKNOWN': (value: (o: 0,))
+                                            },
+                                            options: {'allow_alias': (b: true)}
+                                        ),
+                                    },
+                                    imports: {'other.proto': (modifier: 'public')},
+                                    messages: {
+                                        'Outer': (
+                                            fields: {
+                                                'enum_field': (type: 'EnumAllowingAlias', value: (d: 3)),
+                                                'inner_message': (type: 'Inner', value: (d: 2))
+                                            },
+                                            mapFields: {
+                                                'my_map': (keyType: 'int32', type: 'string', value: (d: 4))
+                                            },
+                                            messages: {
+                                                'Inner': (fields: {'ival': (type: 'int64', value: (d: 1))}),
+                                            },
+                                            options: {'(my_option).a': (b: true)},
+                                        ),
+                                    },
+                                    options: {'java_package': (s: 'com.example.foo')},
+                                    package: {},
+                                    services: {},
+                                    syntax: 'proto3',
+                                );
+                //test.assert.equal(expected, actual)
+        )
+    )
+)
