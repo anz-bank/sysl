@@ -29,17 +29,16 @@ Client:
 
 The resulting model in `client.sysl` will include both the `Server` and `Client` apps.
 
-
 Once a Module is imported, it doesn't matter where it came from. It can be local or remote, with any directory structure or filename.
 
 Imported files can even be non-Sysl files, if Sysl knows how to import them. For example, you can `import` a `.json` file containing an OpenAPI spec, and it will be automatically converted to Sysl.
 
 If the imported file is a `.sysl` file, you can omit the `.sysl` extension from the import location.
 
-
 ### Local relative file
 
 Imagine that you have `server.sysl`, `client.sysl` and `deps.sysl` files structured as below:
+
 ```
 .
 ├── server.sysl
@@ -75,7 +74,6 @@ Deps:
 
 The resulting model in `client.sysl` will include three apps: `Server`, `Client` and `Deps`.
 
-
 ### Local absolute file
 
 If the imported are in the same project but outside of current folder, you must have at least a common root directory and `import /path/from/root`.
@@ -103,7 +101,6 @@ Client:
   Login:
     Server <- Login
 ```
-
 
 ### Remote file
 
@@ -162,7 +159,6 @@ import foreign_import_swagger.yaml as Foreign :: App
 ```
 
 Refer to the [`sysl import`](https://sysl.io/docs/cmd/cmd-import/#usage) command for all supported non-Sysl types. (Note that not all of them can be imported with the `import` keyword.)
-
 
 ## See also
 

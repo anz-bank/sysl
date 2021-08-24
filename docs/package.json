@@ -9,12 +9,12 @@
     "deploy": "docusaurus deploy",
     "spellcheck": "pyspelling -c .spellcheck.yml",
     "sort": "sort -f -o .wordlist.txt .wordlist.txt",
-    "format": "yarn prettier --write ."
+    "tidy": "yarn prettier --write ."
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.73",
-    "@docusaurus/plugin-google-analytics": "^2.0.0-alpha.73",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.73",
+    "@docusaurus/core": "^2.0.0-beta.4",
+    "@docusaurus/plugin-google-analytics": "^2.0.0-beta.4",
+    "@docusaurus/preset-classic": "^2.0.0-beta.4",
     "classnames": "^2.3.1",
     "elliptic": "^6.5.4",
     "react": "^17.0.2",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "markdown-link-check": "^3.8.7",
-    "prettier": "2.2.1"
+    "prettier": "2.3.2"
   },
   "browserslist": {
     "production": [

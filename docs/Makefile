@@ -18,7 +18,7 @@ lint:
 	find ./{blog,docs} -name '*.md' | xargs -n1 npx markdown-link-check --progress --config=.md-link-check-config.json
 
 tidy:
-	yarn format
+	yarn tidy
 
 update:
 	npx npm-check-updates -u && yarn install
