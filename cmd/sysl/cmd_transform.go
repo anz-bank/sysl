@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/anz-bank/sysl/pkg/arrai/relmod"
@@ -49,6 +50,15 @@ func (p *transformCmd) Execute(args cmdutils.ExecuteArgs) error {
 	input, err := buildTransformInput(args)
 	if err != nil {
 		return err
+	}
+
+	// Expands '~' since it's not automatically expanded by the shell like '$ENV' notations are.
+	if strings.HasPrefix(p.transformFile, "~/") {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+		p.transformFile = homeDir + p.transformFile[1:]
 	}
 
 	// If transform file is a local file (stat doesn't fail), read from it. Otherwise, assume it's a
