@@ -245,6 +245,34 @@ apps: {
   }
   long_name: "User Preference"
   attrs: {
+   key: "description"
+   value: {
+    s: "No description.\n"
+    source_context: {
+     file: "tests/preference.yaml"
+     start: {
+      line: 8
+      col: 18
+     }
+     end: {
+      line: 11
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/preference.yaml"
+     start: {
+      line: 8
+      col: 18
+     }
+     end: {
+      line: 11
+      col: 5
+     }
+    }
+   }
+  }
+  attrs: {
    key: "version"
    value: {
     s: "1.0.0"
@@ -276,6 +304,7 @@ apps: {
    key: "GET /preference"
    value: {
     name: "GET /preference"
+    docstring: "No description."
     attrs: {
      key: "patterns"
      value: {
@@ -288,28 +317,28 @@ apps: {
     }
     stmt: {
      ret: {
-      payload: "200 <: get_preference_200_resp_type"
+      payload: "200 <: Preferences [mediatype=\"application/json\"]"
      }
      source_context: {
       file: "tests/preference.yaml"
       start: {
-       line: 11
+       line: 14
        col: 12
       }
       end: {
-       line: 11
-       col: 54
+       line: 14
+       col: 68
       }
      }
      source_contexts: {
       file: "tests/preference.yaml"
       start: {
-       line: 11
+       line: 14
        col: 12
       }
       end: {
-       line: 11
-       col: 54
+       line: 14
+       col: 68
       }
      }
     }
@@ -320,22 +349,22 @@ apps: {
     source_context: {
      file: "tests/preference.yaml"
      start: {
-      line: 10
+      line: 12
       col: 8
      }
      end: {
-      line: 13
+      line: 19
       col: 5
      }
     }
     source_contexts: {
      file: "tests/preference.yaml"
      start: {
-      line: 10
+      line: 12
       col: 8
      }
      end: {
-      line: 13
+      line: 19
       col: 5
      }
     }
@@ -359,46 +388,46 @@ apps: {
      source_context: {
       file: "tests/preference.yaml"
       start: {
-       line: 13
+       line: 29
        col: 4
       }
       end: {
-       line: 16
-       col: 5
+       line: 31
+       col: 1
       }
      }
      source_contexts: {
       file: "tests/preference.yaml"
       start: {
-       line: 13
+       line: 29
        col: 4
       }
       end: {
-       line: 16
-       col: 5
+       line: 31
+       col: 1
       }
      }
     }
     source_context: {
      file: "tests/preference.yaml"
      start: {
-      line: 13
+      line: 29
       col: 4
      }
      end: {
-      line: 16
-      col: 5
+      line: 31
+      col: 1
      }
     }
     source_contexts: {
      file: "tests/preference.yaml"
      start: {
-      line: 13
+      line: 29
       col: 4
      }
      end: {
-      line: 16
-      col: 5
+      line: 31
+      col: 1
      }
     }
    }
@@ -418,22 +447,22 @@ apps: {
          source_context: {
           file: "tests/preference.yaml"
           start: {
-           line: 18
+           line: 21
            col: 24
           }
           end: {
-           line: 18
+           line: 21
            col: 40
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
-           line: 18
+           line: 21
            col: 24
           }
           end: {
-           line: 18
+           line: 21
            col: 40
           }
          }
@@ -442,22 +471,22 @@ apps: {
        source_context: {
         file: "tests/preference.yaml"
         start: {
-         line: 17
+         line: 20
          col: 8
         }
         end: {
-         line: 19
+         line: 22
          col: 9
         }
        }
        source_contexts: {
         file: "tests/preference.yaml"
         start: {
-         line: 17
+         line: 20
          col: 8
         }
         end: {
-         line: 19
+         line: 22
          col: 9
         }
        }
@@ -474,22 +503,22 @@ apps: {
          source_context: {
           file: "tests/preference.yaml"
           start: {
-           line: 20
+           line: 23
            col: 24
           }
           end: {
-           line: 20
+           line: 23
            col: 41
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
-           line: 20
+           line: 23
            col: 24
           }
           end: {
-           line: 20
+           line: 23
            col: 41
           }
          }
@@ -499,22 +528,22 @@ apps: {
        source_context: {
         file: "tests/preference.yaml"
         start: {
-         line: 19
+         line: 22
          col: 8
         }
         end: {
-         line: 21
+         line: 24
          col: 9
         }
        }
        source_contexts: {
         file: "tests/preference.yaml"
         start: {
-         line: 19
+         line: 22
          col: 8
         }
         end: {
-         line: 21
+         line: 24
          col: 9
         }
        }
@@ -531,22 +560,22 @@ apps: {
          source_context: {
           file: "tests/preference.yaml"
           start: {
-           line: 22
+           line: 25
            col: 24
           }
           end: {
-           line: 22
+           line: 25
            col: 32
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
-           line: 22
+           line: 25
            col: 24
           }
           end: {
-           line: 22
+           line: 25
            col: 32
           }
          }
@@ -555,22 +584,22 @@ apps: {
        source_context: {
         file: "tests/preference.yaml"
         start: {
-         line: 21
+         line: 24
          col: 8
         }
         end: {
-         line: 23
+         line: 26
          col: 9
         }
        }
        source_contexts: {
         file: "tests/preference.yaml"
         start: {
-         line: 21
+         line: 24
          col: 8
         }
         end: {
-         line: 23
+         line: 26
          col: 9
         }
        }
@@ -579,7 +608,17 @@ apps: {
      attr_defs: {
       key: "userId"
       value: {
-       primitive: STRING
+       type_ref: {
+        context: {
+         appname: {
+          part: "preference"
+         }
+         path: "Preferences_obj"
+        }
+        ref: {
+         path: "uuid"
+        }
+       }
        attrs: {
         key: "json_tag"
         value: {
@@ -587,22 +626,22 @@ apps: {
          source_context: {
           file: "tests/preference.yaml"
           start: {
-           line: 24
+           line: 27
            col: 24
           }
           end: {
-           line: 24
+           line: 27
            col: 32
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
-           line: 24
+           line: 27
            col: 24
           }
           end: {
-           line: 24
+           line: 27
            col: 32
           }
          }
@@ -611,22 +650,22 @@ apps: {
        source_context: {
         file: "tests/preference.yaml"
         start: {
-         line: 23
+         line: 26
          col: 8
         }
         end: {
-         line: 26
+         line: 29
          col: 5
         }
        }
        source_contexts: {
         file: "tests/preference.yaml"
         start: {
-         line: 23
-         col: 8
-        }
-        end: {
          line: 26
+         col: 8
+        }
+        end: {
+         line: 29
          col: 5
         }
        }
@@ -636,157 +675,23 @@ apps: {
     source_context: {
      file: "tests/preference.yaml"
      start: {
-      line: 16
+      line: 19
       col: 4
      }
      end: {
-      line: 24
+      line: 27
       col: 32
      }
     }
     source_contexts: {
      file: "tests/preference.yaml"
      start: {
-      line: 16
+      line: 19
       col: 4
      }
      end: {
-      line: 24
+      line: 27
       col: 32
-     }
-    }
-   }
-  }
-  types: {
-   key: "get_preference_200_resp_type"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "body"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "preference"
-         }
-         path: "get_preference_200_resp_type"
-        }
-        ref: {
-         path: "get_preference_200_resp_type_body"
-        }
-       }
-       attrs: {
-        key: "json_tag"
-        value: {
-         s: "body"
-         source_context: {
-          file: "tests/preference.yaml"
-          start: {
-           line: 28
-           col: 24
-          }
-          end: {
-           line: 28
-           col: 30
-          }
-         }
-         source_contexts: {
-          file: "tests/preference.yaml"
-          start: {
-           line: 28
-           col: 24
-          }
-          end: {
-           line: 28
-           col: 30
-          }
-         }
-        }
-       }
-       opt: true
-       source_context: {
-        file: "tests/preference.yaml"
-        start: {
-         line: 27
-         col: 8
-        }
-        end: {
-         line: 30
-         col: 5
-        }
-       }
-       source_contexts: {
-        file: "tests/preference.yaml"
-        start: {
-         line: 27
-         col: 8
-        }
-        end: {
-         line: 30
-         col: 5
-        }
-       }
-      }
-     }
-    }
-    source_context: {
-     file: "tests/preference.yaml"
-     start: {
-      line: 26
-      col: 4
-     }
-     end: {
-      line: 28
-      col: 30
-     }
-    }
-    source_contexts: {
-     file: "tests/preference.yaml"
-     start: {
-      line: 26
-      col: 4
-     }
-     end: {
-      line: 28
-      col: 30
-     }
-    }
-   }
-  }
-  types: {
-   key: "get_preference_200_resp_type_body"
-   value: {
-    type_ref: {
-     context: {
-      appname: {
-       part: "preference"
-      }
-      path: "get_preference_200_resp_type_body"
-     }
-     ref: {
-      path: "Preferences"
-     }
-    }
-    source_context: {
-     file: "tests/preference.yaml"
-     start: {
-      line: 30
-      col: 4
-     }
-     end: {
-      line: 32
-      col: 1
-     }
-    }
-    source_contexts: {
-     file: "tests/preference.yaml"
-     start: {
-      line: 30
-      col: 4
-     }
-     end: {
-      line: 32
-      col: 1
      }
     }
    }
@@ -797,7 +702,7 @@ apps: {
     line: 6
    }
    end: {
-    line: 32
+    line: 31
     col: 1
    }
   }
@@ -807,7 +712,7 @@ apps: {
     line: 6
    }
    end: {
-    line: 32
+    line: 31
     col: 1
    }
   }

@@ -4,23 +4,30 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
     /pets:
-        PATCH(patch_pets_req_body <: patch_pets_req_body_type? [~body, mediatype="application/json"]):
+        PATCH (objectRequest <: EXTERNAL_objectRequest [mediatype="application/json", ~body]):
+            | No description.
             return 200
-    
-    !alias Canine%2EDog:
-        @openapi_type = "allOf"
-        string
-    
-    !alias Feline%2ECat:
-        @openapi_type = "allOf"
-        string
-    
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type Pet:
         pet_type <: string:
             @json_tag = "pet_type"
-    
-    !alias patch_pets_req_body_type:
-        @openapi_type = "allOf"
+
+    !alias EXTERNAL_Canine%2EDog:
+        string
+
+    !alias EXTERNAL_Feline%2ECat:
+        string
+
+    !alias EXTERNAL_object:
+        string
+
+    !alias EXTERNAL_objectRequest:
         string

@@ -4,23 +4,21 @@
 ##                                      ##
 ##########################################
 
-TestApp "Goat CRUD API":
+TestApp "Goat CRUD API" [package="com.example.package"]:
     @version = "1.2.3"
-    
+    @description =:
+        | No description.
+
     /goat/get-goats:
         GET:
             | Gotta get goats.
-            return 200 <: get_goat_get_goats_200_resp_type
-    
+            return 200 <: sequence of Goat [mediatype="application/json"]
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type Goat:
         birthday <: date?:
             @json_tag = "birthday"
         name <: string?:
             @json_tag = "name"
-    
-    !type get_goat_get_goats_200_resp_type:
-        body <: get_goat_get_goats_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !alias get_goat_get_goats_200_resp_type_body:
-        sequence of Goat

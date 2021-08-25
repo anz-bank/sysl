@@ -4,24 +4,24 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
-    /docs/{docId <: bytes}:
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
+    /docs/{docId<:bytes}:
         GET:
-            return 200 <: get_docs_docId__200_resp_type
+            | No description.
+            return 200 <: SimpleObj [mediatype="application/json"]
             return 400 <: bytes [mediatype="application/json"]
             return 500
-    
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type SimpleObj:
         name <: string?:
             @json_tag = "name"
-    
+
     !type SimpleObj2:
-        name <: any?:
+        name <: SimpleObj?:
             @json_tag = "name"
-    
-    !type get_docs_docId__200_resp_type:
-        body <: get_docs_docId__200_resp_type_body?:
-            @json_tag = "body"
-    
-    !alias get_docs_docId__200_resp_type_body:
-        SimpleObj

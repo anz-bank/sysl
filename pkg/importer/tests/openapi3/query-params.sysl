@@ -4,7 +4,14 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
     /test:
-        GET?key=string?&min_date=string:
+        GET ?key=string?&min_date=string:
+            | No description.
             return 200
+
+    #---------------------------------------------------------------------------
+    # definitions

@@ -4,10 +4,15 @@
 ##                                      ##
 ##########################################
 
-TestApp "Sample API":
-    @description = "API description in Markdown."
+TestApp "Sample API" [package="com.example.package"]:
     @version = "1.0.0"
-    
-    /users/{id <: int}:
-        GET(request_id <: string [~header, description="the request ID.", name="request-id"]) ?metadata=bool?:
+    @description =:
+        | API description in Markdown.
+
+    /users/{id<:int}:
+        GET (request_id <: string [~header, name="request-id"]) ?metadata=bool?:
+            | No description.
             return 200
+
+    #---------------------------------------------------------------------------
+    # definitions

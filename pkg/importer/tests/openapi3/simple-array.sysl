@@ -4,10 +4,16 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
-    !alias TopLevelArray:
-        sequence of TopLevelArray_obj
-    
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type TopLevelArray_obj:
         name <: string?:
             @json_tag = "name"
+
+    !alias TopLevelArray:
+        sequence of TopLevelArray_obj

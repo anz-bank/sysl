@@ -4,36 +4,33 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
     /test:
         GET:
-            return 200 <: get_test_200_resp_type
+            | No description.
+            return 200 <: _test_200
             return 400
             return 401
             return 500
             return 503
             return 504
-    
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type SimpleObj:
         name <: string?:
             @json_tag = "name"
-    
+
     !type SimpleObj2:
-        name <: any?:
+        name <: SimpleObj?:
             @json_tag = "name"
-    
-    !type get_test_200_resp_type:
-        body <: get_test_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !union get_test_200_resp_type_body:
-        get_test_200_resp_type_body_application_json
-        get_test_200_resp_type_body_application_pdf
-    
-    !alias get_test_200_resp_type_body_application_json:
-        @mediatype = "application/json"
-        SimpleObj
-    
-    !alias get_test_200_resp_type_body_application_pdf:
-        @mediatype = "application/pdf"
-        bytes
+
+    !type _test_200:
+        SimpleObj <: SimpleObj [mediatype="application/json"]:
+            @json_tag = "SimpleObj"
+        bytes_ <: bytes [mediatype="application/pdf"]:
+            @json_tag = "bytes"

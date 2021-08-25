@@ -4,14 +4,18 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
     /test:
-        POST(key <: int? [~header, name="key"], min_date <: string [~header, name="min_date"], csrftoken <: string? [~cookie, name="csrftoken"], post_test_req_body <: post_test_req_body_type? [~body, mediatype="application/json"]):
+        POST (SimpleObjRequest <: SimpleObj [mediatype="application/json", ~body], key <: int? [~header, name="key"], min_date <: string [~header, name="min_date"], csrftoken <: string? [~cookie, name="csrftoken"]):
+            | No description.
             return 200
-    
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type SimpleObj:
         name <: string?:
             @json_tag = "name"
-    
-    !alias post_test_req_body_type:
-        SimpleObj

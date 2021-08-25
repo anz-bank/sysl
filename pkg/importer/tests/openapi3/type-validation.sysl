@@ -4,7 +4,13 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type Postcode:
-        name <: string?:
+        name <: string? [regex="%5Cd{4}"]:
             @json_tag = "name"

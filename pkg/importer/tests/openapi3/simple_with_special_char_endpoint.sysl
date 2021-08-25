@@ -4,95 +4,61 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple":
+TestApp "Simple" [package="com.example.package"]:
+    @description =:
+        | No description.
+
     /deep/deeeeeeep/test%2Estuff:
         GET:
-            return 200 <: get_deep_deeeeeeep_test%2Estuff_200_resp_type
-    
+            | No description.
+            return 200 <: _deep_deeeeeeep_test%2Estuff_200
+
     /test%2Bplus:
         GET:
-            return 200 <: get_test%2Bplus_200_resp_type
-    
+            | No description.
+            return 200 <: SimpleObj [mediatype="application/json"]
+
     /test%2Estuff:
         GET:
-            return 200 <: get_test%2Estuff_200_resp_type
-    
+            | No description.
+            return 200 <: SimpleObj [mediatype="application/json"]
+
     /test%3Acolon:
         GET:
-            return 200 <: get_test%3Acolon_200_resp_type
-    
+            | No description.
+            return 200 <: SimpleObj [mediatype="application/json"]
+
     /withHeaders%3AandSpecialChars:
         GET:
-            return 200 <: get_withHeaders%3AandSpecialChars_200_resp_type
-            return 404 <: get_withHeaders%3AandSpecialChars_404_resp_type
-    
+            | No description.
+            return 200 <: SimpleObj [mediatype="application/json"]
+            return 404 <: _withHeaders%3AandSpecialChars_404
+
+    #---------------------------------------------------------------------------
+    # definitions
+
     !type Error:
         code <: int?:
             @json_tag = "code"
         description <: string?:
             @json_tag = "description"
-    
+
     !type SimpleObj:
         name <: string?:
             @json_tag = "name"
-    
+
     !type SimpleObj2:
-        name <: any?:
+        name <: SimpleObj?:
             @json_tag = "name"
-    
-    !type get_deep_deeeeeeep_test%2Estuff_200_resp_type:
-        body <: get_deep_deeeeeeep_test%2Estuff_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !union get_deep_deeeeeeep_test%2Estuff_200_resp_type_body:
-        get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_%2A
-        get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_json
-    
-    !alias get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_%2A:
-        @mediatype = "application/*"
-        SimpleObj2
-    
-    !alias get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_json:
-        @mediatype = "application/json"
-        SimpleObj
-    
-    !type get_test%2Bplus_200_resp_type:
-        body <: get_test%2Bplus_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !alias get_test%2Bplus_200_resp_type_body:
-        SimpleObj
-    
-    !type get_test%2Estuff_200_resp_type:
-        body <: get_test%2Estuff_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !alias get_test%2Estuff_200_resp_type_body:
-        SimpleObj
-    
-    !type get_test%3Acolon_200_resp_type:
-        body <: get_test%3Acolon_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !alias get_test%3Acolon_200_resp_type_body:
-        SimpleObj
-    
-    !type get_withHeaders%3AandSpecialChars_200_resp_type:
-        body <: get_withHeaders%3AandSpecialChars_200_resp_type_body?:
-            @json_tag = "body"
-    
-    !alias get_withHeaders%3AandSpecialChars_200_resp_type_body:
-        SimpleObj
-    
-    !type get_withHeaders%3AandSpecialChars_404_resp_type:
-        body <: get_withHeaders%3AandSpecialChars_404_resp_type_body?:
-            @json_tag = "body"
-        header <: get_withHeaders%3AandSpecialChars_404_resp_type_header?:
-            @json_tag = "header"
-    
-    !alias get_withHeaders%3AandSpecialChars_404_resp_type_body:
-        Error
-    
-    !type get_withHeaders%3AandSpecialChars_404_resp_type_header:
-        content_type <: string?:
+
+    !type _deep_deeeeeeep_test%2Estuff_200:
+        SimpleObj <: SimpleObj [mediatype="application/json"]:
+            @json_tag = "SimpleObj"
+        SimpleObj2 <: SimpleObj2 [mediatype="application/*"]:
+            @json_tag = "SimpleObj2"
+
+    !type _withHeaders%3AandSpecialChars_404:
+        Error <: Error [mediatype="application/json"]:
+            @json_tag = "Error"
+        content-type <: string [~header]:
             @json_tag = "content-type"
