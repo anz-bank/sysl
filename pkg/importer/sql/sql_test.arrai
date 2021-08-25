@@ -82,6 +82,21 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                 )}
             ,
         ),
+        unique: (
+            unique_key:
+                {:macro:CREATE TABLE t (c INT, UNIQUE KEY name (c)):}.entities
+                --- {(
+                    unique_keys: {(
+                        constraint_name: 'name',
+                        unique_keys: {'c'},
+                    )}
+                )}
+            ,
+            key:
+                {:macro:CREATE TABLE t (c INT, KEY name (c)):}.entities =
+                {:macro:CREATE TABLE t (c INT, UNIQUE KEY name (c)):}.entities
+            ,
+        ),
         interleave: (
             simple:
                 {:macro:CREATE TABLE t (c INT64) PRIMARY KEY(c), INTERLEAVE IN PARENT p:}.entities
@@ -101,7 +116,19 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
     ),
 
     alter_table: (
-        owner_to: let s = {:macro:ALTER TABLE t OWNER TO local:}; s = emptyModel
+        owner_to: let s = {:macro:ALTER TABLE t OWNER TO local:}; s = emptyModel,
+        type:
+            let s = {:macro:CREATE TABLE t (c INT); ALTER TABLE t MODIFY COLUMN c STRING:};
+            (s.entities single).attributes(0).type = 'string'
+        ,
+        type_without_column:
+            {:macro:CREATE TABLE t (c INT); ALTER TABLE t MODIFY c STRING:} =
+            {:macro:CREATE TABLE t (c INT); ALTER TABLE t MODIFY COLUMN c STRING:}
+        ,
+        set_not_null:
+            let s = {:macro:CREATE TABLE t (c INT); ALTER TABLE t MODIFY COLUMN c SET NOT NULL:};
+            (s.entities single).attributes(0).nullable = false
+        ,
     ),
 
     index: (

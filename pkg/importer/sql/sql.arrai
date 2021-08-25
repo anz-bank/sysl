@@ -42,7 +42,7 @@ create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name 
                         pks_outer=(pk "(" key_parts ")")?
                         ("," cluster)*; //# Spanner
 table_constraint    -> ("CONSTRAINT" constraint_name)? (unique | fk | pks=(pk "(" key_parts ")"));
-unique              -> "UNIQUE" ("KEY" key_name=name)? "(" column_name:"," ")";
+unique              -> "UNIQUE"? ("KEY" key_name=name)? "(" column_name:"," ")";
 fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")"
                        "REFERENCES" foreign=(table_prefix? table_name "(" column_name:"," ")")
                        on_delete? on_update?;
@@ -100,7 +100,7 @@ table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name (attr_type
                      | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name)
                      | OWNER_TO        = ("OWNER" "TO" name)
                      | drop_index;
-attr_alteration     -> ("ALTER" | "MODIFY") "COLUMN" column_name
+attr_alteration     -> ("ALTER" | "MODIFY") "COLUMN"? column_name
                        (action=("SET" | "DROP") NOT_NULL | "SET" (options_def | default) | "TYPE"? attr_type);
 
 //# Spanner
@@ -330,7 +330,10 @@ let evalForeignKeyConstraint = \parsed
     );
 
 let evalUniqueConstraint = \parsed (
-    constraint_name: cond parsed.constraint_name?:{} {('': name): name rank (:.@)},
+    constraint_name: cond parsed {
+        (constraint_name: ('': name), ...): name rank (:.@),
+        (unique: (key_name: (name: ('': name), ...), ...), ...): name rank (:.@),
+    },
     unique_keys: parsed.unique.column_name => (.@item.'' rank (:.@))
 );
 
