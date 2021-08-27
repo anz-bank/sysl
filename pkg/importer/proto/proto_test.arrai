@@ -39,7 +39,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto};
         package: (
             simple:
                 let file = parseFile(`syntax = "proto3"; package foo.bar.baz;`);
-                let expected = 'foo.bar.baz';
+                let expected = {'foo.bar.baz': ()};
                 let actual = file.package;
                 //test.assert.equal(expected, actual),
 
@@ -53,7 +53,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto};
         imports: (
             single: 
                 let file = parseFile(`syntax = "proto3"; import "other.proto";`);
-                let expected = {'other.proto':()};
+                let expected = {'other.proto': ()};
                 let actual = file.imports;
                 //test.assert.equal(expected, actual),
 
@@ -143,51 +143,70 @@ let (:evalConstant, :parseFile, ...) = //{./proto};
                                         syntax = "proto2";
                                         import public "other.proto";
                                         option java_package = "com.example.foo";
+                                        /* A
+                                        Multiline
+                                        Comment */
                                         enum EnumAllowingAlias {
-                                        option allow_alias = true;
+                                            // preceding option comment
+                                            option allow_alias = true; // inline option comment
+                                            // enumField comment
                                             UNKNOWN = 0;
                                             STARTED = 1;
                                             RUNNING = 2 [(custom_option) = "hello world"];
                                         }
+                                        // Level 1
                                         message Outer {
                                             option (my_option).a = true;
-                                            message Inner {   // Level 2
+                                            // Level 2
+                                            // Description
+                                            message Inner {
                                                 required int64 ival = 1;
                                             }
                                             repeated Inner inner_message = 2;
                                             optional EnumAllowingAlias enum_field = 3;
                                             map<int32, string> my_map = 4;
                                             extensions 20 to 30;
-                                        }`);
+                                        }
+                                        /* single line multiline */
+                                        extend Foo {
+                                            optional int32 bar = 126;
+                                        }
+                                        service SearchService {
+                                            rpc Search (SearchRequest) returns (SearchResponse);
+                                        }
+                                        `);
                 let expected =  (
                                     enums: {
                                         'EnumAllowingAlias': (
+                                            comments: ["A\nMultiline\nComment"],
                                             fields: {
                                                 'RUNNING': (
                                                     options: {'(custom_option)': (s: 'hello world')},
                                                     value: (d: 2,),
                                                 ),
                                                 'STARTED': (value: (d: 1)),
-                                                'UNKNOWN': (value: (o: 0,))
+                                                'UNKNOWN': (value: (o: 0), comments: ["enumField comment"])
                                             },
-                                            options: {'allow_alias': (b: true)}
+                                            options: {'allow_alias': (b: true, comments: ["preceding option comment", "inline option comment"])}
                                         )
                                     },
+                                    extends: {"Foo": ( comments: ["single line multiline"], fields:{"bar": (label: "optional", type: "int32", value: (d: 126))}) },
                                     imports: {'other.proto': (modifier: 'public')},
                                     messages: {
                                         'Outer': (
+                                            comments: ["Level 1"],
                                             fields: {
-                                                'enum_field': (type: 'EnumAllowingAlias',value: (d: 3)),
-                                                'inner_message': (type: 'Inner',value: (d: 2)),
+                                                'enum_field': (label: "optional", type: 'EnumAllowingAlias',value: (d: 3)),
+                                                'inner_message': (label: "repeated", type: 'Inner', value: (d: 2)),
                                             },
                                             mapFields: {'my_map': (keyType: 'int32', type: 'string', value: (d: 4))},
-                                            messages: {'Inner': (fields: {'ival': (type: 'int64', value: (d: 1))}),},
+                                            messages: {'Inner': (comments: ["Level 2", "Description"], fields: {'ival': (label: "required", type: 'int64', value: (d: 1))})},
                                             options: {'(my_option).a': ( b: true)}
                                         ),
                                     },
                                     options: {'java_package': (s: 'com.example.foo')},
                                     package: {},
-                                    services: {},
+                                    services: {'SearchService': (rpcs: {"Search": (in: "SearchRequest", out: "SearchResponse")})},
                                     syntax: 'proto2',
                                 );
                 //test.assert.equal(expected, actual),
@@ -197,20 +216,28 @@ let (:evalConstant, :parseFile, ...) = //{./proto};
                                         import public "other.proto";
                                         option java_package = "com.example.foo";
                                         enum EnumAllowingAlias {
-                                        option allow_alias = true;
-                                        UNKNOWN = 0;
-                                        STARTED = 1;
-                                        RUNNING = 2 [(custom_option) = "hello world"];
+                                            option allow_alias = true;
+                                            UNKNOWN = 0;
+                                            STARTED = 1;
+                                            RUNNING = 2 [(custom_option) = "hello world"];
                                         }
+
+                                        // Level 1
                                         message Outer {
-                                        option (my_option).a = true;
-                                        message Inner {   // Level 2
-                                            int64 ival = 1;
+                                            option (my_option).a = true;
+
+                                            // Level 2
+                                            message Inner {   
+                                                int64 ival = 1;
+                                            }
+                                            repeated Inner inner_message = 2;
+                                            EnumAllowingAlias enum_field =3;
+                                            map<int32, string> my_map = 4;
                                         }
-                                        repeated Inner inner_message = 2;
-                                        EnumAllowingAlias enum_field =3;
-                                        map<int32, string> my_map = 4;
-                                        }`);
+                                        service SearchService {
+                                            rpc Search (SearchRequest) returns (SearchResponse);
+                                        }
+                                        `);
                 let expected =  (
                                     enums: {
                                         'EnumAllowingAlias': (
@@ -225,25 +252,27 @@ let (:evalConstant, :parseFile, ...) = //{./proto};
                                             options: {'allow_alias': (b: true)}
                                         ),
                                     },
+                                    extends: {},
                                     imports: {'other.proto': (modifier: 'public')},
                                     messages: {
                                         'Outer': (
+                                            comments: ["Level 1"],
                                             fields: {
                                                 'enum_field': (type: 'EnumAllowingAlias', value: (d: 3)),
-                                                'inner_message': (type: 'Inner', value: (d: 2))
+                                                'inner_message': (label: "repeated", type: 'Inner', value: (d: 2))
                                             },
                                             mapFields: {
                                                 'my_map': (keyType: 'int32', type: 'string', value: (d: 4))
                                             },
                                             messages: {
-                                                'Inner': (fields: {'ival': (type: 'int64', value: (d: 1))}),
+                                                'Inner': (comments: ["Level 2"], fields: {'ival': (type: 'int64', value: (d: 1))}),
                                             },
                                             options: {'(my_option).a': (b: true)},
                                         ),
                                     },
                                     options: {'java_package': (s: 'com.example.foo')},
                                     package: {},
-                                    services: {},
+                                    services: {'SearchService': (rpcs: {"Search": (in: "SearchRequest", out: "SearchResponse")})},
                                     syntax: 'proto3',
                                 );
                 //test.assert.equal(expected, actual)

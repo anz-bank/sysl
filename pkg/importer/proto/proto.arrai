@@ -1,63 +1,67 @@
+let (:trimWhitespace, ...) = //{/pkg/arrai/util};
 # Tools for parsing and importing Protocol Buffers.
 # 
-# `grammar` is a wbnf encoding of the Protocol Buffers Version 3 Lanauge Specification:
+# `grammar` is a wbnf encoding of the Protocol Buffers Version 2 and 3 Language Specifications:
 # https://developers.google.com/protocol-buffers/docs/reference/proto3-spec
+# https://developers.google.com/protocol-buffers/docs/reference/proto2-spec
 
 let grammar = {://grammar.lang.wbnf:
 
-file            -> syntax stmt=(import | package | option | topLevelDef | emptyStatement )*;
+file            -> c* syntax stmt=(import | package | option | topLevelDef | emptyStatement)* \n*;
 
-syntax          -> "syntax" "=" (quote "proto3" quote | quote "proto2" quote) ";";
+syntax          -> "syntax" "=" quote proto quote ";" ($ | c)?;
 
-package         -> "package" fullIdent ";";
+proto           -> "proto2" | "proto3";
 
-import          -> "import" modifier=("weak" | "public")? strLit ";";
+package         -> c* "package" fullIdent ";" ($ | c)?;
 
-option          -> "option" optionName "=" constant ";";
+import          -> c* "import" modifier=("weak" | "public")? strLit ";" ($ | c)?;
+
+option          -> c* "option" optionName "=" constant ";" ($ | c)?;
 optionName      -> ("(" fullIdent ")" | ident) ("." ident)*;
 
 topLevelDef     -> enum | message | service | extend;
 
-enum            -> "enum" enumName enumBody;
+enum            -> c* "enum" enumName enumBody;
 enumName        -> ident;
 enumBody        -> "{" (option | enumField | emptyStatement)* "}";
-enumField       -> fieldName "=" "-"? intLit ("[" enumValueOption:"," "]")? ";";
+enumField       -> c* fieldName "=" "-"? intLit ("[" enumValueOption:comma "]")? ";" ($ | c)?;
 enumValueOption -> optionName "=" constant;
 
-message         -> "message" messageName messageBody;
+message         -> c* "message" messageName messageBody;
 messageName     -> ident;
 messageBody     -> "{" (field | enum | message | extend | extensions | group | option | oneof | mapField | reserved | emptyStatement)* "}";
 messageType     ->  ident:,".";
 
-service         -> "service" serviceName "{" (option | rpc | emptyStatement)* "}";
+service         -> c* "service" serviceName "{" (option | rpc | emptyStatement)* "}";
 serviceName     -> ident;
-rpc             -> "rpc" rpcName "(" "stream"? inputMessage ")" "returns" "(" "stream"? returnMessage ")" (( "{" (option | emptyStatement)* "}" ) | ";");
+rpc             -> c* "rpc" rpcName "(" "stream"? inputMessage ")" "returns" "(" "stream"? returnMessage ")" (( "{" (option | emptyStatement)* "}" ) | ";" ) ($ | c)?;
 rpcName         -> ident;
 inputMessage    -> messageType;
 returnMessage   -> messageType;
 
-extend          -> "extend" messageType "{" (field | group | emptyStatement)* "}";
+extend          -> c* "extend" messageType "{" (field | group | emptyStatement)* "}";
 
-field           -> label? type fieldName "=" fieldNumber ("[" fieldOptions "]")?";";
+field           -> c* label? type fieldName "=" fieldNumber ("[" fieldOptions "]")? ";"  ($ | c)?;
 fieldName       -> ident;
 fieldNumber     -> intLit;
-fieldOptions    -> fieldOption:",";
+fieldOptions    -> fieldOption:comma;
 fieldOption     -> optionName "=" constant;
 
-group           -> label "group" groupName "=" fieldNumber messageBody;
+group           -> c* label "group" groupName "=" fieldNumber messageBody;
 groupName       -> ident;
 
-oneof           -> "oneof" oneofName "{" (option | oneofField | emptyStatement)* "}";
+oneof           -> c* "oneof" oneofName "{" (option | oneofField | emptyStatement)* "}";
 oneofName       -> ident;
-oneofField      -> type fieldName "=" fieldNumber ("[" fieldOptions "]")? ";";
+oneofField      -> c* type fieldName "=" fieldNumber ("[" fieldOptions "]")? ";" ($ | c)?;
 
-mapField        -> "map" "<" keyType "," type ">" mapName "=" fieldNumber  ("[" fieldOptions "]")? ";";
+mapField        -> c* "map" "<" keyType "," type ">" mapName "=" fieldNumber  ("[" fieldOptions "]")? ";" ($ | c)?;
 mapName         -> ident;
 keyType         -> "int32" | "int64" | "uint32" | "uint64" | "sint32" | "sint64" |
                    "fixed32" | "fixed64" | "sfixed32" | "sfixed64" | "bool" | "string";
                    
-reserved        -> "reserved" (range:"," | ('"'fieldName'"'):",") ";";
-extensions      -> "extensions" range:"," ";";
+reserved        -> c* "reserved" (range:comma | ('"'fieldName'"'):comma) ";" ($ | c)?;
+extensions      -> c* "extensions" range:comma ";" ($ | c)?;
 range           -> intLit ("to" (intLit | "max"))?;
 
 emptyStatement  -> ";";
@@ -84,16 +88,19 @@ boolLit         -> /{true | false};
 
 strLit          -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //';
 
-object          -> "{" objectField:","? "}";
+object          -> "{" objectField:comma? "}";
 objectField     -> objectKey ":" objectValue;
 objectKey       -> constant;
 objectValue     -> constant;
 
-array           -> "[" arrayItem:","? "]";
+array           -> "[" arrayItem:comma? "]";
 arrayItem       -> constant;
 
-// All tokens may be preceded by comments or whitespace and succeeded by new lines.
-.wrapRE -> /{(//[^\n]*(?:\n|\z)|/\*[^*]*\*/|\s)*()\n*};
+c               -> /{ // .* $ | (?: /\* (?: [^*] | \*+[^*/] )* \*/ )};
+comma           -> c* ",";
+
+// All tokens may be preceded by whitespace.
+.wrapRE -> /{\s*()};
 
 :};
 
@@ -118,6 +125,8 @@ let evalType = \parsed
         _: parsed.'' rank (:.@)
     };
 
+let evalLabel = \parsed parsed.'' rank (:.@) ;
+
 let rec evalConstant = \parsed
     cond parsed {
         (:strLit, ...): (s: strLit.''(1) rank (:.@)),
@@ -137,19 +146,31 @@ let evalOptionName = \parsed
         (:ident, ...): evalIdent(ident),
     };
 
-let evalOption = \parsed { evalOptionName(parsed.optionName): evalConstant(parsed.constant) };
+let evalComments = \parsed
+    cond parsed {
+        (:c, ...): (comments: c >> cond {
+            //seq.has_prefix("//", .''): trimWhitespace(//seq.trim_prefix("//", .'')),
+            //seq.has_prefix("/*", .''): 
+                let trimmed = //seq.trim_suffix("*/", //seq.trim_prefix("/*", .''));
+                //seq.join("\n", //seq.split("\n", trimmed) >> trimWhitespace(.) where .@item rank (:.@))
+        })
+    } || ();
+
+let evalOption = \parsed { evalOptionName(parsed.optionName): evalConstant(parsed.constant) +> evalComments(parsed) };
 
 let evalField = \parsed
     {
         evalName(parsed.fieldName): ( 
         value: evalConstant(parsed.fieldNumber), 
-        type: evalType(parsed.type)) +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+        type: evalType(parsed.type)) 
+        +> (cond parsed {(:label, ...): (label: evalLabel(label))} || ())
+        +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
 
 let evalOneofField = \parsed
     {
         parsed.oneofName: (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
-            +> (cond parsed {(:oneofField, ...): (fields: //rel.union(oneofField => evalField(.@item)))} || ())
+            +> (cond parsed {(:oneofField, ...): (fields: //rel.union(oneofField => evalField(.@item)))} || ()) +> evalComments(parsed)
     };
 
 let evalMapField = \parsed
@@ -158,8 +179,13 @@ let evalMapField = \parsed
             type: evalType(parsed.type),
             keyType: evalType(parsed.keyType),
             value: evalConstant(parsed.fieldNumber)
-        ) +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+        ) +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
      };
+
+let evalGroupField = \parsed
+    {
+        evalName(parsed.groupName): (label: evalLabel(parsed.label)) +> evalMessageBody(parsed.messageBody)
+    };
 
 let evalRange = \parsed
     cond {
@@ -169,45 +195,66 @@ let evalRange = \parsed
 
 let evalReserved = \parsed
     (cond parsed {(:range, ...): (ranges: range => evalRange(.@item))} || ())
-    +> (cond parsed {(:fieldName, ...): (fields: fieldName => evalName(.@item))} || ());
+    +> (cond parsed {(:fieldName, ...): (fields: fieldName => evalName(.@item))} || ()) +> evalComments(parsed);
 
 let evalEnumField = \parsed
     {
         evalName(parsed.fieldName): (
             value: evalConstant(parsed)
-        ) +> (cond parsed {(:enumValueOption, ...): (options: //rel.union(enumValueOption => evalOption(.@item)))} || ())
+        ) +> (cond parsed {(:enumValueOption, ...): (options: //rel.union(enumValueOption => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
 
 let evalEnumBody = \parsed
     (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
-     +> (cond parsed {(:enumField, ...): (fields: //rel.union(parsed.enumField?:{} => evalEnumField(.@item)))} || ());
+     +> (cond parsed {(:enumField, ...): (fields: //rel.union(parsed.enumField?:{} => evalEnumField(.@item)))} || ()) +> evalComments(parsed);
 
-let evalEnum = \parsed { evalName(parsed.enumName): evalEnumBody(parsed.enumBody) };
+let evalEnum = \parsed { evalName(parsed.enumName): evalEnumBody(parsed.enumBody) +> evalComments(parsed) };
 
 let evalRPC = \parsed
     {
         evalName(parsed.rpcName):(
             in: evalName(parsed.inputMessage.messageType),
             out: evalName(parsed.returnMessage.messageType)
-        )+> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+        )+> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
 
 let rec evalMessageBody = \parsed
     (cond parsed {(:field, ...): (fields: //rel.union(field => evalField(.@item)))} || ())
     +> (cond parsed {(:enum, ...): (enums: //rel.union(enum => evalEnum(.@item)))} || ())
-    +> (cond parsed {(:message, ...): (messages: //rel.union(message => {evalName(.@item.messageName): evalMessageBody(.@item.messageBody)}))} || ())
+    +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(group.messageBody)}))} || ())
+    +> (cond parsed {(:message, ...): (messages: //rel.union(message => {evalName(.@item.messageName): evalMessageBody(.@item.messageBody) +> evalComments(.@item)}))} || ())
     +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
     +> (cond parsed {(:oneof, ...): (oneofs: //rel.union(oneof => evalOneofField(.@item)))} || ())
     +> (cond parsed {(:mapField, ...): (mapFields: //rel.union(mapField => evalMapField(.@item)))} || ())
     +> (cond parsed {(:reserved, ...): (reserveds: //rel.union(reserved => evalReserved(.@item)))} || ());
 
+let evalGroupField = \parsed
+    {
+        evalName(parsed.groupName): evalMessageBody(parsed.messageBody)
+    };
+
+let evalService = \parsed
+    {
+        evalName(parsed.serviceName): ()
+        +> (cond parsed {(:option, ...): (options: option => evalOption(.@item))} || ()) 
+        +> (cond parsed {(:rpc, ...): (rpcs: //rel.union(rpc => evalRPC(.@item)))} || ())
+        +> evalComments(parsed)
+    };
+
+let evalExtend = \parsed
+    {
+        evalName(parsed.messageType): ()
+        +> (cond parsed {(:field, ...): (fields: //rel.union(field => evalField(.@item)))} || ())
+        +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(group.messageBody)}))} || ())
+        +> evalComments(parsed)
+    };
+
 let evalStmt = \parsed
     cond parsed {
         (:import, ...): 
             (import: {import.strLit.''(1) rank (:.@): () +> (cond import.modifier?:{} {('':mod, ...): (modifier: mod rank (:.@))} || ())}),
-        (:package, ...): (
-            package: evalFullIdent(package.fullIdent)
-        ),
+        (:package, ...): 
+            (package: {evalFullIdent(package.fullIdent): () +> evalComments(package)}),
         (:option, ...): (
            (option: evalOption(option))
         ),
@@ -216,26 +263,25 @@ let evalStmt = \parsed
                 (:enum, ...):
                     (enum: evalEnum(enum)),
                 (:message, ...):
-                    (message: {evalName(message.messageName): evalMessageBody(message.messageBody)}),
+                    (message: {evalName(message.messageName): evalMessageBody(message.messageBody) +> evalComments(message)}),
                 (:service, ...):
-                    (service: {evalName(service.serviceName): ()
-                    +> (cond service {(:option, ...): (options: option => evalOption(.@item))} || ()) 
-                    +> (cond service {(:rpc, ...): (rpcs: //rel.union(rpc => evalRPC(.@item)))} || ())}),
+                    (service: evalService(service)),
                 (:extend, ...):
-                    (extend: {evalName(extend.messageType)})
+                    (extend: evalExtend(extend))
             }
     };
 
 let evalFile = \parsed
-    let syntax = parsed.syntax.''(2) rank (:.@);
+    let syntax = parsed.syntax.proto.'' rank (:.@);
     let stmts = parsed.stmt?:{} => evalStmt(.@item);
-    let package = cond (stmts where (.).package?:{} orderby .) { [p, ...]: p.package };
+    let package = //rel.union(stmts where (.).package?:{} => .package);
     let imports = //rel.union(stmts where (.).import?:{} => .import);
     let options = //rel.union(stmts where (.).option?:{} => .option);
     let enums = //rel.union(stmts where (.).enum?:{} => .enum);
     let messages = //rel.union(stmts where (.).message?:{} => .message);
     let services = //rel.union(stmts where (.).service?:{} => .service);
-    (:syntax, :package, :imports, :options, :messages, :enums, :services);
+    let extends = //rel.union(stmts where (.).extend?:{} => .extend);
+    (:syntax, :package, :imports, :options, :messages, :enums, :services, :extends) +> evalComments(parsed);
 
 # `parseFile` parses a byte array against the `file` grammar rule and evaluates it into an arr.ai model.
 let parseFile = \bytes 
@@ -252,21 +298,20 @@ let import = \file \paths
     # `import` returns the parsed files and their imports
     # `files` the files to parse
     # `result` the result of all evaluated files so far
-    # `fileMaps` a map of import paths to available files
-    let rec _import = \files \result \fileMaps
+    let rec _import = \files \result
         cond files {
             {}: result,
             [file, ...tail]:
                 cond {
-                    result(file)?:{}: import(tail, result, fileMaps),
+                    result(file)?:{}: _import(tail, result),
                     _:
                         let parsed = parseFile(//os.file(file));
                         let result = result +> {file: parsed};
                         let importFiles = (parsed.imports => importFile(.@, fileMaps) orderby .);
-                        _import(tail ++ importFiles, result, fileMaps)
+                        _import(tail ++ importFiles, result)
         }
     };
-    _import([file], {}, fileMaps);
+    _import([file], {});
 
 (
     :evalConstant, # Visible for testing
