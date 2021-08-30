@@ -48,7 +48,7 @@ apps: {
     }
     stmt: {
      ret: {
-      payload: "PetShop"
+      payload: "ok <: PetShop"
      }
      source_context: {
       file: "tests/petshop.sysl"
@@ -58,7 +58,7 @@ apps: {
       }
       end: {
        line: 39
-       col: 26
+       col: 32
       }
      }
      source_contexts: {
@@ -69,7 +69,7 @@ apps: {
       }
       end: {
        line: 39
-       col: 26
+       col: 32
       }
      }
     }

@@ -3368,6 +3368,10 @@ func (s *TreeShapeListener) ExitApp_decl(ctx *parser.App_declContext) {
 func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	filename := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
 
+	if filepath.Ext(filename) == "" {
+		filename += syslExt
+	}
+
 	if !syslutil.IsRemoteImport(filename) {
 		base := s.base
 		if strings.HasPrefix(filename, "/") {
@@ -3378,14 +3382,9 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		if syslutil.IsRemoteImport(s.base) {
 			filename = "/" + filename
 		}
-	}
-
-	if filepath.Ext(filename) == "" {
-		filename += syslExt
-	}
-
-	if !strings.Contains(filename, "@") && s.version != "" {
-		filename += "@" + s.version
+		if !strings.Contains(filename, "@") && s.version != "" {
+			filename += "@" + s.version
+		}
 	}
 
 	id := importDef{

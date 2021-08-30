@@ -9,7 +9,7 @@ require (
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20210521184019-c5ad59b459ec
 	github.com/anz-bank/go-bindata v3.22.0+incompatible
-	github.com/anz-bank/golden-retriever v0.9.0
+	github.com/anz-bank/golden-retriever v0.11.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.38
 	github.com/arr-ai/arrai v0.283.0
@@ -34,6 +34,7 @@ require (
 	github.com/spf13/afero v1.4.0
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.8.0
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0

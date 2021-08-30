@@ -756,7 +756,7 @@ func TestDuplicateImportWarning(t *testing.T) {
 	if assert.NoError(t, err) {
 		res := strings.Contains(
 			buf.String(),
-			"level=warning msg=\"Duplicate import: 'tests/simple_model.sysl' in file: 'tests/duplicate_import.sysl'\\n\"",
+			"level=warning msg=\"Duplicate import: 'tests/simple_model.sysl'\\n\"",
 		)
 		assert.True(t, res, "duplicate import not detected")
 	}
@@ -1017,7 +1017,8 @@ func TestParseSysl(t *testing.T) {
 	content := `
 App:
 	Endpoint:
-		...`
+		...
+`
 	_, err := NewParser().ParseString(content)
 	assert.Nil(t, err)
 }
@@ -1045,7 +1046,8 @@ func TestParseSyslRetriever(t *testing.T) {
 import two.sysl
 One:
 	_:
-		...`
+		...
+`
 	two := `
 Two:
 	...
@@ -1077,7 +1079,8 @@ import //github.com/org/repo/two.sysl@master
 import 3.sysl
 One:
 	_:
-		...`
+		...
+`
 	two := `
 Two:
 	...
@@ -1110,7 +1113,8 @@ func TestParseSyslRetrieverRemoteImport(t *testing.T) {
 import //github.com/org/repo/two.sysl@master
 One:
 	_:
-		...`
+		...
+`
 	two := `
 import three.sysl
 Two:

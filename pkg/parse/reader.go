@@ -56,7 +56,7 @@ func NewReader(fs afero.Fs) (reader.Reader, error) {
 		}
 	}
 
-	return remotefs.NewWithGitRetriever(
+	return remotefs.NewWithPinnerGitRetriever(
 		filesystem.New(fs),
 		filepath.Join(root, SyslRootMarker, "modules.yaml"),
 		&git.AuthOptions{

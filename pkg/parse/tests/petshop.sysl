@@ -37,7 +37,7 @@ PetShopFacade [package="io.sysl.demo.petshop.facade"]:
 PetShopApi [package="io.sysl.demo.petshop.api"]:
     /petshop:
         GET:
-            return PetShop
+            return ok <: PetShop
 
     !type PetShop:
         employees <: set of Employee

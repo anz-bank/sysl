@@ -5341,7 +5341,7 @@ apps: {
       col: 2
      }
      end: {
-      line: 42
+      line: 41
       col: 1
      }
      text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type:"
@@ -5353,7 +5353,7 @@ apps: {
       col: 2
      }
      end: {
-      line: 42
+      line: 41
       col: 1
      }
      text: "!view NoArgTransform(number1 <: int, foo <: Some.Type ) -> Model.Type:"

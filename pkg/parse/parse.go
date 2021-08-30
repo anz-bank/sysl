@@ -1,12 +1,19 @@
 package parse
 
 import (
+	"bufio"
+	"bytes"
 	"context"
 	"fmt"
 	"path"
+	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/anz-bank/golden-retriever/reader"
+	"github.com/anz-bank/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/env"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/importer"
@@ -14,13 +21,11 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/anz-bank/golden-retriever/reader"
-	"github.com/anz-bank/pkg/mod"
 	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -39,6 +44,7 @@ type Parser struct {
 	allowAbsoluteImport bool
 }
 
+// NewParser intializes and returns a new Parser instance
 func NewParser() *Parser {
 	return &Parser{
 		AssignTypes:         map[string]TypeData{},
@@ -143,41 +149,59 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 	return p.Parse(filename, reader)
 }
 
+type srcInput struct {
+	src   importDef
+	input string
+}
+
+type srcInputs struct {
+	inputs []srcInput
+	mutex  sync.Mutex
+}
+
 // Parse parses a sysl definition from an retriever interface
 func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, error) { //nolint:funlen
-	imported := map[string]struct{}{}
 	listener := NewTreeShapeListener()
 	listener.lint()
 
-	if !strings.HasSuffix(resource, syslExt) {
+	if filepath.Ext(resource) == "" {
 		resource += syslExt
 	}
 
-	source := importDef{filename: resource}
+	specs := srcInputs{make([]srcInput, 0), sync.Mutex{}}
 
-	for {
-		filename := source.filename
-		logrus.Debugf("Parsing: " + filename)
+	if err := collectSpecs(
+		context.Background(),
+		importDef{filename: resource},
+		reader,
+		&specs,
+		map[string]struct{}{},
+	); err != nil {
+		return nil, err
+	}
 
-		content, hash, err := reader.ReadHash(context.Background(), filename)
-		if err != nil {
-			return nil, syslutil.Exitf(ImportError, fmt.Sprintf("error reading %#v: \n%v\n", filename, err))
-		}
-		fsinput := &fsFileStream{antlr.NewInputStream(string(content)), filename}
-		version := hash.String()
+	for _, v := range specs.inputs {
+		src := v.src
+		logrus.Debug("Parsing: ", src.filename)
 
-		listener.sc = sourceCtxHelper{source.filename, version}
-		listener.base = path.Dir(filename)
-		if syslutil.IsRemoteImport(filename) {
+		fsinput := &fsFileStream{antlr.NewInputStream(v.input), src.filename}
+
+		version := ""
+		if syslutil.IsRemoteImport(src.filename) {
 			listener.base = "/" + listener.base
+			v := strings.Split(src.filename, "@")
+			version = v[len(v)-1]
 		}
+		// FIXME: listener.sc.version and listener.version maybe duplicated
+		listener.sc = sourceCtxHelper{src.filename, version}
+		listener.base = path.Dir(src.filename)
 		listener.version = version
 
 		// Import Sysl Proto
-		if strings.HasSuffix(filename, ".sysl.pb.json") {
+		if strings.HasSuffix(src.filename, ".sysl.pb.json") {
 			syslProtoImport, err := importSyslProto(fsinput)
 			if err != nil {
-				return nil, fmt.Errorf("error parsing %s: %w", filename, err)
+				return nil, fmt.Errorf("error parsing %s: %w", src.filename, err)
 			}
 			if syslProtoImport != nil {
 				// Merge structs recursively
@@ -189,63 +213,125 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 			break
 		}
 
-		input, err := importForeign(source, fsinput)
+		str, err := importForeign(src, fsinput)
 		if err != nil {
 			return nil, err
 		}
 
-		tree, err := parseString(filename, input)
+		tree, err := parseString(src.filename, str)
 		if err != nil {
 			return nil, err
 		}
 
-		// FIXME
-		localListener := NewTreeShapeListener()
-		localListener.sc = listener.sc
-		localListener.base = listener.base
-		localListener.version = listener.version
 		walker := antlr.NewParseTreeWalker()
-		walker.Walk(localListener, tree)
 		walker.Walk(listener, tree)
-
-		if len(listener.imports) == 0 {
-			break
-		}
-
-		duplicateImportCheck := func(list []importDef) {
-			// assume that a file will have less than 256 imports
-			set := make(map[string]byte)
-			for _, value := range list {
-				if count := set[value.filename]; count == 1 {
-					logrus.Warnf("Duplicate import: '%s' in file: '%s'\n", value.filename, source.filename)
-				}
-				set[value.filename]++
-			}
-		}
-		duplicateImportCheck(localListener.imports)
-
-		imported[filename] = struct{}{}
-
-		for len(listener.imports) > 0 {
-			source = listener.imports[0]
-			listener.imports = listener.imports[1:]
-			if _, has := imported[source.filename]; !has {
-				if !p.allowAbsoluteImport && strings.HasPrefix(source.filename, "/") && !syslutil.IsRemoteImport(source.filename) {
-					return nil, syslutil.Exitf(2,
-						"error importing: importing outside current directory is only allowed when root is defined")
-				}
-				break
-			}
-		}
-
-		if _, has := imported[source.filename]; has {
-			break
-		}
 	}
+
 	listener.lintAppDefs()
 	listener.lintEndpoint()
 	p.postProcess(listener.module)
 	return listener.module, nil
+}
+
+// collectSpecs splits a single sysl file to two -
+// one contains all the import statements and
+// the other consists of non-import statements.
+//
+// Parse the former then split and parse the dependencies recursively and in parallel.
+// Collect the latter in the `specs` map.
+func collectSpecs(ctx context.Context,
+	source importDef, reader reader.Reader, specs *srcInputs,
+	imported map[string]struct{}) error {
+	specs.mutex.Lock()
+	if _, has := imported[source.filename]; has {
+		logrus.Warnf("Duplicate import: '%s'\n", source.filename)
+		specs.mutex.Unlock()
+		return nil
+	}
+	imported[source.filename] = struct{}{}
+	specs.mutex.Unlock()
+
+	content, hash, err := reader.ReadHash(ctx, source.filename)
+	if err != nil {
+		return syslutil.Exitf(ImportError, fmt.Sprintf("error reading %#v: \n%v\n", source.filename, err))
+	}
+
+	version := hash.String()
+
+	importsInput, specsInput := separateImportsAndSpecs(source.filename, content)
+
+	specs.mutex.Lock()
+	specs.inputs = append(specs.inputs, srcInput{source, specsInput.String()})
+	specs.mutex.Unlock()
+
+	if importsInput.Len() == 0 {
+		return nil
+	}
+
+	children, err := parseImports(source, sourceCtxHelper{source.filename, version}, importsInput.String())
+	if err != nil {
+		return err
+	}
+
+	g := new(errgroup.Group)
+	for _, c := range children {
+		c := c
+		g.Go(func() error {
+			return collectSpecs(ctx, c, reader, specs, imported)
+		})
+	}
+
+	return g.Wait()
+}
+
+var importStmtPrefix = []byte("import ")
+
+func separateImportsAndSpecs(filename string, content []byte) (importsInput, specsInput bytes.Buffer) {
+	// non-sysl specs remote reference file fetching is not yet supported.
+	if !strings.Contains(filename, syslExt) {
+		specsInput = *bytes.NewBuffer(content)
+		return
+	}
+
+	scanner := bufio.NewScanner(bytes.NewReader(content))
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		if bytes.HasPrefix(scanner.Bytes(), importStmtPrefix) {
+			importsInput.Write(scanner.Bytes())
+			importsInput.WriteByte('\n')
+			specsInput.WriteByte('\n')
+		} else {
+			specsInput.Write(scanner.Bytes())
+			specsInput.WriteByte('\n')
+		}
+	}
+
+	return
+}
+
+// parseImports parses string with only import statements.
+func parseImports(parent importDef, src sourceCtxHelper, input string) ([]importDef, error) {
+	listener := NewTreeShapeListener()
+	listener.lint()
+
+	fsinput := &fsFileStream{antlr.NewInputStream(input), parent.filename}
+
+	listener.sc = src
+	listener.base = path.Dir(parent.filename)
+	if syslutil.IsRemoteImport(parent.filename) {
+		listener.base = "/" + listener.base
+	}
+	listener.version = src.version
+
+	tree, err := parseString(parent.filename, fsinput)
+	if err != nil {
+		return nil, err
+	}
+
+	walker := antlr.NewParseTreeWalker()
+	walker.Walk(listener, tree)
+
+	return listener.imports, nil
 }
 
 // apply attributes from src to dst statement and all of its
