@@ -1578,3 +1578,13 @@ apps: {
   }
  }
 }
+imports: {
+ target: "grocery.sysl.pb.json"
+ source_context: {
+  file: "tests/import_proto_JSON_merge.sysl"
+  start: {}
+  end: {
+   col: 27
+  }
+ }
+}

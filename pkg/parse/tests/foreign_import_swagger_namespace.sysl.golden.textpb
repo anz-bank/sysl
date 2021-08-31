@@ -577,3 +577,19 @@ apps: {
   }
  }
 }
+imports: {
+ target: "foreign_import_swagger.yaml"
+ name: {
+  part: "com"
+  part: "foo"
+  part: "bar"
+  part: "app"
+ }
+ source_context: {
+  file: "tests/foreign_import_swagger_namespace.sysl"
+  start: {}
+  end: {
+   col: 65
+  }
+ }
+}

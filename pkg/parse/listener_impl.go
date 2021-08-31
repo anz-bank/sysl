@@ -3366,7 +3366,8 @@ func (s *TreeShapeListener) ExitApp_decl(ctx *parser.App_declContext) {
 
 // EnterImport_stmt is called when production import_stmt is entered.
 func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
-	filename := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
+	raw := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
+	filename := raw
 
 	if filepath.Ext(filename) == "" {
 		filename += syslExt
@@ -3411,6 +3412,21 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	}
 
 	s.imports = append(s.imports, id)
+
+	im := &sysl.Import{
+		Target:        raw,
+		SourceContext: s.getSrcCtx(ctx.BaseParserRuleContext),
+	}
+
+	if len(id.appname) > 0 {
+		parts := strings.Split(id.appname, "::")
+		for i := range parts {
+			parts[i] = MustUnescape(strings.TrimSpace(parts[i]))
+		}
+		im.Name = &sysl.AppName{Part: parts}
+	}
+
+	s.module.Imports = append(s.module.Imports, im)
 }
 
 func (s *TreeShapeListener) currentType() *sysl.Type {

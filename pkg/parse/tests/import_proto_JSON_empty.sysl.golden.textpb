@@ -32,3 +32,13 @@ apps: {
   }
  }
 }
+imports: {
+ target: "empty.sysl.pb.json"
+ source_context: {
+  file: "tests/import_proto_JSON_empty.sysl"
+  start: {}
+  end: {
+   col: 25
+  }
+ }
+}

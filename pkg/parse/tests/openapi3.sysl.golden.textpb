@@ -718,3 +718,16 @@ apps: {
   }
  }
 }
+imports: {
+ target: "preference.yaml"
+ name: {
+  part: "preference"
+ }
+ source_context: {
+  file: "tests/openapi3.sysl"
+  start: {}
+  end: {
+   col: 46
+  }
+ }
+}

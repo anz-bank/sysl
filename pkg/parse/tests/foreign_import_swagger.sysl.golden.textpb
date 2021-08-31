@@ -602,3 +602,16 @@ apps: {
   }
  }
 }
+imports: {
+ target: "foreign_import_swagger.yaml"
+ name: {
+  part: "app"
+ }
+ source_context: {
+  file: "tests/foreign_import_swagger.sysl"
+  start: {}
+  end: {
+   col: 62
+  }
+ }
+}

@@ -1341,3 +1341,13 @@ apps: {
   }
  }
 }
+imports: {
+ target: "grocery.sysl.pb.json"
+ source_context: {
+  file: "tests/import_proto_JSON_dep.sysl"
+  start: {}
+  end: {
+   col: 27
+  }
+ }
+}

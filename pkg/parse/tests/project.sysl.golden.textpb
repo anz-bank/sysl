@@ -3120,3 +3120,13 @@ apps: {
   }
  }
 }
+imports: {
+ target: "test1"
+ source_context: {
+  file: "tests/project.sysl"
+  start: {}
+  end: {
+   col: 12
+  }
+ }
+}

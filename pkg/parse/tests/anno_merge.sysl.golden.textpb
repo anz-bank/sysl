@@ -480,3 +480,13 @@ apps: {
   }
  }
 }
+imports: {
+ target: "anno_merge_import.sysl"
+ source_context: {
+  file: "tests/anno_merge.sysl"
+  start: {}
+  end: {
+   col: 29
+  }
+ }
+}

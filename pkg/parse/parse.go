@@ -258,10 +258,10 @@ func collectSpecs(ctx context.Context,
 
 	version := hash.String()
 
-	importsInput, specsInput := separateImportsAndSpecs(source.filename, content)
+	importsInput, _ := separateImportsAndSpecs(source.filename, content)
 
 	specs.mutex.Lock()
-	specs.inputs = append(specs.inputs, srcInput{source, specsInput.String()})
+	specs.inputs = append(specs.inputs, srcInput{source, string(content)})
 	specs.mutex.Unlock()
 
 	if importsInput.Len() == 0 {

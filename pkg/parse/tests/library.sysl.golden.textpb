@@ -896,3 +896,13 @@ apps: {
   }
  }
 }
+imports: {
+ target: "school"
+ source_context: {
+  file: "tests/library.sysl"
+  start: {}
+  end: {
+   col: 13
+  }
+ }
+}
