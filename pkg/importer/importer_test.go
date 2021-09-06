@@ -11,6 +11,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -202,5 +203,48 @@ func TestLoadAvroFromTestFiles(t *testing.T) {
 		name:          "TestLoadAvroFromTestFiles",
 		testDir:       "avro/tests",
 		testExtension: ".avsc",
+	})
+}
+
+type errTestConfig struct {
+	testConfig
+	cases map[string]string
+}
+
+func runImportErrorTest(t *testing.T, cfg errTestConfig) {
+	for filename, expectedErr := range cfg.cases {
+		logger, _ := test.NewNullLogger()
+		t.Run(
+			fmt.Sprintf("%s-%s", cfg.name, filename),
+			func(t *testing.T) {
+				t.Parallel()
+				fileToImport := syslutil.MustAbsolute(t, filepath.Join(cfg.testDir, filename)+cfg.testExtension)
+				imp, err := Factory(fileToImport, true, cfg.format, nil, logger)
+				require.NoError(t, err)
+				_, err = imp.WithAppName("TestApp").WithPackage("com.example.package").LoadFile(fileToImport)
+
+				// some errors can be non-deterministic e.g. circular errors can point to different types that have
+				// circular references.
+				assert.Contains(t, err.Error(), expectedErr)
+			},
+		)
+	}
+}
+
+func TestLoadOpenAPI3Errors(t *testing.T) {
+	t.Parallel()
+
+	runImportErrorTest(t, errTestConfig{
+		testConfig: testConfig{
+			testDir:       "tests/openapi3/errors",
+			testExtension: ".yaml",
+			format:        OpenAPI3.Name,
+			name:          "TestLoadOpenAPI3Errors",
+		},
+
+		cases: map[string]string{
+			"all-of-recursive": "circular reference detected for type:",
+			"duplicate-fields": `duplicate fields exist: "x"`,
+		},
 	})
 }

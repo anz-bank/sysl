@@ -9,25 +9,59 @@ TestApp "Simple" [package="com.example.package"]:
         | No description.
 
     /pets:
-        PATCH (objectRequest <: EXTERNAL_objectRequest [mediatype="application/json", ~body]):
+        PATCH (objectRequest <: objectRequest [mediatype="application/json", ~body]):
             | No description.
             return 200
 
     #---------------------------------------------------------------------------
     # definitions
 
+    !type Canine%2EDog:
+        bark <: bool?:
+            @json_tag = "bark"
+        breed <: string?:
+            @json_tag = "breed"
+        color <: uuid?:
+            @json_tag = "color"
+        pet_type <: string:
+            @json_tag = "pet_type"
+
+    !type Feline%2ECat:
+        age <: int?:
+            @json_tag = "age"
+        hunts <: bool?:
+            @json_tag = "hunts"
+        pet_type <: string:
+            @json_tag = "pet_type"
+
     !type Pet:
         pet_type <: string:
             @json_tag = "pet_type"
 
-    !alias EXTERNAL_Canine%2EDog:
-        string
+    !type object:
+        age <: int?:
+            @json_tag = "age"
+        bark <: bool?:
+            @json_tag = "bark"
+        breed <: string?:
+            @json_tag = "breed"
+        color <: uuid?:
+            @json_tag = "color"
+        hunts <: bool?:
+            @json_tag = "hunts"
+        pet_type <: string:
+            @json_tag = "pet_type"
 
-    !alias EXTERNAL_Feline%2ECat:
-        string
-
-    !alias EXTERNAL_object:
-        string
-
-    !alias EXTERNAL_objectRequest:
-        string
+    !type objectRequest:
+        age <: int?:
+            @json_tag = "age"
+        bark <: bool?:
+            @json_tag = "bark"
+        breed <: string?:
+            @json_tag = "breed"
+        color <: uuid?:
+            @json_tag = "color"
+        hunts <: bool?:
+            @json_tag = "hunts"
+        pet_type <: string:
+            @json_tag = "pet_type"

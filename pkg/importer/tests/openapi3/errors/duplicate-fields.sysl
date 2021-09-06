@@ -9,25 +9,19 @@ TestApp "Simple" [package="com.example.package"]:
         | No description.
 
     /pets:
-        PATCH (objectRequest <: EXTERNAL_objectRequest [mediatype="application/json", ~body]):
+        PATCH:
             | No description.
             return 200
 
     #---------------------------------------------------------------------------
     # definitions
 
-    !type Pet:
-        pet_type <: string:
-            @json_tag = "pet_type"
+    !type Test:
+        x <: string?:
+            @json_tag = "x"
 
-    !alias EXTERNAL_Cat:
-        string
-
-    !alias EXTERNAL_Dog:
-        string
-
-    !alias EXTERNAL_object:
-        string
-
-    !alias EXTERNAL_objectRequest:
-        string
+    !type Test2:
+        x <: string?:
+            @json_tag = "x"
+        x <: float?:
+            @json_tag = "x"

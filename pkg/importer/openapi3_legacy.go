@@ -35,6 +35,9 @@ type OpenAPI3Importer struct {
 	types    TypeList
 
 	nameStack []string
+
+	// to check for circular references when loading schemas.
+	refMap map[string]bool
 }
 
 func NewLegacyOpenAPIV3Importer(logger *logrus.Logger, fs afero.Fs) Importer {
@@ -116,7 +119,11 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.Swagger) (string, error) {
 			if ref.Value == nil {
 				o.types.Add(NewStringAlias(name))
 			} else {
-				o.types.Add(o.loadTypeSchema(name, ref.Value))
+				t, err := o.loadTypeSchema(name, ref.Value)
+				if err != nil {
+					return "", err
+				}
+				o.types.Add(t)
 			}
 		}
 	}
@@ -127,7 +134,10 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.Swagger) (string, error) {
 		endpoints[k] = nil
 	}
 	for path, ep := range spec.Paths {
-		meps := o.buildEndpoint(path, ep)
+		meps, err := o.buildEndpoint(path, ep)
+		if err != nil {
+			return "", err
+		}
 		for _, mep := range meps {
 			endpoints[mep.Method] = append(endpoints[mep.Method], mep.Endpoints...)
 		}
@@ -294,13 +304,13 @@ func makeSizeSpec(min uint64, max *uint64) *sizeSpec {
 	return nil
 }
 
-func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Field {
+func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Field, error) {
 	f := Field{Name: name}
 	typeName := typeNameFromSchemaRef(prop)
 
 	if prop.Ref != "" {
 		f.Type = nameOnlyType(typeName)
-		return f
+		return f, nil
 	}
 
 	defer o.pushName(name)()
@@ -308,7 +318,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Fie
 	if prop.Value.Type == OpenAPI_ARRAY && prop.Value.Items.Ref != "" {
 		f.Type = &Array{Items: nameOnlyType(typeNameFromSchemaRef(prop.Value.Items))}
 		f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
-		return f
+		return f, nil
 	}
 
 	f.Type = o.typeAliasForSchema(prop)
@@ -322,7 +332,10 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Fie
 		ns := o.nameStack
 		o.nameStack = nil
 		defer func() { o.nameStack = ns }()
-		t := o.loadTypeSchema(strings.Join(ns, "_"), prop.Value)
+		t, err := o.loadTypeSchema(strings.Join(ns, "_"), prop.Value)
+		if err != nil {
+			return Field{}, err
+		}
 		o.types.Add(t)
 		if isArray && prop.Ref == "" {
 			f.Type = &Array{Items: t}
@@ -339,7 +352,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) Fie
 		f.Attrs = append(f.Attrs, e)
 	}
 
-	return f
+	return f, nil
 }
 
 func attrsForStrings(schema *openapi3.Schema) []string {
@@ -358,21 +371,35 @@ func attrsForStrings(schema *openapi3.Schema) []string {
 	return attrs
 }
 
-func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) Type {
+func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) (_ Type, err error) {
+	if o.refMap == nil {
+		o.refMap = make(map[string]bool)
+	}
 	name = getSyslSafeName(name)
 	defer o.pushName(name)()
+	setDefined := func(refName string) { o.refMap[refName] = true }
 	switch schema.Type {
 	case OpenAPI_ARRAY:
 		var items Type
 		if childName := typeNameFromSchemaRef(schema.Items); childName == OpenAPI_OBJECT {
 			defer o.pushName("obj")()
-			items = o.loadTypeSchema(name+"_obj", schema.Items.Value)
+			if o.isCircular(schema.Items) {
+				return nil, errCircularType(o.nameStack)
+			}
+			if schema.Items.Ref != "" {
+				o.refMap[schema.Items.Ref] = false
+			}
+			defer setDefined(schema.Items.Ref)
+			items, err = o.loadTypeSchema(name+"_obj", schema.Items.Value)
+			if err != nil {
+				return nil, err
+			}
 			o.types.Add(items)
 		} else {
 			items = o.typeAliasForSchema(schema.Items)
 		}
 
-		return &Array{baseType: baseType{name: name, attrs: getAttrs(schema)}, Items: items}
+		return &Array{baseType: baseType{name: name, attrs: getAttrs(schema)}, Items: items}, nil
 	case OpenAPI_OBJECT, OpenAPI_EMPTY:
 		obj := &StandardType{
 			baseType: baseType{name: name, attrs: getAttrs(schema)},
@@ -381,48 +408,86 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		if len(schema.OneOf) != 0 {
 			var fields FieldList
 			for _, subSchema := range schema.OneOf {
-				field := o.buildField(typeNameFromSchemaRef(subSchema), subSchema)
+				field, err := o.buildField(typeNameFromSchemaRef(subSchema), subSchema)
+				if err != nil {
+					return nil, err
+				}
 				fields = append(fields, field)
 			}
 			return &Union{
 				baseType: baseType{name: name},
 				Options:  fields,
-			}
+			}, nil
 		}
 
 		// Removing this as it breaks an import file.
 		// AllOf means this object is composed of all of the sub-schemas (and potentially additional properties)
-		// for _, subschema := range schema.AllOf {
-		// 	subType := o.loadTypeSchema("", subschema.Value)
+		for _, subschema := range schema.AllOf {
+			if o.isCircular(subschema) {
+				return nil, errCircularType(o.nameStack)
+			}
+			if subschema.Ref != "" {
+				o.refMap[subschema.Ref] = false
+			}
+			defer setDefined(subschema.Ref)
 
-		// 	if subObj, ok := subType.(*StandardType); ok {
-		// 		obj.Properties = append(obj.Properties, subObj.Properties...)
-		// 	}
-		// }
+			subType, err := o.loadTypeSchema("", subschema.Value)
+			if err != nil {
+				return nil, err
+			}
+
+			if subObj, ok := subType.(*StandardType); ok {
+				obj.Properties = append(obj.Properties, subObj.Properties...)
+			}
+		}
 
 		for fname, prop := range schema.Properties {
-			f := o.buildField(fname, prop)
+			f, err := o.buildField(fname, prop)
+			if err != nil {
+				return nil, err
+			}
 			f.Optional = !utils.Contains(fname, schema.Required)
 			obj.Properties = append(obj.Properties, f)
 		}
 		if len(obj.Properties) == 0 {
-			return NewStringAlias(name)
+			return NewStringAlias(name), nil
 		}
-		obj.Properties.Sort()
-		return obj
+		if err = obj.SortProperties(); err != nil {
+			return nil, err
+		}
+		return obj, nil
 	default:
 		if schema.Type == OpenAPI_STRING && schema.Enum != nil {
-			return &Enum{baseType{name: name, attrs: attrsForStrings(schema)}}
+			return &Enum{baseType{name: name, attrs: attrsForStrings(schema)}}, nil
 		}
 		if t, ok := checkBuiltInTypes(mapOpenAPITypeAndFormatToType(schema.Type, schema.Format, o.logger)); ok {
-			return &Alias{baseType: baseType{name: name}, Target: t}
+			return &Alias{baseType: baseType{name: name}, Target: t}, nil
 		}
 		o.logger.Warnf("unknown scheme type: %s", schema.Type)
-		return NewStringAlias(name)
+		return NewStringAlias(name), nil
 	}
 }
 
-func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) []MethodEndpoints {
+func (o *OpenAPI3Importer) isCircular(ref *openapi3.SchemaRef) bool {
+	if o.refMap == nil || ref.Ref == "" {
+		return false
+	}
+	t, visited := o.refMap[ref.Ref]
+	// if it is visited but the type is false, type is still being defined and that means it is loading a circular type.
+	return visited && !t
+}
+
+func errCircularType(nameStack []string) error {
+	stack := make([]string, 0, len(nameStack))
+	for _, n := range nameStack {
+		if n != "" {
+			stack = append(stack, n)
+		}
+	}
+	return fmt.Errorf("circular reference detected for type: %s", strings.Join(stack, "."))
+}
+
+func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) ([]MethodEndpoints, error) {
 	var res []MethodEndpoints
 	ops := map[string]*openapi3.Operation{
 		syslutil.Method_GET:    item.Get,
@@ -432,7 +497,10 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 		syslutil.Method_PATCH:  item.Patch,
 	}
 
-	commonParams := o.buildParams(item.Parameters)
+	commonParams, err := o.buildParams(item.Parameters)
+	if err != nil {
+		return nil, err
+	}
 	supportedCode := regexp.MustCompile("^ok|error|[1-5][0-9][0-9]$")
 	errType := regexp.MustCompile("^Error|error$")
 
@@ -442,16 +510,25 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 		}
 
 		me := MethodEndpoints{Method: method}
+		params, err := o.buildParams(op.Parameters)
+		if err != nil {
+			return nil, err
+		}
+
 		ep := Endpoint{
 			Path:        getSyslSafeName(path),
 			Description: op.Description,
-			Params:      commonParams.Extend(o.buildParams(op.Parameters)),
+			Params:      commonParams.Extend(params),
 			Responses:   nil,
 		}
 		if req := op.RequestBody; req != nil {
 			for mediaType, obj := range req.Value.Content {
 				param := Param{In: "body"}
-				param.Field = o.fieldForMediaType(mediaType, obj, "Request")
+				field, err := o.fieldForMediaType(mediaType, obj, "Request")
+				if err != nil {
+					return nil, err
+				}
+				param.Field = field
 				ep.Params.Add(param)
 			}
 		}
@@ -467,7 +544,10 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 			}
 
 			for mediaType, val := range resp.Value.Content {
-				f := o.fieldForMediaType(mediaType, val, "")
+				f, err := o.fieldForMediaType(mediaType, val, "")
+				if err != nil {
+					return nil, err
+				}
 				respType.Properties = append(respType.Properties, f)
 			}
 			for name := range resp.Value.Headers {
@@ -487,7 +567,9 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 				r.Type = respType.Properties[0].Type
 				r.Type.AddAttributes(respType.Properties[0].Attrs)
 			} else if len(respType.Properties) > 0 {
-				respType.Properties.Sort()
+				if err := respType.SortProperties(); err != nil {
+					return nil, err
+				}
 				o.types.Add(respType)
 				r.Type = respType
 			}
@@ -510,18 +592,22 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) [
 		me.Endpoints = append(me.Endpoints, ep)
 		res = append(res, me)
 	}
-	return res
+	return res, nil
 }
 
-func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) Parameters {
+func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) (Parameters, error) {
 	var out Parameters
 	for _, item := range params {
 		name := item.Value.Name
 		if item.Value.In == "query" {
 			name = convertToSyslSafe(name)
 		}
+		field, err := o.buildField(name, item.Value.Schema)
+		if err != nil {
+			return out, err
+		}
 		p := Param{
-			Field: o.buildField(name, item.Value.Schema),
+			Field: field,
 			In:    item.Value.In,
 		}
 		// Avoid putting sequences into the params
@@ -531,15 +617,26 @@ func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) Parameters {
 		p.Optional = !item.Value.Required
 		out.Add(p)
 	}
-	return out
+	return out, nil
 }
 
-func (o *OpenAPI3Importer) fieldForMediaType(mediatype string, mediaObj *openapi3.MediaType, typeSuffix string) Field {
+func (o *OpenAPI3Importer) fieldForMediaType(
+	mediatype string,
+	mediaObj *openapi3.MediaType,
+	typeSuffix string,
+) (Field, error) {
 	schema := mediaObj.Schema
 	tname := typeNameFromSchemaRef(schema)
-	field := o.buildField(tname+typeSuffix, schema)
+	field, err := o.buildField(tname+typeSuffix, schema)
+	if err != nil {
+		return Field{}, err
+	}
 	if _, found := o.types.Find(tname); !found {
-		o.types.Add(o.loadTypeSchema(tname, schema.Value))
+		t, err := o.loadTypeSchema(tname, schema.Value)
+		if err != nil {
+			return Field{}, err
+		}
+		o.types.Add(t)
 	}
 	if a, ok := field.Type.(*Array); ok && typeSuffix == "Request" {
 		field.Type = o.types.AddAndRet(&Alias{baseType: baseType{name: field.Name}, Target: a})
@@ -559,7 +656,7 @@ func (o *OpenAPI3Importer) fieldForMediaType(mediatype string, mediaObj *openapi
 		field.Attrs = append(field.Attrs, es)
 	}
 
-	return field
+	return field, nil
 }
 
 func pathToURL(filename string) (*url.URL, error) {

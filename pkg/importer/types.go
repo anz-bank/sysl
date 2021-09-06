@@ -1,6 +1,8 @@
 package importer
 
 import (
+	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -31,6 +33,16 @@ func (s *baseType) AddAttributes(attrs []string) []string {
 type StandardType struct {
 	baseType
 	Properties FieldList
+}
+
+func (s *StandardType) SortProperties() error {
+	// this is done so that sorted properties can be assigned back.
+	props, err := s.Properties.SortWithoutDupl()
+	if err != nil {
+		return err
+	}
+	s.Properties = props
+	return nil
 }
 
 // Union represents a union type https://sysl.io/docs/lang-spec#union
@@ -125,10 +137,22 @@ func (t TypeList) Sort() {
 
 type FieldList []Field
 
-func (props FieldList) Sort() {
+func (props FieldList) SortWithoutDupl() (FieldList, error) {
+	m := make(map[string]Field)
+	for _, p := range props {
+		if prop, exist := m[p.Name]; exist && !reflect.DeepEqual(p, prop) {
+			return nil, fmt.Errorf("duplicate fields exist: %q", prop.Name)
+		}
+		m[p.Name] = p
+	}
+	props = make(FieldList, 0, len(m))
+	for _, prop := range m {
+		props = append(props, prop)
+	}
 	sort.SliceStable(props, func(i, j int) bool {
 		return strings.Compare(props[i].Name, props[j].Name) < 0
 	})
+	return props, nil
 }
 
 func (t TypeList) Find(name string) (Type, bool) {

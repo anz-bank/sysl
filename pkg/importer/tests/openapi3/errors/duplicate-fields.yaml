@@ -1,0 +1,23 @@
+openapi: "3.0.1"
+info:
+  title: Simple
+paths:
+  /pets:
+    patch:
+      responses:
+        "200":
+          description: Updated
+components:
+  schemas:
+    Test:
+      type: object
+      properties:
+        x:
+          type: string
+    Test2:
+      allOf:
+        - $ref: "#/components/schemas/Test"
+        - type: object
+          properties:
+            x:
+              type: number
