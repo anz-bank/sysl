@@ -267,6 +267,17 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         select = emptyModel
     ,
 
+    insert: (
+        values:
+            let insert = {:macro:INSERT INTO t (c) VALUES (1):};
+            insert = emptyModel
+        ,
+        selection:
+            let insert = {:macro:INSERT INTO t (c) SELECT a FROM b:};
+            insert = emptyModel
+        ,
+    ),
+
     set: [
         {:macro:SET foo = 0:},
         {:macro:SET standard_conforming_strings = on:},
