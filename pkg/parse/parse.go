@@ -101,11 +101,11 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		imp.WithAppName(def.appname).WithPackage(def.pkg)
 		if err != nil {
-			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
 		}
 		output, err := imp.Load(file)
 		if err != nil {
-			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format", fileName))
+			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
 		}
 		return antlr.NewInputStream(output), nil
 	default:

@@ -9,6 +9,7 @@ package importer
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/url"
@@ -501,8 +502,6 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) (
 	if err != nil {
 		return nil, err
 	}
-	supportedCode := regexp.MustCompile("^ok|error|[1-5][0-9][0-9]$")
-	errType := regexp.MustCompile("^Error|error$")
 
 	for method, op := range ops {
 		if op == nil {
@@ -515,84 +514,145 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) (
 			return nil, err
 		}
 
-		ep := Endpoint{
+		ep := &Endpoint{
 			Path:        getSyslSafeName(path),
 			Description: op.Description,
 			Params:      commonParams.Extend(params),
 			Responses:   nil,
 		}
-		if req := op.RequestBody; req != nil {
-			for mediaType, obj := range req.Value.Content {
-				param := Param{In: "body"}
-				field, err := o.fieldForMediaType(mediaType, obj, "Request")
-				if err != nil {
-					return nil, err
-				}
-				param.Field = field
-				ep.Params.Add(param)
-			}
+
+		err = o.buildRequests(op.RequestBody, ep)
+		if err != nil {
+			return nil, err
 		}
-		typePrefix := getSyslSafeName(convertToSyslSafe(cleanEndpointPath(path))) + "_"
+
 		for statusCode, resp := range op.Responses {
-			text := statusCode
-
-			respType := &StandardType{
-				baseType: baseType{
-					name: typePrefix + text,
-				},
-				Properties: FieldList{},
+			err = o.buildResponses(statusCode, resp, path, ep)
+			if err != nil {
+				return nil, err
 			}
-
-			for mediaType, val := range resp.Value.Content {
-				f, err := o.fieldForMediaType(mediaType, val, "")
-				if err != nil {
-					return nil, err
-				}
-				respType.Properties = append(respType.Properties, f)
-			}
-			for name := range resp.Value.Headers {
-				f := Field{
-					Name:  name,
-					Attrs: []string{"~header"},
-				}
-				if f.Type == nil {
-					f.Type = StringAlias
-				}
-				respType.Properties = append(respType.Properties, f)
-			}
-
-			r := Response{}
-
-			if len(respType.Properties) == 1 && respType.Properties[0].Attrs[0] != "~header" {
-				r.Type = respType.Properties[0].Type
-				r.Type.AddAttributes(respType.Properties[0].Attrs)
-			} else if len(respType.Properties) > 0 {
-				if err := respType.SortProperties(); err != nil {
-					return nil, err
-				}
-				o.types.Add(respType)
-				r.Type = respType
-			}
-
-			match := supportedCode.MatchString(text)
-			if !match {
-				o.logger.Warnf("Custom response code %s is not supported", text)
-				text = "ok"
-				if r.Type != nil {
-					if match = errType.MatchString(r.Type.Name()); match {
-						text = "error"
-					}
-				}
-			}
-			r.Text = text
-
-			ep.Responses = append(ep.Responses, r)
 		}
 
-		me.Endpoints = append(me.Endpoints, ep)
+		me.Endpoints = append(me.Endpoints, *ep)
 		res = append(res, me)
 	}
 	return res, nil
+}
+
+func (o *OpenAPI3Importer) buildRequests(req *openapi3.RequestBodyRef, ep *Endpoint) error {
+	if req == nil {
+		return nil
+	}
+	if ep == nil {
+		return errors.New("nil endpoint")
+	}
+
+	fields := make(map[string]map[string]*openapi3.MediaType)
+	for mediaType, obj := range req.Value.Content {
+		schema := obj.Schema
+		tname := typeNameFromSchemaRef(schema)
+		if _, ok := fields[tname]; !ok {
+			fields[tname] = make(map[string]*openapi3.MediaType)
+		}
+		fields[tname][mediaType] = obj
+	}
+
+	for _, content := range fields {
+		mtType := mtReq
+		if len(content) > 1 {
+			mtType = mtMultiReq
+		}
+		for mediaType, obj := range content {
+			field, err := o.fieldForMediaType(mediaType, obj, mtType)
+			if err != nil {
+				return err
+			}
+			ep.Params.Add(Param{In: "body", Field: field})
+		}
+	}
+	return nil
+}
+
+func (o *OpenAPI3Importer) buildResponses(
+	statusCode string,
+	resp *openapi3.ResponseRef,
+	path string,
+	ep *Endpoint,
+) error {
+	supportedCode := regexp.MustCompile("^ok|error|[1-5][0-9][0-9]$")
+	errType := regexp.MustCompile("^Error|error$")
+	typePrefix := getSyslSafeName(convertToSyslSafe(cleanEndpointPath(path))) + "_"
+	text := statusCode
+
+	respType := &StandardType{
+		baseType: baseType{
+			name: typePrefix + text,
+		},
+		Properties: FieldList{},
+	}
+
+	fields := make(map[string]map[string]*openapi3.MediaType)
+	for mediaType, obj := range resp.Value.Content {
+		schema := obj.Schema
+		tname := typeNameFromSchemaRef(schema)
+		if _, ok := fields[tname]; !ok {
+			fields[tname] = make(map[string]*openapi3.MediaType)
+		}
+		fields[tname][mediaType] = obj
+	}
+
+	for _, content := range fields {
+		mtType := mtResp
+		if len(content) > 1 {
+			mtType = mtMultiResp
+		}
+		for mediaType, obj := range content {
+			f, err := o.fieldForMediaType(mediaType, obj, mtType)
+			if err != nil {
+				return err
+			}
+			respType.Properties = append(respType.Properties, f)
+		}
+	}
+
+	for name := range resp.Value.Headers {
+		f := Field{
+			Name:  name,
+			Attrs: []string{"~header"},
+		}
+		if f.Type == nil {
+			f.Type = StringAlias
+		}
+		respType.Properties = append(respType.Properties, f)
+	}
+
+	r := Response{}
+
+	if len(respType.Properties) == 1 && respType.Properties[0].Attrs[0] != "~header" {
+		r.Type = respType.Properties[0].Type
+		r.Type.AddAttributes(respType.Properties[0].Attrs)
+	} else if len(respType.Properties) > 0 {
+		if err := respType.SortProperties(); err != nil {
+			return err
+		}
+		o.types.Add(respType)
+		r.Type = respType
+	}
+
+	match := supportedCode.MatchString(text)
+	if !match {
+		o.logger.Warnf("Custom response code %s is not supported", text)
+		text = "ok"
+		if r.Type != nil {
+			if match = errType.MatchString(r.Type.Name()); match {
+				text = "error"
+			}
+		}
+	}
+	r.Text = text
+
+	ep.Responses = append(ep.Responses, r)
+	return nil
 }
 
 func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) (Parameters, error) {
@@ -620,17 +680,35 @@ func (o *OpenAPI3Importer) buildParams(params openapi3.Parameters) (Parameters, 
 	return out, nil
 }
 
+type mediaTypeFieldType uint8
+
+const (
+	mtReq mediaTypeFieldType = iota
+	mtResp
+	mtMultiReq
+	mtMultiResp
+)
+
 func (o *OpenAPI3Importer) fieldForMediaType(
 	mediatype string,
 	mediaObj *openapi3.MediaType,
-	typeSuffix string,
+	mtType mediaTypeFieldType,
 ) (Field, error) {
 	schema := mediaObj.Schema
 	tname := typeNameFromSchemaRef(schema)
-	field, err := o.buildField(tname+typeSuffix, schema)
+
+	medianame, typeSuffix := "", ""
+	if mtType == mtMultiReq || mtType == mtMultiResp {
+		medianame = utils.ToCamel(cleanMediaType(mediatype))
+	}
+	if mtType == mtReq || mtType == mtMultiReq {
+		typeSuffix = "Request"
+	}
+	field, err := o.buildField(tname+medianame+typeSuffix, schema)
 	if err != nil {
 		return Field{}, err
 	}
+
 	if _, found := o.types.Find(tname); !found {
 		t, err := o.loadTypeSchema(tname, schema.Value)
 		if err != nil {

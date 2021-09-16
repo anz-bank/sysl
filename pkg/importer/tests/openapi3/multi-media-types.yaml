@@ -1,0 +1,36 @@
+openapi: "3.0"
+info:
+  title: Simple
+paths:
+  /docs/{docId}:
+    get:
+      parameters:
+        - name: docId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: byte
+      responses:
+        200:
+          description: "200 OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+            application/vnd.restful+json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/SimpleObj"
+components:
+  schemas:
+    SimpleObj:
+      type: object
+      properties:
+        name:
+          type: string

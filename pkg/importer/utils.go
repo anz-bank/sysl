@@ -117,6 +117,15 @@ func cleanEndpointPath(path string) string {
 		"-", "_").Replace(path)
 }
 
+func cleanMediaType(path string) string {
+	return strings.NewReplacer(
+		"/", "_",
+		"+", "_",
+		"-", "_",
+		".", "_",
+		"*", "_").Replace(path)
+}
+
 func convertToSyslSafe(name string) string {
 	if !strings.ContainsAny(name, "- ") {
 		return name
