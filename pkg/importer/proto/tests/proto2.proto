@@ -1,0 +1,34 @@
+syntax = "proto2";
+package proto2;
+option java_package = "com.example.foo";
+/* A
+    Multiline
+Comment */
+enum EnumAllowingAlias {
+    // preceding option comment
+    option allow_alias = true; // inline option comment
+    // enumField comment
+    UNKNOWN = 0;
+    STARTED = 1;
+    RUNNING = 2 [(custom_option) = "hello world"];
+}
+// Level 1
+message Outer {
+    option (my_option).a = true;
+    // Level 2
+    // Description
+    message Inner {
+        required int64 ival = 1;
+    }
+    repeated Inner inner_message = 2;
+    optional EnumAllowingAlias enum_field = 3;
+    map<int32, string> my_map = 4;
+    extensions 20 to 30;
+}
+/* single line multiline */
+extend Foo {
+    optional int32 bar = 126;
+}
+service SearchService {
+    rpc Search (SearchRequest) returns (SearchResponse);
+}

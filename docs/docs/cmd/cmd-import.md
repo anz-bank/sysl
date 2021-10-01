@@ -28,11 +28,17 @@ Currently, the supported formats include:
 - Avro (Kafka)
 - SQL (Spanner, PostgreSQL, MySQL, BigQuery)
 - A directory of SQL migration scripts
+- Protobuf
+- A directory of Protobuf files
 
 ## Required Flags
 
+### Universal
 - `-i, --input=<FILE-TO-IMPORT.EXT>`: Input filename.
 - `-a, --app-name=<APP-NAME>`: Name of the sysl app to define in sysl model.
+
+### Protobuf
+- `-I, --import-paths="foo,bar/baz"`: The directories to resolve imports in.
 
 ## Optional flags
 
@@ -229,4 +235,16 @@ sysl import --input=sysl/pkg/importer/spanner/test --app-name=Foo
 Foo [spanner_spec="1.0"]:
     !table foo:
         a <: int? [~pk]
+```
+
+### Protobuf
+
+```bash
+sysl import --input=pkg/importer/proto/tests/proto2.proto --app-name=Foo --output=pkg/importer/proto/tests/combined/proto2.sysl --import-paths=pkg/importer/proto/tests/
+```
+
+### Protobuf directory
+
+```bash
+sysl import --input=pkg/importer/proto/tests/combined/ --app-name=Foo --output=pkg/importer/proto/tests/combined/combined.sysl --import-paths=pkg/importer/proto/tests/combined --format=ProtobufDir
 ```

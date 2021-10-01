@@ -75,6 +75,11 @@ func (o *OpenAPI3Importer) WithPackage(packageName string) Importer {
 	return o
 }
 
+// Set the importPaths attribute of the imported app
+func (o *OpenAPI3Importer) WithImports(_ string) Importer {
+	return o
+}
+
 func NewOpenAPI3Loader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoader {
 	loader := openapi3.NewSwaggerLoader()
 	loader.IsExternalRefsAllowed = true

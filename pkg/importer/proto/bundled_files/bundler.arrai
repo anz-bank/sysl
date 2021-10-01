@@ -1,0 +1,5 @@
+let (:parseFile, ...) = //{/pkg/importer/proto/proto_parser};
+
+let bundleDir = "pkg/importer/proto/bundled_files/";
+let files = //os.tree(bundleDir) => .path where //seq.contains(".proto", .);
+//rel.union(files => {//seq.trim_prefix(bundleDir, .): parseFile(//os.file(.))})

@@ -36,6 +36,11 @@ func (i *TransformImporter) WithPackage(_ string) Importer {
 	return i
 }
 
+// WithImports allows the imported Sysl import paths attribute to be specified
+func (i *TransformImporter) WithImports(_ string) Importer {
+	return i
+}
+
 // LoadFile generates a Sysl spec by invoking the arr.ai transform.
 func (i *TransformImporter) LoadFile(path string) (string, error) {
 	bs, err := ioutil.ReadFile(path)

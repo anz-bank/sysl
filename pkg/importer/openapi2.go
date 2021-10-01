@@ -74,6 +74,11 @@ func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
 	return l
 }
 
+// Set the importPaths attribute of the imported app
+func (l *OpenAPI2Importer) WithImports(_ string) Importer {
+	return l
+}
+
 // convertToOpenAPI3 takes a openapi2 spec and converts it to openapi3
 func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader) (*openapi3.Swagger, string, error) {
 	var openapiv2 openapi2.Swagger

@@ -1,0 +1,33 @@
+let (:import, ...) = //{./proto_parser};
+let (:module, ...) = //{./proto_to_sysl};
+let (:renderAllInOne, ...) = //{/pkg/arrai/sysl-renderer/render_mod};
+
+let importString = \appName \str \importPaths //log.error("Proto string import not supported");
+
+let importFiles = \appName \files \importPaths $`${renderAllInOne(module(import(files, //seq.split(",", importPaths))))}` ++ '\n';
+
+let importDir = \appName \dir \importPaths
+    let isProto = \path //seq.has_suffix(".proto", path);
+
+    let paths = //os.tree(dir) => .path;
+    let files = (paths where isProto(.)) orderby .;
+
+    importFiles(appName, files, importPaths)
+;
+
+let import = \appName \input \importPaths
+    cond input {
+        [...]: importFiles(appName, input, importPaths),
+        _:
+            let [..., base] = //seq.split(//os.path_separator, input);
+            cond {
+                //seq.has_suffix('.proto', base): importFiles(appName, [input], importPaths),
+                _: importDir(appName, input, importPaths),
+            }
+    }
+;
+
+(
+    :importString,
+    :import
+)

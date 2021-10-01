@@ -1,5 +1,6 @@
 let (:partsToAppName, ...) = //{/pkg/arrai/tools/appname};
 let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (:unescape, ...) = //{/pkg/importer/utils};
 let (
     :renderInlineSections,
     :renderMultilineSections,
@@ -23,7 +24,7 @@ let renderLongName = \name name && $`"${name}"`;
 let rec renderInlineAnnoValue = \v
     cond v {
         (a: (:elt, ...), ...): $`[${elt >> renderInlineAnnoValue(.)::, }]`,
-        (:s, ...): $`"${//re.compile('"').sub(`\"`, $`${s}`)}"`,
+        (:s, ...): $`"${//re.compile('((?:^|[^\\\\])(?:\\\\{2})*)"').sub(`\"`, $`${trimPrefixWS(s)}`)}"`,
         _: //error(v),
     }
 ;
@@ -33,9 +34,9 @@ let renderAnnoStmts = \anno
         ${(
             anno => \(@: name, @value: value)
                 $`
-                    @${name} = ${
+                    @${name} =${
                         cond value {
-                            (a: (elt: _, ...), ...): renderInlineAnnoValue(value),
+                            (a: (elt: _, ...), ...): ' ' ++ renderInlineAnnoValue(value),
                             (:s, ...): cond {
                                 //seq.contains('\n', s):
                                     let s = ' ' ++ //seq.trim_suffix('\n', trimPrefixWS(s));
@@ -43,7 +44,7 @@ let renderAnnoStmts = \anno
                                         :
                                             ${//seq.split('\n', s) >> '|' ++ .::\i:}
                                     `,
-                                _: renderInlineAnnoValue(value),
+                                _: ' ' ++ renderInlineAnnoValue(value),
                             }
                         }
                     }
@@ -295,47 +296,6 @@ let renderAlias = \(:name, :type)
     `
 ;
 
-let rec renderFieldDefinition = \(:name, :type)
-    let typeUsage = cond type {
-        (tuple: (attr_defs: fields, ...), ...): $`
-            :
-                ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
-        `,
-        _:
-            let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
-            ': ' ++ $`
-                ${renderTypeUsage(type)}${tags && ' ' ++ renderInlineAnnoAndTags(tags)}${
-                    anno && $`
-                        :
-                            ${renderAnnoStmts(anno)}
-                    `
-                }
-            `
-    };
-    # colon is in typeUsage to help with nested tuple indentations
-    $`${name} <${typeUsage}`
-;
-
-let renderTypeOrTable = \(:name, :type)
-    cond {
-        # FIXME: handle inplace type definitions on fields
-        //seq.contains('.', name): '',
-        _:
-            let attrs = type.attrs?:{};
-            let (:tags, :anno) = attrsToTagsAndAnno(attrs);
-            let [kind, fields] = cond type {
-                (tuple: (attr_defs: fields, ...), ...):    ['type', fields],
-                (relation: (attr_defs: fields, ...), ...): ['table', fields],
-                _: //error($`renderTypeOrTable: unrecognised type ${type}`),
-            };
-            $`
-                !${renderInlineSections([kind, name, renderInlineAnnoAndTags(tags)])}:
-                    ${renderAnnoStmts(anno)}
-                    ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
-            `
-    }
-;
-
 let renderUnion = \(:name, type: (one_of: (type: union, ...), ?:attrs:{}, ...))
     let (:tags, :anno) = attrsToTagsAndAnno(attrs);
     $`
@@ -345,13 +305,66 @@ let renderUnion = \(:name, type: (one_of: (type: union, ...), ?:attrs:{}, ...))
     `
 ;
 
-# FIXME: handle union
+let renderOneOf = \(:name, type: (one_of: (type: union, ...), ?:attrs:{}, ...))
+let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+    $`
+        ${renderInlineSections([name, renderInlineAnnoAndTags(tags)])}:
+            ${renderAnnoStmts(anno)}
+            ${union >> renderFieldDefinition(.)::\i}
+    `
+;
+
+let rec renderFieldDefinition = \(:name, :type)
+    cond type {
+        (tuple: (attr_defs: fields, ...), ...): 
+            $`
+                ${name} <:
+                    ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
+            `,
+        (:one_of, ...):
+            # TODO: Add tags/annos when Sysl supports it
+            $`
+                ${name} <: 
+                    ${one_of.type >> renderFieldDefinition((name: .name, type: (.)))::\i}
+            `,
+        _:
+            let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
+            $`${name} <: ${renderTypeUsage(type)}${tags && ' ' ++ renderInlineAnnoAndTags(tags)}${
+                    anno && $`
+                        :
+                            ${renderAnnoStmts(anno)}
+                    `
+                }
+            `
+    };
+
+let renderTypeOrTable = \(:name, :type)
+    cond {
+        # FIXME: handle inplace type definitions on fields
+        //seq.contains('.', unescape(name)): '',
+        _:
+            let attrs = type.attrs?:{};
+            let (:tags, :anno) = attrsToTagsAndAnno(attrs);
+            let inlineAnno = anno where .@ = "oneOfProtoField";
+            let [kind, fields] = cond type {
+                (tuple: (attr_defs: fields, ...), ...):    ['type', fields],
+                (relation: (attr_defs: fields, ...), ...): ['table', fields],
+                _: //error($`renderTypeOrTable: unrecognised type ${type}`),
+            };
+            $`
+                !${renderInlineSections([kind, name, renderInlineAnnoAndTags(tags +> inlineAnno)])}:
+                    ${renderAnnoStmts(anno &~ inlineAnno)}
+                    ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
+            `
+    }
+;
+
 let renderAllType = \t
     cond t.type {
+        (one_of: _, ...):   renderUnion(t),
         (tuple: _, ...):    renderTypeOrTable(t),
         (relation: _, ...): renderTypeOrTable(t),
         (enum: _, ...):     renderEnum(t),
-        (one_of: _, ...):   renderUnion(t),
         _:                  renderAlias(t),
     }
 ;

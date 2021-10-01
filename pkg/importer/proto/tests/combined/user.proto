@@ -1,0 +1,9 @@
+syntax = "proto3";
+package foo.user;
+
+import "user_type.proto";
+
+service UserService {
+    rpc GetUser (GetUserRequest) returns (GetUserResponse);
+    rpc AddUser (AddUserRequest) returns (AddUserResponse);
+}

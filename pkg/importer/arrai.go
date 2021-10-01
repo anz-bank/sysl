@@ -13,10 +13,11 @@ const ArraiImporterDir = "pkg/importer"
 
 // ArraiImporter encapsulates glue code for calling arr.ai scripts to import specs.
 type ArraiImporter struct {
-	appName string
-	pkg     string
-	asset   string
-	logger  *logrus.Logger
+	appName     string
+	pkg         string
+	asset       string
+	importPaths string
+	logger      *logrus.Logger
 }
 
 // MakeArraiImporterImporter returns a new ArraiImporter.
@@ -36,6 +37,12 @@ func (i *ArraiImporter) WithAppName(appName string) Importer {
 // WithPackage allows the exported Sysl package attribute to be specified.
 func (i *ArraiImporter) WithPackage(packageName string) Importer {
 	i.pkg = packageName
+	return i
+}
+
+// Set the importPaths attribute of the imported app
+func (i *ArraiImporter) WithImports(importPaths string) Importer {
+	i.importPaths = importPaths
 	return i
 }
 

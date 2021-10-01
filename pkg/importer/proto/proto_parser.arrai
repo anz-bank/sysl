@@ -1,10 +1,10 @@
-let (:trimWhitespace, ...) = //{/pkg/arrai/util};
+let (:includeImport, ...) = //{./util};
+
 # Tools for parsing and importing Protocol Buffers.
 # 
 # `grammar` is a wbnf encoding of the Protocol Buffers Version 2 and 3 Language Specifications:
 # https://developers.google.com/protocol-buffers/docs/reference/proto3-spec
 # https://developers.google.com/protocol-buffers/docs/reference/proto2-spec
-
 let grammar = {://grammar.lang.wbnf:
 
 file            -> c* syntax stmt=(import | package | option | topLevelDef | emptyStatement)* \n*;
@@ -24,16 +24,16 @@ topLevelDef     -> enum | message | service | extend;
 
 enum            -> c* "enum" enumName enumBody;
 enumName        -> ident;
-enumBody        -> "{" (option | enumField | emptyStatement)* "}";
+enumBody        -> "{" (option | enumField | emptyStatement | c)* "}";
 enumField       -> c* fieldName "=" "-"? intLit ("[" enumValueOption:comma "]")? ";" ($ | c)?;
 enumValueOption -> optionName "=" constant;
 
 message         -> c* "message" messageName messageBody;
 messageName     -> ident;
-messageBody     -> "{" (field | enum | message | extend | extensions | group | option | oneof | mapField | reserved | emptyStatement)* "}";
+messageBody     -> "{" (field | enum | message | extend | extensions | group | option | oneof | mapField | reserved | emptyStatement | c)* "}";
 messageType     ->  ident:,".";
 
-service         -> c* "service" serviceName "{" (option | rpc | emptyStatement)* "}";
+service         -> c* "service" serviceName "{" (option | rpc | emptyStatement | c)* "}";
 serviceName     -> ident;
 rpc             -> c* "rpc" rpcName "(" "stream"? inputMessage ")" "returns" "(" "stream"? returnMessage ")" (( "{" (option | emptyStatement)* "}" ) | ";" ) ($ | c)?;
 rpcName         -> ident;
@@ -88,12 +88,12 @@ boolLit         -> /{true | false};
 
 strLit          -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //';
 
-object          -> "{" objectField:comma? "}";
-objectField     -> objectKey ":" objectValue;
+object          -> "{" (objectField comma? c*)* "}";
+objectField     -> objectKey ":"? objectValue;
 objectKey       -> constant;
-objectValue     -> constant;
+objectValue     -> constant ";"?;
 
-array           -> "[" arrayItem:comma? "]";
+array           -> "[" (arrayItem comma? c*)* "]";
 arrayItem       -> constant;
 
 c               -> /{ // .* $ | (?: /\* (?: [^*] | \*+[^*/] )* \*/ )};
@@ -106,7 +106,7 @@ comma           -> c* ",";
 
 let evalIdent = \parsed
     cond parsed {
-        [...]: //seq.join('', parsed >> //seq.join('', .'')),
+        [...]: //seq.join('.', parsed >> //seq.join('', .'')),
         _: //seq.join('', parsed.'')
     };
 
@@ -119,11 +119,13 @@ let evalName = \parsed
     };
 
 let evalType = \parsed
-    cond parsed {
+   let fullName = cond parsed {
         (:messageType, ...): evalIdent(messageType.ident),
         (:ident, ...): evalIdent(ident),
         _: parsed.'' rank (:.@)
     };
+    let [...package, name] = //seq.split(".", fullName);
+    cond {package: (package: //seq.join(".", package), :name)} || (:name);
 
 let evalLabel = \parsed parsed.'' rank (:.@) ;
 
@@ -149,10 +151,9 @@ let evalOptionName = \parsed
 let evalComments = \parsed
     cond parsed {
         (:c, ...): (comments: c >> cond {
-            //seq.has_prefix("//", .''): trimWhitespace(//seq.trim_prefix("//", .'')),
+            //seq.has_prefix("//", .''): //seq.trim_prefix("//", .''),
             //seq.has_prefix("/*", .''): 
-                let trimmed = //seq.trim_suffix("*/", //seq.trim_prefix("/*", .''));
-                //seq.join("\n", //seq.split("\n", trimmed) >> trimWhitespace(.) where .@item rank (:.@))
+               //seq.trim_suffix("*/", //seq.trim_prefix("/*", .''))
         })
     } || ();
 
@@ -169,7 +170,7 @@ let evalField = \parsed
 
 let evalOneofField = \parsed
     {
-        parsed.oneofName: (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+        evalName(parsed.oneofName): (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
             +> (cond parsed {(:oneofField, ...): (fields: //rel.union(oneofField => evalField(.@item)))} || ()) +> evalComments(parsed)
     };
 
@@ -213,8 +214,8 @@ let evalEnum = \parsed { evalName(parsed.enumName): evalEnumBody(parsed.enumBody
 let evalRPC = \parsed
     {
         evalName(parsed.rpcName):(
-            in: evalName(parsed.inputMessage.messageType),
-            out: evalName(parsed.returnMessage.messageType)
+            in: evalType(parsed.inputMessage.messageType),
+            out: evalType(parsed.returnMessage.messageType)
         )+> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
 
@@ -284,34 +285,73 @@ let evalFile = \parsed
     (:syntax, :package, :imports, :options, :messages, :enums, :services, :extends) +> evalComments(parsed);
 
 # `parseFile` parses a byte array against the `file` grammar rule and evaluates it into an arr.ai model.
-let parseFile = \bytes 
+let parseFile = \bytes
     evalFile(//grammar.parse(grammar, "file", bytes));
 
-let import = \file \paths
+
+# `import` imports a list of proto files and returns the arrai representation.
+# `files` the list of proto files. 
+# `paths` the list of paths used to resolve imports.
+# Example ouput:
+# {
+#   "pkg/importer/proto/tests/combined/user.proto": (
+#       enums: {}, 
+#       extends: {},
+#       imports: {'user_type.proto': ()}, 
+#       messages: {}, 
+#       options: {}, 
+#       package: {'foo.user': ()}, 
+#       services: {
+#           'UserService': (rpcs: {'AddUser': (in: (name: 'AddUserRequest'), out: (name: 'AddUserResponse')),
+#           'GetUser': (in: (name: 'GetUserRequest'), out: (name: 'GetUserResponse'))})
+#       }, 
+#       syntax: 'proto3'
+#   ),
+#   "pkg/importer/proto/tests/combined/user_type.proto": (
+#       enums: {}, 
+#       extends: {}, 
+#       imports: {}, 
+#       messages: {'AddUserRequest': (), 'AddUserResponse': (), 'GetUserRequest': (), 'GetUserResponse': ()}, 
+#       options: {}, 
+#       package: {'foo.user': ()}, 
+#       services: {}, 
+#       syntax: 'proto3'
+#   )
+# }
+let import = \files \paths
+    let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.contains(".proto", .)};
-    # `importFile` returns the full file path of an import
-    # `import` the file to import
-    # `fileMaps` a map of import paths to available files
-    let importFile = \import \fileMaps 
-        let matches = (fileMaps >> \map (map single).@value where //seq.contains(import,  .)) where .@item;
-        cond matches{[...]: (matches rank (:.@))(0) single, _: //error($'FATAL: cannot find import ${import}')};
-    # `import` returns the parsed files and their imports
+    # `path` returns the full filepath for the file being processed
+    # `file` the file being processed
+    let rec path = \file
+        let m = (fileMaps >> \map (map single).@value where //seq.contains(file,  .)) where .@item;
+        cond {m: (m rank (:.@))(0) single, _: let [_, ...tail] = //seq.split("/", file); cond {tail: path(//seq.join("/", tail))}};
+    # `_import` returns the parsed files and their imports
     # `files` the files to parse
     # `result` the result of all evaluated files so far
     let rec _import = \files \result
         cond files {
             {}: result,
             [file, ...tail]:
+                let filePath = path(file);
+                let parsed = cond {
+                    filePath: cond {
+                            !result(filePath)?:{}: parseFile(//os.file(filePath)),
+                        },
+                    _: cond {
+                        localImports(file): localImports(file),
+                        _: //error($'FATAL: cannot find import ${file}')
+                    }
+                };
                 cond {
-                    result(file)?:{}: _import(tail, result),
-                    _:
-                        let parsed = parseFile(//os.file(file));
+                    parsed:
                         let result = result +> {file: parsed};
-                        let importFiles = (parsed.imports => importFile(.@, fileMaps) orderby .);
-                        _import(tail ++ importFiles, result)
-        }
+                        let importFiles = ((parsed.imports => cond {includeImport(.@): .@}) where .) orderby .;
+                        _import(tail ++ importFiles, result), 
+                    _: _import(tail, result)
+                }
     };
-    _import([file], {});
+    _import(files, {});
 
 (
     :evalConstant, # Visible for testing

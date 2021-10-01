@@ -80,6 +80,11 @@ func (i *XSDImporter) WithPackage(pkg string) Importer {
 	return i
 }
 
+// Set the importPaths attribute of the imported app
+func (i *XSDImporter) WithImports(_ string) Importer {
+	return i
+}
+
 func makeNamespacedType(name xml.Name, target Type) Type {
 	return &ImportedBuiltInAlias{
 		baseType: baseType{name: fmt.Sprintf("%s:%s", name.Space, name.Local)},

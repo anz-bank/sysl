@@ -3,10 +3,9 @@ let (:simplify, ...) = //{github.com/arr-ai/arrai/contrib/json};
 let (:appNameToAppNameMessage, :partsToAppName, ...) = //{/pkg/arrai/tools/appname};
 let (:renderTypeUsageWithInlineAnno, ...) = //{/pkg/arrai/sysl-renderer/sysl_mod_renderers};
 
-let primitive = \p (primitive: p);
-let typeRef = \(?:appName:'', ?:path:[]) (type_ref: (ref: (appname: appNameToAppNameMessage(appName), :path)));
+let (:syslAttrs, ...) = //{./util};
+let (:primitive, :typeRef, :syslSafeName, :shallowEscape, :syslSafePath, ...) = //{/pkg/importer/utils};
 
-let (:syslSafeName, :syslAttrs, :shallowEscape, :syslSafePath, ...) = //{./util};
 
 let rec schemaToTypeMessage = \t
     let type = cond t {

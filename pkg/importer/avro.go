@@ -58,3 +58,8 @@ func (i *avroImporter) WithPackage(pkg string) Importer {
 	i.pkg = pkg
 	return i
 }
+
+// Set the importPaths attribute of the imported app
+func (i *avroImporter) WithImports(_ string) Importer {
+	return i
+}

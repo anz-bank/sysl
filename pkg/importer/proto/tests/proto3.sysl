@@ -1,0 +1,27 @@
+SearchService [~gRPC]:
+    @package = "proto3"
+    @source_path = "proto/tests/proto3.proto"
+    
+    Search (input <: SearchRequest) [~gRPC]:
+        @source_path = "proto/tests/proto3.proto"
+        return ok <: SearchResponse
+
+proto3:
+    @package = "proto3"
+    
+    !enum EnumAllowingAlias [proto_options=["allow_alias = "], source_path="proto/tests/proto3.proto"]:
+        UNKNOWN : 0
+        STARTED : 1
+        RUNNING : 2
+    
+    !type Outer:
+        @description =:
+            | Level 1
+        @proto_options = ["(my_option).a = "]
+        @source_path = "proto/tests/proto3.proto"
+        enum_field <: EnumAllowingAlias:
+            @json_tag = "enumField"
+            @rpcId = "3"
+        inner_message <: sequence of Inner:
+            @json_tag = "innerMessage"
+            @rpcId = "2"

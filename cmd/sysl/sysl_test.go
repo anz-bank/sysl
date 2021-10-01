@@ -1150,6 +1150,7 @@ func TestSyslSyntaxValidate(t *testing.T) {
 
 	dirs := []string{
 		"../../pkg/importer/avro/tests",
+		"../../pkg/importer/proto/tests",
 		"../../pkg/importer/tests/grammar",
 		"../../pkg/importer/tests/openapi3",
 		"../../pkg/importer/tests/openapi2",

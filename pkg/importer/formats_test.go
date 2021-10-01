@@ -16,6 +16,7 @@ var formatsToTest = []Format{
 	OpenAPI2,
 	SpannerSQL,
 	SpannerSQLDir,
+	Protobuf,
 }
 
 var formatTests = []struct {
@@ -36,6 +37,7 @@ var formatTests = []struct {
 	{"Parses xsd files", ".xsd", []byte(`xml`), &XSD, nil},
 	{"Parses xml files", ".xml", []byte(`xml`), &XSD, nil},
 	{"Parses Spanner SQL files", ".sql", []byte{}, &SpannerSQL, nil},
+	{"Parses Protobuf files", ".proto", []byte{}, &Protobuf, nil},
 	{"Fails for unknown extension", ".abcde", []byte{}, nil, errors.New("error detecting input file format for ")},
 	{"Fails for invalid json", ".json", []byte{}, nil, errors.New("error converting json to yaml for ")},
 	{"Fails for empty string", "", []byte{}, nil, errors.New("error detecting input file format for ")},

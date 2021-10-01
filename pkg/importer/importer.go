@@ -19,6 +19,8 @@ type Importer interface {
 	WithAppName(appName string) Importer
 	// WithPackage allows the imported Sysl package attribute to be specified.
 	WithPackage(packageName string) Importer
+	// withImports allows the import directories to be specified.
+	WithImports(imports string) Importer
 }
 
 // Formats lists all supported import formats
@@ -31,6 +33,8 @@ var Formats = []Format{
 	Avro,
 	SpannerSQL,
 	SpannerSQLDir,
+	Protobuf,
+	ProtobufDir,
 	Postgres,
 	PostgresDir,
 	MySQL,
@@ -92,6 +96,9 @@ func Factory(path string, isDir bool, formatName string, content []byte, logger 
 	case SpannerSQL.Name, SpannerSQLDir.Name, Postgres.Name, PostgresDir.Name, MySQL.Name, MySQLDir.Name, BigQuery.Name:
 		logger.Debugln("Detected SQL")
 		return MakeSQLImporter(logger), nil
+	case Protobuf.Name, ProtobufDir.Name:
+		logger.Debugln("Detected Protobuf")
+		return MakeProtobufImporter(logger), nil
 	default:
 		logger.Debugln("Defaulting to transform-based importing")
 		return MakeTransformImporter(logger, format.Name), nil

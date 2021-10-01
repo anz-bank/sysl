@@ -1,0 +1,19 @@
+syntax = "proto3";
+package foo.user;
+
+message GetUserRequest {
+
+}
+
+message GetUserResponse {
+
+}
+
+message AddUserRequest {
+
+}
+
+message AddUserResponse {
+
+}
+

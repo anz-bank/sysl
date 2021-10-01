@@ -1,0 +1,37 @@
+TokenService [~gRPC]:
+    @package = "foo_token"
+    @source_path = "proto/tests/combined/token.proto"
+    
+    GetToken (input <: GetTokenRequest) [~gRPC]:
+        @source_path = "proto/tests/combined/token.proto"
+        return ok <: GetTokenResponse
+
+UserService [~gRPC]:
+    @package = "foo_user"
+    @source_path = "proto/tests/combined/user.proto"
+    
+    AddUser (input <: AddUserRequest) [~gRPC]:
+        @source_path = "proto/tests/combined/user.proto"
+        return ok <: AddUserResponse
+    
+    GetUser (input <: GetUserRequest) [~gRPC]:
+        @source_path = "proto/tests/combined/user.proto"
+        return ok <: GetUserResponse
+
+foo_user:
+    @package = "foo_user"
+    
+    !type AddUserRequest:
+        @source_path = "proto/tests/combined/user_type.proto"
+    
+    
+    !type AddUserResponse:
+        @source_path = "proto/tests/combined/user_type.proto"
+    
+    
+    !type GetUserRequest:
+        @source_path = "proto/tests/combined/user_type.proto"
+    
+    
+    !type GetUserResponse:
+        @source_path = "proto/tests/combined/user_type.proto"

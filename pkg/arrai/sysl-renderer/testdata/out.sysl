@@ -8,7 +8,7 @@ AppWithAnnotation:
     @annotation = "annotation"
     @annotation1 = "you can do string annotation like this"
     @annotation2 = ["or", "in", "an", "array"]
-    @annotation3 = :
+    @annotation3 =:
         | you can also do
         | multiline annotations
         | like this
@@ -90,7 +90,7 @@ Statements:
     Annotations:
         @annotation1 = "you can do string annotation like this"
         @annotation2 = ["or", "in", "an", "array"]
-        @annotation3 = :
+        @annotation3 =:
             | you can also do
             | multiline annotations
             | like this

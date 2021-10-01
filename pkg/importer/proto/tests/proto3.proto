@@ -1,0 +1,25 @@
+syntax = "proto3";
+package proto3;
+option java_package = "com.example.foo";
+
+enum EnumAllowingAlias {
+    option allow_alias = true;
+    UNKNOWN = 0;
+    STARTED = 1;
+    RUNNING = 2 [(custom_option) = "hello world"];
+}
+
+// Level 1
+message Outer {
+    option (my_option).a = true;
+    // Level 2
+    message Inner {
+        int64 ival = 1;
+    }
+    repeated Inner inner_message = 2;
+    EnumAllowingAlias enum_field = 3;
+    map<int32, string> my_map = 4;
+}
+service SearchService {
+    rpc Search (SearchRequest) returns (SearchResponse);
+}

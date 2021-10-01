@@ -1,0 +1,47 @@
+# getNamespace returns the value of an option split and cleaned to resemble an app name, or an
+# empty array if the given option is not present.
+# 
+# Intend for the retrieval of namespace and app name values from options.
+let getNamespace = \file 
+	let re = //re.compile(`(?m)\{"sysl":.*}`);
+    let matches = cond {file.comments?:{}: (file.comments >> re.match(.)) where .@item rank (:.@)};
+
+    cond {
+        matches: //seq.split(" :: ", //encoding.json.decode(matches(0)(0)(0))('sysl')('namespace').s)
+    }
+;
+
+let getPackage = \file (file.@value.package single).@;
+
+let cleanAnnoName = \annoName //seq.sub("(", "", //seq.sub(")", "", //seq.sub(".", "_", annoName)));
+
+let rec annoFromOption = \annoValue
+    cond annoValue {
+        (:fields, ...): fields => $`${.@}: ${annoFromOption(.@value)}`,
+        (:s, ...): s,
+        [...]: annoValue >> annoFromOption(.),
+        {...}: let _ = _; $`${annoValue.@}: ${annoFromOption(annoValue.@value)}`
+    }
+;
+
+let annoFromComment = \annoValue
+    "\n" ++ cond annoValue {
+        [...]: //seq.join("\n", annoValue),
+        _: annoValue
+    }
+;
+
+let includeImport = \import import != "google/protobuf/descriptor.proto";
+
+# `forwardSlashedPath` ensures paths use forward slashes regardless of OS
+let forwardSlashedPath = \path //seq.sub("\\", "/", path);
+
+(
+    :getNamespace,
+    :getPackage,
+    :cleanAnnoName,
+    :annoFromOption,
+    :annoFromComment,
+    :includeImport,
+    :forwardSlashedPath
+)

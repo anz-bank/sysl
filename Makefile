@@ -35,7 +35,7 @@ tidy:
 	make -C docs tidy
 
 # Generates intermediate files for build.
-generate: internal/arrai/bindata.go plugins
+generate: internal/arrai/bindata.go plugins bundled-proto
 gen: generate
 
 test: test-arrai coverage
@@ -87,7 +87,8 @@ plugins: \
 internal/arrai/bindata.go: \
 		pkg/importer/avro/transformer_cli.arraiz \
 		pkg/importer/sql/import_cli.arraiz \
-		pkg/importer/openapi/import_cli.arraiz
+		pkg/importer/openapi/import_cli.arraiz \
+		pkg/importer/proto/import_cli.arraiz
 	go-bindata -version
 	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
 	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-clean failed.
@@ -95,6 +96,11 @@ internal/arrai/bindata.go: \
 	# Add `-mode 0644` for similar reason as files' mode are possible different in CI and local development environments.
 	go-bindata -mode 0644 -modtime 1 -pkg arrai -o $@ $^
 	gofmt -s -w $@
+
+.PHONY: bundled-proto
+bundled-proto: 
+	$(ARRAI) run pkg/importer/proto/bundled_files/bundler.arrai > pkg/importer/proto/bundled_files/tmp.arrai && \
+	mv -f pkg/importer/proto/bundled_files/tmp.arrai pkg/importer/proto/bundled_files/local_imports.arrai
 
 release:
 	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot -f .goreleaser.yml

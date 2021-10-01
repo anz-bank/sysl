@@ -64,6 +64,18 @@ var PostgresDir = Format{
 	FileExt:   []string{".up.sql"},
 }
 
+var Protobuf = Format{
+	Name:      "protobuf",
+	Signature: "",
+	FileExt:   []string{".proto"},
+}
+
+var ProtobufDir = Format{
+	Name:      "protobufDir",
+	Signature: "",
+	FileExt:   []string{".up.proto"},
+}
+
 var MySQL = Format{
 	Name:      "mysql",
 	Signature: "",
@@ -114,8 +126,8 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 			for _, info := range files {
 				if strings.HasSuffix(info.Name(), ".up.sql") || strings.HasSuffix(info.Name(), ".up.ddl") {
 					return Format{}, fmt.Errorf(
-						"input file format for %s could be one of {%v, %v, %v}; pass --format to specify",
-						path, SpannerSQLDir.Name, PostgresDir.Name, MySQLDir.Name)
+						"input file format for %s could be one of {%v, %v, %v, %v}; pass --format to specify",
+						path, SpannerSQLDir.Name, PostgresDir.Name, MySQLDir.Name, ProtobufDir.Name)
 				}
 			}
 		}

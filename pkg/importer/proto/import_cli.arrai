@@ -1,0 +1,2 @@
+let (:import, :importString, ...) = //{./proto_importer};
+//{/pkg/importer/cli}((importPath: import, importSpec: importString))

@@ -1,13 +1,16 @@
 let config = {
     'app-name': (type: 'string', alias: 'a', default: 'App', usage: 'Name of the imported app'),
     'input': (type: 'string', alias: 'i', usage: 'Path to the file or directory to import'),
-    'spec': (type: 'string', alias: 's', usage: 'content of the spec file'),
+    'spec': (type: 'string', alias: 's', usage: 'Content of the spec file'),
+    'import-paths': (type: 'string', alias: 'I', usage: "comma separated list of paths used to resolve imports in " ++
+		"the input file. Currently only used for protobuf input."),
 };
 
 let args = //flag.parser(config).parse(//os.args);
 
 \(?:importPath:{}, ?:importSpec:{})
     cond args {
+        (flags: {'input': input, 'app-name': appName, 'import-paths': importPaths, ...}, ...): importPath(appName, input, importPaths),
         (flags: {'input': input, 'app-name': appName, ...}, ...): importPath(appName, input),
         (flags: {'spec': spec, 'app-name': appName, ...}, ...): importSpec(appName, spec),
         _: $`

@@ -55,8 +55,14 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				imp, err := Factory(absFilePath, false, cfg.format, input, logger)
 				require.NoError(t, err)
-				imp.WithAppName("TestApp").WithPackage("com.example.package")
-				result, err := imp.LoadFile(absFilePath)
+				imp.WithAppName("TestApp").WithPackage("com.example.package").WithImports(".")
+				var result string
+				switch imp.(type) {
+				case *ProtobufImporter:
+					result, err = imp.LoadFile(filepath.Join(cfg.testDir, filename+cfg.testExtension))
+				default:
+					result, err = imp.LoadFile(absFilePath)
+				}
 				require.NoError(t, err)
 				if *update {
 					err = ioutil.WriteFile(syslFile, []byte(result), 0600)
@@ -82,7 +88,14 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	path := syslutil.MustAbsolute(t, cfg.testDir)
 	imp, err := Factory(path, true, cfg.format, nil, logger)
 	require.NoError(t, err)
-	out, err := imp.WithAppName("TestApp").WithPackage("com.example.package").LoadFile(path)
+	imp = imp.WithAppName("TestApp").WithPackage("com.example.package").WithImports(".")
+	var out string
+	switch imp.(type) {
+	case *ProtobufImporter:
+		out, err = imp.LoadFile(cfg.testDir)
+	default:
+		out, err = imp.LoadFile(path)
+	}
 	require.NoError(t, err)
 	expected, err := ioutil.ReadFile(syslFile)
 	require.NoError(t, err)
@@ -183,6 +196,24 @@ func TestLoadBigQueryFromTestFiles(t *testing.T) {
 		testDir:       "sql/tests/bigquery",
 		testExtension: ".sql",
 		format:        "bigquery",
+	})
+}
+
+func TestLoadProtobufFromTestFiles(t *testing.T) {
+	runImportEqualityTests(t, testConfig{
+		name:          "TestLoadProtobufTestFiles",
+		testDir:       "proto/tests",
+		testExtension: ".proto",
+		format:        "protobuf",
+	})
+}
+
+func TestLoadProtobufDirFromTestDir(t *testing.T) {
+	runImportDirEqualityTests(t, testConfig{
+		name:          "TestLoadProtobufDirFromTestDir",
+		testDir:       "proto/tests/combined",
+		testExtension: "",
+		format:        "protobufDir",
 	})
 }
 

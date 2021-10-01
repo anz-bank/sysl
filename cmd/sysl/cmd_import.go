@@ -38,6 +38,9 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]. "+
 		"Formats are autodetected, but this can force the use of a particular importer.", optsText)).Short('f').
 		StringVar(&p.format)
+	cmd.Flag("import-paths", "comma separated list of paths used to resolve imports in "+
+		"the input file. Currently only used for protobuf input.").Short('I').
+		StringVar(&p.ImportPaths)
 	return cmd
 }
 
@@ -62,13 +65,16 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	imp.WithAppName(p.AppName).WithPackage(p.Package)
+	imp.WithAppName(p.AppName).WithPackage(p.Package).WithImports(p.ImportPaths)
 
 	var output string
 	// TODO: Abstract this logic.
 	switch imp.(type) {
 	case *importer.ArraiImporter:
 		output, err = imp.LoadFile(inputFilePath)
+	case *importer.ProtobufImporter:
+		// TODO: support `Load` for proto importer
+		output, err = imp.LoadFile(p.filename)
 	default:
 		output, err = imp.Load(string(content))
 	}

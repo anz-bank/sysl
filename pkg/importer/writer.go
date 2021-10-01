@@ -18,6 +18,7 @@ import (
 type OutputData struct {
 	AppName     string
 	Package     string
+	ImportPaths string
 	SwaggerRoot string
 	Mode        string
 }

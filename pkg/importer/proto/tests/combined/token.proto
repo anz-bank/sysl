@@ -1,0 +1,6 @@
+syntax = "proto3";
+package foo.token;
+
+service TokenService {
+    rpc GetToken (GetTokenRequest) returns (GetTokenResponse);
+}
