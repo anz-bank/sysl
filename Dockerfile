@@ -15,8 +15,6 @@ WORKDIR /sysl
 
 COPY . .
 
-RUN go get github.com/anz-bank/go-bindata/...
-
 RUN make build
 
 FROM golang:${go_ver}-alpine${alpine_ver} as runner

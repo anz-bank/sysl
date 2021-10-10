@@ -35,7 +35,7 @@ tidy:
 	make -C docs tidy
 
 # Generates intermediate files for build.
-generate: internal/arrai/bindata.go plugins bundled-proto
+generate: internal/arrai/arrai.go plugins bundled-proto
 gen: generate
 
 test: test-arrai coverage
@@ -84,21 +84,30 @@ build-sysl-version-diff-docker: generate
 plugins: \
 		pkg/plugins/integration_model_plugin.arraiz
 
-internal/arrai/bindata.go: \
-		pkg/importer/avro/transformer_cli.arraiz \
-		pkg/importer/sql/import_cli.arraiz \
-		pkg/importer/openapi/import_cli.arraiz \
-		pkg/importer/proto/import_cli.arraiz
-	go-bindata -version
-	# Binary files in bindata.go have metadata like size, mode and modification time(modTime).
-	# And modTime will be updated every time when arrai bundle file is regenerated, it will cause task check-clean failed.
-	# So add parameter `-modtime 1` to set a fixed modTime.
-	# Add `-mode 0644` for similar reason as files' mode are possible different in CI and local development environments.
-	go-bindata -mode 0644 -modtime 1 -pkg arrai -o $@ $^
-	gofmt -s -w $@
+internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cli.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/assets/spanner_cli.arraiz: pkg/exporter/spanner/spanner_cli.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/arrai/arrai.go: \
+		internal/bundles/assets/transformer_cli.arraiz \
+		internal/bundles/assets/import_sql_cli.arraiz \
+		internal/bundles/assets/import_openapi_cli.arraiz \
+		internal/bundles/assets/spanner_cli.arraiz \
+		internal/bundles/assets/import_proto_cli.arraiz
 
 .PHONY: bundled-proto
-bundled-proto: 
+bundled-proto:
 	$(ARRAI) run pkg/importer/proto/bundled_files/bundler.arrai > pkg/importer/proto/bundled_files/tmp.arrai && \
 	mv -f pkg/importer/proto/bundled_files/tmp.arrai pkg/importer/proto/bundled_files/local_imports.arrai
 

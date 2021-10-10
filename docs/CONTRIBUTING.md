@@ -27,7 +27,6 @@ Prerequisites:
 - [golangci-lint 1.30.0+](https://github.com/golangci/golangci-lint)
 - `protoc`: `brew install protobuf` (macOS)
 - `protoc-gen-go`: `go get github.com/golang/protobuf/protoc-gen-go`
-- `go-bindata`: `go get github.com/anz-bank/go-bindata/...`
 
 Clone `sysl` to create a local copy on your computer:
 

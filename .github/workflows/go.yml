@@ -27,9 +27,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/...
-
       - name: Check out code
         uses: actions/checkout@v2
 
@@ -73,9 +70,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-cache-
 
-    - name: Install go-bindata
-      run: go get github.com/anz-bank/go-bindata/...
-
     - name: Check out code
       uses: actions/checkout@v2
 
@@ -102,9 +96,6 @@ jobs:
         key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-cache-
-
-    - name: Install go-bindata
-      run: go get github.com/anz-bank/go-bindata/...
 
     - name: Check out code
       uses: actions/checkout@v2
@@ -149,9 +140,6 @@ jobs:
         with:
           go-version: 1.16
 
-      - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/...
-
       - name: Check out code
         uses: actions/checkout@v2
 
@@ -182,8 +170,8 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/... && go mod tidy
+      - name: Tidy
+        run: go mod tidy
 
       - name: Generate intermediate files
         run: make generate

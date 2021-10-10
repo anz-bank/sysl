@@ -8,7 +8,6 @@ require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20210521184019-c5ad59b459ec
-	github.com/anz-bank/go-bindata v3.22.0+incompatible
 	github.com/anz-bank/golden-retriever v0.12.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.38
@@ -26,7 +25,6 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/hashicorp/hcl v1.0.0
 	github.com/imdario/mergo v0.3.12
-	github.com/kevinburke/go-bindata v3.22.0+incompatible // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/rjeczalik/notify v0.9.2

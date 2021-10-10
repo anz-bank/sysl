@@ -3,25 +3,22 @@ package importer
 import (
 	"fmt"
 
-	arrai2 "github.com/anz-bank/sysl/internal/arrai"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
-const ArraiImporterDir = "pkg/importer"
-
 // ArraiImporter encapsulates glue code for calling arr.ai scripts to import specs.
 type ArraiImporter struct {
 	appName     string
 	pkg         string
-	asset       string
+	asset       []byte
 	importPaths string
 	logger      *logrus.Logger
 }
 
 // MakeArraiImporterImporter returns a new ArraiImporter.
-func MakeArraiImporterImporter(asset string, logger *logrus.Logger) *ArraiImporter {
+func MakeArraiImporterImporter(asset []byte, logger *logrus.Logger) *ArraiImporter {
 	return &ArraiImporter{
 		asset:  asset,
 		logger: logger,
@@ -48,12 +45,8 @@ func (i *ArraiImporter) WithImports(importPaths string) Importer {
 
 // LoadFile generates a Sysl spec be invoking the arr.ai script.
 func (i *ArraiImporter) LoadFile(path string) (string, error) {
-	b, err := arrai2.Asset(i.asset)
-	if err != nil {
-		return "", err
-	}
 	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(b, `--app-name`, i.appName, `--input`, path)
+	val, err := arrai.EvaluateBundle(i.asset, `--app-name`, i.appName, `--input`, path)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`)", i.appName, path),
@@ -66,12 +59,8 @@ func (i *ArraiImporter) LoadFile(path string) (string, error) {
 
 // Load generates a Sysl spec given the content of an input file.
 func (i *ArraiImporter) Load(content string) (string, error) {
-	b, err := arrai2.Asset(i.asset)
-	if err != nil {
-		return "", err
-	}
 	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(b, `--app-name`, i.appName, `--spec`, content)
+	val, err := arrai.EvaluateBundle(i.asset, `--app-name`, i.appName, `--spec`, content)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("AppName: %s, Content: %s", i.appName, content),

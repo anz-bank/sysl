@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	arrai2 "github.com/anz-bank/sysl/internal/arrai"
+	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -46,10 +46,7 @@ func (s *SpannerExporter) ExportFile(inPath string) error {
 
 // transform converts the Sysl at path to an SQL output string.
 func (s *SpannerExporter) transform(path string) (string, error) {
-	b, err := arrai2.Asset("pkg/exporter/spanner/spanner_cli.arraiz")
-	if err != nil {
-		return "", err
-	}
+	b := bundles.SpannerExporter
 	out, err := arrai.EvaluateBundle(b, path)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{

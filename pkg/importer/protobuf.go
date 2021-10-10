@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	arrai2 "github.com/anz-bank/sysl/internal/arrai"
+	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -23,10 +23,8 @@ func MakeProtobufImporter(logger *logrus.Logger) *ProtobufImporter {
 }
 
 func (p *ProtobufImporter) LoadFile(path string) (string, error) {
-	b, err := arrai2.Asset("pkg/importer/proto/import_cli.arraiz")
-	if err != nil {
-		return "", err
-	}
+	b := bundles.ProtoImporter
+
 	// TODO: Make the appname optional
 	val, err := arrai.EvaluateBundle(b, `--app-name`, p.appName, `--input`, path, `--import-paths`, p.importPaths)
 	if err != nil {
@@ -41,10 +39,8 @@ func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 
 // Load returns a Sysl spec equivalent to protoSpec.
 func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
-	b, err := arrai2.Asset("pkg/importer/proto/import_cli.arraiz")
-	if err != nil {
-		return "", err
-	}
+	b := bundles.ProtoImporter
+
 	// TODO: Make the appname optional
 	val, err := arrai.EvaluateBundle(b, `--app-name`, p.appName, `--spec`, protoSpec, `--import-paths`, p.importPaths)
 	if err != nil {

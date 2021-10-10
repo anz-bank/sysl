@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	arrai2 "github.com/anz-bank/sysl/internal/arrai"
+	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -33,10 +33,7 @@ func (i *avroImporter) LoadFile(path string) (string, error) {
 
 // Load returns a Sysl spec equivalent to avroSpec.
 func (i *avroImporter) Load(avroSpec string) (string, error) {
-	b, err := arrai2.Asset("pkg/importer/avro/transformer_cli.arraiz")
-	if err != nil {
-		return "", err
-	}
+	b := bundles.Transformer
 	val, err := arrai.EvaluateBundle(b, avroSpec, i.appName, i.pkg)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{

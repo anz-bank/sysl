@@ -24,11 +24,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install go-bindata
-        run: go get github.com/anz-bank/go-bindata/... && go mod tidy
-
       - name: Check go.mod and go.sum are tidy
-        run: make check-clean
+        run: go mod tidy && make check-clean
 
       - name: Test
         run: make coverage
