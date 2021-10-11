@@ -925,7 +925,7 @@ func TestHandleProjectRoot(t *testing.T) {
 			t.Parallel()
 
 			logger, _ := test.NewNullLogger()
-			fs := afero.NewMemMapFs()
+			fs := syslutil.NewChrootFs(afero.NewMemMapFs(), "/")
 			syslutil.BuildFolderTest(t, fs, ts.structure.folders, ts.structure.files)
 
 			config := loader.NewProjectConfiguration()

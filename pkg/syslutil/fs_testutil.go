@@ -13,6 +13,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const sep = string(os.PathSeparator)
+
 // AssertFsHasExactly asserts that fs contains the given files and only
 // those. All paths must start with '/'.
 func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
@@ -23,7 +25,16 @@ func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 	sort.Strings(expected)
 
 	actual := []string{}
-	root := MustAbsolute(t, string(os.PathSeparator))
+
+	root := MustAbsolute(t, sep)
+
+	// special case for MemFs in windows as walking from root results in infinite loop
+	_, isMemFs := fs.(*afero.MemMapFs)
+	isMemFsWindows := runtime.GOOS == windows && isMemFs
+	if isMemFsWindows {
+		root = sep
+	}
+
 	require.NoError(t, afero.Walk(fs, root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -34,6 +45,13 @@ func AssertFsHasExactly(t *testing.T, fs afero.Fs, paths ...string) bool {
 		return nil
 	}))
 	sort.Strings(actual)
+
+	// add back the volume name as expected always have absolute path
+	if isMemFsWindows {
+		for i := 0; i < len(actual); i++ {
+			actual[i] = MustAbsolute(t, filepath.Join(sep, actual[i]))
+		}
+	}
 
 	return assert.Equal(t, expected, actual)
 }
@@ -60,24 +78,17 @@ func MustRelative(t *testing.T, base, target string) string {
 
 func BuildFolderTest(t *testing.T, fs afero.Fs, folders, files []string) {
 	for _, folder := range folders {
-		folder, err := filepath.Abs(folder)
-		require.NoError(t, err)
-
-		err = fs.MkdirAll(folder, os.ModeTemporary)
-		require.NoError(t, err)
+		require.NoError(t, fs.MkdirAll(trimVolumeName(MustAbsolute(t, folder)), os.ModeTemporary))
 	}
 
 	for _, file := range files {
-		file, err := filepath.Abs(file)
-		require.NoError(t, err)
-
-		_, err = fs.Create(file)
+		_, err := fs.Create(trimVolumeName(MustAbsolute(t, file)))
 		require.NoError(t, err)
 	}
 }
 
 func HandleCRLF(text []byte) []byte {
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == windows {
 		re := regexp.MustCompile("(\r\n|\r)")
 		text = re.ReplaceAll(text, []byte("\n"))
 	}

@@ -71,6 +71,10 @@ func (m *MockFs) Chmod(name string, mode os.FileMode) error {
 	return m.Called(name, mode).Error(0)
 }
 
+func (m *MockFs) Chown(name string, uid, gid int) error {
+	return m.Called(name, uid, gid).Error(0)
+}
+
 func (m *MockFs) Chtimes(name string, atime time.Time, mtime time.Time) error {
 	return m.Called(name, atime, mtime).Error(0)
 }

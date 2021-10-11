@@ -4,11 +4,14 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
 	"github.com/spf13/afero"
 )
+
+const windows = "windows"
 
 type ChrootFs struct {
 	fs   afero.Fs
@@ -26,16 +29,29 @@ func NewChrootFs(fs afero.Fs, root string) *ChrootFs {
 			panic(err)
 		}
 	}
-	return &ChrootFs{fs: fs, root: root}
+	return &ChrootFs{fs: fs, root: cleanPathForMemFs(fs, root)}
+}
+
+func trimVolumeName(name string) string {
+	return strings.TrimLeft(name, filepath.VolumeName(name))
+}
+
+func cleanPathForMemFs(fs afero.Fs, p string) string {
+	// this is a workaround for afero.MemMapFs because it does not work if path has volume names.
+	if _, isMemFs := fs.(*afero.MemMapFs); runtime.GOOS == windows && isMemFs {
+		p = trimVolumeName(p)
+	}
+	return p
 }
 
 func (fs *ChrootFs) join(name string) (string, error) {
 	// this is to avoid windows joining volume name twice in a nested fs
-	volumeName := filepath.VolumeName(name)
-	if volumeName != "" {
-		name = strings.TrimLeft(name, volumeName)
+	name = trimVolumeName(name)
+	p, err := filepath.Abs(filepath.Join(fs.root, name))
+	if err != nil {
+		return "", err
 	}
-	return filepath.Abs(filepath.Join(fs.root, name))
+	return cleanPathForMemFs(fs.fs, p), nil
 }
 
 func (fs *ChrootFs) Create(name string) (afero.File, error) {
@@ -123,6 +139,12 @@ func (fs *ChrootFs) Name() string {
 func (fs *ChrootFs) Chmod(name string, mode os.FileMode) error {
 	return fs.wrapCall(name, func(fixedPath string) error {
 		return fs.fs.Chmod(fixedPath, mode)
+	})
+}
+
+func (fs *ChrootFs) Chown(name string, uid, gid int) error {
+	return fs.wrapCall(name, func(fixedPath string) error {
+		return fs.fs.Chown(fixedPath, uid, gid)
 	})
 }
 
