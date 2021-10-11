@@ -142,6 +142,15 @@ HelloService:
                ...
 ```
 
+If you have a number of clashes across an application you can add  the `~vars_in_url_name` annotation to application itself to specify that the parameters should be included in the name for all the endpoints. So the endpoint below would also generate the name `GetGreetingUserid`:
+
+```
+HelloService [~vars_in_url_name]:
+    /greeting/{userId <: int}:
+           GET:
+               ...
+```
+
 ### Authorization
 
 The `@authorization_rule` annotation can be used in the sysl specification of a service to permit or deny access to a method or endpoint.
