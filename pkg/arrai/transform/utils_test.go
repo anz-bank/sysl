@@ -109,11 +109,13 @@ func getTransformArraizResult(
 	_, err = f.Write(bundle.MustCreateTestBundleFromMap(t, files, mainScript))
 	require.NoError(t, err)
 
-	f.Close()
+	err = f.Close()
+	require.NoError(t, err)
 
-	expr, err := ExprFileWithParam(fs, scriptPath, param)
+	scriptBytes, err := afero.ReadFile(fs, scriptPath)
 	if err != nil {
 		return nil, err
 	}
-	return expr.Eval(context.Background(), rel.EmptyScope)
+
+	return EvalWithParam(scriptBytes, scriptPath, param)
 }

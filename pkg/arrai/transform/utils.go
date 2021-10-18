@@ -3,8 +3,7 @@ package transform
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
+	"net/http"
 	"time"
 
 	"github.com/arr-ai/arrai/pkg/arraictx"
@@ -12,15 +11,14 @@ import (
 	"github.com/arr-ai/arrai/rel"
 	"github.com/arr-ai/arrai/syntax"
 	"github.com/arr-ai/wbnf/parser"
-	"github.com/spf13/afero"
 )
 
 var errNotClosure = fmt.Errorf("supplied transform script is not a function")
 
-// EvalFileWithParam returns the result of evaluating the function in the specified file, passing in the specified
+// EvalWithParam returns the result of evaluating the function in the specified bytes, passing in the specified
 // parameter.
-func EvalFileWithParam(fs afero.Fs, scriptPath string, param rel.Value) (rel.Value, error) {
-	expr, err := ExprFileWithParam(fs, scriptPath, param)
+func EvalWithParam(scriptBytes []byte, scriptPath string, param rel.Value) (rel.Value, error) {
+	expr, err := exprWithParam(scriptBytes, scriptPath, param)
 	if err != nil {
 		return nil, err
 	}
@@ -28,48 +26,21 @@ func EvalFileWithParam(fs afero.Fs, scriptPath string, param rel.Value) (rel.Val
 	return expr.Eval(arraictx.InitRunCtx(context.Background()), rel.EmptyScope)
 }
 
-// EvalWithParam returns the result of evaluating the function in the specified string, passing in the specified
-// parameter.
-func EvalWithParam(script string, param rel.Value) (rel.Value, error) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-	expr, err := ExprWithParam(script, cwd, param)
-	if err != nil {
-		return nil, err
-	}
-
-	return expr.Eval(arraictx.InitRunCtx(context.Background()), rel.EmptyScope)
-}
-
-// ExprFileWithParam returns the unevaluated expression of the function in the specified file after the specified
-// parameter was applied to it.
-func ExprFileWithParam(fs afero.Fs, scriptPath string, param rel.Value) (rel.Expr, error) {
-	scriptBytes, err := afero.ReadFile(fs, scriptPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if filepath.Ext(scriptPath) == ".arraiz" {
+// exprWithParam returns the unevaluated expression of the function in the specified file content, which may be a
+// textual script (.arrai) or a bundle (.arraiz), after the specified parameter was applied to it.
+func exprWithParam(scriptBytes []byte, scriptPath string, param rel.Value) (rel.Expr, error) {
+	if http.DetectContentType(scriptBytes) == "application/zip" {
 		closure, err := syntax.EvaluateBundle(scriptBytes)
 		if err != nil {
 			return nil, err
 		}
-
 		if _, is := closure.(rel.Closure); !is {
 			return nil, errNotClosure
 		}
-
 		return rel.NewCallExpr(*parser.NewScanner(""), closure, param), nil
 	}
-	return ExprWithParam(string(scriptBytes), scriptPath, param)
-}
 
-// ExprWithParam returns the unevaluated expression of the function in the specified string after the specified
-// parameter was applied to it.
-func ExprWithParam(script string, scriptPath string, param rel.Value) (rel.Expr, error) {
-	closure, err := syntax.EvaluateExpr(arraictx.InitRunCtx(context.Background()), scriptPath, script)
+	closure, err := syntax.EvaluateExpr(arraictx.InitRunCtx(context.Background()), scriptPath, string(scriptBytes))
 	if err != nil {
 		return nil, err
 	}
@@ -83,11 +54,11 @@ func ExprWithParam(script string, scriptPath string, param rel.Value) (rel.Expr,
 
 // RunTests runs the test function in the specified string, passing in the specified param, and returns a populated
 // test.File with the results.
-func RunTests(testScript string, testScriptPath string, param rel.Value) (test.File, error) {
+func RunTests(scriptBytes []byte, testScriptPath string, param rel.Value) (test.File, error) {
 	testFile := test.File{Path: testScriptPath}
 
 	start := time.Now()
-	testExpr, err := ExprWithParam(testScript, testScriptPath, param)
+	testExpr, err := exprWithParam(scriptBytes, testScriptPath, param)
 	testFile.WallTime = time.Since(start)
 	if err == nil {
 		testFile.Results, err = test.RunExpr(arraictx.InitRunCtx(context.Background()), testExpr)

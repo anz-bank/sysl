@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"strings"
@@ -61,17 +62,27 @@ func (p *transformCmd) Execute(args cmdutils.ExecuteArgs) error {
 		p.transformFile = homeDir + p.transformFile[1:]
 	}
 
-	// If transform file is a local file (stat doesn't fail), read from it. Otherwise, assume it's a
-	// remote file expressed in arr.ai import format (e.g. "github.com/org/repo/path/to/file").
-	if _, statErr := os.Stat(p.transformFile); statErr == nil {
-		result, err = transform.EvalFileWithParam(args.Filesystem, p.transformFile, input)
-	} else {
-		importPattern := regexp.MustCompile(`^[\w-]+\.[\w-]+/[\w-]+/[\w-]+/`)
-		if !importPattern.MatchString(p.transformFile) {
-			return fmt.Errorf("remote --script path should be of the form github.com/org/repo/path/to/file")
-		}
-		result, err = transform.EvalWithParam(fmt.Sprintf("//{%s}", p.transformFile), input)
+	var scriptBytes []byte
+
+	exists, err := afero.Exists(args.Filesystem, p.transformFile)
+	switch {
+	case exists:
+		scriptBytes, err = afero.ReadFile(args.Filesystem, p.transformFile)
+	case p.transformFile == "-":
+		scriptBytes, err = io.ReadAll(args.Stdin)
+	case p.transformFile[0] == '\\':
+		scriptBytes = []byte(p.transformFile)
+	case regexp.MustCompile(`^[\w-]+\.[\w-]+/[\w-]+/[\w-]+/`).MatchString(p.transformFile):
+		scriptBytes = []byte(fmt.Sprintf("//{%s}", p.transformFile))
+	default:
+		err = fmt.Errorf("the specified --script is neither '-' (for stdin), a local file, a remote file " +
+			"(in the form of 'github.com/org/repo/path/to/file') or an inline script function")
 	}
+
+	if err == nil {
+		result, err = transform.EvalWithParam(scriptBytes, p.transformFile, input)
+	}
+
 	if err != nil {
 		return err
 	}
@@ -132,8 +143,12 @@ func outputTransformResult(fs afero.Fs, transformResult rel.Value, outfile strin
 			}
 		}
 
-		if outfile == "" {
-			fmt.Printf("%s\n", prettyResult)
+		if !strings.HasSuffix(prettyResult, "\n") {
+			prettyResult += "\n"
+		}
+
+		if outfile == "" || outfile == "-" {
+			fmt.Printf("%s", prettyResult)
 		} else {
 			return afero.WriteFile(fs, outfile, []byte(prettyResult), os.ModePerm)
 		}
@@ -150,7 +165,7 @@ func runTransformTests(fs afero.Fs, transformResult rel.Value, testFilePath stri
 		return err
 	}
 
-	testFile, err := transform.RunTests(string(scriptBytes), testFilePath, transformResult)
+	testFile, err := transform.RunTests(scriptBytes, testFilePath, transformResult)
 	if err != nil {
 		return err
 	}

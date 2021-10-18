@@ -60,7 +60,7 @@ func TestImporters(t *testing.T) {
 		require.NoError(t, err)
 
 		// Run the test script with the imported Sysl as the argument
-		testFile, err := transform.RunTests(string(testScriptBytes), importerDir.Name(), rel.NewString([]rune(sysl)))
+		testFile, err := transform.RunTests(testScriptBytes, importerDir.Name(), rel.NewString([]rune(sysl)))
 		require.NoError(t, err)
 		testFiles = append(testFiles, testFile)
 	}

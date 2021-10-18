@@ -60,12 +60,13 @@ func (i *TransformImporter) Load(content string) (string, error) {
 		return "", err
 	}
 
-	transformBytes, err := transforms.EmbedFs.ReadFile(path.Join("importers", i.transformName, "/transform.arrai"))
+	scriptPath := path.Join("importers", i.transformName, "/transform.arrai")
+	transformBytes, err := transforms.EmbedFs.ReadFile(scriptPath)
 	if err != nil {
 		return "", err
 	}
 
-	result, err := transform.EvalWithParam(string(transformBytes), input)
+	result, err := transform.EvalWithParam(transformBytes, scriptPath, input)
 
 	if result != nil {
 		return result.String(), err

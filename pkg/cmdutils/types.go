@@ -1,6 +1,8 @@
 package cmdutils
 
 import (
+	"io"
+
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -98,6 +100,7 @@ type ExecuteArgs struct {
 	DefaultAppName string
 	ModulePaths    []string
 	Root           string
+	Stdin          io.Reader
 }
 
 type DiagramCmd struct {

@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"sort"
 	"strconv"
 	"strings"
@@ -24,7 +25,7 @@ type cmdRunner struct {
 	modules []string
 }
 
-func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error {
+func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error {
 	// splitter to parse main command from subcommand
 	mainCommand := strings.Split(which, " ")[0]
 	if cmd, ok := r.commands[mainCommand]; ok {
@@ -49,7 +50,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger) error 
 				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
 			}
 			return cmd.Execute(cmdutils.ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
-				Logger: logger, DefaultAppName: appName, ModulePaths: r.modules, Root: r.Root})
+				Logger: logger, DefaultAppName: appName, ModulePaths: r.modules, Root: r.Root, Stdin: stdin})
 		}
 	}
 	return nil

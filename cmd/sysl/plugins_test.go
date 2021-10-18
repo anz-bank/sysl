@@ -36,7 +36,7 @@ func TestIntegrationModelPlugins(t *testing.T) {
   ]
 }
 `
-	output := runSyslWithOutput(t, ".sysl",
+	output := runSyslWithOutput(t, ".sysl", nil,
 		"transform", "../../tests/simple.sysl", "--script", "../../pkg/plugins/integration_model_plugin.arraiz")
 	assert.Equal(t, expectedOut, output)
 }

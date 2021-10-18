@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/arrai"
-
 	"github.com/anz-bank/sysl/pkg/cfg"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
@@ -17,7 +17,7 @@ import (
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
-func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
+func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error {
 	flags, err := syslutil.PopulateCMDFlagsFromFile(args)
 	if err == nil && len(flags) > 0 {
 		// apply flags in file
@@ -40,7 +40,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger) error {
 		return err
 	}
 
-	return runner.Run(selectedCommand, fs, logger)
+	return runner.Run(selectedCommand, fs, logger, stdin)
 }
 
 type debugTypeData struct {
@@ -81,9 +81,10 @@ func main2(
 	args []string,
 	fs afero.Fs,
 	logger *logrus.Logger,
-	main3 func(args []string, fs afero.Fs, logger *logrus.Logger) error,
+	stdin io.Reader,
+	main3 func(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error,
 ) int {
-	if err := main3(args, fs, logger); err != nil {
+	if err := main3(args, fs, logger, stdin); err != nil {
 		arraiErr, ok := errors.Cause(err).(arrai.ExecutionError)
 		if ok {
 			logger.Debugln(err)
@@ -111,7 +112,7 @@ func main2(
 
 // main is as small as possible to minimise its no-coverage footprint.
 func main() {
-	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), main3); rc != 0 {
+	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), os.Stdin, main3); rc != 0 {
 		os.Exit(rc)
 	}
 }

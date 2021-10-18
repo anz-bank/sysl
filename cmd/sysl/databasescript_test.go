@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -52,7 +53,7 @@ func TestCreateDBScriptValidSyslFile(t *testing.T) {
 		"-o", "",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		"-a", "RelModel"},
-		fs, logger, main3)
+		fs, logger, os.Stdin, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql")
 }
 
@@ -63,7 +64,7 @@ func TestCreateDBScriptInValidSyslFile(t *testing.T) {
 
 	err := main2([]string{"sysl", "generatescript", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl")},
-		fs, logger, main3)
+		fs, logger, os.Stdin, main3)
 	assert.Equal(t, 1, err)
 }
 
@@ -74,7 +75,7 @@ func TestCreateDBScriptNoAppSyslFile(t *testing.T) {
 
 	err := main2([]string{"sysl", "generatescript", "-t", "PetStore", "-o", "", "-a", "Proj123",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
-		fs, logger, main3)
+		fs, logger, os.Stdin, main3)
 	assert.Equal(t, 1, err)
 }
 
