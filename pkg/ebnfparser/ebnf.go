@@ -8,33 +8,32 @@ import (
 )
 
 func Grammar() parser.Parsers {
-	return parser.Grammar{"grammar": parser.Some(parser.Rule(`stmt`)),
-		"stmt": parser.Oneof{parser.Rule(`COMMENT`),
-			parser.Rule(`prod`)},
-		"prod": parser.Seq{parser.Rule(`IDENT`),
-			parser.S(":"),
-			parser.Some(parser.Rule(`term`)),
-			parser.S(";")},
-		"term": parser.Stack{parser.Delim{Term: parser.Rule(`@`),
-			Sep: parser.Eq("op",
-				parser.S("|")),
-			Assoc: parser.NonAssociative},
-			parser.Some(parser.Rule(`@`)),
-			parser.Seq{parser.Rule(`atom`),
-				parser.Opt(parser.Eq("quant",
-					parser.Oneof{parser.S("*"),
-						parser.S("+"),
-						parser.S("?")}))}},
-		"atom": parser.Oneof{parser.Rule(`STRING`),
-			parser.Eq("rule",
-				parser.Rule(`IDENT`)),
-			parser.Seq{parser.S("("),
-				parser.Rule(`term`),
-				parser.S(")")}},
+	return parser.Grammar{".wrapRE": parser.RE(`[\s]*()[\s]*`),
+		"COMMENT": parser.RE(`//.*$|(?s:/\*(?:[^*]|\*+[^*/])\*/)`),
 		"IDENT":   parser.RE(`[A-Za-z_\.]\w*`),
 		"STRING":  parser.RE(`\'([^\']*)\'`),
-		"COMMENT": parser.RE(`//.*$|(?s:/\*(?:[^*]|\*+[^*/])\*/)`),
-		".wrapRE": parser.RE(`[\s]*()[\s]*`)}.Compile(nil)
+		"atom": parser.Oneof{parser.Rule(`STRING`),
+			parser.Eq(`rule`,
+				parser.Rule(`IDENT`)),
+			parser.Seq{parser.CutPoint{parser.S(`(`)},
+				parser.Rule(`term`),
+				parser.CutPoint{parser.S(`)`)}}},
+		"grammar": parser.Some(parser.Rule(`stmt`)),
+		"prod": parser.Seq{parser.Rule(`IDENT`),
+			parser.CutPoint{parser.S(`:`)},
+			parser.Some(parser.Rule(`term`)),
+			parser.CutPoint{parser.S(`;`)}},
+		"stmt": parser.Oneof{parser.Rule(`COMMENT`),
+			parser.Rule(`prod`)},
+		"term": parser.Stack{parser.Delim{Term: parser.At,
+			Sep: parser.Eq(`op`,
+				parser.S(`|`))},
+			parser.Some(parser.At),
+			parser.Seq{parser.Rule(`atom`),
+				parser.Opt(parser.Eq(`quant`,
+					parser.Oneof{parser.S(`*`),
+						parser.S(`+`),
+						parser.S(`?`)}))}}}.Compile(nil)
 }
 
 type Stopper interface {
@@ -56,9 +55,12 @@ var (
 	Aborter    = &aborter{}
 )
 
+type IsWalkableType interface{ isWalkableType() }
+
 type AtomNode struct{ ast.Node }
 
-func (c AtomNode) Choice() int { return ast.Choice(c.Node) }
+func (AtomNode) isWalkableType() {}
+func (c AtomNode) Choice() int   { return ast.Choice(c.Node) }
 
 func (c AtomNode) OneRule() *IdentNode {
 	if child := ast.First(c.Node, "rule"); child != nil {
@@ -85,6 +87,13 @@ func (c AtomNode) OneToken() string {
 	if child := ast.First(c.Node, ""); child != nil {
 		return child.Scanner().String()
 	}
+	if b, ok := c.Node.(ast.Branch); ok && len(b) == 1 {
+		for _, c := range b {
+			if child := ast.First(c.(ast.One).Node, ""); child != nil {
+				return child.Scanner().String()
+			}
+		}
+	}
 	return ""
 }
 
@@ -98,6 +107,7 @@ func (c AtomNode) AllToken() []string {
 
 type CommentNode struct{ ast.Node }
 
+func (CommentNode) isWalkableType() {}
 func (c *CommentNode) String() string {
 	if c == nil || c.Node == nil {
 		return ""
@@ -107,6 +117,7 @@ func (c *CommentNode) String() string {
 
 type GrammarNode struct{ ast.Node }
 
+func (GrammarNode) isWalkableType() {}
 func (c GrammarNode) AllStmt() []StmtNode {
 	var out []StmtNode
 	for _, child := range ast.All(c.Node, "stmt") {
@@ -117,6 +128,7 @@ func (c GrammarNode) AllStmt() []StmtNode {
 
 type IdentNode struct{ ast.Node }
 
+func (IdentNode) isWalkableType() {}
 func (c *IdentNode) String() string {
 	if c == nil || c.Node == nil {
 		return ""
@@ -125,6 +137,8 @@ func (c *IdentNode) String() string {
 }
 
 type ProdNode struct{ ast.Node }
+
+func (ProdNode) isWalkableType() {}
 
 func (c ProdNode) OneIdent() *IdentNode {
 	if child := ast.First(c.Node, "IDENT"); child != nil {
@@ -145,6 +159,13 @@ func (c ProdNode) OneToken() string {
 	if child := ast.First(c.Node, ""); child != nil {
 		return child.Scanner().String()
 	}
+	if b, ok := c.Node.(ast.Branch); ok && len(b) == 1 {
+		for _, c := range b {
+			if child := ast.First(c.(ast.One).Node, ""); child != nil {
+				return child.Scanner().String()
+			}
+		}
+	}
 	return ""
 }
 
@@ -158,7 +179,8 @@ func (c ProdNode) AllToken() []string {
 
 type StmtNode struct{ ast.Node }
 
-func (c StmtNode) Choice() int { return ast.Choice(c.Node) }
+func (StmtNode) isWalkableType() {}
+func (c StmtNode) Choice() int   { return ast.Choice(c.Node) }
 
 func (c StmtNode) OneComment() *CommentNode {
 	if child := ast.First(c.Node, "COMMENT"); child != nil {
@@ -176,6 +198,7 @@ func (c StmtNode) OneProd() *ProdNode {
 
 type StringNode struct{ ast.Node }
 
+func (StringNode) isWalkableType() {}
 func (c *StringNode) String() string {
 	if c == nil || c.Node == nil {
 		return ""
@@ -184,6 +207,8 @@ func (c *StringNode) String() string {
 }
 
 type TermNode struct{ ast.Node }
+
+func (TermNode) isWalkableType() {}
 
 func (c TermNode) OneAtom() *AtomNode {
 	if child := ast.First(c.Node, "atom"); child != nil {
@@ -216,17 +241,26 @@ func (c TermNode) AllTerm() []TermNode {
 
 type TermQuantNode struct{ ast.Node }
 
-func (c TermQuantNode) Choice() int { return ast.Choice(c.Node) }
+func (TermQuantNode) isWalkableType() {}
+func (c TermQuantNode) Choice() int   { return ast.Choice(c.Node) }
 
 func (c TermQuantNode) OneToken() string {
 	if child := ast.First(c.Node, ""); child != nil {
 		return child.Scanner().String()
+	}
+	if b, ok := c.Node.(ast.Branch); ok && len(b) == 1 {
+		for _, c := range b {
+			if child := ast.First(c.(ast.One).Node, ""); child != nil {
+				return child.Scanner().String()
+			}
+		}
 	}
 	return ""
 }
 
 type WrapReNode struct{ ast.Node }
 
+func (WrapReNode) isWalkableType() {}
 func (c *WrapReNode) String() string {
 	if c == nil || c.Node == nil {
 		return ""
@@ -257,7 +291,49 @@ type WalkerOps struct {
 	ExitWrapReNode     func(WrapReNode) Stopper
 }
 
-func (w WalkerOps) Walk(tree GrammarNode) { w.WalkGrammarNode(tree) }
+func (w WalkerOps) Walk(tree IsWalkableType) Stopper {
+	switch node := tree.(type) {
+	case AtomNode:
+		return w.WalkAtomNode(node)
+
+	case CommentNode:
+		if fn := w.EnterCommentNode; fn != nil {
+			return fn(node)
+		}
+
+	case GrammarNode:
+		return w.WalkGrammarNode(node)
+
+	case IdentNode:
+		if fn := w.EnterIdentNode; fn != nil {
+			return fn(node)
+		}
+
+	case ProdNode:
+		return w.WalkProdNode(node)
+
+	case StmtNode:
+		return w.WalkStmtNode(node)
+
+	case StringNode:
+		if fn := w.EnterStringNode; fn != nil {
+			return fn(node)
+		}
+
+	case TermNode:
+		return w.WalkTermNode(node)
+
+	case TermQuantNode:
+		return w.WalkTermQuantNode(node)
+
+	case WrapReNode:
+		if fn := w.EnterWrapReNode; fn != nil {
+			return fn(node)
+		}
+
+	}
+	return nil
+}
 func (w WalkerOps) WalkAtomNode(node AtomNode) Stopper {
 	if fn := w.EnterAtomNode; fn != nil {
 		if s := fn(node); s != nil {

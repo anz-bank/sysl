@@ -6,7 +6,7 @@ run:
     - pkg/grammar/syslparser_base_listener.go
     - pkg/ui/pkged.go
   skip-dirs:
-    - pkg/lspimpl
+    - pkg/lsp
 linters:
   disable-all: true
   enable:

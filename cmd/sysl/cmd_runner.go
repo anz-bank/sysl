@@ -87,14 +87,15 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&importCmd{},
 		&infoCmd{},
 		&intsCmd{},
+		&lspCmd{},
 		&modDatabaseScriptCmd{},
-		&protobuf{},
+		&protobufCmd{},
 		&replCmd{},
 		&sequenceDiagramCmd{},
 		&templateCmd{},
 		&testRigCmd{},
-		&validateCmd{},
 		&transformCmd{},
+		&validateCmd{},
 	}
 	r.commands = map[string]cmdutils.Command{}
 

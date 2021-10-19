@@ -11,15 +11,15 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-type protobuf struct {
+type protobufCmd struct {
 	output string
 	mode   string
 }
 
-func (p *protobuf) Name() string       { return "protobuf" }
-func (p *protobuf) MaxSyslModule() int { return 1 }
+func (p *protobufCmd) Name() string       { return "protobuf" }
+func (p *protobufCmd) MaxSyslModule() int { return 1 }
 
-func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
+func (p *protobufCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Generate textpb/json/binary").Alias("pb")
 	cmd.Flag("output", "output file name").Short('o').Default("-").StringVar(&p.output)
 	opts := []string{"textpb", "json", "pb"}
@@ -30,7 +30,7 @@ func (p *protobuf) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	return cmd
 }
 
-func (p *protobuf) Execute(args cmdutils.ExecuteArgs) error {
+func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 	args.Logger.Debugf("Protobuf: %+v", *p)
 
 	p.output = strings.TrimSpace(p.output)

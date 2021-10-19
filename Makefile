@@ -1,6 +1,6 @@
 include ./scripts/version-report.mk
 
-.PHONY: all install grammar antlr build lint test test-arrai coverage clean check-clean golden
+.PHONY: all install grammar antlr build lint test test-arrai coverage clean check-clean gen generate golden
 
 GOPATH		= $(shell go env GOPATH)
 GOVERSION	= $(shell go version | cut -d' ' -f3-4)
@@ -36,6 +36,8 @@ tidy:
 
 # Generates intermediate files for build.
 generate: internal/arrai/arrai.go plugins bundled-proto
+	go generate ./pkg/lsp/...
+
 gen: generate
 
 test: test-arrai coverage
@@ -67,7 +69,7 @@ build: generate
 build-windows: generate
 	go build -o ./dist/sysl.exe -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
-buildlsp:
+buildlsp: generate
 	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp
 
 build-docker: generate
