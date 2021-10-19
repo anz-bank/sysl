@@ -1,5 +1,9 @@
 package main
 
-const syslDir = "../../pkg/"
-const projDir = "../../"
-const testDir = "../../tests/"
+import "path/filepath"
+
+var (
+	projDir = filepath.Join("..", "..")
+	syslDir = filepath.Join(projDir, "pkg")
+	testDir = filepath.Join(projDir, "tests")
+)

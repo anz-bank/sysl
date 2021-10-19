@@ -34,10 +34,12 @@ Currently, the supported formats include:
 ## Required Flags
 
 ### Universal
+
 - `-i, --input=<FILE-TO-IMPORT.EXT>`: Input filename.
 - `-a, --app-name=<APP-NAME>`: Name of the sysl app to define in sysl model.
 
 ### Protobuf
+
 - `-I, --import-paths="foo,bar/baz"`: The directories to resolve imports in.
 
 ## Optional flags

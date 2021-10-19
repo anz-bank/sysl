@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/diagrams"
@@ -26,7 +27,7 @@ func TestDataModel(t *testing.T) {
 	p.ClassFormat = "%(classname)" //nolint:goconst
 	p.Direct = false
 	fs := afero.NewOsFs()
-	filename := testDir + "multiple-app-datamodel.sysl"
+	filename := filepath.Join(testDir, "multiple-app-datamodel.sysl")
 	m, err := parse.NewParser().ParseFromFs(filename, fs)
 	if err != nil {
 		panic(err)
@@ -68,7 +69,7 @@ func TestHTML(t *testing.T) {
 	p.Direct = false
 	fs := afero.NewOsFs()
 	plantuml := os.Getenv("SYSL_PLANTUML")
-	filename := testDir + "multiple-app-datamodel.sysl"
+	filename := filepath.Join(testDir, "multiple-app-datamodel.sysl")
 	m, err := parse.NewParser().ParseFromFs(filename, fs)
 	if err != nil {
 		panic(err)
@@ -109,7 +110,7 @@ func TestLinkOutput(t *testing.T) {
 	p.Direct = false
 	plantuml := os.Getenv("SYSL_PLANTUML")
 	fs := afero.NewOsFs()
-	filename := testDir + "multiple-app-datamodel.sysl"
+	filename := filepath.Join(testDir, "multiple-app-datamodel.sysl")
 	m, err := parse.NewParser().ParseFromFs(filename, fs)
 	if err != nil {
 		panic(err)
@@ -151,7 +152,7 @@ func TestSequence(t *testing.T) {
 	p.Direct = false
 	plantuml := os.Getenv("SYSL_PLANTUML")
 	fs := afero.NewOsFs()
-	filename := testDir + "sequence.sysl"
+	filename := filepath.Join(testDir, "sequence.sysl")
 	m, err := parse.NewParser().ParseFromFs(filename, fs)
 	if err != nil {
 		panic(err)

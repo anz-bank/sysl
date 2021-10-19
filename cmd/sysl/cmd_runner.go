@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"io"
 	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/loader"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/parse"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
@@ -25,32 +25,52 @@ type cmdRunner struct {
 	modules []string
 }
 
+// Run identifies the command to run, loads the Sysl modules from the input (if necessary), then
+// executes the command with all of the accumulated context.
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error {
 	// splitter to parse main command from subcommand
 	mainCommand := strings.Split(which, " ")[0]
 	if cmd, ok := r.commands[mainCommand]; ok {
 		if cmd.Name() == mainCommand {
-			var module *sysl.Module
+			var defaultAppName string
+			var modules []*sysl.Module
 			var err error
-			var appName string
-			var mods []*sysl.Module
 
 			if cmd.MaxSyslModule() > 0 {
-				for _, moduleName := range r.modules {
-					module, appName, err = loader.LoadSyslModule(r.Root, moduleName, fs, logger)
+				if len(r.modules) > 0 {
+					modules, defaultAppName, err = r.loadFromModules(fs, logger)
 					if err != nil {
 						return err
 					}
-					mods = append(mods, module)
+				} else {
+					src, err := io.ReadAll(stdin)
+					if err != nil {
+						return err
+					}
+					if len(src) == 0 {
+						return errors.New("no modules input provided via args or stdin")
+					}
+					mod, err := parse.NewParser().ParseString(string(src))
+					if err != nil {
+						return err
+					}
+					modules = []*sysl.Module{mod}
 				}
 			}
 
-			if len(mods) > cmd.MaxSyslModule() {
-				logger.Error("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
-				return fmt.Errorf("this command can accept max " + strconv.Itoa(cmd.MaxSyslModule()) + " module(s).")
+			if len(modules) > cmd.MaxSyslModule() {
+				return fmt.Errorf("this command can accept max %d module(s)", cmd.MaxSyslModule())
 			}
-			return cmd.Execute(cmdutils.ExecuteArgs{Command: which, Modules: mods, Filesystem: fs,
-				Logger: logger, DefaultAppName: appName, ModulePaths: r.modules, Root: r.Root, Stdin: stdin})
+			return cmd.Execute(cmdutils.ExecuteArgs{
+				Command:        which,
+				Modules:        modules,
+				Filesystem:     fs,
+				Logger:         logger,
+				DefaultAppName: defaultAppName,
+				ModulePaths:    r.modules,
+				Root:           r.Root,
+				Stdin:          stdin,
+			})
 		}
 	}
 	return nil
@@ -90,7 +110,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		if cmd.MaxSyslModule() > 0 {
 			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
 				"/project_dir/my_models combine with --root if needed").
-				Required().StringsVar(&r.modules)
+				StringsVar(&r.modules)
 		}
 		r.commands[cmd.Name()] = cmd
 	}
@@ -137,4 +157,22 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 	}
 
 	cmd.PreAction(fn)
+}
+
+// loadFromModules attempts to load the Sysl modules for the files specified in r.modules.
+func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, string, error) {
+	var mods []*sysl.Module
+	var defaultAppName string
+	for _, moduleName := range r.modules {
+		mod, appName, err := loader.LoadSyslModule(r.Root, moduleName, fs, logger)
+		if err != nil {
+			return nil, "", err
+		}
+		// Use the first app as the default app name.
+		if defaultAppName == "" {
+			defaultAppName = appName
+		}
+		mods = append(mods, mod)
+	}
+	return mods, defaultAppName, nil
 }

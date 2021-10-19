@@ -743,20 +743,21 @@ func TestSwaggerExportCurrentDir(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
-		syslDir + "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"}, fs, logger, os.Stdin, main3)
+		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"),
+	}, fs, logger, os.Stdin, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/SIMPLE_SWAGGER_EXAMPLE.yaml")
 }
 
 func TestSwaggerExportTargetDir(t *testing.T) {
 	t.Parallel()
 	runSyslWithOutput(t, ".yaml", nil,
-		"export", "-a", "testapp", path.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"))
+		"export", "-a", "testapp", filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"))
 }
 
 func TestSwaggerExportJson(t *testing.T) {
 	t.Parallel()
 	runSyslWithOutput(t, ".json", nil,
-		"export", "-a", "testapp", path.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"))
+		"export", "-a", "testapp", filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"))
 }
 
 func TestSwaggerExportInvalid(t *testing.T) {
@@ -764,26 +765,26 @@ func TestSwaggerExportInvalid(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
-		path.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")}, fs, logger, os.Stdin, main3)
+		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")}, fs, logger, os.Stdin, main3)
 	assert.True(t, errInt == 1)
 }
 
 func TestSwaggerAppExportNoDir(t *testing.T) {
 	t.Parallel()
-	outputDir := path.Join(t.TempDir(), "dirYetToBeCreated")
-	runSysl(t, 0, nil, "export", "-o", path.Join(outputDir, "%(appname).yaml"),
-		path.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
-	assert.FileExists(t, path.Join(outputDir, "single.yaml"))
-	assert.FileExists(t, path.Join(outputDir, "multiple.yaml"))
+	outputDir := filepath.Join(t.TempDir(), "dirYetToBeCreated")
+	runSysl(t, 0, nil, "export", "-o", filepath.Join(outputDir, "%(appname).yaml"),
+		filepath.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
+	assert.FileExists(t, filepath.Join(outputDir, "single.yaml"))
+	assert.FileExists(t, filepath.Join(outputDir, "multiple.yaml"))
 }
 
 func TestSwaggerAppExportDirExists(t *testing.T) {
 	t.Parallel()
 	outputDir := t.TempDir()
-	runSysl(t, 0, nil, "export", "-o", path.Join(outputDir, "%(appname).yaml"),
-		path.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
-	assert.FileExists(t, path.Join(outputDir, "single.yaml"))
-	assert.FileExists(t, path.Join(outputDir, "multiple.yaml"))
+	runSysl(t, 0, nil, "export", "-o", filepath.Join(outputDir, "%(appname).yaml"),
+		filepath.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
+	assert.FileExists(t, filepath.Join(outputDir, "single.yaml"))
+	assert.FileExists(t, filepath.Join(outputDir, "multiple.yaml"))
 }
 
 func TestHandleProjectRoot(t *testing.T) {
@@ -1023,7 +1024,7 @@ func TestSpannerDirImport(t *testing.T) {
 // with a file directed at a temporary output directory. The content of the file are verified to be identical to the
 // file specified in the expectedPathFromRepoRoot parameter (no need for "../../" in its path).
 func runSyslWithExpectedOutput(t *testing.T, expectedPathFromRepoRoot string, args ...string) {
-	expectedBytes, err := ioutil.ReadFile(path.Join("..", "..", expectedPathFromRepoRoot))
+	expectedBytes, err := ioutil.ReadFile(filepath.Join("..", "..", expectedPathFromRepoRoot))
 	require.NoError(t, err)
 	expected := string(expectedBytes)
 

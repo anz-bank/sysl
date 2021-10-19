@@ -8,7 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"reflect"
 	"regexp"
 	"strings"
@@ -41,7 +41,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-const mainTestDir = "../../tests/"
+var mainTestDir = filepath.Join("..", "..", "tests")
 
 func readSyslModule(filename string) (*sysl.Module, error) {
 	var buf bytes.Buffer
@@ -243,7 +243,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 		goldenFilename += syslExt
 	}
 	goldenFilename += ".golden.textpb"
-	golden := path.Join(root, goldenFilename)
+	golden := filepath.Join(root, goldenFilename)
 
 	if *update {
 		updated := bytes.Buffer{}
@@ -304,7 +304,7 @@ func TestParseDirectoryAsFile(t *testing.T) {
 
 	dirname := "not-a-file.sysl"
 	tmproot := os.TempDir()
-	tmpdir := path.Join(tmproot, dirname)
+	tmpdir := filepath.Join(tmproot, dirname)
 	require.NoError(t, os.Mkdir(tmpdir, 0755))
 	defer os.Remove(tmpdir)
 	_, err := parseComparable(dirname, tmproot, false)
