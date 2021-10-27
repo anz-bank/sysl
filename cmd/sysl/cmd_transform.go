@@ -177,8 +177,12 @@ func runTransformTests(fs afero.Fs, transformResult rel.Value, testFilePath stri
 func buildTransformInput(args cmdutils.ExecuteArgs) (rel.Tuple, error) {
 	models := make([]syslModel, 0, len(args.Modules))
 
-	for i := range args.Modules {
-		mod, err := buildModel(args.Modules[i], args.ModulePaths[i])
+	for i, module := range args.Modules {
+		modPath := "stdin"
+		if len(args.ModulePaths) > i {
+			modPath = args.ModulePaths[i]
+		}
+		mod, err := buildModel(module, modPath)
 		if err != nil {
 			return nil, err
 		}

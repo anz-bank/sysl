@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"io/ioutil"
 	"os"
 	"path"
 	"runtime"
@@ -39,9 +40,21 @@ func TestTransformInlineScript(t *testing.T) {
 
 func TestTransformTextFile(t *testing.T) {
 	t.Parallel()
+
 	scriptPath := writeTempFile(t, "transform.arrai", []byte(transformScript))
 	output := runSyslWithOutput(t, ".sysl", nil,
 		"transform", "../../tests/simple.sysl", "--script", scriptPath)
+	assert.Equal(t, transformOutput, output)
+}
+
+func TestTransformTextFile_moduleStdin(t *testing.T) {
+	t.Parallel()
+
+	src, err := ioutil.ReadFile("../../tests/simple.sysl")
+	require.NoError(t, err)
+	scriptPath := writeTempFile(t, "transform.arrai", []byte(transformScript))
+	output := runSyslWithOutput(t, ".sysl", bytes.NewReader(src),
+		"transform", "--script", scriptPath)
 	assert.Equal(t, transformOutput, output)
 }
 
