@@ -737,7 +737,7 @@ func fixParamTypeRef(mod *sysl.Module, app *sysl.Application, appName string) {
 	}
 }
 
-func (p *Parser) postProcess(mod *sysl.Module) {
+func (p *Parser) postProcess(mod *sysl.Module) { // nolint:funlen
 	appNames := make([]string, 0, len(mod.Apps))
 	for a := range mod.Apps {
 		appNames = append(appNames, a)
@@ -751,6 +751,10 @@ func (p *Parser) postProcess(mod *sysl.Module) {
 		if app.Mixin2 != nil {
 			for _, src := range app.Mixin2 {
 				srcApp := syslutil.GetApp(src.Name, mod)
+				if srcApp == nil {
+					logrus.Warnf("mixin App (%s) not found", syslutil.GetAppName(src.Name))
+					continue
+				}
 				if !syslutil.HasPattern(srcApp.Attrs, "abstract") {
 					logrus.Warnf("mixin App (%s) should be ~abstract", syslutil.GetAppName(src.Name))
 					continue
