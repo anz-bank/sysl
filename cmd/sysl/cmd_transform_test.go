@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
@@ -20,8 +21,11 @@ import (
 )
 
 const (
-	transformScript = `\input (output: input.models(0).rel.app => .appName(1))`
-	transformOutput = "{'App1', 'App2'}\n"
+	testSyslPath          = "../../tests/simple.sysl"
+	transformScript       = `\input (output: input.models(0).rel.app => .appName(1))`
+	transformImportScript = `\input (output: input.models(0).rel.app => //{./util}.joinAppName(.appName))`
+	transformOutput       = "{'App1', 'App2'}\n"
+	transformImportOutput = "{'Namespace1 :: App1', 'Namespace1 :: App2'}\n"
 )
 
 func TestTransformInlineScript(t *testing.T) {
@@ -34,7 +38,7 @@ func TestTransformInlineScript(t *testing.T) {
 	}
 
 	output := runSyslWithOutput(t, ".sysl", nil,
-		"transform", "../../tests/simple.sysl", "--script", transformScript)
+		"transform", testSyslPath, "--script", transformScript)
 	assert.Equal(t, transformOutput, output)
 }
 
@@ -43,18 +47,19 @@ func TestTransformTextFile(t *testing.T) {
 
 	scriptPath := writeTempFile(t, "transform.arrai", []byte(transformScript))
 	output := runSyslWithOutput(t, ".sysl", nil,
-		"transform", "../../tests/simple.sysl", "--script", scriptPath)
+		"transform", testSyslPath, "--script", scriptPath)
 	assert.Equal(t, transformOutput, output)
 }
 
 func TestTransformTextFile_moduleStdin(t *testing.T) {
 	t.Parallel()
 
-	src, err := ioutil.ReadFile("../../tests/simple.sysl")
+	testPath := testSyslPath
+	src, err := ioutil.ReadFile(testPath)
 	require.NoError(t, err)
 	scriptPath := writeTempFile(t, "transform.arrai", []byte(transformScript))
-	output := runSyslWithOutput(t, ".sysl", bytes.NewReader(src),
-		"transform", "--script", scriptPath)
+	stdin := toStdin(t, stdinFile{Path: testPath, Content: string(src)})
+	output := runSyslWithOutput(t, ".sysl", stdin, "transform", "--script", scriptPath)
 	assert.Equal(t, transformOutput, output)
 }
 
@@ -68,7 +73,7 @@ func TestTransformBundleFile(t *testing.T) {
 
 	bundlePath := writeTempFile(t, "transform.arraiz", createBundle(t, transformScript))
 	output := runSyslWithOutput(t, ".sysl", nil,
-		"transform", "../../tests/simple.sysl", "--script", bundlePath)
+		"transform", testSyslPath, "--script", bundlePath)
 	assert.Equal(t, transformOutput, output)
 }
 
@@ -76,15 +81,26 @@ func TestTransformTextStdin(t *testing.T) {
 	t.Parallel()
 
 	output := runSyslWithOutput(t, ".sysl", strings.NewReader(transformScript),
-		"transform", "../../tests/simple.sysl", "--script=-")
+		"transform", testSyslPath, "--script=-")
 	assert.Equal(t, transformOutput, output)
+}
+
+func TestTransformTextStdin_relImport(t *testing.T) {
+	t.Skip("relative imports not yet supported by stdin transform")
+	t.Parallel()
+
+	scriptPath := filepath.Join("..", "..", "pkg", "arrai", "foo.arrai")
+	stdin := toStdin(t, stdinFile{Path: scriptPath, Content: transformImportScript})
+	output := runSyslWithOutput(t, ".sysl", stdin,
+		"transform", testSyslPath, "--script=-")
+	assert.Equal(t, transformImportOutput, output)
 }
 
 func TestTransformBundleStdin(t *testing.T) {
 	t.Parallel()
 
 	output := runSyslWithOutput(t, ".sysl", bytes.NewReader(createBundle(t, transformScript)),
-		"transform", "../../tests/simple.sysl", "--script=-")
+		"transform", testSyslPath, "--script=-")
 	assert.Equal(t, transformOutput, output)
 }
 

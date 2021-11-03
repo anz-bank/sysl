@@ -1,11 +1,17 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
+	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/anz-bank/golden-retriever/reader"
+	"github.com/anz-bank/golden-retriever/reader/filesystem"
+	"github.com/anz-bank/golden-retriever/retriever"
 
 	"github.com/anz-bank/sysl/pkg/loader"
 
@@ -25,6 +31,29 @@ type cmdRunner struct {
 	modules []string
 }
 
+// overridingReader is a Golden Retriever reader that delegates to another reader, unless the
+// requested path matches a supplied override, in which case the override bytes are returned.
+type overridingReader struct {
+	reader.Reader
+	overrides map[string]string
+}
+
+func (r overridingReader) Read(ctx context.Context, path string) ([]byte, error) {
+	path = filepath.Clean(path)
+	if bs, ok := r.overrides[path]; ok {
+		return []byte(bs), nil
+	}
+	return r.Reader.Read(ctx, path)
+}
+
+func (r overridingReader) ReadHash(ctx context.Context, path string) ([]byte, retriever.Hash, error) {
+	path = filepath.Clean(path)
+	if bs, ok := r.overrides[path]; ok {
+		return []byte(bs), retriever.ZeroHash, nil
+	}
+	return r.Reader.ReadHash(ctx, path)
+}
+
 // Run identifies the command to run, loads the Sysl modules from the input (if necessary), then
 // executes the command with all of the accumulated context.
 func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error {
@@ -39,22 +68,12 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 			if cmd.MaxSyslModule() > 0 {
 				if len(r.modules) > 0 {
 					modules, defaultAppName, err = r.loadFromModules(fs, logger)
-					if err != nil {
-						return err
-					}
+					// stdin may still be provided for use by commands like transform.
 				} else {
-					src, err := io.ReadAll(stdin)
-					if err != nil {
-						return err
-					}
-					if len(src) == 0 {
-						return errors.New("no modules input provided via args or stdin")
-					}
-					mod, err := parse.NewParser().ParseString(string(src))
-					if err != nil {
-						return err
-					}
-					modules = []*sysl.Module{mod}
+					modules, defaultAppName, err = r.loadFromStdin(stdin, fs)
+				}
+				if err != nil {
+					return err
 				}
 			}
 
@@ -107,16 +126,20 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
 	})
 	for _, cmd := range commands {
-		c := cmd.Configure(app)
-		if cmd.MaxSyslModule() > 0 {
-			c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
-				"/project_dir/my_models combine with --root if needed").
-				StringsVar(&r.modules)
-		}
-		r.commands[cmd.Name()] = cmd
+		r.ConfigureCmd(app, cmd)
 	}
 
 	return nil
+}
+
+func (r *cmdRunner) ConfigureCmd(app *kingpin.Application, cmd cmdutils.Command) {
+	c := cmd.Configure(app)
+	if cmd.MaxSyslModule() > 0 {
+		c.Arg("MODULE", "input files without .sysl extension and with leading /, eg: "+
+			"/project_dir/my_models combine with --root if needed").
+			StringsVar(&r.modules)
+	}
+	r.commands[cmd.Name()] = cmd
 }
 
 // Helper function to validate that a set of command flags are not empty values
@@ -160,20 +183,38 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 	cmd.PreAction(fn)
 }
 
-// loadFromModules attempts to load the Sysl modules for the files specified in r.modules.
-func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, string, error) {
+// loadFromStdin attempts to load the Sysl modules for the files provided via stdin.
+func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs) ([]*sysl.Module, string, error) {
+	stdinFiles, err := loadStdinFiles(stdin)
+	if err != nil {
+		return nil, "", err
+	}
+
 	var mods []*sysl.Module
-	var defaultAppName string
-	for _, moduleName := range r.modules {
-		mod, appName, err := loader.LoadSyslModule(r.Root, moduleName, fs, logger)
+	for _, f := range stdinFiles {
+		r.modules = append(r.modules, f.Path)
+		mod, err := parse.NewParser().Parse(f.Path, overridingReader{
+			Reader:    filesystem.New(fs),
+			overrides: map[string]string{f.Path: f.Content},
+		})
 		if err != nil {
 			return nil, "", err
 		}
-		// Use the first app as the default app name.
-		if defaultAppName == "" {
-			defaultAppName = appName
+		mods = append(mods, mod)
+	}
+
+	return mods, "", err
+}
+
+// loadFromModules attempts to load the Sysl modules for the files specified in r.modules.
+func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, string, error) {
+	var mods []*sysl.Module
+	for _, moduleName := range r.modules {
+		mod, _, err := loader.LoadSyslModule(r.Root, moduleName, fs, logger)
+		if err != nil {
+			return nil, "", err
 		}
 		mods = append(mods, mod)
 	}
-	return mods, defaultAppName, nil
+	return mods, "", nil
 }

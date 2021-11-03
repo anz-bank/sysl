@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -160,7 +159,7 @@ type srcInputs struct {
 }
 
 // Parse parses a sysl definition from an retriever interface
-func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, error) { //nolint:funlen
+func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, error) {
 	listener := NewTreeShapeListener()
 	listener.lint()
 
@@ -179,7 +178,10 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 	); err != nil {
 		return nil, err
 	}
+	return p.parseSpecs(&specs, listener)
+}
 
+func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sysl.Module, error) { //nolint:funlen
 	for _, v := range specs.inputs {
 		src := v.src
 		logrus.Debug("Parsing: ", src.filename)
@@ -188,13 +190,13 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 
 		version := ""
 		if syslutil.IsRemoteImport(src.filename) {
-			listener.base = "/" + listener.base
 			v := strings.Split(src.filename, "@")
 			version = v[len(v)-1]
 		}
+		srcCtxFile := cleanImportFilename(src.filename)
+		listener.base = importDir(src.filename)
 		// FIXME: listener.sc.version and listener.version maybe duplicated
-		listener.sc = sourceCtxHelper{src.filename, version}
-		listener.base = path.Dir(src.filename)
+		listener.sc = sourceCtxHelper{srcCtxFile, version}
 		listener.version = version
 
 		// Import Sysl Proto
@@ -244,7 +246,7 @@ func collectSpecs(ctx context.Context,
 	imported map[string]struct{}) error {
 	specs.mutex.Lock()
 	if _, has := imported[source.filename]; has {
-		logrus.Warnf("Duplicate import: '%s'\n", source.filename)
+		logrus.Warnf("Duplicate import: '%s'\n", cleanImportFilename(source.filename))
 		specs.mutex.Unlock()
 		return nil
 	}
@@ -253,7 +255,9 @@ func collectSpecs(ctx context.Context,
 
 	content, hash, err := reader.ReadHash(ctx, source.filename)
 	if err != nil {
-		return syslutil.Exitf(ImportError, fmt.Sprintf("error reading %#v: \n%v\n", source.filename, err))
+		return syslutil.Exitf(ImportError, fmt.Sprintf(
+			"error reading %#v: \n%v\n", cleanImportFilename(source.filename), err,
+		))
 	}
 
 	version := hash.String()
@@ -317,10 +321,7 @@ func parseImports(parent importDef, src sourceCtxHelper, input string) ([]import
 	fsinput := &fsFileStream{antlr.NewInputStream(input), parent.filename}
 
 	listener.sc = src
-	listener.base = path.Dir(parent.filename)
-	if syslutil.IsRemoteImport(parent.filename) {
-		listener.base = "/" + listener.base
-	}
+	listener.base = importDir(parent.filename)
 	listener.version = src.version
 
 	tree, err := parseString(parent.filename, fsinput)
@@ -481,7 +482,6 @@ func checkEndpointCalls(mod *sysl.Module) bool {
 }
 
 func inferAnonymousType(mod *sysl.Module, appName string, anonCount int, t *sysl.Expr_Transform_, expr *sysl.Expr) int {
-	// logrus.Printf("found anonymous type\n")
 	newType := &sysl.Type{
 		Type: &sysl.Type_Tuple_{
 			Tuple: &sysl.Type_Tuple{

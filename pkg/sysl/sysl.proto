@@ -15,6 +15,7 @@ enum Delta {
 }
 
 message SourceContext {
+    // The location of the source file relative to the root. Path separators normalized to /.
     string      file    = 1;
     Location    start   = 2;
     Location    end     = 3;
@@ -40,6 +41,9 @@ message Module {
 }
 
 message Import {
+    // The raw content of the import statement path. This could be remote (leading //) or relative
+    // to either the the module root (leading /) or the importing source (no leading /).
+    // All path separators will be normalized to /.
     string target = 1;
     AppName name = 2;
 

@@ -3378,11 +3378,11 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		if strings.HasPrefix(filename, "/") {
 			base = "."
 		}
-		// path, not filepath: used for normalized `source_contexts.file` paths.
-		filename = path.Join(base, filename)
 
 		if syslutil.IsRemoteImport(s.base) {
-			filename = "/" + filename
+			filename = "/" + path.Join(base, filename)
+		} else {
+			filename = filepath.Join(base, filename)
 		}
 		if !strings.Contains(filename, "@") && s.version != "" {
 			filename += "@" + s.version

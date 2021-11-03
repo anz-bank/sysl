@@ -3,7 +3,11 @@ package parse
 import (
 	"math"
 	"net/url"
+	"path"
+	"path/filepath"
 	"strings"
+
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -185,4 +189,18 @@ func MustUnescapeStrings(strs []string) []string {
 		escaped = append(escaped, MustUnescape(str))
 	}
 	return escaped
+}
+
+// cleanImportFilename takes the import path to a file, and returns the canonical display form of
+// that path (i.e. how it should appear in SourceContext.file, error messages, etc.).
+func cleanImportFilename(filename string) string {
+	return strings.ReplaceAll(filename, `\`, `/`)
+}
+
+// importDir returns the directory of a file referenced by an import.
+func importDir(filename string) string {
+	if syslutil.IsRemoteImport(filename) {
+		return "/" + path.Dir(filename)
+	}
+	return filepath.Dir(filename)
 }
