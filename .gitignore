@@ -15,3 +15,4 @@ coverage.txt
 .DS_Store
 .blueprint
 .lint-cache
+.sysl

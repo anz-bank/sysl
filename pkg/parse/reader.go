@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/anz-bank/golden-retriever/retriever"
 	"github.com/anz-bank/sysl/pkg/env"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
@@ -18,6 +19,18 @@ import (
 const SyslRootMarker = ".sysl"
 
 func NewReader(fs afero.Fs) (reader.Reader, error) {
+	pinner, err := NewPinner(fs)
+	if err != nil {
+		return nil, err
+	}
+
+	return remotefs.NewWithRetriever(
+		filesystem.New(fs),
+		pinner,
+	), nil
+}
+
+func NewPinner(fs afero.Fs) (retriever.Retriever, error) {
 	root := "."
 	if v, is := fs.(*syslutil.ChrootFs); is {
 		root = v.Root()
@@ -56,12 +69,9 @@ func NewReader(fs afero.Fs) (reader.Reader, error) {
 		}
 	}
 
-	return remotefs.NewWithPinnerGitRetriever(
-		filesystem.New(fs),
-		filepath.Join(root, SyslRootMarker, "modules.yaml"),
+	return remotefs.NewPinnerGitRetriever(filepath.Join(root, SyslRootMarker, "modules.yaml"),
 		&git.AuthOptions{
 			Tokens:  tokens,
 			SSHKeys: keys,
-		},
-	)
+		})
 }
