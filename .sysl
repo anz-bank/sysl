@@ -1,0 +1,5 @@
+# .sysl
+
+This file indicates that this directory (i.e. the root of the `sysl` repo) is the Sysl root for all of the `.sysl` files contained within.
+
+This is used for testing and should not be removed.

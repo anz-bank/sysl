@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -65,7 +66,7 @@ func TestLoadModule_stdinImport(t *testing.T) {
 	}}
 	r := buildRunner(t, cmd)
 
-	stdin := toStdin(t, stdinFile{Path: filepath.Join(cwd(), "test.sysl"), Content: importSrc})
+	stdin := toStdin(t, stdinFile{Path: "test.sysl", Content: importSrc})
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
 
 	assert.Len(t, mods, 1)
@@ -89,6 +90,9 @@ func TestLoadModule_stdinPathImport(t *testing.T) {
 	assert.Len(t, mods[0].Apps, 2)
 	for _, a := range []string{"Namespace1 :: App1", "Namespace1 :: App2"} {
 		assert.Contains(t, mods[0].Apps, a)
+		for _, src := range mods[0].Apps[a].SourceContexts {
+			assert.True(t, strings.HasSuffix(src.File, "tests/simple.sysl"))
+		}
 	}
 }
 

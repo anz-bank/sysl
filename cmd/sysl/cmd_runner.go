@@ -1,23 +1,17 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/golden-retriever/reader"
-	"github.com/anz-bank/golden-retriever/reader/filesystem"
-	"github.com/anz-bank/golden-retriever/retriever"
-
 	"github.com/anz-bank/sysl/pkg/loader"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-	"github.com/anz-bank/sysl/pkg/parse"
-
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -29,29 +23,6 @@ type cmdRunner struct {
 
 	Root    string
 	modules []string
-}
-
-// overridingReader is a Golden Retriever reader that delegates to another reader, unless the
-// requested path matches a supplied override, in which case the override bytes are returned.
-type overridingReader struct {
-	reader.Reader
-	overrides map[string]string
-}
-
-func (r overridingReader) Read(ctx context.Context, path string) ([]byte, error) {
-	path = filepath.Clean(path)
-	if bs, ok := r.overrides[path]; ok {
-		return []byte(bs), nil
-	}
-	return r.Reader.Read(ctx, path)
-}
-
-func (r overridingReader) ReadHash(ctx context.Context, path string) ([]byte, retriever.Hash, error) {
-	path = filepath.Clean(path)
-	if bs, ok := r.overrides[path]; ok {
-		return []byte(bs), retriever.ZeroHash, nil
-	}
-	return r.Reader.ReadHash(ctx, path)
 }
 
 // Run identifies the command to run, loads the Sysl modules from the input (if necessary), then
@@ -70,7 +41,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 					modules, defaultAppName, err = r.loadFromModules(fs, logger)
 					// stdin may still be provided for use by commands like transform.
 				} else {
-					modules, defaultAppName, err = r.loadFromStdin(stdin, fs)
+					modules, defaultAppName, err = r.loadFromStdin(stdin, fs, logger)
 				}
 				if err != nil {
 					return err
@@ -184,26 +155,25 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 }
 
 // loadFromStdin attempts to load the Sysl modules for the files provided via stdin.
-func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs) ([]*sysl.Module, string, error) {
+func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, string, error) {
 	stdinFiles, err := loadStdinFiles(stdin)
 	if err != nil {
 		return nil, "", err
 	}
 
-	var mods []*sysl.Module
+	fs = afero.NewCopyOnWriteFs(fs, afero.NewMemMapFs())
 	for _, f := range stdinFiles {
 		r.modules = append(r.modules, f.Path)
-		mod, err := parse.NewParser().Parse(f.Path, overridingReader{
-			Reader:    filesystem.New(fs),
-			overrides: map[string]string{f.Path: f.Content},
-		})
+		absPath, err := filepath.Abs(f.Path)
 		if err != nil {
 			return nil, "", err
 		}
-		mods = append(mods, mod)
+		err = afero.WriteFile(fs, absPath, []byte(f.Content), os.ModePerm)
+		if err != nil {
+			return nil, "", err
+		}
 	}
-
-	return mods, "", err
+	return r.loadFromModules(fs, logger)
 }
 
 // loadFromModules attempts to load the Sysl modules for the files specified in r.modules.
