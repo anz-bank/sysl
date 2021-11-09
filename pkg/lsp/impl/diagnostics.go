@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -31,6 +32,7 @@ func (s *Server) diagnoseRaw(input string, listener *SyslErrorListener) parser.I
 }
 
 func (s *Server) provideSyntaxDiagnostics(ctx context.Context, uri protocol.DocumentURI, version int32) error {
+	fsPath := strings.TrimPrefix(string(uri), "file://")
 	errListener := NewSyslErrorListener(ctx, s.client)
 
 	//spanUri := uri.SpanURI()
@@ -44,7 +46,7 @@ func (s *Server) provideSyntaxDiagnostics(ctx context.Context, uri protocol.Docu
 	//		return err
 	//	}
 
-	fh, err := os.Open(string(uri))
+	fh, err := os.Open(fsPath)
 	if err != nil {
 		return errors.Wrapf(err, "file not found (%v)", jsonrpc2.ErrInternal)
 	}
@@ -64,8 +66,7 @@ func (s *Server) provideSyntaxDiagnostics(ctx context.Context, uri protocol.Docu
 		Version:     version,
 	})
 	if err != nil {
-		//fmt.Println("publishReports failed")
-		return err
+		return errors.Wrapf(err, "PublishDiagnostics failed")
 	}
 
 	return nil
