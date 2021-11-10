@@ -2,3 +2,10 @@ SequenceType:
     !type A:
         x <: sequence of int?:
           @comment = "array of int"
+
+    Endpoint(x <: sequence of string [~tag, anno = "simple"]):
+        ...
+
+    /rest:
+        GET(x <: sequence of string [~tag, anno = "rest"]):
+            ...

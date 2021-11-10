@@ -373,7 +373,7 @@ func (s *TreeShapeListener) EnterField_type(ctx *parser.Field_typeContext) {
 		type1.Opt = true
 	}
 
-	if ctx.Annotations() != nil {
+	if ctx.Annotations() != nil || ctx.Attribs_or_modifiers() != nil {
 		if type1.Attrs == nil {
 			type1.Attrs = map[string]*sysl.Attribute{}
 		}
@@ -413,7 +413,7 @@ func (s *TreeShapeListener) ExitField_type(ctx *parser.Field_typeContext) {
 			type1.Constraint = makeArrayConstraint(type1, array_spec)
 		}
 	}
-	if ctx.Annotations() != nil {
+	if ctx.Annotations() != nil || ctx.Attribs_or_modifiers() != nil {
 		s.popScope()
 	}
 }

@@ -4,6 +4,310 @@ apps: {
   name: {
    part: "SequenceType"
   }
+  endpoints: {
+   key: "Endpoint"
+   value: {
+    name: "Endpoint"
+    param: {
+     name: "x"
+     type: {
+      sequence: {
+       primitive: STRING
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 5
+         col: 13
+        }
+        end: {
+         line: 5
+         col: 60
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 5
+         col: 13
+        }
+        end: {
+         line: 5
+         col: 60
+        }
+       }
+      }
+      attrs: {
+       key: "anno"
+       value: {
+        s: "simple"
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 5
+          col: 51
+         }
+         end: {
+          line: 5
+          col: 59
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 5
+          col: 51
+         }
+         end: {
+          line: 5
+          col: 59
+         }
+        }
+       }
+      }
+      attrs: {
+       key: "patterns"
+       value: {
+        a: {
+         elt: {
+          s: "tag"
+          source_context: {
+           file: "tests/sequence_type.sysl"
+           start: {
+            line: 5
+            col: 38
+           }
+           end: {
+            line: 5
+            col: 42
+           }
+          }
+          source_contexts: {
+           file: "tests/sequence_type.sysl"
+           start: {
+            line: 5
+            col: 38
+           }
+           end: {
+            line: 5
+            col: 42
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/sequence_type.sysl"
+      start: {
+       line: 6
+       col: 8
+      }
+      end: {
+       line: 6
+       col: 11
+      }
+     }
+     source_contexts: {
+      file: "tests/sequence_type.sysl"
+      start: {
+       line: 6
+       col: 8
+      }
+      end: {
+       line: 6
+       col: 11
+      }
+     }
+    }
+    source_context: {
+     file: "tests/sequence_type.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 11
+     }
+    }
+    source_contexts: {
+     file: "tests/sequence_type.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 6
+      col: 11
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /rest"
+   value: {
+    name: "GET /rest"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    param: {
+     name: "x"
+     type: {
+      sequence: {
+       primitive: STRING
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 9
+         col: 12
+        }
+        end: {
+         line: 9
+         col: 57
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 9
+         col: 12
+        }
+        end: {
+         line: 9
+         col: 57
+        }
+       }
+      }
+      attrs: {
+       key: "anno"
+       value: {
+        s: "rest"
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 9
+          col: 50
+         }
+         end: {
+          line: 9
+          col: 56
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 9
+          col: 50
+         }
+         end: {
+          line: 9
+          col: 56
+         }
+        }
+       }
+      }
+      attrs: {
+       key: "patterns"
+       value: {
+        a: {
+         elt: {
+          s: "tag"
+          source_context: {
+           file: "tests/sequence_type.sysl"
+           start: {
+            line: 9
+            col: 37
+           }
+           end: {
+            line: 9
+            col: 41
+           }
+          }
+          source_contexts: {
+           file: "tests/sequence_type.sysl"
+           start: {
+            line: 9
+            col: 37
+           }
+           end: {
+            line: 9
+            col: 41
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/sequence_type.sysl"
+      start: {
+       line: 10
+       col: 12
+      }
+      end: {
+       line: 10
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/sequence_type.sysl"
+      start: {
+       line: 10
+       col: 12
+      }
+      end: {
+       line: 10
+       col: 15
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/rest"
+    }
+    source_context: {
+     file: "tests/sequence_type.sysl"
+     start: {
+      line: 9
+      col: 8
+     }
+     end: {
+      line: 11
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/sequence_type.sysl"
+     start: {
+      line: 9
+      col: 8
+     }
+     end: {
+      line: 11
+      col: 1
+     }
+    }
+   }
+  }
   types: {
    key: "A"
    value: {
@@ -20,8 +324,8 @@ apps: {
           col: 8
          }
          end: {
-          line: 4
-          col: 1
+          line: 5
+          col: 5
          }
         }
         source_contexts: {
@@ -31,8 +335,8 @@ apps: {
           col: 8
          }
          end: {
-          line: 4
-          col: 1
+          line: 5
+          col: 5
          }
         }
        }
@@ -72,8 +376,8 @@ apps: {
          col: 8
         }
         end: {
-         line: 4
-         col: 1
+         line: 5
+         col: 5
         }
        }
        source_contexts: {
@@ -83,8 +387,8 @@ apps: {
          col: 8
         }
         end: {
-         line: 4
-         col: 1
+         line: 5
+         col: 5
         }
        }
       }
@@ -118,16 +422,16 @@ apps: {
    file: "tests/sequence_type.sysl"
    start: {}
    end: {
-    line: 3
-    col: 35
+    line: 10
+    col: 15
    }
   }
   source_contexts: {
    file: "tests/sequence_type.sysl"
    start: {}
    end: {
-    line: 3
-    col: 35
+    line: 10
+    col: 15
    }
   }
  }
