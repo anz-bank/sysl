@@ -12,6 +12,7 @@ import (
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/anz-bank/golden-retriever/reader"
+	"github.com/anz-bank/golden-retriever/reader/remotefs"
 	"github.com/anz-bank/pkg/mod"
 	"github.com/anz-bank/sysl/pkg/env"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
@@ -145,6 +146,17 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 	if err != nil {
 		return nil, err
 	}
+	return p.Parse(filename, reader)
+}
+
+// ParseFromFsWithVendor parses a sysl definition from an afero filesystem, and vendor remote files in root dir
+func (p *Parser) ParseFromFsWithVendor(filename string, fs afero.Fs) (*sysl.Module, error) {
+	reader, err := NewReader(fs)
+	if err != nil {
+		return nil, err
+	}
+
+	reader.(*remotefs.RemoteFs).Vendor(SyslRootDir(fs))
 	return p.Parse(filename, reader)
 }
 

@@ -31,11 +31,6 @@ func NewReader(fs afero.Fs) (reader.Reader, error) {
 }
 
 func NewPinner(fs afero.Fs) (retriever.Retriever, error) {
-	root := "."
-	if v, is := fs.(*syslutil.ChrootFs); is {
-		root = v.Root()
-	}
-
 	tokens := make(map[string]string)
 	if tokensStr := env.SYSL_TOKENS.Value(); tokensStr != "" {
 		hostTokens := strings.Split(tokensStr, ",")
@@ -69,9 +64,17 @@ func NewPinner(fs afero.Fs) (retriever.Retriever, error) {
 		}
 	}
 
-	return remotefs.NewPinnerGitRetriever(filepath.Join(root, SyslRootMarker, "modules.yaml"),
+	return remotefs.NewPinnerGitRetriever(filepath.Join(SyslRootDir(fs), "modules.yaml"),
 		&git.AuthOptions{
 			Tokens:  tokens,
 			SSHKeys: keys,
 		})
+}
+
+func SyslRootDir(fs afero.Fs) string {
+	root := "."
+	if v, is := fs.(*syslutil.ChrootFs); is {
+		root = v.Root()
+	}
+	return filepath.Join(root, SyslRootMarker)
 }
