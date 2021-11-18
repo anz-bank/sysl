@@ -297,6 +297,27 @@ func (v *DataModelView) DrawTuple(
 	v.StringBuilder.WriteString("}\n")
 }
 
+func (v *DataModelView) DrawEnum(name string, entity *sysl.Type_Enum) {
+	encEntity := v.UniqueVarForAppName(strings.Split(name, ".")...)
+
+	// Prepare the enum names to be written in the order of their numeric values.
+	// Ideally they would be written in the same order they appear in the source, but SourceContext
+	// is not available for enum values.
+	vals := make([]int, 0, len(entity.Items))
+	valToName := make(map[int]string, len(entity.Items))
+	for name, val := range entity.Items {
+		vals = append(vals, int(val))
+		valToName[int(val)] = name
+	}
+	sort.Ints(vals)
+
+	v.StringBuilder.WriteString(fmt.Sprintf("enum \"%s\" as %s {\n", name, encEntity))
+	for _, val := range vals {
+		v.StringBuilder.WriteString(fmt.Sprintf("%s\n", valToName[val]))
+	}
+	v.StringBuilder.WriteString("}\n")
+}
+
 // getNames returns the names and details needed to represent a type in a diagram.
 func getNames(t *sysl.Type) (appName string, path []string, label string, isPrimitiveList bool) {
 	if t.GetPrimitive() == sysl.Type_NO_Primitive {
@@ -388,6 +409,9 @@ func (v *DataModelView) GenerateDataView(dataParam *DataModelParam) string {
 				Types:        typeMap,
 			}
 			v.DrawPrimitive(viewParam, pe.String(), relationshipMap)
+		} else if ee := entityType.GetEnum(); ee != nil {
+			isRelation = false
+			v.DrawEnum(entityName, ee)
 		}
 	}
 	if isRelation {

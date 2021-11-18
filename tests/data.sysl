@@ -5,6 +5,8 @@ Project [seqtitle="DataModel"]:
         ObjectModel
     Primitive-Alias-Model:
         PrimitiveAliasModel
+    Enum-Model:
+        EnumModel
     Cross-Model:
         Namespace :: CrossModel
 
@@ -63,3 +65,12 @@ PrimitiveAliasModel:
         foo <: string
     !alias uuid:
         int
+
+EnumModel:
+    !type User:
+        id <: uuid
+        type <: UserType
+    !enum UserType:
+        READER: 0
+        WRITER: 1
+        ADMIN: 2

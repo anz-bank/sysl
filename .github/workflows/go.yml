@@ -114,23 +114,6 @@ jobs:
     - name: Test installed
       run: .\scripts\test-gosysl.bat
 
-  build-and-test-sysl_js:
-    name: Build and test sysl_js on linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Node
-        uses: actions/setup-node@v1
-
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Install and test sysl_js
-        run: |
-          npm install --prefix unsorted/sysl_js
-          npm test --prefix unsorted/sysl_js
-        env:
-          NPM_AUTH_TOKEN: "SOME-RANDOM-KEY"
-
   build-docker:
     name: Builds the sysl docker image
     runs-on: ubuntu-latest

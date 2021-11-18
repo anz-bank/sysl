@@ -33,6 +33,7 @@ func TestDoConstructDataDiagramsWithProjectMannerModule(t *testing.T) {
 			"Relational-Model.png":      filepath.Join(testDir, "relational-model-golden.puml"),
 			"Object-Model.png":          filepath.Join(testDir, "object-model-golden.puml"),
 			"Primitive-Alias-Model.png": filepath.Join(testDir, "primitive-alias-model-golden.puml"),
+			"Enum-Model.png":            filepath.Join(testDir, "enum-model-golden.puml"),
 			"Cross-Model.png":           filepath.Join(testDir, "cross-model-golden.puml"),
 		},
 	}

@@ -126,3 +126,15 @@ func TestDrawTuple(t *testing.T) {
 		},
 	)
 }
+
+func TestDrawEnum(t *testing.T) {
+	t.Parallel()
+	enum := syslwrapper.MakeEnum(map[int64]string{1: "Bar", 0: "Foo"}).Type.(*sysl.Type_Enum_).Enum
+	assertDraw(t, `enum "enumName" as _0 {
+Foo
+Bar
+}
+`, "enumName", func(v *DataModelView, relationshipMap map[string]map[string]RelationshipParam) {
+		v.DrawEnum("enumName", enum)
+	})
+}
