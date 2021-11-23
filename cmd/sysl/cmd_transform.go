@@ -65,9 +65,11 @@ func (p *transformCmd) Execute(args cmdutils.ExecuteArgs) error {
 	var scriptBytes []byte
 
 	exists, err := afero.Exists(args.Filesystem, p.transformFile)
+	scriptPath := "temp.arrai"
 	switch {
 	case exists:
 		scriptBytes, err = afero.ReadFile(args.Filesystem, p.transformFile)
+		scriptPath = p.transformFile
 	case p.transformFile == "-":
 		scriptBytes, err = io.ReadAll(args.Stdin)
 	case p.transformFile[0] == '\\':
@@ -80,7 +82,7 @@ func (p *transformCmd) Execute(args cmdutils.ExecuteArgs) error {
 	}
 
 	if err == nil {
-		result, err = transform.EvalWithParam(scriptBytes, p.transformFile, input)
+		result, err = transform.EvalWithParam(scriptBytes, scriptPath, input)
 	}
 
 	if err != nil {

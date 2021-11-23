@@ -5,11 +5,24 @@ let all = newNormalize(loadBytes(//[//encoding.bytes]{./out/all.pb}));
 
 let reconstruct = //{./reconstruct};
 
-let simple = (
+let simpleNoSrc = (
     app: {(appName: ['A'])},
     type: {(appName: ['A'], typeName: 'T')},
     field: {(appName: ['A'], typeName: 'T', fieldName: 'f', fieldType: 'int', fieldOpt: false)},
-    src: (app: {(appName: ['A'], appSrc: (file: 'a.sysl'))})
+);
+
+let simple = simpleNoSrc +> (src: (app: {(appName: ['A'], appSrc: (file: 'a.sysl'))}));
+
+let table = (
+    src: (app: {(appName: ['A'], appSrc: (file: 'a.sysl'))}),
+    app: {(appName: ['A'])},
+    type: {(appName: ['A'], typeName: 'Tb')},
+    table: {(appName: ['A'], typeName: 'Tb', pk: ['id'])},
+    tag: (field: {(appName: ['A'], typeName: 'Tb', fieldName: 'id', fieldTag: 'pk')}),
+    field: {
+        (appName: ['A'], typeName: 'Tb', fieldName: 'c', fieldType: 'int', fieldOpt: false),
+        (appName: ['A'], typeName: 'Tb', fieldName: 'id', fieldType: 'int', fieldOpt: false)
+    },
 );
 
 let nested = (
@@ -31,6 +44,15 @@ let rest = (
 
     simple: reconstruct(simple) = {
         'a.sysl': $`
+            A:
+                !type T:
+                    f <: int
+
+        `
+    },
+
+    simpleNoSrc: reconstruct(simpleNoSrc) = {
+        'default.sysl': $`
             A:
                 !type T:
                     f <: int
@@ -61,6 +83,97 @@ let rest = (
 
         `
     },
+
+    tags:
+        let appTag = (appName: ['A'], appTag: 'app_tag');
+        let typeTag = (appName: ['A'], typeName: 'T', typeTag: 'type_tag');
+        let fieldTag = (appName: ['A'], typeName: 'T', fieldName: 'f', fieldTag: 'field_tag');
+        let tableTag = (appName: ['A'], typeName: 'Tb', typeTag: 'table_tag');
+        let columnTag = (appName: ['A'], typeName: 'Tb', fieldName: 'c', fieldTag: 'column_tag');
+        (
+            noTags: reconstruct(simple) = {
+                'a.sysl': $`
+                    A:
+                        !type T:
+                            f <: int
+
+                `
+            },
+            onApp: reconstruct(simple +> (tag: (app: {appTag}))) = {
+                'a.sysl': $`
+                    A [~app_tag]:
+                        !type T:
+                            f <: int
+
+                `
+            },
+            onType: reconstruct(simple +> (tag: (type: {typeTag}))) = {
+                'a.sysl': $`
+                    A:
+                        !type T [~type_tag]:
+                            f <: int
+
+                `
+            },
+            onField: reconstruct(simple +> (tag: (field: {fieldTag}))) = {
+                'a.sysl': $`
+                    A:
+                        !type T:
+                            f <: int [~field_tag]
+
+                `
+            },
+
+            noTagsTable: reconstruct(table) = {
+                'a.sysl': $`
+                    A:
+                        !table Tb:
+                            c <: int
+                            id <: int [~pk]
+
+                `
+            },
+            noTagsMixed: reconstruct(table +> (type: table.type | simple.type, field: table.field | simple.field)) = {
+                'a.sysl': $`
+                    A:
+                        !type T:
+                            f <: int
+                    
+                        !table Tb:
+                            c <: int
+                            id <: int [~pk]
+
+                `
+            },
+            onTable: reconstruct(table +> (tag: table.tag +> (type: {tableTag}))) = {
+                'a.sysl': $`
+                    A:
+                        !table Tb [~table_tag]:
+                            c <: int
+                            id <: int [~pk]
+
+                `
+            },
+            onColumn: reconstruct(table +> (tag: (field: table.tag.field | {columnTag}))) = {
+                'a.sysl': $`
+                    A:
+                        !table Tb:
+                            c <: int [~column_tag]
+                            id <: int [~pk]
+
+                `
+            },
+            onPK: reconstruct(table +> (tag: (field: table.tag.field | {columnTag +> (fieldName: 'id')}))) = {
+                'a.sysl': $`
+                    A:
+                        !table Tb:
+                            c <: int
+                            id <: int [~column_tag, ~pk]
+
+                `
+            },
+        )
+    ,
 
     nested:
         let expected = {

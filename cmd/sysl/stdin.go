@@ -3,8 +3,11 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"math"
 	"path/filepath"
+	"strings"
 )
 
 // stdinFile represents a file to parse provided via stdin (JSON encoded). The content is the source
@@ -34,7 +37,27 @@ func loadStdinFiles(stdin io.Reader) ([]stdinFile, error) {
 
 	if len(src) > 0 {
 		if err := json.Unmarshal(src, &files); err != nil || len(files) == 0 {
-			return nil, errors.New("stdin must be a JSON array of {path, content} file objects")
+			errMsg := fmt.Sprintf("stdin must be a JSON array of {path, content} file objects. "+
+				"JSON parsing error: %v", err)
+
+			// From: https://adrianhesketh.com/2017/03/18/getting-line-and-character-positions-from-gos-json-unmarshal-errors/
+			offset := int64(-1)
+			if jsonError, ok := err.(*json.SyntaxError); ok {
+				offset = jsonError.Offset - 1
+			} else if jsonError, ok := err.(*json.UnmarshalTypeError); ok {
+				offset = jsonError.Offset - 1
+			}
+
+			// From: https://github.com/golang/go/issues/43513#issuecomment-755754498
+			if offset >= 0 && offset < math.MaxInt32 {
+				offset := int(offset)
+				jsonUntilErr := string(src[:offset])
+				line := 1 + strings.Count(jsonUntilErr, "\n")
+				col := 1 + offset - (strings.LastIndex(jsonUntilErr, "\n") + len("\n"))
+				errMsg += fmt.Sprintf(" (line %d, col %d)", line, col)
+			}
+
+			return nil, errors.New(errMsg)
 		}
 	}
 

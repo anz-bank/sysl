@@ -170,9 +170,8 @@ let fileContents = \file \apps
 
             # TODO: exclude union and alias
             let type =
-                let enumAndTable = (enum | table) => .typeName;
                 # TODO: inplace fields
-                type where .typeName !<: enumAndTable && !//seq.contains('.', .typeName)
+                type where .typeName !<: (enum => .typeName) && !//seq.contains('.', .typeName)
             ;
             let isEmpty = //rel.union({ep, type, field, table, enum, mixin, appAnno}) = {};
             $`
@@ -189,42 +188,21 @@ let fileContents = \file \apps
                     ::\i\n:\n}
                     ${type orderby .typeName >> \(:typeName, ...)
                         let typeTags = tagsString((tag.type where .typeName = typeName) => .typeTag);
+                        let isTable = (type <&- {(:typeName)}) --- table;
                         $`
-                            !type ${typeName}${typeTags}:
+                            ${cond {isTable: "!table", _: "!type"}} ${typeName}${typeTags}:
                                 ${resolvedTypeAnno(anno.type, typeName)::\i}
                                 ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
-                                        $`
-                                            ${fieldName} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${
-                                                let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
-                                                anno && $`
-                                                    :
-                                                        ${anno::\i}
-                                                `
-                                            }
-                                        `)
-                                || ['...'] ::\i}
-                        `
-                    ::\i\n:\n}
-                    ${table orderby .typeName >> \(:typeName, :pk, ...)
-                        # TODO: tags
-                        # TODO: pk should be set?
-                        let pk = pk => .@item;
-                        let typeTags = tagsString((tag.type where .typeName = typeName) => .typeTag);
-                        $`
-                            !table ${typeName}${typeTags}:
-                                ${resolvedTypeAnno(anno.type, typeName)::\i}
-                                ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
-                                        $`
-                                            ${fieldName} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${cond {(fieldName <: pk): ' [~pk]'}}${
-                                                let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
-                                                cond {
-                                                    (anno != ''): $`
-                                                        :
-                                                            ${anno::\i}
-                                                    `,
-                                                }
-                                            }
-                                        `)
+                                    let fieldTags = tagsString(tag.field <&- {(:typeName, :fieldName)} => .fieldTag);
+                                    $`
+                                        ${fieldName} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${fieldTags}${
+                                            let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
+                                            anno && $`
+                                                :
+                                                    ${anno::\i}
+                                            `
+                                        }
+                                    `)
                                 || ['...'] ::\i}
                         `
                     ::\i\n:\n}
@@ -265,6 +243,7 @@ let fileMap = \file \apps
     _fileMap(//seq.split('/', //seq.trim_prefix('/', file)))
 ;
 
-let files = (src.app => \(:appName, :appSrc, ...) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
+let missingSrc = app &~ (app <&- src.app) => (:.appName, appSrc: (file: "default.sysl"));
+let files = (src.app | missingSrc => \(:appName, :appSrc, ...) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
 let fileMaps = files => fileMap(.file, .apps);
 reduce(fileMaps orderby ., \k \v dictMerge(v, k), {})
