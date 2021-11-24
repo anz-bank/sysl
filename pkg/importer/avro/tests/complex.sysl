@@ -41,7 +41,7 @@ TestApp[avro_spec="1.0", package="com.example.package"]:
         relationshipType <: string [description="This would be the business key for uniquely identifying a relation"]
         startDate <: string? [default="null", description="Relationship start date"]
         endDate <: string? [union=['string', 'null'], default="2020-09-18", description="Relationship end date"]
-        issueDate <: Int32String? [union=['int32', 'string', 'null'], default="2.0200918e+07", description="Relationship issue date"]
+        issueDate <: Int32String? [union=['int32', 'string', 'null'], default="2.0200918E+07", description="Relationship issue date"]
         closeDate <: Int32String? [union=['null', 'string', 'int32'], default="null", description="Relationship close date"]
         realCloseDate <: Int32String? [union=['string', 'null', 'int32'], default="20200919", description="Relationship real close date"]
         updateDate <: Int32String [union=['string', 'int32'], default="20200919", description="Relationship update date", order="ascending"]
