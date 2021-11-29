@@ -95,6 +95,20 @@ Types:
     !type AliasSequence:
         ...
 
+    !table Table [~tag]:
+        decimal_with_precision <: decimal
+        inplace <: Types.inplace
+        nativeTypeField <: string
+        optional <: string?
+        primaryKey <: string [~pk]
+        reference <: RestEndpoint.Type
+        sequence <: sequence of string
+        set <: set of string
+        string_max_constraint <: string
+        string_range_constraint <: string
+        with_anno <: string:
+            @annotation = "this is an annotation"
+
     !type Type:
         @annotation = "annotation"
         aliasSequence <: Types.Alias
@@ -110,20 +124,6 @@ Types:
     !type Union:
         @annotation = "annotation"
         ...
-
-    !table Table [~tag]:
-        decimal_with_precision <: decimal
-        inplace <: Types.inplace
-        nativeTypeField <: string
-        optional <: string?
-        primaryKey <: string [~pk]
-        reference <: RestEndpoint.Type
-        sequence <: sequence of string
-        set <: set of string
-        string_max_constraint <: string
-        string_range_constraint <: string
-        with_anno <: string:
-            @annotation = "this is an annotation"
 
 
 Statements:

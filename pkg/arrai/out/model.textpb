@@ -1,2962 +1,2962 @@
-apps: {
- key: "A"
- value: {
-  name: {
-   part: "A"
+apps:  {
+ key:  "A"
+ value:  {
+  name:  {
+   part:  "A"
   }
-  endpoints: {
-   key: "Fetch"
-   value: {
-    name: "Fetch"
-    stmt: {
-     call: {
-      target: {
-       part: "Source"
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Source"
       }
-      endpoint: "Read"
+      endpoint:  "Read"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 40
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  40
+       col:  8
       }
-      end: {
-       line: 40
-       col: 22
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 40
-       col: 8
-      }
-      end: {
-       line: 40
-       col: 22
+      end:  {
+       line:  40
+       col:  22
       }
      }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: A.FetchResponse [dataflow={\"A.FetchResponse.ax\": \"Source.Foo.x\", \"A.FetchResponse.ay\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 41
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  40
+       col:  8
       }
-      end: {
-       line: 41
-       col: 153
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 41
-       col: 8
-      }
-      end: {
-       line: 41
-       col: 153
+      end:  {
+       line:  40
+       col:  22
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 39
-      col: 4
+    stmt:  {
+     ret:  {
+      payload:  "ok <: A.FetchResponse [dataflow={\"A.FetchResponse.ax\": \"Source.Foo.x\", \"A.FetchResponse.ay\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
      }
-     end: {
-      line: 41
-      col: 153
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 39
-      col: 4
-     }
-     end: {
-      line: 41
-      col: 153
-     }
-    }
-   }
-  }
-  types: {
-   key: "FetchResponse"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "ax"
-      value: {
-       primitive: INT
-       attrs: {
-        key: "examples"
-        value: {
-         a: {
-          elt: {
-           s: "12"
-           source_context: {
-            file: "model.sysl"
-            start: {
-             line: 45
-             col: 25
-            }
-            end: {
-             line: 45
-             col: 29
-            }
-           }
-           source_contexts: {
-            file: "model.sysl"
-            start: {
-             line: 45
-             col: 25
-            }
-            end: {
-             line: 45
-             col: 29
-            }
-           }
-          }
-          elt: {
-           s: "42"
-           source_context: {
-            file: "model.sysl"
-            start: {
-             line: 45
-             col: 31
-            }
-            end: {
-             line: 45
-             col: 35
-            }
-           }
-           source_contexts: {
-            file: "model.sysl"
-            start: {
-             line: 45
-             col: 31
-            }
-            end: {
-             line: 45
-             col: 35
-            }
-           }
-          }
-         }
-         source_context: {
-          file: "model.sysl"
-          start: {
-           line: 45
-           col: 24
-          }
-          end: {
-           line: 45
-           col: 36
-          }
-         }
-         source_contexts: {
-          file: "model.sysl"
-          start: {
-           line: 45
-           col: 24
-          }
-          end: {
-           line: 45
-           col: 36
-          }
-         }
-        }
-       }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 44
-         col: 8
-        }
-        end: {
-         line: 46
-         col: 9
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 44
-         col: 8
-        }
-        end: {
-         line: 46
-         col: 9
-        }
-       }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  41
+       col:  8
+      }
+      end:  {
+       line:  41
+       col:  153
       }
      }
-     attr_defs: {
-      key: "ay"
-      value: {
-       primitive: INT
-       attrs: {
-        key: "examples"
-        value: {
-         a: {
-          elt: {
-           s: "12"
-           source_context: {
-            file: "model.sysl"
-            start: {
-             line: 46
-             col: 29
-            }
-            end: {
-             line: 46
-             col: 33
-            }
-           }
-           source_contexts: {
-            file: "model.sysl"
-            start: {
-             line: 46
-             col: 29
-            }
-            end: {
-             line: 46
-             col: 33
-            }
-           }
-          }
-          elt: {
-           s: "42"
-           source_context: {
-            file: "model.sysl"
-            start: {
-             line: 46
-             col: 35
-            }
-            end: {
-             line: 46
-             col: 39
-            }
-           }
-           source_contexts: {
-            file: "model.sysl"
-            start: {
-             line: 46
-             col: 35
-            }
-            end: {
-             line: 46
-             col: 39
-            }
-           }
-          }
-         }
-         source_context: {
-          file: "model.sysl"
-          start: {
-           line: 46
-           col: 28
-          }
-          end: {
-           line: 46
-           col: 40
-          }
-         }
-         source_contexts: {
-          file: "model.sysl"
-          start: {
-           line: 46
-           col: 28
-          }
-          end: {
-           line: 46
-           col: 40
-          }
-         }
-        }
-       }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 46
-         col: 8
-        }
-        end: {
-         line: 46
-         col: 41
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 46
-         col: 8
-        }
-        end: {
-         line: 46
-         col: 41
-        }
-       }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  41
+       col:  8
+      }
+      end:  {
+       line:  41
+       col:  153
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 43
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  39
+      col:  4
      }
-     end: {
-      line: 46
-      col: 40
+     end:  {
+      line:  41
+      col:  153
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 43
-      col: 4
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  39
+      col:  4
      }
-     end: {
-      line: 46
-      col: 40
+     end:  {
+      line:  41
+      col:  153
      }
     }
    }
   }
-  source_context: {
-   file: "model.sysl"
-   start: {
-    line: 38
-   }
-   end: {
-    line: 46
-    col: 40
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "ax"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "examples"
+        value:  {
+         a:  {
+          elt:  {
+           s:  "12"
+           source_context:  {
+            file:  "model.sysl"
+            start:  {
+             line:  45
+             col:  25
+            }
+            end:  {
+             line:  45
+             col:  29
+            }
+           }
+           source_contexts:  {
+            file:  "model.sysl"
+            start:  {
+             line:  45
+             col:  25
+            }
+            end:  {
+             line:  45
+             col:  29
+            }
+           }
+          }
+          elt:  {
+           s:  "42"
+           source_context:  {
+            file:  "model.sysl"
+            start:  {
+             line:  45
+             col:  31
+            }
+            end:  {
+             line:  45
+             col:  35
+            }
+           }
+           source_contexts:  {
+            file:  "model.sysl"
+            start:  {
+             line:  45
+             col:  31
+            }
+            end:  {
+             line:  45
+             col:  35
+            }
+           }
+          }
+         }
+         source_context:  {
+          file:  "model.sysl"
+          start:  {
+           line:  45
+           col:  24
+          }
+          end:  {
+           line:  45
+           col:  36
+          }
+         }
+         source_contexts:  {
+          file:  "model.sysl"
+          start:  {
+           line:  45
+           col:  24
+          }
+          end:  {
+           line:  45
+           col:  36
+          }
+         }
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  44
+         col:  8
+        }
+        end:  {
+         line:  46
+         col:  9
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  44
+         col:  8
+        }
+        end:  {
+         line:  46
+         col:  9
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ay"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "examples"
+        value:  {
+         a:  {
+          elt:  {
+           s:  "12"
+           source_context:  {
+            file:  "model.sysl"
+            start:  {
+             line:  46
+             col:  29
+            }
+            end:  {
+             line:  46
+             col:  33
+            }
+           }
+           source_contexts:  {
+            file:  "model.sysl"
+            start:  {
+             line:  46
+             col:  29
+            }
+            end:  {
+             line:  46
+             col:  33
+            }
+           }
+          }
+          elt:  {
+           s:  "42"
+           source_context:  {
+            file:  "model.sysl"
+            start:  {
+             line:  46
+             col:  35
+            }
+            end:  {
+             line:  46
+             col:  39
+            }
+           }
+           source_contexts:  {
+            file:  "model.sysl"
+            start:  {
+             line:  46
+             col:  35
+            }
+            end:  {
+             line:  46
+             col:  39
+            }
+           }
+          }
+         }
+         source_context:  {
+          file:  "model.sysl"
+          start:  {
+           line:  46
+           col:  28
+          }
+          end:  {
+           line:  46
+           col:  40
+          }
+         }
+         source_contexts:  {
+          file:  "model.sysl"
+          start:  {
+           line:  46
+           col:  28
+          }
+          end:  {
+           line:  46
+           col:  40
+          }
+         }
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  46
+         col:  8
+        }
+        end:  {
+         line:  46
+         col:  41
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  46
+         col:  8
+        }
+        end:  {
+         line:  46
+         col:  41
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  43
+      col:  4
+     }
+     end:  {
+      line:  46
+      col:  40
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  43
+      col:  4
+     }
+     end:  {
+      line:  46
+      col:  40
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "model.sysl"
-   start: {
-    line: 38
+  source_context:  {
+   file:  "model.sysl"
+   start:  {
+    line:  38
    }
-   end: {
-    line: 46
-    col: 40
+   end:  {
+    line:  46
+    col:  40
+   }
+  }
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {
+    line:  38
+   }
+   end:  {
+    line:  46
+    col:  40
    }
   }
  }
 }
-apps: {
- key: "B"
- value: {
-  name: {
-   part: "B"
+apps:  {
+ key:  "B"
+ value:  {
+  name:  {
+   part:  "B"
   }
-  endpoints: {
-   key: "Fetch"
-   value: {
-    name: "Fetch"
-    stmt: {
-     call: {
-      target: {
-       part: "Source"
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "Source"
       }
-      endpoint: "Read"
+      endpoint:  "Read"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 50
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  50
+       col:  8
       }
-      end: {
-       line: 50
-       col: 22
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 50
-       col: 8
-      }
-      end: {
-       line: 50
-       col: 22
+      end:  {
+       line:  50
+       col:  22
       }
      }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: B.FetchResponse [dataflow={\"B.FetchResponse.bx\": \"Source.Foo.x\", \"B.FetchResponse.by\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 51
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  50
+       col:  8
       }
-      end: {
-       line: 51
-       col: 153
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 51
-       col: 8
-      }
-      end: {
-       line: 51
-       col: 153
+      end:  {
+       line:  50
+       col:  22
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 49
-      col: 4
+    stmt:  {
+     ret:  {
+      payload:  "ok <: B.FetchResponse [dataflow={\"B.FetchResponse.bx\": \"Source.Foo.x\", \"B.FetchResponse.by\": \"Source.Foo.y\"}, description=\"1:1 transform\"]"
      }
-     end: {
-      line: 51
-      col: 153
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  51
+       col:  8
+      }
+      end:  {
+       line:  51
+       col:  153
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  51
+       col:  8
+      }
+      end:  {
+       line:  51
+       col:  153
+      }
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 49
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  49
+      col:  4
      }
-     end: {
-      line: 51
-      col: 153
+     end:  {
+      line:  51
+      col:  153
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  49
+      col:  4
+     }
+     end:  {
+      line:  51
+      col:  153
      }
     }
    }
   }
-  types: {
-   key: "Code"
-   value: {
-    enum: {
-     items: {
-      key: "A"
-      value: 784
+  types:  {
+   key:  "Code"
+   value:  {
+    enum:  {
+     items:  {
+      key:  "A"
+      value:  784
      }
-     items: {
-      key: "B"
-      value: 971
+     items:  {
+      key:  "B"
+      value:  971
      }
-     items: {
-      key: "C"
-      value: 8
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 57
-      col: 4
-     }
-     end: {
-      line: 62
-      col: 2
+     items:  {
+      key:  "C"
+      value:  8
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 57
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  57
+      col:  4
      }
-     end: {
-      line: 62
-      col: 2
+     end:  {
+      line:  62
+      col:  2
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  57
+      col:  4
+     }
+     end:  {
+      line:  62
+      col:  2
      }
     }
    }
   }
-  types: {
-   key: "FetchResponse"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "bx"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 54
-         col: 8
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "bx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  54
+         col:  8
         }
-        end: {
-         line: 54
-         col: 17
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 54
-         col: 8
-        }
-        end: {
-         line: 54
-         col: 17
+        end:  {
+         line:  54
+         col:  17
         }
        }
-      }
-     }
-     attr_defs: {
-      key: "by"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 55
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  54
+         col:  8
         }
-        end: {
-         line: 55
-         col: 17
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 55
-         col: 8
-        }
-        end: {
-         line: 55
-         col: 17
+        end:  {
+         line:  54
+         col:  17
         }
        }
       }
      }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 53
-      col: 4
-     }
-     end: {
-      line: 55
-      col: 17
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 53
-      col: 4
-     }
-     end: {
-      line: 55
-      col: 17
-     }
-    }
-   }
-  }
-  source_context: {
-   file: "model.sysl"
-   start: {
-    line: 48
-   }
-   end: {
-    line: 62
-    col: 2
-   }
-  }
-  source_contexts: {
-   file: "model.sysl"
-   start: {
-    line: 48
-   }
-   end: {
-    line: 62
-    col: 2
-   }
-  }
- }
-}
-apps: {
- key: "C"
- value: {
-  name: {
-   part: "C"
-  }
-  endpoints: {
-   key: "Fetch"
-   value: {
-    name: "Fetch"
-    stmt: {
-     call: {
-      target: {
-       part: "C"
-      }
-      endpoint: "FetchA"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 73
-       col: 8
-      }
-      end: {
-       line: 73
-       col: 18
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 73
-       col: 8
-      }
-      end: {
-       line: 73
-       col: 18
-      }
-     }
-    }
-    stmt: {
-     call: {
-      target: {
-       part: "C"
-      }
-      endpoint: "FetchB"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 74
-       col: 8
-      }
-      end: {
-       line: 74
-       col: 18
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 74
-       col: 8
-      }
-      end: {
-       line: 74
-       col: 18
-      }
-     }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": [\"A.FetchResponse.ax\", \"B.FetchResponse.bx\"], \"C.FetchResponse.cy\": [\"A.FetchResponse.ay\", \"B.FetchResponse.by\"]}, description=\"1:1 transform\"]"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 75
-       col: 8
-      }
-      end: {
-       line: 75
-       col: 213
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 75
-       col: 8
-      }
-      end: {
-       line: 75
-       col: 213
-      }
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 72
-      col: 4
-     }
-     end: {
-      line: 75
-      col: 213
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 72
-      col: 4
-     }
-     end: {
-      line: 75
-      col: 213
-     }
-    }
-   }
-  }
-  endpoints: {
-   key: "FetchA"
-   value: {
-    name: "FetchA"
-    stmt: {
-     call: {
-      target: {
-       part: "A"
-      }
-      endpoint: "Fetch"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 64
-       col: 8
-      }
-      end: {
-       line: 64
-       col: 18
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 64
-       col: 8
-      }
-      end: {
-       line: 64
-       col: 18
-      }
-     }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"A.FetchResponse.ax\", \"C.FetchResponse.cy\": \"A.FetchResponse.ay\"}, description=\"1:1 transform\"]"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 65
-       col: 8
-      }
-      end: {
-       line: 65
-       col: 165
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 65
-       col: 8
-      }
-      end: {
-       line: 65
-       col: 165
-      }
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 63
-      col: 4
-     }
-     end: {
-      line: 65
-      col: 165
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 63
-      col: 4
-     }
-     end: {
-      line: 65
-      col: 165
-     }
-    }
-   }
-  }
-  endpoints: {
-   key: "FetchB"
-   value: {
-    name: "FetchB"
-    stmt: {
-     call: {
-      target: {
-       part: "B"
-      }
-      endpoint: "Fetch"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 68
-       col: 8
-      }
-      end: {
-       line: 68
-       col: 18
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 68
-       col: 8
-      }
-      end: {
-       line: 68
-       col: 18
-      }
-     }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"B.FetchResponse.bx\", \"C.FetchResponse.cy\": \"B.FetchResponse.by\"}, description=\"1:1 transform\"]"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 69
-       col: 8
-      }
-      end: {
-       line: 69
-       col: 165
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 69
-       col: 8
-      }
-      end: {
-       line: 69
-       col: 165
-      }
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 67
-      col: 4
-     }
-     end: {
-      line: 69
-      col: 165
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 67
-      col: 4
-     }
-     end: {
-      line: 69
-      col: 165
-     }
-    }
-   }
-  }
-  types: {
-   key: "FetchResponse"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "cx"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 78
-         col: 8
+     attr_defs:  {
+      key:  "by"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  55
+         col:  8
         }
-        end: {
-         line: 78
-         col: 17
+        end:  {
+         line:  55
+         col:  17
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 78
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  55
+         col:  8
         }
-        end: {
-         line: 78
-         col: 17
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "cy"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 79
-         col: 8
-        }
-        end: {
-         line: 79
-         col: 17
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 79
-         col: 8
-        }
-        end: {
-         line: 79
-         col: 17
+        end:  {
+         line:  55
+         col:  17
         }
        }
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 77
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  53
+      col:  4
      }
-     end: {
-      line: 79
-      col: 17
+     end:  {
+      line:  55
+      col:  17
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 77
-      col: 4
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  53
+      col:  4
      }
-     end: {
-      line: 79
-      col: 17
+     end:  {
+      line:  55
+      col:  17
      }
     }
    }
   }
-  source_context: {
-   file: "model.sysl"
-   start: {
-    line: 62
+  source_context:  {
+   file:  "model.sysl"
+   start:  {
+    line:  48
    }
-   end: {
-    line: 79
-    col: 17
+   end:  {
+    line:  62
+    col:  2
    }
   }
-  source_contexts: {
-   file: "model.sysl"
-   start: {
-    line: 62
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {
+    line:  48
    }
-   end: {
-    line: 79
-    col: 17
+   end:  {
+    line:  62
+    col:  2
    }
   }
  }
 }
-apps: {
- key: "Client"
- value: {
-  name: {
-   part: "Client"
+apps:  {
+ key:  "C"
+ value:  {
+  name:  {
+   part:  "C"
   }
-  endpoints: {
-   key: "Do"
-   value: {
-    name: "Do"
-    stmt: {
-     call: {
-      target: {
-       part: "D"
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "C"
       }
-      endpoint: "Fetch"
+      endpoint:  "FetchA"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 93
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  73
+       col:  8
       }
-      end: {
-       line: 93
-       col: 18
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 93
-       col: 8
-      }
-      end: {
-       line: 93
-       col: 18
+      end:  {
+       line:  73
+       col:  18
       }
      }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: Client.Screen [dataflow={\"Client.Screen.xx\": \"D.FetchResponse.dx\", \"Client.Screen.yy\": \"D.FetchResponse.dy\"}, description=\"1:1 transform\"]"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 94
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  73
+       col:  8
       }
-      end: {
-       line: 94
-       col: 159
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 94
-       col: 8
-      }
-      end: {
-       line: 94
-       col: 159
+      end:  {
+       line:  73
+       col:  18
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 92
-      col: 4
-     }
-     end: {
-      line: 94
-      col: 159
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 92
-      col: 4
-     }
-     end: {
-      line: 94
-      col: 159
-     }
-    }
-   }
-  }
-  types: {
-   key: "Digit"
-   value: {
-    primitive: INT
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 105
-      col: 4
-     }
-     end: {
-      line: 108
-      col: 5
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 105
-      col: 4
-     }
-     end: {
-      line: 108
-      col: 5
-     }
-    }
-   }
-  }
-  types: {
-   key: "Digits"
-   value: {
-    sequence: {
-     primitive: INT
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 108
-       col: 4
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "C"
       }
-      end: {
-       line: 111
-       col: 4
+      endpoint:  "FetchB"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  74
+       col:  8
+      }
+      end:  {
+       line:  74
+       col:  18
       }
      }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 108
-       col: 4
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  74
+       col:  8
       }
-      end: {
-       line: 111
-       col: 4
+      end:  {
+       line:  74
+       col:  18
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 108
-      col: 4
+    stmt:  {
+     ret:  {
+      payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": [\"A.FetchResponse.ax\", \"B.FetchResponse.bx\"], \"C.FetchResponse.cy\": [\"A.FetchResponse.ay\", \"B.FetchResponse.by\"]}, description=\"1:1 transform\"]"
      }
-     end: {
-      line: 111
-      col: 4
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  75
+       col:  8
+      }
+      end:  {
+       line:  75
+       col:  213
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  75
+       col:  8
+      }
+      end:  {
+       line:  75
+       col:  213
+      }
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 108
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  72
+      col:  4
      }
-     end: {
-      line: 111
-      col: 4
+     end:  {
+      line:  75
+      col:  213
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  72
+      col:  4
+     }
+     end:  {
+      line:  75
+      col:  213
      }
     }
    }
   }
-  types: {
-   key: "Display"
-   value: {
-    type_ref: {
-     context: {
-      appname: {
-       part: "Client"
+  endpoints:  {
+   key:  "FetchA"
+   value:  {
+    name:  "FetchA"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "A"
       }
-      path: "Display"
+      endpoint:  "Fetch"
      }
-     ref: {
-      path: "Screen"
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 102
-      col: 4
-     }
-     end: {
-      line: 105
-      col: 5
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 102
-      col: 4
-     }
-     end: {
-      line: 105
-      col: 5
-     }
-    }
-   }
-  }
-  types: {
-   key: "Screen"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "ww"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "Client"
-         }
-         path: "Screen"
-        }
-        ref: {
-         path: "Digit"
-        }
-       }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 97
-         col: 8
-        }
-        end: {
-         line: 97
-         col: 19
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 97
-         col: 8
-        }
-        end: {
-         line: 97
-         col: 19
-        }
-       }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  64
+       col:  8
+      }
+      end:  {
+       line:  64
+       col:  18
       }
      }
-     attr_defs: {
-      key: "xx"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 98
-         col: 8
-        }
-        end: {
-         line: 98
-         col: 17
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 98
-         col: 8
-        }
-        end: {
-         line: 98
-         col: 17
-        }
-       }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  64
+       col:  8
       }
-     }
-     attr_defs: {
-      key: "yy"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 99
-         col: 8
-        }
-        end: {
-         line: 99
-         col: 17
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 99
-         col: 8
-        }
-        end: {
-         line: 99
-         col: 17
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "zz"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "Client"
-         }
-         path: "Screen"
-        }
-        ref: {
-         path: "Digits"
-        }
-       }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 100
-         col: 8
-        }
-        end: {
-         line: 100
-         col: 20
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 100
-         col: 8
-        }
-        end: {
-         line: 100
-         col: 20
-        }
-       }
+      end:  {
+       line:  64
+       col:  18
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 96
-      col: 4
+    stmt:  {
+     ret:  {
+      payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"A.FetchResponse.ax\", \"C.FetchResponse.cy\": \"A.FetchResponse.ay\"}, description=\"1:1 transform\"]"
      }
-     end: {
-      line: 100
-      col: 20
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  65
+       col:  8
+      }
+      end:  {
+       line:  65
+       col:  165
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  65
+       col:  8
+      }
+      end:  {
+       line:  65
+       col:  165
+      }
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 96
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  63
+      col:  4
      }
-     end: {
-      line: 100
-      col: 20
+     end:  {
+      line:  65
+      col:  165
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  63
+      col:  4
+     }
+     end:  {
+      line:  65
+      col:  165
      }
     }
    }
   }
-  source_context: {
-   file: "model.sysl"
-   start: {
-    line: 91
-   }
-   end: {
-    line: 111
-    col: 4
-   }
-  }
-  source_contexts: {
-   file: "model.sysl"
-   start: {
-    line: 91
-   }
-   end: {
-    line: 111
-    col: 4
-   }
-  }
- }
-}
-apps: {
- key: "D"
- value: {
-  name: {
-   part: "D"
-  }
-  endpoints: {
-   key: "Fetch"
-   value: {
-    name: "Fetch"
-    stmt: {
-     call: {
-      target: {
-       part: "A"
+  endpoints:  {
+   key:  "FetchB"
+   value:  {
+    name:  "FetchB"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "B"
       }
-      endpoint: "Fetch"
+      endpoint:  "Fetch"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 83
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  68
+       col:  8
       }
-      end: {
-       line: 83
-       col: 18
+      end:  {
+       line:  68
+       col:  18
       }
      }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 83
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  68
+       col:  8
       }
-      end: {
-       line: 83
-       col: 18
+      end:  {
+       line:  68
+       col:  18
       }
      }
     }
-    stmt: {
-     call: {
-      target: {
-       part: "C"
-      }
-      endpoint: "Fetch"
+    stmt:  {
+     ret:  {
+      payload:  "ok <: C.FetchResponse [dataflow={\"C.FetchResponse.cx\": \"B.FetchResponse.bx\", \"C.FetchResponse.cy\": \"B.FetchResponse.by\"}, description=\"1:1 transform\"]"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 84
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  69
+       col:  8
       }
-      end: {
-       line: 84
-       col: 18
+      end:  {
+       line:  69
+       col:  165
       }
      }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 84
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  69
+       col:  8
       }
-      end: {
-       line: 84
-       col: 18
+      end:  {
+       line:  69
+       col:  165
       }
      }
     }
-    stmt: {
-     ret: {
-      payload: "ok <: D.FetchResponse [dataflow={\"D.FetchResponse.dx\": [\"A.FetchResponse.ax\", \"C.FetchResponse.cx\"], \"D.FetchResponse.dy\": [\"A.FetchResponse.ay\", \"C.FetchResponse.cy\"]}, description=\"1:1 transform\"]"
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  67
+      col:  4
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 85
-       col: 8
-      }
-      end: {
-       line: 85
-       col: 213
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 85
-       col: 8
-      }
-      end: {
-       line: 85
-       col: 213
-      }
+     end:  {
+      line:  69
+      col:  165
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 82
-      col: 4
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  67
+      col:  4
      }
-     end: {
-      line: 85
-      col: 213
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 82
-      col: 4
-     }
-     end: {
-      line: 85
-      col: 213
+     end:  {
+      line:  69
+      col:  165
      }
     }
    }
   }
-  types: {
-   key: "FetchResponse"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "dx"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 88
-         col: 8
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "cx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  78
+         col:  8
         }
-        end: {
-         line: 88
-         col: 17
+        end:  {
+         line:  78
+         col:  17
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 88
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  78
+         col:  8
         }
-        end: {
-         line: 88
-         col: 17
+        end:  {
+         line:  78
+         col:  17
         }
        }
       }
      }
-     attr_defs: {
-      key: "dy"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 89
-         col: 8
+     attr_defs:  {
+      key:  "cy"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  79
+         col:  8
         }
-        end: {
-         line: 89
-         col: 17
+        end:  {
+         line:  79
+         col:  17
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 89
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  79
+         col:  8
         }
-        end: {
-         line: 89
-         col: 17
+        end:  {
+         line:  79
+         col:  17
         }
        }
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 87
-      col: 4
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  77
+      col:  4
      }
-     end: {
-      line: 89
-      col: 17
+     end:  {
+      line:  79
+      col:  17
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 87
-      col: 4
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  77
+      col:  4
      }
-     end: {
-      line: 89
-      col: 17
+     end:  {
+      line:  79
+      col:  17
      }
     }
    }
   }
-  source_context: {
-   file: "model.sysl"
-   start: {
-    line: 81
+  source_context:  {
+   file:  "model.sysl"
+   start:  {
+    line:  62
    }
-   end: {
-    line: 89
-    col: 17
+   end:  {
+    line:  79
+    col:  17
    }
   }
-  source_contexts: {
-   file: "model.sysl"
-   start: {
-    line: 81
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {
+    line:  62
    }
-   end: {
-    line: 89
-    col: 17
+   end:  {
+    line:  79
+    col:  17
    }
   }
  }
 }
-apps: {
- key: "Source"
- value: {
-  name: {
-   part: "Source"
+apps:  {
+ key:  "Client"
+ value:  {
+  name:  {
+   part:  "Client"
   }
-  attrs: {
-   key: "description"
-   value: {
-    s: "A database.\n Stores data.\n"
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 1
-      col: 18
+  endpoints:  {
+   key:  "Do"
+   value:  {
+    name:  "Do"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "D"
+      }
+      endpoint:  "Fetch"
      }
-     end: {
-      line: 4
-      col: 5
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  93
+       col:  8
+      }
+      end:  {
+       line:  93
+       col:  18
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  93
+       col:  8
+      }
+      end:  {
+       line:  93
+       col:  18
+      }
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 1
-      col: 18
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Client.Screen [dataflow={\"Client.Screen.xx\": \"D.FetchResponse.dx\", \"Client.Screen.yy\": \"D.FetchResponse.dy\"}, description=\"1:1 transform\"]"
      }
-     end: {
-      line: 4
-      col: 5
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  94
+       col:  8
+      }
+      end:  {
+       line:  94
+       col:  159
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  94
+       col:  8
+      }
+      end:  {
+       line:  94
+       col:  159
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  92
+      col:  4
+     }
+     end:  {
+      line:  94
+      col:  159
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  92
+      col:  4
+     }
+     end:  {
+      line:  94
+      col:  159
      }
     }
    }
   }
-  attrs: {
-   key: "package"
-   value: {
-    s: "io.sysl.bank.model"
-    source_context: {
-     file: "model.sysl"
-     start: {
-      col: 15
+  types:  {
+   key:  "Digit"
+   value:  {
+    primitive:  INT
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  105
+      col:  4
      }
-     end: {
-      col: 35
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      col: 15
-     }
-     end: {
-      col: 35
+     end:  {
+      line:  108
+      col:  5
      }
     }
-   }
-  }
-  attrs: {
-   key: "patterns"
-   value: {
-    a: {
-     elt: {
-      s: "db"
-      source_context: {
-       file: "model.sysl"
-       start: {
-        col: 36
-       }
-       end: {
-        col: 39
-       }
-      }
-      source_contexts: {
-       file: "model.sysl"
-       start: {
-        col: 36
-       }
-       end: {
-        col: 39
-       }
-      }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  105
+      col:  4
+     }
+     end:  {
+      line:  108
+      col:  5
      }
     }
    }
   }
-  endpoints: {
-   key: "GET /get/{id}"
-   value: {
-    name: "GET /get/{id}"
-    attrs: {
-     key: "patterns"
-     value: {
-      a: {
-       elt: {
-        s: "rest"
-       }
+  types:  {
+   key:  "Digits"
+   value:  {
+    sequence:  {
+     primitive:  INT
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  108
+       col:  4
+      }
+      end:  {
+       line:  111
+       col:  4
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  108
+       col:  4
+      }
+      end:  {
+       line:  111
+       col:  4
       }
      }
     }
-    stmt: {
-     ret: {
-      payload: "ok <: Foo"
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  108
+      col:  4
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 31
-       col: 16
-      }
-      end: {
-       line: 31
-       col: 32
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 31
-       col: 16
-      }
-      end: {
-       line: 31
-       col: 32
-      }
+     end:  {
+      line:  111
+      col:  4
      }
     }
-    rest_params: {
-     method: GET
-     path: "/get/{id}"
-     url_param: {
-      name: "id"
-      type: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 29
-         col: 9
-        }
-        end: {
-         line: 29
-         col: 18
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 29
-         col: 9
-        }
-        end: {
-         line: 29
-         col: 18
-        }
-       }
-      }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  108
+      col:  4
      }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 30
-      col: 12
-     }
-     end: {
-      line: 34
-      col: 5
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 30
-      col: 12
-     }
-     end: {
-      line: 34
-      col: 5
+     end:  {
+      line:  111
+      col:  4
      }
     }
    }
   }
-  endpoints: {
-   key: "POST /post"
-   value: {
-    name: "POST /post"
-    attrs: {
-     key: "patterns"
-     value: {
-      a: {
-       elt: {
-        s: "rest"
-       }
+  types:  {
+   key:  "Display"
+   value:  {
+    type_ref:  {
+     context:  {
+      appname:  {
+       part:  "Client"
       }
+      path:  "Display"
+     }
+     ref:  {
+      path:  "Screen"
      }
     }
-    param: {
-     name: "x_request_id"
-     type: {
-      primitive: STRING
-      attrs: {
-       key: "name"
-       value: {
-        s: "x-request-id"
-        source_context: {
-         file: "model.sysl"
-         start: {
-          line: 35
-          col: 63
-         }
-         end: {
-          line: 35
-          col: 77
-         }
-        }
-        source_contexts: {
-         file: "model.sysl"
-         start: {
-          line: 35
-          col: 63
-         }
-         end: {
-          line: 35
-          col: 77
-         }
-        }
-       }
-      }
-      attrs: {
-       key: "patterns"
-       value: {
-        a: {
-         elt: {
-          s: "header"
-          source_context: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 38
-           }
-           end: {
-            line: 35
-            col: 45
-           }
-          }
-          source_contexts: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 38
-           }
-           end: {
-            line: 35
-            col: 45
-           }
-          }
-         }
-         elt: {
-          s: "required"
-          source_context: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 47
-           }
-           end: {
-            line: 35
-            col: 56
-           }
-          }
-          source_contexts: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 47
-           }
-           end: {
-            line: 35
-            col: 56
-           }
-          }
-         }
-        }
-       }
-      }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  102
+      col:  4
+     }
+     end:  {
+      line:  105
+      col:  5
      }
     }
-    param: {
-     name: "ssotoken"
-     type: {
-      primitive: STRING
-      attrs: {
-       key: "name"
-       value: {
-        s: "ssotoken"
-        source_context: {
-         file: "model.sysl"
-         start: {
-          line: 35
-          col: 126
-         }
-         end: {
-          line: 35
-          col: 136
-         }
-        }
-        source_contexts: {
-         file: "model.sysl"
-         start: {
-          line: 35
-          col: 126
-         }
-         end: {
-          line: 35
-          col: 136
-         }
-        }
-       }
-      }
-      attrs: {
-       key: "patterns"
-       value: {
-        a: {
-         elt: {
-          s: "cookie"
-          source_context: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 101
-           }
-           end: {
-            line: 35
-            col: 108
-           }
-          }
-          source_contexts: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 101
-           }
-           end: {
-            line: 35
-            col: 108
-           }
-          }
-         }
-         elt: {
-          s: "required"
-          source_context: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 110
-           }
-           end: {
-            line: 35
-            col: 119
-           }
-          }
-          source_contexts: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 110
-           }
-           end: {
-            line: 35
-            col: 119
-           }
-          }
-         }
-        }
-       }
-      }
-      opt: true
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  102
+      col:  4
      }
-    }
-    param: {
-     name: "request"
-     type: {
-      type_ref: {
-       ref: {
-        path: "Bar"
-       }
-      }
-      attrs: {
-       key: "mediatype"
-       value: {
-        s: "application/json"
-        source_context: {
-         file: "model.sysl"
-         start: {
-          line: 35
-          col: 165
-         }
-         end: {
-          line: 35
-          col: 183
-         }
-        }
-        source_contexts: {
-         file: "model.sysl"
-         start: {
-          line: 35
-          col: 165
-         }
-         end: {
-          line: 35
-          col: 183
-         }
-        }
-       }
-      }
-      attrs: {
-       key: "patterns"
-       value: {
-        a: {
-         elt: {
-          s: "body"
-          source_context: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 185
-           }
-           end: {
-            line: 35
-            col: 190
-           }
-          }
-          source_contexts: {
-           file: "model.sysl"
-           start: {
-            line: 35
-            col: 185
-           }
-           end: {
-            line: 35
-            col: 190
-           }
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    stmt: {
-     ret: {
-      payload: "ok <: Foo"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 36
-       col: 12
-      }
-      end: {
-       line: 36
-       col: 28
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 36
-       col: 12
-      }
-      end: {
-       line: 36
-       col: 28
-      }
-     }
-    }
-    rest_params: {
-     method: POST
-     path: "/post"
-     query_param: {
-      name: "page"
-      type: {
-       primitive: INT
-       opt: true
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 35
-         col: 194
-        }
-        end: {
-         line: 35
-         col: 203
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 35
-         col: 194
-        }
-        end: {
-         line: 35
-         col: 203
-        }
-       }
-      }
-     }
-     query_param: {
-      name: "bar"
-      type: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "Source"
-         }
-        }
-        ref: {
-         path: "Bar"
-        }
-       }
-       opt: true
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 35
-         col: 204
-        }
-        end: {
-         line: 35
-         col: 214
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 35
-         col: 204
-        }
-        end: {
-         line: 35
-         col: 214
-        }
-       }
-      }
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 35
-      col: 8
-     }
-     end: {
-      line: 38
-      col: 2
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 35
-      col: 8
-     }
-     end: {
-      line: 38
-      col: 2
+     end:  {
+      line:  105
+      col:  5
      }
     }
    }
   }
-  endpoints: {
-   key: "Read"
-   value: {
-    name: "Read"
-    param: {
-     name: "accountNumber"
-     type: {
-      primitive: STRING
+  types:  {
+   key:  "Screen"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "ww"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Client"
+         }
+         path:  "Screen"
+        }
+        ref:  {
+         path:  "Digit"
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  97
+         col:  8
+        }
+        end:  {
+         line:  97
+         col:  19
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  97
+         col:  8
+        }
+        end:  {
+         line:  97
+         col:  19
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "xx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  98
+         col:  8
+        }
+        end:  {
+         line:  98
+         col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  98
+         col:  8
+        }
+        end:  {
+         line:  98
+         col:  17
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "yy"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  99
+         col:  8
+        }
+        end:  {
+         line:  99
+         col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  99
+         col:  8
+        }
+        end:  {
+         line:  99
+         col:  17
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "zz"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Client"
+         }
+         path:  "Screen"
+        }
+        ref:  {
+         path:  "Digits"
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  100
+         col:  8
+        }
+        end:  {
+         line:  100
+         col:  20
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  100
+         col:  8
+        }
+        end:  {
+         line:  100
+         col:  20
+        }
+       }
+      }
      }
     }
-    stmt: {
-     ret: {
-      payload: "ok <: Foo"
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  96
+      col:  4
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 25
-       col: 8
-      }
-      end: {
-       line: 25
-       col: 24
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 25
-       col: 8
-      }
-      end: {
-       line: 25
-       col: 24
-      }
+     end:  {
+      line:  100
+      col:  20
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 24
-      col: 4
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  96
+      col:  4
      }
-     end: {
-      line: 25
-      col: 24
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 24
-      col: 4
-     }
-     end: {
-      line: 25
-      col: 24
+     end:  {
+      line:  100
+      col:  20
      }
     }
    }
   }
-  types: {
-   key: "Bar"
-   value: {
-    relation: {
-     attr_defs: {
-      key: "a"
-      value: {
-       primitive: STRING
-       attrs: {
-        key: "patterns"
-        value: {
-         a: {
-          elt: {
-           s: "pk"
-           source_context: {
-            file: "model.sysl"
-            start: {
-             line: 15
-             col: 21
+  source_context:  {
+   file:  "model.sysl"
+   start:  {
+    line:  91
+   }
+   end:  {
+    line:  111
+    col:  4
+   }
+  }
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {
+    line:  91
+   }
+   end:  {
+    line:  111
+    col:  4
+   }
+  }
+ }
+}
+apps:  {
+ key:  "D"
+ value:  {
+  name:  {
+   part:  "D"
+  }
+  endpoints:  {
+   key:  "Fetch"
+   value:  {
+    name:  "Fetch"
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "A"
+      }
+      endpoint:  "Fetch"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  83
+       col:  8
+      }
+      end:  {
+       line:  83
+       col:  18
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  83
+       col:  8
+      }
+      end:  {
+       line:  83
+       col:  18
+      }
+     }
+    }
+    stmt:  {
+     call:  {
+      target:  {
+       part:  "C"
+      }
+      endpoint:  "Fetch"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  84
+       col:  8
+      }
+      end:  {
+       line:  84
+       col:  18
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  84
+       col:  8
+      }
+      end:  {
+       line:  84
+       col:  18
+      }
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: D.FetchResponse [dataflow={\"D.FetchResponse.dx\": [\"A.FetchResponse.ax\", \"C.FetchResponse.cx\"], \"D.FetchResponse.dy\": [\"A.FetchResponse.ay\", \"C.FetchResponse.cy\"]}, description=\"1:1 transform\"]"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  85
+       col:  8
+      }
+      end:  {
+       line:  85
+       col:  213
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  85
+       col:  8
+      }
+      end:  {
+       line:  85
+       col:  213
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  82
+      col:  4
+     }
+     end:  {
+      line:  85
+      col:  213
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  82
+      col:  4
+     }
+     end:  {
+      line:  85
+      col:  213
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "FetchResponse"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "dx"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  88
+         col:  8
+        }
+        end:  {
+         line:  88
+         col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  88
+         col:  8
+        }
+        end:  {
+         line:  88
+         col:  17
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "dy"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  89
+         col:  8
+        }
+        end:  {
+         line:  89
+         col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  89
+         col:  8
+        }
+        end:  {
+         line:  89
+         col:  17
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  87
+      col:  4
+     }
+     end:  {
+      line:  89
+      col:  17
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  87
+      col:  4
+     }
+     end:  {
+      line:  89
+      col:  17
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "model.sysl"
+   start:  {
+    line:  81
+   }
+   end:  {
+    line:  89
+    col:  17
+   }
+  }
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {
+    line:  81
+   }
+   end:  {
+    line:  89
+    col:  17
+   }
+  }
+ }
+}
+apps:  {
+ key:  "Source"
+ value:  {
+  name:  {
+   part:  "Source"
+  }
+  attrs:  {
+   key:  "description"
+   value:  {
+    s:  "A database.\n Stores data.\n"
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  1
+      col:  18
+     }
+     end:  {
+      line:  4
+      col:  5
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  1
+      col:  18
+     }
+     end:  {
+      line:  4
+      col:  5
+     }
+    }
+   }
+  }
+  attrs:  {
+   key:  "package"
+   value:  {
+    s:  "io.sysl.bank.model"
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      col:  15
+     }
+     end:  {
+      col:  35
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      col:  15
+     }
+     end:  {
+      col:  35
+     }
+    }
+   }
+  }
+  attrs:  {
+   key:  "patterns"
+   value:  {
+    a:  {
+     elt:  {
+      s:  "db"
+      source_context:  {
+       file:  "model.sysl"
+       start:  {
+        col:  36
+       }
+       end:  {
+        col:  39
+       }
+      }
+      source_contexts:  {
+       file:  "model.sysl"
+       start:  {
+        col:  36
+       }
+       end:  {
+        col:  39
+       }
+      }
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "GET /get/{id}"
+   value:  {
+    name:  "GET /get/{id}"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Foo"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  31
+       col:  16
+      }
+      end:  {
+       line:  31
+       col:  32
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  31
+       col:  16
+      }
+      end:  {
+       line:  31
+       col:  32
+      }
+     }
+    }
+    rest_params:  {
+     method:  GET
+     path:  "/get/{id}"
+     url_param:  {
+      name:  "id"
+      type:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  29
+         col:  9
+        }
+        end:  {
+         line:  29
+         col:  18
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  29
+         col:  9
+        }
+        end:  {
+         line:  29
+         col:  18
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  30
+      col:  12
+     }
+     end:  {
+      line:  34
+      col:  5
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  30
+      col:  12
+     }
+     end:  {
+      line:  34
+      col:  5
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "POST /post"
+   value:  {
+    name:  "POST /post"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "x_request_id"
+     type:  {
+      primitive:  STRING
+      attrs:  {
+       key:  "name"
+       value:  {
+        s:  "x-request-id"
+        source_context:  {
+         file:  "model.sysl"
+         start:  {
+          line:  35
+          col:  63
+         }
+         end:  {
+          line:  35
+          col:  77
+         }
+        }
+        source_contexts:  {
+         file:  "model.sysl"
+         start:  {
+          line:  35
+          col:  63
+         }
+         end:  {
+          line:  35
+          col:  77
+         }
+        }
+       }
+      }
+      attrs:  {
+       key:  "patterns"
+       value:  {
+        a:  {
+         elt:  {
+          s:  "header"
+          source_context:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  38
+           }
+           end:  {
+            line:  35
+            col:  45
+           }
+          }
+          source_contexts:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  38
+           }
+           end:  {
+            line:  35
+            col:  45
+           }
+          }
+         }
+         elt:  {
+          s:  "required"
+          source_context:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  47
+           }
+           end:  {
+            line:  35
+            col:  56
+           }
+          }
+          source_contexts:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  47
+           }
+           end:  {
+            line:  35
+            col:  56
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "ssotoken"
+     type:  {
+      primitive:  STRING
+      attrs:  {
+       key:  "name"
+       value:  {
+        s:  "ssotoken"
+        source_context:  {
+         file:  "model.sysl"
+         start:  {
+          line:  35
+          col:  126
+         }
+         end:  {
+          line:  35
+          col:  136
+         }
+        }
+        source_contexts:  {
+         file:  "model.sysl"
+         start:  {
+          line:  35
+          col:  126
+         }
+         end:  {
+          line:  35
+          col:  136
+         }
+        }
+       }
+      }
+      attrs:  {
+       key:  "patterns"
+       value:  {
+        a:  {
+         elt:  {
+          s:  "cookie"
+          source_context:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  101
+           }
+           end:  {
+            line:  35
+            col:  108
+           }
+          }
+          source_contexts:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  101
+           }
+           end:  {
+            line:  35
+            col:  108
+           }
+          }
+         }
+         elt:  {
+          s:  "required"
+          source_context:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  110
+           }
+           end:  {
+            line:  35
+            col:  119
+           }
+          }
+          source_contexts:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  110
+           }
+           end:  {
+            line:  35
+            col:  119
+           }
+          }
+         }
+        }
+       }
+      }
+      opt:  true
+     }
+    }
+    param:  {
+     name:  "request"
+     type:  {
+      type_ref:  {
+       ref:  {
+        path:  "Bar"
+       }
+      }
+      attrs:  {
+       key:  "mediatype"
+       value:  {
+        s:  "application/json"
+        source_context:  {
+         file:  "model.sysl"
+         start:  {
+          line:  35
+          col:  165
+         }
+         end:  {
+          line:  35
+          col:  183
+         }
+        }
+        source_contexts:  {
+         file:  "model.sysl"
+         start:  {
+          line:  35
+          col:  165
+         }
+         end:  {
+          line:  35
+          col:  183
+         }
+        }
+       }
+      }
+      attrs:  {
+       key:  "patterns"
+       value:  {
+        a:  {
+         elt:  {
+          s:  "body"
+          source_context:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  185
+           }
+           end:  {
+            line:  35
+            col:  190
+           }
+          }
+          source_contexts:  {
+           file:  "model.sysl"
+           start:  {
+            line:  35
+            col:  185
+           }
+           end:  {
+            line:  35
+            col:  190
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Foo"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  36
+       col:  12
+      }
+      end:  {
+       line:  36
+       col:  28
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  36
+       col:  12
+      }
+      end:  {
+       line:  36
+       col:  28
+      }
+     }
+    }
+    rest_params:  {
+     method:  POST
+     path:  "/post"
+     query_param:  {
+      name:  "page"
+      type:  {
+       primitive:  INT
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  35
+         col:  194
+        }
+        end:  {
+         line:  35
+         col:  203
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  35
+         col:  194
+        }
+        end:  {
+         line:  35
+         col:  203
+        }
+       }
+      }
+     }
+     query_param:  {
+      name:  "bar"
+      type:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Source"
+         }
+        }
+        ref:  {
+         path:  "Bar"
+        }
+       }
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  35
+         col:  204
+        }
+        end:  {
+         line:  35
+         col:  214
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  35
+         col:  204
+        }
+        end:  {
+         line:  35
+         col:  214
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  35
+      col:  8
+     }
+     end:  {
+      line:  38
+      col:  2
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  35
+      col:  8
+     }
+     end:  {
+      line:  38
+      col:  2
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "Read"
+   value:  {
+    name:  "Read"
+    param:  {
+     name:  "accountNumber"
+     type:  {
+      primitive:  STRING
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: Foo"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  25
+       col:  8
+      }
+      end:  {
+       line:  25
+       col:  24
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  25
+       col:  8
+      }
+      end:  {
+       line:  25
+       col:  24
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  24
+      col:  4
+     }
+     end:  {
+      line:  25
+      col:  24
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  24
+      col:  4
+     }
+     end:  {
+      line:  25
+      col:  24
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Bar"
+   value:  {
+    relation:  {
+     attr_defs:  {
+      key:  "a"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "patterns"
+        value:  {
+         a:  {
+          elt:  {
+           s:  "pk"
+           source_context:  {
+            file:  "model.sysl"
+            start:  {
+             line:  15
+             col:  21
             }
-            end: {
-             line: 15
-             col: 24
-            }
-           }
-           source_contexts: {
-            file: "model.sysl"
-            start: {
-             line: 15
-             col: 21
-            }
-            end: {
-             line: 15
-             col: 24
+            end:  {
+             line:  15
+             col:  24
             }
            }
+           source_contexts:  {
+            file:  "model.sysl"
+            start:  {
+             line:  15
+             col:  21
+            }
+            end:  {
+             line:  15
+             col:  24
+            }
+           }
           }
          }
         }
        }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 15
-         col: 8
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  15
+         col:  8
         }
-        end: {
-         line: 15
-         col: 25
+        end:  {
+         line:  15
+         col:  25
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 15
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  15
+         col:  8
         }
-        end: {
-         line: 15
-         col: 25
+        end:  {
+         line:  15
+         col:  25
         }
        }
       }
      }
-     attr_defs: {
-      key: "b"
-      value: {
-       primitive: INT
-       attrs: {
-        key: "description"
-        value: {
-         s: "An optional int"
-         source_context: {
-          file: "model.sysl"
-          start: {
-           line: 17
-           col: 27
+     attr_defs:  {
+      key:  "b"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "An optional int"
+         source_context:  {
+          file:  "model.sysl"
+          start:  {
+           line:  17
+           col:  27
           }
-          end: {
-           line: 17
-           col: 44
+          end:  {
+           line:  17
+           col:  44
           }
          }
-         source_contexts: {
-          file: "model.sysl"
-          start: {
-           line: 17
-           col: 27
+         source_contexts:  {
+          file:  "model.sysl"
+          start:  {
+           line:  17
+           col:  27
           }
-          end: {
-           line: 17
-           col: 44
+          end:  {
+           line:  17
+           col:  44
           }
          }
         }
        }
-       opt: true
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 16
-         col: 8
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  16
+         col:  8
         }
-        end: {
-         line: 18
-         col: 9
+        end:  {
+         line:  18
+         col:  9
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 16
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  16
+         col:  8
         }
-        end: {
-         line: 18
-         col: 9
+        end:  {
+         line:  18
+         col:  9
         }
        }
       }
      }
-     attr_defs: {
-      key: "x"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "Source"
+     attr_defs:  {
+      key:  "x"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Source"
          }
-         path: "Bar"
+         path:  "Bar"
         }
-        ref: {
-         path: "Foo"
-         path: "x"
+        ref:  {
+         path:  "Foo"
+         path:  "x"
         }
        }
-       attrs: {
-        key: "description"
-        value: {
-         s: "A foreign key"
-         source_context: {
-          file: "model.sysl"
-          start: {
-           line: 19
-           col: 27
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "A foreign key"
+         source_context:  {
+          file:  "model.sysl"
+          start:  {
+           line:  19
+           col:  27
           }
-          end: {
-           line: 19
-           col: 42
+          end:  {
+           line:  19
+           col:  42
           }
          }
-         source_contexts: {
-          file: "model.sysl"
-          start: {
-           line: 19
-           col: 27
+         source_contexts:  {
+          file:  "model.sysl"
+          start:  {
+           line:  19
+           col:  27
           }
-          end: {
-           line: 19
-           col: 42
+          end:  {
+           line:  19
+           col:  42
           }
          }
         }
        }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 18
-         col: 8
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  18
+         col:  8
         }
-        end: {
-         line: 20
-         col: 9
+        end:  {
+         line:  20
+         col:  9
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 18
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  18
+         col:  8
         }
-        end: {
-         line: 20
-         col: 9
+        end:  {
+         line:  20
+         col:  9
         }
        }
       }
      }
-     attr_defs: {
-      key: "y"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "Source"
+     attr_defs:  {
+      key:  "y"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "Source"
          }
-         path: "Bar"
+         path:  "Bar"
         }
-        ref: {
-         path: "Foo"
-         path: "y"
+        ref:  {
+         path:  "Foo"
+         path:  "y"
         }
        }
-       attrs: {
-        key: "description"
-        value: {
-         s: "A foreign key"
-         source_context: {
-          file: "model.sysl"
-          start: {
-           line: 21
-           col: 27
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "A foreign key"
+         source_context:  {
+          file:  "model.sysl"
+          start:  {
+           line:  21
+           col:  27
           }
-          end: {
-           line: 21
-           col: 42
+          end:  {
+           line:  21
+           col:  42
           }
          }
-         source_contexts: {
-          file: "model.sysl"
-          start: {
-           line: 21
-           col: 27
+         source_contexts:  {
+          file:  "model.sysl"
+          start:  {
+           line:  21
+           col:  27
           }
-          end: {
-           line: 21
-           col: 42
+          end:  {
+           line:  21
+           col:  42
           }
          }
         }
        }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 20
-         col: 8
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  20
+         col:  8
         }
-        end: {
-         line: 24
-         col: 5
+        end:  {
+         line:  24
+         col:  5
         }
        }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 20
-         col: 8
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  20
+         col:  8
         }
-        end: {
-         line: 24
-         col: 5
+        end:  {
+         line:  24
+         col:  5
         }
        }
       }
      }
-     primary_key: {
-      attr_name: "a"
+     primary_key:  {
+      attr_name:  "a"
      }
     }
-    attrs: {
-     key: "description"
-     value: {
-      s: "A bar table."
-      source_context: {
-       file: "model.sysl"
-       start: {
-        line: 14
-        col: 23
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "A bar table."
+      source_context:  {
+       file:  "model.sysl"
+       start:  {
+        line:  14
+        col:  23
        }
-       end: {
-        line: 14
-        col: 37
-       }
-      }
-      source_contexts: {
-       file: "model.sysl"
-       start: {
-        line: 14
-        col: 23
-       }
-       end: {
-        line: 14
-        col: 37
+       end:  {
+        line:  14
+        col:  37
        }
       }
-     }
-    }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 13
-      col: 4
-     }
-     end: {
-      line: 21
-      col: 42
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 13
-      col: 4
-     }
-     end: {
-      line: 21
-      col: 42
-     }
-    }
-   }
-  }
-  types: {
-   key: "Foo"
-   value: {
-    relation: {
-     attr_defs: {
-      key: "x"
-      value: {
-       primitive: INT
-       attrs: {
-        key: "description"
-        value: {
-         s: "The x value."
-         source_context: {
-          file: "model.sysl"
-          start: {
-           line: 9
-           col: 27
-          }
-          end: {
-           line: 9
-           col: 41
-          }
-         }
-         source_contexts: {
-          file: "model.sysl"
-          start: {
-           line: 9
-           col: 27
-          }
-          end: {
-           line: 9
-           col: 41
-          }
-         }
-        }
+      source_contexts:  {
+       file:  "model.sysl"
+       start:  {
+        line:  14
+        col:  23
        }
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 8
-         col: 8
-        }
-        end: {
-         line: 10
-         col: 9
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 8
-         col: 8
-        }
-        end: {
-         line: 10
-         col: 9
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "y"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 10
-         col: 8
-        }
-        end: {
-         line: 10
-         col: 16
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 10
-         col: 8
-        }
-        end: {
-         line: 10
-         col: 16
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "z"
-      value: {
-       primitive: INT
-       opt: true
-       source_context: {
-        file: "model.sysl"
-        start: {
-         line: 11
-         col: 8
-        }
-        end: {
-         line: 11
-         col: 17
-        }
-       }
-       source_contexts: {
-        file: "model.sysl"
-        start: {
-         line: 11
-         col: 8
-        }
-        end: {
-         line: 11
-         col: 17
-        }
+       end:  {
+        line:  14
+        col:  37
        }
       }
      }
     }
-    attrs: {
-     key: "description"
-     value: {
-      s: "A Foo.\n Represents foo things.\n"
-      source_context: {
-       file: "model.sysl"
-       start: {
-        line: 5
-        col: 22
-       }
-       end: {
-        line: 8
-        col: 9
-       }
-      }
-      source_contexts: {
-       file: "model.sysl"
-       start: {
-        line: 5
-        col: 22
-       }
-       end: {
-        line: 8
-        col: 9
-       }
-      }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  13
+      col:  4
+     }
+     end:  {
+      line:  21
+      col:  42
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 4
-      col: 4
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  13
+      col:  4
      }
-     end: {
-      line: 11
-      col: 17
-     }
-    }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 4
-      col: 4
-     }
-     end: {
-      line: 11
-      col: 17
+     end:  {
+      line:  21
+      col:  42
      }
     }
    }
   }
-  source_context: {
-   file: "model.sysl"
-   start: {}
-   end: {
-    line: 36
-    col: 28
+  types:  {
+   key:  "Foo"
+   value:  {
+    relation:  {
+     attr_defs:  {
+      key:  "x"
+      value:  {
+       primitive:  INT
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "The x value."
+         source_context:  {
+          file:  "model.sysl"
+          start:  {
+           line:  9
+           col:  27
+          }
+          end:  {
+           line:  9
+           col:  41
+          }
+         }
+         source_contexts:  {
+          file:  "model.sysl"
+          start:  {
+           line:  9
+           col:  27
+          }
+          end:  {
+           line:  9
+           col:  41
+          }
+         }
+        }
+       }
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  8
+         col:  8
+        }
+        end:  {
+         line:  10
+         col:  9
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  8
+         col:  8
+        }
+        end:  {
+         line:  10
+         col:  9
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "y"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  10
+         col:  8
+        }
+        end:  {
+         line:  10
+         col:  16
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  10
+         col:  8
+        }
+        end:  {
+         line:  10
+         col:  16
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "z"
+      value:  {
+       primitive:  INT
+       opt:  true
+       source_context:  {
+        file:  "model.sysl"
+        start:  {
+         line:  11
+         col:  8
+        }
+        end:  {
+         line:  11
+         col:  17
+        }
+       }
+       source_contexts:  {
+        file:  "model.sysl"
+        start:  {
+         line:  11
+         col:  8
+        }
+        end:  {
+         line:  11
+         col:  17
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "A Foo.\n Represents foo things.\n"
+      source_context:  {
+       file:  "model.sysl"
+       start:  {
+        line:  5
+        col:  22
+       }
+       end:  {
+        line:  8
+        col:  9
+       }
+      }
+      source_contexts:  {
+       file:  "model.sysl"
+       start:  {
+        line:  5
+        col:  22
+       }
+       end:  {
+        line:  8
+        col:  9
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  4
+      col:  4
+     }
+     end:  {
+      line:  11
+      col:  17
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  4
+      col:  4
+     }
+     end:  {
+      line:  11
+      col:  17
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "model.sysl"
-   start: {}
-   end: {
-    line: 36
-    col: 28
+  source_context:  {
+   file:  "model.sysl"
+   start:  {}
+   end:  {
+    line:  36
+    col:  28
+   }
+  }
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {}
+   end:  {
+    line:  36
+    col:  28
    }
   }
  }
 }
-apps: {
- key: "all"
- value: {
-  name: {
-   part: "all"
+apps:  {
+ key:  "all"
+ value:  {
+  name:  {
+   part:  "all"
   }
-  endpoints: {
-   key: "all"
-   value: {
-    name: "all"
-    stmt: {
-     action: {
-      action: "Source"
+  endpoints:  {
+   key:  "all"
+   value:  {
+    name:  "all"
+    stmt:  {
+     action:  {
+      action:  "Source"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 113
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  113
+       col:  8
       }
-      end: {
-       line: 113
-       col: 14
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 113
-       col: 8
-      }
-      end: {
-       line: 113
-       col: 14
+      end:  {
+       line:  113
+       col:  14
       }
      }
-    }
-    stmt: {
-     action: {
-      action: "Client"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 114
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  113
+       col:  8
       }
-      end: {
-       line: 114
-       col: 14
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 114
-       col: 8
-      }
-      end: {
-       line: 114
-       col: 14
+      end:  {
+       line:  113
+       col:  14
       }
      }
     }
-    stmt: {
-     action: {
-      action: "A"
+    stmt:  {
+     action:  {
+      action:  "Client"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 115
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  114
+       col:  8
       }
-      end: {
-       line: 115
-       col: 9
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 115
-       col: 8
-      }
-      end: {
-       line: 115
-       col: 9
+      end:  {
+       line:  114
+       col:  14
       }
      }
-    }
-    stmt: {
-     action: {
-      action: "B"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 116
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  114
+       col:  8
       }
-      end: {
-       line: 116
-       col: 9
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 116
-       col: 8
-      }
-      end: {
-       line: 116
-       col: 9
+      end:  {
+       line:  114
+       col:  14
       }
      }
     }
-    stmt: {
-     action: {
-      action: "C"
+    stmt:  {
+     action:  {
+      action:  "A"
      }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 117
-       col: 8
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  115
+       col:  8
       }
-      end: {
-       line: 117
-       col: 9
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 117
-       col: 8
-      }
-      end: {
-       line: 117
-       col: 9
+      end:  {
+       line:  115
+       col:  9
       }
      }
-    }
-    stmt: {
-     action: {
-      action: "D"
-     }
-     source_context: {
-      file: "model.sysl"
-      start: {
-       line: 118
-       col: 8
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  115
+       col:  8
       }
-      end: {
-       line: 118
-       col: 9
-      }
-     }
-     source_contexts: {
-      file: "model.sysl"
-      start: {
-       line: 118
-       col: 8
-      }
-      end: {
-       line: 118
-       col: 9
+      end:  {
+       line:  115
+       col:  9
       }
      }
     }
-    source_context: {
-     file: "model.sysl"
-     start: {
-      line: 112
-      col: 4
+    stmt:  {
+     action:  {
+      action:  "B"
      }
-     end: {
-      line: 118
-      col: 9
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  116
+       col:  8
+      }
+      end:  {
+       line:  116
+       col:  9
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  116
+       col:  8
+      }
+      end:  {
+       line:  116
+       col:  9
+      }
      }
     }
-    source_contexts: {
-     file: "model.sysl"
-     start: {
-      line: 112
-      col: 4
+    stmt:  {
+     action:  {
+      action:  "C"
      }
-     end: {
-      line: 118
-      col: 9
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  117
+       col:  8
+      }
+      end:  {
+       line:  117
+       col:  9
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  117
+       col:  8
+      }
+      end:  {
+       line:  117
+       col:  9
+      }
      }
     }
-   }
-  }
-  source_context: {
-   file: "model.sysl"
-   start: {
-    line: 111
-   }
-   end: {
-    line: 118
-    col: 9
+    stmt:  {
+     action:  {
+      action:  "D"
+     }
+     source_context:  {
+      file:  "model.sysl"
+      start:  {
+       line:  118
+       col:  8
+      }
+      end:  {
+       line:  118
+       col:  9
+      }
+     }
+     source_contexts:  {
+      file:  "model.sysl"
+      start:  {
+       line:  118
+       col:  8
+      }
+      end:  {
+       line:  118
+       col:  9
+      }
+     }
+    }
+    source_context:  {
+     file:  "model.sysl"
+     start:  {
+      line:  112
+      col:  4
+     }
+     end:  {
+      line:  118
+      col:  9
+     }
+    }
+    source_contexts:  {
+     file:  "model.sysl"
+     start:  {
+      line:  112
+      col:  4
+     }
+     end:  {
+      line:  118
+      col:  9
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "model.sysl"
-   start: {
-    line: 111
+  source_context:  {
+   file:  "model.sysl"
+   start:  {
+    line:  111
    }
-   end: {
-    line: 118
-    col: 9
+   end:  {
+    line:  118
+    col:  9
+   }
+  }
+  source_contexts:  {
+   file:  "model.sysl"
+   start:  {
+    line:  111
+   }
+   end:  {
+    line:  118
+    col:  9
    }
   }
  }

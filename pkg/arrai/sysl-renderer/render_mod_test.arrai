@@ -2,6 +2,6 @@ let (:loadBytes, ...) = //{/pkg/arrai/sysl};
 let (:renderAllInOne, ...) = //{./render_mod};
 
 (
-    all: renderAllInOne(loadBytes(//[//encoding.bytes]{/pkg/arrai/out/all.pb})) =
-            $`${//[//encoding.bytes]{./testdata/out.sysl}}`,
+    all: renderAllInOne(loadBytes(//[//encoding.bytes]{/pkg/arrai/out/all.pb}))
+        = $`${//[//encoding.bytes]{./testdata/out.sysl}}`,
 )

@@ -1511,18 +1511,732 @@
       (['Source'], 'Read', 'accountNumber', {}, {}),
     },
     stmt: {
-      |appName, epName, stmtSrc, stmtSrcs|
-      (['A'], 'Fetch', {}, {}),
-      (['B'], 'Fetch', {}, {}),
-      (['C'], 'Fetch', {}, {}),
-      (['C'], 'FetchA', {}, {}),
-      (['C'], 'FetchB', {}, {}),
-      (['Client'], 'Do', {}, {}),
-      (['D'], 'Fetch', {}, {}),
-      (['Source'], 'GET /get/{id}', {}, {}),
-      (['Source'], 'POST /post', {}, {}),
-      (['Source'], 'Read', {}, {}),
-      (['all'], 'all', {}, {}),
+      |appName, epName, stmtIndex, stmtSrc, stmtSrcs|
+      (
+        ['A'],
+        'Fetch',
+        0,
+        (
+          end: (
+            col: 22,
+            line: 40,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 40,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 22,
+              line: 40,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 40,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['A'],
+        'Fetch',
+        1,
+        (
+          end: (
+            col: 153,
+            line: 41,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 41,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 153,
+              line: 41,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 41,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['B'],
+        'Fetch',
+        0,
+        (
+          end: (
+            col: 22,
+            line: 50,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 50,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 22,
+              line: 50,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 50,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['B'],
+        'Fetch',
+        1,
+        (
+          end: (
+            col: 153,
+            line: 51,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 51,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 153,
+              line: 51,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 51,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'Fetch',
+        0,
+        (
+          end: (
+            col: 18,
+            line: 73,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 73,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 73,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 73,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'Fetch',
+        1,
+        (
+          end: (
+            col: 18,
+            line: 74,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 74,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 74,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 74,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'Fetch',
+        2,
+        (
+          end: (
+            col: 213,
+            line: 75,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 75,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 213,
+              line: 75,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 75,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'FetchA',
+        0,
+        (
+          end: (
+            col: 18,
+            line: 64,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 64,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 64,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 64,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'FetchA',
+        1,
+        (
+          end: (
+            col: 165,
+            line: 65,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 65,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 165,
+              line: 65,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 65,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'FetchB',
+        0,
+        (
+          end: (
+            col: 18,
+            line: 68,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 68,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 68,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 68,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['C'],
+        'FetchB',
+        1,
+        (
+          end: (
+            col: 165,
+            line: 69,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 69,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 165,
+              line: 69,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 69,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Client'],
+        'Do',
+        0,
+        (
+          end: (
+            col: 18,
+            line: 93,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 93,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 93,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 93,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Client'],
+        'Do',
+        1,
+        (
+          end: (
+            col: 159,
+            line: 94,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 94,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 159,
+              line: 94,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 94,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['D'],
+        'Fetch',
+        0,
+        (
+          end: (
+            col: 18,
+            line: 83,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 83,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 83,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 83,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['D'],
+        'Fetch',
+        1,
+        (
+          end: (
+            col: 18,
+            line: 84,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 84,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 18,
+              line: 84,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 84,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['D'],
+        'Fetch',
+        2,
+        (
+          end: (
+            col: 213,
+            line: 85,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 85,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 213,
+              line: 85,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 85,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Source'],
+        'GET /get/{id}',
+        0,
+        (
+          end: (
+            col: 32,
+            line: 31,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 16,
+            line: 31,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 32,
+              line: 31,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 16,
+              line: 31,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Source'],
+        'POST /post',
+        0,
+        (
+          end: (
+            col: 28,
+            line: 36,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 12,
+            line: 36,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 28,
+              line: 36,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 12,
+              line: 36,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Source'],
+        'Read',
+        0,
+        (
+          end: (
+            col: 24,
+            line: 25,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 25,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 24,
+              line: 25,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 25,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['all'],
+        'all',
+        0,
+        (
+          end: (
+            col: 14,
+            line: 113,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 113,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 14,
+              line: 113,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 113,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['all'],
+        'all',
+        1,
+        (
+          end: (
+            col: 14,
+            line: 114,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 114,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 14,
+              line: 114,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 114,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['all'],
+        'all',
+        2,
+        (
+          end: (
+            col: 9,
+            line: 115,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 115,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 115,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 115,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['all'],
+        'all',
+        3,
+        (
+          end: (
+            col: 9,
+            line: 116,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 116,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 116,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 116,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['all'],
+        'all',
+        4,
+        (
+          end: (
+            col: 9,
+            line: 117,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 117,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 117,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 117,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['all'],
+        'all',
+        5,
+        (
+          end: (
+            col: 9,
+            line: 118,
+          ),
+          file: 'model.sysl',
+          start: (
+            col: 8,
+            line: 118,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 118,
+            ),
+            file: 'model.sysl',
+            start: (
+              col: 8,
+              line: 118,
+            ),
+          ),
+        ],
+      ),
     },
     type: {
       |appName, typeName, typeSrc, typeSrcs|

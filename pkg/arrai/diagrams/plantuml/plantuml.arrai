@@ -1,14 +1,13 @@
 let (:appNameToParts, ...) = //{/pkg/arrai/tools/appname};
 
+# alias constructs an alias for a given id
+let alias = \id //seq.sub(" ", "_", //seq.join('_', appNameToParts(id)));
+
 # `diagram` constructs a PlantUML diagram from the given integration model.
 # The resulting diagram does not include nodes that are either not `visible` or are a descendent of
 # a node that is not `expanded`. Likewise, links that reference nodes that are not present within
 # the final diagram are also not included.
 let diagram = \im
-
-    # alias constructs an alias for a given id
-    let alias = \id //seq.join('_', appNameToParts(id));
-
     # nodeWithId returns the node from the model with the given id or `{}` if not found
     let nodeWithId = \nodes \id (nodes <&- {(:id)} orderby .id)(0)?:{};
 
@@ -84,7 +83,7 @@ let simpleDiagram = \(:nodes, :edges) $`
     @startuml
     ${nodes orderby . >>
         $`
-            entity "${.label}" as ${.key}
+            entity "${.label}" as ${alias(.key)}
             {
                 ${.fields orderby . >> $`${.name}: ${.type}`::\n}
             }

@@ -184,9 +184,7 @@ Types:
     !type Type:
         @annotation = "annotation"
         aliasSequence <: Alias
-        inplace <:
-            a <: string
-            b <: int
+        inplace <: inplace
         nativeTypeField <: string
         optional <: string?
         reference <: RestEndpoint.Type

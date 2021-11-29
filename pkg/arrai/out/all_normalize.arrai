@@ -2668,35 +2668,1225 @@
       (['SimpleEndpoint'], 'SimpleEpWithTypes', 'native', {}, {}),
     },
     stmt: {
-      |appName, epName, stmtSrc, stmtSrcs|
-      (['EventAndSubscriber'], 'App -> Event', {}, {}),
-      (['RestEndpoint'], 'DELETE /', {}, {}),
-      (['RestEndpoint'], 'DELETE /param', {}, {}),
-      (['RestEndpoint'], 'GET /', {}, {}),
-      (['RestEndpoint'], 'GET /nested1/nested2/nested3', {}, {}),
-      (['RestEndpoint'], 'GET /notnested', {}, {}),
-      (['RestEndpoint'], 'GET /param', {}, {}),
-      (['RestEndpoint'], 'GET /pathwithtype/{native}', {}, {}),
-      (['RestEndpoint'], 'GET /query', {}, {}),
-      (['RestEndpoint'], 'PATCH /', {}, {}),
-      (['RestEndpoint'], 'PATCH /param', {}, {}),
-      (['RestEndpoint'], 'POST /', {}, {}),
-      (['RestEndpoint'], 'POST /param', {}, {}),
-      (['RestEndpoint'], 'PUT /', {}, {}),
-      (['RestEndpoint'], 'PUT /param', {}, {}),
-      (['SimpleEndpoint'], 'SimpleEp', {}, {}),
-      (['SimpleEndpoint'], 'SimpleEpWithAnnotations', {}, {}),
-      (['SimpleEndpoint'], 'SimpleEpWithArray', {}, {}),
-      (['SimpleEndpoint'], 'SimpleEpWithParamsRef', {}, {}),
-      (['SimpleEndpoint'], 'SimpleEpWithTypes', {}, {}),
-      (['Statements'], 'AnnotatedStatements', {}, {}),
-      (['Statements'], 'Calls', {}, {}),
-      (['Statements'], 'GroupStatements', {}, {}),
-      (['Statements'], 'IfStmt', {}, {}),
-      (['Statements'], 'Loops', {}, {}),
-      (['Statements'], 'Miscellanous', {}, {}),
-      (['Statements'], 'OneOfStatements', {}, {}),
-      (['Statements'], 'Returns', {}, {}),
+      |appName, epName, stmtIndex, stmtSrc, stmtSrcs|
+      (
+        ['EventAndSubscriber'],
+        'App -> Event',
+        0,
+        (
+          end: (
+            col: 11,
+            line: 265,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 265,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 11,
+              line: 265,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 265,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'DELETE /',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 50,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 50,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 50,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 50,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'DELETE /param',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 89,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 89,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 89,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 89,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'GET /',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 42,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 42,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 42,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 42,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'GET /nested1/nested2/nested3',
+        0,
+        (
+          end: (
+            col: 23,
+            line: 56,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 20,
+            line: 56,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 23,
+              line: 56,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 20,
+              line: 56,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'GET /notnested',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 60,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 60,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 60,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 60,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'GET /param',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 75,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 75,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 75,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 75,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'GET /pathwithtype/{native}',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 66,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 66,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 66,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 66,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'GET /query',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 70,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 70,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 70,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 70,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'PATCH /',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 48,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 48,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 48,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 48,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'PATCH /param',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 78,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 78,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 78,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 78,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'POST /',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 44,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 44,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 44,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 44,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'POST /param',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 83,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 83,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 83,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 83,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'PUT /',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 46,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 46,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 46,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 46,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['RestEndpoint'],
+        'PUT /param',
+        0,
+        (
+          end: (
+            col: 15,
+            line: 86,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 12,
+            line: 86,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 86,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 12,
+              line: 86,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['SimpleEndpoint'],
+        'SimpleEp',
+        0,
+        (
+          end: (
+            col: 11,
+            line: 20,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 20,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 11,
+              line: 20,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 20,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['SimpleEndpoint'],
+        'SimpleEpWithAnnotations',
+        0,
+        (
+          end: (
+            col: 11,
+            line: 34,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 34,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 11,
+              line: 34,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 34,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['SimpleEndpoint'],
+        'SimpleEpWithArray',
+        0,
+        (
+          end: (
+            col: 11,
+            line: 31,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 31,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 11,
+              line: 31,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 31,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['SimpleEndpoint'],
+        'SimpleEpWithParamsRef',
+        0,
+        (
+          end: (
+            col: 11,
+            line: 23,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 23,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 11,
+              line: 23,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 23,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['SimpleEndpoint'],
+        'SimpleEpWithTypes',
+        0,
+        (
+          end: (
+            col: 11,
+            line: 28,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 28,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 11,
+              line: 28,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 28,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'AnnotatedStatements',
+        0,
+        (
+          end: (
+            col: 24,
+            line: 222,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 222,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 24,
+              line: 222,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 222,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'AnnotatedStatements',
+        1,
+        (
+          end: (
+            col: 62,
+            line: 223,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 223,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 62,
+              line: 223,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 223,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'AnnotatedStatements',
+        2,
+        (
+          end: (
+            col: 78,
+            line: 224,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 224,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 78,
+              line: 224,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 224,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Calls',
+        0,
+        (
+          end: (
+            col: 19,
+            line: 189,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 189,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 19,
+              line: 189,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 189,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Calls',
+        1,
+        (
+          end: (
+            col: 34,
+            line: 192,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 192,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 34,
+              line: 192,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 192,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'GroupStatements',
+        0,
+        (
+          end: (
+            col: 31,
+            line: 211,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 209,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 31,
+              line: 211,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 209,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'IfStmt',
+        0,
+        (
+          end: (
+            col: 9,
+            line: 155,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 152,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 155,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 152,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'IfStmt',
+        1,
+        (
+          end: (
+            col: 9,
+            line: 158,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 155,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 158,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 155,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'IfStmt',
+        2,
+        (
+          end: (
+            col: 15,
+            line: 160,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 158,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 160,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 158,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Loops',
+        0,
+        (
+          end: (
+            col: 9,
+            line: 166,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 163,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 166,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 163,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Loops',
+        1,
+        (
+          end: (
+            col: 9,
+            line: 169,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 166,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 169,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 166,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Loops',
+        2,
+        (
+          end: (
+            col: 9,
+            line: 172,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 169,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 172,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 169,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Loops',
+        3,
+        (
+          end: (
+            col: 9,
+            line: 175,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 172,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 175,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 172,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Loops',
+        4,
+        (
+          end: (
+            col: 9,
+            line: 178,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 175,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 9,
+              line: 178,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 175,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Loops',
+        5,
+        (
+          end: (
+            col: 15,
+            line: 180,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 178,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 15,
+              line: 180,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 178,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Miscellanous',
+        0,
+        (
+          end: (
+            col: 40,
+            line: 227,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 227,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 40,
+              line: 227,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 227,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Miscellanous',
+        1,
+        (
+          end: (
+            col: 27,
+            line: 228,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 228,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 27,
+              line: 228,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 228,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Miscellanous',
+        2,
+        (
+          end: (
+            col: 34,
+            line: 229,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 229,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 34,
+              line: 229,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 229,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'OneOfStatements',
+        0,
+        (
+          end: (
+            col: 38,
+            line: 206,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 195,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 38,
+              line: 206,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 195,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Returns',
+        0,
+        (
+          end: (
+            col: 27,
+            line: 183,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 183,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 27,
+              line: 183,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 183,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Returns',
+        1,
+        (
+          end: (
+            col: 31,
+            line: 184,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 184,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 31,
+              line: 184,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 184,
+            ),
+          ),
+        ],
+      ),
+      (
+        ['Statements'],
+        'Returns',
+        2,
+        (
+          end: (
+            col: 34,
+            line: 185,
+          ),
+          file: 'all.sysl',
+          start: (
+            col: 8,
+            line: 185,
+          ),
+        ),
+        [
+          (
+            end: (
+              col: 34,
+              line: 185,
+            ),
+            file: 'all.sysl',
+            start: (
+              col: 8,
+              line: 185,
+            ),
+          ),
+        ],
+      ),
     },
     type: {
       |appName, typeName, typeSrc, typeSrcs|

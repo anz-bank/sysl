@@ -151,7 +151,7 @@ let parseReturn = \payload \apps \currApp
 
 # Replaces all `ret` payloads with structured tuples.
 let polishReturns = \m
-    let apps = m.apps => .@;
+    let apps = m.apps?:{} => .@;
     let tweak = \. \currApp
         cond (.).ret.payload?:{} {
             (:type, ...): .,    # Already tweaked.
@@ -182,7 +182,7 @@ let newNormalize = \m
     let m = polish(m);
 
     # Applications
-    let _apps = m.apps => \(@value:app, ...) (appName: app.name.part, :app);
+    let _apps = m.apps?:{} => \(@value:app, ...) (appName: app.name.part, :app);
     let app = _apps => \(:appName, :app)
         (
             :appName,
@@ -191,7 +191,7 @@ let newNormalize = \m
         );
 
     # Mixins
-    let _mixins = //rel.union(m.apps => \(@value:app, ...)
+    let _mixins = //rel.union(m.apps?:{} => \(@value:app, ...)
         app.mixins2?:{} => \mixin (
             appName: app.name.part,
             mixinName: mixin.name.part,
@@ -204,7 +204,7 @@ let newNormalize = \m
         );
 
     # Endpoints
-    let _eps = //rel.union(m.apps => \(@value:app, ...)
+    let _eps = //rel.union(m.apps?:{} => \(@value:app, ...)
         app.endpoints?:{} where !.@value.is_pubsub?:{} && .@ != empty => \(@:epName, @value:ep)
             (appName: app.name.part, :epName, :ep)
     ) where .;
@@ -268,7 +268,7 @@ let newNormalize = \m
     ;
 
     # Events
-    let _events = //rel.union(m.apps => \(@value:app, ...)
+    let _events = //rel.union(m.apps?:{} => \(@value:app, ...)
         app.endpoints?:{} where .@value.is_pubsub?:{} => \(@:eventName, @value:event)
             (appName: app.name.part, :eventName, :event)
     ) where .;
@@ -279,7 +279,7 @@ let newNormalize = \m
         );
 
     # Types
-    let _types = //rel.union(m.apps => \(@value:app, ...)
+    let _types = //rel.union(m.apps?:{} => \(@value:app, ...)
         app.types?:{} => \(@:typeName, @value:type)
             (appName: app.name.part, :typeName, :type)
     ) where .;
@@ -298,7 +298,7 @@ let newNormalize = \m
             pk: rel.primary_key?.attr_name:{}
         );
 
-    let enum = //rel.union(m.apps => \(@value:app, ...)
+    let enum = //rel.union(m.apps?:{} => \(@value:app, ...)
         app.types?:{} filter . {
             (@:typeName, @value: (enum: (:items, ...), ...)): (
                 appName: app.name.part,
@@ -317,7 +317,7 @@ let newNormalize = \m
     ) where .aliasType;
 
     # Fields
-    let _fields = //rel.union(m.apps => \(@value:app, ...)
+    let _fields = //rel.union(m.apps?:{} => \(@value:app, ...)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
             (type.tuple?:(type.relation?:())).attr_defs?:{} => \(@:fieldName, @value:field)
                 (appName: app.name.part, :typeName, :fieldName, :field)
@@ -378,7 +378,7 @@ let newNormalize = \m
         );
 
     # View
-    let _views = //rel.union(m.apps => \(@value:app, ...)
+    let _views = //rel.union(m.apps?:{} => \(@value:app, ...)
         app.views?:{} => (appName: app.name.part, viewName: .@, view: .@value)
     ) where .;
     let view = _views => \(:appName, :viewName, :view)
@@ -436,7 +436,7 @@ let calls = \m
 # Returns a normalised, relational model of a Sysl model.
 let normalize = \m
     let m = polish(m);
-    let apps = m.apps => \(@:appName, @value:app)
+    let apps = m.apps?:{} => \(@:appName, @value:app)
         (
             :appName,
             appPackage: app.attrs?('package')?.s:{},
@@ -445,14 +445,14 @@ let normalize = \m
             appAnnotations: app.attrs?:{} >>> \k \v v.s?:(v.a.elt >> .s),
         )
     ;
-    let endpoints = //rel.union(m.apps => \(@:appName, @value:app)
+    let endpoints = //rel.union(m.apps?:{} => \(@:appName, @value:app)
         app.endpoints?:{} => \(@:epName, ...)
             (
                 :appName,
                 :epName,
             )
     );
-    let calls = //rel.union(m.apps => \(@:appName, @value:app)
+    let calls = //rel.union(m.apps?:{} => \(@:appName, @value:app)
         //rel.union(app.endpoints?:{} => \(@:epName, @value:ep)
             ep.stmt?:{} where .@item.call?:{} =>
                 (
@@ -470,7 +470,7 @@ let normalize = \m
                 )
         )
     );
-    let types = //rel.union(m.apps => \(@:appName, @value:app)
+    let types = //rel.union(m.apps?:{} => \(@:appName, @value:app)
         app.types?:{} => \(@:typeName, @value: t)
             (
                 :appName,
@@ -480,7 +480,7 @@ let normalize = \m
             )
         ) where .
     ;
-    let fields = //rel.union(m.apps => \(@:appName, @value:app)
+    let fields = //rel.union(m.apps?:{} => \(@:appName, @value:app)
         //rel.union(app.types?:{} => \(@:typeName, @value:type)
             type.relation?:(type.tuple?:()).attr_defs?:{} => \(@:fieldName, @value:field)
                 let tags = tags(field);
