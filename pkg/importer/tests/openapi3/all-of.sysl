@@ -4,63 +4,52 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple" [package="com.example.package"]:
-    @description =:
-        | No description.
-
+TestApp "Simple":
+    @package = "com.example.package"
+    
     /pets:
-        PATCH (objectRequest <: objectRequest [mediatype="application/json", ~body]):
-            | No description.
+        PATCH(patch_pets_req_body <: patch_pets_req_body_type? [~body]):
             return 200
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type Canine%2EDog:
+        @openapi_type = "allOf"
         bark <: bool?:
             @json_tag = "bark"
         breed <: string?:
             @json_tag = "breed"
-        color <: uuid?:
+            @openapi_format = "enum"
+        color <: string?:
             @json_tag = "color"
+            @openapi_format = "uuid"
         pet_type <: string:
             @json_tag = "pet_type"
-
+    
     !type Feline%2ECat:
+        @openapi_type = "allOf"
         age <: int?:
             @json_tag = "age"
         hunts <: bool?:
             @json_tag = "hunts"
         pet_type <: string:
             @json_tag = "pet_type"
-
+    
     !type Pet:
         pet_type <: string:
             @json_tag = "pet_type"
-
-    !type object:
+    
+    !type patch_pets_req_body_type:
+        @mediatype = "application/json"
+        @openapi_type = "allOf"
         age <: int?:
             @json_tag = "age"
         bark <: bool?:
             @json_tag = "bark"
         breed <: string?:
             @json_tag = "breed"
-        color <: uuid?:
+            @openapi_format = "enum"
+        color <: string?:
             @json_tag = "color"
-        hunts <: bool?:
-            @json_tag = "hunts"
-        pet_type <: string:
-            @json_tag = "pet_type"
-
-    !type objectRequest:
-        age <: int?:
-            @json_tag = "age"
-        bark <: bool?:
-            @json_tag = "bark"
-        breed <: string?:
-            @json_tag = "breed"
-        color <: uuid?:
-            @json_tag = "color"
+            @openapi_format = "uuid"
         hunts <: bool?:
             @json_tag = "hunts"
         pet_type <: string:

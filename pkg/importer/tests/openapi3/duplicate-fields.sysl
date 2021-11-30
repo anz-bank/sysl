@@ -4,24 +4,18 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple" [package="com.example.package"]:
-    @description =:
-        | No description.
-
+TestApp "Simple":
+    @package = "com.example.package"
+    
     /pets:
         PATCH:
-            | No description.
             return 200
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type Test:
         x <: string?:
             @json_tag = "x"
-
+    
     !type Test2:
-        x <: string?:
-            @json_tag = "x"
+        @openapi_type = "allOf"
         x <: float?:
             @json_tag = "x"

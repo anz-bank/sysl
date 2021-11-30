@@ -4,19 +4,14 @@
 ##                                      ##
 ##########################################
 
-TestApp "simple" [package="com.example.package"]:
+TestApp "simple":
+    @package = "com.example.package"
     @version = "v0.1"
-    @description =:
-        | No description.
-
+    
     /api/v0%2E1/simple:
-        POST (MerchantRequest <: Merchant [mediatype="application/json", ~body]):
-            | No description.
+        POST(post_api_v0%2E1_simple_req_body <: Merchant? [~body, mediatype="application/json"]):
             return 200 <: Merchant [mediatype="application/json"]
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type Merchant:
         id <: string?:
             @json_tag = "id"
@@ -24,7 +19,7 @@ TestApp "simple" [package="com.example.package"]:
             @json_tag = "name"
         sub_responses <: sequence of Merchant?:
             @json_tag = "sub_responses"
-
+    
     !type Merchant1:
         id <: string?:
             @json_tag = "id"

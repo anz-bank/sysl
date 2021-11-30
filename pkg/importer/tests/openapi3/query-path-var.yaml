@@ -8,7 +8,7 @@ basePath: /v1
 schemes:
   - https
 paths:
-  /users/{id}:
+  /users/{id}/{id2}:
     parameters:
       - in: path
         name: id
@@ -16,6 +16,12 @@ paths:
           type: integer
         required: true
         description: The user ID.
+      - in: path
+        name: id2
+        schema:
+          type: string
+          maxLength: 5
+        required: true
       - in: header
         name: request-id
         schema:

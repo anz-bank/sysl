@@ -17,7 +17,7 @@ let importFiles = \appName \files
 ;
 
 # Imports a database model into Sysl from a SQL string.
-let importString = \appName \sql
+let importString = \(:appName, ...) \sql
     let model = applyStmt(parseDdl(sql), emptyModel);
 
     transformModel(
@@ -46,7 +46,7 @@ let importDir = \appName \dir
     importFiles(appName, sqls)
 ;
 
-let import = \appName \input
+let import = \(:appName, ...) \input
     cond input {
         [...]: importFiles(appName, input),
         _:

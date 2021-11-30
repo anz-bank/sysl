@@ -4,25 +4,29 @@
 ##                                      ##
 ##########################################
 
-TestApp "Goat CRUD API" [package="com.example.package"]:
+TestApp "Goat CRUD API":
+    @package = "com.example.package"
     @version = "1.2.3"
-    @description =:
-        | No description.
-
+    
     /goat/create-goat:
-        POST (GoatRequest <: Goat [mediatype="application/json", ~body]):
+        POST(post_goat_create_goat_req_body <: Goat? [~body, mediatype="application/json"]):
             | Creates a goat.
-            return 201 <: _goat_create_goat_201
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+            return 201 <: post_goat_create_goat_201_resp_type 
+    
     !type Goat:
         birthday <: date?:
             @json_tag = "birthday"
         name <: string?:
             @json_tag = "name"
-
-    !type _goat_create_goat_201:
-        Location <: string [~header]:
+    
+    !type post_goat_create_goat_201_resp_type [~GeneratedOpenAPIResponse]:
+        header <: post_goat_create_goat_201_resp_type_header [~header]:
+            @json_tag = "header"
+    
+    !type post_goat_create_goat_201_resp_type_header:
+        Location <: post_goat_create_goat_201_resp_type_header_Location?:
             @json_tag = "Location"
+    
+    !alias post_goat_create_goat_201_resp_type_header_Location [~unmapped_openapi]:
+        @description = "Location of the newly allocated goat."
+        string

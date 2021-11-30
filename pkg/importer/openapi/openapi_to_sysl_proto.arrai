@@ -2,259 +2,372 @@ let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 let (:simplify, ...) = //{github.com/arr-ai/arrai/contrib/json};
 let (:appNameToAppNameMessage, :partsToAppName, ...) = //{/pkg/arrai/tools/appname};
 let (:renderTypeUsageWithInlineAnno, ...) = //{/pkg/arrai/sysl-renderer/sysl_mod_renderers};
-
-let (:syslAttrs, ...) = //{./util};
 let (:primitive, :typeRef, :syslSafeName, :shallowEscape, :syslSafePath, ...) = //{/pkg/importer/utils};
+let (
+    :syslAttrs,
+    :resolveToObj,
+    :deepResolveRef,
+    :httpVerbs,
+    :isURLRef,
+    :isLocalRef,
+    :isExternalPathRef,
+    :extRefToName,
+    :joinPath,
+    :baseDir,
+    :extPathAttr,
+    :movedToRef,
+    ...
+) = //{./util};
 
+let intOrFloatRegex = //re.compile(`^(int|float)`);
+let escapeRegex = //re.compile(`\\`);
 
-let rec schemaToTypeMessage = \t
-    let type = cond t {
-        {'properties': properties, ...}:
-            let requiredList = t('required')?.a:{} => .@item.s;
-            (
-                tuple: (
-                    attr_defs: properties => (
-                        @: syslSafeName(.@),
-                        @value: schemaToTypeMessage(.@value) +> (
-                            opt: .@ !<: requiredList,
-                            # json_tag is required to handle special characters in field names
-                            attrs: {'json_tag': (s: .@)},
-                        )
-                    )
-                ),
-            ),
-        {'oneOf': (:a), ...}: (one_of: (type: a >> schemaToTypeMessage(.))),
+# TODO: allows multiple oapi files
+\(?:packageName:'', ?:filepath:'', ?:root:'', ...) \oapi
+    let (:resolveToObj, :deepResolveRef) = (:resolveToObj, :deepResolveRef) :> \resolve resolve((:oapi, :filepath, :root));
 
-        # FIXME: allOf doesn't have a mapping to sysl. Default behavior seems to be to just alias into a string.
-        {'allOf': (:a), ...}: primitive('STRING') +> (attrs: {'openapi_type': (s: 'allOf')}),
-        {'type': (s: type), ...}: cond {
-            type <: {'bool', 'boolean'}: primitive('BOOL'),
-            type <: {'int', 'integer'}:  primitive('INT'),
-            type = 'number':             primitive('FLOAT'),
+    let unmappedTag = \t t +> ('attrs': {'patterns' +>: (a +>: (elt ++: [(s: 'unmapped_openapi')]))});
 
-            type = 'array': (sequence: schemaToTypeMessage(t('items')?:{})),
+    let unmappedType = primitive('STRING') -> unmappedTag(.);
 
-            type <: {'string', 'str'}: cond t('format')?.s:{} {
-                'date':     primitive('DATE'),
-                'datetime': primitive('DATETIME'),
-                'byte':     primitive('BYTES'),
-                'binary':   primitive('BYTES'),
-                _:          primitive('STRING'),
-            },
+    # FIXME: better error messages
+    let allOfToObj = \allOf
+        let rec resolvePropertiesAndTrack = \previous \obj
+            cond obj {
+                {'properties': _, ...}: obj,
+                {'$ref': (s: ref), ...}:
+                    cond {
+                        ref <: previous:
+                            //error($`circular reference not allowed in allOf: ${//encoding.json.encode(allOf)}`),
+                        _: resolvePropertiesAndTrack(previous with ref, deepResolveRef(ref))
+                    }
+                ,
+                {'allOf': (:a), ...}:
+                    let combine = \acc \subObj
+                        let subObj = resolvePropertiesAndTrack(previous, subObj);
+                        acc +> {
+                            'properties' +>: subObj('properties'),
+                            'required'   +>: (a ++: subObj('required')?.a:[]),
+                        }
+                    ;
+                    reduce(a, combine, {}),
 
-            _: primitive('ANY'),
-        },
-        {'$ref': (s: ref), ...}:
-            # FIXME: allows more types of references
-            cond //seq.split('/', ref) {
-                # only define local types so no need for appName in the ref
-                ['#', 'components', 'schemas', type]: typeRef((path: [shallowEscape(type)])),
-            },
-        _: primitive('STRING'),
-    };
-
-    let constraint = [(
-        length:
-            let maxLength = t('maxLength')?:{};
-            let minLength = t('minLength')?:{};
-            cond {maxLength: ('max': maxLength), _: ()} +>
-            cond {minLength: ('min': minLength), _: ()}
-        ,
-        bit_width:
-            let format = //re.compile(`^(int|float)`).sub('', t('format')?.s:{});
-            cond format {'32': 32, '64': 64}
-        ,
-    )];
-
-    let examples =
-        let rec exampleAttr = \e
-            cond e {
-                (:a, ...): (a: (elt: (a >> exampleAttr(.)) where .@item rank (:.@))),
-                (:s, ...): e,
-                (b: true, ...): (s: 'true'),
-                (b: false, ...): (s: 'false'),
-                {...}: e && (a: (elt: (e => (a: (elt: [(s: .@), (s: simplify(.@value))]))) orderby .)),
-                _: e && (s: e),
+                _: //error($`all allOf items must resolve to object: ${//encoding.json.encode(obj)}`),
             }
         ;
-        # examples can appear with different attributes
-        let attr = exampleAttr(t('example')?:{} || t('examples')?:{});
-        attr && {'examples': attr}
+        resolvePropertiesAndTrack({}, allOf)
     ;
-    # FIXME: sysl doesn't allow proper escaping in annotations
-    let regex = let regex = t('pattern')?:{}; regex && {'regex': (s: //re.compile(`\\`).sub('\\\\', regex.s))};
-    type +> (attrs+>: t(syslAttrs)?:{} +> regex +> examples, :constraint)
-;
+    let rec schemaToTypeMessageWithConfig = \conf \t
+        # check for current location provided by simplify_oapi.arrai
+        let filepath = t(extPathAttr)?:{};
+        let conf = conf +> cond {filepath: (:filepath), _: ()};
 
-let infoToAppMessageData = \info
-    let {
-        'title': (s: title),
-        ...info,
-    } = info;
-    (
-        long_name: title,
-        docstring: info('description')?.s:'',
-
-        attrs:
-            let flatten = \attr info(attr)?:{} -> . && ({attr: (s: attr)} | (. => (@: $`${attr}_${.@}`, :.@value)));
-            (info where .@ !<: {'license', 'contact'}) | flatten('license') | flatten('contact')
-        ,
-    )
-;
-
-let paramToParamMessage = \param
-    let {
-        'name': (s: name),
-        'schema': schema,
-        'in': in,
-        ...
-    } = param;
-    let attrs = {
-        'patterns': (a: (elt: [in])),
-        'name': (s: name),
-    };
-    let attrs =
-        let description = param('description')?:{};
-        cond description {
-            {}: attrs,
-            _: attrs +> {'description': description},
-        }
-    ;
-    (
-        name: syslSafeName(name),
-        type: schemaToTypeMessage(schema) +> (
-            opt: !(param('required')?.b:false),
-            attrs+>: attrs
-        ),
-    )
-;
-
-let paramsToParamData = \params
-    reduce(
-        params,
-        \acc \param
-            let paramObject = paramToParamMessage(param);
-            cond param {
-                {'in': (s: 'header'), ...}: acc +> (header |: {paramObject}),
-                {'in': (s: 'cookie'), ...}: acc +> (cookie |: {paramObject}),
-                {'in': (s: 'path'), ...}:   acc +> (path   |: {paramObject}),
-                {'in': (s: 'query'), ...}:  acc +> (query  |: {paramObject}),
-                _: //error(param),
-            }
-        ,
-        (header: {}, cookie: {}, path: {}, query: {}),
-    )
-;
-
-let mediaTypeToTypeMessage = \(:mediaType, :config)
-    schemaToTypeMessage(config('schema')?:{}) +> (attrs+>: mediaType && {'mediatype': (s: mediaType)})
-;
-
-let reqBodyToParamMessage = \epName \reqBody
-    reqBody &&
-        let contents = reqBody('content')?:{};
-        let type = (contents count = 1) && mediaTypeToTypeMessage(contents single -> (mediaType: .@, config: .@value));
-        let type = type +> (attrs+>: {'patterns': (a: (elt: [(s: 'body')]))}, opt: !(reqBody('required')?.b:false));
-        (
-            name: syslSafeName($`${//str.lower(epName)}_req_body`),
-            :type,
-        )
-;
-
-let responseToReturnMessage = \(:status, :response)
-    let contents = response('content')?:{};
-    let type = (contents count = 1) && mediaTypeToTypeMessage(contents single -> (mediaType: .@, config: .@value));
-    let type = type && ' ' ++ $`<: ${renderTypeUsageWithInlineAnno(type)}`;
-    let status = cond status {
-        # in openapi3 the `default` return status seems to refer to a fallback behaviour.
-        'default': 'error',
-        _:         status
-    };
-
-    (ret: (payload: $`${status}${type}`))
-;
-
-let responsesToReturnMessages = \responses
-    responses => responseToReturnMessage((status: .@, response: .@value)) orderby .
-;
-
-let pathToEndpointMessage = \(:pathName, :verb, :ep)
-    let name = $`${//str.upper(verb)} ${pathName}`;
-    let (
-        :header,
-        :cookie,
-        :path,
-        :query,
-    ) = paramsToParamData(ep('parameters')?.a:{}) :> \params params orderby .name;
-    let reqBodyParam = reqBodyToParamMessage(name, ep('requestBody')?:{});
-    (
-        :name,
-        param: header ++ cookie ++ [reqBodyParam],
-        stmt: responsesToReturnMessages(ep('responses')?:{}),
-        docstring: ep('description')?.s:{},
-        rest_params: (
-            method: //str.upper(verb),
-            path: //seq.trim_suffix('/', syslSafePath(pathName)),
-            url_param: path,
-            query_param: query,
-        )
-    )
-
-;
-
-let pathsToEndpointMessages = \paths (
-    paths => \(@: pathName, @value: ops)
-        ops => \(@: verb, @value: ep)
-            pathToEndpointMessage((:pathName, :verb, :ep)) -> (@: .name, @value: .)
-) -> //rel.union(.)
-;
-
-let componentsSchemasToTypesMessages = \schemas schemas => (@: shallowEscape(.@), @value: schemaToTypeMessage(.@value));
-
-# TODO: handle other types definitions outside of schemas.
-let oapiToTypesMessages = \oapi
-    let fromComponentsSchemas = componentsSchemasToTypesMessages(oapi('components', 'schemas')?:{});
-    fromComponentsSchemas
-;
-
-let oapiToAppMessage = \appName \oapi
-    let (:long_name, :docstring, :attrs) = infoToAppMessageData(oapi('info')?:{});
-    let endpoints = pathsToEndpointMessages(oapi('paths')?:{});
-    let types = oapiToTypesMessages(oapi);
-    (
-        apps: {
-            appName:
+        let type = cond t {
+            {'properties': properties, ...}:
+                let requiredList = t('required')?.a:{} => .@item.s;
                 (
-                    name: appNameToAppNameMessage(appName),
-                    :long_name,
-                    :docstring,
-                    :attrs,
+                    tuple: (
+                        attr_defs: properties => (
+                            @: syslSafeName(.@),
+                            @value: schemaToTypeMessageWithConfig(conf, .@value) +> (
+                                opt: .@ !<: requiredList,
+                                # json_tag is required to handle special characters in field names
+                                attrs +>: {'json_tag': (s: .@)},
+                            )
+                        )
+                    ),
+                ),
+            {'enum': (:a), ...subConf}:
+                cond subConf {
+                    # enums can be in different type (e.g. int, string). This will allow the correct mapping.
+                    {'type': type, ...}: schemaToTypeMessageWithConfig(conf, {'type': type}),
+                    _: primitive('STRING'),
+                } +> (attrs+>: {'openapi_format': (s: 'enum')}),
+            # FIXME: this is commented because enums in openapi can have special characters which sysl does not allow
+            # uncomment this when there's a proper mapping for it
+            # (enum: (items: a => \(@: i, @item: (s: enumVal)) (@: enumVal, @value: i))),
 
-                    :endpoints,
-                    :types,
-                )
-        },
-)
-;
+            {'oneOf': (:a), ...}: (one_of: (type: a >> schemaToTypeMessageWithConfig(conf, .))),
+            {'allOf': _, ...}: schemaToTypeMessageWithConfig(conf, allOfToObj(t)) +> (attrs+>: {'openapi_type': (s: 'allOf')}),
 
-# All the functions in this script only able to process simplified oapi spec.
-# To simplify oapi spec, use simplify_oapi.arrai function.
-(
-    # the following functions have one-to-one mapping from object to sysl proto.
-    :schemaToTypeMessage,
-    :paramToParamMessage,
-    :mediaTypeToTypeMessage,
-    :reqBodyToParamMessage,
-    :responseToReturnMessage,
-    :responsesToReturnMessages,
-    :pathToEndpointMessage,
-    :pathsToEndpointMessages,
-    :componentsSchemasToTypesMessages,
-    :oapiToTypesMessages,
-    :oapiToAppMessage,
+            {'items': items, ...}:
+                let (?:attrs:{}, ?:constraint:{}, ...type) = schemaToTypeMessageWithConfig(conf, items);
+                (sequence: type, :attrs, :constraint),
 
-    # the following functions takes in oapi object and return various data that
-    # can be used to populate a sysl proto.
-    :infoToAppMessageData,
-    :paramsToParamData,
-)
+            {'$ref': (s: ref), ...}:
+                let filepath = conf.filepath?:'';
+                cond {
+                    isURLRef(ref): //error($`URL ref not supported: ${ref}`),
+
+                    isLocalRef(ref):
+                        cond //seq.split('/', ref) {
+                            # if it is currently outside of the main spec and the reference object was not made by
+                            # simplify_oapi.arrai, then local ref needs to be renamed so that it references the
+                            # localised external ref.
+                            ['#', 'components', 'schemas', type]:
+                                let type = cond {
+                                    !(t(movedToRef)?:false) && filepath: extRefToName(filepath, ref),
+                                    _:                                   shallowEscape(type),
+                                };
+                                typeRef((path: [type]))
+                            ,
+                            ['#', 'components', _, _]: schemaToTypeMessageWithConfig(conf, resolveToObj(t)('schema')?:{}),
+                            _: //error($`local ref not recognised: ${ref}`),
+                        },
+
+                    isExternalPathRef(ref):
+                        let [fp, localisedRef] = //seq.split('#', ref);
+                        typeRef((path: [extRefToName(joinPath(baseDir(filepath), fp), localisedRef)])),
+
+                    _: //error($`unrecognised ref: ${ref}`),
+                },
+            {'type': (s: type), ...}: cond {
+                type <: {'bool', 'boolean'}: primitive('BOOL'),
+                type <: {'int', 'integer'}:  primitive('INT'),
+                type = 'number':             primitive('FLOAT'),
+
+                type = 'array': (sequence: schemaToTypeMessageWithConfig(conf, t('items')?:{})),
+
+                type <: {'string', 'str'}: cond t('format')?.s:{} {
+                    '':            primitive('STRING'),
+                    'date':        primitive('DATE'),
+                    'date-time':   primitive('DATETIME'),
+                    'byte':        primitive('BYTES'),
+                    'binary':      primitive('BYTES'),
+                    specialFormat: primitive('STRING') +> (attrs+>: {'openapi_format': (s: specialFormat)}),
+                },
+
+
+                _: unmappedType +> (attrs +>:{'openapi_type': (s: type)}),
+            },
+            _: unmappedType,
+        };
+
+        let constraint = [(
+            length:
+                let maxLength = t('maxLength')?:{};
+                let minLength = t('minLength')?:{};
+                cond {maxLength: ('max': maxLength), _: ()} +>
+                cond {minLength: ('min': minLength), _: ()}
+            ,
+            bit_width:
+                let format = intOrFloatRegex.sub('', t('format')?.s:{});
+                cond format {'32': 32, '64': 64}
+            ,
+        )];
+
+        let range =
+            reduce(
+                [
+                    (attrName: 'max',          openapiAttr: 'maximum'),
+                    (attrName: 'min',          openapiAttr: 'minimum'),
+                    (attrName: 'exclusiveMax', openapiAttr: 'exclusiveMaximum'),
+                    (attrName: 'exclusiveMin', openapiAttr: 'exclusiveMinimum'),
+                ],
+                \acc \(:attrName, :openapiAttr)
+                    acc +> cond t(openapiAttr)?:{} {{}: {}, val: {attrName: (s: $`${val}`)}}
+                ,
+                {}
+            )
+        ;
+
+        let desc = cond t {
+            {'description': (s: description), ...}: {'description': (s: description)}
+        };
+
+        let examples =
+            let rec exampleAttr = \e
+                cond e {
+                    (:a, ...): (a: (elt: (a >> exampleAttr(.)) where .@item rank (:.@))),
+                    (:s, ...): e,
+                    (b: true, ...): (s: 'true'),
+                    (b: false, ...): (s: 'false'),
+                    {...}: e && (
+                        a: (elt: (e => (a: (elt: [(s: .@), (s: $`${simplify(.@value)}`)]))) orderby .)
+                    ),
+                    _: e && (s: $`${e}`),
+                }
+            ;
+            # examples can appear with different attributes
+            let attr = exampleAttr(t('example')?:{} || t('examples')?:{});
+            attr && {'examples': attr}
+        ;
+        # FIXME: sysl doesn't allow proper escaping in annotations
+        let regex = let regex = t('pattern')?:{}; regex && {'regex': (s: escapeRegex.sub('\\\\', regex.s))};
+
+        let additionalAttrs = t(syslAttrs)?:{};
+        let additionalTags = type.attrs?('patterns')?:(a: (elt: [])) +> (a: (elt ++: additionalAttrs('patterns')?.a.elt:[]));
+
+        let additionalAttrs = additionalAttrs +> {'patterns': additionalTags};
+
+        type +> (attrs+>: additionalAttrs +> regex +> examples +> range +> desc, :constraint)
+    ;
+
+    let schemaToTypeMessage = schemaToTypeMessageWithConfig(());
+
+    let infoToAppMessageData = \info
+        let {
+            'title': (s: title),
+            ...info,
+        } = info;
+        (
+            long_name: title,
+            docstring: info('description')?.s:'',
+
+            attrs:
+                let flatten = \attr info(attr)?:{} -> . && ({attr: (s: attr)} | (. => (@: $`${attr}_${.@}`, :.@value)));
+                (info where .@ !<: {'license', 'contact'}) | flatten('license') | flatten('contact')
+            ,
+        )
+    ;
+
+    let paramToParamMessage = \param
+        let param = resolveToObj(param);
+        let {'name': (s: name), 'schema': schema, 'in': in, ...} = param;
+        let attrs = {'patterns': (a: (elt: [in])), 'name': (s: name)};
+        let attrs =
+            let description = param('description')?:{};
+            cond description {
+                {}: attrs,
+                _: attrs +> {'description': description},
+            }
+        ;
+        (
+            name: syslSafeName(name),
+            type: schemaToTypeMessage(schema) +> (
+                opt: !(param('required')?.b:false),
+                attrs+>: attrs
+            ),
+        )
+    ;
+
+    let paramsToParamData = \params
+        reduce(
+            params,
+            \acc \param
+                let param = resolveToObj(param);
+                let location = param('in').s;
+                # path parameters in sysl cannot be optional
+                let param = (location = 'path' && param +> {'required': (b: true)}) || param;
+                let paramObject = paramToParamMessage(param);
+                cond location {
+                    'header': acc +> (header |: {paramObject}),
+                    'cookie': acc +> (cookie |: {paramObject}),
+                    'path':   acc +> (path   |: {paramObject}),
+                    'query':  acc +> (query  |: {paramObject}),
+                    _: //error($`param has unknown location: ${param}`),
+                }
+            ,
+            (header: {}, cookie: {}, path: {}, query: {}),
+        )
+    ;
+
+    let mediaTypeToTypeMessage = \(:mediaType, :config)
+        let config = resolveToObj(config);
+        let example = (config('examples')?:{} || config('example')?:{}) -> . && {'example': .};
+        schemaToTypeMessage(config('schema')?:{} +> example) +> (attrs+>: mediaType && {'mediatype': (s: mediaType)})
+    ;
+
+    let reqBodyToParamMessage = \epName \reqBody
+        reqBody &&
+            let reqBody = resolveToObj(reqBody);
+            let contents = reqBody('content')?:{};
+            let type = (contents count = 1) && mediaTypeToTypeMessage(contents single -> (mediaType: .@, config: .@value));
+            let type = type +> (attrs+>: {'patterns': (a: (elt: [(s: 'body')]))}, opt: !(reqBody('required')?.b:false));
+            (
+                name: syslSafeName($`${//str.lower(epName)}_req_body`),
+                :type,
+            )
+    ;
+
+    let responseToReturnMessage = \(:status, :response)
+        let response = resolveToObj(response);
+        let contents = response('content')?:{};
+        let type = (contents count = 1) && mediaTypeToTypeMessage(contents single -> (mediaType: .@, config: .@value));
+        let type = type && ' ' ++ $`<: ${renderTypeUsageWithInlineAnno(type)}`;
+        let status = cond status {
+            # in openapi3 the `default` return status seems to refer to a fallback behaviour.
+            'default': 'error',
+            _:         status
+        };
+
+        (ret: (payload: $`${status}${type}`))
+    ;
+
+    let responsesToReturnMessages = \responses
+        responses => responseToReturnMessage((status: .@, response: .@value)) orderby .
+    ;
+
+    let pathToEndpointMessage = \(:pathName, :verb, :ep)
+        let name = $`${//str.upper(verb)} ${pathName}`;
+        let (
+            :header,
+            :cookie,
+            :path,
+            :query,
+        ) = paramsToParamData(ep('parameters')?.a:{}) :> \params params orderby .name;
+        let reqBodyParam = reqBodyToParamMessage(name, ep('requestBody')?:{});
+        (
+            :name,
+            param: [reqBodyParam] ++ header ++ cookie,
+            stmt: responsesToReturnMessages(ep('responses')?:{}),
+            docstring: ep('description')?.s:{},
+            rest_params: (
+                method: //str.upper(verb),
+                path: //seq.trim_suffix('/', syslSafePath(pathName)),
+                url_param: path,
+                query_param: query,
+            )
+        )
+
+    ;
+
+    let pathsToEndpointMessages = \paths (
+        paths => \(@: pathName, @value: ops)
+            ops => \(@: verb, @value: ep)
+                (verb <: httpVerbs) && (pathToEndpointMessage((:pathName, :verb, :ep)) -> (@: .name, @value: .))
+    ) -> //rel.union(.) where .
+    ;
+
+    let componentsSchemasToTypesMessages = \schemas schemas => (@: shallowEscape(.@), @value: schemaToTypeMessage(.@value));
+
+    let oapiToAppMessage = \appName
+        let (:long_name, :docstring, :attrs) = infoToAppMessageData(oapi('info')?:{});
+        let attrs = attrs +> (packageName && {'package': (s: packageName)});
+        let endpoints = pathsToEndpointMessages(oapi('paths')?:{});
+        (
+            apps: {
+                appName:
+                    (
+                        name: appNameToAppNameMessage(appName),
+                        :long_name,
+                        :docstring,
+                        :attrs,
+
+                        :endpoints,
+                        types:  componentsSchemasToTypesMessages(oapi('components', 'schemas')?:{}),
+                    )
+            },
+    )
+    ;
+
+    # All the functions in this script only able to process simplified oapi spec.
+    # To simplify oapi spec, use simplify_oapi.arrai function.
+    (
+        # the following functions have one-to-one mapping from object to sysl proto.
+        :schemaToTypeMessage,
+        :paramToParamMessage,
+        :mediaTypeToTypeMessage,
+        :reqBodyToParamMessage,
+        :responseToReturnMessage,
+        :responsesToReturnMessages,
+        :pathToEndpointMessage,
+        :pathsToEndpointMessages,
+        :componentsSchemasToTypesMessages,
+        :oapiToAppMessage,
+
+        # the following functions takes in oapi object and return various data that
+        # can be used to populate a sysl proto.
+        :infoToAppMessageData,
+        :paramsToParamData,
+    )

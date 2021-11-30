@@ -13,6 +13,13 @@ paths:
             type: string
           required: false
           in: query
+        - name: number
+          schema:
+            type: integer
+            format: int32
+            maxLength: 5
+          required: false
+          in: query
         - name: min_date
           schema:
             type: string

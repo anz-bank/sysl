@@ -864,6 +864,13 @@ func (s *TreeShapeListener) applyAnnotations(
 	// Copy the annotations from the parent (tuple or relation) to each child
 	collection := s.currentApp().Types[s.currentTypePath.Get()]
 
+	switch collection.Type.(type) {
+	case *sysl.Type_Tuple_, *sysl.Type_Relation_:
+	default:
+		// skip if type is not tuple or relation
+		return
+	}
+
 	for _, annotation := range annotations {
 		varname := annotation.(*parser.AnnotationContext).VAR_NAME().GetText()
 		attr := collection.Attrs[varname]

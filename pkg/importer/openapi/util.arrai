@@ -1,9 +1,119 @@
-# special attr that the openapi_to_sysl_proto.arrai can use to get additional attributes
+let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (:syslSafeName, ...) = //{/pkg/importer/utils};
+
+# TODO: move these functions to arr-ai/contrib or stdlib
+let baseDir = \path //seq.split(//os.path_separator, path) -> \[...path, _] //seq.join(//os.path_separator, path);
+let baseFile = \path //seq.split(//os.path_separator, path) -> \[..., file] file;
+let cleanPath = \path
+    let path = //re.compile(`(/|\\)`).sub(//os.path_separator, path);
+    reduce(
+        //seq.split(//os.path_separator, path),
+        \acc \current
+            cond current {
+                '':   acc,
+                '..': cond acc {[...head, tail]: cond tail {'..': acc ++ ['..'], _: head}, {}: ['..']},
+                '.':  acc,
+                _:    acc ++ [current],
+            },
+        [],
+    ) -> //seq.join(//os.path_separator, .)
+;
+let joinPath = \base \path cleanPath($`${base}${//os.path_separator}${path}`);
+
+# special attr that the openapi_to_sysl_proto.arrai can use to get additional attributes.
 let syslAttrs = '_attrs';
+
+# special attr that openapi_to_sysl_proto.arrai can use to determine the current location of a schema.
+let extPathAttr = '_extPath';
+
+# special attr that openapi_to_sysl_proto.arrai can use to determine if a reference was created by simplify_oapi.arrai.
+let movedToRef = '_movedToRef';
+
+# special tag that denotes openapi responses that are wrapped into body and headers.
+let wrappedResponseTypeTag = 'GeneratedOpenAPIResponse';
 
 let httpVerbs = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'};
 
+let isURLRef = //re.compile('^(//|https?://)').match;
+let isLocalRef = //seq.has_prefix('#');
+let isExternalPathRef = \ref !isURLRef(ref) && !isLocalRef(ref);
+
+let extRefToName = \fp \localisedRef syslSafeName($`${fp}_${//seq.trim_prefix('#', localisedRef) -> //seq.trim_prefix('/', .)}`);
+
+let parseSpecBytes = \bytes //encoding.yaml.decode(bytes)?:(//encoding.json.decode(bytes)?:(//error($`${bytes} unknown format`)));
+let parseSpec = \fp (//os.exists(fp) && parseSpecBytes(//os.file(fp))) || //error($`${fp} not found`);
+let parseSpecWithRoot = \root \fp parseSpec(joinPath(root, fp));
+
+let rec resolveRef = \(?:oapi:'', ?:filepath:'', ?:root: '', ...) \ref
+    cond //seq.split('#', ref) {
+        # local
+        ['', path]:
+            let ['components', type, name] = //seq.trim_prefix('/', path) -> //seq.split('/', .);
+            oapi('components', type, name)?:(//error($`reference not found ${ref}`)),
+
+        [externalPath, refPath]:
+            cond {
+                isURLRef(externalPath): //error('URL ref not implemented'),
+                _:
+                    let path = joinPath(baseDir(filepath), externalPath);
+                    resolveRef((oapi: parseSpecWithRoot(root, path)), $`#${refPath}`),
+            }
+        ,
+
+        _: //error($`unsupported reference ${ref}`),
+    }
+;
+
+let deepResolveRef = \conf \ref
+    let refID = \specPath \ref
+        ref &&
+            let [refPath, path] = //seq.split('#', ref);
+            let refPath = (isExternalPathRef(ref) && joinPath(baseDir(specPath), refPath)) || refPath;
+            (:path, :refPath)
+    ;
+    let rec resolveRefAndTrack = \conf \previous \current
+        let (?:filepath:'', ...) = conf;
+        cond current {
+            {'$ref': (s: currentRef), ...}:
+                let id = refID(filepath, currentRef);
+                cond {
+                    (id <: previous): //error($`cycle reference detected: ${ref}`),
+                    _:
+                        let conf = (filepath: id.refPath);
+                        let conf = (isLocalRef(currentRef) && conf +> (oapi: parseSpec(id.refPath))) || conf;
+                        resolveRefAndTrack(
+                            conf,
+                            previous with refID(filepath, currentRef),
+                            resolveRef(conf, currentRef),
+                        ),
+                }
+            ,
+            _: current,
+        }
+    ;
+    resolveRefAndTrack(conf, {refID(ref('$ref')?.s:'')}, resolveRef(conf, ref))
+;
+
+let resolveToObj = \conf \refOrObj cond refOrObj {{'$ref': (s: ref), ...}: deepResolveRef(conf, ref), _: refOrObj};
+
 (
     :syslAttrs,
-    :httpVerbs
+    :httpVerbs,
+    :wrappedResponseTypeTag,
+    :resolveRef,
+    :resolveToObj,
+    :deepResolveRef,
+    :isURLRef,
+    :isLocalRef,
+    :isExternalPathRef,
+    :baseDir,
+    :baseFile,
+    :cleanPath,
+    :joinPath,
+    :extRefToName,
+    :parseSpec,
+    :parseSpecWithRoot,
+    :parseSpecBytes,
+    :extPathAttr,
+    :movedToRef,
 )

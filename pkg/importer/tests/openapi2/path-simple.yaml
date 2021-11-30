@@ -1,0 +1,83 @@
+# Multiple paths with mixed request methods and mixed availabile attributes
+
+swagger: "2.0"
+
+info:
+  title: Path API Test
+  description: Random APIs that don't make any sense apart from testing
+  version: 1.0.0
+
+paths:
+  /endpoint-1:
+    post:
+      summary: Just a post endpoint
+      description: |
+        Here's a description
+      operationId: "POST_ENDPOINT_1"
+      tags:
+        - Test
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: param ABC
+          in: header
+          description: Description of param ABC
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: UNAUTHORISED
+
+    get:
+      summary: Just a get endpoint
+      description: |
+        Here's a description
+      operationId: "GET_ENDPOINT_1"
+      tags:
+        - Test
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: param ABC
+          in: header
+          description: Description of param ABC
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: UNAUTHORISED
+
+  /endpoint-2:
+    put:
+      summary: One available response
+      description: Here's a description
+      responses:
+        "200":
+          description: OK
+
+    delete:
+      summary: No parameters
+      description: |
+        Here's another description
+      operationId: "GET_ENDPOINT_2"
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: UNAUTHORISED
+
+schemes:
+  - https
+
+security:
+  - someheader: []

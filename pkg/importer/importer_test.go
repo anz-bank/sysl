@@ -256,6 +256,7 @@ func runImportErrorTest(t *testing.T, cfg errTestConfig) {
 
 				// some errors can be non-deterministic e.g. circular errors can point to different types that have
 				// circular references.
+				require.NotNil(t, err)
 				assert.Contains(t, err.Error(), expectedErr)
 			},
 		)
@@ -274,8 +275,7 @@ func TestLoadOpenAPI3Errors(t *testing.T) {
 		},
 
 		cases: map[string]string{
-			"all-of-recursive": "circular reference detected for type:",
-			"duplicate-fields": `duplicate fields exist: "x"`,
+			"all-of-recursive": "circular reference not allowed in allOf",
 		},
 	})
 }

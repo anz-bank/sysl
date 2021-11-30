@@ -1,0 +1,63 @@
+# Meta properties that covers the breadth of the openapi spec
+#   with minimal component and paths, no responses or parameters
+
+openapi: 3.0.0
+
+info:
+  title: Meta API Test
+  description: Random APIs that don't make any sense apart from testing
+  version: 1.0.0
+  contact:
+    name: some name
+    url: https://example.com
+    email: abcd@example.com
+  license:
+    name: license name
+    url: https://example.com/license
+
+servers:
+  - url: https://example.com/dev
+    description: dev
+  - url: https://example/com/sit
+    description: sit
+
+paths:
+  /endpoint-1:
+    get:
+      summary: Get Endpoint
+      description: |
+        Here's a description filler
+      operationId: "GET_ENDPOINT_1"
+      tags: ["Test"]
+
+      responses:
+        "200":
+          description: OK
+          headers:
+            content-type:
+              $ref: "#/components/headers/content-type"
+
+components:
+  headers:
+    content-type:
+      schema:
+        type: string
+        example: application/json
+  securitySchemes:
+    BearerJWT:
+      description: |
+        Bearer token JWT
+      type: http
+      scheme: bearer
+      bearerFormat: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoSW........."
+
+tags:
+  - name: "Test"
+    description: "Test OpenAPI YAML"
+
+security:
+  - BearerJWT: []
+
+externalDocs:
+  description: Some example docs
+  url: https://example.com/external-docs

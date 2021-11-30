@@ -103,6 +103,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
 		}
+		// FIXME: because filepath information is not provided, external references are ignored in OpenAPI3.
 		output, err := imp.Load(file)
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))

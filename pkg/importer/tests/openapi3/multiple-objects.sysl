@@ -4,59 +4,78 @@
 ##                                      ##
 ##########################################
 
-TestApp "Twilio - Conversations" [package="com.example.package"]:
-    @version = "1.12.0"
+TestApp "Twilio - Conversations":
+    @description = "This is the public Twilio REST API."
+    @license = "license"
+    @license_name = "Apache 2.0"
+    @license_url = "https://www.apache.org/licenses/LICENSE-2.0.html"
+    @package = "com.example.package"
     @termsOfService = "https://www.twilio.com/legal/tos"
-    @license = "Apache 2.0"
-    @description =:
-        | This is the public Twilio REST API.
-
+    @version = "1.12.0"
+    
     /v1/Conversations:
-        GET ?PageSize=int?:
+        GET?PageSize=int?:
             | Retrieve a list of conversations in your account's default service
-            return 200 <: ListConversationResponse [mediatype="application/json"]
-
-    /v1/Conversations/{ConversationSid<:string}/Messages:
-        GET ?PageSize=int?:
+            return 200 <: get_v1_Conversations_200_resp_type 
+    
+    /v1/Conversations/{ConversationSid <: string}/Messages:
+        GET?PageSize=int?:
             | Retrieve a list of all messages in the conversation
-            return 200 <: ListConversationMessageResponse [mediatype="application/json"]
-
-    #---------------------------------------------------------------------------
-    # definitions
-
-    !type ListConversationMessageResponse:
-        messages <: sequence of conversations%2Ev1%2Econversation%2Econversation_message?:
-            @json_tag = "messages"
-        meta <: ListConversationMessageResponse_meta?:
-            @json_tag = "meta"
-
-    !type ListConversationMessageResponse_meta:
-        url <: string?:
-            @json_tag = "url"
-
-    !type ListConversationResponse:
-        conversations <: sequence of conversations%2Ev1%2Econversation?:
-            @json_tag = "conversations"
-        meta <: ListConversationResponse_meta?:
-            @json_tag = "meta"
-
-    !type ListConversationResponse_meta:
-        url <: string?:
-            @json_tag = "url"
-
+            return 200 <: get_v1_Conversations_ConversationSid_Messages_200_resp_type 
+    
     !type conversations%2Ev1%2Econversation:
-        account_sid <: string(34..34)? [regex="%5EAC%5B0-9a-fA-F%5D{32}%24"]:
+        account_sid <: string(34..34)?:
+            @description = "The unique ID of the Account responsible for this conversation."
             @json_tag = "account_sid"
+            @regex = "^AC[0-9a-fA-F]{32}$"
         attributes <: string?:
+            @description = "An optional string metadata field you can use to store any data you wish."
             @json_tag = "attributes"
-        links <: EXTERNAL_conversations%252Ev1%252Econversation_links?:
+        links <: conversations%2Ev1%2Econversation_links?:
             @json_tag = "links"
         state <: string?:
+            @description = "Current state of this conversation."
             @json_tag = "state"
-
+            @openapi_format = "enum"
+    
     !type conversations%2Ev1%2Econversation%2Econversation_message:
         body <: string?:
+            @description = "The content of the message."
             @json_tag = "body"
-
-    !alias EXTERNAL_conversations%252Ev1%252Econversation_links:
+    
+    !alias conversations%2Ev1%2Econversation_links [~unmapped_openapi]:
+        @description = "Absolute URLs to access the participants, messages and webhooks of this conversation."
+        @openapi_type = "object"
         string
+    
+    !type get_v1_Conversations_200_resp_type [~GeneratedOpenAPIResponse]:
+        body <: get_v1_Conversations_200_resp_type_body [~body]:
+            @json_tag = "body"
+    
+    !type get_v1_Conversations_200_resp_type_body:
+        @mediatype = "application/json"
+        conversations <: sequence of conversations%2Ev1%2Econversation?:
+            @json_tag = "conversations"
+        meta <: get_v1_Conversations_200_resp_type_body_meta?:
+            @json_tag = "meta"
+    
+    !type get_v1_Conversations_200_resp_type_body_meta:
+        url <: string?:
+            @json_tag = "url"
+            @openapi_format = "uri"
+    
+    !type get_v1_Conversations_ConversationSid_Messages_200_resp_type [~GeneratedOpenAPIResponse]:
+        body <: get_v1_Conversations_ConversationSid_Messages_200_resp_type_body [~body]:
+            @json_tag = "body"
+    
+    !type get_v1_Conversations_ConversationSid_Messages_200_resp_type_body:
+        @mediatype = "application/json"
+        messages <: sequence of conversations%2Ev1%2Econversation%2Econversation_message?:
+            @json_tag = "messages"
+        meta <: get_v1_Conversations_ConversationSid_Messages_200_resp_type_body_meta?:
+            @json_tag = "meta"
+    
+    !type get_v1_Conversations_ConversationSid_Messages_200_resp_type_body_meta:
+        url <: string?:
+            @json_tag = "url"
+            @openapi_format = "uri"

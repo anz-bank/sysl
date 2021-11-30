@@ -1,0 +1,28 @@
+# Minimum valid openapi 3 spec
+
+openapi: 3.0.0
+
+info:
+  title: Minimum API Test
+  version: 1.0.0
+
+paths:
+  /endpoint-1:
+    get:
+      responses:
+        "200":
+          description: OK
+
+components:
+  headers:
+    content-type:
+      schema:
+        type: string
+        example: application/json
+  securitySchemes:
+    BearerJWT:
+      description: |
+        Bearer token JWT
+      type: http
+      scheme: bearer
+      bearerFormat: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoSW........."

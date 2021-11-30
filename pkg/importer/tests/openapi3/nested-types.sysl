@@ -4,46 +4,51 @@
 ##                                      ##
 ##########################################
 
-TestApp "Fruit API" [package="com.example.package"]:
+TestApp "Fruit API":
+    @package = "com.example.package"
     @version = "1.0.0"
-    @description =:
-        | No description.
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type Basket:
         fruit <: Fruit?:
+            @description = "something about fruit"
             @json_tag = "fruit"
         id <: string?:
+            @description = "id of the basket"
             @json_tag = "id"
         veggies <: Veggies?:
+            @description = "something about veggies"
             @json_tag = "veggies"
-
+    
     !type Details:
         month <: string?:
+            @description = "month of the planting"
             @json_tag = "month"
+            @openapi_format = "enum"
         monthlyTotal <: int?:
             @json_tag = "monthlyTotal"
         transDet <: sequence of string?:
             @json_tag = "transDet"
-
+    
     !type Fruit:
         details <: sequence of Details?:
             @json_tag = "details"
         entity <: string?:
             @json_tag = "entity"
+            @openapi_format = "enum"
         id <: string?:
+            @description = "id of the fruit"
             @json_tag = "id"
         name <: string?:
             @json_tag = "name"
-
+    
     !type Veggies:
         details <: sequence of Details?:
             @json_tag = "details"
         entity <: string?:
             @json_tag = "entity"
+            @openapi_format = "enum"
         id <: string?:
+            @description = "id of the vegetable"
             @json_tag = "id"
         name <: string?:
             @json_tag = "name"

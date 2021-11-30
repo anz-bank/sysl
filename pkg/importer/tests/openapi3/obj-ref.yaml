@@ -1,0 +1,105 @@
+openapi: "3.0"
+info:
+  title: Simple
+paths:
+  /parameters/{param4}:
+    post:
+      parameters:
+        - $ref: "#/components/parameters/param1"
+        - $ref: "#/components/parameters/param2"
+        - $ref: "#/components/parameters/param3"
+        - $ref: "#/components/parameters/param4"
+        - name: param5
+          schema:
+            type: string
+          in: 'query'
+      responses:
+        200:
+          $ref: "#/components/responses/simple"
+        400:
+          $ref: "#/components/responses/complex"
+        500:
+          $ref: "#/components/responses/very_complex"
+  /reqbody:
+    post:
+      requestBody:
+        $ref: "#/components/requestBodies/simple"
+    get:
+      requestBody:
+        $ref: "#/components/requestBodies/complex"
+
+components:
+  parameters:
+    param1:
+      name: param1
+      in: query
+      required: true
+      schema:
+        type: string
+    param2:
+      name: param2
+      in: header
+      required: true
+      schema:
+        properties:
+          'hi':
+            type: string
+    param3:
+      name: param3
+      schema:
+        properties:
+          'hi':
+            properties:
+              'hi':
+                type: number
+      required: false
+      in: cookie
+    param4:
+      name: param4
+      schema:
+        type: string
+      in: path
+  requestBodies:
+    simple:
+      content:
+        application/json:
+          schema:
+            type: string
+    complex:
+      content:
+        application/json:
+          schema:
+            type: string
+        plain/text:
+          schema:
+            type: string
+  responses:
+    simple:
+      description: simple
+      content:
+        application/json:
+          schema:
+            type: string
+    complex:
+      description: complex
+      content:
+        application/json:
+          schema:
+            type: string
+        plain/text:
+          schema:
+            type: string
+    very_complex:
+      description: complex
+      content:
+        application/json:
+          schema:
+            type: string
+        plain/text:
+          schema:
+            type: string
+      header:
+        header:
+          schema:
+            type: string
+

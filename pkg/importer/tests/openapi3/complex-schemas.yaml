@@ -1,0 +1,111 @@
+openapi: "3.0"
+info:
+  title: Simple
+  version: 1.0.0
+components:
+  schemas:
+    object:
+      required:
+        - a
+      properties:
+        a:
+          required:
+            - b
+          properties:
+            b:
+              properties:
+                c:
+                  type: string
+        b:
+          items:
+            required:
+              - c
+            properties:
+              c:
+                type: string
+        c:
+          items:
+            type: string
+        d:
+          allOf:
+            - properties:
+                e:
+                  type: string
+        e:
+          oneOf:
+            - properties:
+                f:
+                  type: string
+            - properties:
+                g:
+                  type: string
+        f:
+          enum:
+            - a
+            - b
+    array:
+      items:
+        items:
+          items:
+            properties:
+              a:
+                type: string
+
+    enum_array:
+      items:
+        items:
+          enum:
+            - x
+            - "y"
+            - z
+
+    one_of:
+      oneOf:
+        - properties:
+            a:
+              type: string
+        - items:
+            type: string
+        - oneOf:
+            - properties:
+                b:
+                  type: string
+            - properties:
+                c:
+                  type: string
+
+    all_of:
+      allOf:
+        - properties:
+            a:
+              type: string
+        - properties:
+            b:
+              properties:
+                c:
+                  items:
+                    properties:
+                      d:
+                        type: string
+            c:
+              items:
+                items:
+                  items:
+                    type: string
+            d:
+              items:
+                items:
+                  items:
+                    required:
+                      - e
+                    properties:
+                      e:
+                        type: string
+            f:
+              allOf:
+                - properties:
+                    g:
+                      type: string
+                - properties:
+                    e:
+                      type: string

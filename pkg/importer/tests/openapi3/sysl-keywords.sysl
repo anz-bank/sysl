@@ -4,14 +4,10 @@
 ##                                      ##
 ##########################################
 
-TestApp "Fruit API" [package="com.example.package"]:
+TestApp "Fruit API":
+    @package = "com.example.package"
     @version = "1.0.0"
-    @description =:
-        | No description.
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+    
     !type SimpleObj:
         date_ <: string?:
             @json_tag = "date"

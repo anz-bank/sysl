@@ -45,8 +45,16 @@ func (i *ArraiImporter) WithImports(importPaths string) Importer {
 
 // LoadFile generates a Sysl spec be invoking the arr.ai script.
 func (i *ArraiImporter) LoadFile(path string) (string, error) {
-	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(i.asset, `--app-name`, i.appName, `--input`, path)
+	args, err := buildArraiImporterArgs(&arraiImporterArgs{
+		appName:  i.appName,
+		specPath: path,
+		pkg:      i.pkg,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	val, err := arrai.EvaluateBundle(i.asset, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`)", i.appName, path),
@@ -59,8 +67,16 @@ func (i *ArraiImporter) LoadFile(path string) (string, error) {
 
 // Load generates a Sysl spec given the content of an input file.
 func (i *ArraiImporter) Load(content string) (string, error) {
-	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(i.asset, `--app-name`, i.appName, `--spec`, content)
+	args, err := buildArraiImporterArgs(&arraiImporterArgs{
+		appName:     i.appName,
+		specContent: content,
+		pkg:         i.pkg,
+	})
+	if err != nil {
+		return "", err
+	}
+
+	val, err := arrai.EvaluateBundle(i.asset, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("AppName: %s, Content: %s", i.appName, content),
@@ -69,4 +85,38 @@ func (i *ArraiImporter) Load(content string) (string, error) {
 		}, "Executing arr.ai transform failed")
 	}
 	return val.String(), nil
+}
+
+type arraiImporterArgs struct {
+	appName, specPath, specContent, pkg string
+}
+
+func buildArraiImporterArgs(a *arraiImporterArgs) ([]string, error) {
+	// TODO: Make the appname optional
+	if a.appName == "" {
+		return nil, errors.New("application name not provided")
+	}
+
+	args := []string{"--app-name", a.appName}
+
+	if a.specContent != "" && a.specPath != "" {
+		return nil, errors.New("provide only path to spec or the spec content")
+	}
+
+	if a.specContent == "" && a.specPath == "" {
+		return nil, errors.New("spec not provided")
+	}
+
+	if a.specContent != "" {
+		args = append(args, "--spec", a.specContent)
+	}
+	if a.specPath != "" {
+		args = append(args, "--input", a.specPath)
+	}
+
+	if a.pkg != "" {
+		args = append(args, "--package", a.pkg)
+	}
+
+	return args, nil
 }

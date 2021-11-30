@@ -1,0 +1,18 @@
+openapi: "3.0.0"
+info:
+  title: ExtRef3
+  version: 1.2.3
+components:
+  schemas:
+    test1:
+      type: string
+    test2:
+      properties:
+        x:
+          type: number
+        "y":
+          properties:
+            a:
+              type: string
+            b:
+              $ref: "./external-ref-test/ext-ref-4.yaml#/components/schemas/test1"

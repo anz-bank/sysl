@@ -30,5 +30,7 @@ components:
   responses:
     500Response:
       description: Internal Server Error
-      schema:
-        $ref: "#/components/schemas/SimpleObj:WithColon"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SimpleObj:WithColon"

@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
 )
 
 // Importer is an interface implemented by all sysl importers
@@ -83,7 +82,7 @@ func Factory(path string, isDir bool, formatName string, content []byte, logger 
 	case OpenAPI3.Name:
 		logger.Debugln("Detected OpenAPI3")
 		// FIXME: revert back to the arrai importer once regression test is done.
-		return NewLegacyOpenAPIV3Importer(logger, afero.NewOsFs()), nil
+		return NewOpenAPIV3Importer(logger), nil
 	case XSD.Name:
 		logger.Debugln("Detected XSD")
 		return MakeXSDImporter(logger), nil

@@ -1,0 +1,141 @@
+# One paths only
+
+openapi: 3.0.0
+
+info:
+  title: Path API Test
+  description: Random APIs that don't make any sense apart from testing
+  version: 1.0.0
+
+paths:
+  /endpoint-1:
+    post:
+      summary: Just a post endpoint
+      description: |
+        Here's a description
+      operationId: "POST_ENDPOINT_1"
+      tags: ["Test"]
+
+      parameters:
+        - $ref: "#/components/parameters/content-type"
+        - $ref: "#/components/parameters/custom-parameter"
+        - $ref: "#/components/parameters/accept"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/req_body"
+
+      responses:
+        "200":
+          description: OK
+          headers:
+            content-type:
+              $ref: "#/components/headers/content-type"
+          content:
+            application/json:
+              examples:
+                just an example content:
+                  $ref: "#/components/examples/resp_create"
+        "401":
+          description: UNAUTHORISED
+          headers:
+            content-type:
+              $ref: "#/components/headers/content-type"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_401"
+              examples:
+                Too many attempts:
+                  $ref: "#/components/examples/error_too_many_attempts"
+
+components:
+  schemas:
+    req_body:
+      required:
+        - placeholder
+      properties:
+        placeholder:
+          type: string
+          example: "anjkdansjkdnadjkansd"
+        placeholder2:
+          type: string
+          example: "ckzlxmczklmcfa"
+    error_401:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+              example: Too many OTP attempts
+
+  headers:
+    content-type:
+      schema:
+        type: string
+        example: application/json
+    x-request-id:
+      schema:
+        type: string
+        example: 12345678-1234-1234-1234-123456789012
+    auth-id:
+      schema:
+        type: string
+        example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoSW.........
+    set-cookie:
+      schema:
+        type: string
+        example: anzssotoken=%JWT%
+  securitySchemes:
+    BearerJWT:
+      description: |
+        Bearer token JWT
+      type: http
+      scheme: bearer
+      bearerFormat: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoSW........."
+
+  parameters:
+    content-type:
+      in: header
+      name: content-type
+      required: true
+      schema:
+        type: string
+        enum:
+          [
+            "application/json",
+            "application/x-www-form-urlencoded",
+            "application/x-www-form-urlencoded; charset=utf-8",
+          ]
+    custom-parameter:
+      in: header
+      name: custom-parameter
+      required: true
+      schema:
+        type: string
+        example: hello im just a placeholder
+    accept:
+      in: header
+      name: accept
+      required: true
+      schema:
+        type: string
+        example: application/json
+
+  examples:
+    resp_create:
+      value:
+        authId: string
+
+    error_too_many_attempts:
+      value:
+        error:
+          code: "12345"
+          description: Too many attempts

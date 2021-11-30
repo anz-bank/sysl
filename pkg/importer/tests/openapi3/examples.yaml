@@ -20,8 +20,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ObjectLevelExample'
-              example: 
+                $ref: "#/components/schemas/ObjectLevelExample"
+              example:
                 id: 12
                 name: Paul Smith
         "500":
@@ -39,7 +39,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ObjectLevelExample'
+              $ref: "#/components/schemas/ObjectLevelExample"
             examples:
               Jessica:
                 value:
@@ -69,7 +69,7 @@ components:
       properties:
         response:
           type: string
-          example: "[{\"assertions\":[{\"assertionScheme\":\"test\"}]}]"
+          example: '[{"assertions":[{"assertionScheme":"test"}]}]'
         responseCode:
           type: integer
           example: 1200
@@ -105,15 +105,26 @@ components:
           format: int64
         name:
           type: string
+    ComplexExample:
+      type: string
+      example:
+        - test1:
+            test1:
+              test1: some string
+        - test2:
+            test2: another string
+    ExampleWithCRLFCharacters:
+      type: string
+      example: "for the windows users out there \r\nhello there"
 
   examples:
     resp_create_prospect:
       value:
         authId: string
         nextStages:
-            - create_prospect
+          - create_prospect
     resp_verify_pin:
       value:
         authId: string
         nextStages:
-            - verify_pin
+          - verify_pin

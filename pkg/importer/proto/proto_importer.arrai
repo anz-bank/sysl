@@ -15,7 +15,7 @@ let importDir = \appName \dir \importPaths
     importFiles(appName, files, importPaths)
 ;
 
-let import = \appName \input \importPaths
+let import = \(:appName, ...) \input \importPaths
     cond input {
         [...]: importFiles(appName, input, importPaths),
         _:

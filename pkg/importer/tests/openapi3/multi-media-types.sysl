@@ -4,28 +4,39 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple" [package="com.example.package"]:
-    @description =:
-        | No description.
-
-    /docs/{docId<:bytes}:
+TestApp "Simple":
+    @package = "com.example.package"
+    
+    /docs/{docId <: bytes}:
         GET:
-            | No description.
-            return 200 <: _docs__docId__200
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+            return 200 <: get_docs_docId__200_resp_type 
+    
     !type SimpleObj:
         name <: string?:
             @json_tag = "name"
-
-    !type _docs__docId__200:
-        SimpleObjApplicationJson <: SimpleObj [mediatype="application/json"]:
-            @json_tag = "SimpleObjApplicationJson"
-        SimpleObjApplicationProblemJson <: SimpleObj [mediatype="application/problem+json"]:
-            @json_tag = "SimpleObjApplicationProblemJson"
-        SimpleObjApplicationVndRestfulJson <: SimpleObj [mediatype="application/vnd.restful+json"]:
-            @json_tag = "SimpleObjApplicationVndRestfulJson"
-        SimpleObjTextPlain <: SimpleObj [mediatype="text/plain"]:
-            @json_tag = "SimpleObjTextPlain"
+    
+    !type get_docs_docId__200_resp_type [~GeneratedOpenAPIResponse]:
+        body <: get_docs_docId__200_resp_type_body [~body]:
+            @json_tag = "body"
+    
+    !union get_docs_docId__200_resp_type_body:
+        get_docs_docId__200_resp_type_body_application_json
+        get_docs_docId__200_resp_type_body_application_problem%2Bjson
+        get_docs_docId__200_resp_type_body_application_vnd%2Erestful%2Bjson
+        get_docs_docId__200_resp_type_body_text_plain
+    
+    !alias get_docs_docId__200_resp_type_body_application_json:
+        @mediatype = "application/json"
+        SimpleObj
+    
+    !alias get_docs_docId__200_resp_type_body_application_problem%2Bjson:
+        @mediatype = "application/problem+json"
+        SimpleObj
+    
+    !alias get_docs_docId__200_resp_type_body_application_vnd%2Erestful%2Bjson:
+        @mediatype = "application/vnd.restful+json"
+        SimpleObj
+    
+    !alias get_docs_docId__200_resp_type_body_text_plain:
+        @mediatype = "text/plain"
+        SimpleObj

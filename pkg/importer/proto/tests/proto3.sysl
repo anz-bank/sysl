@@ -25,3 +25,11 @@ proto3:
         inner_message <: sequence of Inner:
             @json_tag = "innerMessage"
             @rpcId = "2"
+    
+    !type Outer%2EInner:
+        @description =:
+            | Level 2
+        @source_path = "proto/tests/proto3.proto"
+        ival <: int:
+            @json_tag = "ival"
+            @rpcId = "1"

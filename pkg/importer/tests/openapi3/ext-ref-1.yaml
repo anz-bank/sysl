@@ -1,0 +1,33 @@
+openapi: "3.0.0"
+info:
+  title: ExtRef1
+  version: 1.2.3
+components:
+  schemas:
+    test1:
+      $ref: "./ext-ref-2.yaml#/components/schemas/test1"
+    test2:
+      properties:
+        field1:
+          $ref: "./ext-ref-2.yaml#/components/schemas/test1"
+        field2:
+          $ref: "./ext-ref-2.yaml#/components/schemas/test2"
+    test3:
+      allOf:
+        - $ref: "./ext-ref-2.yaml#/components/schemas/test2"
+        - $ref: "./ext-ref-2.yaml#/components/schemas/test3"
+    test4:
+      anyOf:
+        - $ref: "./ext-ref-2.yaml#/components/schemas/test2"
+        - $ref: "./ext-ref-2.yaml#/components/schemas/test3"
+    test5:
+      oneOf:
+        - $ref: "./ext-ref-2.yaml#/components/schemas/test2"
+        - $ref: "./ext-ref-2.yaml#/components/schemas/test3"
+    test6:
+      items:
+        $ref: "./ext-ref-2.yaml#/components/schemas/test3"
+    test7:
+      $ref: "./external-ref-test/ext-ref-4.yaml#/components/schemas/test1"
+    test8:
+      type: string

@@ -16,14 +16,37 @@ let trimPrefixWS = //re.compile(`^\s*`).sub('');
 let attrsToTagsAndAnno = \attrs
     let anno = attrs where .@ != 'patterns';
     let tags = attrs &~ anno;
+    # Ensures tags are not empty. If tags does not have 'patterns' or 'elt' is empty, then get empty set.
+    # If not, return tags itself.
+    let tags = cond tags {{'patterns': (a: (:elt))}: elt && tags};
     (:tags, :anno)
 ;
 
 let renderLongName = \name name && $`"${name}"`;
 
-let rec renderInlineAnnoValue = \v
+let rec simplifyAnnoValue = \v
     cond v {
-        (a: (:elt, ...), ...): $`[${elt >> renderInlineAnnoValue(.)::, }]`,
+        (a: (:elt, ...), ...): elt >> simplifyAnnoValue(.),
+        (:s, ...): s,
+        _: v,
+    }
+;
+
+# FIXME: sysl should be able to handle any type of annotations.
+let rec renderInlineAnnoValue = \v
+    # an annotation is complex if it is neither a string, an array of strings, or array of array of strings.
+    let isComplex = \(a: (:elt, ...), ...)
+        elt filter (.@item) {
+            (a: (:elt, ...), ...): elt filter (.@item) {
+                (a: (:elt, ...), ...): elt
+            }
+        } where .
+    ;
+    cond v {
+        (a: (:elt, ...), ...):
+            (isComplex(v) && renderInlineAnnoValue((s: $`${simplifyAnnoValue(v)}`))) ||
+            $`[${elt >> renderInlineAnnoValue(.)::, }]`
+        ,
         (:s, ...): $`"${//re.compile('((?:^|[^\\\\])(?:\\\\{2})*)"').sub(`\"`, $`${trimPrefixWS(s)}`)}"`,
         _: //error(v),
     }
@@ -39,6 +62,7 @@ let renderAnnoStmts = \anno
                             (a: (elt: _, ...), ...): ' ' ++ renderInlineAnnoValue(value),
                             (:s, ...): cond {
                                 //seq.contains('\n', s):
+                                    let s = //re.compile('\r?\n').sub('\n', s);
                                     let s = ' ' ++ //seq.trim_suffix('\n', trimPrefixWS(s));
                                     $`
                                         :
@@ -76,9 +100,9 @@ let renderTypeUsage = \type
 
     # FIXME handle precision
     let constraintStr = cond constraint {
-        [(length: ('max': maxLength, 'min': minLength))]: $`(${minLength}..${maxLength})`,
-        [(length: ('max': maxLength))]: $`(${maxLength})`,
-        [(length: ('min': minLength))]: $`(${minLength}..)`,
+        [(length: ('max': maxLength, 'min': minLength), ...)]: $`(${minLength}..${maxLength})`,
+        [(length: ('max': maxLength), ...)]: $`(${maxLength})`,
+        [(length: ('min': minLength), ...)]: $`(${minLength}..)`,
     };
 
     let bitWidth = cond constraint {
@@ -99,19 +123,34 @@ let renderRegularParam = \(:name, :type) $`${name} <: ${renderTypeUsageWithInlin
 
 let renderRegularParams = \params params && $`(${params >> renderRegularParam(.)::, :})`;
 
+let removeLengthConstraint = \type
+    cond type {
+        (constraint: [(length: _, ...c)], ...): type +> (constraint: [c]),
+        _: type,
+    }
+;
+
 let renderQueryParams = \params params &&
-    let renderParamTypeUsage = \type cond type {
-        (primitive:_, ...): renderTypeUsage(type),
-        _:
-            let isOpt = type.opt?:false;
-            let type = type +> (opt: false); # always change it to false to avoid rendering `?` in type
-            $`{${renderTypeUsage(type)}}${isOpt && '?'}`,
-    };
+    let renderParamTypeUsage = \type
+        # FIXME: sysl does not allow constraints in query parameters, remove this once it is allowed.
+        let type = removeLengthConstraint(type);
+        cond type {
+            (primitive:_, ...): renderTypeUsage(type),
+            _:
+                let isOpt = type.opt?:false;
+                let type = type +> (opt: false); # always change it to false to avoid rendering `?` in type
+                $`{${renderTypeUsage(type)}}${isOpt && '?'}`,
+        };
     $`?${params >> \(:name, :type) $`${name}=${renderParamTypeUsage(type)}`::&:}`
 ;
 
 let renderParameterizedPath = \path \urlParam
-    let renderedParamType = urlParam => \(@item: (:name, :type), ...) (@: name, @value: renderTypeUsage(type));
+    let renderedParamType = urlParam =>
+        \(@item: (:name, :type), ...)
+            # FIXME: sysl does not allow constraints in parameters, remove this once it is allowed.
+            let type = removeLengthConstraint(type);
+            (@: name, @value: renderTypeUsage(type))
+    ;
     let segments = //seq.split('/', path) >> cond inCurly(.) {
         [[_, name]]: $`{${name} <: ${renderedParamType(name rank (:.@))}}`,
         _: .,
@@ -316,7 +355,7 @@ let (:tags, :anno) = attrsToTagsAndAnno(attrs);
 
 let rec renderFieldDefinition = \(:name, :type)
     cond type {
-        (tuple: (attr_defs: fields, ...), ...): 
+        (tuple: (attr_defs: fields, ...), ...):
             $`
                 ${name} <:
                     ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
@@ -324,7 +363,7 @@ let rec renderFieldDefinition = \(:name, :type)
         (:one_of, ...):
             # TODO: Add tags/annos when Sysl supports it
             $`
-                ${name} <: 
+                ${name} <:
                     ${one_of.type >> renderFieldDefinition((name: .name, type: (.)))::\i}
             `,
         _:
@@ -341,7 +380,7 @@ let rec renderFieldDefinition = \(:name, :type)
 let renderTypeOrTable = \(:name, :type)
     cond {
         # FIXME: handle inplace type definitions on fields
-        //seq.contains('.', unescape(name)): '',
+        //seq.contains('.', name): '',
         _:
             let attrs = type.attrs?:{};
             let (:tags, :anno) = attrsToTagsAndAnno(attrs);

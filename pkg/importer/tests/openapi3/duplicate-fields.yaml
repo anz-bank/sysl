@@ -15,6 +15,7 @@ components:
         x:
           type: string
     Test2:
+      # duplicate fields will be replaced based on type order
       allOf:
         - $ref: "#/components/schemas/Test"
         - type: object

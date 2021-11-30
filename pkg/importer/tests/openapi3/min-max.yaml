@@ -1,0 +1,37 @@
+openapi: "3.0"
+info:
+  title: Simple
+components:
+  schemas:
+    type:
+      properties:
+        a:
+          type: integer
+          maximum: 100
+          minimum: 10
+        b:
+          type: integer
+          minimum: 10
+        c:
+          type: integer
+          maximum: 100
+        d:
+          type: integer
+          exclusiveMaximum: 100
+          exclusiveMinimum: 10
+        e:
+          type: integer
+          exclusiveMinimum: 10
+        f:
+          type: integer
+          exclusiveMaximum: 100
+        g:
+          type: integer
+          exclusiveMaximum: 100
+          minimum: 10
+        h:
+          type: integer
+          maximum: 100
+          exclusiveMinimum: 10
+        i:
+          type: integer

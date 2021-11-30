@@ -1,7 +1,26 @@
 let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
-let (:syslSafeName, :syslAttrs, :httpVerbs, ...) = //{./util};
+let (
+    :syslAttrs,
+    :httpVerbs,
+    :wrappedResponseTypeTag,
+    :resolveRef,
+    :resolveToObj,
+    :deepResolveRef,
+    :baseDir,
+    :cleanPath,
+    :joinPath,
+    :extRefToName,
+    :isURLRef,
+    :isLocalRef,
+    :isExternalPathRef,
+    :parseSpecWithRoot,
+    :extPathAttr,
+    :movedToRef,
+    ...
+) = //{./util};
+let (:syslSafeName, ...) = //{/pkg/importer/utils};
 
-let schemaRef = \typeName {'$ref': (s: $`#/components/schemas/${typeName}`)};
+let schemaRef = \typeName {'$ref': (s: $`#/components/schemas/${typeName}`), movedToRef: true};
 let singleSyslStrTag = \tag {'patterns': (a: (elt: [(s: tag)]))};
 let schemaSyslTag = \tag {syslAttrs: singleSyslStrTag(tag)};
 let isNativeType = \type type <: {'boolean', 'integer', 'number', 'string'};
@@ -39,30 +58,80 @@ let simplifiedParams =
         }
 ;
 
+let rec isComplexSchema = \schema
+    cond schema {
+        {}: false,
+        _:
+            schema('properties')?:false         ||
 
-# FIXME: handle external references
+            # FIXME: currently enum is just mapped into string, uncomment this when there's a proper mapping for it.
+            # schema('enum')?:false               ||
+
+            schema('oneOf')?:false              ||
+            schema('allOf')?:false              ||
+            schema('anyOf')?:false              ||
+            schema('items', 'items')?:false     ||
+            isComplexSchema(schema('items')?:{})
+    }
+;
+
+let isUnmappable = \schema
+    !isComplexSchema(schema) && cond schema {
+        {'$ref': _, ...}: false,
+        {'enum': _, ...}: false,
+        {'items': _, ...}: false,
+        {'type': (s: type), ...}: type !<: {'number', 'bool', 'boolean', 'int', 'integer', 'string', 'str'},
+        _: true,
+    }
+;
+
+let contentIsComplex = \content
+    content count > 1 || ((content count = 1) && isComplexSchema((content single).@value('schema')?:{}))
+;
+
+let isComplexResponse = \response
+    cond response {
+        {'$ref': _, ...}: false,
+        {'headers': _, ...}: true,
+        {'content': content, ...}: contentIsComplex(content),
+    }
+;
+
+let schemaOrRef = \t
+    cond t {
+        {'schema': schema, ...}: schema,
+        {'$ref': ref, ...}: {'$ref': ref},
+    }
+;
+
+# FIXME: clean up components reqbody and components responses
 
 # simplifiedInplaceTypeDefinitions takes in an openapi spec and tries to find all the inplace type definitions and move
 # them into #/components/schemas in the openapi spec.
-let simplifiedInplaceTypeDefinitions = \oapi
+let simplifiedInplaceTypeDefinitions = \conf \oapi
     let empty = (schemas: {}, paths: {});
+    let mergePaths = \prevPaths \newPaths
+        let joined = (prevPaths => (old: .@value, name: .@)) <&> (newPaths => (new: .@value, name: .@));
+        prevPaths +> newPaths +> (joined => (@: .name, @value: .old +> .new))
+    ;
     let contentToSchemas = \content \typeName
         let withExamples = \v
             let examples = v('example')?:{} || v('examples')?:{};
             examples && {'example': examples}
         ;
-        cond content {
+        cond (content count) {
             # single media type becomes one type
-            {(@: _, @value: {'schema': schema, ...})}: {
-                typeName: schema +> withExamples((content single).@value)
-            },
+            (1):
+                let (@: mediatype, @value: config) = content single;
+                {typeName: schemaOrRef(config) +> withExamples(config) +> {syslAttrs: {'mediatype': (s: mediatype)}}}
+            ,
 
             # multiple media types become a union type and each media types become its own type
             _:
                 # turn every mediatype into its own type
                 let typesFromFields = content => (
                     @: syslSafeName($`${typeName}_${.@}`),
-                    @value: .@value('schema')?:{} +>
+                    @value: schemaOrRef(.@value) +>
                         {syslAttrs: {'mediatype': (s: .@)}} +>
                         withExamples(.@value)
                     ,
@@ -73,9 +142,6 @@ let simplifiedInplaceTypeDefinitions = \oapi
                 };
                 typesFromFields | oneOf
         }
-    ;
-    let contentIsComplex = \content
-        content count > 1 || ((content count = 1) && !isNativeType((content single).@value('schema', 'type')?.s:{}))
     ;
 
     # TODO: remove this once sysl support types in endpoints
@@ -96,10 +162,9 @@ let simplifiedInplaceTypeDefinitions = \oapi
                             contentIsComplex(content):
                                 let epName = //seq.trim_prefix('/', epName);
                                 let typeName = syslSafeName($`${method}_${epName}_req_body_type`);
-                                let newMediaType = content count = 1 && (content single).@;
                                 let newEp = ep +> (
                                     config+>: {
-                                        'requestBody'+>: {'content': {newMediaType: {'schema': schemaRef(typeName)}}}
+                                        'requestBody'+>: {'content': {'': {'schema': schemaRef(typeName)}}}
                                     }
                                 );
                                 let newSchemas = contentToSchemas(content, typeName);
@@ -112,12 +177,44 @@ let simplifiedInplaceTypeDefinitions = \oapi
                 };
                 acc +> (schemas|: schemas, paths|: paths)
         ;
-        let (:schemas, :paths) = reduce(flattened  orderby ., newSchemasAndParamsFromReqBody, empty);
+        let (:schemas, :paths) = reduce(flattened orderby ., newSchemasAndParamsFromReqBody, empty);
         let paths = paths nest ~|epName|methods => (@: .epName, @value: .methods => (@: .method, @value: .config));
         oapi +> {
             'components'+>: {'schemas'+>: schemas},
             'paths'+>: paths
         }
+    ;
+
+    let typesFromResponse = \typeName \response
+        let body = response('content')?:{};
+        let headers = response('headers')?:{};
+        let headerTypeName = headers && $`${typeName}_header`;
+        let headerSchema = headers && {
+            headerTypeName: {
+                'type': (s: 'object'),
+                'properties':
+                    headers >>
+                        schemaOrRef(.) +>
+                            let desc = .('description')?:{}; desc && {syslAttrs: {'description': desc}}
+                ,
+            }
+        };
+        let bodyTypeName = body && $`${typeName}_body`;
+        let bodySchema = body && contentToSchemas(body, bodyTypeName);
+        let responseSchema =
+            let header = headerSchema && {
+                'header': schemaRef(headerTypeName) +> schemaSyslTag('header')
+            };
+            let body = bodySchema && {'body': schemaRef(bodyTypeName) +> schemaSyslTag('body')};
+            {
+                typeName: {
+                    'type': (s: 'object'),
+                    'required': (a: [(s: 'header'), (s: 'body')]),
+                    'properties': header +> body,
+                } +> schemaSyslTag(wrappedResponseTypeTag)
+            }
+        ;
+        headerSchema | bodySchema | responseSchema
     ;
 
     # TODO: remove this once sysl support types in endpoints
@@ -141,37 +238,18 @@ let simplifiedInplaceTypeDefinitions = \oapi
                     (method <: httpVerbs):
                         let epName = //seq.trim_prefix('/', epName);
                         let typeName = syslSafeName($`${method}_${epName}_${status}_resp_type`);
-                        let body = response('content')?:{};
-                        let headers = response('headers')?:{};
 
                         cond {
                             # turn complex response into its own type
-                            (headers || contentIsComplex(body)):
-                                let headerTypeName = headers && $`${typeName}_header`;
-                                let headerSchema = headers && {
-                                    headerTypeName: {
-                                        'type': (s: 'object'),
-                                        'properties': headers >>
-                                            .('schema')?:{} +>
-                                            let desc = .('description')?:{};
-                                            desc && {syslAttrs: {'description': desc}}
-                                        ,
-                                    }
-                                };
-                                let bodyTypeName = body && $`${typeName}_body`;
-                                let bodySchema = body && contentToSchemas(body, bodyTypeName);
-                                let responseSchema =
-                                    let header = headerSchema && {
-                                        'header': schemaRef(headerTypeName) +> schemaSyslTag('header')
-                                    };
-                                    let body = bodySchema && {'body': schemaRef(bodyTypeName) +> schemaSyslTag('body')};
-                                    {typeName: {'type': (s: 'object'),'properties': header +> body}}
-                                ;
-                                # move the new type to content.
-                                let newEp = ep +> (
-                                    response+>: {'header': {}, 'content': {'': {'schema': schemaRef(typeName)}}}
-                                );
-                                (paths: {newEp}, schemas: headerSchema | bodySchema | responseSchema)
+                            isComplexResponse(response):
+                                (
+                                    paths: {
+                                        ep +> (
+                                            response+>: {'header': {}, 'content': {'': {'schema': schemaRef(typeName)}}}
+                                        )
+                                    },
+                                    schemas: typesFromResponse(typeName, response),
+                                )
                             ,
                             _: default,
                         }
@@ -193,11 +271,12 @@ let simplifiedInplaceTypeDefinitions = \oapi
             ),
         );
 
-        oapi +> {'components'+>: {'schemas'+>: schemas}, 'paths'+>: paths}
+        oapi +> {'components'+>: {'schemas'+>: schemas}, 'paths': mergePaths(oapi('paths')?:{}, paths)}
     ;
 
     # TODO: remove this once sysl support types in endpoints
     let simplifiedTypesFromParameters = \oapi
+        let resolveToObj = resolveToObj(oapi);
         # each status and response is flattened to avoid deeply nested reduce functions.
         let flattened = (
             (
@@ -213,25 +292,22 @@ let simplifiedInplaceTypeDefinitions = \oapi
             \acc \ep
                 let (:epName, :method, :config, :index, :param) = ep;
                 let default = (paths: {ep});
-
                 let (?:paths:{}, ?:schemas:{}) =
-                    let typeName = syslSafeName($`${method}_${//seq.trim_prefix('/', epName)}_${param('name').s}`);
                     let newEpWithSchema = \schema
+                        let typeName = syslSafeName($`${method}_${//seq.trim_prefix('/', epName)}_${param('name').s}`);
                         (
                             paths: {ep +> (param+>: {'schema': schemaRef(typeName)})},
                             schemas: {typeName: schema},
                         )
                     ;
-                    cond param('schema')?:{} {
-                        {'items': items, ...}: newEpWithSchema({'type': (s: 'array'), 'items': items}),
-                        {'properties': properties, ...}: newEpWithSchema({
-                            'type': (s: 'object'),
-                            'properties': properties,
-                        }),
-                        {'oneOf': oneOf, ...}: newEpWithSchema({'oneOf': oneOf}),
-                        {'allOf': allOf, ...}: newEpWithSchema({'allOf': allOf}),
-                        _: default,
+                    let schema = param('schema')?:{};
+                    let isComplex = cond param('in')?.s:'' {
+                        # type in query parameters must be native data type or just a ref
+                        'query': !(isNativeType(schema('type')?.s?:'') || schema('$ref')?:false),
+                        _: isComplexSchema(schema),
                     };
+                    (isComplex && newEpWithSchema(schema)) || default
+                ;
                 acc +> (schemas|: schemas, paths|: paths)
         ;
 
@@ -246,38 +322,301 @@ let simplifiedInplaceTypeDefinitions = \oapi
                 },
             ),
         );
-        oapi +> {'components'+>: {'schemas'+>: schemas}, 'paths'+>: paths}
+        oapi +> {'components'+>: {'schemas'+>: schemas}, 'paths': mergePaths(oapi('paths')?:{}, paths)}
     ;
 
-    let flattenArrays = \oapi
-        let schemas = oapi('components', 'schemas')?:{};
-        let divideComplexArrays =
-            \acc \schema
-                let (@: name, @value: type) = schema;
-                # complex array is an array with inline object definitions.
-                cond type {
-                    {'type': (s: 'array'), 'items': {'properties': _, ...}, ...}:
-                        let objName = syslSafeName($`${name}_obj`);
-                        acc +> {
-                            name: type +> {'items': schemaRef(objName)},
-                            objName: type('items'),
+    let simplifiedComponentsOnLocation = \collect \simplify \location \oapi
+        let resolveToObj = resolveToObj(oapi);
+        let collected = reduce(
+            oapi('components', location)?:{} orderby .,
+            \acc \(@: name, @value: obj) collect(acc, name, resolveToObj(obj)) || acc,
+            (),
+        );
+
+        simplify(oapi, collected)
+    ;
+
+    let simplifiedComponentsParameters = simplifiedComponentsOnLocation(
+        \acc \name \param
+            let schema = param('schema')?:{};
+            isComplexSchema(schema) &&
+                let safeName = syslSafeName($`${name}_param`);
+                acc +> (
+                    schemas +>: {safeName: param('schema')},
+                    parameters +>: {name: param +> {'schema': schemaRef(safeName)}},
+                )
+        ,
+        \oapi \(?:schemas:{}, ?:parameters:{})
+            oapi +> {'components'+>: {'schemas'+>: schemas, 'parameters'+>: parameters}}
+        ,
+        'parameters',
+    );
+
+
+    let simplifiedComponentsResponses = simplifiedComponentsOnLocation(
+        \acc \name \response
+            isComplexResponse(response) &&
+                let typeName = syslSafeName($`${name}_response`);
+                acc +> (
+                    schemas +>: typesFromResponse(typeName, response),
+                    responses +>: {name: response +> {'header': {}, 'content': {'': {'schema': schemaRef(typeName)}}}},
+                )
+        ,
+        \oapi \(?:schemas:{}, ?:responses:{})
+            oapi +> {'components'+>: {'schemas'+>: schemas, 'responses'+>: responses}}
+        ,
+        'responses',
+    );
+
+    let simplifiedComponentsReqBody = simplifiedComponentsOnLocation(
+        \acc \name \reqBody
+            let content = reqBody('content')?:{};
+            contentIsComplex(content) &&
+                let typeName = syslSafeName($`${name}_req_body`);
+                acc +> (
+                    schemas +>: contentToSchemas(content, typeName),
+                    requestBodies +>: {
+                        name: reqBody +> {
+                            'content': {'': {'schema': schemaRef(typeName)}},
+                        }
+                    },
+                )
+        ,
+        \oapi \(?:schemas:{}, ?:requestBodies:{})
+            oapi +> {'components'+>: {'schemas'+>: schemas, 'requestBodies'+>: requestBodies}}
+        ,
+        'requestBodies',
+    );
+
+    let localiseRefs = \(?:filepath:'', ?:root:'', ...) \oapi
+        # FIXME: uncomment this when importing from a sysl spec is fixed. Currently, importing from sysl spec would  not
+        # provide the filepath.
+        # if filepath and root isn't defined, don't allow localiseRef.
+        # (filepath = '' && root = '' && //log.print('root and filepath not provided, external references not handled') && oapi) ||
+        (filepath = '' && root = '' && oapi) ||
+        let parseSpec = parseSpecWithRoot(root);
+        let rec resolver = (
+            resolveObj: \acc \obj
+                let (?:visited:{}, ?:types:{}, ?:filepath:'', ?:outsideMainSpec:'', ?:oapi:{}, ...) = acc;
+                let (types?:newTypes:{}, visited?:newVisited:{}, ...) = cond obj {
+                    {'properties': props, ...}: resolver.resolveObjs(acc, (props => .@value) orderby .),
+                    {'allOf': (:a), ...}:       resolver.resolveObjs(acc, a),
+                    {'oneOf': (:a), ...}:       resolver.resolveObjs(acc, a),
+                    {'anyOf': (:a), ...}:       resolver.resolveObjs(acc, a),
+                    {'items': item, ...}:       resolver.resolveObj(acc, item),
+                    {'$ref': (s: ref), ...}:
+                        cond {
+                            isURLRef(ref): //error($`url reference not supported: ${ref}`),
+
+                            isExternalPathRef(ref):
+                                let [refPath, localisedRef] = //seq.split('#', ref);
+                                let filepath = joinPath(baseDir(filepath), refPath);
+                                let localisedRef = $`#${localisedRef}`;
+                                let node = (:filepath, ref: localisedRef);
+                                cond {
+                                    (node <: visited): acc,
+                                    _:
+                                        let oapi = parseSpec(filepath);
+                                        let referencedObj = resolveRef((:root, :oapi), localisedRef);
+                                        resolver.resolveObj(
+                                            acc +> (
+                                                :filepath,
+                                                outsideMainSpec: true,
+                                                types +>: {extRefToName(filepath, localisedRef): referencedObj +> {extPathAttr: filepath}},
+                                                visited |: {node},
+                                                :oapi,
+                                            ),
+                                            referencedObj,
+                                        )
+                                }
+                            ,
+
+                            isLocalRef(ref):
+                                let node = (:filepath, :ref);
+                                cond {
+                                    outsideMainSpec && (node !<: visited):
+                                        let referencedObj = resolveRef((:root, :oapi), ref);
+                                        resolver.resolveObj(
+                                            acc +> (
+                                                :filepath,
+                                                outsideMainSpec: true,
+                                                types +>: {extRefToName(filepath, ref): referencedObj +> {extPathAttr: filepath}},
+                                                visited |: {node},
+                                                :oapi,
+                                            ),
+                                            referencedObj,
+                                        )
+                                    ,
+                                    _: acc,
+                                },
+
+                            _: //error($`unknown ref ${ref}`),
                         },
-                    _: acc +> {schema},
-                }
-        ;
-        let newSchemas = reduce(schemas orderby ., divideComplexArrays, {});
-        oapi +> {'components'+>: {'schemas': newSchemas}}
+                    _: acc,
+                };
+
+                # collect all visited nodes and types while rolling back to current file and oapi spec.
+                acc +> (types +>: newTypes, visited |: newVisited)
+            ,
+
+            resolveObjs: \acc \objs reduce(objs, resolver.resolveObj, acc),
+
+            localisedRefs: \schema resolver.resolveObjs((:filepath), (schema => .@value) orderby .).types?:{},
+        );
+
+        oapi +> {'components' +>: {'schemas' +>: resolver.localisedRefs(oapi('components', 'schemas')?:{})}}
     ;
 
+    let flattenComplexSchemas = \oapi
+        let rec flattener = (
+            # finds the closest complex schemas from a type this function returns the closest complex schemas from a
+            # schema and the modified schema so that it refers to the closest complex schemas through references.
+            collectClosestComplexSchemas: \(:name, ?:isDefined:true) \type
+                cond type {
+                    # when an object is encountered, it checks for complex schemas in its subproperties.
+                    {'properties': properties, ...config}:
+                        let (:newProps, :newTypes) = reduce(
+                            properties orderby .,
+                            \acc \(@: subname, @value: property)
+                                let conf = (name: $`${name}_${subname}`, isDefined: false);
+                                let (modifiedSchema: newProp, ?:newTypes:{}) =
+                                    cond property {
+                                        # FIXME: uncomment this when nested tuples handler is implemented in sysl-go.
+                                        # For now, all nested tuples are flattened.
+                                        # if a sub-property is an object, instead of moving the entire object into a new
+                                        # type, just keep exploring the sub properties to bring out the closest complex
+                                        # schema. This is done so that every nested object does not become its own type.
+                                        # {'properties': subProperties, ...subConfig}:
+                                        #     let (
+                                        #         modifiedSchema: modifiedSubProps,
+                                        #         ?:newTypes:{},
+                                        #     ) = flattener.divideWithPrefix(conf, subProperties);
+
+                                        #     (
+                                        #         modifiedSchema: {'properties': modifiedSubProps} +> subConfig,
+                                        #         :newTypes,
+                                        #     )
+                                        # ,
+
+                                        # arrays and allOf are special and they do not need to be defined as their own
+                                        # type. Instead it should just change the schema. Any complex schema nested
+                                        # within arrays and allOf will be moved into their own type while still
+                                        # preserving arrays and allOf at this level.
+                                        {'items': _, ...}: flattener.collectClosestComplexSchemas(conf, property),
+                                        {'allOf': _, ...}: flattener.collectClosestComplexSchemas(conf, property),
+
+                                        # any other type will just be returned, unless they are complex schemas. They
+                                        # will then be defined as their own type.
+                                        _: cond {
+                                            isComplexSchema(property) || isUnmappable(property):
+                                                let prefix = conf.name;
+                                                (modifiedSchema: schemaRef(prefix), newTypes: {prefix: property}),
+                                            _: (modifiedSchema: property),
+                                        },
+                                    };
+                                acc +> (newProps +>: {subname: newProp}, newTypes +>: newTypes),
+                            (),
+                        );
+
+                        # modified all the properties while preserving any config and also return the newly defined
+                        # types.
+                        (modifiedSchema: config +> {'properties': newProps}, :newTypes)
+                    ,
+
+                    # complex schemas of arrays will only be moved if the item of the array is a complex schema or
+                    # another array of any other items.
+                    {'items': items, ...config}:
+                        cond {
+                            isComplexSchema(items) || items('items')?:false || isUnmappable(items):
+                                let ref = (isDefined && $`${name}_obj`) || name;
+                                (modifiedSchema: config +> {'items': schemaRef(ref)}, newTypes: {ref: items}),
+                            _: (modifiedSchema: type),
+                        }
+                    ,
+
+                    # to avoid redefining every complex anonymous type definitions inside allOf to be redefined, the
+                    # types are instead explored further to find the next closest complex schemas.
+                    {'allOf': (a: allOf), ...subConfig}:
+                        flattener.handleArrayTypes(
+                            \name \subtype flattener.collectClosestComplexSchemas((:name, isDefined: false), subtype),
+                            name, 'allOf', allOf, subConfig
+                        )
+                    ,
+
+                    # any complex schemas in anyOf and oneOf can just be redefined as their own type.
+                    {'anyOf': (a: anyOf), ...subConfig}:
+                        flattener.handleNonAllOfArrayTypes(name, 'anyOf', anyOf, subConfig),
+                    {'oneOf': (a: oneOf), ...subConfig}:
+                        flattener.handleNonAllOfArrayTypes(name, 'oneOf', oneOf, subConfig),
+
+                    # if type is not complex, return itself.
+                    _: (modifiedSchema: type),
+                }
+            ,
+
+            handleArrayTypes: \subtypeHandler \name \typeKind \types \subConfig
+                let types = types >>> \i \type subtypeHandler($`${name}_${i}`, type);
+                let (:modifiedSchema, ?:newTypes:{}) = reduce(
+                    types,
+                    \acc \(:modifiedSchema, ?:newTypes:{}) acc +> (
+                        modifiedSchema ++: [modifiedSchema],
+                        newTypes       +>: newTypes,
+                    ),
+                    (modifiedSchema: []),
+                );
+                (modifiedSchema: {typeKind: (a: modifiedSchema)} +> subConfig, :newTypes)
+            ,
+
+            # FIXME: function currying doesn't work in a mutual recursive tuple
+            handleNonAllOfArrayTypes: \name \typeKind \types \subConfig
+                flattener.handleArrayTypes(
+                    \name \type
+                        (isComplexSchema(type) && (modifiedSchema: schemaRef(name), newTypes: {name: type})) ||
+                        (modifiedSchema: type)
+                    , name, typeKind, types, subConfig,
+                )
+            ,
+
+            # divide modified schema and any new types that has to be redefined. New types will have the prefix of
+            # the provided prefix and the name of the schema.
+            divideWithPrefix: \(name: prefix, ?:isDefined:true) \schemas
+                reduce(
+                    schemas orderby .,
+                    \acc \(@: name, @value: type)
+                        let (:modifiedSchema, ?:newTypes:{}) = flattener.collectClosestComplexSchemas(
+                            (name: (prefix && $`${prefix}_${name}`) || name, :isDefined),
+                            type,
+                        );
+                        acc +> (modifiedSchema +>: {name: modifiedSchema}, newTypes +>: newTypes)
+                    ,
+                    (modifiedSchema: {}),
+                )
+            ,
+
+            # flatten all the modified schemas and the newly redefined types into one dictionary
+            flatten: \schemas
+                let (:modifiedSchema, ?:newTypes:{}) = flattener.divideWithPrefix((name: ''), schemas);
+
+                # if the newly defined types still have complex schemas in it, redefined them. Do it until there are
+                # no more types that need to be redefined.
+                modifiedSchema +> (newTypes && flattener.flatten(newTypes))
+            ,
+        );
+        oapi +> {'components' +>: {'schemas' +>: flattener.flatten(oapi('components', 'schemas')?:{})}}
+    ;
     oapi
         -> simplifiedTypeDefsInRequestBody(.)
         -> simplifiedTypesFromResponses(.)
         -> simplifiedTypesFromParameters(.)
-        -> flattenArrays(.)
+        -> simplifiedComponentsParameters(.)
+        -> simplifiedComponentsResponses(.)
+        -> simplifiedComponentsReqBody(.)
+        -> localiseRefs(conf, .)
+        -> flattenComplexSchemas(.)
 ;
 
 # this function will transform the openapi spec into its simplified form.
-\oapi
+\conf \oapi
     oapi
         -> simplifiedParams(.)
-        -> simplifiedInplaceTypeDefinitions(.)
+        -> simplifiedInplaceTypeDefinitions(conf, .)

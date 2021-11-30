@@ -168,7 +168,7 @@ Types:
         ENUM_3 : 3
     
     !table Table [~tag]:
-        decimal_with_precision <: decimal
+        decimal_with_precision <: decimal(5)
         inplace <: inplace
         nativeTypeField <: string
         optional <: string?

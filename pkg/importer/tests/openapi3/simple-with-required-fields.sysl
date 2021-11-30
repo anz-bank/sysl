@@ -4,13 +4,9 @@
 ##                                      ##
 ##########################################
 
-TestApp "Simple" [package="com.example.package"]:
-    @description =:
-        | No description.
-
-    #---------------------------------------------------------------------------
-    # definitions
-
+TestApp "Simple":
+    @package = "com.example.package"
+    
     !type Goat:
         id <: string:
             @json_tag = "id"
