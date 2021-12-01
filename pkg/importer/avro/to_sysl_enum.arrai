@@ -5,14 +5,14 @@ let transformer = \enumItem $`
     !enum ${util.syslTypeNameWithIdentifierCheck(enumItem('name').s)}${
         let annotations = util.prettyAnnotations(
                 [util.nameAnnotation(enumItem, true)] ++ (['namespace', 'default', 'description'] >> util.annotation(enumItem, .)));
-        cond {annotations: ' ' + $`${annotations}`}
+        cond {annotations: ' ' ++ $`${annotations}`}
     }:
         ${enumItem('symbols').a >>> \i \(s: item)  $`${item}: ${i}`::\i}
 
     ${enumItem('aliases')?.a:[] >> $`
         !alias ${util.syslTypeNameWithIdentifierCheck(.s)}${
             let annotations = util.prettyAnnotations([util.nameAnnotation(., true)]);
-            cond {annotations: ' ' + $`${annotations}`}
+            cond {annotations: ' ' ++ $`${annotations}`}
         }:
             ${util.syslTypeNameWithIdentifierCheck(enumItem('name').s)}
     `::\n\n}

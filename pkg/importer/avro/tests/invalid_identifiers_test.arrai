@@ -1,0 +1,7 @@
+let import = //{/pkg/importer/avro/transformer};
+
+let schema = //[//encoding.bytes]{./invalid_identifiers.avsc};
+
+(
+    import: import(schema, "TestApp", "com.example.package") = $`${//[//encoding.bytes]{./invalid_identifiers.sysl}}`
+)

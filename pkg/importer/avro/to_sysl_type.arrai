@@ -7,7 +7,7 @@ let buildTypeAnnotation = \type
         (a: typeArray):
             let types = (typeArray >> util.syslTypeNameTuple(.)) >> .collectionType;
             cond types {
-                ['null', ...]: 
+                ['null', ...]:
                     # Types like ['null', 'string', 'int'].
                     cond {types count > 2: (name: 'union', value: types),},
                 _: (name: 'union', value: types), # Types like ['string', 'int32', 'null'] or ['string', 'null'].
@@ -35,7 +35,7 @@ let buildLogicalTypeAnnotation = \type
 
 let buildAttrAnnotations = \type
     buildLogicalTypeAnnotation(type)
-    ++ [buildTypeAnnotation(type('type')), util.defaultVal(type)] 
+    ++ [buildTypeAnnotation(type('type')), util.defaultVal(type)]
     ++ (['description', 'order'] >> util.annotation(type, .))
     ++ [util.nameAnnotation(type, false)]
 ;
@@ -59,29 +59,29 @@ let printMapType = \record
 let transformer = \record
     # Display map item.
     $`
-        ${(record('isMap')?:()).s?:{} = 'true' && (printMapType(record) + '\n')}
+        ${(record('isMap')?:()).s?:{} = 'true' && (printMapType(record) ++ '\n')}
         ${
             cond record {
                 {'type': (s: 'record'), ...}:
                     $`
                         !type ${util.syslTypeNameWithIdentifierCheck(record('name').s)}${
                             let annotations = util.prettyAnnotations([util.nameAnnotation(record, true)] ++ (['namespace', 'description'] >> util.annotation(record, .)));
-                            cond {annotations: ' ' + $`${annotations}`}
+                            cond {annotations: ' ' ++ $`${annotations}`}
                         }:
                             ${ # List fields.
-                                let fields = record('fields')?.a:[]; 
+                                let fields = record('fields')?.a:[];
                                 fields >> \field $`
                                     ${util.resolveValidIdentifier(field('name').s)} <: ${util.transformType(field('type'))} ${
                                         util.prettyAnnotations(buildAttrAnnotations(field))
                                     }${
                                         let aliases = field('aliases')?.a:[];
                                         cond {
-                                            aliases: '\n' + $`
+                                            aliases: '\n' ++ $`
                                                 ${aliases >> \alias $`
                                                     ${util.resolveValidIdentifier(alias.s)} <: ${util.transformType(field('type'))} ${
-                                                        let aliasAnnotaions = 
-                                                            util.prettyAnnotations(buildAttrAnnotations(field) 
-                                                                + [(name: 'alias_of', value: field('name').s), 
+                                                        let aliasAnnotaions =
+                                                            util.prettyAnnotations(buildAttrAnnotations(field)
+                                                                ++ [(name: 'alias_of', value: field('name').s),
                                                                     cond {
                                                                         !util.isValidIdentifier(alias.s):
                                                                             (name: 'name', value: alias.s),
@@ -91,21 +91,21 @@ let transformer = \record
                                                     }
                                                 `::\n}
                                             `,
-                                        }                                            
+                                        }
                                     }
                                 `::\n}
                         ${ # List records's aliases.
                             let aliases = record('aliases')?.a:[];
                             cond {
-                                aliases: '\n' + $`
+                                aliases: '\n' ++ $`
                                     ${aliases >> \alias $`
                                         !alias ${util.syslTypeNameWithIdentifierCheck(alias.s)}${
                                             let annotations = util.prettyAnnotations([util.nameAnnotation(alias, true)]);
-                                            cond {annotations: ' ' + $`${annotations}`}
+                                            cond {annotations: ' ' ++ $`${annotations}`}
                                         }:
                                             ${util.syslTypeNameWithIdentifierCheck(record('name').s)}
                                     `::\n\n}
-                                ` + '\n',
+                                ` ++ '\n',
                             }
                         }
                     `

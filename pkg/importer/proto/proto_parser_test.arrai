@@ -2,7 +2,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
 
 (
     constant: (
-        string: 
+        string:
             let constant = (strLit: ('': [153\'"', 154\'test', 231\'"']));
             let expected = (s: "test");
             let actual = evalConstant(constant);
@@ -51,7 +51,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
         ),
 
         imports: (
-            single: 
+            single:
                 let file = parseFile(`syntax = "proto3"; import "other.proto";`);
                 let expected = {'other.proto': ()};
                 let actual = file.imports;
@@ -65,13 +65,13 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
         ),
 
         options: (
-            single: 
+            single:
                 let file = parseFile(`syntax = "proto3"; option java_package = "com.example.foo";`);
                 let expected = {'java_package': (s: 'com.example.foo')};
                 let actual = file.options;
                 //test.assert.equal(expected, actual),
 
-            full: 
+            full:
                 let file = parseFile(`syntax = "proto3"; option (foo.java_package).bar = "com.example.foo"; option (foo.java_package).baz = "true";`);
                 let expected = {'(foo.java_package).bar': (s: 'com.example.foo'), '(foo.java_package).baz': (s: 'true')};
                 let actual = file.options;
@@ -80,7 +80,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
         ),
 
         enum: (
-            single: 
+            single:
                 let file = parseFile(`syntax = "proto3"; enum something { option java_package = "com.example.foo"; }`);
                 let expected = {'something': (options: {"java_package": (s: "com.example.foo")})};
                 let actual = file.enums;
@@ -98,7 +98,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                 let file = parseFile(`syntax = "proto3"; message Outer { option (my_option).a = true; message Inner { foo.bar foobar = 3; int64 ival = 1; } }`);
                 let expected = {
                         "Outer": (messages: {"Inner": (fields: {"ival":( type: (name: "int64"), value: (d: 1)), "foobar": (type: (name: "bar", package: "foo"), value: (d: 3))})}, options: {"(my_option).a": (b: true)})
-                    };                
+                    };
                 let actual = file.messages;
                 //test.assert.equal(expected, actual),
         ),
@@ -115,7 +115,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                     )
                                 }
                             )
-                    };      
+                    };
                 let actual = file.services;
                 //test.assert.equal(expected, actual),
             rpcWithOptions:
@@ -133,13 +133,13 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                     )
                                 }
                            )
-                    };      
+                    };
                 let actual = file.services;
                 //test.assert.equal(expected, actual),
         ),
         file: (
             proto2:
-                let actual = parseFile(//os.file('pkg/importer/proto/tests/proto2.proto'));
+                let actual = parseFile(//[//encoding.bytes]{/pkg/importer/proto/tests/proto2.proto});
                 let expected =  (
                                     enums: {
                                         'EnumAllowingAlias': (
@@ -176,7 +176,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                 );
                 //test.assert.equal(expected, actual),
             proto3:
-                let actual = parseFile(//os.file('pkg/importer/proto/tests/proto3.proto'));
+                let actual = parseFile(//[//encoding.bytes]{/pkg/importer/proto/tests/proto3.proto});
                 let expected =  (
                                     enums: {
                                         'EnumAllowingAlias': (

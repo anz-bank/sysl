@@ -9,18 +9,17 @@ let transformer = \aliasItem
                 let annotations = util.prettyAnnotations([
                     (name: '~fixed'), (name: 'fixed_size', value: aliasItem('size')),
                     util.annotation(aliasItem, 'namespace'), util.nameAnnotation(aliasItem, true)]);
-                cond {annotations: ' ' + $`${annotations}`}
+                cond {annotations: ' ' ++ $`${annotations}`}
             }:
                 bytes
             ${
                 let aliases = aliasItem('aliases')? .a:[];
                 cond {
-                    aliases count > 0: $`
-                        
+                    aliases count > 0: '\n' ++ $`
                         ${aliases >> \alias $`
                             !alias ${util.syslTypeNameWithIdentifierCheck(alias.s)}${
                                 let annotations = util.prettyAnnotations([util.nameAnnotation(alias, true)]);
-                                cond {annotations: ' ' + $`${annotations}`}
+                                cond {annotations: ' ' ++ $`${annotations}`}
                             }:
                                 ${util.syslTypeNameWithIdentifierCheck(name)}
                         `::\n\n}
