@@ -1,0 +1,123 @@
+openapi: "3.0"
+info:
+  title: Extensions
+  description: "this is a test for OpenAPI3 extensions"
+  x-description: "this should be retained too"
+  x-app-anno: "this is app level annotation"
+  x-package: "second package data"
+paths:
+  /path/{param1}:
+    x-path-anno: "this is a path level annotation"
+    get:
+      x-op-anno: "this is operation level annotation"
+      parameters:
+        - name: param1
+          in: path
+          x-param1-anno: "this should be ignored in the import"
+          schema:
+            type: string
+        - name: param2
+          in: query
+          x-param2-anno: "this should be ignored in the import"
+          schema:
+            type: string
+        - name: param3
+          in: header
+          schema:
+            type: string
+          required: true
+          x-param3-anno: "this is anno for param3"
+        - name: param4
+          in: cookie
+          schema:
+            type: string
+          required: true
+          x-param3-anno: "this is anno for param4"
+      responses:
+        "200":
+          content:
+            plain/text:
+              schema:
+                type: string
+          description: OK
+          x-get-200-resp: "this is anno for get 200 response"
+        "300":
+          content:
+            plain/text:
+              schema:
+                type: string
+                x-get-300-resp: "this anno should replace get 300 response"
+          description: OK
+          x-get-300-resp: "this is anno for get 300 response"
+        "400":
+          content:
+            plain/text:
+              schema:
+                type: string
+                x-get-400-resp: "this anno is for text 400"
+            application/json:
+              schema:
+                type: string
+                x-get-400-resp-json: "this anno is for json 400"
+                x-mediatype: "additional mediatype data"
+          description: OK
+          x-get-400-resp: "this is anno for get 400 response"
+    post:
+      x-path-anno: "this should replace path level annotation"
+      parameters:
+        - name: param1
+          in: path
+          x-param1-anno: "this should be ignored in the import"
+          schema:
+            type: string
+      requestBody:
+        required: true
+        x-req-body-anno: "this is anno for request body"
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+              example: simple example
+              x-example: both example and x-example should be retained
+components:
+  schemas:
+    with-format-ext:
+      type: string
+      format: uuid
+      x-openapi_format: "this should be retained"
+    unmappable-with-ext:
+      x-openapi_type: "this should be retained"
+      x-patterns: this clashes with sysl tag so x-patterns is still x-patterns
+      type: object
+    simple:
+      type: string
+      x-simple-anno: "this is annotation for a simple type"
+    complex:
+      x-complex-anno: "this is annotation for complex type"
+      properties:
+        a:
+          type: string
+          x-complex-a-anno: "this is annotation for complex.a type"
+        b:
+          properties:
+            c:
+              x-complex-a-b-c-anno: "this is annotation for complex.a.b.c type"
+          x-complex-a-b-anno: "this is annotation for complex.a.b type"
+    complex-extensions:
+      type: string
+      x-object-ext:
+        a: "this is an object extension"
+        b: "this is just another field to object extension"
+        c: 2
+      x-array-ext:
+        - this is array extension index 0
+        - this is array extension index 1
+        - this is array extension index 2
+      x-number-ext: 1

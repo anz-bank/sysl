@@ -22,11 +22,28 @@ let (
 let intOrFloatRegex = //re.compile(`^(int|float)`);
 let escapeRegex = //re.compile(`\\`);
 
+let descAnno          = 'description';
+let mediatypeAnno     = 'mediatype';
+let openapiTypeAnno   = 'openapi_type';
+let openapiFormatAnno = 'openapi_format';
+let packageAnno       = 'package';
+let exampleAnno       = 'examples';
+let patternsAnno      = 'patterns';
+let specialAnno = {
+    descAnno,
+    mediatypeAnno,
+    openapiTypeAnno,
+    openapiFormatAnno,
+    packageAnno,
+    exampleAnno,
+    patternsAnno,
+};
+
 # TODO: allows multiple oapi files
 \(?:packageName:'', ?:filepath:'', ?:root:'', ...) \oapi
     let (:resolveToObj, :deepResolveRef) = (:resolveToObj, :deepResolveRef) :> \resolve resolve((:oapi, :filepath, :root));
 
-    let unmappedTag = \t t +> ('attrs': {'patterns' +>: (a +>: (elt ++: [(s: 'unmapped_openapi')]))});
+    let unmappedTag = \t t +> (attrs +>: {patternsAnno +>: (a +>: (elt ++: [(s: 'unmapped_openapi')]))});
 
     let unmappedType = primitive('STRING') -> unmappedTag(.);
 
@@ -57,6 +74,36 @@ let escapeRegex = //re.compile(`\\`);
         ;
         resolvePropertiesAndTrack({}, allOf)
     ;
+
+    let rec annoValToAnnoValMessage = \v
+        # annotation value can appear with different attributes
+        cond v {
+            (:a, ...): (a: (elt: (a >> annoValToAnnoValMessage(.)) where .@item rank (:.@))),
+            (:s, ...): v,
+            (b: true, ...): (s: 'true'),
+            (b: false, ...): (s: 'false'),
+            {...}: v && (
+                a: (elt: (v => (a: (elt: [(s: .@), (s: $`${simplify(.@value)}`)]))) orderby .)
+            ),
+            _: v && (s: $`${v}`),
+        }
+    ;
+
+    let extPrefix = 'x-';
+    let extensionsFromSpec = \spec spec where //seq.has_prefix(extPrefix, .@);
+
+    let extensionToAnnotations =
+        let extsToRetain = specialAnno => $`x-${.}`;
+        \spec
+            extensionsFromSpec(spec) => (
+                @: cond {
+                    (.@ <: extsToRetain): .@,
+                    _                   : //seq.trim_prefix(extPrefix, .@),
+                },
+                @value: annoValToAnnoValMessage(.@value),
+            )
+    ;
+
     let rec schemaToTypeMessageWithConfig = \conf \t
         # check for current location provided by simplify_oapi.arrai
         let filepath = t(extPathAttr)?:{};
@@ -82,13 +129,13 @@ let escapeRegex = //re.compile(`\\`);
                     # enums can be in different type (e.g. int, string). This will allow the correct mapping.
                     {'type': type, ...}: schemaToTypeMessageWithConfig(conf, {'type': type}),
                     _: primitive('STRING'),
-                } +> (attrs+>: {'openapi_format': (s: 'enum')}),
+                } +> (attrs+>: {openapiFormatAnno: (s: 'enum')}),
             # FIXME: this is commented because enums in openapi can have special characters which sysl does not allow
             # uncomment this when there's a proper mapping for it
             # (enum: (items: a => \(@: i, @item: (s: enumVal)) (@: enumVal, @value: i))),
 
             {'oneOf': (:a), ...}: (one_of: (type: a >> schemaToTypeMessageWithConfig(conf, .))),
-            {'allOf': _, ...}: schemaToTypeMessageWithConfig(conf, allOfToObj(t)) +> (attrs+>: {'openapi_type': (s: 'allOf')}),
+            {'allOf': _, ...}: schemaToTypeMessageWithConfig(conf, allOfToObj(t)) +> (attrs+>: {openapiTypeAnno: (s: 'allOf')}),
 
             {'items': items, ...}:
                 let (?:attrs:{}, ?:constraint:{}, ...type) = schemaToTypeMessageWithConfig(conf, items);
@@ -134,11 +181,11 @@ let escapeRegex = //re.compile(`\\`);
                     'date-time':   primitive('DATETIME'),
                     'byte':        primitive('BYTES'),
                     'binary':      primitive('BYTES'),
-                    specialFormat: primitive('STRING') +> (attrs+>: {'openapi_format': (s: specialFormat)}),
+                    specialFormat: primitive('STRING') +> (attrs+>: {openapiFormatAnno: (s: specialFormat)}),
                 },
 
 
-                _: unmappedType +> (attrs +>:{'openapi_type': (s: type)}),
+                _: unmappedType +> (attrs +>: {openapiTypeAnno: (s: type)}),
             },
             _: unmappedType,
         };
@@ -172,35 +219,24 @@ let escapeRegex = //re.compile(`\\`);
         ;
 
         let desc = cond t {
-            {'description': (s: description), ...}: {'description': (s: description)}
+            # FIXME: cannot use descAnno in pattern
+            {'description': (s: description), ...}: {descAnno: (s: description)}
         };
 
         let examples =
-            let rec exampleAttr = \e
-                cond e {
-                    (:a, ...): (a: (elt: (a >> exampleAttr(.)) where .@item rank (:.@))),
-                    (:s, ...): e,
-                    (b: true, ...): (s: 'true'),
-                    (b: false, ...): (s: 'false'),
-                    {...}: e && (
-                        a: (elt: (e => (a: (elt: [(s: .@), (s: $`${simplify(.@value)}`)]))) orderby .)
-                    ),
-                    _: e && (s: $`${e}`),
-                }
-            ;
-            # examples can appear with different attributes
-            let attr = exampleAttr(t('example')?:{} || t('examples')?:{});
-            attr && {'examples': attr}
+            let attr = annoValToAnnoValMessage(t('example')?:{} || t(exampleAnno)?:{});  attr && {exampleAnno: attr}
         ;
         # FIXME: sysl doesn't allow proper escaping in annotations
         let regex = let regex = t('pattern')?:{}; regex && {'regex': (s: escapeRegex.sub('\\\\', regex.s))};
 
         let additionalAttrs = t(syslAttrs)?:{};
-        let additionalTags = type.attrs?('patterns')?:(a: (elt: [])) +> (a: (elt ++: additionalAttrs('patterns')?.a.elt:[]));
+        let additionalTags = type.attrs?(patternsAnno)?:(a: (elt: [])) +> (a: (elt ++: additionalAttrs(patternsAnno)?.a.elt:[]));
 
-        let additionalAttrs = additionalAttrs +> {'patterns': additionalTags};
+        let additionalAttrs = additionalAttrs +> {patternsAnno: additionalTags};
 
-        type +> (attrs+>: additionalAttrs +> regex +> examples +> range +> desc, :constraint)
+        let annoFromExtensions = extensionToAnnotations(t);
+
+        type +> (attrs+>: additionalAttrs +> regex +> examples +> range +> annoFromExtensions +> desc, :constraint)
     ;
 
     let schemaToTypeMessage = schemaToTypeMessageWithConfig(());
@@ -210,13 +246,18 @@ let escapeRegex = //re.compile(`\\`);
             'title': (s: title),
             ...info,
         } = info;
+        let extensions = extensionsFromSpec(info);
+        let info = info &~ extensions;
         (
             long_name: title,
-            docstring: info('description')?.s:'',
+            docstring: info(descAnno)?.s:'',
 
             attrs:
                 let flatten = \attr info(attr)?:{} -> . && ({attr: (s: attr)} | (. => (@: $`${attr}_${.@}`, :.@value)));
-                (info where .@ !<: {'license', 'contact'}) | flatten('license') | flatten('contact')
+                (info where .@ !<: {'license', 'contact'})
+                    | flatten('license')
+                    | flatten('contact')
+                    +> extensionToAnnotations(extensions)
             ,
         )
     ;
@@ -224,14 +265,15 @@ let escapeRegex = //re.compile(`\\`);
     let paramToParamMessage = \param
         let param = resolveToObj(param);
         let {'name': (s: name), 'schema': schema, 'in': in, ...} = param;
-        let attrs = {'patterns': (a: (elt: [in])), 'name': (s: name)};
+        let attrs = {patternsAnno: (a: (elt: [in])), 'name': (s: name)};
         let attrs =
-            let description = param('description')?:{};
+            let description = param(descAnno)?:{};
             cond description {
                 {}: attrs,
-                _: attrs +> {'description': description},
+                _: attrs +> {descAnno: description},
             }
         ;
+        let attrs = attrs +> extensionToAnnotations(param);
         (
             name: syslSafeName(name),
             type: schemaToTypeMessage(schema) +> (
@@ -264,8 +306,8 @@ let escapeRegex = //re.compile(`\\`);
 
     let mediaTypeToTypeMessage = \(:mediaType, :config)
         let config = resolveToObj(config);
-        let example = (config('examples')?:{} || config('example')?:{}) -> . && {'example': .};
-        schemaToTypeMessage(config('schema')?:{} +> example) +> (attrs+>: mediaType && {'mediatype': (s: mediaType)})
+        let example = (config(exampleAnno)?:{} || config('example')?:{}) -> . && {exampleAnno: .};
+        schemaToTypeMessage(config('schema')?:{} +> example) +> (attrs+>: mediaType && {mediatypeAnno: (s: mediaType)})
     ;
 
     let reqBodyToParamMessage = \epName \reqBody
@@ -273,7 +315,13 @@ let escapeRegex = //re.compile(`\\`);
             let reqBody = resolveToObj(reqBody);
             let contents = reqBody('content')?:{};
             let type = (contents count = 1) && mediaTypeToTypeMessage(contents single -> (mediaType: .@, config: .@value));
-            let type = type +> (attrs+>: {'patterns': (a: (elt: [(s: 'body')]))}, opt: !(reqBody('required')?.b:false));
+            let type = type && type +> (
+                # type extension has higher precedence than reqBody extensions
+                attrs: extensionToAnnotations(reqBody)
+                        +> type.attrs?:{}
+                        +> {patternsAnno: (a: (elt: [(s: 'body')]))},
+                opt: !(reqBody('required')?.b:false)
+            );
             (
                 name: syslSafeName($`${//str.lower(epName)}_req_body`),
                 :type,
@@ -284,6 +332,8 @@ let escapeRegex = //re.compile(`\\`);
         let response = resolveToObj(response);
         let contents = response('content')?:{};
         let type = (contents count = 1) && mediaTypeToTypeMessage(contents single -> (mediaType: .@, config: .@value));
+        # type extension has higher precedence than response extensions
+        let type = type && type +> (attrs: extensionToAnnotations(response) +> type.attrs?:{});
         let type = type && ' ' ++ $`<: ${renderTypeUsageWithInlineAnno(type)}`;
         let status = cond status {
             # in openapi3 the `default` return status seems to refer to a fallback behaviour.
@@ -311,7 +361,8 @@ let escapeRegex = //re.compile(`\\`);
             :name,
             param: [reqBodyParam] ++ header ++ cookie,
             stmt: responsesToReturnMessages(ep('responses')?:{}),
-            docstring: ep('description')?.s:{},
+            docstring: ep(descAnno)?.s:{},
+            attrs: extensionToAnnotations(ep),
             rest_params: (
                 method: //str.upper(verb),
                 path: //seq.trim_suffix('/', syslSafePath(pathName)),
@@ -322,18 +373,22 @@ let escapeRegex = //re.compile(`\\`);
 
     ;
 
-    let pathsToEndpointMessages = \paths (
-        paths => \(@: pathName, @value: ops)
-            ops => \(@: verb, @value: ep)
-                (verb <: httpVerbs) && (pathToEndpointMessage((:pathName, :verb, :ep)) -> (@: .name, @value: .))
-    ) -> //rel.union(.) where .
+    let pathsToEndpointMessages = \paths
+        let extensions = extensionsFromSpec(paths);
+        (
+            paths => \(@: pathName, @value: ops)
+                ops => \(@: verb, @value: ep)
+                    (verb <: httpVerbs) &&
+                        # endpoint extension has higher precedence
+                        (pathToEndpointMessage((:pathName, :verb, ep: extensions +> ep)) -> (@: .name, @value: .))
+        ) -> //rel.union(.) where .
     ;
 
     let componentsSchemasToTypesMessages = \schemas schemas => (@: shallowEscape(.@), @value: schemaToTypeMessage(.@value));
 
     let oapiToAppMessage = \appName
         let (:long_name, :docstring, :attrs) = infoToAppMessageData(oapi('info')?:{});
-        let attrs = attrs +> (packageName && {'package': (s: packageName)});
+        let attrs = attrs +> (packageName && {packageAnno: (s: packageName)});
         let endpoints = pathsToEndpointMessages(oapi('paths')?:{});
         (
             apps: {
@@ -365,6 +420,7 @@ let escapeRegex = //re.compile(`\\`);
         :pathsToEndpointMessages,
         :componentsSchemasToTypesMessages,
         :oapiToAppMessage,
+        :extensionToAnnotations,
 
         # the following functions takes in oapi object and return various data that
         # can be used to populate a sysl proto.
