@@ -190,7 +190,7 @@ value               -> int_value
                      | array_value
                      | function_value
                      | NULL
-                     | CURRENT_TIMESTAMP
+                     | (TIMESTAMP_FUNCTION ("(" ")")?)
                      | keyword_value;
 int_value           -> hex_value | decimal_value;
 decimal_value       -> [-]?\d+;
@@ -205,7 +205,23 @@ keyword_value       -> name;
 
 NULL                -> "NULL";
 NOT_NULL            -> "NOT" NULL;
-CURRENT_TIMESTAMP   -> "CURRENT_TIMESTAMP";
+TIMESTAMP_FUNCTION  -> "CURRENT_TIMESTAMP"
+                     | "EXTRACT"
+                     | "STRING"
+                     | "TIMESTAMP"
+                     | "TIMESTAMP_ADD"
+                     | "TIMESTAMP_SUB"
+                     | "TIMESTAMP_DIFF"
+                     | "TIMESTAMP_TRUNC"
+                     | "FORMAT_TIMESTAMP"
+                     | "PARSE_TIMESTAMP"
+                     | "TIMESTAMP_SECONDS"
+                     | "TIMESTAMP_MILLIS"
+                     | "TIMESTAMP_MICROS"
+                     | "UNIX_SECONDS"
+                     | "UNIX_MILLIS"
+                     | "UNIX_MICROS"
+                     | "PENDING_COMMIT_TIMESTAMP";
 pair_value          -> "(" value "," value ")"; //# Spanner
 array_value         -> "[" value:"," "]"; //# Spanner
 
@@ -287,7 +303,7 @@ let evalValue = \parsed
         (:pair_value, ...): pair_value.'' rank (:.@),
         (:array_value, ...): array_value.'' rank (:.@),
         (:NULL, ...): 'NULL',
-        (:CURRENT_TIMESTAMP, ...): 'CURRENT_TIMESTAMP',
+        (:TIMESTAMP_FUNCTION, ...): TIMESTAMP_FUNCTION.'' rank (:.@),
     }
 ;
 

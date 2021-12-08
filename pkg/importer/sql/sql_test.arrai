@@ -278,6 +278,13 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         ,
     ),
 
+    update: (
+        multiple:
+            let update = {:macro:UPDATE t SET c=1, d=PENDING_COMMIT_TIMESTAMP():};
+            update = emptyModel
+        ,
+    ),
+
     set: [
         {:macro:SET foo = 0:},
         {:macro:SET standard_conforming_strings = on:},
