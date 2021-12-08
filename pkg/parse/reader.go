@@ -64,11 +64,14 @@ func NewPinner(fs afero.Fs) (retriever.Retriever, error) {
 		}
 	}
 
-	return remotefs.NewPinnerGitRetriever(filepath.Join(SyslRootDir(fs), "modules.yaml"),
-		&git.AuthOptions{
-			Tokens:  tokens,
-			SSHKeys: keys,
-		})
+	auth := &git.AuthOptions{Tokens: tokens, SSHKeys: keys}
+	// If a modules.yaml file already exists, use it. Otherwise use a caching Git retriever without
+	// pinning remote imports.
+	pinnerPath := filepath.Join(SyslRootDir(fs), "modules.yaml")
+	if ok, err := afero.Exists(fs, pinnerPath); ok && err == nil {
+		return remotefs.NewPinnerGitRetriever(pinnerPath, auth)
+	}
+	return git.NewWithCache(auth, git.NewPlainFscache(remotefs.CacheDir)), nil
 }
 
 func SyslRootDir(fs afero.Fs) string {
