@@ -110,7 +110,7 @@ update_table        -> "UPDATE" table_name
 update_item         -> column_name "=" (value | "DEFAULT");
 condition           -> @:("AND"|"OR")
                      > "(" @ ")"
-                     | column_name (("IS" "NOT"? NULL) | comparison value);
+                     | (column_name | value) (("IS" "NOT"? NULL) | comparison value);
 comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
 
 

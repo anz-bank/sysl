@@ -283,6 +283,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             let update = {:macro:UPDATE t SET c=1, d=PENDING_COMMIT_TIMESTAMP():};
             update = emptyModel
         ,
+        where: parseDdl(`UPDATE t SET c=1 WHERE 1=1`) = [{}],
     ),
 
     set: [
@@ -299,6 +300,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             delete = emptyModel
         ,
         conditions: [
+            parseDdl(`DELETE FROM t WHERE 1 = 1`),
             parseDdl(`DELETE FROM t WHERE c = 'x'`),
             parseDdl(`DELETE FROM t WHERE c IS NULL`),
             parseDdl(`DELETE FROM t WHERE c IS NOT NULL`),
