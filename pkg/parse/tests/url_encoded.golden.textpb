@@ -19,22 +19,22 @@ apps: {
      source_context: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 21
+       line: 24
        col: 8
       }
       end: {
-       line: 21
+       line: 24
        col: 11
       }
      }
      source_contexts: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 21
+       line: 24
        col: 8
       }
       end: {
-       line: 21
+       line: 24
        col: 11
       }
      }
@@ -42,22 +42,22 @@ apps: {
     source_context: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 20
+      line: 23
       col: 4
      }
      end: {
-      line: 23
+      line: 26
       col: 5
      }
     }
     source_contexts: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 20
+      line: 23
       col: 4
      }
      end: {
-      line: 23
+      line: 26
       col: 5
      }
     }
@@ -75,22 +75,22 @@ apps: {
      source_context: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 18
+       line: 21
        col: 8
       }
       end: {
-       line: 18
+       line: 21
        col: 27
       }
      }
      source_contexts: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 18
+       line: 21
        col: 8
       }
       end: {
-       line: 18
+       line: 21
        col: 27
       }
      }
@@ -98,22 +98,22 @@ apps: {
     source_context: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 17
+      line: 20
       col: 4
      }
      end: {
-      line: 20
+      line: 23
       col: 5
      }
     }
     source_contexts: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 17
+      line: 20
       col: 4
      }
      end: {
-      line: 20
+      line: 23
       col: 5
      }
     }
@@ -144,22 +144,22 @@ apps: {
      source_context: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 15
+       line: 18
        col: 12
       }
       end: {
-       line: 15
+       line: 18
        col: 51
       }
      }
      source_contexts: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 15
+       line: 18
        col: 12
       }
       end: {
-       line: 15
+       line: 18
        col: 51
       }
      }
@@ -171,22 +171,50 @@ apps: {
     source_context: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 14
+      line: 17
       col: 8
      }
      end: {
-      line: 17
+      line: 20
       col: 5
      }
     }
     source_contexts: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 14
+      line: 17
       col: 8
      }
      end: {
-      line: 17
+      line: 20
+      col: 5
+     }
+    }
+   }
+  }
+  types: {
+   key: "Alias:"
+   value: {
+    primitive: STRING
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 8
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 8
       col: 5
      }
     }
@@ -217,22 +245,22 @@ apps: {
        source_context: {
         file: "tests/url_encoded.sysl"
         start: {
-         line: 11
+         line: 14
          col: 8
         }
         end: {
-         line: 11
+         line: 14
          col: 40
         }
        }
        source_contexts: {
         file: "tests/url_encoded.sysl"
         start: {
-         line: 11
+         line: 14
          col: 8
         }
         end: {
-         line: 11
+         line: 14
          col: 40
         }
        }
@@ -242,22 +270,22 @@ apps: {
     source_context: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 10
+      line: 13
       col: 4
      }
      end: {
-      line: 11
+      line: 14
       col: 40
      }
     }
     source_contexts: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 10
+      line: 13
       col: 4
      }
      end: {
-      line: 11
+      line: 14
       col: 40
      }
     }
@@ -368,20 +396,20 @@ apps: {
   source_context: {
    file: "tests/url_encoded.sysl"
    start: {
-    line: 9
+    line: 12
    }
    end: {
-    line: 21
+    line: 24
     col: 11
    }
   }
   source_contexts: {
    file: "tests/url_encoded.sysl"
    start: {
-    line: 9
+    line: 12
    }
    end: {
-    line: 21
+    line: 24
     col: 11
    }
   }
@@ -437,22 +465,22 @@ apps: {
      source_context: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 20
+       line: 23
        col: 4
       }
       end: {
-       line: 23
+       line: 26
        col: 5
       }
      }
      source_contexts: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 20
+       line: 23
        col: 4
       }
       end: {
-       line: 23
+       line: 26
        col: 5
       }
      }
@@ -480,22 +508,22 @@ apps: {
      source_context: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 7
+       line: 10
        col: 12
       }
       end: {
-       line: 7
+       line: 10
        col: 28
       }
      }
      source_contexts: {
       file: "tests/url_encoded.sysl"
       start: {
-       line: 7
+       line: 10
        col: 12
       }
       end: {
-       line: 7
+       line: 10
        col: 28
       }
      }
@@ -507,22 +535,50 @@ apps: {
     source_context: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 6
+      line: 9
       col: 8
      }
      end: {
-      line: 9
+      line: 12
       col: 5
      }
     }
     source_contexts: {
      file: "tests/url_encoded.sysl"
      start: {
-      line: 6
+      line: 9
       col: 8
      }
      end: {
-      line: 9
+      line: 12
+      col: 5
+     }
+    }
+   }
+  }
+  types: {
+   key: "Alias:"
+   value: {
+    primitive: STRING
+    source_context: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 8
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/url_encoded.sysl"
+     start: {
+      line: 5
+      col: 4
+     }
+     end: {
+      line: 8
       col: 5
      }
     }
@@ -628,7 +684,7 @@ apps: {
    file: "tests/url_encoded.sysl"
    start: {}
    end: {
-    line: 7
+    line: 10
     col: 28
    }
   }
@@ -636,7 +692,7 @@ apps: {
    file: "tests/url_encoded.sysl"
    start: {}
    end: {
-    line: 7
+    line: 10
     col: 28
    }
   }

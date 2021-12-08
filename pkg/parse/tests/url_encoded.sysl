@@ -3,6 +3,9 @@ App%3A :: Test%3A [~abstract]:
         test%3Afield <: Test%3A
         test%3Atoo   <: string
 
+    !alias Alias%3A:
+        string
+
     /endpoint%3Atest:
         GET:
             return ok <: 200

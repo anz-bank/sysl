@@ -3293,7 +3293,7 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 
 // EnterAlias is called when production alias is entered.
 func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
-	s.currentTypePath.Push(ctx.Name_str().GetText())
+	s.currentTypePath.Push(MustUnescape(ctx.Name_str().GetText()))
 	type1 := &sysl.Type{}
 
 	s.typemap = map[string]*sysl.Type{
