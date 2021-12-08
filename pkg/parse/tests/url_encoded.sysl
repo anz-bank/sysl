@@ -17,6 +17,7 @@ App2:
     /endpoint:
         GET:
             App%3A::Test%3A <- GET /endpoint%3Atest
+            return ok <: App%3A::Test%3A.Alias%3A
 
     <-> Event:
         return ok <: string

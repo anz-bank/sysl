@@ -1149,7 +1149,7 @@ func (s *TreeShapeListener) ExitHttp_path(*parser.Http_pathContext) {
 
 // EnterRet_stmt is called when production ret_stmt is entered.
 func (s *TreeShapeListener) EnterRet_stmt(ctx *parser.Ret_stmtContext) {
-	payload := strings.Trim(ctx.TEXT().GetText(), " ")
+	payload := MustUnescape(strings.Trim(ctx.TEXT().GetText(), " "))
 	if s.lintMode {
 		s.lintRetStmt(payload, ctx)
 	}
