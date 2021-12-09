@@ -658,7 +658,7 @@ func (s *TreeShapeListener) makeAttributeArray(attribs *parser.Attribs_or_modifi
 
 // EnterInplace_tuple is called when production inplace_tuple is entered.
 func (s *TreeShapeListener) EnterInplace_tuple(*parser.Inplace_tupleContext) {
-	s.currentTypePath.Push(s.fieldname[len(s.fieldname)-1])
+	s.currentTypePath.Push(MustUnescape(s.fieldname[len(s.fieldname)-1]))
 	s.typemap = map[string]*sysl.Type{}
 	s.currentApp().Types[s.currentTypePath.Get()] = &sysl.Type{
 		Type: &sysl.Type_Tuple_{
@@ -890,7 +890,7 @@ func (s *TreeShapeListener) applyAnnotations(
 
 // EnterUnion is called when production union is entered.
 func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
-	s.currentTypePath.Push(ctx.Name_str().GetText())
+	s.currentTypePath.Push(MustUnescape(ctx.Name_str().GetText()))
 	s.typemap = map[string]*sysl.Type{}
 
 	types := s.currentApp().Types
@@ -3256,7 +3256,7 @@ func (s *TreeShapeListener) ExitView(ctx *parser.ViewContext) {
 
 // EnterEnum is called when production enum is entered.
 func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
-	s.currentTypePath.Push(ctx.Name().GetText())
+	s.currentTypePath.Push(MustUnescape(ctx.Name().GetText()))
 	defer s.currentTypePath.Pop()
 
 	// Build a map of enumerations. If there are none (due to WHATEVER

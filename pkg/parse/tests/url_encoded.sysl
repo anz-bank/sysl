@@ -6,6 +6,14 @@ App%3A :: Test%3A [~abstract]:
     !alias Alias%3A:
         string
 
+    !union Union%3A:
+        string
+        int
+
+    !type Inplace%3A:
+        Field%3A <:
+            Field%3A <: string
+
     /endpoint%3Atest:
         GET:
             return ok <: 200
