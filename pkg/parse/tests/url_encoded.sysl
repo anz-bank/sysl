@@ -14,6 +14,9 @@ App%3A :: Test%3A [~abstract]:
         Field%3A <:
             Field%3A <: string
 
+    !enum Enum%3A:
+        ENUM_1: 1
+
     /endpoint%3Atest:
         GET:
             return ok <: 200
