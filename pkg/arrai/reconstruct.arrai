@@ -1,3 +1,4 @@
+let (:syslSafeName, :syslSafePath, ...) = //{/pkg/importer/utils};
 \m
 
 let sysl = //{./sysl};
@@ -45,6 +46,10 @@ let (:annotations, ...) = //{./sysl};
 
 let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 let (nativeDataTypes: native, :trimLines, :dictMerge, ...) = //{./util};
+
+# syslSafeName adds suffix `_` to all keywords including native data types in case a field name is a sysl keyword.
+# This function is only used to sanitise type.
+let syslSafeType = \name (name <: native && name) || syslSafeName(name);
 
 let joinedName = //seq.join(' :: ');
 
@@ -171,18 +176,18 @@ let fileContents = \file \apps
             # TODO: exclude union and alias
             let type =
                 # TODO: inplace fields
-                type where .typeName !<: (enum => .typeName) && !//seq.contains('.', .typeName)
+                type where .typeName !<: (enum => .typeName)
             ;
             let isEmpty = //rel.union({ep, type, field, table, enum, mixin, appAnno}) = {};
             $`
-                ${joinedName(appName)}${appLongName && (' ' ++ $`"${appLongName}"`)}${appTags}:
+                ${joinedName(appName >> syslSafeName(.))}${appLongName && (' ' ++ $`"${appLongName}"`)}${appTags}:
                     ${cond {isEmpty: '...'}}
                     ${resolvedAnnotations(
                         anno.app => \(:appAnnoName, :appAnnoValue, ...) (name: appAnnoName, value: appAnnoValue)
                     )::\i}
                     ${enum orderby .typeName >> \(:typeName, :enumItems, ...)
                         $`
-                            !enum ${typeName}:
+                            !enum ${syslSafeName(typeName)}:
                                 ${(enumItems orderby .@value >> $`${.@}: ${.@value}`) || ['...']::\i}
                         `
                     ::\i\n:\n}
@@ -190,12 +195,12 @@ let fileContents = \file \apps
                         let typeTags = tagsString((tag.type where .typeName = typeName) => .typeTag);
                         let isTable = (type <&- {(:typeName)}) --- table;
                         $`
-                            ${cond {isTable: "!table", _: "!type"}} ${typeName}${typeTags}:
+                            ${cond {isTable: "!table", _: "!type"}} ${syslSafeName(typeName)}${typeTags}:
                                 ${resolvedTypeAnno(anno.type, typeName)::\i}
                                 ${(orderedField(field, typeName) >> \(:fieldName, :fieldType, :fieldOpt, ...)
                                     let fieldTags = tagsString(tag.field <&- {(:typeName, :fieldName)} => .fieldTag);
                                     $`
-                                        ${fieldName} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${fieldTags}${
+                                        ${syslSafeName(fieldName)} <: ${sysl.resolvedType(fieldType)}${cond {fieldOpt: '?'}}${fieldTags}${
                                             let anno = resolvedFieldAnno(anno.field, typeName, fieldName);
                                             anno && $`
                                                 :
@@ -225,7 +230,7 @@ let fileContents = \file \apps
                     ::\i\n:\n}
                     ${(ep where !.rest orderby .epName) >> \(:epName, ...)
                         $`
-                            ${epName}:
+                            ${syslSafeName(epName)}:
                                 ${stmtBlock(stmt, epName) || ['...']::\i}
                         `
                     ::\i\n:\n}

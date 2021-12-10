@@ -2,6 +2,7 @@
 
 let (:nativeDataTypes, :trimWhitespace, :unpackType, :appToParts, ...) = //{./util};
 let (:simpleTransform, :reduce, :invokeMacro, ...) = //{github.com/arr-ai/arrai/contrib/util};
+let (:syslSafeName, ...) = //{/pkg/importer/utils};
 
 # String representing a placeholder.
 let empty = '...';
@@ -129,7 +130,7 @@ let fixType = \apps \appName \typePayload
 
 let rec resolvedType = \t cond t {
     (:primitive, ...): //str.lower(primitive),
-    (appName: a, typePath: p, ...): $`${cond {a: //seq.join('::', a)++'.'}}${//seq.join('.', p)}`,
+    (appName: a, typePath: p, ...): $`${cond {a: //seq.join('::', a >> syslSafeName(.))++'.'}}${//seq.join('.', p >> syslSafeName(.))}`,
     (:set, ...): $`set of ${resolvedType(set)}`,
     (:sequence, ...): $`sequence of ${resolvedType(sequence)}`,
     _: t

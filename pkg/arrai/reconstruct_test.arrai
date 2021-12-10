@@ -37,6 +37,43 @@ let rest = (
     src: (app: {(appName: ['A'], appSrc: (file: 'a.sysl'))}),
 );
 
+let specialCharacters = (
+    src: (app: {(appName: ['A.'], appSrc: (file: 'a.sysl'))}),
+    app: {(appName: ['A.'])},
+    ep: {(appName: ['A.'], epName: 'Ep.', rest: (method: 'GET', path: '/path/{p}'))},
+    stmt: {
+        |appName, epName, stmtAction, stmtAlt, stmtCall, stmtCond, stmtForeach, stmtGroup, stmtIndex, stmtLoop, stmtLoopN, stmtParent, stmtRet|
+        (
+            ['A.'],
+            'Ep.',
+            (),
+            (),
+            (),
+            (),
+            (),
+            (),
+            0,
+            (),
+            (),
+            (),
+            (attr: (modifier: {}, nvp: {}), status: 'ok', type: (appName: ['A.'], typePath: ['type.']))
+        )
+    },
+    param: {(appName: ['A.'], epName: 'Ep.', paramName: 'p', paramLoc: 'path', paramIndex: 0, paramOpt: false, paramType: (appName: ['A.'], typePath: ['type.']))},
+    src: (app: {(appName: ['A.'], appSrc: (file: 'a.sysl'))}),
+    type: {
+        (appName: ['A.'], typeName: 'Type.'),
+        (appName: ['A.'], typeName: 'Table.'),
+    },
+    table: {(appName: ['A.'], typeName: 'Table.', pk: ['id'])},
+    field: {
+        (appName: ['A.'], typeName: 'Type.', fieldName: 'c.', fieldType: (appName: ['A.'], typePath: ['type.']), fieldOpt: false),
+        (appName: ['A.'], typeName: 'Type.', fieldName: 'id.', fieldType: (appName: ['A.'], typePath: ['type.']), fieldOpt: false),
+        (appName: ['A.'], typeName: 'Table.', fieldName: 'c.', fieldType: (appName: ['A.'], typePath: ['type.']), fieldOpt: false),
+        (appName: ['A.'], typeName: 'Table.', fieldName: 'id.', fieldType: (appName: ['A.'], typePath: ['type.']), fieldOpt: false),
+    },
+);
+
 (
     # Note: The following tests are commented out due to failure.
     #all: reconstruct(all) = //{./test_reconstruct_all},
@@ -138,7 +175,7 @@ let rest = (
                     A:
                         !type T:
                             f <: int
-                    
+
                         !table Tb:
                             c <: int
                             id <: int [~pk]
@@ -207,4 +244,23 @@ let rest = (
             `
         }
     ,
+
+    specialCharacters:
+        reconstruct(specialCharacters) = {
+            'a.sysl': $`
+                A%2E:
+                    !table Table%2E:
+                        c%2E <: A%2E.type%2E
+                        id%2E <: A%2E.type%2E
+
+                    !type Type%2E:
+                        c%2E <: A%2E.type%2E
+                        id%2E <: A%2E.type%2E
+
+                    /path/{p <: A%2E.type%2E}:
+                        GET:
+                            return ok <: A%2E.type%2E
+
+            `
+        }
 )
