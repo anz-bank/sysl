@@ -1,0 +1,8 @@
+let merge = //{./merge};
+let (:newNormalize, :loadBytes, ...) = //{/pkg/arrai/sysl};
+let relmod = \path
+    (//os.exists(path) && newNormalize(loadBytes(//os.file(path)))) ||
+    //error($`file does not exists: ${path}`)
+;
+
+\config \source \overlay merge(config, relmod(source), relmod(overlay))

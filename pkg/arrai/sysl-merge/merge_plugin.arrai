@@ -1,0 +1,10 @@
+let merge = //{./merge};
+\param
+    cond param {
+        (models: [(rel: source, ...), (rel: overlay, ...)], ...config):
+            (output: merge(config, source, overlay), name: 'success'),
+        _: (
+            name: 'failure',
+            message: 'Requires exactly 2 sysl models. First spec as source and second spec to overwrite source.',
+        ),
+    }

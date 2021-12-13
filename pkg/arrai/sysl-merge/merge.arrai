@@ -1,0 +1,126 @@
+let safeRelMod = //{/pkg/arrai/safe_relmod};
+let reconstruct = //{/pkg/arrai/reconstruct};
+
+# TODO: allows more configuration to handle missing apps, eps, types, etc.
+# currently, only merge annotations and only if the spec they belong to exists.
+
+# source is the sysl protobuf that will be overwritten by overlay
+# overlay contains all the specs that needs to be added to source. Currently only supports annotations.
+\config \source \overlay
+    let (:source, :overlay) = (:source, :overlay) :> safeRelMod(.);
+
+    let (?:missingSpecsFile:'missing.sysl', ...) = config;
+
+    # currently overlay.anno would only be added if the spec the annotation belongs to exist in source.
+    # e.g. annotations from overlay.anno.app will only be added if the applications of those annotations
+    # exist in source.
+    let anno = (
+        app:   source.anno.app   | (overlay.anno.app   <&- source.app),
+        ep:    source.anno.ep    | (overlay.anno.ep    <&- source.ep),
+        event: source.anno.event | (overlay.anno.event <&- source.event),
+        field: source.anno.field | (overlay.anno.field <&- source.field),
+        mixin: source.anno.mixin | (overlay.anno.mixin <&- source.mixin),
+        param: source.anno.param | (overlay.anno.param <&- source.param),
+        stmt:  source.anno.stmt  | (overlay.anno.stmt  <&- source.stmt),
+        type:  source.anno.type  | (overlay.anno.type  <&- source.type),
+        view:  source.anno.view  | (overlay.anno.view  <&- source.view),
+    );
+
+    let tag = (
+        app:   source.tag.app   | (overlay.tag.app   <&- source.app),
+        ep:    source.tag.ep    | (overlay.tag.ep    <&- source.ep),
+        event: source.tag.event | (overlay.tag.event <&- source.event),
+        field: source.tag.field | (overlay.tag.field <&- source.field),
+        mixin: source.tag.mixin | (overlay.tag.mixin <&- source.mixin),
+        param: source.tag.param | (overlay.tag.param <&- source.param),
+        stmt:  source.tag.stmt  | (overlay.tag.stmt  <&- source.stmt),
+        type:  source.tag.type  | (overlay.tag.type  <&- source.type),
+        view:  source.tag.view  | (overlay.tag.view  <&- source.view),
+    );
+
+    let merged = (
+        :anno,
+        :tag,
+
+        # TODO: support merging for these specs
+        :source.src,
+        :source.app,
+        :source.enum,
+        :source.ep,
+        :source.event,
+        :source.field,
+        :source.mixin,
+        :source.param,
+        :source.stmt,
+        :source.table,
+        :source.type,
+        :source.view,
+        :source.alias,
+    );
+
+    let missing =
+        let missingFile = (file: missingSpecsFile);
+        (
+            anno: (
+                app:   overlay.anno.app   &~ merged.anno.app,
+                ep:    overlay.anno.ep    &~ merged.anno.ep,
+                event: overlay.anno.event &~ merged.anno.event,
+                field: overlay.anno.field &~ merged.anno.field,
+                mixin: overlay.anno.mixin &~ merged.anno.mixin,
+                param: overlay.anno.param &~ merged.anno.param,
+                stmt:  overlay.anno.stmt  &~ merged.anno.stmt,
+                type:  overlay.anno.type  &~ merged.anno.type,
+                view:  overlay.anno.view  &~ merged.anno.view,
+            ),
+            # convert all source context to missingFile so that reconstruct would print
+            src:
+                let ids = merged.src -> (
+                    app:   .app   => .~|appSrc, appSrcs|,
+                    ep:    .ep    => .~|epSrc, epSrcs|,
+                    event: .event => .~|eventSrc, eventSrcs|,
+                    field: .field => .~|fieldSrc, fieldSrcs|,
+                    mixin: .mixin => .~|mixinSrc, mixinSrcs|,
+                    param: .param => .~|paramSrc, paramSrcs|,
+                    stmt:  .stmt  => .~|stmtSrc, stmtSrcs|,
+                    type:  .type  => .~|typeSrc, typeSrcs|,
+                    view:  .view  => .~|viewSrc, viewSrcs|,
+                );
+                (
+                    app:   (overlay.src.app   &~ (overlay.src.app   <&- ids.app))   => (. +> (appSrc+>:   missingFile)),
+                    ep:    (overlay.src.ep    &~ (overlay.src.ep    <&- ids.ep))    => (. +> (epSrc+>:    missingFile)),
+                    event: (overlay.src.event &~ (overlay.src.event <&- ids.event)) => (. +> (eventSrc+>: missingFile)),
+                    field: (overlay.src.field &~ (overlay.src.field <&- ids.field)) => (. +> (fieldSrc+>: missingFile)),
+                    mixin: (overlay.src.mixin &~ (overlay.src.mixin <&- ids.mixin)) => (. +> (mixinSrc+>: missingFile)),
+                    param: (overlay.src.param &~ (overlay.src.param <&- ids.param)) => (. +> (paramSrc+>: missingFile)),
+                    stmt:  (overlay.src.stmt  &~ (overlay.src.stmt  <&- ids.stmt))  => (. +> (stmtSrc+>:  missingFile)),
+                    type:  (overlay.src.type  &~ (overlay.src.type  <&- ids.type))  => (. +> (typeSrc+>:  missingFile)),
+                    view:  (overlay.src.view  &~ (overlay.src.view  <&- ids.view))  => (. +> (viewSrc+>:  missingFile)),
+                )
+            ,
+            tag: (
+                app:   overlay.tag.app   &~ merged.tag.app,
+                ep:    overlay.tag.ep    &~ merged.tag.ep,
+                event: overlay.tag.event &~ merged.tag.event,
+                field: overlay.tag.field &~ merged.tag.field,
+                mixin: overlay.tag.mixin &~ merged.tag.mixin,
+                param: overlay.tag.param &~ merged.tag.param,
+                stmt:  overlay.tag.stmt  &~ merged.tag.stmt,
+                type:  overlay.tag.type  &~ merged.tag.type,
+                view:  overlay.tag.view  &~ merged.tag.view,
+            ),
+            app:   overlay.app   &~ merged.app,
+            enum:  overlay.enum  &~ merged.enum,
+            ep:    overlay.ep    &~ merged.ep,
+            event: overlay.event &~ merged.event,
+            field: overlay.field &~ merged.field,
+            mixin: overlay.mixin &~ merged.mixin,
+            param: overlay.param &~ merged.param,
+            stmt:  overlay.stmt  &~ merged.stmt,
+            table: overlay.table &~ merged.table,
+            type:  overlay.type  &~ merged.type,
+            view:  overlay.view  &~ merged.view,
+            alias: overlay.alias &~ merged.alias,
+        )
+    ;
+
+    reconstruct(merged) | reconstruct(missing)

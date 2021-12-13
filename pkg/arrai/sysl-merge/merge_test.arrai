@@ -1,0 +1,38 @@
+let merge = //{./merge};
+let source = //[//encoding.bytes]{/pkg/arrai/out/merge_source.pb};
+let overlay = //[//encoding.bytes]{/pkg/arrai/out/merge_overlay.pb};
+let (:loadBytes, :newNormalize, ...) = //{/pkg/arrai/sysl};
+let relmod = \. newNormalize(loadBytes(.));
+
+(
+    simple: merge((), relmod(source), relmod(overlay)) = {
+        'missing.sysl': $'
+            App3:
+                !type Type:
+                    field <: string
+
+        ',
+        'out': {
+            'merge_source.sysl': $'
+                App:
+                    !type Type:
+                        field <: string
+
+
+                App2:
+                    @anno = "app"
+                    !type Type:
+                        @anno = "type"
+                        field <: string:
+                            @anno = "field"
+
+            ',
+            'merge_source_import.sysl': $'
+                App4:
+                    !type Type:
+                        field <: string
+
+            ',
+        },
+    },
+)

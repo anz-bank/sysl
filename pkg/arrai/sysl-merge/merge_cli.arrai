@@ -1,0 +1,24 @@
+let merge = //{./merge_filepaths};
+let missingSpecsFlag = 'missing-specs';
+let flagConf = {
+    missingSpecsFlag: (
+        type:    'string',
+        default: 'missing.sysl',
+        alias:   'm',
+        usage:   'path to a sysl file that will be used to store any values that cannot be written to source',
+    )
+};
+
+let flagHelp = $`
+    Usage: arrai run merge_cli.arrai [Options...] <PATH_TO_SOURCE_PB> <PATH_TO_SYSL_TO_MERGE_PB>
+
+    ${//flag.help(flagConf)}
+`;
+
+let [_, ...args] = //os.args;
+let parsedFlags = //flag.parser(flagConf).parse(args);
+
+cond parsedFlags.args {
+    [source, overlay]: merge((missingSpecsFile: parsedFlags.flags(missingSpecsFlag)), source, overlay),
+    _: flagHelp,
+}

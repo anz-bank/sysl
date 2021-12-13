@@ -1,0 +1,65 @@
+\m
+    let (
+        ?:anno:(),
+        ?:src:(),
+        ?:tag:(),
+        ?:app:{},
+        ?:enum:{},
+        ?:ep:{},
+        ?:event:{},
+        ?:field:{},
+        ?:mixin:{},
+        ?:param:{},
+        ?:stmt:{},
+        ?:table:{},
+        ?:type:{},
+        ?:view:{},
+        ?:alias:{},
+        ...
+    ) = m;
+
+    let safeCategorised = \(
+            ?:app:{},
+            ?:ep:{},
+            ?:event:{},
+            ?:field:{},
+            ?:param:{},
+            ?:mixin:{},
+            ?:stmt:{},
+            ?:type:{},
+            ?:view:{},
+            ...
+        )
+
+        (
+            :app,
+            :ep,
+            :event,
+            :field,
+            :param,
+            :mixin,
+            :stmt,
+            :type,
+            :view,
+        )
+    ;
+
+    let (:anno, :src, :tag) = (:anno, :src, :tag) :> safeCategorised(.);
+
+    (
+        :anno,
+        :src,
+        :tag,
+        :app,
+        :enum,
+        :ep,
+        :event,
+        :field,
+        :mixin,
+        :param,
+        :stmt,
+        :table,
+        :type,
+        :view,
+        :alias,
+    )

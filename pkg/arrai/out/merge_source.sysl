@@ -1,0 +1,12 @@
+import merge_source_import.sysl
+
+App:
+    !type Type:
+        field <: string
+
+App2:
+    @anno = "app"
+    !type Type:
+        @anno = "type"
+        field <: string:
+            @anno = "field"

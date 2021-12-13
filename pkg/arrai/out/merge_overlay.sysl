@@ -1,0 +1,14 @@
+App:
+    !type Type:
+        field <: string
+
+App2:
+    @anno = "app"
+    !type Type:
+        @anno = "type"
+        field <: string:
+            @anno = "field"
+
+App3:
+    !type Type:
+        field <: string
