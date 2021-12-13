@@ -186,8 +186,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 	// s.currentMultiLineAnno, and then assign them in ExitAnnotationValue
 	str := ctx.TEXT().GetText()
 	if len(strings.TrimSpace(str)) == 0 {
-		// hack to match legacy code, required to support excel sheets
-		s.currentMultiLineAnno += "\n\n"
+		s.currentMultiLineAnno += "\n"
 		s.prevLineEmpty = true
 		return
 	}

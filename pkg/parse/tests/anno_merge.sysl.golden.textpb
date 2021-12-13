@@ -238,7 +238,7 @@ apps: {
        attrs: {
         key: "multiline2"
         value: {
-         s: "line1\n\n\n\n\n\n\nline2"
+         s: "line1\n\n\n\nline2"
          source_context: {
           file: "tests/anno_merge.sysl"
           start: {
