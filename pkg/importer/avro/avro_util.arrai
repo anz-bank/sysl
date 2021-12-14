@@ -130,6 +130,9 @@ let syslTypeNameTuple = \t
                 {'type': _, 'name': (s: initName), ...}:
                     let name = syslTypeName(initName);
                     (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
+                {'type': (s: initName), ...}:
+                    let name = syslTypeName(initName);
+                    (s: $`${name}Sequence`, collectionType: $`sequence of ${name}`),
             },
         {'type': _, 'values': values, ...}:
             cond values {
@@ -143,6 +146,9 @@ let syslTypeNameTuple = \t
         # This pattern matching must be last.
         {'type': _, 'name': (:s), ...}:
             (s: syslTypeName(s), collectionType: syslTypeName(s)),
+        # Type without a name
+        {'type': (:s), ...}:
+            (:s, collectionType: s)
     }
 ;
 
@@ -197,7 +203,11 @@ let transformType = \type
                         (:s): $`String${//str.title(s)}Item`, # Primitive.
                     };
                     $`set of ${type}`,
-                _: syslTypeNameWithIdentifierCheck(type('name').s)
+
+                _: cond type('name')?.s?:'' {
+                    '': transformPrimitiveType(typeName.s),
+                    name: syslTypeNameWithIdentifierCheck(name)
+                }
             },
     }
 ;

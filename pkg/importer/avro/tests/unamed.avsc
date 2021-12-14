@@ -1,0 +1,24 @@
+{
+    "type": "record",
+    "name": "name_example",
+    "namespace": "namespace_example",
+    "fields": [
+        {
+            "name": "header",
+            "type": {
+                "type": "record",
+                "name": "Header",
+                "fields": [
+                    {
+                        "name": "eventUUID",
+                        "type": {
+                            "type": "string",
+                            "avro.java.string": "String"
+                        },
+                        "doc": "A unique identifier"
+                    }
+                ]
+            }
+        }
+    ]
+}

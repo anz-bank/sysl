@@ -1,0 +1,7 @@
+let import = //{/pkg/importer/avro/transformer};
+
+let trimNewline = \str //re.compile(`\n*$`).sub('', str);
+let schema = //[//encoding.bytes]{./unamed.avsc};
+(
+    import: trimNewline(import(schema, "TestApp", "com.example.package")) = trimNewline($`${//[//encoding.bytes]{./unamed.sysl}}`)
+)
