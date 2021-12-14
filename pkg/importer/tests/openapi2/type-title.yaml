@@ -1,0 +1,19 @@
+swagger: "2.0"
+info:
+  title: Title
+definitions:
+  test:
+    type: object
+    properties:
+      x:
+        type: integer
+    title: This is a title
+  test2:
+    type: object
+    properties:
+      "y":
+        type: object
+        title: This is a nested title
+        properties:
+          z:
+            type: string
