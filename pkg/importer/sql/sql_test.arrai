@@ -148,6 +148,21 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             {:macro:CREATE INDEX ix ON t1 USING btree (id):}.indexes
             --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
         ,
+        unique:
+            {:macro:CREATE UNIQUE INDEX ix ON t1 (id):}.indexes
+            --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
+        ,
+        ifNotExists:
+            {:macro:CREATE INDEX IF NOT EXISTS ix ON t1 (id):}.indexes
+            --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
+        ,
+        where:
+            {:macro:CREATE INDEX ix ON t1 (id) WHERE c != false:}.indexes
+            --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
+        ,
+        withCast:
+            {:macro:CREATE INDEX ix ON t1 (id) WHERE status = "on"::INT:}.indexes
+            --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
     ),
 
     # TODO: Include views in model.

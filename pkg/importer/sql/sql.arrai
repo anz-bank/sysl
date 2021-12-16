@@ -55,7 +55,7 @@ on_action           -> CASCADE     = "CASCADE"
                      | SET_NULL    = "SET" NULL
                      | SET_DEFAULT = "SET" "DEFAULT";
 
-create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED")? "INDEX" index_name
+create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED")? "INDEX" if_not_exists? index_name
                        "ON" table_prefix? table_name ("USING" name)? "(" key_parts ")"
                        ("WHERE" condition)?
                        storing_clause? ","? interleaving_clause?;
@@ -108,9 +108,9 @@ update_table        -> "UPDATE" table_name
                        "SET" update_item:","
                        ("WHERE" condition)?;
 update_item         -> column_name "=" (value | "DEFAULT");
-condition           -> @:("AND"|"OR")
-                     > "(" @ ")"
-                     | (column_name | value) (("IS" "NOT"? NULL) | comparison value);
+//#FIXME: stack breaks in macros
+condition           -> cond_stmt:("AND"|"OR");
+cond_stmt           -> "(" condition ")" | (column_name | value) (("IS" "NOT"? NULL) | comparison value);
 comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
 
 
@@ -181,7 +181,8 @@ index_name          -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 view_name           -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 sequence_name       -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
-value               -> int_value
+value               -> value_type cast=("::" SCALAR_TYPE)?;
+value_type          -> int_value
                      | bool_value
                      | string_value
                      | time_value
@@ -196,7 +197,7 @@ int_value           -> hex_value | decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
 bool_value          -> "TRUE" | "FALSE";
-string_value        -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //'
+string_value        -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //'s
 time_value          -> "NOW" "(" ")" ("at" "time" "zone" string_value)?;
 id_value            -> ("NEWID" "(" ")")
                      | ("uuid_generate_v1" "(" ")" | "uuid_generate_v4" "(" ")");
@@ -292,9 +293,10 @@ let rec evalType = \parsed
     }
 ;
 
+# FIXME: handle cast
 # evalValue turns a value node into a representative string.
-let evalValue = \parsed
-    cond parsed {
+let evalValue = \(:value_type, ...)
+    cond value_type {
         (:int_value, ...): evalInt(int_value),
         (:bool_value, ...): bool_value.'' rank (:.@),
         (:string_value, ...): string_value.'' rank (:.@),
