@@ -275,7 +275,7 @@ func collectSpecs(ctx context.Context,
 
 	version := hash.String()
 
-	importsInput, _ := separateImportsAndSpecs(source.filename, content)
+	importsInput := extractImports(source.filename, content)
 
 	specs.mutex.Lock()
 	specs.inputs = append(specs.inputs, srcInput{source, string(content)})
@@ -298,15 +298,21 @@ func collectSpecs(ctx context.Context,
 		})
 	}
 
-	return g.Wait()
+	err = g.Wait()
+	if err != nil {
+		return syslutil.Exitf(ImportError, fmt.Sprintf(
+			"error reading %#v: \n%v", cleanImportFilename(source.filename), err,
+		))
+	}
+
+	return nil
 }
 
 var importStmtPrefix = []byte("import ")
 
-func separateImportsAndSpecs(filename string, content []byte) (importsInput, specsInput bytes.Buffer) {
+func extractImports(filename string, content []byte) (importsInput bytes.Buffer) {
 	// non-sysl specs remote reference file fetching is not yet supported.
 	if !strings.Contains(filename, syslExt) {
-		specsInput = *bytes.NewBuffer(content)
 		return
 	}
 
@@ -316,10 +322,6 @@ func separateImportsAndSpecs(filename string, content []byte) (importsInput, spe
 		if bytes.HasPrefix(scanner.Bytes(), importStmtPrefix) {
 			importsInput.Write(scanner.Bytes())
 			importsInput.WriteByte('\n')
-			specsInput.WriteByte('\n')
-		} else {
-			specsInput.Write(scanner.Bytes())
-			specsInput.WriteByte('\n')
 		}
 	}
 

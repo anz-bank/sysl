@@ -733,7 +733,8 @@ func TestOutsideOfRootImport(t *testing.T) {
 	parser := NewParser()
 	parser.RestrictToLocalImport()
 	_, err := parser.ParseFromFs("outsideroot_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), "tests"))
-	require.EqualError(t, err, "error reading \"../alias.sysl\": \npermission denied, file outside root\n")
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "error reading \"../alias.sysl\": \npermission denied, file outside root\n")
 }
 
 func TestDuplicateImport(t *testing.T) {
@@ -842,7 +843,7 @@ func TestAppDoesNotExistLint(t *testing.T) {
 
 func assertLintLogs(t *testing.T, file, logMsg string) {
 	var buf bytes.Buffer
-	//FIXME: using logrus global logger makes it impossible to parallelize log tests
+	// FIXME: using logrus global logger makes it impossible to parallelize log tests
 	logrus.SetOutput(&buf)
 	_, err := NewParser().ParseFromFs(file, syslutil.NewChrootFs(afero.NewOsFs(), ""))
 	require.NoError(t, err)
@@ -1032,12 +1033,18 @@ type mockContent struct {
 	hash    retriever.Hash
 }
 
-func (r mockReader) Read(ctx context.Context, resource string) ([]byte, error) {
-	return []byte(r.contents[resource].content), nil
+func (r mockReader) Read(_ context.Context, resource string) ([]byte, error) {
+	if c, ok := r.contents[resource]; ok {
+		return []byte(c.content), nil
+	}
+	return nil, fmt.Errorf("file not found")
 }
 
-func (r mockReader) ReadHash(ctx context.Context, resource string) ([]byte, retriever.Hash, error) {
-	return []byte(r.contents[resource].content), r.contents[resource].hash, nil
+func (r mockReader) ReadHash(_ context.Context, resource string) ([]byte, retriever.Hash, error) {
+	if c, ok := r.contents[resource]; ok {
+		return []byte(c.content), r.contents[resource].hash, nil
+	}
+	return nil, retriever.Hash{}, fmt.Errorf("file not found")
 }
 
 /* TestParseSyslRetriever tests that a file can be imported */
@@ -1142,6 +1149,22 @@ Three:
 	require.NotNil(t, c.Apps["One"])
 	require.NotNil(t, c.Apps["Two"])
 	require.NotNil(t, c.Apps["Three"])
+}
+
+/* TestParseSyslRetrieverRemoteFail tests an invalid remote import (error includes file that tried to import it)*/
+func TestParseSyslRetrieverRemoteFail(t *testing.T) {
+	one := `
+import //github.com/org/repo/two.sysl@master
+`
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl": {one, retriever.ZeroHash},
+	}}
+
+	p := NewParser()
+
+	_, err := p.Parse("./one", r)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "one.sysl")
 }
 
 func TestFixTypeRefScope(t *testing.T) {
