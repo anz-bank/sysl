@@ -47,6 +47,8 @@ let specialAnno = {
 
     let unmappedType = primitive('STRING') -> unmappedTag(.);
 
+    let unmappedTypeWithTypeInfo = \type unmappedType +> (attrs +>: {openapiTypeAnno: (s: type)});
+
     # FIXME: better error messages
     let allOfToObj = \allOf
         let rec resolvePropertiesAndTrack = \previous \obj
@@ -111,6 +113,7 @@ let specialAnno = {
 
         let type = cond t {
             {'properties': properties, ...}:
+                (properties = {} && unmappedTypeWithTypeInfo('object')) ||
                 let requiredList = t('required')?.a:{} => .@item.s;
                 (
                     tuple: (
@@ -135,8 +138,12 @@ let specialAnno = {
             # (enum: (items: a => \(@: i, @item: (s: enumVal)) (@: enumVal, @value: i))),
 
             {'oneOf': (:a), ...}: (one_of: (type: a >> schemaToTypeMessageWithConfig(conf, .))),
-            {'allOf': _, ...}: schemaToTypeMessageWithConfig(conf, allOfToObj(t)) +> (attrs+>: {openapiTypeAnno: (s: 'allOf')}),
-
+            {'allOf': _, ...}:
+                let objs = allOfToObj(t);
+                cond objs('properties')?:{} {
+                    {}: unmappedTypeWithTypeInfo('allOf'),
+                    _: schemaToTypeMessageWithConfig(conf, objs) +> (attrs+>: {openapiTypeAnno: (s: 'allOf')}),
+                },
             {'items': items, ...}:
                 let (?:attrs:{}, ?:constraint:{}, ...type) = schemaToTypeMessageWithConfig(conf, items);
                 (sequence: type, :attrs, :constraint),
@@ -185,7 +192,7 @@ let specialAnno = {
                 },
 
 
-                _: unmappedType +> (attrs +>: {openapiTypeAnno: (s: type)}),
+                _: unmappedTypeWithTypeInfo(type),
             },
             _: unmappedType,
         };

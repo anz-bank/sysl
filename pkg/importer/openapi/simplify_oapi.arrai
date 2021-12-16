@@ -475,7 +475,7 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
                 cond type {
                     # when an object is encountered, it checks for complex schemas in its subproperties.
                     {'properties': properties, ...config}:
-                        let (:newProps, :newTypes) = reduce(
+                        let (?:newProps:properties, ?:newTypes:{}) = reduce(
                             properties orderby .,
                             \acc \(@: subname, @value: property)
                                 let conf = (name: $`${name}_${subname}`, isDefined: false);
