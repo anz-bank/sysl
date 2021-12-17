@@ -21,9 +21,7 @@ build:
     - windows
   goarch:
     - amd64
-    - 386
-  goarm:
-    - 7
+    - arm64
 
 archives:
 - id: "sysl"
