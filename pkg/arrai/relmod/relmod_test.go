@@ -134,6 +134,18 @@ func TestParseReturnPayload(t *testing.T) {
 	assert.Equal(t,
 		StatementReturn{
 			Status: "ok",
+			Type:   TypePrimitive{"any"},
+			Attr: StatementReturnAttrs{
+				Modifier: []string{"tag"},
+				Nvp:      map[string]interface{}{"k": "v"},
+			},
+		},
+		mustParseReturnPayload(`ok <: A::b.c.d.e [~tag, k="v"]`, appName),
+	)
+
+	assert.Equal(t,
+		StatementReturn{
+			Status: "ok",
 			Type:   TypePrimitive{"string"},
 			Attr: StatementReturnAttrs{
 				Nvp: map[string]interface{}{

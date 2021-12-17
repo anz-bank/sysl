@@ -96,7 +96,7 @@ func buildPayloadParser() (rel.Expr, error) {
 	parse := `
 		\payload //grammar.parse({://grammar.lang.wbnf:
 			payload -> (status ("<:" type)? | (status "<:")? type) attr?;
-			type		-> sequence | set | PRIMITIVE | ref (?="[") | ref $ | raw $;
+			type		-> sequence | set | PRIMITIVE | ref (?="[") | ref attr? $ | raw attr? $;
 			sequence	-> "sequence of " type;
 			set			-> "set of " type;
 			ref			-> (app=([^\s.:]+):"::" ".")? type=[^\s.]+;
@@ -145,8 +145,8 @@ func buildPayloadParser() (rel.Expr, error) {
 		(
 			status: ast.status?.'':'' rank (:.@),
 			type: type(ast.type?:()),
-			nvp: ast.attr?.nvp?:{} => (@: (.@item.name.'' rank (:.@)), @value: buildNvp(.@item.nvp_item)),
-			modifier: ast.attr?.modifier?:{} => (.@item.name.'' rank (:.@))
+			nvp: ast.attr?:(ast.type?.attr?:()).nvp?:{} => (@: (.@item.name.'' rank (:.@)), @value: buildNvp(.@item.nvp_item)),
+			modifier: ast.attr?:(ast.type?.attr?:()).modifier?:{} => (.@item.name.'' rank (:.@))
 		)
 	`
 
