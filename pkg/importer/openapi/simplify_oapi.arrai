@@ -29,13 +29,15 @@ let isNativeType = \type type <: {'boolean', 'integer', 'number', 'string'};
 # FIXME: handle non verbs in path
 
 # simplifiedParams moves top level parameters from a path and move it into all operation objects in a path.
-let simplifiedParams =
+let simplifiedParams = \oapi
+    let resolveToObj = resolveToObj((:oapi));
     let mergeParams = \top \bottom
         cond bottom {
             {}: top,
             _:
-                let nested = \(a: arr)
+                let nested = \arr
                     let mergeNestedParams = \acc \param
+                        let param = resolveToObj(param);
                         let key = (name: param('name'), in: param('in'));
                         cond {
                             acc(key)?:{} = {}: acc +> {key: param},
@@ -49,13 +51,12 @@ let simplifiedParams =
         }
     ;
 
-    \oapi
-        oapi +> {
-            'paths': oapi('paths')?:{} >> cond . {
-                {'parameters': top, ...verbs}: verbs >> . +> {'parameters': (a: mergeParams(top, .('parameters')?:{}))},
-                _: .,
-            }
+    oapi +> {
+        'paths': oapi('paths')?:{} >> cond . {
+            {'parameters': top, ...verbs}: verbs >> . +> {'parameters': (a: mergeParams(top.a, .('parameters')?.a?:{}))},
+            _: .,
         }
+    }
 ;
 
 let rec isComplexSchema = \schema
@@ -276,7 +277,7 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
 
     # TODO: remove this once sysl support types in endpoints
     let simplifiedTypesFromParameters = \oapi
-        let resolveToObj = resolveToObj(oapi);
+        let resolveToObj = resolveToObj((:oapi));
         # each status and response is flattened to avoid deeply nested reduce functions.
         let flattened = (
             (
@@ -326,7 +327,7 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
     ;
 
     let simplifiedComponentsOnLocation = \collect \simplify \location \oapi
-        let resolveToObj = resolveToObj(oapi);
+        let resolveToObj = resolveToObj((:oapi));
         let collected = reduce(
             oapi('components', location)?:{} orderby .,
             \acc \(@: name, @value: obj) collect(acc, name, resolveToObj(obj)) || acc,
