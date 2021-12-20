@@ -108,10 +108,13 @@ internal/arrai/arrai.go: \
 		internal/bundles/assets/spanner_cli.arraiz \
 		internal/bundles/assets/import_proto_cli.arraiz
 
+
+pkg/importer/proto/bundled_files/local_imports.arrai: pkg/importer/proto/bundled_files/bundler.arrai
+	$(ARRAI) run $< > pkg/importer/proto/bundled_files/tmp.arrai && \
+	mv -f pkg/importer/proto/bundled_files/tmp.arrai $@
+
 .PHONY: bundled-proto
-bundled-proto:
-	$(ARRAI) run pkg/importer/proto/bundled_files/bundler.arrai > pkg/importer/proto/bundled_files/tmp.arrai && \
-	mv -f pkg/importer/proto/bundled_files/tmp.arrai pkg/importer/proto/bundled_files/local_imports.arrai
+bundled-proto: pkg/importer/proto/bundled_files/local_imports.arrai
 
 release:
 	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot -f .goreleaser.yml
