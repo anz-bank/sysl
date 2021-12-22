@@ -73,7 +73,7 @@ TestApp "Simple":
         Error
     
     !type get_withHeaders%3AandSpecialChars_404_resp_type_header:
-        content_type <: get_withHeaders%3AandSpecialChars_404_resp_type_header_content-type?:
+        content-type <: get_withHeaders%3AandSpecialChars_404_resp_type_header_content-type?:
             @json_tag = "content-type"
     
     !alias get_withHeaders%3AandSpecialChars_404_resp_type_header_content-type [~unmapped_openapi]:

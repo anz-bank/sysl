@@ -19,13 +19,13 @@ TestApp "Meta API Test":
     /endpoint-1:
         GET:
             | Here's a description filler
-            return 200 <: get_endpoint_1_200_resp_type 
+            return 200 <: get_endpoint-1_200_resp_type 
     
-    !type get_endpoint_1_200_resp_type [~GeneratedOpenAPIResponse]:
-        header <: get_endpoint_1_200_resp_type_header [~header]:
+    !type get_endpoint-1_200_resp_type [~GeneratedOpenAPIResponse]:
+        header <: get_endpoint-1_200_resp_type_header [~header]:
             @json_tag = "header"
     
-    !type get_endpoint_1_200_resp_type_header:
-        content_type <: string?:
+    !type get_endpoint-1_200_resp_type_header:
+        content-type <: string?:
             @examples = "application/json"
             @json_tag = "content-type"

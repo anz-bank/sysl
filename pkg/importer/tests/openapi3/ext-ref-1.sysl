@@ -8,70 +8,70 @@ TestApp "ExtRef1":
     @package = "com.example.package"
     @version = "1.2.3"
     
-    !alias ext_ref_1%2Eyaml_components_schemas_test8:
+    !alias ext-ref-1%2Eyaml_components_schemas_test8:
         string
     
-    !alias ext_ref_2%2Eyaml_components_schemas_test1:
+    !alias ext-ref-2%2Eyaml_components_schemas_test1:
         string
     
-    !type ext_ref_2%2Eyaml_components_schemas_test2:
+    !type ext-ref-2%2Eyaml_components_schemas_test2:
         x <: float?:
             @json_tag = "x"
     
-    !type ext_ref_2%2Eyaml_components_schemas_test3:
-        x <: ext_ref_3%2Eyaml_components_schemas_test1?:
+    !type ext-ref-2%2Eyaml_components_schemas_test3:
+        x <: ext-ref-3%2Eyaml_components_schemas_test1?:
             @json_tag = "x"
-        y <: ext_ref_3%2Eyaml_components_schemas_test2?:
+        y <: ext-ref-3%2Eyaml_components_schemas_test2?:
             @json_tag = "y"
-        z <: ext_ref_2%2Eyaml_components_schemas_test1?:
+        z <: ext-ref-2%2Eyaml_components_schemas_test1?:
             @json_tag = "z"
     
-    !alias ext_ref_3%2Eyaml_components_schemas_test1:
+    !alias ext-ref-3%2Eyaml_components_schemas_test1:
         string
     
-    !type ext_ref_3%2Eyaml_components_schemas_test2:
+    !type ext-ref-3%2Eyaml_components_schemas_test2:
         x <: float?:
             @json_tag = "x"
-        y <: ext_ref_3%2Eyaml_components_schemas_test2_y?:
+        y <: ext-ref-3%2Eyaml_components_schemas_test2_y?:
             @json_tag = "y"
     
-    !type ext_ref_3%2Eyaml_components_schemas_test2_y:
+    !type ext-ref-3%2Eyaml_components_schemas_test2_y:
         a <: string?:
             @json_tag = "a"
-        b <: external_ref_test_ext_ref_4%2Eyaml_components_schemas_test1?:
+        b <: external-ref-test_ext-ref-4%2Eyaml_components_schemas_test1?:
             @json_tag = "b"
     
-    !type external_ref_test_ext_ref_4%2Eyaml_components_schemas_test1:
-        x <: external_ref_test_ext_ref_4%2Eyaml_components_schemas_test2?:
+    !type external-ref-test_ext-ref-4%2Eyaml_components_schemas_test1:
+        x <: external-ref-test_ext-ref-4%2Eyaml_components_schemas_test2?:
             @json_tag = "x"
-        y <: external_ref_test_ext_ref_4%2Eyaml_components_schemas_test3?:
+        y <: external-ref-test_ext-ref-4%2Eyaml_components_schemas_test3?:
             @json_tag = "y"
-        z <: external_ref_test_ext_ref_5%2Ejson_components_schemas_test1?:
+        z <: external-ref-test_ext-ref-5%2Ejson_components_schemas_test1?:
             @json_tag = "z"
     
-    !alias external_ref_test_ext_ref_4%2Eyaml_components_schemas_test2:
-        ext_ref_1%2Eyaml_components_schemas_test8
+    !alias external-ref-test_ext-ref-4%2Eyaml_components_schemas_test2:
+        ext-ref-1%2Eyaml_components_schemas_test8
     
-    !alias external_ref_test_ext_ref_4%2Eyaml_components_schemas_test3:
-        ext_ref_3%2Eyaml_components_schemas_test1
+    !alias external-ref-test_ext-ref-4%2Eyaml_components_schemas_test3:
+        ext-ref-3%2Eyaml_components_schemas_test1
     
-    !alias external_ref_test_ext_ref_5%2Ejson_components_schemas_test1:
+    !alias external-ref-test_ext-ref-5%2Ejson_components_schemas_test1:
         string
     
     !alias test1:
-        ext_ref_2%2Eyaml_components_schemas_test1
+        ext-ref-2%2Eyaml_components_schemas_test1
     
     !type test2:
-        field1 <: ext_ref_2%2Eyaml_components_schemas_test1?:
+        field1 <: ext-ref-2%2Eyaml_components_schemas_test1?:
             @json_tag = "field1"
-        field2 <: ext_ref_2%2Eyaml_components_schemas_test2?:
+        field2 <: ext-ref-2%2Eyaml_components_schemas_test2?:
             @json_tag = "field2"
     
     !type test3:
         @openapi_type = "allOf"
-        x <: ext_ref_3%2Eyaml_components_schemas_test1?:
+        x <: ext-ref-3%2Eyaml_components_schemas_test1?:
             @json_tag = "x"
-        y <: ext_ref_3%2Eyaml_components_schemas_test2?:
+        y <: ext-ref-3%2Eyaml_components_schemas_test2?:
             @json_tag = "y"
         z <: test1?:
             @json_tag = "z"
@@ -80,14 +80,14 @@ TestApp "ExtRef1":
         string
     
     !union test5:
-        ext_ref_2%2Eyaml_components_schemas_test2
-        ext_ref_2%2Eyaml_components_schemas_test3
+        ext-ref-2%2Eyaml_components_schemas_test2
+        ext-ref-2%2Eyaml_components_schemas_test3
     
     !alias test6:
-        sequence of ext_ref_2%2Eyaml_components_schemas_test3
+        sequence of ext-ref-2%2Eyaml_components_schemas_test3
     
     !alias test7:
-        external_ref_test_ext_ref_4%2Eyaml_components_schemas_test1
+        external-ref-test_ext-ref-4%2Eyaml_components_schemas_test1
     
     !alias test8:
         string

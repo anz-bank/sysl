@@ -10,10 +10,10 @@ TestApp "Path API Test":
     @version = "1.0.0"
     
     /endpoint-1:
-        POST(post_endpoint_1_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content_type <: string [~header, name="content-type", openapi_format="enum"], custom_parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
+        POST(post_endpoint-1_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
             | Here's a description
-            return 200 <: post_endpoint_1_200_resp_type 
-            return 401 <: post_endpoint_1_401_resp_type 
+            return 200 <: post_endpoint-1_200_resp_type 
+            return 401 <: post_endpoint-1_401_resp_type 
     
     !type error_401:
         error <: error_401_error?:
@@ -26,35 +26,35 @@ TestApp "Path API Test":
             @examples = "Too many OTP attempts"
             @json_tag = "description"
     
-    !type post_endpoint_1_200_resp_type [~GeneratedOpenAPIResponse]:
-        body <: post_endpoint_1_200_resp_type_body [~body]:
+    !type post_endpoint-1_200_resp_type [~GeneratedOpenAPIResponse]:
+        body <: post_endpoint-1_200_resp_type_body [~body]:
             @json_tag = "body"
-        header <: post_endpoint_1_200_resp_type_header [~header]:
+        header <: post_endpoint-1_200_resp_type_header [~header]:
             @json_tag = "header"
     
-    !alias post_endpoint_1_200_resp_type_body [~unmapped_openapi]:
+    !alias post_endpoint-1_200_resp_type_body [~unmapped_openapi]:
         @examples = [["just an example content", "{'$ref': '#/components/examples/resp_create'}"]]
         @mediatype = "application/json"
         string
     
-    !type post_endpoint_1_200_resp_type_header:
-        content_type <: string?:
+    !type post_endpoint-1_200_resp_type_header:
+        content-type <: string?:
             @examples = "application/json"
             @json_tag = "content-type"
     
-    !type post_endpoint_1_401_resp_type [~GeneratedOpenAPIResponse]:
-        body <: post_endpoint_1_401_resp_type_body [~body]:
+    !type post_endpoint-1_401_resp_type [~GeneratedOpenAPIResponse]:
+        body <: post_endpoint-1_401_resp_type_body [~body]:
             @json_tag = "body"
-        header <: post_endpoint_1_401_resp_type_header [~header]:
+        header <: post_endpoint-1_401_resp_type_header [~header]:
             @json_tag = "header"
     
-    !alias post_endpoint_1_401_resp_type_body:
+    !alias post_endpoint-1_401_resp_type_body:
         @examples = [["Too many attempts", "{'$ref': '#/components/examples/error_too_many_attempts'}"]]
         @mediatype = "application/json"
         error_401
     
-    !type post_endpoint_1_401_resp_type_header:
-        content_type <: string?:
+    !type post_endpoint-1_401_resp_type_header:
+        content-type <: string?:
             @examples = "application/json"
             @json_tag = "content-type"
     

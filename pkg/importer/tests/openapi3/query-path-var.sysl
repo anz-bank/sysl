@@ -10,5 +10,5 @@ TestApp "Sample API":
     @version = "1.0.0"
     
     /users/{id <: int}/{id2 <: string}:
-        GET(request_id <: string [~header, description="the request ID.", name="request-id"]) ?metadata=bool?:
+        GET(request-id <: string [~header, description="the request ID.", name="request-id"]) ?metadata=bool?:
             return 200
