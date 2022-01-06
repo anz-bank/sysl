@@ -27,6 +27,8 @@ func Normalize(ctx context.Context, m *sysl.Module) (*Schema, error) {
 }
 
 func normalizeModule(ctx context.Context, s *Schema, m *sysl.Module) error {
+	normalizeImports(s, m)
+
 	// Normalize apps in a deterministic (alphabetical) order.
 	keys := make([]string, 0, len(m.Apps))
 	for k := range m.Apps {
@@ -40,6 +42,28 @@ func normalizeModule(ctx context.Context, s *Schema, m *sysl.Module) error {
 		}
 	}
 	return nil
+}
+
+func normalizeImports(s *Schema, m *sysl.Module) {
+	for _, imp := range m.Imports {
+		if imp.Name == nil {
+			s.Import = append(s.Import, Import{
+				Target: imp.Target,
+				Name:   nil,
+			})
+		} else {
+			s.Import = append(s.Import, Import{
+				Target: imp.Target,
+				Name:   imp.Name.Part,
+			})
+		}
+
+		s.Src.Import = append(s.Src.Import, ImportContext{
+			Target:     imp.Target,
+			ImportSrc:  relmodSourceContext(imp.SourceContext),
+			ImportSrcs: relmodSourceContexts([]*sysl.SourceContext{imp.SourceContext}),
+		})
+	}
 }
 
 func normalizeApp(ctx context.Context, s *Schema, app *sysl.Application) error {

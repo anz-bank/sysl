@@ -3,6 +3,7 @@ let (:syslSafeName, :syslSafePath, ...) = //{/pkg/importer/utils};
 
 let sysl = //{./sysl};
 
+let import = m.import?:{};
 let app = m.app?:{};
 let enum = m.enum?:{};
 let ep = m.ep?:{};
@@ -153,8 +154,9 @@ let typedPath =
 let fileContents = \file \apps
     let apps = apps orderby .appSrc.start?.line?:(.appName);
     let sortedEp = src.ep where .epSrc.file = file;
-    # TODO: imports
     //{./util}.trimLines($`
+        ${import >> $`import ${.target}${cond {.name: ' as ' ++ joinedName(.name >> syslSafeName(.))}}`::\n}
+
         ${apps >> \(:appName, ...)
             # TODO: appDocstring
             let appLongName = ((app where .appName = appName) single).appLongName?:{};
@@ -249,6 +251,6 @@ let fileMap = \file \apps
 ;
 
 let missingSrc = app &~ (app <&- src.app) => (:.appName, appSrc: (file: "default.sysl"));
-let files = (src.app | missingSrc => \(:appName, :appSrc, ...) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
+let files = ((src.app <&- app) | missingSrc => \(:appName, :appSrc, ...) (:appName, :appSrc, :appSrc.file)) nest |appName, appSrc|apps;
 let fileMaps = files => fileMap(.file, .apps);
 reduce(fileMaps orderby ., \k \v dictMerge(v, k), {})

@@ -1,5 +1,10 @@
 package relmod
 
+type Import struct {
+	Target string
+	Name   []string
+}
+
 type App struct {
 	AppName      []string
 	AppLongName  string
@@ -304,6 +309,12 @@ type ViewTag struct {
 
 // SOURCE CONTEXTS
 
+type ImportContext struct {
+	Target     string
+	ImportSrc  SourceContext
+	ImportSrcs []SourceContext
+}
+
 type AppContext struct {
 	AppName []string
 	AppSrc  SourceContext
@@ -398,31 +409,33 @@ type Tags struct {
 }
 
 type SourceContexts struct {
-	App   []AppContext       `arrai:",unordered"`
-	Mixin []MixinContext     `arrai:",unordered"`
-	Ep    []EndpointContext  `arrai:",unordered"`
-	Param []ParamContext     `arrai:",unordered"`
-	Stmt  []StatementContext `arrai:",unordered"`
-	Event []EventContext     `arrai:",unordered"`
-	Type  []TypeContext      `arrai:",unordered"`
-	Field []FieldContext     `arrai:",unordered"`
-	View  []ViewContext      `arrai:",unordered"`
+	Import []ImportContext    `arrai:",unordered"`
+	App    []AppContext       `arrai:",unordered"`
+	Mixin  []MixinContext     `arrai:",unordered"`
+	Ep     []EndpointContext  `arrai:",unordered"`
+	Param  []ParamContext     `arrai:",unordered"`
+	Stmt   []StatementContext `arrai:",unordered"`
+	Event  []EventContext     `arrai:",unordered"`
+	Type   []TypeContext      `arrai:",unordered"`
+	Field  []FieldContext     `arrai:",unordered"`
+	View   []ViewContext      `arrai:",unordered"`
 }
 
 type Schema struct {
-	App   []App       `arrai:",unordered"`
-	Mixin []Mixin     `arrai:",unordered"`
-	Ep    []Endpoint  `arrai:",unordered"`
-	Param []Param     `arrai:",unordered"`
-	Stmt  []Statement `arrai:",unordered"`
-	Event []Event     `arrai:",unordered"`
-	Type  []Type      `arrai:",unordered"`
-	Field []Field     `arrai:",unordered"`
-	Table []Table     `arrai:",unordered"`
-	Alias []Alias     `arrai:",unordered"`
-	Enum  []Enum      `arrai:",unordered"`
-	View  []View      `arrai:",unordered"`
-	Anno  Annotations
-	Tag   Tags
-	Src   SourceContexts
+	Import []Import
+	App    []App       `arrai:",unordered"`
+	Mixin  []Mixin     `arrai:",unordered"`
+	Ep     []Endpoint  `arrai:",unordered"`
+	Param  []Param     `arrai:",unordered"`
+	Stmt   []Statement `arrai:",unordered"`
+	Event  []Event     `arrai:",unordered"`
+	Type   []Type      `arrai:",unordered"`
+	Field  []Field     `arrai:",unordered"`
+	Table  []Table     `arrai:",unordered"`
+	Alias  []Alias     `arrai:",unordered"`
+	Enum   []Enum      `arrai:",unordered"`
+	View   []View      `arrai:",unordered"`
+	Anno   Annotations
+	Tag    Tags
+	Src    SourceContexts
 }

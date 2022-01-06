@@ -97,6 +97,15 @@ let specialCharacters = (
         `
     },
 
+    simpleWrongSrc: reconstruct(simpleNoSrc +> (src: (app: {(appName: ['nonexistentApp'], appSrc: (file: 'a.sysl'))}))) = {
+        'default.sysl': $`
+            A:
+                !type T:
+                    f <: int
+
+        `
+    },    
+
     optional:
         let data = simple +> (field: simple.field => . +> (fieldOpt: true));
         reconstruct(data) = {
@@ -263,4 +272,61 @@ let specialCharacters = (
 
             `
         }
+    ,
+
+    imports:
+    (
+        syslImport:
+            let data = simple +> (import: [(target: 'other.sysl', name: {})]);
+            reconstruct(data) = {
+                'a.sysl': $`
+                    import other.sysl
+
+                    A:
+                        !type T:
+                            f <: int
+
+                `
+            },
+
+        yamlImport:
+            let data = simple +> (import: [(target: 'other.yaml', name: {})]);
+            reconstruct(data) = {
+                'a.sysl': $`
+                    import other.yaml
+
+                    A:
+                        !type T:
+                            f <: int
+
+                `
+            },
+
+        yamlImportWithName:
+            let data = simple +> (import: [(target: 'other.yaml', name: ['App'])]);
+            reconstruct(data) = {
+                'a.sysl': $`
+                    import other.yaml as App
+
+                    A:
+                        !type T:
+                            f <: int
+
+                `
+            },
+
+        yamlImportWithMultipartName:
+            let data = simple +> (import: [(target: 'other.yaml', name: ['Namespace', 'App'])]);
+            reconstruct(data) = {
+                'a.sysl': $`
+                    import other.yaml as Namespace :: App
+
+                    A:
+                        !type T:
+                            f <: int
+
+                `
+            },
+
+    )
 )
