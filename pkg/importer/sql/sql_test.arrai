@@ -34,6 +34,13 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                 attributes: [(name: 'c', type: 'int64', nullable: true, length: 0, scale: 0, options: {})],
             )}
         ,
+        check:
+            {:macro:CREATE TABLE t (c INT64, CONSTRAINT c CHECK(c <> 0 AND c <> 1)):}.entities
+            --- {(
+                name: 't',
+                attributes: [(name: 'c', type: 'int64', nullable: true, length: 0, scale: 0, options: {})],
+            )}
+        ,
         pk: (
             simple:
                 {:macro:CREATE TABLE t (c INT64) PRIMARY KEY(c):}.entities
