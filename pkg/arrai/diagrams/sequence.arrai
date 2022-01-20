@@ -44,7 +44,8 @@ let rec transitiveSequence = \appName \epName \allCalls \allReturns \visited
     ${calls orderby .index >> $`
       "${appName}" -> "${.to.appName}": "${.to.epName}"
       activate "${.to.appName}"
-      ${visited && visited => .@item};
+      ${
+        let v = visited && visited => .@item;
         cond {
           (:.to.appName, :.to.epName) !<: v:
             transitiveSequence(.to.appName, .to.epName, allCalls, allReturns, [(:.to.appName, :.to.epName)] ++ visited)
