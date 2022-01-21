@@ -31,19 +31,21 @@ const (
 	jsonMode     = "json"
 	spannerMode  = "spanner"
 	yamlMode     = "yaml"
+	protoMode    = "proto"
 )
 
 func (p *exportCmd) Name() string       { return "export" }
 func (p *exportCmd) MaxSyslModule() int { return 1 }
 
 func (p *exportCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
-	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types: Swagger,openapi2,openapi3,spanner")
+	cmd := app.Command(p.Name(), "Export sysl to external types. Supported types:"+
+		" Swagger,openapi2,openapi3,spanner, proto")
 	cmd.Flag("app-name", "name of the sysl App defined in the sysl model."+
 		" if there are multiple Apps defined in the sysl model,"+
 		" swagger will be generated only for the given app").Short('a').StringVar(&p.appName)
 	cmd.Flag(
 		"format",
-		"format of export, supported options; (swagger | openapi2 | openapi3 | spanner)",
+		"format of export, supported options; (swagger | openapi2 | openapi3 | spanner | proto)",
 	).Default("swagger").Short('f').StringVar(&p.mode)
 	cmd.Flag("output", "output filepath.format(yaml | json) (default: %(appname).yaml)").Default(
 		"%(appname).yaml").Short('o').StringVar(&p.out)
@@ -61,6 +63,13 @@ func (p *exportCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if format == spannerMode {
 		x := exporter.MakeSpannerExporter(args.Filesystem, args.Logger, args.Root, p.out)
 		err := x.ExportFile(args.ModulePaths[0])
+		if err != nil {
+			return err
+		}
+		return nil
+	} else if format == protoMode {
+		x := exporter.MakeTransformExporter(args.Filesystem, args.Logger, args.Root, p.out, format)
+		err := x.ExportFile(args.Modules, args.ModulePaths)
 		if err != nil {
 			return err
 		}
@@ -102,6 +111,8 @@ func (p *exportCmd) determineOperationMode(filename string) (string, error) {
 		return spannerMode, nil
 	case yamlMode:
 		return yamlMode, nil
+	case protoMode:
+		return protoMode, nil
 	default:
 		return "", fmt.Errorf("could not determine output format from specified output file extension '%s'", fileExtn)
 	}

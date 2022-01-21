@@ -8,11 +8,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/arrai"
-	"github.com/anz-bank/sysl/pkg/arrai/relmod"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/arr-ai/arrai/pkg/test"
 	"github.com/arr-ai/arrai/rel"
@@ -48,7 +45,7 @@ func (p *transformCmd) Execute(args cmdutils.ExecuteArgs) error {
 	var err error
 	var result rel.Value
 
-	input, err := buildTransformInput(args)
+	input, err := transform.BuildTransformInput(args.Modules, args.ModulePaths)
 	if err != nil {
 		return err
 	}
@@ -173,51 +170,4 @@ func runTransformTests(fs afero.Fs, transformResult rel.Value, testFilePath stri
 	}
 
 	return test.Report(os.Stdout, []test.File{testFile})
-}
-
-// buildTransformInput prepares the input tuple that is accepted as the only parameter for transforms.
-func buildTransformInput(args cmdutils.ExecuteArgs) (rel.Tuple, error) {
-	models := make([]syslModel, 0, len(args.Modules))
-
-	for i, module := range args.Modules {
-		modPath := "stdin"
-		if len(args.ModulePaths) > i {
-			modPath = args.ModulePaths[i]
-		}
-		mod, err := buildModel(module, modPath)
-		if err != nil {
-			return nil, err
-		}
-		models = append(models, mod)
-	}
-
-	input, err := rel.NewTupleFromMap(map[string]interface{}{"models": models})
-	if err != nil {
-		return nil, err
-	}
-
-	return input, nil
-}
-
-// buildModel create a syslModel struct by normalizing the supplied Sysl module and packaging it together with the
-// original document model and the path. A collection of them is consumed by transforms, and allows them to choose
-// the preferred type of model they want to work with.
-func buildModel(module *sysl.Module, path string) (syslModel, error) {
-	docMod, err := arrai.SyslModuleToValue(module)
-	if err != nil {
-		return syslModel{}, err
-	}
-
-	relMod, err := relmod.Normalize(context.Background(), module)
-	if err != nil {
-		return syslModel{}, err
-	}
-
-	return syslModel{path: path, doc: docMod, rel: *relMod}, nil
-}
-
-type syslModel struct {
-	path string
-	doc  rel.Value
-	rel  relmod.Schema
 }

@@ -1,0 +1,6 @@
+let export = //{/transforms/exporters/proto/export};
+
+\(:models, ...)
+  let namespace = //os.get_env('SYSL_PROTO_NAMESPACE')?:'';
+  let package = //os.get_env('SYSL_PROTO_PACKAGE')?:'';
+  export(models(0).rel, namespace, package)

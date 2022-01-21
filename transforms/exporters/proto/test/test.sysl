@@ -1,0 +1,18 @@
+App:
+  !type Request:
+    numbered <: int:
+      @proto_number = "42"
+    primaryKey <: string [~pk]
+    nativeTypeField <: string
+    reference <: Type
+    optional <: string?
+    set <: set of string
+    sequence <: sequence of string
+    with_anno <: string:
+        @annotation = "this is an annotation"
+    decimal_with_precision <: decimal(5.8)
+    string_max_constraint <: string(5)
+    string_range_constraint <: string(5..10)
+
+  !type Type:
+    foo <: int

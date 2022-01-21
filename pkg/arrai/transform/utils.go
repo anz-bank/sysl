@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/anz-bank/sysl/pkg/arrai"
+	"github.com/anz-bank/sysl/pkg/arrai/relmod"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/arr-ai/arrai/pkg/arraictx"
 	"github.com/arr-ai/arrai/pkg/test"
 	"github.com/arr-ai/arrai/rel"
@@ -65,4 +68,51 @@ func RunTests(scriptBytes []byte, testScriptPath string, param rel.Value) (test.
 	}
 
 	return testFile, err
+}
+
+// buildTransformInput prepares the input tuple that is accepted as the only parameter for transforms.
+func BuildTransformInput(modules []*sysl.Module, modulePaths []string) (rel.Tuple, error) {
+	models := make([]syslModel, 0, len(modules))
+
+	for i, module := range modules {
+		modPath := "stdin"
+		if len(modulePaths) > i {
+			modPath = modulePaths[i]
+		}
+		mod, err := buildModel(module, modPath)
+		if err != nil {
+			return nil, err
+		}
+		models = append(models, mod)
+	}
+
+	input, err := rel.NewTupleFromMap(map[string]interface{}{"models": models})
+	if err != nil {
+		return nil, err
+	}
+
+	return input, nil
+}
+
+// buildModel create a syslModel struct by normalizing the supplied Sysl module and packaging it together with the
+// original document model and the path. A collection of them is consumed by transforms, and allows them to choose
+// the preferred type of model they want to work with.
+func buildModel(module *sysl.Module, path string) (syslModel, error) {
+	docMod, err := arrai.SyslModuleToValue(module)
+	if err != nil {
+		return syslModel{}, err
+	}
+
+	relMod, err := relmod.Normalize(context.Background(), module)
+	if err != nil {
+		return syslModel{}, err
+	}
+
+	return syslModel{path: path, doc: docMod, rel: *relMod}, nil
+}
+
+type syslModel struct {
+	path string
+	doc  rel.Value
+	rel  relmod.Schema
 }
