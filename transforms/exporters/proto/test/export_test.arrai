@@ -5,8 +5,10 @@ let (:loadBytes, :newNormalize, ...) = //{/pkg/arrai/sysl};
 let trimNewline = \str //re.compile(`\n*$`).sub('', str);
 
 let rel = newNormalize(loadBytes(//{./test.pb}));
-let expected = $`${//{./test.proto}}`;
 
 (
-  export: trimNewline(export(rel, "Name :: Space", "Foo")) = trimNewline(expected),
+  export:
+    trimNewline(export(rel, "Name :: Space", "Foo")) = trimNewline($`${//[//encoding.bytes]{./test.proto}}`),
+  exportWithoutSrc:
+    trimNewline(export(rel.~|src|, "Name :: Space", "Foo")) = trimNewline($`${//[//encoding.bytes]{./test_no_src.proto}}`),
 )

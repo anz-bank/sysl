@@ -1,22 +1,48 @@
 let export = \rel \namespace \package
-
   let rec toProtoType = \field
     let ft = field.fieldType;
     let tags = {field} --> rel.tag.field;
+    let opt = field.fieldOpt?:false;
 
     cond ft {
       (:sequence, ...): $`repeated ${toProtoType(field +> (fieldType: sequence))}`,
       (:set, ...): $`repeated ${toProtoType(field +> (fieldType: set))}`,
       # TODO: Constraints, tags.
-      (primitive: 'BYTES'): 'bytes',
-      (primitive: 'BOOL'): 'bool',
-      (primitive: 'INT'): 'int32',
-      (primitive: 'FLOAT'): 'float32',
-      (primitive: 'DECIMAL'): 'float64',
-      (primitive: 'STRING'): 'string',
+      (:primitive, ...):
+        let protoValOrPrimitive = \t cond {
+          opt:
+            let t = //str.title((t <: {'float32', 'float64'} && 'float') || t);
+            $`google.protobuf.${t}Value`
+          ,
+          _: t
+        };
+        cond primitive {
+          'BYTES':   protoValOrPrimitive('bytes'),
+          'BOOL':    protoValOrPrimitive('bool'),
+          'INT':     protoValOrPrimitive('int32'),
+          'FLOAT':   protoValOrPrimitive('float32'),
+          'DECIMAL': protoValOrPrimitive('float64'),
+          'STRING':  protoValOrPrimitive('string'),
+        },
       (:typePath, ...): $`${typePath::.}`,
-      _: //error($`unhandled type ${ft}`)
-    }
+    } || //error($`unhandled type ${ft}`)
+  ;
+
+  let orderedFields =
+    let src = rel.src?.field?:{} => (
+      :.appName,
+      :.typeName,
+      :.fieldName,
+      line:
+        cond .fieldSrcs {
+          [(start: (:line, ...), ...), ...]: line
+        }
+    );
+    \fields
+      cond {
+        src: ((fields <&> src) rank (:.line)) => (@: .line, @item: .~|line|),
+        _: fields orderby .fieldName
+      }
   ;
 
   let nonEnums = (rel.type => .|appName, typeName|) &~ (rel.enum => .|appName, typeName|);
@@ -32,6 +58,8 @@ let export = \rel \namespace \package
 
     option go_package = "${package}";
 
+    import "google/protobuf/struct.proto";
+
     ${rel.enum orderby .typeName >> $`
       enum ${.typeName} {
         ${.enumItems orderby .@value >> $`${.@} = ${.@value};`::\i}
@@ -39,7 +67,7 @@ let export = \rel \namespace \package
     `::\n\n}
     ${nonEnums orderby .typeName >> $`
       message ${.typeName} {
-        ${({.} <&> rel.field orderby .fieldName) >>> \i \f
+        ${orderedFields({.} <&> rel.field) >>> \i \f
           let {index} = ({f +> (fieldAnnoName: 'proto_number')} --> rel.anno.field => .fieldAnnoValue) || {i+1};
           $`
             ${toProtoType(f)} ${f.fieldName} = ${index};
