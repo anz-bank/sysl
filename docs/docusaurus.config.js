@@ -45,10 +45,6 @@ module.exports = {
       defaultMode: "light",
       disableSwitch: false,
     },
-    googleAnalytics: {
-      trackingID: "UA-173443254-1", // GA account owner: sysl.usr@gmail.com
-      anonymizeIP: true,
-    },
   },
   presets: [
     [
@@ -73,16 +69,16 @@ module.exports = {
             },
           },
         },
-        community: {
-          homePageId: "discussions",
-          sidebarPath: require.resolve("./sidebars.js"),
-        },
         blog: {
           showReadingTime: true,
           editUrl: "https://github.com/anz-bank/sysl-website/edit/master/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
+        },
+        googleAnalytics: {
+          trackingID: "UA-173443254-1", // GA account owner: sysl.usr@gmail.com
+          anonymizeIP: true,
         },
       },
     ],
