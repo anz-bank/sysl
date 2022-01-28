@@ -3,11 +3,12 @@ package exporter
 import (
 	"os"
 	"path"
+	"strings"
 
+	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/transforms"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -50,13 +51,9 @@ func (e *TransformExporter) ExportFile(modules []*sysl.Module, modulePaths []str
 	if err != nil {
 		return err
 	}
-	scriptPath := path.Join("exporters", e.transformName, "/transform.arrai")
-	transformBytes, err := transforms.EmbedFs.ReadFile(scriptPath)
-	if err != nil {
-		return err
-	}
 
-	result, err := transform.EvalWithParam(transformBytes, scriptPath, input)
+	scriptPath := path.Join("exporters", strings.ToLower(e.transformName), "transform.arraiz")
+	result, err := transform.EvalWithParam(bundles.MustRead(scriptPath), scriptPath, input)
 	if err != nil {
 		return err
 	}

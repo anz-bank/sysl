@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
-	"github.com/anz-bank/sysl/transforms"
 	"github.com/arr-ai/arrai/pkg/test"
 	"github.com/arr-ai/arrai/rel"
 	"github.com/sirupsen/logrus"
@@ -22,7 +22,7 @@ import (
 func TestImporters(t *testing.T) {
 	t.Parallel()
 
-	dirEntries, err := transforms.EmbedFs.ReadDir("importers")
+	dirEntries, err := bundles.BundlesFs.ReadDir("importers")
 	require.NoError(t, err)
 	require.NotEmpty(t, dirEntries)
 	testFiles := make([]test.File, 0, len(dirEntries))
@@ -32,14 +32,14 @@ func TestImporters(t *testing.T) {
 		// Read the importer's directory content
 		require.Equal(t, os.ModeDir, importerDir.Type())
 		dirPath := path.Join("importers", importerDir.Name())
-		files, err := transforms.EmbedFs.ReadDir(dirPath)
+		files, err := bundles.BundlesFs.ReadDir(dirPath)
 		require.NoError(t, err)
 
 		// Find and read the input file. It can be of any filetype, so look for something that starts with 'input.'
 		var inputFile string
 		for _, file := range files {
 			if strings.HasPrefix(file.Name(), "input.") {
-				inputFileBytes, err := transforms.EmbedFs.ReadFile(path.Join(dirPath, file.Name()))
+				inputFileBytes, err := bundles.BundlesFs.ReadFile(path.Join(dirPath, file.Name()))
 				require.NoError(t, err)
 				inputFile = string(inputFileBytes)
 				break
@@ -56,7 +56,7 @@ func TestImporters(t *testing.T) {
 
 		// Read the test script
 		testsPath := path.Join(dirPath, "tests.arrai")
-		testScriptBytes, err := transforms.EmbedFs.ReadFile(testsPath)
+		testScriptBytes, err := bundles.BundlesFs.ReadFile(testsPath)
 		require.NoError(t, err)
 
 		// Run the test script with the imported Sysl as the argument

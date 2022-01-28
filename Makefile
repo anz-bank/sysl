@@ -35,7 +35,7 @@ tidy:
 	make -C docs tidy
 
 # Generates intermediate files for build.
-generate: internal/arrai/arrai.go plugins bundled-proto
+generate: internal/bundles/bundles.go plugins bundled-proto
 	go generate ./pkg/lsp/...
 
 gen: generate
@@ -101,13 +101,20 @@ internal/bundles/assets/spanner_cli.arraiz: pkg/exporter/spanner/spanner_cli.arr
 internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai
 	$(ARRAI) bundle $< > $@
 
-internal/arrai/arrai.go: \
+internal/bundles/exporters/%/transform.arraiz: transforms/exporters/%/transform.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/importers/%/transform.arraiz: transforms/importers/%/transform.arrai
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/bundles.go: \
 		internal/bundles/assets/transformer_cli.arraiz \
 		internal/bundles/assets/import_sql_cli.arraiz \
 		internal/bundles/assets/import_openapi_cli.arraiz \
 		internal/bundles/assets/spanner_cli.arraiz \
-		internal/bundles/assets/import_proto_cli.arraiz
-
+		internal/bundles/assets/import_proto_cli.arraiz \
+		internal/bundles/exporters/proto/transform.arraiz \
+		internal/bundles/importers/jsonschema/transform.arraiz
 
 pkg/importer/proto/bundled_files/local_imports.arrai: pkg/importer/proto/bundled_files/bundler.arrai
 	$(ARRAI) run $< > pkg/importer/proto/bundled_files/tmp.arrai && \

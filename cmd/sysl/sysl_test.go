@@ -1009,9 +1009,9 @@ func TestSpannerSQLImportDefOut(t *testing.T) {
 
 func TestJsonSchemaImport(t *testing.T) {
 	t.Parallel()
-	runSyslWithExpectedOutput(t, "transforms/importers/jsonschema/expected.sysl",
+	runSyslWithExpectedOutput(t, "internal/bundles/importers/jsonschema/expected.sysl",
 		"import",
-		"--input", "../../transforms/importers/jsonschema/input.json",
+		"--input", "../../internal/bundles/importers/jsonschema/input.json",
 		"--app-name", "TestNamespace::TestApp",
 		"--format", "JSONSchema")
 }

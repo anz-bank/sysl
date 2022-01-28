@@ -1,7 +1,8 @@
 package bundles
 
-import _ "embed"
+import "embed"
 
+// TODO: refactor these into transform plugins and move them into exporters or importers.
 var (
 	// OpenAPIImporter returns the bytes that represents the bundled script for openapi importer.
 	//go:embed assets/import_openapi_cli.arraiz
@@ -23,3 +24,15 @@ var (
 	//go:embed assets/spanner_cli.arraiz
 	SpannerExporter []byte
 )
+
+// BundlesFs is a filesystem that can be used to dynamically load the available bundles.
+//go:embed *
+var BundlesFs embed.FS
+
+func MustRead(path string) []byte {
+	b, err := BundlesFs.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+	return b
+}

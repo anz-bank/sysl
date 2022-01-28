@@ -3,9 +3,10 @@ package importer
 import (
 	"io/ioutil"
 	"path"
+	"strings"
 
+	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
-	"github.com/anz-bank/sysl/transforms"
 	"github.com/arr-ai/arrai/rel"
 	"github.com/sirupsen/logrus"
 )
@@ -60,14 +61,8 @@ func (i *TransformImporter) Load(content string) (string, error) {
 		return "", err
 	}
 
-	scriptPath := path.Join("importers", i.transformName, "/transform.arrai")
-	transformBytes, err := transforms.EmbedFs.ReadFile(scriptPath)
-	if err != nil {
-		return "", err
-	}
-
-	result, err := transform.EvalWithParam(transformBytes, scriptPath, input)
-
+	scriptPath := path.Join("importers", strings.ToLower(i.transformName), "transform.arraiz")
+	result, err := transform.EvalWithParam(bundles.MustRead(scriptPath), scriptPath, input)
 	if result != nil {
 		return result.String(), err
 	}
