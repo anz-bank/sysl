@@ -58,7 +58,7 @@ let export = \rel \namespace \package
 
     option go_package = "${package}";
 
-    import "google/protobuf/struct.proto";
+    import "google/protobuf/wrappers.proto";
 
     ${rel.enum orderby .typeName >> $`
       enum ${.typeName} {

@@ -8,7 +8,7 @@ package Foo;
 
 option go_package = "Foo";
 
-import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
 
 message OptionalPrimitives {
   google.protobuf.BoolValue bool_field = 1;
