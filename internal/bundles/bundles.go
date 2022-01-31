@@ -19,10 +19,6 @@ var (
 	// Transformer returns the bytes that represents the bundled script for avro importer.
 	//go:embed assets/transformer_cli.arraiz
 	Transformer []byte
-
-	// SpannerExporter returns the bytes that represents the bundled script for spanner exporter.
-	//go:embed assets/spanner_cli.arraiz
-	SpannerExporter []byte
 )
 
 // BundlesFs is a filesystem that can be used to dynamically load the available bundles.

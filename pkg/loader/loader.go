@@ -122,19 +122,3 @@ func FindRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
 		}
 	}
 }
-
-// EnsureSyslPb generates a binary protobuf message alongside a Sysl file if one does not already
-// exist.
-// TODO(ladeo): Remove once parsed modules can be easily passed into arr.ai.
-func EnsureSyslPb(fs afero.Fs, root, syslPath string) error {
-	target := syslPath + ".pb"
-	_, err := os.Stat(target)
-	if err != nil && os.IsNotExist(err) {
-		module, _, err := LoadSyslModule(root, syslPath, fs, logrus.StandardLogger())
-		if err != nil {
-			return err
-		}
-		return pbutil.GeneratePBBinaryMessageFile(module, target, fs)
-	}
-	return nil
-}

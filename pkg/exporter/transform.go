@@ -1,13 +1,14 @@
 package exporter
 
 import (
+	"bytes"
+	"io"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
-	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -42,11 +43,14 @@ type TransformExporter struct {
 // ExportFile reads in a Sysl file from path, converts it to the output format, and writes it to
 // the file system.
 func (e *TransformExporter) ExportFile(modules []*sysl.Module, modulePaths []string) error {
-	err := loader.EnsureSyslPb(e.fs, e.rootPath, modulePaths[0])
-	if err != nil {
+	b := &bytes.Buffer{}
+	if err := e.ExportToWriter(b, modules, modulePaths); err != nil {
 		return err
 	}
+	return afero.WriteFile(e.fs, e.outPath, b.Bytes(), os.ModePerm)
+}
 
+func (e *TransformExporter) ExportToWriter(w io.Writer, modules []*sysl.Module, modulePaths []string) error {
 	input, err := transform.BuildTransformInput(modules, modulePaths)
 	if err != nil {
 		return err
@@ -57,11 +61,8 @@ func (e *TransformExporter) ExportFile(modules []*sysl.Module, modulePaths []str
 	if err != nil {
 		return err
 	}
-	err = afero.WriteFile(e.fs, e.outPath, []byte(result.String()), os.ModePerm)
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err = w.Write([]byte(result.String()))
+	return err
 }
 
 func (e *TransformExporter) ExportApp(*sysl.Application) error {

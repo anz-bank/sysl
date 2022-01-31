@@ -1,7 +1,0 @@
-# Loads a Sysl model and transforms it to Spanner DDL.
-
-let syslPath = //os.args(1)?:'';
-# Expect a Sysl binary protobuf alongside the Sysl spec.
-let syslPb = syslPath++'.pb';
-
-//{./spanner}.exportFile(syslPb)

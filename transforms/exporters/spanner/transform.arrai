@@ -1,0 +1,6 @@
+# Loads a Sysl model and transforms it to Spanner DDL.
+\param
+    cond param {
+        (models: [(:rel, ...), ...], ...): //{./spanner}.export(rel),
+        _: (name: 'failure'),
+    }

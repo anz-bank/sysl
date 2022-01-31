@@ -60,14 +60,8 @@ func (p *exportCmd) Execute(args cmdutils.ExecuteArgs) error {
 	}
 	p.format = format
 
-	if format == spannerMode {
-		x := exporter.MakeSpannerExporter(args.Filesystem, args.Logger, args.Root, p.out)
-		err := x.ExportFile(args.ModulePaths[0])
-		if err != nil {
-			return err
-		}
-		return nil
-	} else if format == protoMode {
+	switch format {
+	case protoMode, spannerMode:
 		x := exporter.MakeTransformExporter(args.Filesystem, args.Logger, args.Root, p.out, format)
 		err := x.ExportFile(args.Modules, args.ModulePaths)
 		if err != nil {

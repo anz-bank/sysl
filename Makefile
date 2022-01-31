@@ -95,9 +95,6 @@ internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.a
 internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/assets/spanner_cli.arraiz: pkg/exporter/spanner/spanner_cli.arrai
-	$(ARRAI) bundle $< > $@
-
 internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai
 	$(ARRAI) bundle $< > $@
 
@@ -111,9 +108,9 @@ internal/bundles/bundles.go: \
 		internal/bundles/assets/transformer_cli.arraiz \
 		internal/bundles/assets/import_sql_cli.arraiz \
 		internal/bundles/assets/import_openapi_cli.arraiz \
-		internal/bundles/assets/spanner_cli.arraiz \
 		internal/bundles/assets/import_proto_cli.arraiz \
 		internal/bundles/exporters/proto/transform.arraiz \
+		internal/bundles/exporters/spanner/transform.arraiz \
 		internal/bundles/importers/jsonschema/transform.arraiz
 
 pkg/importer/proto/bundled_files/local_imports.arrai: pkg/importer/proto/bundled_files/bundler.arrai
