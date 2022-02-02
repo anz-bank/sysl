@@ -415,6 +415,16 @@ func normalizeAppMeta(s *Schema, app *sysl.Application) {
 			AppAnnoName:  annoName,
 			AppAnnoValue: annoValue,
 		})
+
+		if m, has := app.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.App = append(s.Src.Anno.App, AppAnnoContext{
+					AnnoSrcs: relmodSourceContexts(m.SourceContexts),
+					AppName:  app.Name.Part,
+					AnnoName: annoName,
+				})
+			}
+		}
 	}
 
 	if len(app.SourceContexts) > 0 {
@@ -444,6 +454,17 @@ func normalizeMixinMeta(s *Schema, app *sysl.Application, mixin *sysl.Applicatio
 			MixinAnnoName:  annoName,
 			MixinAnnoValue: annoValue,
 		})
+
+		if m, has := mixin.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Mixin = append(s.Src.Anno.Mixin, MixinAnnoContext{
+					AnnoSrcs:  relmodSourceContexts(m.SourceContexts),
+					AppName:   app.Name.Part,
+					MixinName: mixin.Name.Part,
+					AnnoName:  annoName,
+				})
+			}
+		}
 	}
 
 	if len(mixin.SourceContexts) > 0 {
@@ -474,6 +495,17 @@ func normalizeEndpointMeta(s *Schema, app *sysl.Application, ep *sysl.Endpoint) 
 			EpAnnoName:  annoName,
 			EpAnnoValue: annoValue,
 		})
+
+		if m, has := ep.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Ep = append(s.Src.Anno.Ep, EndpointAnnoContext{
+					AnnoSrcs: relmodSourceContexts(m.SourceContexts),
+					AppName:  app.Name.Part,
+					EpName:   ep.Name,
+					AnnoName: annoName,
+				})
+			}
+		}
 	}
 
 	if len(app.SourceContexts) > 0 {
@@ -504,6 +536,17 @@ func normalizeEventMeta(s *Schema, app *sysl.Application, event *sysl.Endpoint) 
 			EventAnnoName:  annoName,
 			EventAnnoValue: annoValue,
 		})
+
+		if m, has := event.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Event = append(s.Src.Anno.Event, EventAnnoContext{
+					AnnoSrcs:  relmodSourceContexts(m.SourceContexts),
+					AppName:   app.Name.Part,
+					EventName: event.Name,
+					AnnoName:  annoName,
+				})
+			}
+		}
 	}
 
 	if len(event.SourceContexts) > 0 {
@@ -542,6 +585,19 @@ func normalizeStatementMeta(
 			StmtAnnoName:  annoName,
 			StmtAnnoValue: annoValue,
 		})
+
+		// FIXME: annotation in return statements cannot be extracted because of compiler not outputting them.
+		if m, has := stmt.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Stmt = append(s.Src.Anno.Stmt, StatementAnnoContext{
+					AnnoSrcs:  relmodSourceContexts(m.SourceContexts),
+					AppName:   app.Name.Part,
+					EpName:    ep.Name,
+					StmtIndex: stmtIndex,
+					AnnoName:  annoName,
+				})
+			}
+		}
 	}
 
 	if len(stmt.SourceContexts) > 0 {
@@ -587,6 +643,20 @@ func normalizeParamMeta(
 			ParamAnnoName:  annoName,
 			ParamAnnoValue: annoValue,
 		})
+
+		if m, has := param.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Param = append(s.Src.Anno.Param, ParamAnnoContext{
+					AnnoSrcs:   relmodSourceContexts(m.SourceContexts),
+					AppName:    app.Name.Part,
+					EpName:     ep.Name,
+					ParamName:  paramName,
+					ParamLoc:   loc,
+					ParamIndex: index,
+					AnnoName:   annoName,
+				})
+			}
+		}
 	}
 
 	if len(param.SourceContexts) > 0 {
@@ -620,6 +690,17 @@ func normalizeTypeMeta(s *Schema, app *sysl.Application, typ *sysl.Type, typeNam
 			TypeAnnoName:  annoName,
 			TypeAnnoValue: annoValue,
 		})
+
+		if m, has := typ.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Type = append(s.Src.Anno.Type, TypeAnnoContext{
+					AnnoSrcs: relmodSourceContexts(m.SourceContexts),
+					AppName:  app.Name.Part,
+					TypeName: typeName,
+					AnnoName: annoName,
+				})
+			}
+		}
 	}
 
 	if len(typ.SourceContexts) > 0 {
@@ -652,6 +733,18 @@ func normalizeFieldMeta(s *Schema, app *sysl.Application, typeName string, field
 			FieldAnnoName:  annoName,
 			FieldAnnoValue: annoValue,
 		})
+
+		if m, has := field.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.Field = append(s.Src.Anno.Field, FieldAnnoContext{
+					AnnoSrcs:  relmodSourceContexts(m.SourceContexts),
+					AppName:   app.Name.Part,
+					TypeName:  typeName,
+					FieldName: fieldName,
+					AnnoName:  annoName,
+				})
+			}
+		}
 	}
 
 	if len(field.SourceContexts) > 0 {
@@ -683,6 +776,17 @@ func normalizeViewMeta(s *Schema, app *sysl.Application, view *sysl.View, viewNa
 			ViewAnnoName:  annoName,
 			ViewAnnoValue: annoValue,
 		})
+
+		if m, has := view.Attrs[annoName]; has {
+			if len(m.SourceContexts) > 0 {
+				s.Src.Anno.View = append(s.Src.Anno.View, ViewAnnoContext{
+					AnnoSrcs: relmodSourceContexts(m.SourceContexts),
+					AppName:  app.Name.Part,
+					ViewName: viewName,
+					AnnoName: annoName,
+				})
+			}
+		}
 	}
 
 	if len(view.SourceContexts) > 0 {

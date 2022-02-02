@@ -396,6 +396,87 @@ type Annotations struct {
 	View  []ViewAnnotation      `arrai:",unordered"`
 }
 
+// Annotation Source Context
+
+type AnnoContext struct {
+	App   []AppAnnoContext       `arrai:",unordered"`
+	Mixin []MixinAnnoContext     `arrai:",unordered"`
+	Ep    []EndpointAnnoContext  `arrai:",unordered"`
+	Param []ParamAnnoContext     `arrai:",unordered"`
+	Stmt  []StatementAnnoContext `arrai:",unordered"`
+	Event []EventAnnoContext     `arrai:",unordered"`
+	Type  []TypeAnnoContext      `arrai:",unordered"`
+	Field []FieldAnnoContext     `arrai:",unordered"`
+	View  []ViewAnnoContext      `arrai:",unordered"`
+}
+
+type AppAnnoContext struct {
+	AnnoSrcs []SourceContext
+	AppName  []string
+	AnnoName string
+}
+
+type MixinAnnoContext struct {
+	AnnoSrcs  []SourceContext
+	AppName   []string
+	MixinName []string
+	AnnoName  string
+}
+
+type EndpointAnnoContext struct {
+	AnnoSrcs []SourceContext
+	AppName  []string
+	EpName   string
+	AnnoName string
+}
+
+type ParamAnnoContext struct {
+	AnnoSrcs   []SourceContext
+	AppName    []string
+	EpName     string
+	ParamName  string
+	ParamLoc   string // enum
+	ParamIndex int
+	AnnoName   string
+}
+
+type StatementAnnoContext struct {
+	AnnoSrcs  []SourceContext
+	AppName   []string
+	EpName    string
+	AnnoName  string
+	StmtIndex []int
+}
+
+type EventAnnoContext struct {
+	AnnoSrcs  []SourceContext
+	AppName   []string
+	EventName string
+	AnnoName  string
+}
+
+type TypeAnnoContext struct {
+	AnnoSrcs []SourceContext
+	AppName  []string
+	TypeName string
+	AnnoName string
+}
+
+type FieldAnnoContext struct {
+	AnnoSrcs  []SourceContext
+	AppName   []string
+	TypeName  string
+	FieldName string
+	AnnoName  string
+}
+
+type ViewAnnoContext struct {
+	AnnoSrcs []SourceContext
+	AppName  []string
+	ViewName string
+	AnnoName string
+}
+
 type Tags struct {
 	App   []AppTag       `arrai:",unordered"`
 	Mixin []MixinTag     `arrai:",unordered"`
@@ -419,6 +500,7 @@ type SourceContexts struct {
 	Type   []TypeContext      `arrai:",unordered"`
 	Field  []FieldContext     `arrai:",unordered"`
 	View   []ViewContext      `arrai:",unordered"`
+	Anno   AnnoContext        `arrai:",unordered"`
 }
 
 type Schema struct {
