@@ -57,17 +57,17 @@ func (s *BaseSyslParserListener) EnterQuoted_string(ctx *Quoted_stringContext) {
 // ExitQuoted_string is called when production quoted_string is exited.
 func (s *BaseSyslParserListener) ExitQuoted_string(ctx *Quoted_stringContext) {}
 
-// EnterArray_of_strings is called when production array_of_strings is entered.
-func (s *BaseSyslParserListener) EnterArray_of_strings(ctx *Array_of_stringsContext) {}
+// EnterArrays_item is called when production arrays_item is entered.
+func (s *BaseSyslParserListener) EnterArrays_item(ctx *Arrays_itemContext) {}
 
-// ExitArray_of_strings is called when production array_of_strings is exited.
-func (s *BaseSyslParserListener) ExitArray_of_strings(ctx *Array_of_stringsContext) {}
+// ExitArrays_item is called when production arrays_item is exited.
+func (s *BaseSyslParserListener) ExitArrays_item(ctx *Arrays_itemContext) {}
 
-// EnterArray_of_arrays is called when production array_of_arrays is entered.
-func (s *BaseSyslParserListener) EnterArray_of_arrays(ctx *Array_of_arraysContext) {}
+// EnterArrays is called when production arrays is entered.
+func (s *BaseSyslParserListener) EnterArrays(ctx *ArraysContext) {}
 
-// ExitArray_of_arrays is called when production array_of_arrays is exited.
-func (s *BaseSyslParserListener) ExitArray_of_arrays(ctx *Array_of_arraysContext) {}
+// ExitArrays is called when production arrays is exited.
+func (s *BaseSyslParserListener) ExitArrays(ctx *ArraysContext) {}
 
 // EnterNvp is called when production nvp is entered.
 func (s *BaseSyslParserListener) EnterNvp(ctx *NvpContext) {}

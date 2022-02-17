@@ -9,9 +9,9 @@ name_str        : Name|TEXT_LINE|E_Name;
 reference       : app_name ((E_DOT | DOT) name_str)+;
 doc_string      : PIPE TEXT;
 quoted_string       : QSTRING;
-array_of_strings    : SQ_OPEN quoted_string (COMMA quoted_string)* SQ_CLOSE;
-array_of_arrays     : SQ_OPEN array_of_strings (COMMA array_of_strings)* SQ_CLOSE;
-nvp                 : Name EQ (quoted_string | array_of_strings | array_of_arrays);
+arrays_item         : (quoted_string | arrays);
+arrays              : SQ_OPEN (arrays_item (COMMA arrays_item)*)? SQ_CLOSE;
+nvp                 : Name EQ (quoted_string | arrays);
 entry               : nvp | modifier ;
 attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
 
@@ -24,7 +24,7 @@ sequence_type            : sequence_of types size_spec?;
 //TODO : allow for other collection types?
 collection_type     : set_type | sequence_type;
 multi_line_docstring    :   COLON INDENT doc_string+ DEDENT;
-annotation_value        :   QSTRING | array_of_strings | array_of_arrays | multi_line_docstring;
+annotation_value        :   QSTRING | arrays | multi_line_docstring;
 annotation      : AT VAR_NAME EQ annotation_value;
 annotations     : INDENT annotation+ DEDENT;
 

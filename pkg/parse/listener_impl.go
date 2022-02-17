@@ -312,13 +312,9 @@ func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueCo
 		attr.Attribute = &sysl.Attribute_S{
 			S: fromQString(ctx.QSTRING().GetText()),
 		}
-	case ctx.Array_of_strings() != nil:
+	case ctx.Arrays() != nil:
 		attr.Attribute = &sysl.Attribute_A{
-			A: s.makeArrayOfStringsAttribute(ctx.Array_of_strings().(*parser.Array_of_stringsContext)).GetA(),
-		}
-	case ctx.Array_of_arrays() != nil:
-		attr.Attribute = &sysl.Attribute_A{
-			A: s.makeArrayOfArraysAttribute(ctx.Array_of_arrays().(*parser.Array_of_arraysContext)).GetA(),
+			A: s.makeArraysAttribute(ctx.Arrays().(*parser.ArraysContext)).GetA(),
 		}
 	default:
 		panic("unexpected annotation value")
@@ -503,45 +499,51 @@ func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*
 	return c
 }
 
-func (s *TreeShapeListener) makeArrayOfStringsAttribute(array_strings *parser.Array_of_stringsContext) *sysl.Attribute {
-	arr := make([]*sysl.Attribute, len(array_strings.AllQuoted_string()))
-	for i, ars := range array_strings.AllQuoted_string() {
-		str := ars.(*parser.Quoted_stringContext)
-		sc := s.getSrcCtx(str.BaseParserRuleContext)
+func (s *TreeShapeListener) makeArraysAttribute(arrays *parser.ArraysContext) *sysl.Attribute {
+	sc := s.getSrcCtx(arrays.BaseParserRuleContext)
 
-		arr[i] = &sysl.Attribute{
-			Attribute: &sysl.Attribute_S{
-				S: fromQString(str.QSTRING().GetText()),
+	// return empty array
+	if arrays.AllArrays_item() == nil || len(arrays.AllArrays_item()) == 0 {
+		return &sysl.Attribute{
+			Attribute: &sysl.Attribute_A{
+				A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{}},
 			},
 			SourceContext:  sc,
 			SourceContexts: []*sysl.SourceContext{sc},
 		}
 	}
 
-	sc := s.getSrcCtx(array_strings.BaseParserRuleContext)
+	elements := make([]*sysl.Attribute, 0, len(arrays.AllArrays_item()))
+	for _, item := range arrays.AllArrays_item() {
+		itemCtx := item.GetRuleContext().(*parser.Arrays_itemContext)
+		var itemSrc *sysl.SourceContext
+		var element *sysl.Attribute
+		switch {
+		case itemCtx.Quoted_string() != nil:
+			i := itemCtx.Quoted_string().(*parser.Quoted_stringContext)
+			itemSrc = s.getSrcCtx(i.BaseParserRuleContext)
+			element = &sysl.Attribute{
+				Attribute: &sysl.Attribute_S{
+					S: fromQString(i.QSTRING().GetText()),
+				},
+			}
+		case itemCtx.Arrays() != nil:
+			i := itemCtx.Arrays().(*parser.ArraysContext)
+			itemSrc = s.getSrcCtx(i.BaseParserRuleContext)
+			element = s.makeArraysAttribute(i)
+		default:
+			panic(fmt.Errorf("unhandled annotation arrays element"))
+		}
+
+		element.SourceContext = itemSrc //nolint:staticcheck
+		element.SourceContexts = []*sysl.SourceContext{itemSrc}
+
+		elements = append(elements, element)
+	}
 	return &sysl.Attribute{
 		Attribute: &sysl.Attribute_A{
 			A: &sysl.Attribute_Array{
-				Elt: arr,
-			},
-		},
-		SourceContext:  sc,
-		SourceContexts: []*sysl.SourceContext{sc},
-	}
-}
-
-func (s *TreeShapeListener) makeArrayOfArraysAttribute(array_arrays *parser.Array_of_arraysContext) *sysl.Attribute {
-	arr := make([]*sysl.Attribute, len(array_arrays.AllArray_of_strings()))
-	for i, arrCtx := range array_arrays.AllArray_of_strings() {
-		aosCtx := arrCtx.(*parser.Array_of_stringsContext)
-		arr[i] = s.makeArrayOfStringsAttribute(aosCtx)
-	}
-
-	sc := s.getSrcCtx(array_arrays.BaseParserRuleContext)
-	return &sysl.Attribute{
-		Attribute: &sysl.Attribute_A{
-			A: &sysl.Attribute_Array{
-				Elt: arr,
+				Elt: elements,
 			},
 		},
 		SourceContext:  sc,
@@ -609,28 +611,8 @@ func (s *TreeShapeListener) makeAttributeArray(attribs *parser.Attribs_or_modifi
 					SourceContext:  sc,
 					SourceContexts: []*sysl.SourceContext{sc},
 				}
-			case nvp.Array_of_strings() != nil:
-				array_strings := nvp.Array_of_strings().(*parser.Array_of_stringsContext)
-				attributes[nvp.Name().GetText()] = s.makeArrayOfStringsAttribute(array_strings)
-			case nvp.Array_of_arrays() != nil:
-				arr := nvp.Array_of_arrays().(*parser.Array_of_arraysContext)
-				sc := s.getSrcCtx(arr.BaseParserRuleContext)
-				attrArray := sysl.Attribute_Array{
-					Elt: []*sysl.Attribute{},
-				}
-				for _, astrings := range arr.AllArray_of_strings() {
-					array_strings := astrings.(*parser.Array_of_stringsContext)
-					elt := s.makeArrayOfStringsAttribute(array_strings)
-					attrArray.Elt = append(attrArray.Elt, elt)
-				}
-
-				attributes[nvp.Name().GetText()] = &sysl.Attribute{
-					Attribute: &sysl.Attribute_A{
-						A: &attrArray,
-					},
-					SourceContext:  sc,
-					SourceContexts: []*sysl.SourceContext{sc},
-				}
+			case nvp.Arrays() != nil:
+				attributes[nvp.Name().GetText()] = s.makeArraysAttribute(nvp.Arrays().(*parser.ArraysContext))
 			}
 		} else if mod, ok := entry.Modifier().(*parser.ModifierContext); ok {
 			sc := s.getSrcCtx(mod.BaseParserRuleContext)

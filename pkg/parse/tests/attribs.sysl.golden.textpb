@@ -293,6 +293,372 @@ apps: {
    }
   }
   attrs: {
+   key: "at_empty"
+   value: {
+    a: {}
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 5
+      col: 16
+     }
+     end: {
+      line: 5
+      col: 18
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 5
+      col: 16
+     }
+     end: {
+      line: 5
+      col: 18
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "at_mix"
+   value: {
+    a: {
+     elt: {
+      s: "a"
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 3
+        col: 15
+       }
+       end: {
+        line: 3
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 3
+        col: 15
+       }
+       end: {
+        line: 3
+        col: 18
+       }
+      }
+     }
+     elt: {
+      a: {
+       elt: {
+        s: "b"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 3
+          col: 21
+         }
+         end: {
+          line: 3
+          col: 24
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 3
+          col: 21
+         }
+         end: {
+          line: 3
+          col: 24
+         }
+        }
+       }
+       elt: {
+        s: "c"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 3
+          col: 26
+         }
+         end: {
+          line: 3
+          col: 29
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 3
+          col: 26
+         }
+         end: {
+          line: 3
+          col: 29
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 3
+        col: 20
+       }
+       end: {
+        line: 3
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 3
+        col: 20
+       }
+       end: {
+        line: 3
+        col: 30
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 3
+      col: 14
+     }
+     end: {
+      line: 3
+      col: 31
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 3
+      col: 14
+     }
+     end: {
+      line: 3
+      col: 31
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "at_nested"
+   value: {
+    a: {
+     elt: {
+      a: {
+       elt: {
+        a: {
+         elt: {
+          s: "a"
+          source_context: {
+           file: "tests/attribs.sysl"
+           start: {
+            line: 4
+            col: 20
+           }
+           end: {
+            line: 4
+            col: 23
+           }
+          }
+          source_contexts: {
+           file: "tests/attribs.sysl"
+           start: {
+            line: 4
+            col: 20
+           }
+           end: {
+            line: 4
+            col: 23
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 4
+          col: 19
+         }
+         end: {
+          line: 4
+          col: 24
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 4
+          col: 19
+         }
+         end: {
+          line: 4
+          col: 24
+         }
+        }
+       }
+       elt: {
+        a: {
+         elt: {
+          s: "b"
+          source_context: {
+           file: "tests/attribs.sysl"
+           start: {
+            line: 4
+            col: 27
+           }
+           end: {
+            line: 4
+            col: 30
+           }
+          }
+          source_contexts: {
+           file: "tests/attribs.sysl"
+           start: {
+            line: 4
+            col: 27
+           }
+           end: {
+            line: 4
+            col: 30
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 4
+          col: 26
+         }
+         end: {
+          line: 4
+          col: 31
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 4
+          col: 26
+         }
+         end: {
+          line: 4
+          col: 31
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 4
+        col: 18
+       }
+       end: {
+        line: 4
+        col: 32
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 4
+        col: 18
+       }
+       end: {
+        line: 4
+        col: 32
+       }
+      }
+     }
+     elt: {
+      a: {
+       elt: {
+        s: "c"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 4
+          col: 35
+         }
+         end: {
+          line: 4
+          col: 38
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          line: 4
+          col: 35
+         }
+         end: {
+          line: 4
+          col: 38
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 4
+        col: 34
+       }
+       end: {
+        line: 4
+        col: 39
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        line: 4
+        col: 34
+       }
+       end: {
+        line: 4
+        col: 39
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 4
+      col: 17
+     }
+     end: {
+      line: 4
+      col: 40
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      line: 4
+      col: 17
+     }
+     end: {
+      line: 4
+      col: 40
+     }
+    }
+   }
+  }
+  attrs: {
    key: "at_strings"
    value: {
     a: {
@@ -367,6 +733,316 @@ apps: {
      end: {
       line: 1
       col: 28
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "empty"
+   value: {
+    a: {}
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 114
+     }
+     end: {
+      col: 116
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 114
+     }
+     end: {
+      col: 116
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "mix"
+   value: {
+    a: {
+     elt: {
+      s: "a"
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 58
+       }
+       end: {
+        col: 61
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 58
+       }
+       end: {
+        col: 61
+       }
+      }
+     }
+     elt: {
+      a: {
+       elt: {
+        s: "b"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 64
+         }
+         end: {
+          col: 67
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 64
+         }
+         end: {
+          col: 67
+         }
+        }
+       }
+       elt: {
+        s: "c"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 69
+         }
+         end: {
+          col: 72
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 69
+         }
+         end: {
+          col: 72
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 63
+       }
+       end: {
+        col: 73
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 63
+       }
+       end: {
+        col: 73
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 57
+     }
+     end: {
+      col: 74
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 57
+     }
+     end: {
+      col: 74
+     }
+    }
+   }
+  }
+  attrs: {
+   key: "nested"
+   value: {
+    a: {
+     elt: {
+      a: {
+       elt: {
+        a: {
+         elt: {
+          s: "a"
+          source_context: {
+           file: "tests/attribs.sysl"
+           start: {
+            col: 86
+           }
+           end: {
+            col: 89
+           }
+          }
+          source_contexts: {
+           file: "tests/attribs.sysl"
+           start: {
+            col: 86
+           }
+           end: {
+            col: 89
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 85
+         }
+         end: {
+          col: 90
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 85
+         }
+         end: {
+          col: 90
+         }
+        }
+       }
+       elt: {
+        a: {
+         elt: {
+          s: "b"
+          source_context: {
+           file: "tests/attribs.sysl"
+           start: {
+            col: 93
+           }
+           end: {
+            col: 96
+           }
+          }
+          source_contexts: {
+           file: "tests/attribs.sysl"
+           start: {
+            col: 93
+           }
+           end: {
+            col: 96
+           }
+          }
+         }
+        }
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 92
+         }
+         end: {
+          col: 97
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 92
+         }
+         end: {
+          col: 97
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 84
+       }
+       end: {
+        col: 98
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 84
+       }
+       end: {
+        col: 98
+       }
+      }
+     }
+     elt: {
+      a: {
+       elt: {
+        s: "c"
+        source_context: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 101
+         }
+         end: {
+          col: 104
+         }
+        }
+        source_contexts: {
+         file: "tests/attribs.sysl"
+         start: {
+          col: 101
+         }
+         end: {
+          col: 104
+         }
+        }
+       }
+      }
+      source_context: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 100
+       }
+       end: {
+        col: 105
+       }
+      }
+      source_contexts: {
+       file: "tests/attribs.sysl"
+       start: {
+        col: 100
+       }
+       end: {
+        col: 105
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 83
+     }
+     end: {
+      col: 106
+     }
+    }
+    source_contexts: {
+     file: "tests/attribs.sysl"
+     start: {
+      col: 83
+     }
+     end: {
+      col: 106
      }
     }
    }
@@ -449,22 +1125,22 @@ apps: {
      source_context: {
       file: "tests/attribs.sysl"
       start: {
-       line: 4
+       line: 7
        col: 8
       }
       end: {
-       line: 4
+       line: 7
        col: 11
       }
      }
      source_contexts: {
       file: "tests/attribs.sysl"
       start: {
-       line: 4
+       line: 7
        col: 8
       }
       end: {
-       line: 4
+       line: 7
        col: 11
       }
      }
@@ -472,22 +1148,22 @@ apps: {
     source_context: {
      file: "tests/attribs.sysl"
      start: {
-      line: 3
+      line: 6
       col: 4
      }
      end: {
-      line: 4
+      line: 7
       col: 11
      }
     }
     source_contexts: {
      file: "tests/attribs.sysl"
      start: {
-      line: 3
+      line: 6
       col: 4
      }
      end: {
-      line: 4
+      line: 7
       col: 11
      }
     }
@@ -497,7 +1173,7 @@ apps: {
    file: "tests/attribs.sysl"
    start: {}
    end: {
-    line: 4
+    line: 7
     col: 11
    }
   }
@@ -505,7 +1181,7 @@ apps: {
    file: "tests/attribs.sysl"
    start: {}
    end: {
-    line: 4
+    line: 7
     col: 11
    }
   }

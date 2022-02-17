@@ -1,5 +1,8 @@
-App [strings=['a', 'b'], arrays=[['a'], ['b', 'c']]]:
+App [strings=['a', 'b'], arrays=[['a'], ['b', 'c']], mix=['a', ['b', 'c']], nested=[[['a'], ['b']], ['c']], empty=[]]:
     @at_strings = ['a', 'b']
     @at_arrays = [['a'], ['b', 'c']]
+    @at_mix = ['a', ['b', 'c']]
+    @at_nested = [[['a'], ['b']], ['c']]
+    @at_empty = []
     Endpoint:
         ...

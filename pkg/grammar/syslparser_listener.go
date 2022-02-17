@@ -26,11 +26,11 @@ type SyslParserListener interface {
 	// EnterQuoted_string is called when entering the quoted_string production.
 	EnterQuoted_string(c *Quoted_stringContext)
 
-	// EnterArray_of_strings is called when entering the array_of_strings production.
-	EnterArray_of_strings(c *Array_of_stringsContext)
+	// EnterArrays_item is called when entering the arrays_item production.
+	EnterArrays_item(c *Arrays_itemContext)
 
-	// EnterArray_of_arrays is called when entering the array_of_arrays production.
-	EnterArray_of_arrays(c *Array_of_arraysContext)
+	// EnterArrays is called when entering the arrays production.
+	EnterArrays(c *ArraysContext)
 
 	// EnterNvp is called when entering the nvp production.
 	EnterNvp(c *NvpContext)
@@ -569,11 +569,11 @@ type SyslParserListener interface {
 	// ExitQuoted_string is called when exiting the quoted_string production.
 	ExitQuoted_string(c *Quoted_stringContext)
 
-	// ExitArray_of_strings is called when exiting the array_of_strings production.
-	ExitArray_of_strings(c *Array_of_stringsContext)
+	// ExitArrays_item is called when exiting the arrays_item production.
+	ExitArrays_item(c *Arrays_itemContext)
 
-	// ExitArray_of_arrays is called when exiting the array_of_arrays production.
-	ExitArray_of_arrays(c *Array_of_arraysContext)
+	// ExitArrays is called when exiting the arrays production.
+	ExitArrays(c *ArraysContext)
 
 	// ExitNvp is called when exiting the nvp production.
 	ExitNvp(c *NvpContext)
