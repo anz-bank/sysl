@@ -100,19 +100,28 @@ let resolveStmts = \stmt
 let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtIndex) where .@item;
 
 let resolvedAnnotations = \annotations
-    annotations orderby .name >> \(:name, :value)
+    let rec renderValue = \value
         cond value {
-            [...]: $`@${name} = ${value}`,
-            _:
-                cond {
-                    //seq.contains('\n', value):
-                        let value = //seq.trim_suffix('\n', trimLines(value));
-                        $`
-                            @${name} =:
-                                ${//seq.split('\n', value) >> $`| ${//seq.trim_prefix(' ', .)}`::\i}
-                        `,
-                    _: $`@${name} = "${value}"`,
-                }
+            [...]: $`[${value >> renderValue(.)::,}]`,
+            _: cond {
+                //seq.contains('\n', value):
+                    let value = //seq.trim_suffix('\n', trimLines(value));
+                    $`${//seq.split('\n', value) >> $`| ${//seq.trim_prefix(' ', .)}`::\i}`,
+
+                _: $`${value:q}`,
+            }
+        }
+    ;
+    let isStr = \value (value where (.).@char?:false) = value;
+    annotations orderby .name >> \(:name, :value)
+        cond {
+            isStr(value) && //seq.contains('\n', value):
+                $`
+                    @${name} =:
+                        ${renderValue(value)}
+                `
+            ,
+            _: $`@${name} = ${renderValue(value)}`
         }
 ;
 

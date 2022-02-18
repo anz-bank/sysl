@@ -104,7 +104,7 @@ let specialCharacters = (
                     f <: int
 
         `
-    },    
+    },
 
     optional:
         let data = simple +> (field: simple.field => . +> (fieldOpt: true));
@@ -327,6 +327,33 @@ let specialCharacters = (
 
                 `
             },
+    ),
+    escapeAnno:
+        let escapeAnno = simpleNoSrc.|app| +> (
+            anno: (
+                app: {
+                    |appName, appAnnoName, appAnnoValue|
+                    (['A'], 'escape'     , '\b'),
+                    (['A'], 'backslash'  , `\` ),
+                    (['A'], 'doubleQuote', `"` ),
+                    (['A'], 'singleQuote', `'` ),
+                    (['A'], 'arr_escape'     , ['\b']),
+                    (['A'], 'arr_backslash'  , [`\` ]),
+                    (['A'], 'arr_doubleQuote', [`"` ]),
+                    (['A'], 'arr_singleQuote', [`'` ]),
+                }
+            )
+        );
+        (reconstruct(escapeAnno) single).@value = $`
+            A:
+                @arr_backslash = ["\\"]
+                @arr_doubleQuote = ["\""]
+                @arr_escape = ["\b"]
+                @arr_singleQuote = ["'"]
+                @backslash = "\\"
+                @doubleQuote = "\""
+                @escape = "\b"
+                @singleQuote = "'"
 
-    )
+        `
 )
