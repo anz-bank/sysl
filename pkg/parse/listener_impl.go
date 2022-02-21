@@ -3313,12 +3313,7 @@ func (s *TreeShapeListener) EnterApp_decl(ctx *parser.App_declContext) {
 	if s.currentApp().Types == nil && (ctx.Table(0) != nil || ctx.Alias(0) != nil || ctx.Enum(0) != nil) {
 		s.currentApp().Types = map[string]*sysl.Type{}
 	}
-	has_stmts := ctx.Simple_endpoint(0) != nil ||
-		ctx.Rest_endpoint(0) != nil ||
-		ctx.Event(0) != nil ||
-		ctx.Subscribe(0) != nil ||
-		ctx.Collector(0) != nil
-	if s.currentApp().Endpoints == nil && has_stmts {
+	if s.currentApp().Endpoints == nil {
 		s.currentApp().Endpoints = map[string]*sysl.Endpoint{}
 	}
 	if s.currentApp().Wrapped == nil && len(ctx.AllFacade()) > 0 {

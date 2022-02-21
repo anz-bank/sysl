@@ -21,6 +21,9 @@ My :: Subscriber:
     Yet :: Another :: Publisher -> BusinessEvent:
         External <- Endpoint
 
+    Missing -> Endpoints:
+        ...
+
 Publisher:
     .. * <- *:
         My :: Subscriber <- Publisher -> BusinessEvent [id="one"]
@@ -33,3 +36,8 @@ Yet :: Another :: Publisher:
     .. * <- *:
         My :: Subscriber <- Yet :: Another :: Publisher -> BusinessEvent [id="three"]
 
+Missing:
+    # to test for missing endpoints.
+    # defining a type previously can create an app with nil endpoints.
+    !type Type:
+        ...

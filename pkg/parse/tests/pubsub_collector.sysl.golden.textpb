@@ -24,22 +24,22 @@ apps: {
        source_context: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 29
+         line: 32
          col: 70
         }
         end: {
-         line: 29
+         line: 32
          col: 75
         }
        }
        source_contexts: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 29
+         line: 32
          col: 70
         }
         end: {
-         line: 29
+         line: 32
          col: 75
         }
        }
@@ -48,22 +48,22 @@ apps: {
      source_context: {
       file: "tests/pubsub_collector.sysl"
       start: {
-       line: 29
+       line: 32
        col: 8
       }
       end: {
-       line: 29
+       line: 32
        col: 75
       }
      }
      source_contexts: {
       file: "tests/pubsub_collector.sysl"
       start: {
-       line: 29
+       line: 32
        col: 8
       }
       end: {
-       line: 29
+       line: 32
        col: 75
       }
      }
@@ -71,22 +71,22 @@ apps: {
     source_context: {
      file: "tests/pubsub_collector.sysl"
      start: {
-      line: 28
+      line: 31
       col: 4
      }
      end: {
-      line: 31
+      line: 34
       col: 4
      }
     }
     source_contexts: {
      file: "tests/pubsub_collector.sysl"
      start: {
-      line: 28
+      line: 31
       col: 4
      }
      end: {
-      line: 31
+      line: 34
       col: 4
      }
     }
@@ -112,22 +112,22 @@ apps: {
        source_context: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 29
+         line: 32
          col: 70
         }
         end: {
-         line: 29
+         line: 32
          col: 75
         }
        }
        source_contexts: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 29
+         line: 32
          col: 70
         }
         end: {
-         line: 29
+         line: 32
          col: 75
         }
        }
@@ -183,10 +183,10 @@ apps: {
   source_context: {
    file: "tests/pubsub_collector.sysl"
    start: {
-    line: 27
+    line: 30
    }
    end: {
-    line: 29
+    line: 32
     col: 75
    }
   }
@@ -203,10 +203,10 @@ apps: {
   source_contexts: {
    file: "tests/pubsub_collector.sysl"
    start: {
-    line: 27
+    line: 30
    }
    end: {
-    line: 29
+    line: 32
     col: 75
    }
   }
@@ -264,6 +264,99 @@ apps: {
    end: {
     line: 4
     col: 17
+   }
+  }
+ }
+}
+apps: {
+ key: "Missing"
+ value: {
+  name: {
+   part: "Missing"
+  }
+  endpoints: {
+   key: "Endpoints"
+   value: {
+    name: "Endpoints"
+    is_pubsub: true
+    stmt: {
+     call: {
+      target: {
+       part: "My"
+       part: "Subscriber"
+      }
+      endpoint: "Missing -> Endpoints"
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 23
+       col: 4
+      }
+      end: {
+       line: 26
+       col: 10
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 23
+       col: 4
+      }
+      end: {
+       line: 26
+       col: 10
+      }
+     }
+    }
+   }
+  }
+  types: {
+   key: "Type"
+   value: {
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 41
+      col: 4
+     }
+     end: {
+      line: 43
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 41
+      col: 4
+     }
+     end: {
+      line: 43
+      col: 1
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 38
+   }
+   end: {
+    line: 43
+    col: 1
+   }
+  }
+  source_contexts: {
+   file: "tests/pubsub_collector.sysl"
+   start: {
+    line: 38
+   }
+   end: {
+    line: 43
+    col: 1
    }
   }
  }
@@ -333,6 +426,64 @@ apps: {
      end: {
       line: 20
       col: 5
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "Missing -> Endpoints"
+   value: {
+    name: "Missing -> Endpoints"
+    source: {
+     part: "Missing"
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 24
+       col: 8
+      }
+      end: {
+       line: 24
+       col: 11
+      }
+     }
+     source_contexts: {
+      file: "tests/pubsub_collector.sysl"
+      start: {
+       line: 24
+       col: 8
+      }
+      end: {
+       line: 24
+       col: 11
+      }
+     }
+    }
+    source_context: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 23
+      col: 4
+     }
+     end: {
+      line: 26
+      col: 10
+     }
+    }
+    source_contexts: {
+     file: "tests/pubsub_collector.sysl"
+     start: {
+      line: 23
+      col: 4
+     }
+     end: {
+      line: 26
+      col: 10
      }
     }
    }
@@ -473,7 +624,7 @@ apps: {
      }
      end: {
       line: 23
-      col: 10
+      col: 5
      }
     }
     source_contexts: {
@@ -484,7 +635,7 @@ apps: {
      }
      end: {
       line: 23
-      col: 10
+      col: 5
      }
     }
    }
@@ -495,8 +646,8 @@ apps: {
     line: 12
    }
    end: {
-    line: 21
-    col: 28
+    line: 24
+    col: 11
    }
   }
   source_contexts: {
@@ -505,8 +656,8 @@ apps: {
     line: 12
    }
    end: {
-    line: 21
-    col: 28
+    line: 24
+    col: 11
    }
   }
  }
@@ -536,22 +687,22 @@ apps: {
        source_context: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 25
+         line: 28
          col: 59
         }
         end: {
-         line: 25
+         line: 28
          col: 64
         }
        }
        source_contexts: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 25
+         line: 28
          col: 59
         }
         end: {
-         line: 25
+         line: 28
          col: 64
         }
        }
@@ -560,22 +711,22 @@ apps: {
      source_context: {
       file: "tests/pubsub_collector.sysl"
       start: {
-       line: 25
+       line: 28
        col: 8
       }
       end: {
-       line: 25
+       line: 28
        col: 64
       }
      }
      source_contexts: {
       file: "tests/pubsub_collector.sysl"
       start: {
-       line: 25
+       line: 28
        col: 8
       }
       end: {
-       line: 25
+       line: 28
        col: 64
       }
      }
@@ -583,22 +734,22 @@ apps: {
     source_context: {
      file: "tests/pubsub_collector.sysl"
      start: {
-      line: 24
+      line: 27
       col: 4
      }
      end: {
-      line: 27
+      line: 30
       col: 8
      }
     }
     source_contexts: {
      file: "tests/pubsub_collector.sysl"
      start: {
-      line: 24
+      line: 27
       col: 4
      }
      end: {
-      line: 27
+      line: 30
       col: 8
      }
     }
@@ -624,22 +775,22 @@ apps: {
        source_context: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 25
+         line: 28
          col: 59
         }
         end: {
-         line: 25
+         line: 28
          col: 64
         }
        }
        source_contexts: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 25
+         line: 28
          col: 59
         }
         end: {
-         line: 25
+         line: 28
          col: 64
         }
        }
@@ -695,10 +846,10 @@ apps: {
   source_context: {
    file: "tests/pubsub_collector.sysl"
    start: {
-    line: 23
+    line: 26
    }
    end: {
-    line: 25
+    line: 28
     col: 64
    }
   }
@@ -713,10 +864,10 @@ apps: {
   source_contexts: {
    file: "tests/pubsub_collector.sysl"
    start: {
-    line: 23
+    line: 26
    }
    end: {
-    line: 25
+    line: 28
     col: 64
    }
   }
@@ -749,22 +900,22 @@ apps: {
        source_context: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 33
+         line: 36
          col: 77
         }
         end: {
-         line: 33
+         line: 36
          col: 84
         }
        }
        source_contexts: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 33
+         line: 36
          col: 77
         }
         end: {
-         line: 33
+         line: 36
          col: 84
         }
        }
@@ -773,22 +924,22 @@ apps: {
      source_context: {
       file: "tests/pubsub_collector.sysl"
       start: {
-       line: 33
+       line: 36
        col: 8
       }
       end: {
-       line: 33
+       line: 36
        col: 84
       }
      }
      source_contexts: {
       file: "tests/pubsub_collector.sysl"
       start: {
-       line: 33
+       line: 36
        col: 8
       }
       end: {
-       line: 33
+       line: 36
        col: 84
       }
      }
@@ -796,23 +947,23 @@ apps: {
     source_context: {
      file: "tests/pubsub_collector.sysl"
      start: {
-      line: 32
+      line: 35
       col: 4
      }
      end: {
-      line: 35
-      col: 1
+      line: 38
+      col: 8
      }
     }
     source_contexts: {
      file: "tests/pubsub_collector.sysl"
      start: {
-      line: 32
+      line: 35
       col: 4
      }
      end: {
-      line: 35
-      col: 1
+      line: 38
+      col: 8
      }
     }
    }
@@ -837,22 +988,22 @@ apps: {
        source_context: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 33
+         line: 36
          col: 77
         }
         end: {
-         line: 33
+         line: 36
          col: 84
         }
        }
        source_contexts: {
         file: "tests/pubsub_collector.sysl"
         start: {
-         line: 33
+         line: 36
          col: 77
         }
         end: {
-         line: 33
+         line: 36
          col: 84
         }
        }
@@ -866,7 +1017,7 @@ apps: {
       }
       end: {
        line: 23
-       col: 10
+       col: 5
       }
      }
      source_contexts: {
@@ -877,7 +1028,7 @@ apps: {
       }
       end: {
        line: 23
-       col: 10
+       col: 5
       }
      }
     }
@@ -908,10 +1059,10 @@ apps: {
   source_context: {
    file: "tests/pubsub_collector.sysl"
    start: {
-    line: 31
+    line: 34
    }
    end: {
-    line: 33
+    line: 36
     col: 84
    }
   }
@@ -928,10 +1079,10 @@ apps: {
   source_contexts: {
    file: "tests/pubsub_collector.sysl"
    start: {
-    line: 31
+    line: 34
    }
    end: {
-    line: 33
+    line: 36
     col: 84
    }
   }
