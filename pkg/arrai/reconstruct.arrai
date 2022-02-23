@@ -102,7 +102,7 @@ let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtInde
 let resolvedAnnotations = \annotations
     let rec renderValue = \value
         cond value {
-            [...]: $`[${value >> renderValue(.)::,}]`,
+            [...]: $`[${value >> renderValue(.)::, }]`,
             _: cond {
                 //seq.contains('\n', value):
                     let value = //seq.trim_suffix('\n', trimLines(value));

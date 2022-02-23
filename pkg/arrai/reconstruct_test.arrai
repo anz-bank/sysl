@@ -328,19 +328,36 @@ let specialCharacters = (
                 `
             },
     ),
+    anno:
+        let anno = simpleNoSrc.|app| +> (
+            anno: (
+                app: {
+                    |appName, appAnnoName, appAnnoValue|
+                    (['A']  , 'single'   , ['1']       ),
+                    (['A']  , 'multiple' , ['1', '2']  ),
+                }
+            )
+        );
+        (reconstruct(anno) single).@value = $`
+            A:
+                @multiple = ["1", "2"]
+                @single = ["1"]
+
+        `
+    ,
     escapeAnno:
         let escapeAnno = simpleNoSrc.|app| +> (
             anno: (
                 app: {
-                    |appName, appAnnoName, appAnnoValue|
-                    (['A'], 'escape'     , '\b'),
-                    (['A'], 'backslash'  , `\` ),
-                    (['A'], 'doubleQuote', `"` ),
-                    (['A'], 'singleQuote', `'` ),
-                    (['A'], 'arr_escape'     , ['\b']),
-                    (['A'], 'arr_backslash'  , [`\` ]),
-                    (['A'], 'arr_doubleQuote', [`"` ]),
-                    (['A'], 'arr_singleQuote', [`'` ]),
+                    |appName, appAnnoName      , appAnnoValue|
+                    (['A']  , 'escape'         , '\b'        ),
+                    (['A']  , 'backslash'      , `\`         ),
+                    (['A']  , 'doubleQuote'    , `"`         ),
+                    (['A']  , 'singleQuote'    , `'`         ),
+                    (['A']  , 'arr_escape'     , ['\b']      ),
+                    (['A']  , 'arr_backslash'  , [`\` ]      ),
+                    (['A']  , 'arr_doubleQuote', [`"` ]      ),
+                    (['A']  , 'arr_singleQuote', [`'` ]      ),
                 }
             )
         );
