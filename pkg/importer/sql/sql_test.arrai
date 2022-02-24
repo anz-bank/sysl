@@ -227,6 +227,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     {:macro:CREATE TABLE t (c VARCHAR):},
                     {:macro:CREATE TABLE t (c CHARACTER):},
                     {:macro:CREATE TABLE t (c CHARACTER VARYING):},
+                    {:macro:CREATE TABLE t (c JSON):},
                     {:macro:CREATE TABLE t (c UUID):}, # TODO: Capture UUID-ness as well.
                 ],
                 (type: 'string', length: 42): [

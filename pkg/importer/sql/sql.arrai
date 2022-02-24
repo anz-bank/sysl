@@ -166,7 +166,7 @@ SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | DECIMAL   = (("DECIMAL" | "DEC" | "FIXED" | "NUMERIC") ("(" precision=int_value "," scale=int_value ")")?)
                      | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP" (("WITHOUT" | "WITH") "TIME" "ZONE")?)
                      | DATE      = "DATE"
-                     | STRING    = (("TEXT" | "VARCHAR" | "STRING" | "CHARACTER" "VARYING"?) ("(" length ")")?)
+                     | STRING    = (("TEXT" | "VARCHAR" | "STRING" | "CHARACTER" "VARYING"? | "JSON") ("(" length ")")?)
                      | BYTES     = ("BYTES" ("(" length ")")? | "BYTEA" | "BLOB" | "LONGBLOB")
                      | UUID      = "UUID"
                      ;
