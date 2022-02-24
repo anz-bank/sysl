@@ -2,6 +2,7 @@
 
 customeraccounts:
     !table Account [indexes=[["name:AccountsByNum","key_parts:AccountNum(desc)"],["name:Complex","key_parts:AccountNum,BSB(desc),Balance(asc)"]]]:
+        @primary_key = ["AccountNum"]
         AccountNum <: string(23) [~pk]
         BSB <: string(6)
         Balance <: int64
@@ -9,6 +10,7 @@ customeraccounts:
         Table <: string(32)?
 
     !table AccountAddress:
+        @primary_key = ["AccountNum", "AddressPostCode"]
         AccountNum <: string(23) [~pk]
         AddressPostCode <: string(10) [~pk]
         LastUpdated <: datetime?
@@ -17,6 +19,7 @@ customeraccounts:
         AddressLine3 <: bytes(100)?
 
     !table Customer [indexes=[["name:CustomerByEmail","unique:true","key_parts:Email,Mobile(desc)"]]]:
+        @primary_key = ["CustomerID"]
         CustomerID <: string(36) [~pk]
         FirstName <: string(64)
         LastName <: string(64)
@@ -25,7 +28,8 @@ customeraccounts:
         NetWorth <: decimal(38.9)?
         _Int <: int [name="Int"]
 
-    !table CustomerHasAccount [primary_key="AccountNum,CustomerID", foreign_keys=[["columns:CustomerID"],["constraint:FK_AccountNum","columns:AccountNum,BranchID"]]]:
+    !table CustomerHasAccount [foreign_keys=[["columns:CustomerID"],["constraint:FK_AccountNum","columns:AccountNum,BranchID"]]]:
+        @primary_key = ["AccountNum", "CustomerID"]
         CustomerID <: Customer.CustomerID [~pk, ~fk]
         Customer <: string(36)
         AccountNum <: Account.AccountNum [~pk, ~fk]
@@ -34,6 +38,7 @@ customeraccounts:
         Permissions <: sequence of string(10)?
 
     !table PayID:
+        @primary_key = ["PayID"]
         PayID <: string(23) [~pk]
         BSB <: string(6)
         _float <: float [name="float"]

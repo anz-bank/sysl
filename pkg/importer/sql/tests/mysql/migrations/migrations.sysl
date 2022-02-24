@@ -2,4 +2,5 @@
 
 TestApp:
     !table foo:
+        @primary_key = ["a"]
         a <: int64? [~pk]

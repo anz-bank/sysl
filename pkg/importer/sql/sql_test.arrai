@@ -50,6 +50,8 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     primary_key: ['c']
                 )}
             ,
+            ordering: ({:macro:CREATE TABLE foo (a int, b int, c int) PRIMARY KEY(b, a, c):}.entities single).primary_key
+                = ['b', 'a', 'c'],
             empty:
                 ({:macro:CREATE TABLE t (c INT64) PRIMARY KEY():}.entities => .primary_key) = {[]}
             ,

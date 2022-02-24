@@ -34,11 +34,13 @@ let interleaved = (
 
         test:
             !table bar [interleave_in_parent="foo", interleave_on_delete=""]:
+                @primary_key = ["a", "b"]
                 a <: foo.a? [~pk]
                 b <: int [~pk]
                 c <: datetime [allow_commit_timestamp="true", foo="bar"]
 
             !table foo:
+                @primary_key = ["a"]
                 a <: int? [~pk]
                 b <: sequence of int?
 
