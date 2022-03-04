@@ -31,3 +31,5 @@ components:
       $ref: "./external-ref-test/ext-ref-4.yaml#/components/schemas/test1"
     test8:
       type: string
+    test9:
+      $ref: './external-ref-test/asset.json'

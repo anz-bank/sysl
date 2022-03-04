@@ -41,6 +41,10 @@ TestApp "ExtRef1":
         b <: external-ref-test_ext-ref-4%2Eyaml_components_schemas_test1?:
             @json_tag = "b"
     
+    !type external-ref-test_asset%2Ejson_:
+        field <: string?:
+            @json_tag = "field"
+    
     !type external-ref-test_ext-ref-4%2Eyaml_components_schemas_test1:
         x <: external-ref-test_ext-ref-4%2Eyaml_components_schemas_test2?:
             @json_tag = "x"
@@ -91,3 +95,6 @@ TestApp "ExtRef1":
     
     !alias test8:
         string
+    
+    !alias test9:
+        external-ref-test_asset%2Ejson_

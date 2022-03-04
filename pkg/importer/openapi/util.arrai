@@ -46,6 +46,9 @@ let parseSpecWithRoot = \root \fp parseSpec(joinPath(root, fp));
 
 let rec resolveRef = \(?:oapi:'', ?:filepath:'', ?:root: '', ...) \ref
     cond //seq.split('#', ref) {
+        # referencing the whole oapi object
+        ['']: oapi,
+
         # local
         ['', path]:
             let ['components', type, name] = //seq.trim_prefix('/', path) -> //seq.split('/', .);

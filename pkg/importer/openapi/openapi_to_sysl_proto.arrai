@@ -170,7 +170,7 @@ let specialAnno = {
                         },
 
                     isExternalPathRef(ref):
-                        let [fp, localisedRef] = //seq.split('#', ref);
+                        let [fp, ?localisedRef:''] = //seq.split('#', ref);
                         typeRef((path: [extRefToName(joinPath(baseDir(filepath), fp), localisedRef)])),
 
                     _: //error($`unrecognised ref: ${ref}`),

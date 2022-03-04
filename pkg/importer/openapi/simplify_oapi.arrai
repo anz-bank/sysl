@@ -410,9 +410,9 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
                             isURLRef(ref): //error($`url reference not supported: ${ref}`),
 
                             isExternalPathRef(ref):
-                                let [refPath, localisedRef] = //seq.split('#', ref);
+                                let [refPath, ?localisedRef:''] = //seq.split('#', ref);
                                 let filepath = joinPath(baseDir(filepath), refPath);
-                                let localisedRef = $`#${localisedRef}`;
+                                let localisedRef = localisedRef && $`#${localisedRef}`;
                                 let node = (:filepath, ref: localisedRef);
                                 cond {
                                     (node <: visited): acc,
