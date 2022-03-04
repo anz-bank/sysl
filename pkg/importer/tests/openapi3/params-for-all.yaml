@@ -9,6 +9,10 @@ paths:
         schema:
           type: string
         in: path
+      - name: special-character
+        schema:
+          type: string
+        in: query
     post:
       description: Empty parameters
       responses:

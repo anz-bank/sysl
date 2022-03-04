@@ -281,8 +281,18 @@ let specialAnno = {
             }
         ;
         let attrs = attrs +> extensionToAnnotations(param);
+
+        # FIXME: sysl grammar allows dashes in their names which include parameter names. However, query params do not
+        # allow this for unknown reason. When this is fixed, remove this substitution.
+        let subDashes = \name
+            cond in.s {
+                'query': //re.compile(`-`).sub('%2D', name),
+                _:       name
+            }
+        ;
+
         (
-            name: syslSafeName(name),
+            name: subDashes(syslSafeName(name)),
             type: schemaToTypeMessage(schema) +> (
                 opt: !(param('required')?.b:false),
                 attrs+>: attrs
