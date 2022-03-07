@@ -475,7 +475,7 @@ func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*
 				Length: &sysl.Type_Constraint_Length{},
 			}
 		}
-		if t.GetPrimitive() != sysl.Type_STRING && array_size.DIGITS(0) != nil {
+		if array_size.DIGITS(0) != nil {
 			val := array_size.DIGITS(0).GetText()
 			if l, err = strconv.ParseInt(val, 10, 0); err == nil && l != 0 {
 				ct.Length.Min = l

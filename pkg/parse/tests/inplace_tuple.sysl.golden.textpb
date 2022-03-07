@@ -1465,6 +1465,7 @@ apps: {
        primitive: STRING
        constraint: {
         length: {
+         min: 10
          max: 30
         }
        }
