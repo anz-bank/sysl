@@ -29,7 +29,7 @@ let annotations =
     let rec resolveVal = \v
         cond v {
             (:s, ...):        s,
-            (a: (:elt), ...): elt >> resolveVal(.),
+            (a: (?:elt:[]), ...): elt >> resolveVal(.),
             _: //error($`unexpected anno value: ${v}`),
         };
     \x attrs(x) where .@ != 'patterns' >> resolveVal(.)
