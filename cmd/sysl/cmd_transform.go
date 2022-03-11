@@ -11,9 +11,11 @@ import (
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/arr-ai/arrai/pkg/shell"
 	"github.com/arr-ai/arrai/pkg/test"
 	"github.com/arr-ai/arrai/rel"
 	"github.com/arr-ai/arrai/syntax"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -22,6 +24,7 @@ type transformCmd struct {
 	transformFile string
 	outFile       string
 	testFile      string
+	debug         bool
 }
 
 func (p *transformCmd) Name() string       { return "transform" }
@@ -38,6 +41,9 @@ func (p *transformCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("tests",
 		"path of arr.ai script file with test function that accepts the transform output").
 		Short('t').StringVar(&p.testFile)
+	cmd.Flag("debug",
+		"enable arr.ai shell debug mode when transform script fails").
+		Short('d').BoolVar(&p.debug)
 	return cmd
 }
 
@@ -83,6 +89,13 @@ func (p *transformCmd) Execute(args cmdutils.ExecuteArgs) error {
 	}
 
 	if err != nil {
+		if p.debug {
+			// Prints the error first and create the debugging session.
+			// This returns nil so that it does not print the error messages twice
+			logrus.Error(err)
+			shell.CreateDebugSession(err)
+			return nil
+		}
 		return err
 	}
 

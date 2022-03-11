@@ -9,7 +9,7 @@ require (
 	github.com/anz-bank/golden-retriever v0.19.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.39
-	github.com/arr-ai/arrai v0.292.0
+	github.com/arr-ai/arrai v0.302.0
 	github.com/arr-ai/frozen v0.20.0
 	github.com/arr-ai/proto v0.0.0-20180422074755-2ffbedebee50
 	github.com/arr-ai/wbnf v0.34.0
