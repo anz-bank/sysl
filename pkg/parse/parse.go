@@ -168,7 +168,12 @@ type srcInput struct {
 
 type srcInputs struct {
 	inputs []srcInput
-	mutex  sync.Mutex
+	ch     chan struct{}
+}
+
+type retrievedList struct {
+	l     map[string]*srcInputs
+	mutex sync.Mutex
 }
 
 // Parse parses a sysl definition from an retriever interface
@@ -180,18 +185,18 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		resource += syslExt
 	}
 
-	specs := srcInputs{make([]srcInput, 0), sync.Mutex{}}
+	retrieved := retrievedList{make(map[string]*srcInputs), sync.Mutex{}}
 
 	if err := collectSpecs(
 		context.Background(),
 		importDef{filename: resource},
 		reader,
-		&specs,
-		map[string]struct{}{},
+		&retrieved,
 	); err != nil {
 		return nil, err
 	}
-	return p.parseSpecs(&specs, listener)
+
+	return p.parseSpecs(retrieved.l[resource], listener)
 }
 
 func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sysl.Module, error) { //nolint:funlen
@@ -248,23 +253,23 @@ func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sys
 	return listener.module, nil
 }
 
-// collectSpecs splits a single sysl file to two -
-// one contains all the import statements and
-// the other consists of non-import statements.
-//
-// Parse the former then split and parse the dependencies recursively and in parallel.
-// Collect the latter in the `specs` map.
-func collectSpecs(ctx context.Context,
-	source importDef, reader reader.Reader, specs *srcInputs,
-	imported map[string]struct{}) error {
-	specs.mutex.Lock()
-	if _, has := imported[source.filename]; has {
+// collectSpecs retrieves the contents for a sourceFile. It then parses the source to find all imports and recursively
+// (and in parallel) retrieves those as well. A slice of all the files and their contents (in the order they
+// appear in the source file) are placed into the retrievedList.
+func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, retrieved *retrievedList) error {
+	retrieved.mutex.Lock()
+	if inputs, has := retrieved.l[source.filename]; has {
 		logrus.Warnf("Duplicate import: '%s'\n", cleanImportFilename(source.filename))
-		specs.mutex.Unlock()
+		retrieved.mutex.Unlock()
+		// Wait for result to be ready before returning
+		<-inputs.ch
+
 		return nil
 	}
-	imported[source.filename] = struct{}{}
-	specs.mutex.Unlock()
+	inputs := srcInputs{nil, make(chan struct{})}
+	defer close(inputs.ch)
+	retrieved.l[source.filename] = &inputs
+	retrieved.mutex.Unlock()
 
 	content, hash, err := reader.ReadHash(ctx, source.filename)
 	if err != nil {
@@ -277,11 +282,13 @@ func collectSpecs(ctx context.Context,
 
 	importsInput := extractImports(source.filename, content)
 
-	specs.mutex.Lock()
-	specs.inputs = append(specs.inputs, srcInput{source, string(content)})
-	specs.mutex.Unlock()
+	sources := []srcInput{{source, string(content)}}
 
 	if importsInput.Len() == 0 {
+		retrieved.mutex.Lock()
+		defer retrieved.mutex.Unlock()
+		inputs.inputs = sources
+
 		return nil
 	}
 
@@ -294,7 +301,7 @@ func collectSpecs(ctx context.Context,
 	for _, c := range children {
 		c := c
 		g.Go(func() error {
-			return collectSpecs(ctx, c, reader, specs, imported)
+			return collectSpecs(ctx, c, reader, retrieved)
 		})
 	}
 
@@ -304,6 +311,22 @@ func collectSpecs(ctx context.Context,
 			"error reading %#v: \n%v", cleanImportFilename(source.filename), err,
 		))
 	}
+
+	retrieved.mutex.Lock()
+	defer retrieved.mutex.Unlock()
+	alreadyAdded := map[string]struct{}{
+		source.filename: {},
+	}
+	// Go through and add all the sources from each of the children while checking that each source is only added once
+	for _, c := range children {
+		for _, src := range retrieved.l[c.filename].inputs {
+			if _, has := alreadyAdded[src.src.filename]; !has {
+				sources = append(sources, src)
+				alreadyAdded[src.src.filename] = struct{}{}
+			}
+		}
+	}
+	inputs.inputs = sources
 
 	return nil
 }

@@ -27,7 +27,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/rjeczalik/notify v0.9.2
 	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/afero v1.6.0
+	github.com/spf13/afero v1.8.2
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.11.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
