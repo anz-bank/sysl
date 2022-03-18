@@ -1,7 +1,7 @@
 let (:includeImport, ...) = //{./util};
 
 # Tools for parsing and importing Protocol Buffers.
-# 
+#
 # `grammar` is a wbnf encoding of the Protocol Buffers Version 2 and 3 Language Specifications:
 # https://developers.google.com/protocol-buffers/docs/reference/proto3-spec
 # https://developers.google.com/protocol-buffers/docs/reference/proto2-spec
@@ -59,7 +59,7 @@ mapField        -> c* "map" "<" keyType "," type ">" mapName "=" fieldNumber  ("
 mapName         -> ident;
 keyType         -> "int32" | "int64" | "uint32" | "uint64" | "sint32" | "sint64" |
                    "fixed32" | "fixed64" | "sfixed32" | "sfixed64" | "bool" | "string";
-                   
+
 reserved        -> c* "reserved" (range:comma | ('"'fieldName'"'):comma) ";" ($ | c)?;
 extensions      -> c* "extensions" range:comma ";" ($ | c)?;
 range           -> intLit ("to" (intLit | "max"))?;
@@ -152,7 +152,7 @@ let evalComments = \parsed
     cond parsed {
         (:c, ...): (comments: c >> cond {
             //seq.has_prefix("//", .''): //seq.trim_prefix("//", .''),
-            //seq.has_prefix("/*", .''): 
+            //seq.has_prefix("/*", .''):
                //seq.trim_suffix("*/", //seq.trim_prefix("/*", .''))
         })
     } || ();
@@ -161,9 +161,9 @@ let evalOption = \parsed { evalOptionName(parsed.optionName): evalConstant(parse
 
 let evalField = \parsed
     {
-        evalName(parsed.fieldName): ( 
-        value: evalConstant(parsed.fieldNumber), 
-        type: evalType(parsed.type)) 
+        evalName(parsed.fieldName): (
+        value: evalConstant(parsed.fieldNumber),
+        type: evalType(parsed.type))
         +> (cond parsed {(:label, ...): (label: evalLabel(label))} || ())
         +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
@@ -227,7 +227,7 @@ let rec evalMessageBody = \parsed
     +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
     +> (cond parsed {(:oneof, ...): (oneofs: //rel.union(oneof => evalOneofField(.@item)))} || ())
     +> (cond parsed {(:mapField, ...): (mapFields: //rel.union(mapField => evalMapField(.@item)))} || ())
-    +> (cond parsed {(:reserved, ...): (reserveds: //rel.union(reserved => evalReserved(.@item)))} || ());
+    +> (cond parsed {(:reserved, ...): (reserveds: reserved => evalReserved(.@item))} || ());
 
 let evalGroupField = \parsed
     {
@@ -237,7 +237,7 @@ let evalGroupField = \parsed
 let evalService = \parsed
     {
         evalName(parsed.serviceName): ()
-        +> (cond parsed {(:option, ...): (options: option => evalOption(.@item))} || ()) 
+        +> (cond parsed {(:option, ...): (options: option => evalOption(.@item))} || ())
         +> (cond parsed {(:rpc, ...): (rpcs: //rel.union(rpc => evalRPC(.@item)))} || ())
         +> evalComments(parsed)
     };
@@ -252,14 +252,14 @@ let evalExtend = \parsed
 
 let evalStmt = \parsed
     cond parsed {
-        (:import, ...): 
+        (:import, ...):
             (import: {import.strLit.''(1) rank (:.@): () +> (cond import.modifier?:{} {('':mod, ...): (modifier: mod rank (:.@))} || ())}),
-        (:package, ...): 
+        (:package, ...):
             (package: {evalFullIdent(package.fullIdent): () +> evalComments(package)}),
         (:option, ...): (
            (option: evalOption(option))
         ),
-        (:topLevelDef, ...): 
+        (:topLevelDef, ...):
             cond topLevelDef {
                 (:enum, ...):
                     (enum: evalEnum(enum)),
@@ -290,31 +290,31 @@ let parseFile = \bytes
 
 
 # `import` imports a list of proto files and returns the arrai representation.
-# `files` the list of proto files. 
+# `files` the list of proto files.
 # `paths` the list of paths used to resolve imports.
 # Example ouput:
 # {
 #   "pkg/importer/proto/tests/combined/user.proto": (
-#       enums: {}, 
+#       enums: {},
 #       extends: {},
-#       imports: {'user_type.proto': ()}, 
-#       messages: {}, 
-#       options: {}, 
-#       package: {'foo.user': ()}, 
+#       imports: {'user_type.proto': ()},
+#       messages: {},
+#       options: {},
+#       package: {'foo.user': ()},
 #       services: {
 #           'UserService': (rpcs: {'AddUser': (in: (name: 'AddUserRequest'), out: (name: 'AddUserResponse')),
 #           'GetUser': (in: (name: 'GetUserRequest'), out: (name: 'GetUserResponse'))})
-#       }, 
+#       },
 #       syntax: 'proto3'
 #   ),
 #   "pkg/importer/proto/tests/combined/user_type.proto": (
-#       enums: {}, 
-#       extends: {}, 
-#       imports: {}, 
-#       messages: {'AddUserRequest': (), 'AddUserResponse': (), 'GetUserRequest': (), 'GetUserResponse': ()}, 
-#       options: {}, 
-#       package: {'foo.user': ()}, 
-#       services: {}, 
+#       enums: {},
+#       extends: {},
+#       imports: {},
+#       messages: {'AddUserRequest': (), 'AddUserResponse': (), 'GetUserRequest': (), 'GetUserResponse': ()},
+#       options: {},
+#       package: {'foo.user': ()},
+#       services: {},
 #       syntax: 'proto3'
 #   )
 # }
@@ -347,7 +347,7 @@ let import = \files \paths
                     parsed:
                         let result = result +> {file: parsed};
                         let importFiles = ((parsed.imports => cond {includeImport(.@): .@}) where .) orderby .;
-                        _import(tail ++ importFiles, result), 
+                        _import(tail ++ importFiles, result),
                     _: _import(tail, result)
                 }
     };

@@ -94,6 +94,32 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                 let actual = file.messages;
                 //test.assert.equal(expected, actual),
 
+            reserved: (
+                single:
+                    let file = parseFile(`syntax = "proto3"; message Message { reserved 1; }`);
+                    let expected = {'Message': (reserveds: {(ranges: {(from: (d: 1), till: (d: 1))})})};
+                    let actual = file.messages;
+                    //test.assert.equal(expected, actual),
+
+                multiple:
+                    let file = parseFile(`syntax = "proto3"; message Message { reserved 2; reserved 4, 5, 6; }`);
+                    let expected = {'Message': (reserveds: {
+                        |ranges|
+                        ({
+                            |from  , till|
+                            ((d: 2), (d: 2)),
+                        }),
+                        ({
+                            |from  , till|
+                            ((d: 4), (d: 4)),
+                            ((d: 5), (d: 5)),
+                            ((d: 6), (d: 6)),
+                        }),
+                    })};
+                    let actual = file.messages;
+                    //test.assert.equal(expected, actual),
+            ),
+
             nested:
                 let file = parseFile(`syntax = "proto3"; message Outer { option (my_option).a = true; message Inner { foo.bar foobar = 3; int64 ival = 1; } }`);
                 let expected = {
