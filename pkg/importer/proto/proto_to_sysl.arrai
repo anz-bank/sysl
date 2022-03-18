@@ -7,21 +7,21 @@ let (:renderTypeUsageWithInlineAnno, ...) = //{/pkg/arrai/sysl-renderer/sysl_mod
 # The suffix to add to the application name of the application that holds type specifications.
 let typeAppSuffix = "Types";
 
-# `packageToApp` converts a package string to a valid application string 
+# `packageToApp` converts a package string to a valid application string
 # `package` the package string
 let packageToApp = \package //seq.sub(".", "_", package);
 
 # `resolveImport` searches the full file paths in `imports` for one that matches the short import path.
-# `import` the import path as it appears in a proto file. 
+# `import` the import path as it appears in a proto file.
 # `imports` a map of all files in the module.
 let resolveImport = \import \imports
     let matches = (imports where //seq.contains(import, .@));
     cond {
         matches: (matches single).@,
-        _: //error("Unresolvable import")
+        _: //error($`Unresolvable import: ${import} not in [${imports => .@ orderby .::, }]`)
     };
 
-# `fileContainsType` checks whether a Sysl type is defined in a file by searching messages/enums. 
+# `fileContainsType` checks whether a Sysl type is defined in a file by searching messages/enums.
 #  This also searches nested messages/enums.
 # `fileContent` the content of the file being searched in.
 # `typeName` the name of the type being searched for.
@@ -42,7 +42,7 @@ let evalNumber = \number
 # `file` the file that is referencing the type.
 # `appName` the name of the application, within the file, that is referencing the type.
 # `imports` a map of all files in the module.
-let referencedType = \t \file \appName \imports 
+let referencedType = \t \file \appName \imports
     let name = syslSafeName(t.name);
     # `referencedNs` finds the file that had the original type definition and returns the namespace of that file.
     let referencedNs = \t \file \imports
@@ -61,16 +61,16 @@ let referencedType = \t \file \appName \imports
             _: (path: [name])
         };
     typeRef(cond {
-            t.package?:{}: 
-                refObj(t, referencedNs(t, file, imports)),	
-            _: 
+            t.package?:{}:
+                refObj(t, referencedNs(t, file, imports)),
+            _:
                 cond {
                     # TODO: Get the full name of a type when it's found in a file
                     # For example: If Baz and is a nested message within Foo
                     # name is set to Baz when it should be Foo.Baz
                     fileContainsType(file.@value, t.name): cond {
                         //seq.contains(typeAppSuffix, appName): (path: [name]),
-                        _: 
+                        _:
                             let ns = getNamespace(file.@value);
                             refObj(t, ns)
                         },
@@ -92,11 +92,11 @@ let evalType = \t \file \appName \imports
     cond {
         t.name <: {'bool', 'boolean'}: primitive('BOOL'),
         t.name <: integers:  primitive('INT'),
-        t.name <: {'number', 'double', 'float'}: primitive('FLOAT'),	
+        t.name <: {'number', 'double', 'float'}: primitive('FLOAT'),
         t.name <: {'string', 'str'}:   primitive('STRING'),
-        t.name = 'date':     primitive('DATE'),			
-        t.name = 'datetime': primitive('DATETIME'),			
-        t.name <: {'byte', 'bytes'}: primitive('BYTES'),			
+        t.name = 'date':     primitive('DATE'),
+        t.name = 'datetime': primitive('DATETIME'),
+        t.name <: {'byte', 'bytes'}: primitive('BYTES'),
         t.name = 'binary':   primitive('BYTES'),
         _: referencedType(t, file, appName, imports)
     };
@@ -134,9 +134,9 @@ let baseAttrs = \obj \file
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
 let typeFieldValue = \messageField \file \appName \imports
-    evalField(messageField.@value, file, appName, imports) 
-    +> let attrs = {"json_tag": (s: camelCaseFromSnakeCase(messageField.@))} 
-        +> cond messageField.@value {(:value, ...): {"rpcId": (s: $`${evalNumber(value)}`)}} 
+    evalField(messageField.@value, file, appName, imports)
+    +> let attrs = {"json_tag": (s: camelCaseFromSnakeCase(messageField.@))}
+        +> cond messageField.@value {(:value, ...): {"rpcId": (s: $`${evalNumber(value)}`)}}
         +> cond messageField.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}};
     (:attrs);
 
@@ -147,7 +147,7 @@ let typeFieldValue = \messageField \file \appName \imports
 # `imports` a map of all files in the module.
 let typeField = \messageField \file \appName \imports
     (
-        @: syslSafeName(messageField.@), 
+        @: syslSafeName(messageField.@),
         @value: typeFieldValue(messageField, file, appName, imports)
     );
 
@@ -158,10 +158,10 @@ let typeField = \messageField \file \appName \imports
 # `imports` a map of all files in the module.
 let oneOfTypeField = \oneOf \file \appName \imports
     let key = $`oneof_${oneOf.@}`;
-    let types = oneOf.@value.fields?:{} => \field 
+    let types = oneOf.@value.fields?:{} => \field
             field -> (name: syslSafeName(.@)) +> typeFieldValue(., file, appName, imports);
     let value = (one_of: (
-        attrs: cond oneOf.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}}, 
+        attrs: cond oneOf.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}},
         type: types orderby .
     ));
     (@: key, @value: value);
@@ -198,7 +198,7 @@ let endpoint = \rpc \appName \file \imports
     let payload = $`ok <: ${renderTypeUsageWithInlineAnno(evalType(rpc.@value.out, file, appName, imports))}`;
     let type = evalType(rpc.@value.in, file, appName, imports) +> ("attrs": {});
     let endpoint = (:appName,
-        name: rpc.@, 
+        name: rpc.@,
         attrs: baseAttrs(rpc, file.@) +> {"patterns": (a: (elt: [("s": "gRPC")]))},
         param: [(name: "input", :type)],
         stmt: [(name: rpc.@value.out, ret: (:payload))]
@@ -217,9 +217,9 @@ let application = \service \ns \file \imports
         +> {"source_path": (s: forwardSlashedPath(file.@))}
         +> {"patterns": (a: (elt: [("s": "gRPC")]))}
         +> cond service.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}}
-        +> cond service.@value {(:options, ...): {"proto_options": 
+        +> cond service.@value {(:options, ...): {"proto_options":
             (a: (elt: (options => (s: $`${.@} = ${annoFromOption(.@value)}`)) orderby .))}}
-        +> cond service.@value {(:fileOptions, ...): {"proto_file_options": 
+        +> cond service.@value {(:fileOptions, ...): {"proto_file_options":
             (a: (elt: (fileOptions => (s: $`${.@} = ${annoFromOption(.@value)}`)) orderby .))}
         }
     });
@@ -235,7 +235,7 @@ let application = \service \ns \file \imports
 # `file` the file the rpc is located in.
 # `imports` a map of all files in the module.
 # TODO: support extends
-# Extends are in the format 
+# Extends are in the format
 # extend Foo {
 #   optional int32 bar = 126;
 # }
@@ -244,11 +244,11 @@ let application = \service \ns \file \imports
 # TODO: Update sysl_mod_renderers.arrai -> renderTypeOrTable to render the nested messages/enums.
 let rec fileTypes = \content \prefix \appName \file \imports
     let name = \typeName \prefix syslSafeName(cond {prefix: $`${prefix}.${typeName}`} || typeName);
-    let messages = (content.messages?:{} => ({name(.@, prefix): type(., file, appName, imports)} 
+    let messages = (content.messages?:{} => ({name(.@, prefix): type(., file, appName, imports)}
         +> fileTypes(.@value, .@, appName, file, imports)));
     //rel.union(
         let messages = content.messages?:{} =>
-            ({name(.@, prefix): type(., file, appName, imports)} 
+            ({name(.@, prefix): type(., file, appName, imports)}
                 +> fileTypes(.@value, .@, appName, file, imports));
         let enums = content.enums?:{} => {name(.@, {}): enum(., file.@)};
         messages | enums);
@@ -264,8 +264,8 @@ let fileApps = \file \imports
         let typeAppName = cond { ns: partsToAppName(ns ++ [typeAppSuffix]) } || appPackage;
         {typeAppName:
             (
-                attrs: {"package": (s: packageToApp(getPackage(file)))}, 
-                name: appNameToAppNameMessage(typeAppName), 
+                attrs: {"package": (s: packageToApp(getPackage(file)))},
+                name: appNameToAppNameMessage(typeAppName),
                 types: fileTypes(file.@value, {}, typeAppName, file, imports)
             )
         }
@@ -278,13 +278,13 @@ let module = \imports
     let merge = \apps \appName \app
         let existing = apps(appName)?:{};
         let app = existing && (
-            name: existing.name, 
-            attrs: existing.attrs?:{} | app.attrs?:{}, 
-            types: existing.types?:{} | app.types?:{}, 
+            name: existing.name,
+            attrs: existing.attrs?:{} | app.attrs?:{},
+            types: existing.types?:{} | app.types?:{},
             endpoints: existing.endpoints?:{} | app.endpoints?:{}
         ) || app;
         {appName: app};
-    
+
     let apps = imports => fileApps(., imports);
     # Merge the contents of applications with the same name together.
     let apps = reduce(apps orderby ., \v \k v +> //rel.union(k => merge(v, .@, .@value)), {});

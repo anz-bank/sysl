@@ -320,6 +320,7 @@ let parseFile = \bytes
 # }
 let import = \files \paths
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
+    let isLocal = \path localImports(path)?:false && true;
     let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.contains(".proto", .)};
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
@@ -333,7 +334,8 @@ let import = \files \paths
         cond files {
             {}: result,
             [file, ...tail]:
-                let filePath = path(file);
+                # If the file is a local import, don't attempt to resolve a path elsewhere.
+                let filePath = !isLocal(file) && path(file);
                 let parsed = cond {
                     filePath: cond {
                             !result(filePath)?:{}: parseFile(//os.file(filePath)),
