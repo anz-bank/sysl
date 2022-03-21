@@ -31,7 +31,6 @@ type importDef struct {
 type TreeShapeListener struct {
 	*parser.BaseSyslParserListener
 	base         string
-	version      string
 	sc           sourceCtxHelper
 	imports      []importDef
 	module       *sysl.Module
@@ -3367,8 +3366,8 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		} else {
 			filename = filepath.Join(base, filename)
 		}
-		if !strings.Contains(filename, "@") && s.version != "" {
-			filename += "@" + s.version
+		if !strings.Contains(filename, "@") && s.sc.version != "" {
+			filename += "@" + s.sc.version
 		}
 	}
 

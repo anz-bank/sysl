@@ -36,6 +36,10 @@ var (
 	update = flag.Bool("update", false, "Update golden test files")
 )
 
+const (
+	randomSha = `1e7c4cecaaa8f76e3c668cebc411f1b03174501f`
+)
+
 func TestMain(m *testing.M) {
 	flag.Parse()
 	os.Exit(m.Run())
@@ -1031,6 +1035,7 @@ type mockReader struct {
 type mockContent struct {
 	content string
 	hash    retriever.Hash
+	branch  string
 }
 
 func (r mockReader) Read(_ context.Context, resource string) ([]byte, error) {
@@ -1045,6 +1050,13 @@ func (r mockReader) ReadHash(_ context.Context, resource string) ([]byte, retrie
 		return []byte(c.content), r.contents[resource].hash, nil
 	}
 	return nil, retriever.Hash{}, fmt.Errorf("file not found")
+}
+
+func (r mockReader) ReadHashBranch(_ context.Context, resource string) ([]byte, retriever.Hash, string, error) {
+	if c, ok := r.contents[resource]; ok {
+		return []byte(c.content), r.contents[resource].hash, r.contents[resource].branch, nil
+	}
+	return nil, retriever.ZeroHash, "", fmt.Errorf("file not found")
 }
 
 /* TestParseSyslRetriever tests that a file can be imported */
@@ -1065,9 +1077,9 @@ NotTwo:
 `
 
 	r := mockReader{contents: map[string]mockContent{
-		"./one.sysl": {one, retriever.ZeroHash},
-		"two.sysl":   {two, retriever.ZeroHash},
-		"./two.sysl": {nottwo, retriever.ZeroHash},
+		"./one.sysl": {one, retriever.ZeroHash, ""},
+		"two.sysl":   {two, retriever.ZeroHash, ""},
+		"./two.sysl": {nottwo, retriever.ZeroHash, ""},
 	}}
 
 	p := NewParser()
@@ -1098,10 +1110,13 @@ Three:
 		...
 `
 
+	sha := randomSha
+	h, err := retriever.NewHash(sha)
+	require.NoError(t, err)
 	r := mockReader{contents: map[string]mockContent{
-		"./one.sysl":                            {one, retriever.ZeroHash},
-		"//github.com/org/repo/two.sysl@master": {two, retriever.ZeroHash},
-		`3.sysl`:                                {three, retriever.ZeroHash},
+		"./one.sysl":                            {one, retriever.ZeroHash, ""},
+		"//github.com/org/repo/two.sysl@master": {two, h, "master"},
+		`3.sysl`:                                {three, retriever.ZeroHash, ""},
 	}}
 
 	p := NewParser()
@@ -1132,13 +1147,52 @@ Three:
 	...
 `
 
-	sha := "1e7c4cecaaa8f76e3c668cebc411f1b03174501f"
+	sha := randomSha
 	h, err := retriever.NewHash(sha)
 	require.NoError(t, err)
 	r := mockReader{contents: map[string]mockContent{
-		"./one.sysl":                              {one, retriever.ZeroHash},
-		"//github.com/org/repo/two.sysl@master":   {two, h},
-		"//github.com/org/repo/three.sysl@" + sha: {three, h},
+		"./one.sysl":                              {one, retriever.ZeroHash, ""},
+		"//github.com/org/repo/two.sysl@master":   {two, h, "master"},
+		"//github.com/org/repo/three.sysl@master": {three, h, "master"},
+	}}
+
+	p := NewParser()
+
+	c, err := p.Parse("./one", r)
+	require.NoError(t, err)
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
+}
+
+/* TestParseSyslRetrieverRemoteImportNotMaster tests that a remote file imported not from master branch will import
+   a local file from the same branch
+*/
+func TestParseSyslRetrieverRemoteImportNotMaster(t *testing.T) {
+	one := `
+import //github.com/org/repo/two.sysl@branch
+One:
+	_:
+		...
+`
+	two := `
+import three.sysl
+Two:
+	...
+`
+	three := `
+Three:
+	...
+`
+
+	sha := randomSha
+	h, err := retriever.NewHash(sha)
+	require.NoError(t, err)
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl":                              {one, retriever.ZeroHash, ""},
+		"//github.com/org/repo/two.sysl@branch":   {two, h, "branch"},
+		"//github.com/org/repo/three.sysl@branch": {three, h, "branch"},
 	}}
 
 	p := NewParser()
@@ -1157,7 +1211,7 @@ func TestParseSyslRetrieverRemoteFail(t *testing.T) {
 import //github.com/org/repo/two.sysl@master
 `
 	r := mockReader{contents: map[string]mockContent{
-		"./one.sysl": {one, retriever.ZeroHash},
+		"./one.sysl": {one, retriever.ZeroHash, ""},
 	}}
 
 	p := NewParser()

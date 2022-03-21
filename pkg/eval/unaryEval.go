@@ -22,7 +22,7 @@ func evalUnaryFunc(op sysl.Expr_UnExpr_Op, arg *sysl.Value) *sysl.Value {
 	if x, has := unaryFunctions[op]; has {
 		return x(arg)
 	}
-	panic(errors.Errorf("evalUnaryFunc: Operation %v not supported\n", op))
+	panic(errors.Errorf("evalUnaryFunc: operation %v not supported", op))
 }
 
 func unaryNeg(arg *sysl.Value) *sysl.Value {

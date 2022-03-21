@@ -35,6 +35,7 @@ func TestEvalStrategySetup(t *testing.T) {
 
 	for key := range valueFunctions {
 		idx := strings.Index(key, "_Value")
+		require.Greater(t, idx, 0)
 		op := key[:idx]
 		_, has := functionEvalStrategy[sysl.Expr_BinExpr_Op(sysl.Expr_BinExpr_Op_value[op])]
 		assert.True(t, has, "%#v", key)
@@ -42,6 +43,7 @@ func TestEvalStrategySetup(t *testing.T) {
 
 	for key := range exprFunctions {
 		idx := strings.Index(key, "_Value")
+		require.Greater(t, idx, 0)
 		op := key[:idx]
 		_, has := functionEvalStrategy[sysl.Expr_BinExpr_Op(sysl.Expr_BinExpr_Op_value[op])]
 		assert.True(t, has, "%#v", key)

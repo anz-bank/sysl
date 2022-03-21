@@ -213,9 +213,7 @@ func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sys
 		}
 		srcCtxFile := cleanImportFilename(src.filename)
 		listener.base = importDir(src.filename)
-		// FIXME: listener.sc.version and listener.version maybe duplicated
 		listener.sc = sourceCtxHelper{srcCtxFile, version}
-		listener.version = version
 
 		// Import Sysl Proto
 		if strings.HasSuffix(src.filename, ".sysl.pb.json") {
@@ -271,14 +269,17 @@ func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, r
 	retrieved.l[source.filename] = &inputs
 	retrieved.mutex.Unlock()
 
-	content, hash, err := reader.ReadHash(ctx, source.filename)
+	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
 	if err != nil {
 		return syslutil.Exitf(ImportError, fmt.Sprintf(
 			"error reading %#v: \n%v\n", cleanImportFilename(source.filename), err,
 		))
 	}
 
-	version := hash.String()
+	version := branch
+	if version == "" {
+		version = hash.String()
+	}
 
 	importsInput := extractImports(source.filename, content)
 
@@ -360,7 +361,6 @@ func parseImports(parent importDef, src sourceCtxHelper, input string) ([]import
 
 	listener.sc = src
 	listener.base = importDir(parent.filename)
-	listener.version = src.version
 
 	tree, err := parseString(parent.filename, fsinput)
 	if err != nil {

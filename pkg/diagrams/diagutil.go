@@ -56,7 +56,7 @@ func sendHTTPRequest(url string) ([]byte, error) {
 
 	out, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, errors.Errorf("Unable to read body.")
+		return nil, errors.Errorf("unable to read body")
 	}
 	return out, nil
 }

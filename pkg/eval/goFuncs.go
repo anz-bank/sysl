@@ -198,7 +198,7 @@ func reflectToValue(r reflect.Value, typ *sysl.Type) *sysl.Value {
 		}
 		return list
 	}
-	panic(errors.Errorf("reflectToValue: kind %s not supported\n", r.Kind().String()))
+	panic(errors.Errorf("reflectToValue: kind %s not supported", r.Kind().String()))
 }
 
 func evalGoFunc(name string, list *sysl.Value) *sysl.Value {

@@ -101,7 +101,7 @@ func TestLoadModule_pathsAndStdin(t *testing.T) {
 	cmd := &testCmd{name: cmdName, maxSyslModule: 1, exec: func(args cmdutils.ExecuteArgs) {}}
 	r := buildRunnerWithRoot(t, cmd, testDir, args...)
 
-	stdin := toStdin(t, stdinFile{Path: filepath.Join("test.sysl"), Content: emptyAppSrc})
+	stdin := toStdin(t, stdinFile{Path: "test.sysl", Content: emptyAppSrc})
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
 }
 

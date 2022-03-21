@@ -6,7 +6,7 @@ require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
-	github.com/anz-bank/golden-retriever v0.19.0
+	github.com/anz-bank/golden-retriever v0.20.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.39
 	github.com/arr-ai/arrai v0.302.0
