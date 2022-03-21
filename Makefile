@@ -125,7 +125,7 @@ release:
 
 install: build ## Install the sysl binary into $(GOPATH)/bin. We don't use go install because we need to pass in LDFLAGS.
 	test -n "$(GOPATH)"  # $$GOPATH
-	rm $(GOPATH)/bin/sysl
+	rm -f $(GOPATH)/bin/sysl
 	cp ./dist/sysl $(GOPATH)/bin
 
 clean:
