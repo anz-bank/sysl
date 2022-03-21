@@ -51,7 +51,7 @@ fieldOption     -> optionName "=" constant;
 group           -> c* label "group" groupName "=" fieldNumber messageBody;
 groupName       -> ident;
 
-oneof           -> c* "oneof" oneofName "{" (option | oneofField | emptyStatement)* "}";
+oneof           -> c* "oneof" oneofName "{" (option | oneofField | emptyStatement | c)* "}";
 oneofName       -> ident;
 oneofField      -> c* type fieldName "=" fieldNumber ("[" fieldOptions "]")? ";" ($ | c)?;
 
