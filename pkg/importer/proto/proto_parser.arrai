@@ -31,7 +31,7 @@ enumValueOption -> optionName "=" constant;
 message         -> c* "message" messageName messageBody;
 messageName     -> ident;
 messageBody     -> "{" (field | enum | message | extend | extensions | group | option | oneof | mapField | reserved | emptyStatement | c)* "}";
-messageType     ->  ident:,".";
+messageType     ->  "."? ident:".";
 
 service         -> c* "service" serviceName "{" (option | rpc | emptyStatement | c)* "}";
 serviceName     -> ident;

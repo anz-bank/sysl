@@ -95,7 +95,9 @@ internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.a
 internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai
+# There are many files that change the proto importer logic.
+# Check all arrai files within the directory for changes before bundling.
+internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai $(shell find pkg/importer/proto -name '*.arrai')
 	$(ARRAI) bundle $< > $@
 
 internal/bundles/exporters/%/transform.arraiz: transforms/exporters/%/transform.arrai
