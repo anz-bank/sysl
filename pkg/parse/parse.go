@@ -10,7 +10,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/golden-retriever/reader/remotefs"
 	"github.com/anz-bank/pkg/mod"
@@ -18,15 +17,16 @@ import (
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/msg"
+	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
+	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"golang.org/x/sync/errgroup"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // TypeData contains referenced type and actual tuple of referenced type
@@ -70,19 +70,6 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 		return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
 	}
 	return tree, nil
-}
-
-// Currently only supports JSON format Proto.
-// TODO: Add support for binary and textpb
-func importSyslProto(fsinput antlr.CharStream) (*sysl.Module, error) {
-	file := fsinput.GetText(0, fsinput.Size())
-	syslFile := &sysl.Module{}
-	err := protojson.Unmarshal([]byte(file), syslFile)
-	if err != nil {
-		return nil, err
-	}
-
-	return syslFile, nil
 }
 
 func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
@@ -143,22 +130,22 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 
 // ParseFromFs parses a sysl definition from an afero filesystem
 func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error) {
-	reader, err := NewReader(fs)
+	r, err := NewReader(fs)
 	if err != nil {
 		return nil, err
 	}
-	return p.Parse(filename, reader)
+	return p.Parse(filename, r)
 }
 
 // ParseFromFsWithVendor parses a sysl definition from an afero filesystem, and vendor remote files in root dir
 func (p *Parser) ParseFromFsWithVendor(filename string, fs afero.Fs) (*sysl.Module, error) {
-	reader, err := NewReader(fs)
+	r, err := NewReader(fs)
 	if err != nil {
 		return nil, err
 	}
 
-	reader.(*remotefs.RemoteFs).Vendor(SyslRootDir(fs))
-	return p.Parse(filename, reader)
+	r.(*remotefs.RemoteFs).Vendor(SyslRootDir(fs))
+	return p.Parse(filename, r)
 }
 
 type srcInput struct {
@@ -204,8 +191,6 @@ func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sys
 		src := v.src
 		logrus.Debug("Parsing: ", src.filename)
 
-		fsinput := &fsFileStream{antlr.NewInputStream(v.input), src.filename}
-
 		version := ""
 		if syslutil.IsRemoteImport(src.filename) {
 			v := strings.Split(src.filename, "@")
@@ -216,21 +201,22 @@ func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sys
 		listener.sc = sourceCtxHelper{srcCtxFile, version}
 
 		// Import Sysl Proto
-		if strings.HasSuffix(src.filename, ".sysl.pb.json") {
-			syslProtoImport, err := importSyslProto(fsinput)
+		syslProtoImport, err := pbutil.FromPBStringContents(src.filename, v.input)
+		if !errors.Is(pbutil.ErrUnknownExtension, err) {
 			if err != nil {
 				return nil, fmt.Errorf("error parsing %s: %w", src.filename, err)
 			}
 			if syslProtoImport != nil {
 				// Merge structs recursively
-				//nolint:govet
-				if err := mergo.Merge(listener.module, *syslProtoImport); err != nil {
+				if err := mergo.Merge(listener.module, syslProtoImport); err != nil {
 					return nil, err
 				}
 			}
-			break
+
+			continue
 		}
 
+		fsinput := &fsFileStream{antlr.NewInputStream(v.input), src.filename}
 		str, err := importForeign(src, fsinput)
 		if err != nil {
 			return nil, err
@@ -739,6 +725,10 @@ func fixTypeRefScope(mod *sysl.Module, currApp string, ref *sysl.Scope) {
 		// local type ref
 		return
 	}
+	if len(appPath) == 0 && len(typePath) > 1 {
+		// local field ref
+		return
+	}
 
 	appName, typeName := appPath[0], typePath[0]
 	if currApp == appName {
@@ -958,12 +948,12 @@ func getDefaultAppName(mod *sysl.Module) string {
 
 func LoadAndGetDefaultApp(model string, fs afero.Fs, p *Parser) (*sysl.Module, string, error) {
 	// Model we want to generate code for
-	mod, err := p.ParseFromFs(model, fs)
+	m, err := p.ParseFromFs(model, fs)
 	if err != nil {
 		return nil, "", err
 	}
-	modelAppName := getDefaultAppName(mod)
-	return mod, modelAppName, nil
+	modelAppName := getDefaultAppName(m)
+	return m, modelAppName, nil
 }
 
 func (p *Parser) GetAssigns() map[string]TypeData {

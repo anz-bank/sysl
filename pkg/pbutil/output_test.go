@@ -45,13 +45,13 @@ func testModule() *sysl.Module {
 func TestJSONPB(t *testing.T) {
 	t.Parallel()
 
-	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
 	filename := "out.pb.json"
 	require.NoError(t, JSONPB(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
-	require.NoError(t, protojson.Unmarshal(output, unmarshalled))
+	unmarshalled, err := FromPBByteContents(filename, output)
+	require.NoError(t, err)
 	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
@@ -85,13 +85,13 @@ func TestFJSONPBNilModule(t *testing.T) {
 func TestTextPB(t *testing.T) {
 	t.Parallel()
 
-	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
 	filename := "/out.textpb"
 	require.NoError(t, TextPB(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
-	require.NoError(t, prototext.Unmarshal(output, unmarshalled))
+	unmarshalled, err := FromPBByteContents(filename, output)
+	require.NoError(t, err)
 	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
@@ -143,13 +143,13 @@ func TestGeneratePBBinaryMessageNilModule(t *testing.T) {
 func TestGeneratePBBinaryMessageFile(t *testing.T) {
 	t.Parallel()
 
-	unmarshalled := &sysl.Module{}
 	fs := afero.NewMemMapFs()
 	filename := "/out.pb"
 	require.NoError(t, GeneratePBBinaryMessageFile(testModule(), filename, fs))
 	output, err := afero.ReadFile(fs, filename)
 	require.NoError(t, err)
-	require.NoError(t, proto.Unmarshal(output, unmarshalled))
+	unmarshalled, err := FromPBByteContents(filename, output)
+	require.NoError(t, err)
 	assert.True(t, proto.Equal(unmarshalled, protoreflect.ProtoMessage(testModule())))
 }
 
