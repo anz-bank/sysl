@@ -767,6 +767,46 @@ func TestDuplicateImportWarning(t *testing.T) {
 	}
 }
 
+func TestCircularImportWarning(t *testing.T) {
+	circularImportA := `
+import circular_import_b
+One:
+	...
+`
+	circularImportB := `
+import circular_import_c
+Two:
+	...
+`
+	circularImportC := `
+import circular_import_a
+Three:
+	...
+`
+	r := mockReader{contents: map[string]mockContent{
+		"circular_import_a.sysl": {circularImportA, retriever.ZeroHash, ""},
+		`circular_import_b.sysl`: {circularImportB, retriever.ZeroHash, ""},
+		`circular_import_c.sysl`: {circularImportC, retriever.ZeroHash, ""},
+	}}
+
+	var buf bytes.Buffer
+	logrus.SetOutput(&buf)
+	c, err := NewParser().Parse("circular_import_a", r)
+	logrus.SetOutput(os.Stderr)
+
+	require.NoError(t, err)
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
+	require.Contains(
+		t,
+		buf.String(),
+		`level=warning msg="circular import: `+
+			`circular_import_a.sysl -> circular_import_b.sysl -> circular_import_c.sysl -> circular_import_a.sysl\n"`,
+	)
+}
+
 func TestLintValid(t *testing.T) {
 	assertLintLogs(t,
 		"tests/lint_valid.sysl", "")

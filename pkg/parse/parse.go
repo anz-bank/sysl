@@ -179,6 +179,7 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		importDef{filename: resource},
 		reader,
 		&retrieved,
+		nil,
 	); err != nil {
 		return nil, err
 	}
@@ -237,10 +238,33 @@ func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sys
 	return listener.module, nil
 }
 
+type parentNode struct {
+	filename string
+	parent   *parentNode
+}
+
+// parentsContain will check if filename is already contained in the parents
+func parentsContain(filename string, parent *parentNode) bool {
+	for parent != nil {
+		if parent.filename == filename {
+			return true
+		}
+		parent = parent.parent
+	}
+
+	return false
+}
+
 // collectSpecs retrieves the contents for a sourceFile. It then parses the source to find all imports and recursively
 // (and in parallel) retrieves those as well. A slice of all the files and their contents (in the order they
 // appear in the source file) are placed into the retrievedList.
-func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, retrieved *retrievedList) error {
+func collectSpecs(
+	ctx context.Context,
+	source importDef,
+	reader reader.Reader,
+	retrieved *retrievedList,
+	parents *parentNode,
+) error {
 	retrieved.mutex.Lock()
 	if inputs, has := retrieved.l[source.filename]; has {
 		logrus.Warnf("Duplicate import: '%s'\n", cleanImportFilename(source.filename))
@@ -284,12 +308,28 @@ func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, r
 		return err
 	}
 
+	parents = &parentNode{source.filename, parents}
+
+	processed := make([]string, 0, len(children))
+
 	g := new(errgroup.Group)
 	for _, c := range children {
 		c := c
-		g.Go(func() error {
-			return collectSpecs(ctx, c, reader, retrieved)
-		})
+		if parentsContain(c.filename, parents) {
+			chain := " -> " + cleanImportFilename(c.filename)
+			p := parents
+			for c.filename != p.filename {
+				chain = " -> " + cleanImportFilename(p.filename) + chain
+				p = p.parent
+			}
+			chain = cleanImportFilename(c.filename) + chain
+			logrus.Warnf("circular import: %s\n", chain)
+		} else {
+			processed = append(processed, c.filename)
+			g.Go(func() error {
+				return collectSpecs(ctx, c, reader, retrieved, parents)
+			})
+		}
 	}
 
 	err = g.Wait()
@@ -305,8 +345,8 @@ func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, r
 		source.filename: {},
 	}
 	// Go through and add all the sources from each of the children while checking that each source is only added once
-	for _, c := range children {
-		for _, src := range retrieved.l[c.filename].inputs {
+	for _, p := range processed {
+		for _, src := range retrieved.l[p].inputs {
 			if _, has := alreadyAdded[src.src.filename]; !has {
 				sources = append(sources, src)
 				alreadyAdded[src.src.filename] = struct{}{}
