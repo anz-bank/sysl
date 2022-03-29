@@ -153,13 +153,13 @@ type srcInput struct {
 	input string
 }
 
-type srcInputs struct {
-	inputs []srcInput
-	ch     chan struct{}
+type fileInfo struct {
+	imports []importDef
+	src     srcInput
 }
 
 type retrievedList struct {
-	l     map[string]*srcInputs
+	l     map[string]*fileInfo
 	mutex sync.Mutex
 }
 
@@ -172,23 +172,25 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		resource += syslExt
 	}
 
-	retrieved := retrievedList{make(map[string]*srcInputs), sync.Mutex{}}
+	retrieved := retrievedList{make(map[string]*fileInfo), sync.Mutex{}}
 
 	if err := collectSpecs(
 		context.Background(),
 		importDef{filename: resource},
 		reader,
 		&retrieved,
-		nil,
 	); err != nil {
 		return nil, err
 	}
 
-	return p.parseSpecs(retrieved.l[resource], listener)
+	specs := []srcInput{}
+	addSpecs(&specs, resource, &retrieved, []string{})
+
+	return p.parseSpecs(specs, listener)
 }
 
-func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sysl.Module, error) { //nolint:funlen
-	for _, v := range specs.inputs {
+func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sysl.Module, error) { //nolint:funlen
+	for _, v := range specs {
 		src := v.src
 		logrus.Debug("Parsing: ", src.filename)
 
@@ -238,45 +240,43 @@ func (p *Parser) parseSpecs(specs *srcInputs, listener *TreeShapeListener) (*sys
 	return listener.module, nil
 }
 
-type parentNode struct {
-	filename string
-	parent   *parentNode
-}
+func addSpecs(specs *[]srcInput, filename string, retrieved *retrievedList, parents []string) {
+	for i, p := range parents {
+		if p == filename {
+			chain := strings.Join(parents[i:], " -> ") + " -> " + filename
+			logrus.Warnf("circular import: %s\n", chain)
 
-// parentsContain will check if filename is already contained in the parents
-func parentsContain(filename string, parent *parentNode) bool {
-	for parent != nil {
-		if parent.filename == filename {
-			return true
+			return
 		}
-		parent = parent.parent
 	}
 
-	return false
+	for _, si := range *specs {
+		if si.src.filename == filename {
+			logrus.Warnf("Duplicate import: '%s'\n", cleanImportFilename(filename))
+
+			return
+		}
+	}
+
+	fi := retrieved.l[filename]
+	*specs = append(*specs, fi.src)
+	parents = append(parents, filename)
+	for _, v := range fi.imports {
+		addSpecs(specs, v.filename, retrieved, parents)
+	}
 }
 
 // collectSpecs retrieves the contents for a sourceFile. It then parses the source to find all imports and recursively
-// (and in parallel) retrieves those as well. A slice of all the files and their contents (in the order they
-// appear in the source file) are placed into the retrievedList.
-func collectSpecs(
-	ctx context.Context,
-	source importDef,
-	reader reader.Reader,
-	retrieved *retrievedList,
-	parents *parentNode,
-) error {
+// (and in parallel) retrieves those as well. All the results are placed into the retrievedList.
+func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, retrieved *retrievedList) error {
 	retrieved.mutex.Lock()
-	if inputs, has := retrieved.l[source.filename]; has {
-		logrus.Warnf("Duplicate import: '%s'\n", cleanImportFilename(source.filename))
+	if _, has := retrieved.l[source.filename]; has {
 		retrieved.mutex.Unlock()
-		// Wait for result to be ready before returning
-		<-inputs.ch
 
 		return nil
 	}
-	inputs := srcInputs{nil, make(chan struct{})}
-	defer close(inputs.ch)
-	retrieved.l[source.filename] = &inputs
+	fi := &fileInfo{}
+	retrieved.l[source.filename] = fi
 	retrieved.mutex.Unlock()
 
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
@@ -285,22 +285,17 @@ func collectSpecs(
 			"error reading %#v: \n%v\n", cleanImportFilename(source.filename), err,
 		))
 	}
+	fi.src = srcInput{source, string(content)}
+
+	importsInput := extractImports(source.filename, content)
+
+	if importsInput.Len() == 0 {
+		return nil
+	}
 
 	version := branch
 	if version == "" {
 		version = hash.String()
-	}
-
-	importsInput := extractImports(source.filename, content)
-
-	sources := []srcInput{{source, string(content)}}
-
-	if importsInput.Len() == 0 {
-		retrieved.mutex.Lock()
-		defer retrieved.mutex.Unlock()
-		inputs.inputs = sources
-
-		return nil
 	}
 
 	children, err := parseImports(source, sourceCtxHelper{source.filename, version}, importsInput.String())
@@ -308,28 +303,14 @@ func collectSpecs(
 		return err
 	}
 
-	parents = &parentNode{source.filename, parents}
-
-	processed := make([]string, 0, len(children))
+	fi.imports = children
 
 	g := new(errgroup.Group)
 	for _, c := range children {
 		c := c
-		if parentsContain(c.filename, parents) {
-			chain := " -> " + cleanImportFilename(c.filename)
-			p := parents
-			for c.filename != p.filename {
-				chain = " -> " + cleanImportFilename(p.filename) + chain
-				p = p.parent
-			}
-			chain = cleanImportFilename(c.filename) + chain
-			logrus.Warnf("circular import: %s\n", chain)
-		} else {
-			processed = append(processed, c.filename)
-			g.Go(func() error {
-				return collectSpecs(ctx, c, reader, retrieved, parents)
-			})
-		}
+		g.Go(func() error {
+			return collectSpecs(ctx, c, reader, retrieved)
+		})
 	}
 
 	err = g.Wait()
@@ -338,22 +319,6 @@ func collectSpecs(
 			"error reading %#v: \n%v", cleanImportFilename(source.filename), err,
 		))
 	}
-
-	retrieved.mutex.Lock()
-	defer retrieved.mutex.Unlock()
-	alreadyAdded := map[string]struct{}{
-		source.filename: {},
-	}
-	// Go through and add all the sources from each of the children while checking that each source is only added once
-	for _, p := range processed {
-		for _, src := range retrieved.l[p].inputs {
-			if _, has := alreadyAdded[src.src.filename]; !has {
-				sources = append(sources, src)
-				alreadyAdded[src.src.filename] = struct{}{}
-			}
-		}
-	}
-	inputs.inputs = sources
 
 	return nil
 }
