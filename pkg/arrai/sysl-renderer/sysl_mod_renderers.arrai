@@ -410,7 +410,7 @@ let renderAllType = \t
 
 let renderTypes = \types
     let types = types => (name: .@, type: .@value);
-    $`${renderMultilineSections(types orderby .name >> renderAllType(.))}`
+    $`${renderMultilineSections(types orderby [.name, .type] >> renderAllType(.))}`
 ;
 
 # FIXME: render imports
