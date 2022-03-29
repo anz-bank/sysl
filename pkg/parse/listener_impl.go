@@ -46,7 +46,6 @@ type TreeShapeListener struct {
 	app_name              PathStack
 	annotation_name       string
 	typemap               map[string]*sysl.Type
-	prevLineEmpty         bool
 	pendingDocString      bool
 	lintMode              bool
 	rest_attrs            []map[string]*sysl.Attribute
@@ -59,7 +58,7 @@ type TreeShapeListener struct {
 	stmt_scope            []interface{} // Endpoint, if, if_else, loop
 	expr_stack            []*sysl.Expr
 	opmap                 map[string]sysl.Expr_BinExpr_Op
-	currentMultiLineAnno  string
+	currentMultiLineAnno  []string
 	lastEnd               *sysl.SourceContext_Location
 }
 
@@ -146,10 +145,6 @@ func (s *TreeShapeListener) ExitReference(ctx *parser.ReferenceContext) {
 	s.currentType().GetTypeRef().Ref = makeScope(s.app_name.Parts(), ctx)
 }
 
-func lastTwoChars(str string) string {
-	return str[len(str)-2:]
-}
-
 // EnterDoc_string is called when production doc_string is entered.
 func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 	if s.pendingDocString {
@@ -181,21 +176,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		return
 	}
 
-	// This part process multiline docstring for annotations. It collects the strings line by line, store them in
-	// s.currentMultiLineAnno, and then assign them in ExitAnnotationValue
-	str := ctx.TEXT().GetText()
-	if len(strings.TrimSpace(str)) == 0 {
-		s.currentMultiLineAnno += "\n"
-		s.prevLineEmpty = true
-		return
-	}
-	if s.prevLineEmpty && len(s.currentMultiLineAnno) > 2 && lastTwoChars(s.currentMultiLineAnno) == "\n\n" {
-		s.currentMultiLineAnno += strings.TrimSpace(str)
-		s.prevLineEmpty = false
-		return
-	}
-	s.prevLineEmpty = false
-	s.currentMultiLineAnno += str + "\n"
+	s.currentMultiLineAnno = append(s.currentMultiLineAnno, strings.TrimSpace(ctx.TEXT().GetText()))
 }
 
 // EnterTypes is called when production types is entered.
@@ -327,12 +308,12 @@ func (s *TreeShapeListener) ExitAnnotation_value(ctx *parser.Annotation_valueCon
 	if ctx.Multi_line_docstring() != nil {
 		addAttrWithPrecedence(s.peekAttrs(), s.annotation_name, &sysl.Attribute{
 			Attribute: &sysl.Attribute_S{
-				S: strings.TrimLeft(s.currentMultiLineAnno, " "),
+				S: strings.TrimLeft(strings.Join(s.currentMultiLineAnno, "\n"), " ") + "\n",
 			},
 			SourceContext:  sc,
 			SourceContexts: []*sysl.SourceContext{sc},
 		})
-		s.currentMultiLineAnno = ""
+		s.currentMultiLineAnno = []string{}
 	}
 }
 

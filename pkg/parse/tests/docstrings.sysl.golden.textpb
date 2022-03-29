@@ -11,7 +11,7 @@ apps: {
     attrs: {
      key: "description"
      value: {
-      s: "multi-line documentation comment\n use it for long comments\n"
+      s: "multi-line documentation comment\nuse it for long comments\n"
       source_context: {
        file: "tests/docstrings.sysl"
        start: {
@@ -118,7 +118,7 @@ apps: {
   attrs: {
    key: "description"
    value: {
-    s: "multi-line documentation comment\n use it for long comments\n"
+    s: "multi-line documentation comment\nuse it for long comments\n"
     source_context: {
      file: "tests/docstrings.sysl"
      start: {
@@ -179,7 +179,7 @@ apps: {
     attrs: {
      key: "description"
      value: {
-      s: "multi-line documentation comment\n use it for long comments\n"
+      s: "multi-line documentation comment\nuse it for long comments\n"
       source_context: {
        file: "tests/docstrings.sysl"
        start: {
@@ -267,7 +267,7 @@ apps: {
        attrs: {
         key: "description"
         value: {
-         s: "multi-line documentation comment\n use it for long comments\n"
+         s: "multi-line documentation comment\nuse it for long comments\n"
          source_context: {
           file: "tests/docstrings.sysl"
           start: {

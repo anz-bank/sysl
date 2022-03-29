@@ -455,7 +455,7 @@ apps: {
     attrs: {
      key: "description"
      value: {
-      s: "Multi line comment 1\n Multi line comment 2\n"
+      s: "Multi line comment 1\nMulti line comment 2\n"
       source_context: {
        file: "tests/test_rest_api.sysl"
        start: {

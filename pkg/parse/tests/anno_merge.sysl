@@ -18,3 +18,8 @@ App:
                 |
                 |
                 | line2
+            @multiline3 =:
+                | line1
+                |
+                | line2
+                | line3

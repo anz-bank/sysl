@@ -564,7 +564,7 @@ apps: {
     attrs: {
      key: "description"
      value: {
-      s: "Multi-line annotation\n statement\n"
+      s: "Multi-line annotation\nstatement\n"
       source_context: {
        file: "tests/test2.sysl"
        start: {
