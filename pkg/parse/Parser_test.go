@@ -752,22 +752,9 @@ func TestDuplicateImport(t *testing.T) {
 	}
 }
 
-func TestDuplicateImportWarning(t *testing.T) {
-	var buf bytes.Buffer
-	logrus.SetOutput(&buf)
-	_, err := NewParser().ParseFromFs("tests/duplicate_import.sysl", syslutil.NewChrootFs(afero.NewOsFs(), ""))
-	logrus.SetOutput(os.Stderr)
+func TestCircularImport(t *testing.T) {
+	t.Parallel()
 
-	if assert.NoError(t, err) {
-		res := strings.Contains(
-			buf.String(),
-			"level=warning msg=\"Duplicate import: 'tests/simple_model.sysl'\\n\"",
-		)
-		assert.True(t, res, "duplicate import not detected")
-	}
-}
-
-func TestCircularImportWarning(t *testing.T) {
 	circularImportA := `
 import circular_import_b
 One:
@@ -789,22 +776,13 @@ Three:
 		`circular_import_c.sysl`: {circularImportC, retriever.ZeroHash, ""},
 	}}
 
-	var buf bytes.Buffer
-	logrus.SetOutput(&buf)
 	c, err := NewParser().Parse("circular_import_a", r)
-	logrus.SetOutput(os.Stderr)
 
 	require.NoError(t, err)
 	require.Equal(t, 3, len(c.Apps))
 	require.NotNil(t, c.Apps["One"])
 	require.NotNil(t, c.Apps["Two"])
 	require.NotNil(t, c.Apps["Three"])
-	require.Contains(
-		t,
-		buf.String(),
-		`level=warning msg="circular import: `+
-			`circular_import_a.sysl -> circular_import_b.sysl -> circular_import_c.sysl -> circular_import_a.sysl\n"`,
-	)
 }
 
 func TestLintValid(t *testing.T) {
@@ -1059,6 +1037,8 @@ func TestInferExprTypeTransform(t *testing.T) {
 }
 
 func TestParseSysl(t *testing.T) {
+	t.Parallel()
+
 	content := `
 App:
 	Endpoint:
@@ -1101,6 +1081,8 @@ func (r mockReader) ReadHashBranch(_ context.Context, resource string) ([]byte, 
 
 /* TestParseSyslRetriever tests that a file can be imported */
 func TestParseSyslRetriever(t *testing.T) {
+	t.Parallel()
+
 	one := `
 import two.sysl
 One:
@@ -1133,6 +1115,8 @@ NotTwo:
 
 /* TestParseSyslRetrieverRemote tests a remote import */
 func TestParseSyslRetrieverRemote(t *testing.T) {
+	t.Parallel()
+
 	one := `
 import //github.com/org/repo/two.sysl@master
 import 3.sysl
@@ -1171,6 +1155,8 @@ Three:
 
 /* TestParseSyslRetrieverRemoteImport tests that a remote file that imports from it's own repository */
 func TestParseSyslRetrieverRemoteImport(t *testing.T) {
+	t.Parallel()
+
 	one := `
 import //github.com/org/repo/two.sysl@master
 One:
@@ -1210,6 +1196,8 @@ Three:
    a local file from the same branch
 */
 func TestParseSyslRetrieverRemoteImportNotMaster(t *testing.T) {
+	t.Parallel()
+
 	one := `
 import //github.com/org/repo/two.sysl@branch
 One:
@@ -1247,6 +1235,8 @@ Three:
 
 /* TestParseSyslRetrieverRemoteFail tests an invalid remote import (error includes file that tried to import it)*/
 func TestParseSyslRetrieverRemoteFail(t *testing.T) {
+	t.Parallel()
+
 	one := `
 import //github.com/org/repo/two.sysl@master
 `

@@ -184,7 +184,7 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 	}
 
 	specs := []srcInput{}
-	addSpecs(&specs, resource, &retrieved, []string{})
+	flattenSpecs(&specs, resource, &retrieved)
 
 	return p.parseSpecs(specs, listener)
 }
@@ -240,29 +240,19 @@ func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sys
 	return listener.module, nil
 }
 
-func addSpecs(specs *[]srcInput, filename string, retrieved *retrievedList, parents []string) {
-	for i, p := range parents {
-		if p == filename {
-			chain := strings.Join(parents[i:], " -> ") + " -> " + filename
-			logrus.Warnf("circular import: %s\n", chain)
-
-			return
-		}
-	}
-
+// Takes a starting file and flattens all the imports that were already retrieved into an ordered list (recursively)
+func flattenSpecs(specs *[]srcInput, filename string, retrieved *retrievedList) {
+	// Only add each file once
 	for _, si := range *specs {
 		if si.src.filename == filename {
-			logrus.Warnf("Duplicate import: '%s'\n", cleanImportFilename(filename))
-
 			return
 		}
 	}
 
 	fi := retrieved.l[filename]
 	*specs = append(*specs, fi.src)
-	parents = append(parents, filename)
 	for _, v := range fi.imports {
-		addSpecs(specs, v.filename, retrieved, parents)
+		flattenSpecs(specs, v.filename, retrieved)
 	}
 }
 
