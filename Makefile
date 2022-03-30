@@ -100,7 +100,10 @@ internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_o
 internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai $(shell find pkg/importer/proto -name '*.arrai')
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/exporters/%/transform.arraiz: transforms/exporters/%/transform.arrai
+internal/bundles/exporters/proto/transform.arraiz: transforms/exporters/proto/transform.arrai $(shell find transforms/exporters/proto -name '*.arrai')
+	$(ARRAI) bundle $< > $@
+
+internal/bundles/exporters/spanner/transform.arraiz: transforms/exporters/spanner/transform.arrai $(shell find transforms/exporters/spanner -name '*.arrai')
 	$(ARRAI) bundle $< > $@
 
 internal/bundles/importers/%/transform.arraiz: transforms/importers/%/transform.arrai

@@ -37,6 +37,8 @@ message Request {
   float64 decimal_with_precision = 9;
   string string_max_constraint = 10;
   string string_range_constraint = 11;
+  string dateField = 12;
+  google.protobuf.Timestamp dateTimeField = 13;
 }
 
 message Type {

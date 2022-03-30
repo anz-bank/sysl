@@ -3,26 +3,42 @@ let export = \rel \namespace \package
     let ft = field.fieldType;
     let tags = {field} --> rel.tag.field;
     let opt = field.fieldOpt?:false;
-
     cond ft {
       (:sequence, ...): $`repeated ${toProtoType(field +> (fieldType: sequence))}`,
       (:set, ...): $`repeated ${toProtoType(field +> (fieldType: set))}`,
       # TODO: Constraints, tags.
-      (:primitive, ...):
-        let protoValOrPrimitive = \t cond {
-          opt:
-            let t = //str.title((t <: {'float32', 'float64'} && 'float') || t);
-            $`google.protobuf.${t}Value`
-          ,
-          _: t
-        };
+        (:primitive, ...):
+        let protoValOrPrimitive = \t
+          let isPrimitive = t <: {
+            'double',
+            'float',
+            'float32',
+            'float64',
+            'int32',
+            'int64',
+            'uint32',
+            'uint64',
+            'bool',
+            'string',
+            'bytes'
+          };
+          cond {
+            isPrimitive && opt:
+              let t = //str.title((t <: {'float32', 'float64'} && 'float') || t);
+              $`google.protobuf.${t}Value`,
+            !isPrimitive:
+              $`google.protobuf.${//str.title(t)}`,
+            _: t
+          };
         cond primitive {
-          'BYTES':   protoValOrPrimitive('bytes'),
-          'BOOL':    protoValOrPrimitive('bool'),
-          'INT':     protoValOrPrimitive('int32'),
-          'FLOAT':   protoValOrPrimitive('float32'),
-          'DECIMAL': protoValOrPrimitive('float64'),
-          'STRING':  protoValOrPrimitive('string'),
+          'BYTES':    protoValOrPrimitive('bytes'),
+          'BOOL':     protoValOrPrimitive('bool'),
+          'INT':      protoValOrPrimitive('int32'),
+          'FLOAT':    protoValOrPrimitive('float32'),
+          'DECIMAL':  protoValOrPrimitive('float64'),
+          'STRING':   protoValOrPrimitive('string'),
+          'DATE':     protoValOrPrimitive('string'),
+          'DATETIME': protoValOrPrimitive('timestamp'),
         },
       (:typePath, ...): $`${typePath::.}`,
     } || //error($`unhandled type ${ft}`)

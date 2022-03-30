@@ -26,17 +26,19 @@ message OptionalPrimitives {
 }
 
 message Request {
-  float64 decimal_with_precision = 1;
-  string nativeTypeField = 2;
+  string dateField = 1;
+  google.protobuf.Timestamp dateTimeField = 2;
+  float64 decimal_with_precision = 3;
+  string nativeTypeField = 4;
   int32 numbered = 42;
-  google.protobuf.StringValue optional = 4;
-  string primaryKey = 5;
-  Type reference = 6;
-  repeated string sequence = 7;
-  repeated string set = 8;
-  string string_max_constraint = 9;
-  string string_range_constraint = 10;
-  string with_anno = 11;
+  google.protobuf.StringValue optional = 6;
+  string primaryKey = 7;
+  Type reference = 8;
+  repeated string sequence = 9;
+  repeated string set = 10;
+  string string_max_constraint = 11;
+  string string_range_constraint = 12;
+  string with_anno = 13;
 }
 
 message Type {
