@@ -382,7 +382,7 @@ let specialAnno = {
             attrs: extensionToAnnotations(ep),
             rest_params: (
                 method: //str.upper(verb),
-                path: //seq.trim_suffix('/', syslSafePath(pathName)),
+                path: //seq.trim_suffix('/', syslSafePath(pathName)) || '/',
                 url_param: path,
                 query_param: query,
             )

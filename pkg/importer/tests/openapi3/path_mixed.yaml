@@ -8,6 +8,16 @@ info:
   version: 1.0.0
 
 paths:
+  /:
+    post:
+      summary: test empty path
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
   /endpoint-1:
     post:
       summary: Just a post endpoint

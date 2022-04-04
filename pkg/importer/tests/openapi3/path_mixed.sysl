@@ -9,6 +9,10 @@ TestApp "Path API Test":
     @package = "com.example.package"
     @version = "1.0.0"
     
+    /:
+        POST:
+            return 200 <: string [mediatype="application/json"]
+    
     /endpoint-1:
         GET(accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
             | Here's a description
