@@ -22,6 +22,7 @@ TestApp "Simple":
             @json_tag = "bark"
         breed <: string?:
             @json_tag = "breed"
+            @openapi_enum = ["Dingo", "Husky", "Retriever", "Shepherd"]
             @openapi_format = "enum"
     
     !union Pet:

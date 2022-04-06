@@ -65,6 +65,7 @@ TestApp "Simple":
         sequence of enum_array_obj
     
     !alias enum_array_obj:
+        @openapi_enum = ["x", "y", "z"]
         @openapi_format = "enum"
         sequence of string
     
@@ -82,6 +83,7 @@ TestApp "Simple":
             @json_tag = "e"
         f <: string?:
             @json_tag = "f"
+            @openapi_enum = ["a", "b"]
             @openapi_format = "enum"
     
     !type object_a:

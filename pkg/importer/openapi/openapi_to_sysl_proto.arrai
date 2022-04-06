@@ -26,6 +26,7 @@ let descAnno          = 'description';
 let mediatypeAnno     = 'mediatype';
 let openapiTypeAnno   = 'openapi_type';
 let openapiFormatAnno = 'openapi_format';
+let openapiEnumAnno   = 'openapi_enum';
 let packageAnno       = 'package';
 let exampleAnno       = 'examples';
 let patternsAnno      = 'patterns';
@@ -132,7 +133,22 @@ let specialAnno = {
                     # enums can be in different type (e.g. int, string). This will allow the correct mapping.
                     {'type': type, ...}: schemaToTypeMessageWithConfig(conf, {'type': type}),
                     _: primitive('STRING'),
-                } +> (attrs+>: {openapiFormatAnno: (s: 'enum')}),
+                } +> (
+                    attrs+>: {
+                        openapiFormatAnno: (s: 'enum'),
+                        openapiEnumAnno: (
+                            a: (
+                                elt: a >> (
+                                    s: cond . {
+                                        (:s): s,
+                                        (:b): $`${b}`,
+                                        _: $`${.}`,
+                                    }
+                                )
+                            )
+                        )
+                    }
+                ),
             # FIXME: this is commented because enums in openapi can have special characters which sysl does not allow
             # uncomment this when there's a proper mapping for it
             # (enum: (items: a => \(@: i, @item: (s: enumVal)) (@: enumVal, @value: i))),

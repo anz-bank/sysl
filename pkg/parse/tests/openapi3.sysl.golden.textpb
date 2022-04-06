@@ -581,28 +581,157 @@ apps: {
         }
        }
        attrs: {
-        key: "openapi_format"
+        key: "openapi_enum"
         value: {
-         s: "enum"
+         a: {
+          elt: {
+           s: "test"
+           source_context: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 29
+            }
+            end: {
+             line: 24
+             col: 35
+            }
+           }
+           source_contexts: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 29
+            }
+            end: {
+             line: 24
+             col: 35
+            }
+           }
+          }
+          elt: {
+           s: "enabled"
+           source_context: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 37
+            }
+            end: {
+             line: 24
+             col: 46
+            }
+           }
+           source_contexts: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 37
+            }
+            end: {
+             line: 24
+             col: 46
+            }
+           }
+          }
+          elt: {
+           s: "disabled"
+           source_context: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 48
+            }
+            end: {
+             line: 24
+             col: 58
+            }
+           }
+           source_contexts: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 48
+            }
+            end: {
+             line: 24
+             col: 58
+            }
+           }
+          }
+          elt: {
+           s: "delete"
+           source_context: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 60
+            }
+            end: {
+             line: 24
+             col: 68
+            }
+           }
+           source_contexts: {
+            file: "tests/preference.yaml"
+            start: {
+             line: 24
+             col: 60
+            }
+            end: {
+             line: 24
+             col: 68
+            }
+           }
+          }
+         }
          source_context: {
           file: "tests/preference.yaml"
           start: {
            line: 24
-           col: 30
+           col: 28
           }
           end: {
            line: 24
-           col: 36
+           col: 69
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
            line: 24
-           col: 30
+           col: 28
           }
           end: {
            line: 24
+           col: 69
+          }
+         }
+        }
+       }
+       attrs: {
+        key: "openapi_format"
+        value: {
+         s: "enum"
+         source_context: {
+          file: "tests/preference.yaml"
+          start: {
+           line: 25
+           col: 30
+          }
+          end: {
+           line: 25
+           col: 36
+          }
+         }
+         source_contexts: {
+          file: "tests/preference.yaml"
+          start: {
+           line: 25
+           col: 30
+          }
+          end: {
+           line: 25
            col: 36
           }
          }
@@ -615,7 +744,7 @@ apps: {
          col: 8
         }
         end: {
-         line: 25
+         line: 26
          col: 9
         }
        }
@@ -626,7 +755,7 @@ apps: {
          col: 8
         }
         end: {
-         line: 25
+         line: 26
          col: 9
         }
        }
@@ -643,22 +772,22 @@ apps: {
          source_context: {
           file: "tests/preference.yaml"
           start: {
-           line: 26
+           line: 27
            col: 24
           }
           end: {
-           line: 26
+           line: 27
            col: 32
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
-           line: 26
+           line: 27
            col: 24
           }
           end: {
-           line: 26
+           line: 27
            col: 32
           }
          }
@@ -671,22 +800,22 @@ apps: {
          source_context: {
           file: "tests/preference.yaml"
           start: {
-           line: 27
+           line: 28
            col: 30
           }
           end: {
-           line: 27
+           line: 28
            col: 36
           }
          }
          source_contexts: {
           file: "tests/preference.yaml"
           start: {
-           line: 27
+           line: 28
            col: 30
           }
           end: {
-           line: 27
+           line: 28
            col: 36
           }
          }
@@ -695,22 +824,22 @@ apps: {
        source_context: {
         file: "tests/preference.yaml"
         start: {
-         line: 25
+         line: 26
          col: 8
         }
         end: {
-         line: 28
+         line: 29
          col: 1
         }
        }
        source_contexts: {
         file: "tests/preference.yaml"
         start: {
-         line: 25
+         line: 26
          col: 8
         }
         end: {
-         line: 28
+         line: 29
          col: 1
         }
        }
@@ -724,7 +853,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 27
+      line: 28
       col: 36
      }
     }
@@ -735,7 +864,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 27
+      line: 28
       col: 36
      }
     }
@@ -747,7 +876,7 @@ apps: {
     line: 6
    }
    end: {
-    line: 27
+    line: 28
     col: 36
    }
   }
@@ -757,7 +886,7 @@ apps: {
     line: 6
    }
    end: {
-    line: 27
+    line: 28
     col: 36
    }
   }

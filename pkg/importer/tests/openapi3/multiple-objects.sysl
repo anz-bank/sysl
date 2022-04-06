@@ -36,6 +36,7 @@ TestApp "Twilio - Conversations":
         state <: string?:
             @description = "Current state of this conversation."
             @json_tag = "state"
+            @openapi_enum = ["inactive", "active", "closed"]
             @openapi_format = "enum"
     
     !type conversations%2Ev1%2Econversation%2Econversation_message:

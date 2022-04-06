@@ -14,11 +14,11 @@ TestApp "Path API Test":
             return 200 <: string [mediatype="application/json"]
     
     /endpoint-1:
-        GET(accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
+        GET(accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_enum=["application/json", "application/x-www-form-urlencoded", "application/x-www-form-urlencoded; charset=utf-8"], openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
             | Here's a description
             return 200 <: get_endpoint-1_200_resp_type 
             return 401 <: get_endpoint-1_401_resp_type 
-        POST(post_endpoint-1_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
+        POST(post_endpoint-1_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_enum=["application/json", "application/x-www-form-urlencoded", "application/x-www-form-urlencoded; charset=utf-8"], openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
             | Here's a description
             return 200 <: post_endpoint-1_200_resp_type 
             return 401 <: post_endpoint-1_401_resp_type 
@@ -28,7 +28,7 @@ TestApp "Path API Test":
             | Here's another description
             return 200 <: delete_endpoint-2_200_resp_type 
             return 401 <: delete_endpoint-2_401_resp_type 
-        PUT(put_endpoint-2_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
+        PUT(put_endpoint-2_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_enum=["application/json", "application/x-www-form-urlencoded", "application/x-www-form-urlencoded; charset=utf-8"], openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
             | Here's a description
             return 200 <: put_endpoint-2_200_resp_type 
     

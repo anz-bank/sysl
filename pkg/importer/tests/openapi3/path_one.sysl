@@ -10,7 +10,7 @@ TestApp "Path API Test":
     @version = "1.0.0"
     
     /endpoint-1:
-        POST(post_endpoint-1_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
+        POST(post_endpoint-1_req_body <: req_body [~body, mediatype="application/json"], accept <: string [~header, examples="application/json", name="accept"], content-type <: string [~header, name="content-type", openapi_enum=["application/json", "application/x-www-form-urlencoded", "application/x-www-form-urlencoded; charset=utf-8"], openapi_format="enum"], custom-parameter <: string [~header, examples="hello im just a placeholder", name="custom-parameter"]):
             | Here's a description
             return 200 <: post_endpoint-1_200_resp_type 
             return 401 <: post_endpoint-1_401_resp_type 

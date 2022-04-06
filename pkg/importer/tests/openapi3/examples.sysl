@@ -55,6 +55,7 @@ TestApp "Examples":
             @json_tag = "authId"
         nextStages <: sequence of string?:
             @json_tag = "nextStages"
+            @openapi_enum = ["create_prospect", "verify_pin"]
             @openapi_format = "enum"
     
     !type post_example_200_resp_type [~GeneratedOpenAPIResponse]:

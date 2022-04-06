@@ -23,6 +23,7 @@ TestApp "Fruit API":
         month <: string?:
             @description = "month of the planting"
             @json_tag = "month"
+            @openapi_enum = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
             @openapi_format = "enum"
         monthlyTotal <: int?:
             @json_tag = "monthlyTotal"
@@ -34,6 +35,7 @@ TestApp "Fruit API":
             @json_tag = "details"
         entity <: string?:
             @json_tag = "entity"
+            @openapi_enum = ["expense", "income"]
             @openapi_format = "enum"
         id <: string?:
             @description = "id of the fruit"
@@ -46,6 +48,7 @@ TestApp "Fruit API":
             @json_tag = "details"
         entity <: string?:
             @json_tag = "entity"
+            @openapi_enum = ["expense", "income"]
             @openapi_format = "enum"
         id <: string?:
             @description = "id of the vegetable"

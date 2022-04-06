@@ -20,4 +20,5 @@ TestApp "Integer Enum":
             @json_tag = "message"
         propertyIntEnum <: int?:
             @json_tag = "propertyIntEnum"
+            @openapi_enum = ["4", "3", "2", "1"]
             @openapi_format = "enum"
