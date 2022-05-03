@@ -176,7 +176,7 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		return
 	}
 
-	s.currentMultiLineAnno = append(s.currentMultiLineAnno, strings.TrimSpace(ctx.TEXT().GetText()))
+	s.currentMultiLineAnno = append(s.currentMultiLineAnno, strings.TrimPrefix(ctx.TEXT().GetText(), " "))
 }
 
 // EnterTypes is called when production types is entered.

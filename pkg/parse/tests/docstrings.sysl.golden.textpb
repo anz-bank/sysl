@@ -168,6 +168,68 @@ apps: {
  }
 }
 apps: {
+ key: "Indented"
+ value: {
+  name: {
+   part: "Indented"
+  }
+  attrs: {
+   key: "description"
+   value: {
+    s: "multi-line\n  With indent\n      that must be retained\nend\n"
+    source_context: {
+     file: "tests/docstrings.sysl"
+     start: {
+      line: 38
+      col: 18
+     }
+     end: {
+      line: 43
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/docstrings.sysl"
+     start: {
+      line: 38
+      col: 18
+     }
+     end: {
+      line: 43
+      col: 5
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "..."
+   value: {
+    name: "..."
+   }
+  }
+  source_context: {
+   file: "tests/docstrings.sysl"
+   start: {
+    line: 37
+   }
+   end: {
+    line: 43
+    col: 5
+   }
+  }
+  source_contexts: {
+   file: "tests/docstrings.sysl"
+   start: {
+    line: 37
+   }
+   end: {
+    line: 43
+    col: 5
+   }
+  }
+ }
+}
+apps: {
  key: "Model"
  value: {
   name: {

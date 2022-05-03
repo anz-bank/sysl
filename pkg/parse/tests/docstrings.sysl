@@ -34,3 +34,11 @@ ModelTwo:
                 | multi-line documentation comment
                 | use it for long comments
         field2 <: string "short description here"
+
+Indented:
+    @description =:
+        | multi-line
+        |   With indent
+        |       that must be retained
+        | end
+    ...
