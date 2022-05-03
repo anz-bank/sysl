@@ -106,7 +106,7 @@ let resolvedAnnotations = \annotations
             _: cond {
                 //seq.contains('\n', value):
                     let value = //seq.trim_suffix('\n', trimLines(value));
-                    $`${//seq.split('\n', value) >> $`| ${//seq.trim_prefix(' ', .)}`::\i}`,
+                    $`${//seq.split('\n', value) >> $`| ${.}`::\i}`,
 
                 _: $`${value:q}`,
             }

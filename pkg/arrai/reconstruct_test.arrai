@@ -373,4 +373,27 @@ let specialCharacters = (
                 @singleQuote = "'"
 
         `
+    ,
+    docstringAnno:
+        let docAnno = simpleNoSrc.|app| +> (
+            anno: (
+                app: {
+                    |appName, appAnnoName      , appAnnoValue                                                  |
+                    (['A']  , 'simple'         , 'this is a string\nthis is another one'                       ),
+                    (['A']  , 'retainIndent'   , 'this is a string\n  this is another one\n    and another one'),
+                }
+            )
+        );
+        (reconstruct(docAnno) single).@value = $`
+            A:
+                @retainIndent =:
+                    | this is a string
+                    |   this is another one
+                    |     and another one
+                @simple =:
+                    | this is a string
+                    | this is another one
+
+        `
+    ,
 )
