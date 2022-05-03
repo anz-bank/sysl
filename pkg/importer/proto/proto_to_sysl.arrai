@@ -243,7 +243,7 @@ let application = \service \ns \file \imports
 # Somehow this additional field needs to be grouped with the original definition so they can all be rendered together.
 # TODO: Update sysl_mod_renderers.arrai -> renderTypeOrTable to render the nested messages/enums.
 let rec fileTypes = \content \prefix \appName \file \imports
-    let name = \typeName \prefix syslSafeName(cond {prefix: $`${prefix}.${typeName}`} || typeName);
+    let name = \typeName \prefix syslSafeName(cond {prefix: $`${prefix}_${typeName}`} || typeName);
     let messages = (content.messages?:{} => ({name(.@, prefix): type(., file, appName, imports)}
         +> fileTypes(.@value, .@, appName, file, imports)));
     //rel.union(

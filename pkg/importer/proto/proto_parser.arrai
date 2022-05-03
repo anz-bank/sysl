@@ -35,12 +35,12 @@ messageType     ->  "."? ident:".";
 
 service         -> c* "service" serviceName "{" (option | rpc | emptyStatement | c)* "}";
 serviceName     -> ident;
-rpc             -> c* "rpc" rpcName "(" "stream"? inputMessage ")" "returns" "(" "stream"? returnMessage ")" (( "{" (option | emptyStatement)* "}" ) | ";" ) ($ | c)?;
+rpc             -> c* "rpc" rpcName "(" "stream"? inputMessage ")" "returns" "(" "stream"? returnMessage ")" (( "{" (option | emptyStatement | c)* "}" ) | ";" ) ($ | c)?;
 rpcName         -> ident;
 inputMessage    -> messageType;
 returnMessage   -> messageType;
 
-extend          -> c* "extend" messageType "{" (field | group | emptyStatement)* "}";
+extend          -> c* "extend" messageType "{" (field | group | emptyStatement | c)* "}";
 
 field           -> c* label? type fieldName "=" fieldNumber ("[" fieldOptions "]")? ";"  ($ | c)?;
 fieldName       -> ident;

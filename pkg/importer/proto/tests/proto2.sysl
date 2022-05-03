@@ -30,7 +30,7 @@ proto2:
             @json_tag = "innerMessage"
             @rpcId = "2"
     
-    !type Outer%2EInner:
+    !type Outer_Inner:
         @description =:
             | Level 2
             | Description
