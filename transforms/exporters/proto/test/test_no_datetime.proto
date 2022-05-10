@@ -8,7 +8,6 @@ package Foo;
 
 option go_package = "Foo";
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 message OptionalPrimitives {
@@ -39,7 +38,6 @@ message Request {
   string string_max_constraint = 10;
   string string_range_constraint = 11;
   string dateField = 12;
-  google.protobuf.Timestamp dateTimeField = 13;
 }
 
 message Type {

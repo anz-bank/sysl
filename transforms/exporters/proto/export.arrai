@@ -74,6 +74,7 @@ let export = \rel \namespace \package
 
     option go_package = "${package}";
 
+    ${cond {//rel.union(rel.field => .'fieldType'.'primitive'?:'' = 'DATETIME'): 'import "google/protobuf/timestamp.proto";'}}
     import "google/protobuf/wrappers.proto";
 
     ${rel.enum orderby .typeName >> $`

@@ -8,6 +8,7 @@ package Foo;
 
 option go_package = "Foo";
 
+import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 message OptionalPrimitives {
