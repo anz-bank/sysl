@@ -396,4 +396,72 @@ let specialCharacters = (
 
         `
     ,
+    stmt:
+        let stmtTest = (
+            app: {(appName: ['A'])},
+            ep: {(appName: ['A'], epName: 'GET /ep', rest: (method: 'GET', path: '/ep'))},
+            src: (app: {(appName: ['A'], appSrc: (file: 'a.sysl'))}),
+            stmt: {
+                |appName, epName, stmtAction, stmtAlt, stmtCall, stmtCond, stmtForeach, stmtGroup, stmtIndex, stmtLoop, stmtLoopN, stmtParent, stmtRet|
+                (
+                    ['A'],
+                    'GET /ep',
+                    (),
+                    (),
+                    (appName: ['Test'], epName: 'TestEp'),
+                    (),
+                    (),
+                    (),
+                    0,
+                    (),
+                    (),
+                    (),
+                    (),
+                ),
+                (
+                    ['A'],
+                    'GET /ep',
+                    (),
+                    (),
+                    (),
+                    (),
+                    (),
+                    (),
+                    1,
+                    (),
+                    (),
+                    (),
+                    (
+                        attr: (
+                            modifier: {'tag'},
+                            nvp: {'annotation': (s: 'value')},
+                        ),
+                        status: 'ok',
+                        type: (appName: ['A'], typePath: ['Type']),
+                    )
+                ),
+            },
+            anno: (
+                stmt: {
+                    |appName, epName, stmtIndex, stmtAnnoName, stmtAnnoValue|
+                    (['A'], 'GET /ep', 0, 'annotation', 'value')
+                }
+            ),
+            tag: (
+                stmt: {
+                    |appName, epName, stmtIndex, stmtTag|
+                    (['A'], 'GET /ep', 0, 'tag')
+                }
+            ),
+        );
+        reconstruct(stmtTest) = {
+            'a.sysl': $`
+                A:
+                    /ep:
+                        GET:
+                            Test <- TestEp [~tag, annotation="value"]
+                            return ok <: A.Type [~tag, annotation="value"]
+
+            `,
+        }
 )

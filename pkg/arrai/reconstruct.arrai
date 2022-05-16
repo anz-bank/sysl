@@ -54,7 +54,13 @@ let syslSafeType = \name (name <: native && name) || syslSafeName(name);
 
 let joinedName = //seq.join(' :: ');
 
-let nvpStr = \nvp
+let tagsArr = \tags tags => $`~${.}` orderby .;
+
+# Given a set of tags, return a Sysl source string to append to an element.
+# e.g. {'b', 'a'} -> ' [~a, ~b]'
+let tagsString = \tags cond {tags: ' ' ++ $`[${//seq.join(', ', tagsArr(tags))}]`};
+
+let inlineAnnoArr = \inlineAnnos
     let rec resolveVal = \v
         cond v {
             {k: _, ...}: $`${v orderby .@ >> $`${.@}=${resolveVal(.@value)}`::, }`,
@@ -64,40 +70,51 @@ let nvpStr = \nvp
             (:s): resolveVal(s),
             _: $`"${v}"`,
         };
-    cond nvp {
-        {}: '',
-        _: ' ' ++ $`[${nvp orderby .@ >> $`${.@}=${resolveVal(.@value)}`::, }]`
-    }
+    inlineAnnos orderby .@ >> $`${.@}=${resolveVal(.@value)}`
+;
+
+let inlineAnnoStr = \inlineAnnos cond {inlineAnnos: ' ' ++ $`${inlineAnnoArr(inlineAnnos)::, }`};
+
+let renderInlineAnnoAndTags = \annos \tags
+    let annos = inlineAnnoArr(annos);
+    let tags = tagsArr(tags);
+    cond {(annos || tags): ' ' ++ $`[${tags ++ annos::, }]`}
 ;
 
 let resolveStmts = \stmt
-    stmt >> cond {
-        .stmtAction: $`${.stmtAction}`,
-        .stmtAlt: .stmtAlt -> \(:choice, ...) $`
-            one of:
-                ${choice >> \c
-                    # TODO: handle parent
-                    # TODO: change the name attribute of cond
-                    $`
-                        ${c.cond?:''}:
-                            ...
-                    `
-                ::\i}
-        `,
-        .stmtCall: .stmtCall -> \(:appName, :epName, ...) $`${joinedName(appName)} <- ${epName}`,
-        .stmtCond: '', # TODO: seems something is wrong with this
-        .stmtForeach: '', # TODO
-        .stmtGroup: '', # TODO
-        .stmtLoop: '', # TODO
-        .stmtLoopN: '', # TODO
-        # TODO: handle modifer
-        .stmtRet: .stmtRet -> \(attr: (:modifier, :nvp), ?:status:'ok', :type) $`
-            return ${status} <: ${sysl.resolvedType(type)}${nvpStr(nvp)}
-        `
-    }
+    stmt >>
+        let stmtKey = {(:.appName, :.epName, :.stmtIndex)};
+        let stmtAnno = (anno.stmt <-- stmtKey) => (@: .stmtAnnoName, @value: .stmtAnnoValue);
+        let stmtTags = (tag.stmt  <-- stmtKey) => .stmtTag;
+        cond {
+            .stmtAction: $`${.stmtAction}`,
+            .stmtAlt: .stmtAlt -> \(:choice, ...) $`
+                one of:
+                    ${choice >> \c
+                        # TODO: handle parent
+                        # TODO: change the name attribute of cond
+                        $`
+                            ${c.cond?:''}:
+                                ...
+                        `
+                    ::\i}
+            `,
+            .stmtCall: .stmtCall -> \(:appName, :epName, ...) $`${joinedName(appName)} <- ${epName}`,
+            .stmtCond: '', # TODO: seems something is wrong with this
+            .stmtForeach: '', # TODO
+            .stmtGroup: '', # TODO
+            .stmtLoop: '', # TODO
+            .stmtLoopN: '', # TODO
+            # TODO: currently return statement anno and tags aren't stored in the relational model anno and tag fields
+            # because of a parsing issue. It's currently stored in attr.modifier and attr.nvp. These annotations need to
+            # be moved to the correct fields of the relational model.
+            .stmtRet: .stmtRet -> \(attr: (:modifier, :nvp), ?:status:'ok', :type) $`
+                return ${status} <: ${sysl.resolvedType(type)}${renderInlineAnnoAndTags(nvp, modifier)}
+            `
+        } ++ renderInlineAnnoAndTags(stmtAnno, stmtTags)
 ;
 
-let stmtBlock = \stmt \ep resolveStmts(stmt where .epName = ep orderby .stmtIndex) where .@item;
+let stmtBlock = \stmt \epName resolveStmts((stmt <&- {(:epName)}) orderby .stmtIndex) where .@item;
 
 let resolvedAnnotations = \annotations
     let rec renderValue = \value
@@ -139,13 +156,6 @@ let resolvedFieldAnno = \fieldAnno \typeName \fieldName
 
 let orderedField = \field \typeName
     (field where typeName = .typeName && .fieldType != 'inplace') orderby .fieldName
-;
-
-# Given a set of tags, return a Sysl source string to append to an element.
-# e.g. {'b', 'a'} -> ' [~a, ~b]'
-let tagsString = \tags
-    let tags = tags => $`~${.}` orderby .;
-    cond {tags: ' ' ++ $`[${//seq.join(', ', tags)}]`}
 ;
 
 # Transform a REST endpoint spec to a path with type information on params.
