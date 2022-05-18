@@ -780,7 +780,6 @@ func (p *Parser) postProcess(mod *sysl.Module) { // nolint:funlen
 				}
 				if !syslutil.HasPattern(srcApp.Attrs, "abstract") {
 					logrus.Warnf("mixin App (%s) should be ~abstract", syslutil.GetAppName(src.Name))
-					continue
 				}
 				if srcApp.Types != nil && app.Types == nil {
 					app.Types = map[string]*sysl.Type{}
