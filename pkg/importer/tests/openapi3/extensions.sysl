@@ -68,7 +68,7 @@ TestApp "Extensions":
         string
     
     !alias unmappable-with-ext [~unmapped_openapi]:
-        @openapi_type = "object"
+        @openapi_type = "any"
         @x-openapi_type = "this should be retained"
         @x-patterns = "this clashes with sysl tag so x-patterns is still x-patterns"
         string

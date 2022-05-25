@@ -26,14 +26,11 @@ foo_user:
     !type AddUserRequest:
         @source_path = "proto/tests/combined/user_type.proto"
     
-    
     !type AddUserResponse:
         @source_path = "proto/tests/combined/user_type.proto"
     
-    
     !type GetUserRequest:
         @source_path = "proto/tests/combined/user_type.proto"
-    
     
     !type GetUserResponse:
         @source_path = "proto/tests/combined/user_type.proto"

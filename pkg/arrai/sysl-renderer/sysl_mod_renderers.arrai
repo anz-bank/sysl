@@ -390,10 +390,16 @@ let renderTypeOrTable = \(:name, :type)
                 (relation: (attr_defs: fields, ...), ...): ['table', fields],
                 _: //error($`renderTypeOrTable: unrecognised type ${type}`),
             };
+            let annoStmts = renderAnnoStmts(anno &~ inlineAnno);
             $`
                 !${renderInlineSections([kind, name, renderInlineAnnoAndTags(tags +> inlineAnno)])}:
-                    ${renderAnnoStmts(anno &~ inlineAnno)}
-                    ${fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type))::\i}
+                    ${
+                        (
+                            # only render ... when there's nothing in the type.
+                            (annoStmts && [annoStmts]) ++
+                            (fields orderby .@ >> \(@: name, @value: type) renderFieldDefinition((:name, :type)))
+                        ) || ['...']
+                    ::\i}
             `
     }
 ;

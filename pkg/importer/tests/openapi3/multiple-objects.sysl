@@ -44,10 +44,9 @@ TestApp "Twilio - Conversations":
             @description = "The content of the message."
             @json_tag = "body"
     
-    !alias conversations%2Ev1%2Econversation_links [~unmapped_openapi]:
+    !type conversations%2Ev1%2Econversation_links:
         @description = "Absolute URLs to access the participants, messages and webhooks of this conversation."
         @openapi_type = "object"
-        string
     
     !type get_v1_Conversations_200_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_v1_Conversations_200_resp_type_body [~body]:

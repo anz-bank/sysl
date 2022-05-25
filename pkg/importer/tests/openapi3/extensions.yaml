@@ -95,7 +95,7 @@ components:
     unmappable-with-ext:
       x-openapi_type: "this should be retained"
       x-patterns: this clashes with sysl tag so x-patterns is still x-patterns
-      type: object
+      type: any
     simple:
       type: string
       x-simple-anno: "this is annotation for a simple type"

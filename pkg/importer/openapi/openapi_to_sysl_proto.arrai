@@ -114,7 +114,6 @@ let specialAnno = {
 
         let type = cond t {
             {'properties': properties, ...}:
-                (properties = {} && unmappedTypeWithTypeInfo('object')) ||
                 let requiredList = t('required')?.a:{} => .@item.s;
                 (
                     tuple: (
@@ -127,6 +126,8 @@ let specialAnno = {
                             )
                         )
                     ),
+                    # if properties is empty, ensure it adds object so that it is clear that it's from an object.
+                    attrs: !properties && {openapiTypeAnno: (s: 'object')},
                 ),
             {'enum': (:a), ...subConf}:
                 cond subConf {
@@ -207,6 +208,7 @@ let specialAnno = {
                     specialFormat: primitive('STRING') +> (attrs+>: {openapiFormatAnno: (s: specialFormat)}),
                 },
 
+                type = 'object': (tuple: (attr_defs: {}), attrs: {openapiTypeAnno: (s: type)}),
 
                 _: unmappedTypeWithTypeInfo(type),
             },

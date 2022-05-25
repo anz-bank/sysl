@@ -7,10 +7,8 @@
 TestApp "Simple":
     @package = "com.example.package"
     
-    !alias emptyProps [~unmapped_openapi]:
+    !type emptyProps:
         @openapi_type = "object"
-        string
     
-    !alias object [~unmapped_openapi]:
+    !type object:
         @openapi_type = "object"
-        string
