@@ -5,13 +5,16 @@
 ''                                      ''
 ''''''''''''''''''''''''''''''''''''''''''
 
-class "App.User" as _0 << (D,orchid) >> {
+class "AnotherApp.AnotherType" as _0 << (D,orchid) >> {
+}
+class "App.User" as _1 << (D,orchid) >> {
 + beep : **Server.ftgyhb**
 + weuiyfgwihe : **AnotherApp.AnotherType**
 + whatever : int
 }
-class "Server.ftgyhb" as _1 << (D,orchid) >> {
+class "Server.ftgyhb" as _2 << (D,orchid) >> {
 + blah : int
 }
-_0 *-- "1..1 " _1
+_1 *-- "1..1 " _0
+_1 *-- "1..1 " _2
 @enduml

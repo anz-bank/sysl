@@ -1,3 +1,7 @@
+definitions:
+  Empty:
+    format: tuple
+    type: object
 info:
   description: |
     foo

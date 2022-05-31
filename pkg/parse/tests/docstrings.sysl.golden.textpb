@@ -1,620 +1,621 @@
-apps: {
- key: "Another App"
- value: {
-  name: {
-   part: "Another App"
+apps:  {
+ key:  "Another App"
+ value:  {
+  name:  {
+   part:  "Another App"
   }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    attrs: {
-     key: "description"
-     value: {
-      s: "multi-line documentation comment\nuse it for long comments\n"
-      source_context: {
-       file: "tests/docstrings.sysl"
-       start: {
-        line: 8
-        col: 22
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "multi-line documentation comment\nuse it for long comments\n"
+      source_context:  {
+       file:  "tests/docstrings.sysl"
+       start:  {
+        line:  8
+        col:  22
        }
-       end: {
-        line: 11
-        col: 9
+       end:  {
+        line:  11
+        col:  9
        }
       }
-      source_contexts: {
-       file: "tests/docstrings.sysl"
-       start: {
-        line: 8
-        col: 22
+      source_contexts:  {
+       file:  "tests/docstrings.sysl"
+       start:  {
+        line:  8
+        col:  22
        }
-       end: {
-        line: 11
-        col: 9
+       end:  {
+        line:  11
+        col:  9
        }
       }
      }
     }
-    stmt: {
-     action: {
-      action: "..."
+    stmt:  {
+     action:  {
+      action:  "..."
      }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 11
-       col: 8
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  11
+       col:  8
       }
-      end: {
-       line: 11
-       col: 11
+      end:  {
+       line:  11
+       col:  11
       }
      }
-     source_contexts: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 11
-       col: 8
+     source_contexts:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  11
+       col:  8
       }
-      end: {
-       line: 11
-       col: 11
+      end:  {
+       line:  11
+       col:  11
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 7
-      col: 4
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  7
+      col:  4
      }
-     end: {
-      line: 11
-      col: 11
-     }
-    }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 7
-      col: 4
-     }
-     end: {
-      line: 11
-      col: 11
+     end:  {
+      line:  11
+      col:  11
      }
     }
-   }
-  }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 6
-   }
-   end: {
-    line: 11
-    col: 11
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  11
+      col:  11
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 6
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  6
    }
-   end: {
-    line: 11
-    col: 11
+   end:  {
+    line:  11
+    col:  11
+   }
+  }
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  6
+   }
+   end:  {
+    line:  11
+    col:  11
    }
   }
  }
 }
-apps: {
- key: "App"
- value: {
-  name: {
-   part: "App"
+apps:  {
+ key:  "App"
+ value:  {
+  name:  {
+   part:  "App"
   }
-  attrs: {
-   key: "description"
-   value: {
-    s: "multi-line documentation comment\nuse it for long comments\n"
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 1
-      col: 18
+  attrs:  {
+   key:  "description"
+   value:  {
+    s:  "multi-line documentation comment\nuse it for long comments\n"
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  1
+      col:  18
      }
-     end: {
-      line: 4
-      col: 5
-     }
-    }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 1
-      col: 18
-     }
-     end: {
-      line: 4
-      col: 5
+     end:  {
+      line:  4
+      col:  5
      }
     }
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  1
+      col:  18
+     }
+     end:  {
+      line:  4
+      col:  5
+     }
+    }
    }
   }
-  endpoints: {
-   key: "..."
-   value: {
-    name: "..."
+  endpoints:  {
+   key:  "..."
+   value:  {
+    name:  "..."
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {}
-   end: {
-    line: 4
-    col: 5
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {}
+   end:  {
+    line:  4
+    col:  5
    }
   }
-  source_contexts: {
-   file: "tests/docstrings.sysl"
-   start: {}
-   end: {
-    line: 4
-    col: 5
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {}
+   end:  {
+    line:  4
+    col:  5
    }
   }
  }
 }
-apps: {
- key: "Indented"
- value: {
-  name: {
-   part: "Indented"
+apps:  {
+ key:  "Indented"
+ value:  {
+  name:  {
+   part:  "Indented"
   }
-  attrs: {
-   key: "description"
-   value: {
-    s: "multi-line\n  With indent\n      that must be retained\nend\n"
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 38
-      col: 18
+  attrs:  {
+   key:  "description"
+   value:  {
+    s:  "multi-line\n  With indent\n      that must be retained\nend\n"
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  38
+      col:  18
      }
-     end: {
-      line: 43
-      col: 5
-     }
-    }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 38
-      col: 18
-     }
-     end: {
-      line: 43
-      col: 5
+     end:  {
+      line:  43
+      col:  5
      }
     }
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  38
+      col:  18
+     }
+     end:  {
+      line:  43
+      col:  5
+     }
+    }
    }
   }
-  endpoints: {
-   key: "..."
-   value: {
-    name: "..."
+  endpoints:  {
+   key:  "..."
+   value:  {
+    name:  "..."
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 37
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  37
    }
-   end: {
-    line: 43
-    col: 5
+   end:  {
+    line:  43
+    col:  5
    }
   }
-  source_contexts: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 37
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  37
    }
-   end: {
-    line: 43
-    col: 5
+   end:  {
+    line:  43
+    col:  5
    }
   }
  }
 }
-apps: {
- key: "Model"
- value: {
-  name: {
-   part: "Model"
+apps:  {
+ key:  "Model"
+ value:  {
+  name:  {
+   part:  "Model"
   }
-  types: {
-   key: "TableName"
-   value: {
-    attrs: {
-     key: "description"
-     value: {
-      s: "multi-line documentation comment\nuse it for long comments\n"
-      source_context: {
-       file: "tests/docstrings.sysl"
-       start: {
-        line: 24
-        col: 22
+  types:  {
+   key:  "TableName"
+   value:  {
+    tuple:  {}
+    attrs:  {
+     key:  "description"
+     value:  {
+      s:  "multi-line documentation comment\nuse it for long comments\n"
+      source_context:  {
+       file:  "tests/docstrings.sysl"
+       start:  {
+        line:  24
+        col:  22
        }
-       end: {
-        line: 27
-        col: 9
+       end:  {
+        line:  27
+        col:  9
        }
       }
-      source_contexts: {
-       file: "tests/docstrings.sysl"
-       start: {
-        line: 24
-        col: 22
+      source_contexts:  {
+       file:  "tests/docstrings.sysl"
+       start:  {
+        line:  24
+        col:  22
        }
-       end: {
-        line: 27
-        col: 9
+       end:  {
+        line:  27
+        col:  9
        }
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 23
-      col: 4
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  23
+      col:  4
      }
-     end: {
-      line: 27
-      col: 9
+     end:  {
+      line:  27
+      col:  9
      }
     }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 23
-      col: 4
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  23
+      col:  4
      }
-     end: {
-      line: 27
-      col: 9
+     end:  {
+      line:  27
+      col:  9
      }
     }
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 22
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  22
    }
-   end: {
-    line: 27
-    col: 9
+   end:  {
+    line:  27
+    col:  9
    }
   }
-  source_contexts: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 22
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  22
    }
-   end: {
-    line: 27
-    col: 9
+   end:  {
+    line:  27
+    col:  9
    }
   }
  }
 }
-apps: {
- key: "ModelTwo"
- value: {
-  name: {
-   part: "ModelTwo"
+apps:  {
+ key:  "ModelTwo"
+ value:  {
+  name:  {
+   part:  "ModelTwo"
   }
-  types: {
-   key: "TableName"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "field"
-      value: {
-       primitive: STRING
-       attrs: {
-        key: "description"
-        value: {
-         s: "multi-line documentation comment\nuse it for long comments\n"
-         source_context: {
-          file: "tests/docstrings.sysl"
-          start: {
-           line: 32
-           col: 26
+  types:  {
+   key:  "TableName"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "field"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "description"
+        value:  {
+         s:  "multi-line documentation comment\nuse it for long comments\n"
+         source_context:  {
+          file:  "tests/docstrings.sysl"
+          start:  {
+           line:  32
+           col:  26
           }
-          end: {
-           line: 35
-           col: 9
-          }
-         }
-         source_contexts: {
-          file: "tests/docstrings.sysl"
-          start: {
-           line: 32
-           col: 26
-          }
-          end: {
-           line: 35
-           col: 9
+          end:  {
+           line:  35
+           col:  9
           }
          }
+         source_contexts:  {
+          file:  "tests/docstrings.sysl"
+          start:  {
+           line:  32
+           col:  26
+          }
+          end:  {
+           line:  35
+           col:  9
+          }
+         }
         }
        }
-       source_context: {
-        file: "tests/docstrings.sysl"
-        start: {
-         line: 31
-         col: 8
+       source_context:  {
+        file:  "tests/docstrings.sysl"
+        start:  {
+         line:  31
+         col:  8
         }
-        end: {
-         line: 35
-         col: 9
-        }
-       }
-       source_contexts: {
-        file: "tests/docstrings.sysl"
-        start: {
-         line: 31
-         col: 8
-        }
-        end: {
-         line: 35
-         col: 9
+        end:  {
+         line:  35
+         col:  9
         }
        }
-      }
-     }
-     attr_defs: {
-      key: "field2"
-      value: {
-       primitive: STRING
-       docstring: "short description here"
-       source_context: {
-        file: "tests/docstrings.sysl"
-        start: {
-         line: 35
-         col: 8
+       source_contexts:  {
+        file:  "tests/docstrings.sysl"
+        start:  {
+         line:  31
+         col:  8
         }
-        end: {
-         line: 35
-         col: 49
-        }
-       }
-       source_contexts: {
-        file: "tests/docstrings.sysl"
-        start: {
-         line: 35
-         col: 8
-        }
-        end: {
-         line: 35
-         col: 49
+        end:  {
+         line:  35
+         col:  9
         }
        }
       }
      }
+     attr_defs:  {
+      key:  "field2"
+      value:  {
+       primitive:  STRING
+       docstring:  "short description here"
+       source_context:  {
+        file:  "tests/docstrings.sysl"
+        start:  {
+         line:  35
+         col:  8
+        }
+        end:  {
+         line:  35
+         col:  49
+        }
+       }
+       source_contexts:  {
+        file:  "tests/docstrings.sysl"
+        start:  {
+         line:  35
+         col:  8
+        }
+        end:  {
+         line:  35
+         col:  49
+        }
+       }
+      }
+     }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 30
-      col: 4
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  30
+      col:  4
      }
-     end: {
-      line: 35
-      col: 49
+     end:  {
+      line:  35
+      col:  49
      }
     }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 30
-      col: 4
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  30
+      col:  4
      }
-     end: {
-      line: 35
-      col: 49
+     end:  {
+      line:  35
+      col:  49
      }
     }
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 29
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  29
    }
-   end: {
-    line: 35
-    col: 49
+   end:  {
+    line:  35
+    col:  49
    }
   }
-  source_contexts: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 29
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  29
    }
-   end: {
-    line: 35
-    col: 49
+   end:  {
+    line:  35
+    col:  49
    }
   }
  }
 }
-apps: {
- key: "Yet Another App"
- value: {
-  name: {
-   part: "Yet Another App"
+apps:  {
+ key:  "Yet Another App"
+ value:  {
+  name:  {
+   part:  "Yet Another App"
   }
-  endpoints: {
-   key: "AnotherEndpoint"
-   value: {
-    name: "AnotherEndpoint"
-    stmt: {
-     action: {
-      action: "| a multi line text statement use it to well"
+  endpoints:  {
+   key:  "AnotherEndpoint"
+   value:  {
+    name:  "AnotherEndpoint"
+    stmt:  {
+     action:  {
+      action:  "| a multi line text statement use it to well"
      }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 18
-       col: 8
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  18
+       col:  8
       }
-      end: {
-       line: 18
-       col: 37
-      }
-     }
-     source_contexts: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 18
-       col: 8
-      }
-      end: {
-       line: 18
-       col: 37
+      end:  {
+       line:  18
+       col:  37
       }
      }
-    }
-    stmt: {
-     action: {
-      action: "another text statement"
-     }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 20
-       col: 8
+     source_contexts:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  18
+       col:  8
       }
-      end: {
-       line: 20
-       col: 30
-      }
-     }
-     source_contexts: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 20
-       col: 8
-      }
-      end: {
-       line: 20
-       col: 30
+      end:  {
+       line:  18
+       col:  37
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 17
-      col: 4
+    stmt:  {
+     action:  {
+      action:  "another text statement"
      }
-     end: {
-      line: 20
-      col: 30
-     }
-    }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 17
-      col: 4
-     }
-     end: {
-      line: 20
-      col: 30
-     }
-    }
-   }
-  }
-  endpoints: {
-   key: "Endpoint"
-   value: {
-    name: "Endpoint"
-    stmt: {
-     action: {
-      action: "a simple text statement"
-     }
-     source_context: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 15
-       col: 8
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  20
+       col:  8
       }
-      end: {
-       line: 15
-       col: 31
+      end:  {
+       line:  20
+       col:  30
       }
      }
-     source_contexts: {
-      file: "tests/docstrings.sysl"
-      start: {
-       line: 15
-       col: 8
+     source_contexts:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  20
+       col:  8
       }
-      end: {
-       line: 15
-       col: 31
+      end:  {
+       line:  20
+       col:  30
       }
      }
     }
-    source_context: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 14
-      col: 4
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  17
+      col:  4
      }
-     end: {
-      line: 15
-      col: 31
+     end:  {
+      line:  20
+      col:  30
      }
     }
-    source_contexts: {
-     file: "tests/docstrings.sysl"
-     start: {
-      line: 14
-      col: 4
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  17
+      col:  4
      }
-     end: {
-      line: 15
-      col: 31
+     end:  {
+      line:  20
+      col:  30
      }
     }
    }
   }
-  source_context: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 13
-   }
-   end: {
-    line: 20
-    col: 30
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    stmt:  {
+     action:  {
+      action:  "a simple text statement"
+     }
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  15
+       col:  8
+      }
+      end:  {
+       line:  15
+       col:  31
+      }
+     }
+     source_contexts:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  15
+       col:  8
+      }
+      end:  {
+       line:  15
+       col:  31
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  14
+      col:  4
+     }
+     end:  {
+      line:  15
+      col:  31
+     }
+    }
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  14
+      col:  4
+     }
+     end:  {
+      line:  15
+      col:  31
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "tests/docstrings.sysl"
-   start: {
-    line: 13
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  13
    }
-   end: {
-    line: 20
-    col: 30
+   end:  {
+    line:  20
+    col:  30
+   }
+  }
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  13
+   }
+   end:  {
+    line:  20
+    col:  30
    }
   }
  }

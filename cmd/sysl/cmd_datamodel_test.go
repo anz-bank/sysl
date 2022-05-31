@@ -44,15 +44,18 @@ func TestDataModel(t *testing.T) {
 ''                                      ''
 ''''''''''''''''''''''''''''''''''''''''''
 
-class "App.User" as _0 << (D,orchid) >> {
+class "AnotherApp.AnotherType" as _0 << (D,orchid) >> {
+}
+class "App.User" as _1 << (D,orchid) >> {
 + beep : **Server.ftgyhb**
 + weuiyfgwihe : **AnotherApp.AnotherType**
 + whatever : int
 }
-class "Server.ftgyhb" as _1 << (D,orchid) >> {
+class "Server.ftgyhb" as _2 << (D,orchid) >> {
 + blah : int
 }
-_0 *-- "1..1 " _1
+_1 *-- "1..1 " _0
+_1 *-- "1..1 " _2
 @enduml
 `}
 	assert.Equal(t, outmap, expected)
@@ -86,16 +89,16 @@ func TestHTML(t *testing.T) {
 	html, err := ioutil.ReadAll(file)
 	assert.NoError(t, err)
 	expected := fmt.Sprintf(
-		"<img src=\"%s/svg/UDgCaK5hmZ0OXk"+
-			"_v5UzwwHRNOgyYObd2sCN25iybwgS9T3K"+
-			"aKIbZ_tqudR23aFUKmvE71xvvYDh7msV7"+
-			"ykInF4VIhcYzLCshNCZtMac1bqP850L4W"+
-			"qMZ8CMRUhYXoTRaLhRkT0Z8QkVAPI2VGG"+
-			"UqOqodU1JFUxysTlE4sGnVR8GLaSC4d7-"+
-			"GFv8ljt4tc1NdR8GJ7UomtPsieL-YxlVH"+
-			"a3zhhqyrEBgWHaSwaiS4je_i-o_Xd_JIKT"+
-			"tfwBIv_Mx7u4M1h2hB2XdQYisftvnFzXC0"+
-			"0F__jbPdCm00\" alt=\"plantuml\">\n", plantuml)
+		"<img src=\"%s/svg/UDgCaK5hmZ0SnU_v56-"+
+			"zTAjhi1v5nBA4iOk5BPvBrB-cqDMGHAMCVVUn"+
+			"LJh65FfE8VpUumV_XG_QXUDxpUB1ON6CGRcW-"+
+			"KeLpt8fNtCb1PuA8P6c40MMXO8KB-gkHmUl3d"+
+			"PbcrfxZoXl3i6GowtbbwTgBKNG7kKOindknUF"+
+			"1RKorVS1yZW_ssJUjvIjFhcEpQ-m8QoABAPBa"+
+			"ZTo97D-5VMlMIS96EDEnQdVxSsNeXxXkqg561"+
+			"pgHmnHL4tuL_ens7fCR7hKsVRlCaAGfeepp31"+
+			"7AyR-V2LjGi_q-_rS0003__ykTVD00\" alt=\"plantuml\">"+
+			"\n", plantuml)
 	assert.Equal(t, expected, string(html))
 }
 
@@ -127,16 +130,15 @@ func TestLinkOutput(t *testing.T) {
 	link, err := ioutil.ReadAll(file)
 	assert.NoError(t, err)
 	expected := fmt.Sprintf(
-		`<img src="%s/svg/UDgCaK5hmZ0OXk`+
-			"_v5UzwwHRNOgyYObd2sCN25iybwgS9T3K"+
-			"aKIbZ_tqudR23aFUKmvE71xvvYDh7msV7"+
-			"ykInF4VIhcYzLCshNCZtMac1bqP850L4W"+
-			"qMZ8CMRUhYXoTRaLhRkT0Z8QkVAPI2VGG"+
-			"UqOqodU1JFUxysTlE4sGnVR8GLaSC4d7-"+
-			"GFv8ljt4tc1NdR8GJ7UomtPsieL-YxlVH"+
-			"a3zhhqyrEBgWHaSwaiS4je_i-o_Xd_JIKT"+
-			"tfwBIv_Mx7u4M1h2hB2XdQYisftvnFzXC0"+
-			`0F__jbPdCm00" alt="plantuml">`+
+		"<img src=\"%s/svg/UDgCaK5hmZ0SnU_v56-"+
+			"zTAjhi1v5nBA4iOk5BPvBrB-cqDMGHAMCVVUn"+
+			"LJh65FfE8VpUumV_XG_QXUDxpUB1ON6CGRcW-"+
+			"KeLpt8fNtCb1PuA8P6c40MMXO8KB-gkHmUl3d"+
+			"PbcrfxZoXl3i6GowtbbwTgBKNG7kKOindknUF"+
+			"1RKorVS1yZW_ssJUjvIjFhcEpQ-m8QoABAPBa"+
+			"ZTo97D-5VMlMIS96EDEnQdVxSsNeXxXkqg561"+
+			"pgHmnHL4tuL_ens7fCR7hKsVRlCaAGfeepp31"+
+			"7AyR-V2LjGi_q-_rS0003__ykTVD00\" alt=\"plantuml\">"+
 			"\n", plantuml)
 	assert.Equal(t, expected, string(link))
 }

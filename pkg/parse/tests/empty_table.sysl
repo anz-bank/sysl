@@ -1,0 +1,3 @@
+Foo:
+    !table Bar:
+        @description = "A table with no fields"

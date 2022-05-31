@@ -1,883 +1,884 @@
-apps: {
- key: "A"
- value: {
-  name: {
-   part: "A"
+apps:  {
+ key:  "A"
+ value:  {
+  name:  {
+   part:  "A"
   }
-  types: {
-   key: "T"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "U"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 2
-         col: 8
+  types:  {
+   key:  "T"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "U"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  2
+         col:  8
         }
-        end: {
-         line: 2
-         col: 16
+        end:  {
+         line:  2
+         col:  16
         }
        }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 2
-         col: 8
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  2
+         col:  8
         }
-        end: {
-         line: 2
-         col: 16
+        end:  {
+         line:  2
+         col:  16
         }
        }
       }
      }
     }
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 1
-      col: 4
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  1
+      col:  4
      }
-     end: {
-      line: 2
-      col: 16
+     end:  {
+      line:  2
+      col:  16
      }
     }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 1
-      col: 4
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  1
+      col:  4
      }
-     end: {
-      line: 2
-      col: 16
+     end:  {
+      line:  2
+      col:  16
      }
     }
    }
   }
-  source_context: {
-   file: "tests/type_refs.sysl"
-   start: {}
-   end: {
-    line: 2
-    col: 16
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {}
+   end:  {
+    line:  2
+    col:  16
    }
   }
-  source_contexts: {
-   file: "tests/type_refs.sysl"
-   start: {}
-   end: {
-    line: 2
-    col: 16
+  source_contexts:  {
+   file:  "tests/type_refs.sysl"
+   start:  {}
+   end:  {
+    line:  2
+    col:  16
    }
   }
  }
 }
-apps: {
- key: "A :: T"
- value: {
-  name: {
-   part: "A"
-   part: "T"
+apps:  {
+ key:  "A :: T"
+ value:  {
+  name:  {
+   part:  "A"
+   part:  "T"
   }
-  types: {
-   key: "U"
-   value: {
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 5
-      col: 4
+  types:  {
+   key:  "U"
+   value:  {
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  5
+      col:  4
      }
-     end: {
-      line: 5
-      col: 16
+     end:  {
+      line:  5
+      col:  16
      }
     }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 5
-      col: 4
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  5
+      col:  4
      }
-     end: {
-      line: 5
-      col: 16
-     }
-    }
-   }
-  }
-  source_context: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 4
-   }
-   end: {
-    line: 5
-    col: 16
-   }
-  }
-  source_contexts: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 4
-   }
-   end: {
-    line: 5
-    col: 16
-   }
-  }
- }
-}
-apps: {
- key: "B"
- value: {
-  name: {
-   part: "B"
-  }
-  types: {
-   key: "A"
-   value: {
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 8
-      col: 4
-     }
-     end: {
-      line: 10
-      col: 20
-     }
-    }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 8
-      col: 4
-     }
-     end: {
-      line: 10
-      col: 20
+     end:  {
+      line:  5
+      col:  16
      }
     }
    }
   }
-  types: {
-   key: "A.T"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "U"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 10
-         col: 12
-        }
-        end: {
-         line: 10
-         col: 20
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 10
-         col: 12
-        }
-        end: {
-         line: 10
-         col: 20
-        }
-       }
-      }
-     }
-    }
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 9
-      col: 8
-     }
-     end: {
-      line: 10
-      col: 20
-     }
-    }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 9
-      col: 8
-     }
-     end: {
-      line: 10
-      col: 20
-     }
-    }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  4
+   }
+   end:  {
+    line:  5
+    col:  16
    }
   }
-  types: {
-   key: "B"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "A"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 13
-         col: 8
-        }
-        end: {
-         line: 13
-         col: 16
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 13
-         col: 8
-        }
-        end: {
-         line: 13
-         col: 16
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "ambiguousField"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "B"
-        }
-        ref: {
-         appname: {
-          part: "A"
-         }
-         path: "T"
-         path: "U"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 16
-         col: 8
-        }
-        end: {
-         line: 16
-         col: 31
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 16
-         col: 8
-        }
-        end: {
-         line: 16
-         col: 31
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "ambiguousType"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "B"
-        }
-        ref: {
-         appname: {
-          part: "A"
-         }
-         path: "T"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 15
-         col: 8
-        }
-        end: {
-         line: 15
-         col: 28
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 15
-         col: 8
-        }
-        end: {
-         line: 15
-         col: 28
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "unambiguousType"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "B"
-        }
-        ref: {
-         appname: {
-          part: "A"
-          part: "T"
-         }
-         path: "U"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 18
-         col: 8
-        }
-        end: {
-         line: 18
-         col: 35
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 18
-         col: 8
-        }
-        end: {
-         line: 18
-         col: 35
-        }
-       }
-      }
-     }
-    }
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 12
-      col: 4
-     }
-     end: {
-      line: 18
-      col: 35
-     }
-    }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 12
-      col: 4
-     }
-     end: {
-      line: 18
-      col: 35
-     }
-    }
+  source_contexts:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  4
    }
-  }
-  types: {
-   key: "C"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "ambiguousType"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "C"
-        }
-        ref: {
-         appname: {
-          part: "B"
-         }
-         path: "A"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 21
-         col: 8
-        }
-        end: {
-         line: 21
-         col: 28
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 21
-         col: 8
-        }
-        end: {
-         line: 21
-         col: 28
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "deepField"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "C"
-        }
-        ref: {
-         appname: {
-          part: "B"
-         }
-         path: "A"
-         path: "T"
-         path: "U"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 26
-         col: 8
-        }
-        end: {
-         line: 26
-         col: 28
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 26
-         col: 8
-        }
-        end: {
-         line: 26
-         col: 28
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "unambiguousField"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "C"
-        }
-        ref: {
-         appname: {
-          part: "D"
-         }
-         path: "T"
-         path: "V"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 25
-         col: 8
-        }
-        end: {
-         line: 25
-         col: 33
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 25
-         col: 8
-        }
-        end: {
-         line: 25
-         col: 33
-        }
-       }
-      }
-     }
-     attr_defs: {
-      key: "unambiguousType"
-      value: {
-       type_ref: {
-        context: {
-         appname: {
-          part: "B"
-         }
-         path: "C"
-        }
-        ref: {
-         appname: {
-          part: "D"
-         }
-         path: "T"
-        }
-       }
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 24
-         col: 8
-        }
-        end: {
-         line: 24
-         col: 30
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 23
-         col: 8
-        }
-        end: {
-         line: 23
-         col: 28
-        }
-       }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 24
-         col: 8
-        }
-        end: {
-         line: 24
-         col: 30
-        }
-       }
-      }
-     }
-    }
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 20
-      col: 4
-     }
-     end: {
-      line: 26
-      col: 28
-     }
-    }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 20
-      col: 4
-     }
-     end: {
-      line: 26
-      col: 28
-     }
-    }
-   }
-  }
-  source_context: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 7
-   }
-   end: {
-    line: 26
-    col: 28
-   }
-  }
-  source_contexts: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 7
-   }
-   end: {
-    line: 26
-    col: 28
+   end:  {
+    line:  5
+    col:  16
    }
   }
  }
 }
-apps: {
- key: "D"
- value: {
-  name: {
-   part: "D"
+apps:  {
+ key:  "B"
+ value:  {
+  name:  {
+   part:  "B"
   }
-  types: {
-   key: "T"
-   value: {
-    tuple: {
-     attr_defs: {
-      key: "V"
-      value: {
-       primitive: INT
-       source_context: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 30
-         col: 8
+  types:  {
+   key:  "A"
+   value:  {
+    tuple:  {}
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  8
+      col:  4
+     }
+     end:  {
+      line:  10
+      col:  20
+     }
+    }
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  8
+      col:  4
+     }
+     end:  {
+      line:  10
+      col:  20
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "A.T"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "U"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  10
+         col:  12
         }
-        end: {
-         line: 30
-         col: 16
+        end:  {
+         line:  10
+         col:  20
         }
        }
-       source_contexts: {
-        file: "tests/type_refs.sysl"
-        start: {
-         line: 30
-         col: 8
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  10
+         col:  12
         }
-        end: {
-         line: 30
-         col: 16
+        end:  {
+         line:  10
+         col:  20
         }
        }
       }
      }
     }
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 29
-      col: 4
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  9
+      col:  8
      }
-     end: {
-      line: 30
-      col: 16
+     end:  {
+      line:  10
+      col:  20
      }
     }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 29
-      col: 4
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  9
+      col:  8
      }
-     end: {
-      line: 30
-      col: 16
+     end:  {
+      line:  10
+      col:  20
      }
     }
    }
   }
-  source_context: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 28
-   }
-   end: {
-    line: 30
-    col: 16
+  types:  {
+   key:  "B"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "A"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  13
+         col:  8
+        }
+        end:  {
+         line:  13
+         col:  16
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  13
+         col:  8
+        }
+        end:  {
+         line:  13
+         col:  16
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ambiguousField"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "B"
+        }
+        ref:  {
+         appname:  {
+          part:  "A"
+         }
+         path:  "T"
+         path:  "U"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  16
+         col:  8
+        }
+        end:  {
+         line:  16
+         col:  31
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  16
+         col:  8
+        }
+        end:  {
+         line:  16
+         col:  31
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "ambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "B"
+        }
+        ref:  {
+         appname:  {
+          part:  "A"
+         }
+         path:  "T"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  15
+         col:  8
+        }
+        end:  {
+         line:  15
+         col:  28
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  15
+         col:  8
+        }
+        end:  {
+         line:  15
+         col:  28
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "unambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "B"
+        }
+        ref:  {
+         appname:  {
+          part:  "A"
+          part:  "T"
+         }
+         path:  "U"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  18
+         col:  8
+        }
+        end:  {
+         line:  18
+         col:  35
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  18
+         col:  8
+        }
+        end:  {
+         line:  18
+         col:  35
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  12
+      col:  4
+     }
+     end:  {
+      line:  18
+      col:  35
+     }
+    }
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  12
+      col:  4
+     }
+     end:  {
+      line:  18
+      col:  35
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 28
+  types:  {
+   key:  "C"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "ambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "A"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  21
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  28
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  21
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  28
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "deepField"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "A"
+         path:  "T"
+         path:  "U"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  26
+         col:  8
+        }
+        end:  {
+         line:  26
+         col:  28
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  26
+         col:  8
+        }
+        end:  {
+         line:  26
+         col:  28
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "unambiguousField"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         appname:  {
+          part:  "D"
+         }
+         path:  "T"
+         path:  "V"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  25
+         col:  8
+        }
+        end:  {
+         line:  25
+         col:  33
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  25
+         col:  8
+        }
+        end:  {
+         line:  25
+         col:  33
+        }
+       }
+      }
+     }
+     attr_defs:  {
+      key:  "unambiguousType"
+      value:  {
+       type_ref:  {
+        context:  {
+         appname:  {
+          part:  "B"
+         }
+         path:  "C"
+        }
+        ref:  {
+         appname:  {
+          part:  "D"
+         }
+         path:  "T"
+        }
+       }
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  24
+         col:  8
+        }
+        end:  {
+         line:  24
+         col:  30
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  23
+         col:  8
+        }
+        end:  {
+         line:  23
+         col:  28
+        }
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  24
+         col:  8
+        }
+        end:  {
+         line:  24
+         col:  30
+        }
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  20
+      col:  4
+     }
+     end:  {
+      line:  26
+      col:  28
+     }
+    }
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  20
+      col:  4
+     }
+     end:  {
+      line:  26
+      col:  28
+     }
+    }
    }
-   end: {
-    line: 30
-    col: 16
+  }
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  7
+   }
+   end:  {
+    line:  26
+    col:  28
+   }
+  }
+  source_contexts:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  7
+   }
+   end:  {
+    line:  26
+    col:  28
    }
   }
  }
 }
-apps: {
- key: "E"
- value: {
-  name: {
-   part: "E"
+apps:  {
+ key:  "D"
+ value:  {
+  name:  {
+   part:  "D"
   }
-  endpoints: {
-   key: "POST /endpoint"
-   value: {
-    name: "POST /endpoint"
-    attrs: {
-     key: "patterns"
-     value: {
-      a: {
-       elt: {
-        s: "rest"
-       }
-      }
-     }
-    }
-    param: {
-     name: "x"
-     type: {
-      type_ref: {
-       ref: {
-        path: "F"
-       }
-      }
-     }
-    }
-    param: {
-     name: "y"
-     type: {
-      type_ref: {
-       ref: {
-        appname: {
-         part: "B"
+  types:  {
+   key:  "T"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "V"
+      value:  {
+       primitive:  INT
+       source_context:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  30
+         col:  8
         }
-        path: "A"
-       }
-      }
-     }
-    }
-    param: {
-     name: "z"
-     type: {
-      type_ref: {
-       ref: {
-        appname: {
-         part: "A"
-         part: "T"
+        end:  {
+         line:  30
+         col:  16
         }
-        path: "U"
+       }
+       source_contexts:  {
+        file:  "tests/type_refs.sysl"
+        start:  {
+         line:  30
+         col:  8
+        }
+        end:  {
+         line:  30
+         col:  16
+        }
        }
       }
      }
     }
-    stmt: {
-     action: {
-      action: "..."
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  29
+      col:  4
      }
-     source_context: {
-      file: "tests/type_refs.sysl"
-      start: {
-       line: 38
-       col: 12
-      }
-      end: {
-       line: 38
-       col: 15
-      }
-     }
-     source_contexts: {
-      file: "tests/type_refs.sysl"
-      start: {
-       line: 38
-       col: 12
-      }
-      end: {
-       line: 38
-       col: 15
-      }
+     end:  {
+      line:  30
+      col:  16
      }
     }
-    rest_params: {
-     method: POST
-     path: "/endpoint"
-    }
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 37
-      col: 8
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  29
+      col:  4
      }
-     end: {
-      line: 39
-      col: 1
-     }
-    }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 37
-      col: 8
-     }
-     end: {
-      line: 39
-      col: 1
+     end:  {
+      line:  30
+      col:  16
      }
     }
    }
   }
-  types: {
-   key: "F"
-   value: {
-    source_context: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 34
-      col: 4
-     }
-     end: {
-      line: 34
-      col: 16
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  28
+   }
+   end:  {
+    line:  30
+    col:  16
+   }
+  }
+  source_contexts:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  28
+   }
+   end:  {
+    line:  30
+    col:  16
+   }
+  }
+ }
+}
+apps:  {
+ key:  "E"
+ value:  {
+  name:  {
+   part:  "E"
+  }
+  endpoints:  {
+   key:  "POST /endpoint"
+   value:  {
+    name:  "POST /endpoint"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "rest"
+       }
+      }
      }
     }
-    source_contexts: {
-     file: "tests/type_refs.sysl"
-     start: {
-      line: 34
-      col: 4
+    param:  {
+     name:  "x"
+     type:  {
+      type_ref:  {
+       ref:  {
+        path:  "F"
+       }
+      }
      }
-     end: {
-      line: 34
-      col: 16
+    }
+    param:  {
+     name:  "y"
+     type:  {
+      type_ref:  {
+       ref:  {
+        appname:  {
+         part:  "B"
+        }
+        path:  "A"
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "z"
+     type:  {
+      type_ref:  {
+       ref:  {
+        appname:  {
+         part:  "A"
+         part:  "T"
+        }
+        path:  "U"
+       }
+      }
+     }
+    }
+    stmt:  {
+     action:  {
+      action:  "..."
+     }
+     source_context:  {
+      file:  "tests/type_refs.sysl"
+      start:  {
+       line:  38
+       col:  12
+      }
+      end:  {
+       line:  38
+       col:  15
+      }
+     }
+     source_contexts:  {
+      file:  "tests/type_refs.sysl"
+      start:  {
+       line:  38
+       col:  12
+      }
+      end:  {
+       line:  38
+       col:  15
+      }
+     }
+    }
+    rest_params:  {
+     method:  POST
+     path:  "/endpoint"
+    }
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  37
+      col:  8
+     }
+     end:  {
+      line:  39
+      col:  1
+     }
+    }
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  37
+      col:  8
+     }
+     end:  {
+      line:  39
+      col:  1
      }
     }
    }
   }
-  source_context: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 32
-   }
-   end: {
-    line: 38
-    col: 15
+  types:  {
+   key:  "F"
+   value:  {
+    source_context:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  34
+      col:  4
+     }
+     end:  {
+      line:  34
+      col:  16
+     }
+    }
+    source_contexts:  {
+     file:  "tests/type_refs.sysl"
+     start:  {
+      line:  34
+      col:  4
+     }
+     end:  {
+      line:  34
+      col:  16
+     }
+    }
    }
   }
-  source_contexts: {
-   file: "tests/type_refs.sysl"
-   start: {
-    line: 32
+  source_context:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  32
    }
-   end: {
-    line: 38
-    col: 15
+   end:  {
+    line:  38
+    col:  15
+   }
+  }
+  source_contexts:  {
+   file:  "tests/type_refs.sysl"
+   start:  {
+    line:  32
+   }
+   end:  {
+    line:  38
+    col:  15
    }
   }
  }

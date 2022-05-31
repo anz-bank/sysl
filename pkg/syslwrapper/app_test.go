@@ -33,7 +33,7 @@ func TestMap(t *testing.T) {
 	simpleApps, err := mapper.Map()
 	assert.NoError(t, err)
 	// prettyPrint(t, simpleApps)
-	assert.Equal(t, "", simpleApps["Server"].Types["Response"].Properties["balance"].Type)
+	assert.Equal(t, "tuple", simpleApps["Server"].Types["Response"].Properties["balance"].Type)
 	assert.Equal(t, "tuple", simpleApps["Server"].Types["Response"].Properties["query"].Type)
 	assert.Equal(t, "int", simpleApps["Server"].Types["Response"].Properties["query"].Properties["amount"].Type)
 	assert.Equal(t, "ref", simpleApps["MobileApp"].Endpoints["Login"].Params["input"].Type.Type)

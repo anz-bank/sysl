@@ -706,6 +706,12 @@ func TestAnnotationMerge(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/anno_merge.sysl")
 }
 
+func TestEmptyTable(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/empty_table.sysl")
+}
+
 func TestViewAttr(t *testing.T) {
 	t.Parallel()
 
