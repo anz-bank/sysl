@@ -33,6 +33,9 @@ func (i *avroImporter) LoadFile(path string) (string, error) {
 
 // Load returns a Sysl spec equivalent to avroSpec.
 func (i *avroImporter) Load(avroSpec string) (string, error) {
+	if i.appName == "" {
+		return "", errors.New("application name not provided")
+	}
 	b := bundles.Transformer
 	val, err := arrai.EvaluateBundle(b, avroSpec, i.appName, i.pkg)
 	if err != nil {
@@ -45,18 +48,12 @@ func (i *avroImporter) Load(avroSpec string) (string, error) {
 	return strings.TrimSpace(val.String()) + "\n", nil
 }
 
-func (i *avroImporter) WithAppName(appName string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (i *avroImporter) Configure(appName, packageName, _ string) (Importer, error) {
+	if appName == "" {
+		return nil, errors.New("application name not provided")
+	}
 	i.appName = appName
-	return i
-}
-
-// Sets the package attribute of the imported app.
-func (i *avroImporter) WithPackage(pkg string) Importer {
-	i.pkg = pkg
-	return i
-}
-
-// Set the importPaths attribute of the imported app
-func (i *avroImporter) WithImports(_ string) Importer {
-	return i
+	i.pkg = packageName
+	return i, nil
 }

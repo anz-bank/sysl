@@ -10,11 +10,10 @@ import (
 
 // ArraiImporter encapsulates glue code for calling arr.ai scripts to import specs.
 type ArraiImporter struct {
-	appName     string
-	pkg         string
-	asset       []byte
-	importPaths string
-	logger      *logrus.Logger
+	appName string
+	pkg     string
+	asset   []byte
+	logger  *logrus.Logger
 }
 
 // MakeArraiImporterImporter returns a new ArraiImporter.
@@ -25,22 +24,14 @@ func MakeArraiImporterImporter(asset []byte, logger *logrus.Logger) *ArraiImport
 	}
 }
 
-// WithAppName allows the exported Sysl application name to be specified.
-func (i *ArraiImporter) WithAppName(appName string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (i *ArraiImporter) Configure(appName, packageName, _ string) (Importer, error) {
+	if appName == "" {
+		return nil, errors.New("application name not provided")
+	}
 	i.appName = appName
-	return i
-}
-
-// WithPackage allows the exported Sysl package attribute to be specified.
-func (i *ArraiImporter) WithPackage(packageName string) Importer {
 	i.pkg = packageName
-	return i
-}
-
-// Set the importPaths attribute of the imported app
-func (i *ArraiImporter) WithImports(importPaths string) Importer {
-	i.importPaths = importPaths
-	return i
+	return i, nil
 }
 
 // LoadFile generates a Sysl spec be invoking the arr.ai script.
@@ -92,12 +83,7 @@ type arraiImporterArgs struct {
 }
 
 func buildArraiImporterArgs(a *arraiImporterArgs) ([]string, error) {
-	// TODO: Make the appname optional
-	if a.appName == "" {
-		return nil, errors.New("application name not provided")
-	}
-
-	args := []string{"--app-name", a.appName}
+	args := []string{}
 
 	if a.specContent != "" && a.specPath != "" {
 		return nil, errors.New("provide only path to spec or the spec content")
@@ -105,6 +91,10 @@ func buildArraiImporterArgs(a *arraiImporterArgs) ([]string, error) {
 
 	if a.specContent == "" && a.specPath == "" {
 		return nil, errors.New("spec not provided")
+	}
+
+	if a.appName != "" {
+		args = append(args, "--app-name", a.appName)
 	}
 
 	if a.specContent != "" {

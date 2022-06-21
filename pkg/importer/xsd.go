@@ -12,6 +12,7 @@ import (
 	"aqwari.net/xml/xsd"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/utils"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -68,21 +69,14 @@ func (i *XSDImporter) Load(input string) (string, error) {
 	return result.String(), nil
 }
 
-// Set the AppName of the imported app
-func (i *XSDImporter) WithAppName(appName string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (i *XSDImporter) Configure(appName, packageName, _ string) (Importer, error) {
+	if appName == "" {
+		return nil, errors.New("application name not provided")
+	}
 	i.appName = appName
-	return i
-}
-
-// Set the package attribute of the imported app
-func (i *XSDImporter) WithPackage(pkg string) Importer {
-	i.pkg = pkg
-	return i
-}
-
-// Set the importPaths attribute of the imported app
-func (i *XSDImporter) WithImports(_ string) Importer {
-	return i
+	i.pkg = packageName
+	return i, nil
 }
 
 func makeNamespacedType(name xml.Name, target Type) Type {

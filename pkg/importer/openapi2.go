@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/afero"
 
 	"github.com/ghodss/yaml"
@@ -62,21 +63,14 @@ func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
 	return l.convertSpec(oas3spec)
 }
 
-// Set the AppName of the imported app
-func (l *OpenAPI2Importer) WithAppName(appName string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (l *OpenAPI2Importer) Configure(appName, packageName, _ string) (Importer, error) {
+	if appName == "" {
+		return nil, errors.New("application name not provided")
+	}
 	l.appName = appName
-	return l
-}
-
-// Set the package attribute of the imported app
-func (l *OpenAPI2Importer) WithPackage(pkg string) Importer {
-	l.pkg = pkg
-	return l
-}
-
-// Set the importPaths attribute of the imported app
-func (l *OpenAPI2Importer) WithImports(_ string) Importer {
-	return l
+	l.pkg = packageName
+	return l, nil
 }
 
 // convertToOpenAPI3 takes a openapi2 spec and converts it to openapi3

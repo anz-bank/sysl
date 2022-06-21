@@ -321,12 +321,12 @@ let parseFile = \bytes
 let import = \files \paths
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let isLocal = \path localImports(path)?:false && true;
-    let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.contains(".proto", .)};
+    let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
     let rec path = \file
-        let m = (fileMaps >> \map (map single).@value where //seq.contains(file,  .)) where .@item;
-        cond {m: (m rank (:.@))(0) single, _: let [_, ...tail] = //seq.split("/", file); cond {tail: path(//seq.join("/", tail))}};
+        let m = (fileMaps >> \map (map single).@value where //seq.has_suffix(file,  .)) where .@item;
+        cond {m: (m rank (:.@))(0) single, _: file};
     # `_import` returns the parsed files and their imports
     # `files` the files to parse
     # `result` the result of all evaluated files so far

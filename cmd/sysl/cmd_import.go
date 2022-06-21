@@ -30,7 +30,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Import foreign type to Sysl. Supported types: ["+optsText+"]")
 	cmd.Flag("input", "path of file to import").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
-		"name of the Sysl app to define in Sysl model.").Required().Short('a').StringVar(&p.AppName)
+		"name of the Sysl app to define in Sysl model.").Short('a').StringVar(&p.AppName)
 	cmd.Flag("package",
 		"name of the Sysl package to define in Sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "path of file to write the imported sysl, writes to stdout when not specified").
@@ -65,7 +65,10 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	imp.WithAppName(p.AppName).WithPackage(p.Package).WithImports(p.ImportPaths)
+	imp, err = imp.Configure(p.AppName, p.Package, p.ImportPaths)
+	if err != nil {
+		return err
+	}
 
 	var output string
 	// TODO: Abstract this logic.

@@ -48,10 +48,11 @@ func TestImporters(t *testing.T) {
 		require.NotEmpty(t, inputFile, "Failed to find input file for importer, "+
 			"no files matching 'input.*' pattern in embedded directory '%s'", dirPath)
 
+		imp, err := MakeTransformImporter(logrus.StandardLogger(), importerDir.Name()).
+			Configure("TestNamespace::TestApp", "", "")
+		require.NoError(t, err)
 		// Run the importer and get the resulting Sysl
-		sysl, err := MakeTransformImporter(logrus.StandardLogger(), importerDir.Name()).
-			WithAppName("TestNamespace::TestApp").
-			Load(inputFile)
+		sysl, err := imp.Load(inputFile)
 		require.NoError(t, err)
 
 		// Read the test script

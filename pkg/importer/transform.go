@@ -8,6 +8,7 @@ import (
 	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
 	"github.com/arr-ai/arrai/rel"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -26,20 +27,13 @@ type TransformImporter struct {
 	transformName string
 }
 
-// WithAppName allows the imported Sysl application name to be specified.
-func (i *TransformImporter) WithAppName(appName string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (i *TransformImporter) Configure(appName, _, _ string) (Importer, error) {
+	if appName == "" {
+		return nil, errors.New("application name not provided")
+	}
 	i.appName = appName
-	return i
-}
-
-// WithPackage allows the imported Sysl package attribute to be specified.
-func (i *TransformImporter) WithPackage(_ string) Importer {
-	return i
-}
-
-// WithImports allows the imported Sysl import paths attribute to be specified
-func (i *TransformImporter) WithImports(_ string) Importer {
-	return i
+	return i, nil
 }
 
 // LoadFile generates a Sysl spec by invoking the arr.ai transform.

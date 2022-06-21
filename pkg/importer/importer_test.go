@@ -55,7 +55,8 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				imp, err := Factory(absFilePath, false, cfg.format, input, logger)
 				require.NoError(t, err)
-				imp.WithAppName("TestApp").WithPackage("com.example.package").WithImports(".")
+				imp, err = imp.Configure("TestApp", "com.example.package", ".")
+				require.NoError(t, err)
 				var result string
 				switch imp.(type) {
 				case *ProtobufImporter:
@@ -88,7 +89,8 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	path := syslutil.MustAbsolute(t, cfg.testDir)
 	imp, err := Factory(path, true, cfg.format, nil, logger)
 	require.NoError(t, err)
-	imp = imp.WithAppName("TestApp").WithPackage("com.example.package").WithImports(".")
+	imp, err = imp.Configure("TestApp", "com.example.package", ".")
+	require.NoError(t, err)
 	var out string
 	switch imp.(type) {
 	case *ProtobufImporter:
@@ -252,8 +254,9 @@ func runImportErrorTest(t *testing.T, cfg errTestConfig) {
 				fileToImport := syslutil.MustAbsolute(t, filepath.Join(cfg.testDir, filename)+cfg.testExtension)
 				imp, err := Factory(fileToImport, true, cfg.format, nil, logger)
 				require.NoError(t, err)
-				_, err = imp.WithAppName("TestApp").WithPackage("com.example.package").LoadFile(fileToImport)
-
+				imp, err = imp.Configure("TestApp", "com.example.package", "")
+				require.NoError(t, err)
+				_, err = imp.LoadFile(fileToImport)
 				// some errors can be non-deterministic e.g. circular errors can point to different types that have
 				// circular references.
 				require.NotNil(t, err)

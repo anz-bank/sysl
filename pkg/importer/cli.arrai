@@ -11,11 +11,11 @@ let args = //flag.parser(config).parse(//os.args);
 
 \(?:importPath:{}, ?:importSpec:{})
     let config = (
-        appName: args.flags('app-name'),
+        appName: args.flags('app-name')?:'',
         packageName: args.flags('package')?:'',
+        importPaths: args.flags('import-paths')?:{}
     );
     cond args {
-        (flags: {'input': input, 'import-paths': importPaths, ...}, ...): importPath(config, input, importPaths),
         (flags: {'input': input, ...}, ...): importPath(config, input),
         (flags: {'spec': spec, ...}, ...): importSpec(config, spec),
         _: $`

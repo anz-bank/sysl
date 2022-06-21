@@ -11,7 +11,6 @@ import (
 )
 
 type ProtobufImporter struct {
-	appName     string
 	pkg         string
 	importPaths string
 	logger      *logrus.Logger
@@ -25,11 +24,19 @@ func MakeProtobufImporter(logger *logrus.Logger) *ProtobufImporter {
 func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 	b := bundles.ProtoImporter
 
-	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(b, `--app-name`, p.appName, `--input`, path, `--import-paths`, p.importPaths)
+	args, err := buildImporterArgs(&protobufImporterArgs{
+		specPath:    path,
+		importPaths: p.importPaths,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	val, err := arrai.EvaluateBundle(b, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
-			Context:  fmt.Sprintf("AppName: %s, File: %s, ImportPaths: %s", p.appName, path, p.importPaths),
+			Context:  fmt.Sprintf("File: %s, ImportPaths: %s", path, p.importPaths),
 			Err:      err,
 			ShortMsg: err.Error(),
 		}, "Executing arrai transform failed")
@@ -41,11 +48,19 @@ func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 	b := bundles.ProtoImporter
 
-	// TODO: Make the appname optional
-	val, err := arrai.EvaluateBundle(b, `--app-name`, p.appName, `--spec`, protoSpec, `--import-paths`, p.importPaths)
+	args, err := buildImporterArgs(&protobufImporterArgs{
+		specContent: protoSpec,
+		importPaths: p.importPaths,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	val, err := arrai.EvaluateBundle(b, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
-			Context:  fmt.Sprintf("AppName: %s, Content: %s, ImportPaths: %s", p.appName, protoSpec, p.importPaths),
+			Context:  fmt.Sprintf("Content: %s, ImportPaths: %s", protoSpec, p.importPaths),
 			Err:      err,
 			ShortMsg: err.Error(),
 		}, "Executing arrai transform failed")
@@ -53,20 +68,38 @@ func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 	return strings.TrimSpace(val.String()) + "\n", nil
 }
 
-// Set the AppName of the imported app
-func (p *ProtobufImporter) WithAppName(appName string) Importer {
-	p.appName = appName
-	return p
-}
-
-// Set the package attribute of the imported app
-func (p *ProtobufImporter) WithPackage(pkg string) Importer {
-	p.pkg = pkg
-	return p
-}
-
-// Set the importPaths attribute of the imported app
-func (p *ProtobufImporter) WithImports(importPaths string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (p *ProtobufImporter) Configure(_, packageName, importPaths string) (Importer, error) {
+	p.pkg = packageName
 	p.importPaths = importPaths
-	return p
+	return p, nil
+}
+
+type protobufImporterArgs struct {
+	importPaths, specPath, specContent string
+}
+
+func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
+	args := []string{}
+
+	if a.specContent != "" && a.specPath != "" {
+		return nil, errors.New("provide only path to spec or the spec content")
+	}
+
+	if a.specContent == "" && a.specPath == "" {
+		return nil, errors.New("spec not provided")
+	}
+
+	if a.specContent != "" {
+		args = append(args, "--spec", a.specContent)
+	}
+	if a.specPath != "" {
+		args = append(args, "--input", a.specPath)
+	}
+
+	if a.importPaths != "" {
+		args = append(args, "--import-paths", a.importPaths)
+	}
+
+	return args, nil
 }

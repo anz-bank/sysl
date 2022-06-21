@@ -12,14 +12,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/loader"
-	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 const (
@@ -1023,6 +1024,23 @@ func TestSpannerDirImport(t *testing.T) {
 		"--input", "../../pkg/importer/sql/tests/spanner/migrations",
 		"--app-name", "TestApp",
 		"--format", "spannerSQLdir")
+}
+
+func TestProtobufImportWithoutPaths(t *testing.T) {
+	t.Parallel()
+	runSyslWithOutput(t, "", nil,
+		"import",
+		"--input", "../../pkg/importer/proto/tests/proto3.proto",
+		"--format", "protobuf")
+}
+
+func TestProtobufImportWithPaths(t *testing.T) {
+	t.Parallel()
+	runSyslWithOutput(t, "", nil,
+		"import",
+		"--input", "../../pkg/importer/proto/tests/combined/user.proto",
+		"--import-paths", "../..",
+		"--format", "protobuf")
 }
 
 // runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch

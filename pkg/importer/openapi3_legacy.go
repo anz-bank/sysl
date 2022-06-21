@@ -65,19 +65,14 @@ func (o *OpenAPI3Importer) Load(file string) (string, error) {
 	return o.convertSpec(spec)
 }
 
-func (o *OpenAPI3Importer) WithAppName(appName string) Importer {
+// Configure allows the imported Sysl application name, package and import directories to be specified.
+func (o *OpenAPI3Importer) Configure(appName, packageName, _ string) (Importer, error) {
+	if appName == "" {
+		return nil, errors.New("application name not provided")
+	}
 	o.appName = appName
-	return o
-}
-
-func (o *OpenAPI3Importer) WithPackage(packageName string) Importer {
 	o.pkg = packageName
-	return o
-}
-
-// Set the importPaths attribute of the imported app
-func (o *OpenAPI3Importer) WithImports(_ string) Importer {
-	return o
+	return o, nil
 }
 
 func NewOpenAPI3Loader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoader {

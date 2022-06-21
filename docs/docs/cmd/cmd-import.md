@@ -36,7 +36,7 @@ Currently, the supported formats include:
 ### Universal
 
 - `-i, --input=<FILE-TO-IMPORT.EXT>`: Input filename.
-- `-a, --app-name=<APP-NAME>`: Name of the sysl app to define in sysl model.
+- `-a, --app-name=<APP-NAME>`: Name of the sysl app to define in sysl model. Not required for Protobuf imports.
 
 ### Protobuf
 

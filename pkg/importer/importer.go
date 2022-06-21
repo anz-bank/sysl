@@ -14,12 +14,8 @@ type Importer interface {
 	// Load takes in a string in a format supported by an the importer
 	// It returns the converted Sysl as a string.
 	Load(content string) (string, error)
-	// WithAppName allows the imported Sysl application name to be specified.
-	WithAppName(appName string) Importer
-	// WithPackage allows the imported Sysl package attribute to be specified.
-	WithPackage(packageName string) Importer
-	// withImports allows the import directories to be specified.
-	WithImports(imports string) Importer
+	// Configure allows the imported Sysl application name, package and import directories to be specified.
+	Configure(appName, packageName, imports string) (Importer, error)
 }
 
 // Formats lists all supported import formats
