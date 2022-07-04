@@ -168,3 +168,9 @@ test-grammar:
 update-grammar-result:
 	which wbnf || go install github.com/arr-ai/wbnf
 	./scripts/test-grammar-wbnf.sh . > ./scripts/grammar-out.txt
+
+test_ts: install_ts
+	yarn --cwd ts test
+
+install_ts:
+	yarn --cwd ts install

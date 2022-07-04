@@ -9,7 +9,7 @@ env:
 
 jobs:
   build-and-test:
-    name: Build Go and Test
+    name: Build and Test
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest]
@@ -19,6 +19,12 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
+      
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "17.x"
+          registry-url: "https://registry.npmjs.org"
 
       - uses: actions/cache@v2
         with:
@@ -51,6 +57,11 @@ jobs:
         run: ./scripts/test-gosysl.sh
         env:
           GOPATH: .
+      
+      - name: Test TypeScript
+        run: make test_ts
+        env:
+          SYSL_PATH: $PWD/bin/sysl
 
   test-windows:
     name: Run unit tests (Windows)

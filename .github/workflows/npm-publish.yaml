@@ -1,0 +1,35 @@
+name: Publish NPM Package for Sysl
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "ts/**"
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "17.x"
+          registry-url: "https://registry.npmjs.org"
+
+      # This one-liner will exit 1 if the current version in package.json exists in the registry.
+      - name: Ensure new version
+        run: |
+          ! npm view @anz-bank/sysl versions --json | grep "$(node -e 'console.log(require("./package.json").version)')"
+        working-directory: ts
+
+      - name: Install Project
+        run: yarn install --frozen-lockfile
+        working-directory: ts
+
+      - name: Publish Package
+        run: npm publish
+        if: ${{ github.repository_owner == 'anz-bank' }}
+        working-directory: ts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
