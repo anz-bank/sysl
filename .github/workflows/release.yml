@@ -5,6 +5,9 @@ on:
   push:
     tags:
       - 'v*.*.*'
+    paths-ignore:
+      - ts/**
+      - .github/workflows/npm-publish.yaml
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

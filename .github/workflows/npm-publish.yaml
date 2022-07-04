@@ -1,10 +1,11 @@
 name: Publish NPM Package for Sysl
 on:
-  pull_request:
+  push:
     branches:
       - master
     paths:
       - "ts/**"
+      - .github/workflows/npm-publish.yaml
 
 jobs:
   check-version:
