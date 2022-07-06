@@ -1,8 +1,6 @@
 # This sysl file is a subset of https://github.com/anzx/sysl/blob/master/pkg/arrai/all.sysl, which meant to show every sysl feature.
 # Currently the Typescript renderer does not support the following:
-#   - Aliases
-#   _ Endpoints
-#   - Statements
+#   - Rest endpoints
 #   - Inplace type definitions
 #   - Pubsubs
 #   - Mixins
@@ -25,6 +23,19 @@ AppWithAnnotation:
 
 App :: with :: subpackages:
     ...
+
+SimpleEndpoint:
+    SimpleEp:
+        ...
+
+    SimpleEpWithParamsRef (Types.type):
+        ...
+
+    SimpleEpWithTypes (native <: string):
+        ...
+
+    SimpleEpWithArray (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+        ...
 
 Types:
     !type Type:
@@ -59,3 +70,81 @@ Types:
     !union Union:
         int
         string
+
+    !alias Alias:
+        int
+
+    !alias AliasSequence:
+        sequence of string
+
+    !alias AliasRef:
+        Type
+
+    !alias AliasForeignRef:
+        RestEndpoint.Type
+
+    !alias AliasForeignRefSet:
+        set of RestEndpoint.Type
+
+Statements:
+    IfStmt:
+        if predicate1:
+            return ok <: string
+        else if predicate2:
+            . <- IfStmt
+        else:
+            ...
+
+    Loops:
+        alt predicate:
+            ...
+        until predicate:
+            ...
+        for each predicate:
+            ...
+        for predicate:
+            ...
+        loop predicate:
+            ...
+        while predicate:
+            ...
+
+    Returns:
+        return ok <: string
+        return ok <: Types.Type
+        return error <: Types.Type
+
+    Calls:
+        . <- Returns
+        RestEndpoint <- GET /param
+
+    OneOfStatements:
+        one of:
+            case1:
+                return ok <: string
+            case number 2:
+                return ok <: int
+            "case 3":
+                return ok <: Types.Type
+            :
+                return error <: string
+
+    GroupStatements:
+        grouped:
+            . <- GroupStatements
+
+    Annotations:
+        @annotation1 = "you can do string annotation like this"
+        @annotation2 = ["or", "in", "an", "array"]
+        @annotation3 =:
+            | you can also do
+            | multiline annotations
+            | like this
+
+    AnnotatedStatements:
+        . <- Miscellanous
+        return ok <: string [annotation=["as", "an", "array"]]
+        "statement"
+
+    Miscellanous:
+        SimpleEndpoint -> SimpleEp

@@ -2,17 +2,22 @@ import { readFile } from "fs/promises";
 import { initializeLinq } from "linq-to-typescript";
 import { exec } from "promisify-child-process";
 import "reflect-metadata";
-import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, TypedJSON } from "typedjson";
+import {
+    jsonArrayMember,
+    jsonMapMember,
+    jsonMember,
+    jsonObject,
+    TypedJSON,
+} from "typedjson";
 import { Location } from "../location";
-import { Element } from "../model/element";
 import { Application, Import, Model } from "../model/model";
-import { Endpoint } from "../model/statement";
-import { Type } from "../model/type";
-import { getAnnos, getTags, joinedAppName, serializerFor, sortElements } from "../util";
+import { getAnnos, getTags, sortLocationalArray } from "../sort";
 import { PbAttribute } from "./attribute";
 import { PbAppName } from "./appname";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
+import { serializerFor } from "./serialize";
+import { joinedAppName } from "../format";
 
 initializeLinq();
 
@@ -23,7 +28,11 @@ export class PbImport {
     @jsonMember name?: PbAppName;
 
     toModel(): Import {
-        return new Import(this.target, [this.sourceContext], joinedAppName(this.name?.part ?? []));
+        return new Import(
+            this.target,
+            [this.sourceContext],
+            joinedAppName(this.name?.part ?? [])
+        );
     }
 }
 
@@ -41,10 +50,19 @@ export class PbApplication {
 
     toModel(): Application {
         return new Application(
-            sortElements(this.endpoints?.select(e => new Element<Endpoint>(getTags(e[1].attrs), getAnnos(e[1].attrs), e[1].toModel(this.name.part))).toArray() ?? []),
-            sortElements(this.types?.select(t => new Element<Type>(getTags(t[1].attrs), getAnnos(t[1].attrs), t[1].toModel(t[0]))).toArray() ?? []),
             joinedAppName(this.name.part),
+            sortLocationalArray(
+                this.endpoints
+                    ?.select(e => e[1].toModel(this.name.part))
+                    .toArray() ?? []
+            ),
+            sortLocationalArray(
+                this.types?.select(t => t[1].toModel(t[0], false)).toArray() ??
+                    []
+            ),
             this.sourceContexts,
+            getTags(this.attrs),
+            getAnnos(this.attrs)
         );
     }
 }
@@ -61,20 +79,34 @@ export class PbDocumentModel {
         return this.fromText(syslText, syslFilePath);
     }
 
-    static async fromText(syslText: string, syslFilePath: string = "untitled.sysl"): Promise<PbDocumentModel> {
+    static async fromText(
+        syslText: string,
+        syslFilePath: string = "untitled.sysl"
+    ): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
         const cmd = `${syslPath} pb --mode=json`;
         const proc = exec(cmd);
         try {
-            console.debug(`Sysl Path: ${syslPath}\n${(await exec(`${syslPath} info`)).stdout}`)
-            proc.stdin?.end(JSON.stringify([{ path: syslFilePath, content: syslText }]));
+            console.debug(
+                `Sysl Path: ${syslPath}\n${
+                    (await exec(`${syslPath} info`)).stdout
+                }`
+            );
+            proc.stdin?.end(
+                JSON.stringify([{ path: syslFilePath, content: syslText }])
+            );
             const json = (await proc).stdout;
-            const serializer = new TypedJSON(PbDocumentModel, { errorHandler: (error) => { throw error; } });
+            const serializer = new TypedJSON(PbDocumentModel, {
+                errorHandler: error => {
+                    throw error;
+                },
+            });
             const model = serializer.parse(json)!;
             return model;
-        }
-        catch {
-            throw new Error("Sysl binary not found. Please visit https://sysl.io/docs/installation for installation instructions.")
+        } catch {
+            throw new Error(
+                "Sysl binary not found. Please visit https://sysl.io/docs/installation for installation instructions."
+            );
         }
     }
 
@@ -82,7 +114,10 @@ export class PbDocumentModel {
         return new Model(
             this.imports?.select(i => i.toModel()).toArray() ?? [],
             this.sourceContexts,
-            sortElements(this.apps.select(a => new Element<Application>(getTags(a[1].attrs), getAnnos(a[1].attrs), a[1].toModel())).toArray()),
-            "");
+            sortLocationalArray(
+                this.apps.select(a => a[1].toModel()).toArray()
+            ),
+            ""
+        );
     }
 }

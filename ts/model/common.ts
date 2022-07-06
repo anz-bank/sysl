@@ -1,28 +1,15 @@
 import { Location } from "../location";
+import { Annotation, Tag } from "./attribute";
 
-export abstract class BaseType {
-    discriminator: string;
-
-    constructor(discriminator: string) {
-        this.discriminator = discriminator;
-    }
-
-    toSysl(): string { return ""; }
+export interface IRenderable {
+    toSysl(): string;
 }
 
-export abstract class ComplexType extends BaseType {
+export interface IDescribable {
+    tags: Tag[];
+    annos: Annotation[];
+}
+
+export interface ILocational {
     locations: Location[];
-    name: string;
-
-    constructor(discriminator: string, locations: Location[], name: string) {
-        super(discriminator);
-        this.locations = locations;
-        this.name = name ?? undefined;
-    }
-}
-
-export abstract class SimpleType extends BaseType {
-    constructor() {
-        super("");
-    }
 }

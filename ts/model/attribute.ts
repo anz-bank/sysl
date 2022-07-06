@@ -1,45 +1,54 @@
-import { initializeLinq } from "linq-to-typescript";
 import "reflect-metadata";
 import { Location } from "../location";
-import { indent } from "../util";
-import { ComplexType } from "./common";
-
-initializeLinq();
+import { indent } from "../format";
+import { ILocational, IRenderable } from "./common";
 
 export type AnnoValue = string | number | AnnoValue[];
 
-export class Annotation extends ComplexType {
+export class Annotation implements ILocational, IRenderable {
     value: AnnoValue;
+    name: string;
+    locations: Location[];
 
     constructor(name: string, locations: Location[], value: AnnoValue) {
-        super("", locations, name);
+        this.name = name;
         this.value = value;
+        this.locations = locations;
     }
 
-    override toSysl(): string {
+    toSysl(): string {
         function valueString(v: AnnoValue): string {
-            if (typeof v == 'string') {
+            if (typeof v == "string") {
                 if (v.contains("\n")) {
-                    return `:\n` + indent(`| ${v.trimEnd().split("\n").join("\n| ")}`);
-                }
-                else {
+                    return (
+                        `:\n` +
+                        indent(`| ${v.trimEnd().split("\n").join("\n| ")}`)
+                    );
+                } else {
                     return ` "${v}"`;
                 }
-            }
-            else if (typeof v == "number") {
+            } else if (typeof v == "number") {
                 return ` "${v}"`;
-            }
-            else {
-                return ` [${v.select((item, index) => `${index > 0 ? valueString(item) : (valueString(item).trimStart())}`).toArray().join(",")}]`;
+            } else {
+                return ` [${v
+                    .select(
+                        (item, index) =>
+                            `${
+                                index > 0
+                                    ? valueString(item)
+                                    : valueString(item).trimStart()
+                            }`
+                    )
+                    .toArray()
+                    .join(",")}]`;
             }
         }
-        return `${this.name} =${valueString(this.value)}`
+        return `${this.name} =${valueString(this.value)}`;
     }
 }
 
-
-export class Tag {
-    value: AnnoValue
+export class Tag implements ILocational, IRenderable {
+    value: AnnoValue;
     locations: Location[];
 
     constructor(value: AnnoValue, locations: Location[]) {

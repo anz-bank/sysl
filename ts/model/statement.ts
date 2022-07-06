@@ -1,14 +1,14 @@
 import "reflect-metadata";
 import { Location } from "../location";
-import { indent, joinedAppName } from "../util";
-import { ComplexType } from "./common";
-import { Element } from "./element";
-import { renderInlineSections } from "./renderers";
-import { Type, TypeValue } from "./type";
+import { indent, joinedAppName } from "../format";
+import { IDescribable, ILocational, IRenderable } from "./common";
+import { renderAnnos, renderInlineSections, addTags } from "./renderers";
+import { Primitive, Reference, Type, TypeValue } from "./type";
+import { Annotation, Tag } from "./attribute";
 
 export class Param {
     name: string;
-    type: Type | undefined;
+    type: Primitive | Reference | undefined;
 
     constructor(name: string, type: Type | undefined) {
         this.name = name;
@@ -52,7 +52,12 @@ export class Call {
     targetApp: string[];
     originApp: string[];
 
-    constructor(endpoint: string, arg: CallArg[], targetApp: string[], originApp: string[]) {
+    constructor(
+        endpoint: string,
+        arg: CallArg[],
+        targetApp: string[],
+        originApp: string[]
+    ) {
         this.endpoint = endpoint;
         this.arg = arg;
         this.targetApp = targetApp;
@@ -60,9 +65,17 @@ export class Call {
     }
 
     toSysl(): string {
-        const joinedTarget = joinedAppName(this.targetApp)
-        const appName = joinedAppName(this.originApp) === joinedTarget ? '.' : joinedTarget;
-        return `${appName} <- ${this.endpoint}${this.arg ? this.arg.select(a => a.name).toArray().join(",") : ''}`;
+        const joinedTarget = joinedAppName(this.targetApp);
+        const appName =
+            joinedAppName(this.originApp) === joinedTarget ? "." : joinedTarget;
+        return `${appName} <- ${this.endpoint}${
+            this.arg
+                ? this.arg
+                      .select(a => a.name)
+                      .toArray()
+                      .join(",")
+                : ""
+        }`;
     }
 }
 
@@ -73,6 +86,11 @@ export class LoopN {
     constructor(count: number, stmt: Statement[]) {
         this.count = count;
         this.stmt = stmt;
+    }
+
+    toSysl(): string {
+        // TODO: implement or remove LoopN
+        return "";
     }
 }
 
@@ -87,7 +105,10 @@ export class Foreach {
 
     toSysl(): string {
         let sysl = `for each ${this.collection}:`;
-        return sysl += this.stmt.select(s => `\n${indent(s.toSysl())}`).toArray().join("");
+        return (sysl += this.stmt
+            .select(s => `\n${indent(s.toSysl())}`)
+            .toArray()
+            .join(""));
     }
 }
 
@@ -101,7 +122,10 @@ export class AltChoice {
     }
 
     toSysl(): string {
-        return `${this.cond ? "" + this.cond : ''}:${this.stmt.select(s => `\n${indent(s.toSysl())}`).toArray().join("")}`
+        return `${this.cond ? "" + this.cond : ""}:${this.stmt
+            .select(s => `\n${indent(s.toSysl())}`)
+            .toArray()
+            .join("")}`;
     }
 }
 
@@ -113,9 +137,10 @@ export class Alt {
     }
 
     toSysl(): string {
-        let sysl = `one of:${this.choice.select(
-            c => `\n${indent(c.toSysl())}`)
-            .toArray().join("")}`;
+        let sysl = `one of:${this.choice
+            .select(c => `\n${indent(c.toSysl())}`)
+            .toArray()
+            .join("")}`;
         return sysl;
     }
 }
@@ -131,7 +156,10 @@ export class Group {
 
     toSysl(): string {
         let sysl = `${this.title}:`;
-        return sysl += this.stmt.select(s => `\n${indent(s.toSysl())}`).toArray().join("");
+        return (sysl += this.stmt
+            .select(s => `\n${indent(s.toSysl())}`)
+            .toArray()
+            .join(""));
     }
 }
 
@@ -158,7 +186,10 @@ export class Cond {
 
     toSysl(): string {
         let sysl = `if ${this.test}:`;
-        return sysl += this.stmt.select(s => `\n${indent(s.toSysl())}`).toArray().join("");
+        return (sysl += this.stmt
+            .select(s => `\n${indent(s.toSysl())}`)
+            .toArray()
+            .join(""));
     }
 }
 
@@ -167,15 +198,24 @@ export class Loop {
     criterion: string | undefined;
     stmt: Statement[];
 
-    constructor(mode: LoopMode, criterion: string | undefined, stmt: Statement[]) {
+    constructor(
+        mode: LoopMode,
+        criterion: string | undefined,
+        stmt: Statement[]
+    ) {
         this.mode = mode;
         this.criterion = criterion;
         this.stmt = stmt;
     }
 
     toSysl(): string {
-        let sysl = `${this.mode.toString().toLowerCase()}${this.criterion ? ' ' + this.criterion : ''}:`;
-        return sysl += this.stmt.select(s => `\n${indent(s.toSysl())}`).toArray().join("");
+        let sysl = `${this.mode.toString().toLowerCase()}${
+            this.criterion ? " " + this.criterion : ""
+        }:`;
+        return (sysl += this.stmt
+            .select(s => `\n${indent(s.toSysl())}`)
+            .toArray()
+            .join(""));
     }
 }
 
@@ -186,76 +226,46 @@ export enum LoopMode {
     UNRECOGNIZED = -1,
 }
 
-export class Statement extends ComplexType {
-    // action: Action | undefined;
-    // call: Call | undefined;
-    // cond: Cond | undefined;
-    // loop: Loop | undefined;
-    // loopN: LoopN | undefined;
-    // foreach: Foreach | undefined;
-    // alt: Alt | undefined;
-    // group: Group | undefined;
-    // ret: Return | undefined;
-    // locations: Location[];
-    // tags: Tag[];
-    // annotations: Annotation[];
+export class Statement implements IDescribable, ILocational, IRenderable {
+    value:
+        | Action
+        | Call
+        | Cond
+        | Loop
+        | LoopN
+        | Foreach
+        | Alt
+        | Group
+        | Return
+        | undefined;
+    locations: Location[];
+    tags: Tag[];
+    annos: Annotation[];
 
-    // constructor(action: Action | undefined,
-    //     call: Call | undefined,
-    //     cond: Cond | undefined,
-    //     loop: Loop | undefined,
-    //     loopN: LoopN | undefined,
-    //     foreach: Foreach | undefined,
-    //     alt: Alt | undefined,
-    //     group: Group | undefined,
-    //     ret: Return | undefined,
-    //     locations: Location[],
-    //     tags: Tag[],
-    //     annotations: Annotation[]) {
-    //     this.action = action
-    //     this.call = call
-    //     this.cond = cond
-    //     this.loop = loop
-    //     this.loopN = loopN
-    //     this.foreach = foreach
-    //     this.alt = alt
-    //     this.group = group
-    //     this.ret = ret
-    //     this.locations = locations
-    //     this.tags = tags
-    //     this.annotations = annotations
-    // }
+    constructor(
+        value:
+            | Action
+            | Call
+            | Cond
+            | Loop
+            | LoopN
+            | Foreach
+            | Alt
+            | Group
+            | Return
+            | undefined,
+        locations: Location[],
+        tags: Tag[],
+        annos: Annotation[]
+    ) {
+        this.value = value;
+        this.locations = locations;
+        this.tags = tags;
+        this.annos = annos;
+    }
 
-    override toSysl(): string {
-        let sysl = ``;
-        // if (this.action) {
-        //     sysl += this.action.toSysl();
-        // }
-        // else if (this.call) {
-        //     sysl += this.call.toSysl();
-        // }
-        // else if (this.cond) {
-        //     sysl += this.cond.toSysl();
-        // }
-        // else if (this.loop) {
-        //     sysl += this.loop.toSysl();
-        // }
-        // else if (this.foreach) {
-        //     sysl += this.foreach.toSysl()
-        // }
-        // else if (this.alt) {
-        //     sysl += this.alt.toSysl();
-        // }
-        // else if (this.group) {
-        //     sysl += this.group.toSysl();
-        // }
-        // else if (this.ret) {
-        //     sysl += this.ret.toSysl();
-        // }
-        // else {
-        //     sysl += "...";
-        // }
-        return sysl;
+    toSysl(): string {
+        return this.value?.toSysl() ?? "...";
     }
 }
 
@@ -274,7 +284,12 @@ export class RestParams {
     queryParam: Param[];
     urlParam: Param[];
 
-    constructor(method: RestMethod, path: string, queryParam: Param[], urlParam: Param[]) {
+    constructor(
+        method: RestMethod,
+        path: string,
+        queryParam: Param[],
+        urlParam: Param[]
+    ) {
         this.method = method;
         this.path = path;
         this.queryParam = queryParam;
@@ -282,27 +297,34 @@ export class RestParams {
     }
 }
 
-export class Endpoint extends ComplexType {
+export class Endpoint implements IDescribable, ILocational, IRenderable {
+    name: string;
     longName: string | undefined;
     docstring: string | undefined;
     flag: string[] | undefined;
     isPubsub: boolean;
     param: Param[];
-    statements: Element<Statement>[];
+    statements: Statement[];
     restParams: RestParams | undefined;
     source: string[];
+    locations: Location[];
+    tags: Tag[];
+    annos: Annotation[];
 
-    constructor(name: string,
+    constructor(
+        name: string,
         longName: string | undefined,
         docstring: string | undefined,
         flag: string[] | undefined,
         isPubsub: boolean,
         param: Param[],
-        statements: Element<Statement>[],
+        statements: Statement[],
         restParams: RestParams | undefined,
+        source: string[],
         locations: Location[],
-        source: string[]) {
-        super("", locations, name)
+        tags: Tag[],
+        annos: Annotation[]
+    ) {
         this.locations = locations;
         this.name = name;
         this.longName = longName;
@@ -313,37 +335,57 @@ export class Endpoint extends ComplexType {
         this.statements = statements;
         this.restParams = restParams;
         this.source = source;
+        this.locations = locations;
+        this.tags = tags;
+        this.annos = annos;
     }
 
     private renderRestEndpoint(): string {
         const segments = this.name.split("/");
-        return segments.select(s => {
-            if (s.match(`^{(\\w+)}$`)?.any) {
-                let name = s.replace("{", "").replace("}", "");
-                return `{${this.restParams?.urlParam?.single(p => p.name === name).toSysl()}}`;
-            }
-            return s;
-        }).toArray().join("/")
+        return segments
+            .select(s => {
+                if (s.match(`^{(\\w+)}$`)?.any) {
+                    let name = s.replace("{", "").replace("}", "");
+                    return `{${this.restParams?.urlParam
+                        ?.single(p => p.name === name)
+                        .toSysl()}}`;
+                }
+                return s;
+            })
+            .toArray()
+            .join("/");
     }
 
     private renderParams(): string {
-        return this.param.any() ? `(${this.param.select(p => p.toSysl()).toArray().join(", ")})` : "";
+        return this.param.any()
+            ? `(${this.param
+                  .select(p => p.toSysl())
+                  .toArray()
+                  .join(", ")})`
+            : "";
     }
 
     private renderEndpoint(): string {
         if (this.name === "...") return this.name;
-        const longName = this.longName ? `"${this.longName}"` : '';
+        const longName = this.longName ? `"${this.longName}"` : "";
 
         const sections = [this.name, longName, this.renderParams()];
-        let sysl = `${renderInlineSections(sections)}:`;
-
+        let sysl = `${addTags(renderInlineSections(sections), this.tags)}:`;
+        if (this.annos.any()) {
+            sysl += `\n${indent(renderAnnos(this.annos))}`;
+        }
         if (this.statements) {
-            sysl += this.statements.select(s => `\n${indent(s.toSysl())}`).toArray().join("");
+            sysl += this.statements
+                .select(s => `\n${indent(s.toSysl())}`)
+                .toArray()
+                .join("");
         }
         return sysl;
     }
 
-    override toSysl(): string {
-        return this.restParams ? this.renderRestEndpoint() : this.renderEndpoint();
+    toSysl(): string {
+        return this.restParams
+            ? this.renderRestEndpoint()
+            : this.renderEndpoint();
     }
 }

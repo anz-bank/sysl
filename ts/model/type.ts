@@ -1,8 +1,9 @@
 import "reflect-metadata";
+import { indent } from "../format";
 import { Location } from "../location";
-import { indent } from "../util";
-import { BaseType, ComplexType, SimpleType } from "./common";
-import { Element } from "./element";
+import { Annotation, Tag } from "./attribute";
+import { IDescribable, ILocational, IRenderable } from "./common";
+import { renderAnnos, addTags } from "./renderers";
 
 export type TypeValue = boolean | number | string;
 
@@ -14,7 +15,6 @@ export class TypeConstraintRange {
         this.min = min;
         this.max = max;
     }
-
 }
 
 export class TypeConstraintLength {
@@ -46,12 +46,14 @@ export class TypeConstraint {
     scale: number;
     bitWidth: number;
 
-    constructor(range: TypeConstraintRange | undefined,
+    constructor(
+        range: TypeConstraintRange | undefined,
         length: TypeConstraintLength | undefined,
         resolution: TypeConstraintResolution | undefined,
         precision: number,
         scale: number,
-        bitWidth: number) {
+        bitWidth: number
+    ) {
         this.range = range;
         this.length = length;
         this.resolution = resolution;
@@ -61,12 +63,11 @@ export class TypeConstraint {
     }
 }
 
-export class Primitive extends SimpleType {
+export class Primitive implements IRenderable {
     primitive: TypePrimitive;
     constraints: TypeConstraint[];
 
     constructor(primitive: TypePrimitive, constraints: TypeConstraint[]) {
-        super();
         this.primitive = primitive;
         this.constraints = constraints ?? [];
     }
@@ -76,28 +77,33 @@ export class Primitive extends SimpleType {
         const isPresentAndNumber = (n: number | undefined) => n && !isNaN(n);
 
         const lengthStr = (length: TypeConstraintLength) => {
-            if (isPresentAndNumber(length.max) && isPresentAndNumber(length.min)) {
-                return `(${length.min}..${length.max})`
+            if (
+                isPresentAndNumber(length.max) &&
+                isPresentAndNumber(length.min)
+            ) {
+                return `(${length.min}..${length.max})`;
+            } else if (isPresentAndNumber(length.max)) {
+                return `(${length.max})`;
+            } else if (isPresentAndNumber(length.min)) {
+                return `(${length.min}..)`;
             }
-            else if (isPresentAndNumber(length.max)) {
-                return `(${length.max})`
-            }
-            else if (isPresentAndNumber(length.min)) {
-                return `(${length.min}..)`
-            }
-            return '';
-        }
+            return "";
+        };
 
         if (constraint) {
-            if (isPresentAndNumber(constraint.precision) && isPresentAndNumber(constraint.scale)) return `(${constraint.precision}.${constraint.scale})`
+            if (
+                isPresentAndNumber(constraint.precision) &&
+                isPresentAndNumber(constraint.scale)
+            )
+                return `(${constraint.precision}.${constraint.scale})`;
             if (constraint.length) return lengthStr(constraint.length);
         }
 
-        return '';
+        return "";
     }
 
-    override toSysl(): string {
-        return `${this.primitive.toLowerCase()}${this.constraintStr()}`
+    toSysl(): string {
+        return `${this.primitive.toLowerCase()}${this.constraintStr()}`;
     }
 }
 
@@ -116,20 +122,24 @@ export enum TypePrimitive {
     UUID = "UUID",
 }
 
-export class Enum extends SimpleType {
-    members: EnumValue[]
+export class Enum implements IRenderable {
+    members: EnumValue[];
 
     constructor(members: EnumValue[]) {
-        super();
         this.members = members ?? [];
     }
 
-    override toSysl(): string {
-        return `${indent(this.members.select(e => e.toSysl()).toArray().join("\n"))}`
+    toSysl(): string {
+        return `${indent(
+            this.members
+                .select(e => e.toSysl())
+                .toArray()
+                .join("\n")
+        )}`;
     }
 }
 
-export class EnumValue {
+export class EnumValue implements IRenderable {
     name: string;
     value: number;
 
@@ -139,63 +149,93 @@ export class EnumValue {
     }
 
     toSysl(): string {
-        return `${this.name}: ${this.value}`
+        return `${this.name}: ${this.value}`;
     }
 }
 
-export class Alias extends SimpleType {
-    type: Type
+export class Alias implements IRenderable {
+    type:
+        | Primitive
+        | Struct
+        | TypeDecorator<IRenderable>
+        | Alias
+        | Enum
+        | Union
+        | Reference;
 
-    constructor(type: Type) {
-        super();
+    constructor(
+        type:
+            | Primitive
+            | Struct
+            | TypeDecorator<IRenderable>
+            | Alias
+            | Enum
+            | Union
+            | Reference
+    ) {
         this.type = type;
     }
 
-    override toSysl(): string {
-        return `\n${indent(this.type.toSysl())}`
+    toSysl(): string {
+        return `${indent(this.type.toSysl())}`;
     }
-
 }
 
-export class Union extends SimpleType {
-    types: Type[]
+export class Union implements IRenderable {
+    types: Type[];
 
     constructor(types: Type[]) {
-        super();
         this.types = types ?? [];
     }
 
-    override toSysl(): string {
-        return `${indent(this.types.select(o => o.toSysl()).toArray().join("\n"))}`;
+    toSysl(): string {
+        return `${indent(
+            this.types
+                .select(o => o.toSysl())
+                .toArray()
+                .join("\n")
+        )}`;
     }
 }
 
 // The type of `!type`, `!table` and endpoints.
-export class Struct extends SimpleType {
-    elements: Element<ComplexType>[];
+export class Struct implements IRenderable {
+    elements: Type[];
 
-    constructor(elements: Element<ComplexType>[]) {
-        super()
+    constructor(elements: Type[]) {
         this.elements = elements ?? [];
     }
 
-    override toSysl(): string {
-        return indent(this.elements.select(e => e.toSysl()).toArray().join("\n"));
+    toSysl(): string {
+        return indent(
+            this.elements
+                .select(e => {
+                    let sysl = addTags(
+                        `${e.name} <: ${e.value.toSysl()}${e.opt ? "?" : ""}`,
+                        e.tags
+                    );
+                    if (e.annos.any()) {
+                        sysl += `:\n${indent(renderAnnos(e.annos))}`;
+                    }
+                    return sysl;
+                })
+                .toArray()
+                .join("\n")
+        );
     }
 }
 
 // Used for `sequence of`, `set of` or references to types in other places in the model
-export class TypeDecorator<T extends BaseType> extends SimpleType {
+export class TypeDecorator<T extends IRenderable> implements IRenderable {
     innerType: T;
     kind: DecoratorKind;
 
     constructor(innerType: T, kind: DecoratorKind) {
-        super()
         this.innerType = innerType;
         this.kind = kind;
     }
 
-    override toSysl(): string {
+    toSysl(): string {
         switch (this.kind) {
             case DecoratorKind.Set:
                 return `set of ${this.innerType.toSysl()}`;
@@ -210,38 +250,84 @@ export class TypeDecorator<T extends BaseType> extends SimpleType {
 export enum DecoratorKind {
     Set,
     Sequence,
-    Reference
+    Reference,
 }
 
-export class Reference extends SimpleType {
+export class Reference implements IRenderable {
     name: string;
 
     constructor(name: string) {
-        super();
         this.name = name;
     }
 
-    override toSysl(): string {
+    toSysl(): string {
         return this.name;
     }
 }
 
-export class Type extends ComplexType {
+export class Type implements IDescribable, ILocational, IRenderable {
+    discriminator: string;
+    name: string;
     opt: boolean;
-    value: Primitive | Struct | TypeDecorator<SimpleType> | Alias | Enum | Union | Reference;
+    value:
+        | Primitive
+        | Struct
+        | TypeDecorator<IRenderable>
+        | Alias
+        | Enum
+        | Union
+        | Reference;
+    locations: Location[];
+    tags: Tag[];
+    annos: Annotation[];
 
-    constructor(discriminator: string,
+    constructor(
+        discriminator: string,
         name: string,
         opt: boolean,
-        value: Primitive | Struct | TypeDecorator<SimpleType> | Alias | Enum | Union | Reference,
+        value:
+            | Primitive
+            | Struct
+            | TypeDecorator<IRenderable>
+            | Alias
+            | Enum
+            | Union
+            | Reference,
         locations: Location[],
+        tags: Tag[],
+        annos: Annotation[]
     ) {
-        super(discriminator, locations, name);
+        this.discriminator = discriminator;
+        this.name = name;
         this.opt = opt;
         this.value = value;
+        this.locations = locations;
+        this.tags = tags;
+        this.annos = annos;
     }
 
-    override toSysl(): string {
-        return `${this.value.toSysl()}${this.opt ? '?' : ''}`;
+    toSysl(): string {
+        // Definition rendering
+        if (this.discriminator.length > 0) {
+            let sysl = `${addTags(
+                `${this.discriminator} ${this.name}`,
+                this.tags
+            )}:`;
+            if (this.annos.any()) {
+                sysl += `\n${indent(renderAnnos(this.annos))}`;
+            }
+            return (sysl += `\n${this.value.toSysl()}${this.opt ? "?" : ""}`);
+        }
+        // Field rendering
+        else {
+            let sysl = addTags(
+                `${this.name}${this.value.toSysl()}${this.opt ? "?" : ""}`,
+                this.tags
+            );
+            if (this.annos.any()) {
+                sysl += `:\n${renderAnnos(this.annos)}`;
+            }
+            return sysl;
+        }
     }
 }
