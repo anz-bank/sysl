@@ -3,6 +3,10 @@ info:
   title: Simple
 components:
   schemas:
+    toRefWithLength:
+      type: string
+      minLength: 1
+      maxLength: 2
     type:
       properties:
         a:
@@ -35,3 +39,5 @@ components:
           exclusiveMinimum: 10
         i:
           type: integer
+        j:
+          $ref: '#/components/schemas/toRefWithLength'

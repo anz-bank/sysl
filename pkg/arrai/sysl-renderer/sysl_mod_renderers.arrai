@@ -327,6 +327,8 @@ let renderEnum = \(:name, type: (?:attrs:{}, enum: (:items), ...))
 ;
 
 let renderAlias = \(:name, :type)
+    # FIXME: unable to use constraints in alias
+    !(type.constraint?:false) &&
     let (:tags, :anno) = attrsToTagsAndAnno(type.attrs?:{});
     $`
         !alias ${renderInlineSections([name, renderInlineAnnoAndTags(tags)])}:
@@ -416,7 +418,7 @@ let renderAllType = \t
 
 let renderTypes = \types
     let types = types => (name: .@, type: .@value);
-    $`${renderMultilineSections(types orderby [.name, .type] >> renderAllType(.))}`
+    $`${renderMultilineSections((types orderby [.name, .type] >> renderAllType(.)) where .@item)}`
 ;
 
 # FIXME: render imports

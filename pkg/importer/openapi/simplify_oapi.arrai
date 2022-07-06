@@ -16,6 +16,7 @@ let (
     :parseSpecWithRoot,
     :extPathAttr,
     :movedToRef,
+    :isNativeType,
     ...
 ) = //{./util};
 let (:syslSafeName, ...) = //{/pkg/importer/utils};
@@ -23,7 +24,6 @@ let (:syslSafeName, ...) = //{/pkg/importer/utils};
 let schemaRef = \typeName {'$ref': (s: $`#/components/schemas/${typeName}`), movedToRef: true};
 let singleSyslStrTag = \tag {'patterns': (a: (elt: [(s: tag)]))};
 let schemaSyslTag = \tag {syslAttrs: singleSyslStrTag(tag)};
-let isNativeType = \type type <: {'boolean', 'integer', 'number', 'string'};
 
 # FIXME: handle content type on paths, they have precedence rule (e.g. text/* > text/plain)
 # FIXME: handle non verbs in path

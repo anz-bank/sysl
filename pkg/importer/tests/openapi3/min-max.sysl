@@ -38,3 +38,5 @@ TestApp "Simple":
             @max = "100"
         i <: int?:
             @json_tag = "i"
+        j <: string(1..2)?:
+            @json_tag = "j"

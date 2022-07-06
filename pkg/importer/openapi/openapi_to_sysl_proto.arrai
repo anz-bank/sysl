@@ -16,6 +16,7 @@ let (
     :baseDir,
     :extPathAttr,
     :movedToRef,
+    :isNativeType,
     ...
 ) = //{./util};
 
@@ -176,11 +177,17 @@ let specialAnno = {
                             # simplify_oapi.arrai, then local ref needs to be renamed so that it references the
                             # localised external ref.
                             ['#', 'components', 'schemas', type]:
-                                let type = cond {
+                                let safeType = cond {
                                     !(t(movedToRef)?:false) && filepath: extRefToName(filepath, ref),
                                     _:                                   shallowEscape(type),
                                 };
-                                typeRef((path: [type]))
+                                # if the referenced type is an alias with constraints, return the type instead of typeref
+                                let obj = oapi('components', 'schemas', type)?:{};
+                                (
+                                    isNativeType(obj('type')?.s:'') &&
+                                    (obj('maxLength')?:{} || obj('minLength')?:{}) &&
+                                    schemaToTypeMessageWithConfig(conf, obj)
+                                ) || typeRef((path: [safeType]))
                             ,
                             ['#', 'components', _, _]: schemaToTypeMessageWithConfig(conf, resolveToObj(t)('schema')?:{}),
                             _: //error($`local ref not recognised: ${ref}`),
@@ -215,18 +222,21 @@ let specialAnno = {
             _: unmappedType,
         };
 
-        let constraint = [(
-            length:
-                let maxLength = t('maxLength')?:{};
-                let minLength = t('minLength')?:{};
-                cond {maxLength: ('max': maxLength), _: ()} +>
-                cond {minLength: ('min': minLength), _: ()}
-            ,
-            bit_width:
-                let format = intOrFloatRegex.sub('', t('format')?.s:{});
-                cond format {'32': 32, '64': 64}
-            ,
-        )];
+        let constraint =
+            let c = (
+                length:
+                    let maxLength = t('maxLength')?:{};
+                    let minLength = t('minLength')?:{};
+                    cond {maxLength: ('max': maxLength), _: ()} +>
+                    cond {minLength: ('min': minLength), _: ()}
+                ,
+                bit_width:
+                    let format = intOrFloatRegex.sub('', t('format')?.s:{});
+                    cond format {'32': 32, '64': 64}
+                ,
+            );
+            (c.length || c.bit_width) && [c]
+        ;
 
         let range =
             reduce(
@@ -261,7 +271,10 @@ let specialAnno = {
 
         let annoFromExtensions = extensionToAnnotations(t);
 
-        type +> (attrs+>: additionalAttrs +> regex +> examples +> range +> annoFromExtensions +> desc, :constraint)
+        type +> (
+            attrs+>: additionalAttrs +> regex +> examples +> range +> annoFromExtensions +> desc,
+            constraint: constraint || type.constraint?:[],
+        )
     ;
 
     let schemaToTypeMessage = schemaToTypeMessageWithConfig(());

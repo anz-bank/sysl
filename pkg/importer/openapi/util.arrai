@@ -99,6 +99,8 @@ let deepResolveRef = \conf \ref
 
 let resolveToObj = \conf \refOrObj cond refOrObj {{'$ref': (s: ref), ...}: deepResolveRef(conf, ref), _: refOrObj};
 
+let isNativeType = \type type <: {'boolean', 'integer', 'number', 'string'};
+
 (
     :syslAttrs,
     :httpVerbs,
@@ -119,4 +121,5 @@ let resolveToObj = \conf \refOrObj cond refOrObj {{'$ref': (s: ref), ...}: deepR
     :parseSpecBytes,
     :extPathAttr,
     :movedToRef,
+    :isNativeType,
 )
