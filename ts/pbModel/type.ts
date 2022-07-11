@@ -223,6 +223,20 @@ export class PbTypeDef {
         PbAttribute
     >;
 
+    hasValue(): boolean {
+        return !!(
+            this.primitive ||
+            this.relation ||
+            this.typeRef ||
+            this.set ||
+            this.sequence ||
+            this.enum ||
+            this.tuple ||
+            this.list?.type.any() ||
+            this.map?.any()
+        );
+    }
+
     // `isInner` specifies whether a type exists within something else and is not a type definition.
     // It is true by default, meaning the type is a nested definition or a parameter.
     // When it is false, it means it is a top level `Type` definition and therefore may be an `Alias`

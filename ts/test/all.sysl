@@ -1,10 +1,10 @@
 # This sysl file is a subset of https://github.com/anzx/sysl/blob/master/pkg/arrai/all.sysl, which meant to show every sysl feature.
 # Currently the Typescript renderer does not support the following:
-#   - Rest endpoints
+#   - Nested Rest endpoints
 #   - Inplace type definitions
 #   - Pubsubs
 #   - Mixins
-#   - Inline annotations
+#   - Inline annotations, which includes Param annotations
 # Furthermore comments are not retained during a `sysl pb` command, so they cannot be returned when converting back from json to Sysl.
 # Header comments (such as this one) are extracted before `sysl pb` is called, and then added back at the end, allowing them to be retained
 
@@ -23,6 +23,31 @@ AppWithAnnotation:
 
 App :: with :: subpackages:
     ...
+
+RestEndpoint:
+    /:
+        GET:
+            ...
+
+    /pathwithtype/{native <: int}:
+        GET:
+            ...
+
+    /query:
+        GET?native=string&optional=string?:
+            ...
+
+    /param:
+        PATCH (t <: Types.Type [~body]):
+            ...
+
+    /param:
+        POST (native <: string):
+            ...
+
+    /param:
+        PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+            ...
 
 SimpleEndpoint:
     SimpleEp:

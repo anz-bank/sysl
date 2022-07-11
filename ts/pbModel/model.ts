@@ -86,28 +86,20 @@ export class PbDocumentModel {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
         const cmd = `${syslPath} pb --mode=json`;
         const proc = exec(cmd);
-        try {
-            console.debug(
-                `Sysl Path: ${syslPath}\n${
-                    (await exec(`${syslPath} info`)).stdout
-                }`
-            );
-            proc.stdin?.end(
-                JSON.stringify([{ path: syslFilePath, content: syslText }])
-            );
-            const json = (await proc).stdout;
-            const serializer = new TypedJSON(PbDocumentModel, {
-                errorHandler: error => {
-                    throw error;
-                },
-            });
-            const model = serializer.parse(json)!;
-            return model;
-        } catch {
-            throw new Error(
-                "Sysl binary not found. Please visit https://sysl.io/docs/installation for installation instructions."
-            );
-        }
+        console.debug(
+            `Sysl Path: ${syslPath}\n${(await exec(`${syslPath} info`)).stdout}`
+        );
+        proc.stdin?.end(
+            JSON.stringify([{ path: syslFilePath, content: syslText }])
+        );
+        const json = (await proc).stdout;
+        const serializer = new TypedJSON(PbDocumentModel, {
+            errorHandler: error => {
+                throw error;
+            },
+        });
+        const model = serializer.parse(json)!;
+        return model;
     }
 
     toModel(): Model {

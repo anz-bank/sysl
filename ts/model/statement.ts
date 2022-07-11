@@ -3,12 +3,12 @@ import { Location } from "../location";
 import { indent, joinedAppName } from "../format";
 import { IDescribable, ILocational, IRenderable } from "./common";
 import { renderAnnos, renderInlineSections, addTags } from "./renderers";
-import { Primitive, Reference, Type, TypeValue } from "./type";
+import { Primitive, Reference, Type, TypeDecorator, TypeValue } from "./type";
 import { Annotation, Tag } from "./attribute";
 
 export class Param {
     name: string;
-    type: Primitive | Reference | undefined;
+    type: Type | undefined;
 
     constructor(name: string, type: Type | undefined) {
         this.name = name;
@@ -340,20 +340,18 @@ export class Endpoint implements IDescribable, ILocational, IRenderable {
         this.annos = annos;
     }
 
-    private renderRestEndpoint(): string {
-        const segments = this.name.split("/");
-        return segments
-            .select(s => {
-                if (s.match(`^{(\\w+)}$`)?.any) {
-                    let name = s.replace("{", "").replace("}", "");
-                    return `{${this.restParams?.urlParam
-                        ?.single(p => p.name === name)
-                        .toSysl()}}`;
-                }
-                return s;
-            })
-            .toArray()
-            .join("/");
+    private renderQueryParams(): string {
+        return this.restParams!.queryParam.any()
+            ? `?${this.restParams!.queryParam.select(p => {
+                  let s = `${p.name}=`;
+                  if (p.type?.value instanceof TypeDecorator<Reference>) {
+                      return (s += `{${p.type?.toSysl()}}`);
+                  }
+                  return (s += `${p.type?.toSysl() ?? "Type"}`);
+              })
+                  .toArray()
+                  .join("&")}`
+            : "";
     }
 
     private renderParams(): string {
@@ -365,7 +363,34 @@ export class Endpoint implements IDescribable, ILocational, IRenderable {
             : "";
     }
 
-    private renderEndpoint(): string {
+    private renderRestEndpoint(): string {
+        const segments = this.restParams!.path.split("/");
+        const path = segments
+            .select(s => {
+                if (s.match(`^{(\\w+)}$`)?.any) {
+                    let name = s.replace("{", "").replace("}", "");
+                    return `{${this.restParams?.urlParam
+                        ?.single(p => p.name === name)
+                        .toSysl()}}`;
+                }
+                return s;
+            })
+            .toArray()
+            .join("/");
+        let sysl = `${path}:`;
+        let content = `${this.restParams!.method}${this.renderQueryParams()}${
+            this.param.any() ? ` ${this.renderParams()}` : ""
+        }:`;
+        if (this.statements) {
+            content += this.statements
+                .select(s => `\n${indent(s.toSysl())}`)
+                .toArray()
+                .join("");
+        }
+        return (sysl += `\n${indent(content)}`);
+    }
+
+    private renderGRPCEndpoint(): string {
         if (this.name === "...") return this.name;
         const longName = this.longName ? `"${this.longName}"` : "";
 
@@ -386,6 +411,6 @@ export class Endpoint implements IDescribable, ILocational, IRenderable {
     toSysl(): string {
         return this.restParams
             ? this.renderRestEndpoint()
-            : this.renderEndpoint();
+            : this.renderGRPCEndpoint();
     }
 }

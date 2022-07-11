@@ -14,10 +14,12 @@ beforeAll(async () => {
     allSysl = (await readFile(allPath)).toString();
 });
 
+// All
 test("AllRoundtrip", () => {
     expect(allModel.filterByFile(allPath).toSysl()).toEqual(allSysl);
 });
 
+// Applications
 test("EmptyApp", async () => {
     const sysl = realign(`
     App:
@@ -102,6 +104,7 @@ test("NestedArrayAnno", async () => {
     expect(model.toSysl()).toEqual(sysl);
 });
 
+// GRPC Endpoints
 test("Endpoint", async () => {
     const sysl = realign(`
     App:
@@ -209,6 +212,104 @@ test("EndpointWithRefReturn", async () => {
     expect(model.toSysl()).toEqual(sysl);
 });
 
+// REST Endpoints
+test("RestEndpoint", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /:
+            GET:
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+test("RestEndpointWithoutNesting", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /nested/path:
+            GET:
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+test("RestEndpointWithNesting", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /nested:
+            /path:
+                GET:
+                    ...
+    `);
+    // Currently nested endpoints are not supported so this is the expected output
+    const expected = realign(`
+    RestEndpoint:
+        /nested/path:
+            GET:
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(expected);
+});
+
+test("RestEndpointWithTypeInPath", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /pathwithtype/{native <: int}:
+            GET:
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+test("RestEndpointWithQueryParams", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /query:
+            GET?native=string&optional=string?:
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+test("RestEndpointWithRefParam", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /param:
+            PATCH (t <: Types.Type [~body]):
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+test("RestEndpointWithPrimitiveParam", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /param:
+            POST (native <: string):
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+test("RestEndpointWithConstrainedParams", async () => {
+    const sysl = realign(`
+    RestEndpoint:
+        /param:
+            PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+                ...
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toEqual(sysl);
+});
+
+// Types
 test("Type", async () => {
     const sysl = realign(`
     App:

@@ -37,7 +37,7 @@ export class PbParam {
     toModel(): Param {
         let param = new Param(
             this.name,
-            this.type.noType ? undefined : this.type.toModel()
+            this.type.hasValue() ? this.type.toModel() : undefined
         );
         return param;
     }
@@ -280,7 +280,10 @@ export class PbEndpoint {
             this.docstring,
             this.flag,
             this.isPubsub ?? false,
-            this.param?.select(p => p.toModel()).toArray() ?? [],
+            this.param
+                ?.where(p => p.name != undefined || p.type != undefined)
+                .select(p => p.toModel())
+                .toArray() ?? [],
             sortLocationalArray(
                 this.stmt?.select(s => s.toModel(appName)).toArray() ?? []
             ),
