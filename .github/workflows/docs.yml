@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
       with:
-        config-file: '.md-link-check-config.json'
+        config-file: 'docs/.md-link-check-config.json'
         folder-path: 'docs/docs,docs/blog'
 
     - name: yarn build docs
