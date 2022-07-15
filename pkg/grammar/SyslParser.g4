@@ -18,9 +18,9 @@ attribs_or_modifiers: SQ_OPEN entry (COMMA entry)* SQ_CLOSE;
 user_defined_type       : name_str;
 types: user_defined_type | reference | NativeDataTypes;
 set_of: SET_OF | (E_SET_OF);
-set_type            : set_of types size_spec?;
+set_type            : set_of types (array_size | size_spec)?;
 sequence_of: SEQUENCE_OF | (E_SEQUENCE_OF);
-sequence_type            : sequence_of types size_spec?;
+sequence_type            : sequence_of types (array_size | size_spec)?;
 //TODO : allow for other collection types?
 collection_type     : set_type | sequence_type;
 multi_line_docstring    :   COLON INDENT doc_string+ DEDENT;

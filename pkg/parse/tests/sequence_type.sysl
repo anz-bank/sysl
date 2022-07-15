@@ -2,6 +2,18 @@ SequenceType:
     !type A:
         x <: sequence of int?:
           @comment = "array of int"
+        y <: sequence of string(1..10):
+          @comment = "array of string with length constraints"
+        z <: sequence of decimal(1.10):
+          @comment = "array of decimal with size constraints"
+
+    !type B:
+        x <: set of int?:
+          @comment = "set of int"
+        y <: set of string(1..10):
+          @comment = "set of string with length constraints"
+        z <: set of decimal(1.10):
+          @comment = "set of decimal with size constraints"
 
     Endpoint(x <: sequence of string [~tag, anno = "simple"]):
         ...

@@ -16,22 +16,22 @@ apps: {
        source_context: {
         file: "tests/sequence_type.sysl"
         start: {
-         line: 5
+         line: 17
          col: 13
         }
         end: {
-         line: 5
+         line: 17
          col: 60
         }
        }
        source_contexts: {
         file: "tests/sequence_type.sysl"
         start: {
-         line: 5
+         line: 17
          col: 13
         }
         end: {
-         line: 5
+         line: 17
          col: 60
         }
        }
@@ -43,22 +43,22 @@ apps: {
         source_context: {
          file: "tests/sequence_type.sysl"
          start: {
-          line: 5
+          line: 17
           col: 51
          }
          end: {
-          line: 5
+          line: 17
           col: 59
          }
         }
         source_contexts: {
          file: "tests/sequence_type.sysl"
          start: {
-          line: 5
+          line: 17
           col: 51
          }
          end: {
-          line: 5
+          line: 17
           col: 59
          }
         }
@@ -73,22 +73,22 @@ apps: {
           source_context: {
            file: "tests/sequence_type.sysl"
            start: {
-            line: 5
+            line: 17
             col: 38
            }
            end: {
-            line: 5
+            line: 17
             col: 42
            }
           }
           source_contexts: {
            file: "tests/sequence_type.sysl"
            start: {
-            line: 5
+            line: 17
             col: 38
            }
            end: {
-            line: 5
+            line: 17
             col: 42
            }
           }
@@ -105,22 +105,22 @@ apps: {
      source_context: {
       file: "tests/sequence_type.sysl"
       start: {
-       line: 6
+       line: 18
        col: 8
       }
       end: {
-       line: 6
+       line: 18
        col: 11
       }
      }
      source_contexts: {
       file: "tests/sequence_type.sysl"
       start: {
-       line: 6
+       line: 18
        col: 8
       }
       end: {
-       line: 6
+       line: 18
        col: 11
       }
      }
@@ -128,22 +128,22 @@ apps: {
     source_context: {
      file: "tests/sequence_type.sysl"
      start: {
-      line: 5
+      line: 17
       col: 4
      }
      end: {
-      line: 6
+      line: 18
       col: 11
      }
     }
     source_contexts: {
      file: "tests/sequence_type.sysl"
      start: {
-      line: 5
+      line: 17
       col: 4
      }
      end: {
-      line: 6
+      line: 18
       col: 11
      }
     }
@@ -171,22 +171,22 @@ apps: {
        source_context: {
         file: "tests/sequence_type.sysl"
         start: {
-         line: 9
+         line: 21
          col: 12
         }
         end: {
-         line: 9
+         line: 21
          col: 57
         }
        }
        source_contexts: {
         file: "tests/sequence_type.sysl"
         start: {
-         line: 9
+         line: 21
          col: 12
         }
         end: {
-         line: 9
+         line: 21
          col: 57
         }
        }
@@ -198,22 +198,22 @@ apps: {
         source_context: {
          file: "tests/sequence_type.sysl"
          start: {
-          line: 9
+          line: 21
           col: 50
          }
          end: {
-          line: 9
+          line: 21
           col: 56
          }
         }
         source_contexts: {
          file: "tests/sequence_type.sysl"
          start: {
-          line: 9
+          line: 21
           col: 50
          }
          end: {
-          line: 9
+          line: 21
           col: 56
          }
         }
@@ -228,22 +228,22 @@ apps: {
           source_context: {
            file: "tests/sequence_type.sysl"
            start: {
-            line: 9
+            line: 21
             col: 37
            }
            end: {
-            line: 9
+            line: 21
             col: 41
            }
           }
           source_contexts: {
            file: "tests/sequence_type.sysl"
            start: {
-            line: 9
+            line: 21
             col: 37
            }
            end: {
-            line: 9
+            line: 21
             col: 41
            }
           }
@@ -260,22 +260,22 @@ apps: {
      source_context: {
       file: "tests/sequence_type.sysl"
       start: {
-       line: 10
+       line: 22
        col: 12
       }
       end: {
-       line: 10
+       line: 22
        col: 15
       }
      }
      source_contexts: {
       file: "tests/sequence_type.sysl"
       start: {
-       line: 10
+       line: 22
        col: 12
       }
       end: {
-       line: 10
+       line: 22
        col: 15
       }
      }
@@ -287,22 +287,22 @@ apps: {
     source_context: {
      file: "tests/sequence_type.sysl"
      start: {
-      line: 9
+      line: 21
       col: 8
      }
      end: {
-      line: 11
+      line: 23
       col: 1
      }
     }
     source_contexts: {
      file: "tests/sequence_type.sysl"
      start: {
-      line: 9
+      line: 21
       col: 8
      }
      end: {
-      line: 11
+      line: 23
       col: 1
      }
     }
@@ -324,8 +324,8 @@ apps: {
           col: 8
          }
          end: {
-          line: 5
-          col: 5
+          line: 4
+          col: 9
          }
         }
         source_contexts: {
@@ -335,8 +335,8 @@ apps: {
           col: 8
          }
          end: {
-          line: 5
-          col: 5
+          line: 4
+          col: 9
          }
         }
        }
@@ -376,8 +376,8 @@ apps: {
          col: 8
         }
         end: {
-         line: 5
-         col: 5
+         line: 4
+         col: 9
         }
        }
        source_contexts: {
@@ -387,7 +387,180 @@ apps: {
          col: 8
         }
         end: {
-         line: 5
+         line: 4
+         col: 9
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "y"
+      value: {
+       sequence: {
+        primitive: STRING
+        constraint: {
+         length: {
+          min: 1
+          max: 10
+         }
+        }
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 4
+          col: 8
+         }
+         end: {
+          line: 6
+          col: 9
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 4
+          col: 8
+         }
+         end: {
+          line: 6
+          col: 9
+         }
+        }
+       }
+       attrs: {
+        key: "comment"
+        value: {
+         s: "array of string with length constraints"
+         source_context: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 5
+           col: 21
+          }
+          end: {
+           line: 5
+           col: 62
+          }
+         }
+         source_contexts: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 5
+           col: 21
+          }
+          end: {
+           line: 5
+           col: 62
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 4
+         col: 8
+        }
+        end: {
+         line: 6
+         col: 9
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "z"
+      value: {
+       sequence: {
+        primitive: DECIMAL
+        constraint: {
+         length: {
+          max: 1
+         }
+         precision: 1
+         scale: 10
+        }
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 6
+          col: 8
+         }
+         end: {
+          line: 9
+          col: 5
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 6
+          col: 8
+         }
+         end: {
+          line: 9
+          col: 5
+         }
+        }
+       }
+       attrs: {
+        key: "comment"
+        value: {
+         s: "array of decimal with size constraints"
+         source_context: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 7
+           col: 21
+          }
+          end: {
+           line: 7
+           col: 61
+          }
+         }
+         source_contexts: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 7
+           col: 21
+          }
+          end: {
+           line: 7
+           col: 61
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 9
+         col: 5
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 6
+         col: 8
+        }
+        end: {
+         line: 9
          col: 5
         }
        }
@@ -401,8 +574,8 @@ apps: {
       col: 4
      }
      end: {
-      line: 3
-      col: 35
+      line: 7
+      col: 61
      }
     }
     source_contexts: {
@@ -412,8 +585,291 @@ apps: {
       col: 4
      }
      end: {
-      line: 3
-      col: 35
+      line: 7
+      col: 61
+     }
+    }
+   }
+  }
+  types: {
+   key: "B"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "x"
+      value: {
+       set: {
+        primitive: INT
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 10
+          col: 8
+         }
+         end: {
+          line: 12
+          col: 9
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 10
+          col: 8
+         }
+         end: {
+          line: 12
+          col: 9
+         }
+        }
+       }
+       attrs: {
+        key: "comment"
+        value: {
+         s: "set of int"
+         source_context: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 11
+           col: 21
+          }
+          end: {
+           line: 11
+           col: 33
+          }
+         }
+         source_contexts: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 11
+           col: 21
+          }
+          end: {
+           line: 11
+           col: 33
+          }
+         }
+        }
+       }
+       opt: true
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 10
+         col: 8
+        }
+        end: {
+         line: 12
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 10
+         col: 8
+        }
+        end: {
+         line: 12
+         col: 9
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "y"
+      value: {
+       set: {
+        primitive: STRING
+        constraint: {
+         length: {
+          min: 1
+          max: 10
+         }
+        }
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 12
+          col: 8
+         }
+         end: {
+          line: 14
+          col: 9
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 12
+          col: 8
+         }
+         end: {
+          line: 14
+          col: 9
+         }
+        }
+       }
+       attrs: {
+        key: "comment"
+        value: {
+         s: "set of string with length constraints"
+         source_context: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 13
+           col: 21
+          }
+          end: {
+           line: 13
+           col: 60
+          }
+         }
+         source_contexts: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 13
+           col: 21
+          }
+          end: {
+           line: 13
+           col: 60
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 12
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 9
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 12
+         col: 8
+        }
+        end: {
+         line: 14
+         col: 9
+        }
+       }
+      }
+     }
+     attr_defs: {
+      key: "z"
+      value: {
+       set: {
+        primitive: DECIMAL
+        constraint: {
+         length: {
+          max: 1
+         }
+         precision: 1
+         scale: 10
+        }
+        source_context: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 14
+          col: 8
+         }
+         end: {
+          line: 17
+          col: 5
+         }
+        }
+        source_contexts: {
+         file: "tests/sequence_type.sysl"
+         start: {
+          line: 14
+          col: 8
+         }
+         end: {
+          line: 17
+          col: 5
+         }
+        }
+       }
+       attrs: {
+        key: "comment"
+        value: {
+         s: "set of decimal with size constraints"
+         source_context: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 15
+           col: 21
+          }
+          end: {
+           line: 15
+           col: 59
+          }
+         }
+         source_contexts: {
+          file: "tests/sequence_type.sysl"
+          start: {
+           line: 15
+           col: 21
+          }
+          end: {
+           line: 15
+           col: 59
+          }
+         }
+        }
+       }
+       source_context: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 17
+         col: 5
+        }
+       }
+       source_contexts: {
+        file: "tests/sequence_type.sysl"
+        start: {
+         line: 14
+         col: 8
+        }
+        end: {
+         line: 17
+         col: 5
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/sequence_type.sysl"
+     start: {
+      line: 9
+      col: 4
+     }
+     end: {
+      line: 15
+      col: 59
+     }
+    }
+    source_contexts: {
+     file: "tests/sequence_type.sysl"
+     start: {
+      line: 9
+      col: 4
+     }
+     end: {
+      line: 15
+      col: 59
      }
     }
    }
@@ -422,7 +878,7 @@ apps: {
    file: "tests/sequence_type.sysl"
    start: {}
    end: {
-    line: 10
+    line: 22
     col: 15
    }
   }
@@ -430,7 +886,7 @@ apps: {
    file: "tests/sequence_type.sysl"
    start: {}
    end: {
-    line: 10
+    line: 22
     col: 15
    }
   }

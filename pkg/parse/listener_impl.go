@@ -196,7 +196,10 @@ func (s *TreeShapeListener) EnterTypes(ctx *parser.TypesContext) {
 }
 
 // exitSetOrSequence_type is common between ExitSet_type and ExitSequence_type.
-func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specContext) (type1, newType1 *sysl.Type) {
+func (s *TreeShapeListener) exitSetOrSequence_type(
+	sizeSpec parser.ISize_specContext,
+	arraySpec parser.IArray_sizeContext,
+) (type1, newType1 *sysl.Type) {
 	type1 = s.currentType()
 	newType1 = &sysl.Type{
 		SourceContext:  type1.SourceContext, //nolint:staticcheck
@@ -219,13 +222,18 @@ func (s *TreeShapeListener) exitSetOrSequence_type(sizeSpec parser.ISize_specCon
 			spec := sizeSpec.(*parser.Size_specContext)
 			type1.Constraint = makeTypeConstraint(type1, spec)
 		}
+	} else if arraySpec != nil {
+		if type1.GetPrimitive() != sysl.Type_NO_Primitive {
+			spec := arraySpec.(*parser.Array_sizeContext)
+			type1.Constraint = makeArrayConstraint(type1, spec)
+		}
 	}
-	return
+	return type1, newType1
 }
 
 // ExitSet_type is called when production set_type is exited.
 func (s *TreeShapeListener) ExitSet_type(ctx *parser.Set_typeContext) {
-	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec())
+	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec(), ctx.Array_size())
 	newType1.Type = &sysl.Type_Set{Set: type1}
 }
 
@@ -234,7 +242,7 @@ func (s *TreeShapeListener) EnterSequence_type(*parser.Sequence_typeContext) {}
 
 // ExitSequence_type is called when production set_type is exited.
 func (s *TreeShapeListener) ExitSequence_type(ctx *parser.Sequence_typeContext) {
-	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec())
+	type1, newType1 := s.exitSetOrSequence_type(ctx.Size_spec(), ctx.Array_size())
 	newType1.Type = &sysl.Type_Sequence{Sequence: type1}
 }
 
