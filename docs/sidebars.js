@@ -55,6 +55,15 @@ module.exports = {
       //     "formats-xsd",
       //   ]
       // },
+
+      {
+        "Sysl for TypeScript": [
+          "ts/intro",
+          "ts/pbmodel",
+          "ts/model",
+        ]
+      },
+
       {
         "Sysl CLI": [
           "cmd/cmd",

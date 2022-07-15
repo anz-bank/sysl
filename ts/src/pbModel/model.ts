@@ -1,5 +1,4 @@
 import { readFile } from "fs/promises";
-import { initializeLinq } from "linq-to-typescript";
 import { exec } from "promisify-child-process";
 import "reflect-metadata";
 import {
@@ -9,17 +8,15 @@ import {
     jsonObject,
     TypedJSON,
 } from "typedjson";
-import { Location } from "../location";
-import { Application, Import, Model } from "../model/model";
-import { getAnnos, getTags, sortLocationalArray } from "../sort";
+import { Location } from "../common/location";
+import { joinedAppName } from "../common/format";
+import { Application, AppName, Import, Model } from "../model/model";
+import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
 import { PbAttribute } from "./attribute";
 import { PbAppName } from "./appname";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
 import { serializerFor } from "./serialize";
-import { joinedAppName } from "../format";
-
-initializeLinq();
 
 @jsonObject
 export class PbImport {
@@ -28,11 +25,11 @@ export class PbImport {
     @jsonMember name?: PbAppName;
 
     toModel(): Import {
-        return new Import(
-            this.target,
-            [this.sourceContext],
-            joinedAppName(this.name?.part ?? [])
-        );
+        return new Import({
+            filePath: this.target,
+            locations: [this.sourceContext],
+            appAlias: joinedAppName(this.name?.part ?? []),
+        });
     }
 }
 
@@ -49,21 +46,22 @@ export class PbApplication {
     types?: Map<string, PbTypeDef>;
 
     toModel(): Application {
-        return new Application(
-            joinedAppName(this.name.part),
-            sortLocationalArray(
-                this.endpoints
-                    ?.select(e => e[1].toModel(this.name.part))
-                    .toArray() ?? []
+        return new Application({
+            name: new AppName(this.name.part),
+            endpoints: sortLocationalArray(
+                Array.from(this.endpoints ?? new Map()).map(([, e]) =>
+                    e.toModel(this.name.part)
+                )
             ),
-            sortLocationalArray(
-                this.types?.select(t => t[1].toModel(t[0], false)).toArray() ??
-                    []
+            types: sortLocationalArray(
+                Array.from(this.types ?? new Map()).map(([name, t]) => {
+                    return t.toModel(name, false);
+                })
             ),
-            this.sourceContexts,
-            getTags(this.attrs),
-            getAnnos(this.attrs)
-        );
+            locations: this.sourceContexts,
+            tags: this.attrs ? getTags(this.attrs) : [],
+            annos: this.attrs ? getAnnos(this.attrs) : [],
+        });
     }
 }
 
@@ -86,9 +84,9 @@ export class PbDocumentModel {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
         const cmd = `${syslPath} pb --mode=json`;
         const proc = exec(cmd);
-        console.debug(
-            `Sysl Path: ${syslPath}\n${(await exec(`${syslPath} info`)).stdout}`
-        );
+        // console.debug(
+        //     `Sysl Path: ${syslPath}\n${(await exec(`${syslPath} info`)).stdout}`
+        // );
         proc.stdin?.end(
             JSON.stringify([{ path: syslFilePath, content: syslText }])
         );
@@ -98,18 +96,16 @@ export class PbDocumentModel {
                 throw error;
             },
         });
-        const model = serializer.parse(json)!;
-        return model;
+        return serializer.parse(json)!;
     }
 
     toModel(): Model {
-        return new Model(
-            this.imports?.select(i => i.toModel()).toArray() ?? [],
-            this.sourceContexts,
-            sortLocationalArray(
-                this.apps.select(a => a[1].toModel()).toArray()
+        return new Model({
+            imports: (this.imports ?? []).map(i => i.toModel()),
+            locations: this.sourceContexts,
+            apps: sortLocationalArray(
+                Array.from(this.apps).map(([, a]) => a.toModel())
             ),
-            ""
-        );
+        });
     }
 }

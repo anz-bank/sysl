@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
-      
+
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
@@ -50,80 +50,85 @@ jobs:
       # macOS Catalina: sysl_darwin_amd64
       - name: Install sysl
         run: |
-          mkdir $PWD/bin && \
-          cp ./dist/sysl $PWD/bin/sysl
+          mkdir bin && \
+          cp dist/sysl bin/sysl
 
       - name: Test installed
         run: ./scripts/test-gosysl.sh
         env:
           GOPATH: .
-      
+
+      - name: Install TypeScript deps
+        run: yarn
+        working-directory: ts
+
       - name: Test TypeScript
-        run: make test_ts
+        run: yarn test
+        working-directory: ts
         env:
-          SYSL_PATH: $PWD/bin/sysl
+          SYSL_PATH: ../bin/sysl
 
   test-windows:
     name: Run unit tests (Windows)
     runs-on: windows-latest
     steps:
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.17
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
 
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/go/pkg/mod
-          ~/go/bin
-        key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-cache-
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
+          key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-cache-
 
-    - name: Check out code
-      uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v2
 
-    - name: Generate intermediate files
-      run: make generate
+      - name: Generate intermediate files
+        run: make generate
 
-    - name: Run unit tests
-      run: .\scripts\test-with-coverage-windows.bat
+      - name: Run unit tests
+        run: .\scripts\test-with-coverage-windows.bat
 
   build-windows:
     name: Build Go (Windows)
     runs-on: windows-latest
     steps:
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.17
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
 
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/go/pkg/mod
-          ~/go/bin
-        key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-cache-
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
+          key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-cache-
 
-    - name: Check out code
-      uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v2
 
-    - name: Generate intermediate files
-      run: make generate
+      - name: Generate intermediate files
+        run: make generate
 
-    - name: Build sysl binary
-      run: make build-windows
+      - name: Build sysl binary
+        run: make build-windows
 
-    # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
-    # Windows Server 2019 supports 64-bit applications
-    - name: Install sysl
-      run: md .\bin; copy .\dist\sysl.exe .\bin\sysl.exe
+      # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
+      # Windows Server 2019 supports 64-bit applications
+      - name: Install sysl
+        run: md .\bin; copy .\dist\sysl.exe .\bin\sysl.exe
 
-    - name: Test installed
-      run: .\scripts\test-gosysl.bat
+      - name: Test installed
+        run: .\scripts\test-gosysl.bat
 
   build-docker:
     name: Builds the sysl docker image

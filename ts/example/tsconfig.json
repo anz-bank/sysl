@@ -3,16 +3,12 @@
     "compilerOptions": {
         "target": "ES2022",
         "module": "commonjs",
-        "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
         "noImplicitOverride": true,
         "noPropertyAccessFromIndexSignature": true,
-        "rootDir": "src",
-        "outDir": "dist",
-        "declaration": true
-    },
-    "include": ["src"]
+        "outDir": "dist"
+    }
 }

@@ -1,26 +1,25 @@
 import "reflect-metadata";
-import { Location } from "../location";
-import { indent, joinedAppName } from "../format";
-import { IDescribable, ILocational, IRenderable } from "./common";
-import { renderAnnos, renderInlineSections, addTags } from "./renderers";
-import { Primitive, Reference, Type, TypeDecorator, TypeValue } from "./type";
+import { indent, joinedAppName } from "../common/format";
+import { Location } from "../common/location";
 import { Annotation, Tag } from "./attribute";
+import { IDescribable, ILocational, IRenderable } from "./common";
+import { addTags, renderAnnos, renderInlineSections } from "./renderers";
+import { Reference, Type, TypeDecorator } from "./type";
+
+/** Name of an endpoint that represents the absence of endpoints in an {@link Application}. */
+const placeholder = "...";
 
 export class Param {
     name: string;
     type: Type | undefined;
 
-    constructor(name: string, type: Type | undefined) {
+    constructor(name: string, type?: Type) {
         this.name = name;
         this.type = type;
     }
 
     toSysl(): string {
-        let sysl = `${this.name}`;
-        if (this.type) {
-            sysl += ` <: ${this.type.toSysl()}`;
-        }
-        return sysl;
+        return `${this.name}${this.type ? ` <: ${this.type.toSysl()}` : ""}`;
     }
 }
 
@@ -36,15 +35,24 @@ export class Action {
     }
 }
 
-export class CallArg {
-    value: TypeValue | undefined;
-    name: string;
+export type ValueType = boolean | number | string;
 
-    constructor(value: TypeValue | undefined, name: string) {
+export class CallArg {
+    name: string;
+    value: ValueType | undefined;
+
+    constructor(name: string, value?: ValueType) {
         this.value = value;
         this.name = name;
     }
 }
+
+export type CallParams = {
+    endpoint: string;
+    arg?: CallArg[];
+    targetApp: string[];
+    originApp: string[];
+};
 
 export class Call {
     endpoint: string;
@@ -52,14 +60,9 @@ export class Call {
     targetApp: string[];
     originApp: string[];
 
-    constructor(
-        endpoint: string,
-        arg: CallArg[],
-        targetApp: string[],
-        originApp: string[]
-    ) {
+    constructor({ endpoint, arg, targetApp, originApp }: CallParams) {
         this.endpoint = endpoint;
-        this.arg = arg;
+        this.arg = arg ?? [];
         this.targetApp = targetApp;
         this.originApp = originApp;
     }
@@ -69,12 +72,7 @@ export class Call {
         const appName =
             joinedAppName(this.originApp) === joinedTarget ? "." : joinedTarget;
         return `${appName} <- ${this.endpoint}${
-            this.arg
-                ? this.arg
-                      .select(a => a.name)
-                      .toArray()
-                      .join(",")
-                : ""
+            this.arg ? this.arg.map(a => a.name).join(",") : ""
         }`;
     }
 }
@@ -105,10 +103,7 @@ export class Foreach {
 
     toSysl(): string {
         let sysl = `for each ${this.collection}:`;
-        return (sysl += this.stmt
-            .select(s => `\n${indent(s.toSysl())}`)
-            .toArray()
-            .join(""));
+        return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
 }
 
@@ -123,8 +118,7 @@ export class AltChoice {
 
     toSysl(): string {
         return `${this.cond ? "" + this.cond : ""}:${this.stmt
-            .select(s => `\n${indent(s.toSysl())}`)
-            .toArray()
+            .map(s => `\n${indent(s.toSysl())}`)
             .join("")}`;
     }
 }
@@ -138,8 +132,7 @@ export class Alt {
 
     toSysl(): string {
         let sysl = `one of:${this.choice
-            .select(c => `\n${indent(c.toSysl())}`)
-            .toArray()
+            .map(c => `\n${indent(c.toSysl())}`)
             .join("")}`;
         return sysl;
     }
@@ -156,10 +149,7 @@ export class Group {
 
     toSysl(): string {
         let sysl = `${this.title}:`;
-        return (sysl += this.stmt
-            .select(s => `\n${indent(s.toSysl())}`)
-            .toArray()
-            .join(""));
+        return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
 }
 
@@ -186,10 +176,7 @@ export class Cond {
 
     toSysl(): string {
         let sysl = `if ${this.test}:`;
-        return (sysl += this.stmt
-            .select(s => `\n${indent(s.toSysl())}`)
-            .toArray()
-            .join(""));
+        return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
 }
 
@@ -212,10 +199,7 @@ export class Loop {
         let sysl = `${this.mode.toString().toLowerCase()}${
             this.criterion ? " " + this.criterion : ""
         }:`;
-        return (sysl += this.stmt
-            .select(s => `\n${indent(s.toSysl())}`)
-            .toArray()
-            .join(""));
+        return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
 }
 
@@ -225,6 +209,23 @@ export enum LoopMode {
     UNTIL = 2,
     UNRECOGNIZED = -1,
 }
+
+export type StatementParams = {
+    value:
+        | Action
+        | Call
+        | Cond
+        | Loop
+        | LoopN
+        | Foreach
+        | Alt
+        | Group
+        | Return
+        | undefined;
+    locations?: Location[];
+    tags?: Tag[];
+    annos?: Annotation[];
+};
 
 export class Statement implements IDescribable, ILocational, IRenderable {
     value:
@@ -242,30 +243,20 @@ export class Statement implements IDescribable, ILocational, IRenderable {
     tags: Tag[];
     annos: Annotation[];
 
-    constructor(
-        value:
-            | Action
-            | Call
-            | Cond
-            | Loop
-            | LoopN
-            | Foreach
-            | Alt
-            | Group
-            | Return
-            | undefined,
-        locations: Location[],
-        tags: Tag[],
-        annos: Annotation[]
-    ) {
+    constructor({ value, locations, tags, annos }: StatementParams) {
         this.value = value;
-        this.locations = locations;
-        this.tags = tags;
-        this.annos = annos;
+        this.locations = locations ?? [];
+        this.tags = tags ?? [];
+        this.annos = annos ?? [];
+    }
+
+    /** Returns a statement with the given action text. */
+    static action(action: string): Statement {
+        return new Statement({ value: new Action(action) });
     }
 
     toSysl(): string {
-        return this.value?.toSysl() ?? "...";
+        return this.value?.toSysl() ?? placeholder;
     }
 }
 
@@ -278,133 +269,135 @@ export enum RestMethod {
     PATCH = "PATCH",
 }
 
+export type RestParamsParams = {
+    method: RestMethod;
+    path: string;
+    queryParam?: Param[];
+    urlParam?: Param[];
+};
+
 export class RestParams {
     method: RestMethod;
     path: string;
     queryParam: Param[];
     urlParam: Param[];
 
-    constructor(
-        method: RestMethod,
-        path: string,
-        queryParam: Param[],
-        urlParam: Param[]
-    ) {
+    constructor({ method, path, queryParam, urlParam }: RestParamsParams) {
         this.method = method;
         this.path = path;
-        this.queryParam = queryParam;
-        this.urlParam = urlParam;
+        this.queryParam = queryParam ?? [];
+        this.urlParam = urlParam ?? [];
     }
 }
+
+export type EndpointParams = {
+    name: string;
+    longName?: string | undefined;
+    docstring?: string | undefined;
+    params?: Param[];
+    restParams?: RestParams | undefined;
+    statements?: Statement[];
+    isPubsub?: boolean;
+    pubsubSource?: string[];
+    locations?: Location[];
+    tags?: Tag[];
+    annos?: Annotation[];
+};
 
 export class Endpoint implements IDescribable, ILocational, IRenderable {
     name: string;
     longName: string | undefined;
     docstring: string | undefined;
-    flag: string[] | undefined;
-    isPubsub: boolean;
-    param: Param[];
+    params: Param[];
     statements: Statement[];
     restParams: RestParams | undefined;
-    source: string[];
+    isPubsub: boolean;
+    pubsubSource: string[];
     locations: Location[];
     tags: Tag[];
     annos: Annotation[];
 
-    constructor(
-        name: string,
-        longName: string | undefined,
-        docstring: string | undefined,
-        flag: string[] | undefined,
-        isPubsub: boolean,
-        param: Param[],
-        statements: Statement[],
-        restParams: RestParams | undefined,
-        source: string[],
-        locations: Location[],
-        tags: Tag[],
-        annos: Annotation[]
-    ) {
-        this.locations = locations;
+    constructor({
+        name,
+        longName,
+        docstring,
+        isPubsub,
+        params,
+        statements,
+        restParams,
+        pubsubSource,
+        locations,
+        tags,
+        annos,
+    }: EndpointParams) {
         this.name = name;
         this.longName = longName;
         this.docstring = docstring;
-        this.flag = flag;
-        this.isPubsub = isPubsub;
-        this.param = param;
-        this.statements = statements;
+        this.params = params ?? [];
+        this.statements = statements ?? [];
         this.restParams = restParams;
-        this.source = source;
-        this.locations = locations;
-        this.tags = tags;
-        this.annos = annos;
+        this.isPubsub = isPubsub ?? false;
+        this.pubsubSource = pubsubSource ?? [];
+        this.locations = locations ?? [];
+        this.tags = tags ?? [];
+        this.annos = annos ?? [];
     }
 
     private renderQueryParams(): string {
-        return this.restParams!.queryParam.any()
-            ? `?${this.restParams!.queryParam.select(p => {
-                  let s = `${p.name}=`;
-                  if (p.type?.value instanceof TypeDecorator<Reference>) {
-                      return (s += `{${p.type?.toSysl()}}`);
-                  }
-                  return (s += `${p.type?.toSysl() ?? "Type"}`);
-              })
-                  .toArray()
-                  .join("&")}`
-            : "";
+        if (!this.restParams!.queryParam.length) {
+            return "";
+        }
+
+        return `?${this.restParams!.queryParam.map(p => {
+            let s = `${p.name}=`;
+            if (p.type?.value instanceof TypeDecorator<Reference>) {
+                return (s += `{${p.type.toSysl()}}`);
+            }
+            return (s += `${p.type?.toSysl() ?? "Type"}`);
+        }).join("&")}`;
     }
 
     private renderParams(): string {
-        return this.param.any()
-            ? `(${this.param
-                  .select(p => p.toSysl())
-                  .toArray()
-                  .join(", ")})`
+        return this.params.length
+            ? `(${this.params.map(p => p.toSysl()).join(", ")})`
             : "";
     }
 
     private renderRestEndpoint(): string {
         const segments = this.restParams!.path.split("/");
         const path = segments
-            .select(s => {
-                if (s.match(`^{(\\w+)}$`)?.any) {
-                    let name = s.replace("{", "").replace("}", "");
-                    return `{${this.restParams?.urlParam
-                        ?.single(p => p.name === name)
-                        .toSysl()}}`;
+            .map(s => {
+                const match = s.match(`^{(\\w+)}$`);
+                if (match) {
+                    let name = match[1];
+                    let param = this.restParams?.urlParam
+                        .find(p => p.name === name)
+                        ?.toSysl();
+                    return `{${param}}`;
                 }
                 return s;
             })
-            .toArray()
             .join("/");
         let sysl = `${path}:`;
         let content = `${this.restParams!.method}${this.renderQueryParams()}${
-            this.param.any() ? ` ${this.renderParams()}` : ""
+            this.params.length ? ` ${this.renderParams()}` : ""
         }:`;
-        if (this.statements) {
-            content += this.statements
-                .select(s => `\n${indent(s.toSysl())}`)
-                .toArray()
-                .join("");
-        }
+        content += this.statements.map(s => `\n${indent(s.toSysl())}`).join("");
         return (sysl += `\n${indent(content)}`);
     }
 
     private renderGRPCEndpoint(): string {
-        if (this.name === "...") return this.name;
+        if (this.name === placeholder) {
+            return this.name;
+        }
         const longName = this.longName ? `"${this.longName}"` : "";
 
         const sections = [this.name, longName, this.renderParams()];
         let sysl = `${addTags(renderInlineSections(sections), this.tags)}:`;
-        if (this.annos.any()) {
+        if (this.annos.length) {
             sysl += `\n${indent(renderAnnos(this.annos))}`;
         }
-        if (this.statements) {
-            sysl += this.statements
-                .select(s => `\n${indent(s.toSysl())}`)
-                .toArray()
-                .join("");
-        }
+        sysl += this.statements.map(s => `\n${indent(s.toSysl())}`).join("");
         return sysl;
     }
 

@@ -1,42 +1,58 @@
 import "reflect-metadata";
-import { indent } from "../format";
-import { Location } from "../location";
+import { indent, safeName } from "../common/format";
+import { Location } from "../common/location";
 import { Annotation, Tag } from "./attribute";
 import { IDescribable, ILocational, IRenderable } from "./common";
+import { AppName } from "./model";
 import { renderAnnos, addTags } from "./renderers";
 
-export type TypeValue = boolean | number | string;
+export type TypeConstraintRangeParams = {
+    min?: number | undefined;
+    max?: number | undefined;
+};
 
 export class TypeConstraintRange {
-    min: TypeValue | undefined;
-    max: TypeValue | undefined;
+    min: number | undefined;
+    max: number | undefined;
 
-    constructor(min: TypeValue | undefined, max: TypeValue | undefined) {
+    constructor({ min, max }: TypeConstraintRangeParams) {
         this.min = min;
         this.max = max;
     }
 }
+
+export type TypeConstraintLengthParams = {
+    min?: number | undefined;
+    max?: number | undefined;
+};
 
 export class TypeConstraintLength {
     min: number | undefined;
     max: number | undefined;
 
-    constructor(min: number | undefined, max: number | undefined) {
+    constructor({ min, max }: TypeConstraintLengthParams) {
         this.min = min;
         this.max = max;
     }
 }
+
+export type TypeConstraintResolutionParams = {
+    base?: number | undefined;
+    index?: number | undefined;
+};
 
 /** e.g.: 3 decimal places = {base = 10, index = -3} */
 export class TypeConstraintResolution {
     base: number | undefined;
     index: number | undefined;
 
-    constructor(base: number | undefined, index: number | undefined) {
+    constructor({ base, index }: TypeConstraintResolutionParams) {
         this.base = base;
         this.index = index;
     }
 }
+
+export type TypeConstraintParams = TypeConstraintLength;
 
 export class TypeConstraint {
     range: TypeConstraintRange | undefined;
@@ -46,14 +62,21 @@ export class TypeConstraint {
     scale: number;
     bitWidth: number;
 
-    constructor(
-        range: TypeConstraintRange | undefined,
-        length: TypeConstraintLength | undefined,
-        resolution: TypeConstraintResolution | undefined,
-        precision: number,
-        scale: number,
-        bitWidth: number
-    ) {
+    constructor({
+        range,
+        length,
+        resolution,
+        precision,
+        scale,
+        bitWidth,
+    }: {
+        range: TypeConstraintRange | undefined;
+        length: TypeConstraintParams | undefined;
+        resolution: TypeConstraintResolution | undefined;
+        precision: number;
+        scale: number;
+        bitWidth: number;
+    }) {
         this.range = range;
         this.length = length;
         this.resolution = resolution;
@@ -67,13 +90,15 @@ export class Primitive implements IRenderable {
     primitive: TypePrimitive;
     constraints: TypeConstraint[];
 
-    constructor(primitive: TypePrimitive, constraints: TypeConstraint[]) {
+    constructor(primitive: TypePrimitive, constraints?: TypeConstraint[]) {
         this.primitive = primitive;
         this.constraints = constraints ?? [];
     }
 
     private constraintStr(): string {
-        const constraint = this.constraints?.any() ? this.constraints[0] : null;
+        const constraint = this.constraints?.length
+            ? this.constraints[0]
+            : null;
         const isPresentAndNumber = (n: number | undefined) => n && !isNaN(n);
 
         const lengthStr = (length: TypeConstraintLength) => {
@@ -130,12 +155,7 @@ export class Enum implements IRenderable {
     }
 
     toSysl(): string {
-        return `${indent(
-            this.members
-                .select(e => e.toSysl())
-                .toArray()
-                .join("\n")
-        )}`;
+        return `${indent(this.members.map(e => e.toSysl()).join("\n"))}`;
     }
 }
 
@@ -154,25 +174,9 @@ export class EnumValue implements IRenderable {
 }
 
 export class Alias implements IRenderable {
-    type:
-        | Primitive
-        | Struct
-        | TypeDecorator<IRenderable>
-        | Alias
-        | Enum
-        | Union
-        | Reference;
+    type: TypeValue;
 
-    constructor(
-        type:
-            | Primitive
-            | Struct
-            | TypeDecorator<IRenderable>
-            | Alias
-            | Enum
-            | Union
-            | Reference
-    ) {
+    constructor(type: TypeValue) {
         this.type = type;
     }
 
@@ -189,12 +193,7 @@ export class Union implements IRenderable {
     }
 
     toSysl(): string {
-        return `${indent(
-            this.types
-                .select(o => o.toSysl())
-                .toArray()
-                .join("\n")
-        )}`;
+        return `${indent(this.types.map(o => o.toSysl()).join("\n"))}`;
     }
 }
 
@@ -209,17 +208,18 @@ export class Struct implements IRenderable {
     toSysl(): string {
         return indent(
             this.elements
-                .select(e => {
+                .map(e => {
                     let sysl = addTags(
-                        `${e.name} <: ${e.value.toSysl()}${e.opt ? "?" : ""}`,
+                        `${safeName(e.name)} <: ${e.value.toSysl()}${
+                            e.opt ? "?" : ""
+                        }`,
                         e.tags
                     );
-                    if (e.annos.any()) {
+                    if (e.annos.length) {
                         sysl += `:\n${indent(renderAnnos(e.annos))}`;
                     }
                     return sysl;
                 })
-                .toArray()
                 .join("\n")
         );
     }
@@ -253,78 +253,102 @@ export enum DecoratorKind {
     Reference,
 }
 
-export class Reference implements IRenderable {
-    name: string;
+export type ReferenceParams = {
+    appName: AppName;
+    typeName: string;
+    fieldName?: string;
+};
 
-    constructor(name: string) {
-        this.name = name;
+export class Reference implements IRenderable {
+    /** The name of the referenced application. */
+    appName?: AppName;
+    /** The name of the referenced type. */
+    typeName: string;
+    /** The name of the referenced field (foreign key only). */
+    fieldName?: string;
+
+    constructor({ appName, typeName, fieldName }: ReferenceParams) {
+        this.appName = appName;
+        this.typeName = typeName;
+        this.fieldName = fieldName;
     }
 
     toSysl(): string {
-        return this.name;
+        let sysl = safeName(this.typeName);
+        if (this.appName) {
+            sysl = `${this.appName?.toSysl()}.${sysl}`;
+        }
+        if (this.fieldName) {
+            sysl = `${sysl}.${safeName(this.fieldName)}`;
+        }
+        return sysl;
     }
 }
 
+export type TypeValue =
+    | Primitive
+    | Struct
+    | TypeDecorator<IRenderable>
+    | Alias
+    | Enum
+    | Union
+    | Reference;
+
+export type TypeParams = {
+    discriminator?: string;
+    name: string;
+    value: TypeValue;
+    opt?: boolean;
+    locations?: Location[];
+    tags?: Tag[];
+    annos?: Annotation[];
+};
+
 export class Type implements IDescribable, ILocational, IRenderable {
-    discriminator: string;
+    discriminator: string | undefined;
     name: string;
     opt: boolean;
-    value:
-        | Primitive
-        | Struct
-        | TypeDecorator<IRenderable>
-        | Alias
-        | Enum
-        | Union
-        | Reference;
+    value: TypeValue;
     locations: Location[];
     tags: Tag[];
     annos: Annotation[];
 
-    constructor(
-        discriminator: string,
-        name: string,
-        opt: boolean,
-        value:
-            | Primitive
-            | Struct
-            | TypeDecorator<IRenderable>
-            | Alias
-            | Enum
-            | Union
-            | Reference,
-        locations: Location[],
-        tags: Tag[],
-        annos: Annotation[]
-    ) {
+    constructor({
+        discriminator,
+        name,
+        opt,
+        value,
+        locations,
+        tags,
+        annos,
+    }: TypeParams) {
         this.discriminator = discriminator;
         this.name = name;
-        this.opt = opt;
+        this.opt = opt ?? false;
         this.value = value;
-        this.locations = locations;
-        this.tags = tags;
-        this.annos = annos;
+        this.locations = locations ?? [];
+        this.tags = tags ?? [];
+        this.annos = annos ?? [];
     }
 
     toSysl(): string {
+        const optStr = this.opt ? "?" : "";
         // Definition rendering
-        if (this.discriminator.length > 0) {
+        if (this.discriminator) {
             let sysl = `${addTags(
-                `${this.discriminator} ${this.name}`,
+                `${this.discriminator} ${safeName(this.name)}`,
                 this.tags
             )}:`;
-            if (this.annos.any()) {
+            if (this.annos.length) {
                 sysl += `\n${indent(renderAnnos(this.annos))}`;
             }
-            return (sysl += `\n${this.value.toSysl()}${this.opt ? "?" : ""}`);
+            return (sysl += `\n${this.value.toSysl()}${optStr}`);
         }
         // Field rendering
         else {
-            let sysl = addTags(
-                `${this.name}${this.value.toSysl()}${this.opt ? "?" : ""}`,
-                this.tags
-            );
-            if (this.annos.any()) {
+            let sysl = `${safeName(this.name)}${this.value.toSysl()}${optStr}`;
+            sysl = addTags(sysl, this.tags);
+            if (this.annos.length) {
                 sysl += `:\n${renderAnnos(this.annos)}`;
             }
             return sysl;

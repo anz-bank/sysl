@@ -5,7 +5,8 @@ import {
     jsonMember,
     jsonObject,
 } from "typedjson";
-import { Location } from "../location";
+import { Location } from "../common/location";
+import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
 import {
     Action,
     Alt,
@@ -23,7 +24,6 @@ import {
     Return,
     Statement,
 } from "../model/statement";
-import { getAnnos, getTags, sortLocationalArray } from "../sort";
 import { PbAppName } from "./appname";
 import { PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
@@ -58,7 +58,7 @@ export class PbCallArg {
     @jsonMember name!: string;
 
     toModel(): CallArg {
-        return new CallArg(this.value?.toModel(), this.name);
+        return new CallArg(this.name, this.value?.toModel());
     }
 }
 
@@ -69,12 +69,12 @@ export class PbCall {
     @jsonMember target!: PbAppName;
 
     toModel(appName: string[]): Call {
-        return new Call(
-            this.endpoint,
-            this.arg?.select(a => a.toModel()).toArray() ?? [],
-            this.target.part,
-            appName
-        );
+        return new Call({
+            endpoint: this.endpoint,
+            arg: this.arg?.map(a => a.toModel()) ?? [],
+            targetApp: this.target.part,
+            originApp: appName,
+        });
     }
 }
 
@@ -86,7 +86,7 @@ export class PbLoopN {
     toModel(appName: string[]): LoopN {
         return new LoopN(
             this.count,
-            this.stmt.select(s => s.toModel(appName)).toArray()
+            this.stmt.map(s => s.toModel(appName))
         );
     }
 }
@@ -99,7 +99,7 @@ export class PbForeach {
     toModel(appName: string[]): Foreach {
         return new Foreach(
             this.collection,
-            this.stmt.select(s => s.toModel(appName)).toArray()
+            this.stmt.map(s => s.toModel(appName))
         );
     }
 }
@@ -112,7 +112,7 @@ export class PbAltChoice {
     toModel(appName: string[]): AltChoice {
         return new AltChoice(
             this.cond,
-            this.stmt.select(s => s.toModel(appName)).toArray()
+            this.stmt.map(s => s.toModel(appName))
         );
     }
 }
@@ -122,7 +122,7 @@ export class PbAlt {
     @jsonArrayMember(PbAltChoice) choice!: PbAltChoice[];
 
     toModel(appName: string[]): Alt {
-        return new Alt(this.choice.select(c => c.toModel(appName)).toArray());
+        return new Alt(this.choice.map(c => c.toModel(appName)));
     }
 }
 
@@ -134,7 +134,7 @@ export class PbGroup {
     toModel(appName: string[]): Group {
         return new Group(
             this.title,
-            this.stmt.select(s => s.toModel(appName)).toArray()
+            this.stmt.map(s => s.toModel(appName))
         );
     }
 }
@@ -156,7 +156,7 @@ export class PbCond {
     toModel(appName: string[]): Cond {
         return new Cond(
             this.test,
-            this.stmt.select(s => s.toModel(appName)).toArray()
+            this.stmt.map(s => s.toModel(appName))
         );
     }
 }
@@ -171,7 +171,7 @@ export class PbLoop {
         return new Loop(
             this.mode,
             this.criterion,
-            this.stmt.select(s => s.toModel(appName)).toArray()
+            this.stmt.map(s => s.toModel(appName))
         );
     }
 }
@@ -223,12 +223,12 @@ export class PbStatement {
     }
 
     toModel(appName: string[]): Statement {
-        return new Statement(
-            this.getValue()?.toModel(appName),
-            this.sourceContexts,
-            getTags(this.attrs),
-            getAnnos(this.attrs)
-        );
+        return new Statement({
+            value: this.getValue()?.toModel(appName),
+            locations: this.sourceContexts,
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
+        });
     }
 }
 
@@ -249,12 +249,12 @@ export class PbRestParams {
     @jsonArrayMember(PbParam) urlParam?: PbParam[];
 
     toModel(): RestParams {
-        return new RestParams(
-            this.method,
-            this.path,
-            this.queryParam?.select(p => p.toModel()).toArray() ?? [],
-            this.urlParam?.select(p => p.toModel()).toArray() ?? []
-        );
+        return new RestParams({
+            method: this.method,
+            path: this.path,
+            queryParam: this.queryParam?.map(p => p.toModel()) ?? [],
+            urlParam: this.urlParam?.map(p => p.toModel()) ?? [],
+        });
     }
 }
 
@@ -263,7 +263,6 @@ export class PbEndpoint {
     @jsonMember name!: string;
     @jsonMember longName?: string;
     @jsonMember docstring?: string;
-    @jsonArrayMember(String) flag?: string[];
     @jsonMember isPubsub?: boolean;
     @jsonArrayMember(PbParam) param?: PbParam[];
     @jsonArrayMember(PbStatement) stmt!: PbStatement[];
@@ -274,24 +273,22 @@ export class PbEndpoint {
     @jsonMember source?: PbAppName;
 
     toModel(appName: string[]): Endpoint {
-        return new Endpoint(
-            this.name,
-            this.longName,
-            this.docstring,
-            this.flag,
-            this.isPubsub ?? false,
-            this.param
-                ?.where(p => p.name != undefined || p.type != undefined)
-                .select(p => p.toModel())
-                .toArray() ?? [],
-            sortLocationalArray(
-                this.stmt?.select(s => s.toModel(appName)).toArray() ?? []
+        return new Endpoint({
+            name: this.name,
+            longName: this.longName,
+            docstring: this.docstring,
+            isPubsub: this.isPubsub ?? false,
+            params: (this.param ?? [])
+                .filter(p => p.name || p.type)
+                .map(p => p.toModel()),
+            statements: sortLocationalArray(
+                this.stmt?.map(s => s.toModel(appName)) ?? []
             ),
-            this.restParams?.toModel(),
-            this.source?.part ?? [],
-            this.sourceContexts,
-            getTags(this.attrs),
-            getAnnos(this.attrs)
-        );
+            restParams: this.restParams?.toModel(),
+            pubsubSource: this.source?.part ?? [],
+            locations: this.sourceContexts,
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
+        });
     }
 }

@@ -6,7 +6,10 @@ import {
     jsonObject,
     jsonSetMember,
 } from "typedjson";
-import { Location } from "../location";
+import { Location } from "../common/location";
+import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
+import { AppName, ValueType } from "../model";
+import { IRenderable } from "../model/common";
 import {
     Alias,
     DecoratorKind,
@@ -22,15 +25,11 @@ import {
     TypeConstraintResolution,
     TypeDecorator,
     TypePrimitive,
-    TypeValue,
     Union,
 } from "../model/type";
-import { getAnnos, getTags, sortLocationalArray } from "../sort";
-import { PbAttribute } from "./attribute";
 import { PbAppName } from "./appname";
-import { deserializeMap, serializeMap, serializerFor } from "./serialize";
-import { joinedAppName } from "../format";
-import { IRenderable } from "../model/common";
+import { PbAttribute } from "./attribute";
+import { serializerFor, serializerForFn } from "./serialize";
 
 @jsonObject
 export class PbValue {
@@ -38,7 +37,7 @@ export class PbValue {
     @jsonMember d?: number;
     @jsonMember s?: string;
 
-    toModel(): TypeValue {
+    toModel(): ValueType {
         if (this.b) return this.b;
         else if (this.d) return this.d;
         else if (this.s) return this.s;
@@ -52,26 +51,22 @@ export class PbTypeConstraintRange {
     @jsonMember max?: PbValue;
 
     toModel(): TypeConstraintRange {
-        return new TypeConstraintRange(
-            this.min?.toModel(),
-            this.max?.toModel()
-        );
+        return new TypeConstraintRange({
+            min: Number(this.min?.toModel()),
+            max: Number(this.max?.toModel()),
+        });
     }
 }
 
 @jsonObject
 export class PbTypeConstraintLength {
-    @jsonMember({
-        deserializer: (numberString): number => Number(numberString),
-    })
+    @jsonMember({ deserializer: (numStr): number => Number(numStr) })
     min?: number;
-    @jsonMember({
-        deserializer: (numberString): number => Number(numberString),
-    })
+    @jsonMember({ deserializer: (numStr): number => Number(numStr) })
     max?: number;
 
     toModel(): TypeConstraintLength {
-        return new TypeConstraintLength(this.min, this.max);
+        return new TypeConstraintLength({ min: this.min, max: this.max });
     }
 }
 
@@ -82,10 +77,7 @@ export class PbTypeConstraintResolution {
     @jsonMember index?: number;
 
     toModel(): TypeConstraintResolution {
-        return new TypeConstraintResolution(
-            this.base ?? undefined,
-            this.index ?? undefined
-        );
+        return new TypeConstraintResolution({ ...this });
     }
 }
 
@@ -99,14 +91,14 @@ export class PbTypeConstraint {
     @jsonMember bitWidth!: number;
 
     toModel(): TypeConstraint {
-        return new TypeConstraint(
-            this.range?.toModel(),
-            this.length?.toModel(),
-            this.resolution?.toModel(),
-            this.precision,
-            this.scale,
-            this.bitWidth
-        );
+        return new TypeConstraint({
+            range: this.range?.toModel(),
+            length: this.length?.toModel(),
+            resolution: this.resolution?.toModel(),
+            precision: this.precision,
+            scale: this.scale,
+            bitWidth: this.bitWidth,
+        });
     }
 }
 
@@ -116,12 +108,12 @@ export class PbScope {
     @jsonMember appname!: PbAppName;
 
     toModel(): Reference {
-        const name = `${
-            this.appname?.part.any()
-                ? joinedAppName(this.appname.part, false) + "."
-                : ""
-        }${this.path.join(".")}`;
-        return new Reference(name);
+        const [typeName, fieldName] = this.path;
+        return new Reference({
+            appName: this.appname?.part && new AppName(this.appname.part),
+            typeName,
+            fieldName,
+        });
     }
 }
 
@@ -129,6 +121,7 @@ export class PbScope {
 export class PbScopedRef {
     /** The context in which the ref appeared. */
     @jsonMember context!: PbScope;
+    /** The target of the ref. */
     @jsonMember ref!: PbScope;
 }
 
@@ -142,20 +135,21 @@ export class PbTypeRelation {
     @jsonMember primaryKey!: PbRelationKey;
     @jsonArrayMember(PbRelationKey) key!: PbRelationKey[];
     @jsonArrayMember(String) inject!: string[];
-    @jsonMapMember(String, () => PbTypeDef, {
-        serializer: (mapObject: Map<string, PbTypeDef>) =>
-            serializeMap(mapObject),
-        deserializer: (stringifiedMapObject: { [key: string]: PbTypeDef }) =>
-            deserializeMap(PbTypeDef, stringifiedMapObject),
-    })
+    @jsonMapMember(String, () => PbTypeDef, serializerForFn(() => PbTypeDef))
     attrDefs!: Map<string, PbTypeDef>;
 
     toModel(): Struct {
-        return new Struct(
-            sortLocationalArray(
-                this.attrDefs.select(a => a[1].toModel(a[0])).toArray()
-            )
-        );
+        return new Struct(PbTypeDef.defsToModel(this.attrDefs));
+    }
+}
+
+@jsonObject
+export class PbTypeDefTuple {
+    @jsonMapMember(String, () => PbTypeDef, serializerForFn(() => PbTypeDef))
+    attrDefs!: Map<string, PbTypeDef>;
+
+    toModel(): Struct {
+        return new Struct(PbTypeDef.defsToModel(this.attrDefs));
     }
 }
 
@@ -164,7 +158,7 @@ export class PbTypeDefList {
     @jsonArrayMember(() => PbTypeDef) type!: PbTypeDef[];
 
     toModel(): Union {
-        return new Union(this.type.select(t => t.toModel()).toArray());
+        return new Union(this.type.map(t => t.toModel()));
     }
 }
 
@@ -175,25 +169,8 @@ export class PbTypeDefEnum {
 
     toModel(): Enum {
         return new Enum(
-            this.items.select(i => new EnumValue(i[0], i[1])).toArray()
-        );
-    }
-}
-
-@jsonObject
-export class PbTypeDefTuple {
-    @jsonMapMember(String, () => PbTypeDef, {
-        serializer: (mapObject: Map<string, PbTypeDef>) =>
-            serializeMap(mapObject),
-        deserializer: (stringifiedMapObject: { [key: string]: PbTypeDef }) =>
-            deserializeMap(PbTypeDef, stringifiedMapObject),
-    })
-    attrDefs!: Map<string, PbTypeDef>;
-
-    toModel(): Struct {
-        return new Struct(
-            sortLocationalArray(
-                this.attrDefs.select(a => a[1].toModel(a[0])).toArray()
+            Array.from(this.items).map(
+                ([key, value]) => new EnumValue(key, value)
             )
         );
     }
@@ -232,8 +209,14 @@ export class PbTypeDef {
             this.sequence ||
             this.enum ||
             this.tuple ||
-            this.list?.type.any() ||
-            this.map?.any()
+            this.list?.type?.length ||
+            this.map?.size
+        );
+    }
+
+    static defsToModel(attrDefs: Map<string, PbTypeDef>): Type[] {
+        return sortLocationalArray(
+            Array.from(attrDefs).map(([key, value]) => value.toModel(key))
         );
     }
 
@@ -253,7 +236,7 @@ export class PbTypeDef {
         if (this.primitive) {
             value = new Primitive(
                 this.primitive,
-                this.constraint?.select(c => c.toModel()).toArray() ?? []
+                (this.constraint ?? []).map(c => c.toModel())
             );
         } else if (this.relation) {
             discriminator = "!table";
@@ -283,21 +266,23 @@ export class PbTypeDef {
             discriminator = "!union";
             value = this.oneOf.toModel();
         } else {
-            throw new Error("Error converting type.");
+            throw new Error(
+                "Error converting type: " + name + " " + JSON.stringify(this)
+            );
         }
         // Catch the case that this is a top level definition and we failed to assign a discriminator above.
         if (!isInner && discriminator == "") {
             discriminator = "!alias";
             value = new Alias(value);
         }
-        return new Type(
+        return new Type({
             discriminator,
-            name ?? "",
-            this.opt,
+            name: name ?? "",
+            opt: this.opt,
             value,
-            this.sourceContexts,
-            getTags(this.attrs),
-            getAnnos(this.attrs)
-        );
+            locations: this.sourceContexts,
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
+        });
     }
 }
