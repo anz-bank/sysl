@@ -41,6 +41,7 @@
         }
     },
     "scripts": {
+        "prepublish": "yarn build",
         "build": "tsc",
         "test": "jest",
         "test:watch": "jest --watch",
