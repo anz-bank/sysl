@@ -1,6 +1,6 @@
 {
     "name": "@anz-bank/sysl",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Sysl (pronounced \"sizzle\") is a open source system specification language.",
     "author": "ANZ Bank",
     "publisher": "anz-bank",
@@ -15,6 +15,11 @@
     "keywords": [
         "specification",
         "diagrams"
+    ],
+    "files": [
+        "README.md",
+        "dist/**/!(*.test).js",
+        "dist/**/!(*.test).d.ts"
     ],
     "exports": {
         ".": "./dist/index.js",
