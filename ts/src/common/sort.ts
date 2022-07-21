@@ -5,12 +5,11 @@ import { PbAttribute } from "../pbModel/attribute";
 const tagsAttrName = "patterns";
 
 function getStart<T extends ILocational>(item: T): number {
-    if (item.locations) {
-        return item.locations[0].start
-            ? item.locations[0].start.line
-            : item.locations[0].end.line;
+    if (!item.locations?.length) {
+        return 0;
     }
-    return 0;
+    const firstLoc = item.locations[0];
+    return firstLoc.start ? firstLoc.start.line : firstLoc.end.line;
 }
 
 export function sortLocationalArray<T extends ILocational>(array: T[]): T[] {

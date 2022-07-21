@@ -83,367 +83,310 @@ describe("Roundtrip", () => {
         expect(allModel.filterByFile(allPath).toSysl()).toEqual(allSysl);
     });
 
-    // Applications
-    test("EmptyApp", async () => {
-        const sysl = realign(`
-    App:
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EmptyAppWithSubpackages", async () => {
-        const sysl = realign(`
-    App :: with :: subpackages:
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("AppWithTag", async () => {
-        const sysl = realign(`
-    App [~abstract]:
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("InlineAnno", async () => {
-        const sysl = realign(`
-    App [name="value"]:
-        ...
-    `);
-        const output = realign(`
-    App:
-        @name = "value"
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(output);
-    });
-
-    test("StringAnno", async () => {
-        const sysl = realign(`
-    App:
-        @name = "value"
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("MultilineAnno", async () => {
-        const sysl = realign(`
-    App:
-        @name =:
-            | anno
-            |  indented
-            |   across
-            |
-            |    multiple lines
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("ArrayAnno", async () => {
-        const sysl = realign(`
-    App:
-        @name = ["value1", "value2"]
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("NestedArrayAnno", async () => {
-        const sysl = realign(`
-    App:
-        @name = [["value1", "value2"], ["value3", "value4"]]
-        ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    // GRPC Endpoints
-    test("Endpoint", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp:
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithTag", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp [~ignore]:
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithAnno", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp:
-            @name = "value"
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithInlineAnno", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp [name="value"]:
-            ...
-    `);
-        const output = realign(`
-    App:
-        SimpleEp:
-            @name = "value"
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(output);
-    });
-
-    test("EndpointWithPrimitiveParam", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp (param <: string):
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithRefParam", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp (Types.type):
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithPrimitiveParamWithConstraints", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
-            ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithCall", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp:
-            App2 <- Endpoint
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithPrimitiveReturn", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp:
-            return ok <: string
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("EndpointWithRefReturn", async () => {
-        const sysl = realign(`
-    App:
-        SimpleEp:
-            return ok <: Types.type
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    // REST Endpoints
-    test("RestEndpoint", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /:
-            GET:
+    const cases = {
+        EmptyApp: realign(
+            `
+            App:
                 ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("RestEndpointWithoutNesting", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /nested/path:
-            GET:
+            `
+        ),
+        EmptyAppWithSubpackages: realign(
+            `
+            App :: with :: subpackages:
                 ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("RestEndpointWithNesting", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /nested:
-            /path:
-                GET:
+            `
+        ),
+        AppWithTag: realign(
+            `
+            App [~abstract]:
+                ...
+            `
+        ),
+        InlineAnno: {
+            input: realign(
+                `
+                App [name="value"]:
                     ...
-    `);
-        // Currently nested endpoints are not supported so this is the expected output
-        const expected = realign(`
-    RestEndpoint:
-        /nested/path:
-            GET:
+                `
+            ),
+            output: realign(
+                `
+                App:
+                    @name = "value"
+                    ...
+                `
+            ),
+        },
+        StringAnno: realign(
+            `
+            App:
+                @name = "value"
                 ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(expected);
-    });
-
-    test("RestEndpointWithTypeInPath", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /pathwithtype/{native <: int}:
-            GET:
+            `
+        ),
+        MultilineAnno: realign(
+            `
+            App:
+                @name =:
+                    | anno
+                    |  indented
+                    |   across
+                    |
+                    |    multiple lines
                 ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("RestEndpointWithQueryParams", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /query:
-            GET?native=string&optional=string?:
+            `
+        ),
+        ArrayAnno: realign(
+            `
+            App:
+                @name = ["value1", "value2"]
                 ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("RestEndpointWithRefParam", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /param:
-            PATCH (t <: Types.Type [~body]):
+            `
+        ),
+        NestedArrayAnno: realign(
+            `
+            App:
+                @name = [["value1", "value2"], ["value3", "value4"]]
                 ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
+            `
+        ),
+        Endpoint: realign(
+            `
+            App:
+                SimpleEp:
+                    ...
+            `
+        ),
+        EndpointWithTag: realign(
+            `
+            App:
+                SimpleEp [~ignore]:
+                    ...
+            `
+        ),
+        EndpointWithAnno: realign(
+            `
+            App:
+                SimpleEp:
+                    @name = "value"
+                    ...
+            `
+        ),
+        EndpointWithInlineAnno: {
+            input: realign(
+                `
+                App:
+                    SimpleEp [name="value"]:
+                        ...
+                `
+            ),
+            output: realign(
+                `
+                App:
+                    SimpleEp:
+                        @name = "value"
+                        ...
+                `
+            ),
+        },
+        EndpointWithUntypedParam: realign(
+            `
+            App:
+                SimpleEp (foo):
+                    ...
+            `
+        ),
+        EndpointWithNamedPrimitiveParam: realign(
+            `
+            App:
+                SimpleEp (param <: string):
+                    ...
+            `
+        ),
+        EndpointWithUnnamedRefParam: realign(
+            `
+            App:
+                SimpleEp (Types.type):
+                    ...
+            `
+        ),
+        EndpointWithNamedRefParam: realign(
+            `
+            App:
+                SimpleEp (param <: Types.type):
+                    ...
+            `
+        ),
+        EndpointWithPrimitiveParamWithConstraints: realign(
+            `
+            App:
+                SimpleEp (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+                    ...
+            `
+        ),
+        EndpointWithCall: realign(
+            `
+            App:
+                SimpleEp:
+                    App2 <- Endpoint
+            `
+        ),
+        EndpointWithPrimitiveReturn: realign(
+            `
+            App:
+                SimpleEp:
+                    return ok <: string
+            `
+        ),
+        EndpointWithRefReturn: realign(
+            `
+            App:
+                SimpleEp:
+                    return ok <: Types.type
+            `
+        ),
+        RestEndpoint: realign(
+            `
+            RestEndpoint:
+                /:
+                    GET:
+                        ...
+            `
+        ),
+        RestEndpointWithoutNesting: realign(
+            `
+            RestEndpoint:
+                /nested/path:
+                    GET:
+                        ...
+            `
+        ),
+        RestEndpointWithNesting: {
+            input: realign(
+                `
+            RestEndpoint:
+                /nested:
+                    /path:
+                        GET:
+                            ...
+            `
+            ),
+            output: realign(
+                `
+            RestEndpoint:
+                /nested/path:
+                    GET:
+                        ...
+            `
+            ),
+        },
+        RestEndpointWithTypeInPath: realign(
+            `
+            RestEndpoint:
+                /pathwithtype/{native <: int}:
+                    GET:
+                        ...
+            `
+        ),
+        RestEndpointWithQueryParams: realign(
+            `
+            RestEndpoint:
+                /query:
+                    GET?native=string&optional=string?:
+                        ...
+            `
+        ),
+        RestEndpointWithRefParam: realign(
+            `
+            RestEndpoint:
+                /param:
+                    PATCH (t <: Types.Type [~body]):
+                        ...
+            `
+        ),
+        RestEndpointWithPrimitiveParam: realign(
+            `
+            RestEndpoint:
+                /param:
+                    POST (native <: string):
+                        ...
+            `
+        ),
+        RestEndpointWithConstrainedParams: realign(
+            `
+            RestEndpoint:
+                /param:
+                    PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+                        ...
+            `
+        ),
+        Type: realign(
+            `
+            App:
+                !type Type:
+                    @annotation = "annotation"
+                    nativeTypeField <: string
+                    reference <: RestEndpoint.Type
+                    optional <: string?
+                    set <: set of string
+                    sequence <: sequence of string
+                    aliasSequence <: AliasSequence
+                    with_anno <: string:
+                        @annotation = "this is an annotation"
+            `
+        ),
+        Table: realign(
+            `
+            App:
+                !table Table [~tag]:
+                    primaryKey <: string [~pk]
+                    nativeTypeField <: string
+                    reference <: RestEndpoint.Type
+                    optional <: string?
+                    set <: set of string
+                    sequence <: sequence of string
+                    with_anno <: string:
+                        @annotation = "this is an annotation"
+                    decimal_with_precision <: decimal(5.8)
+                    string_max_constraint <: string(5)
+                    string_range_constraint <: string(5..10)
+            `
+        ),
+        Enum: realign(
+            `
+            App:
+                !enum Enum [~tag]:
+                    ENUM_1: 1
+                    ENUM_2: 2
+                    ENUM_3: 3
+            `
+        ),
+        TypeRef: realign(
+            `
+            Namespace :: App:
+                !type Type:
+                    shortRef <: Type
+                    fullRef <: Namespace :: App.Type
+            `
+        ),
+        UnsafeNames: realign(
+            `
+            %28App%29Name%21:
+                !type %28Type%29Name%21:
+                    %28Field%29Name%21 <: %28App%29Name%21.%28Type%29Name%21 [~%28Tag%29Name%21]
+            `
+        ),
+    };
 
-    test("RestEndpointWithPrimitiveParam", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /param:
-            POST (native <: string):
-                ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
+    type SyslCase = { input: string; output: string };
+    type TestSysl = SyslCase | string;
 
-    test("RestEndpointWithConstrainedParams", async () => {
-        const sysl = realign(`
-    RestEndpoint:
-        /param:
-            PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
-                ...
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
+    // sysl should be of type TestSysl, but the compiler treats `SyslCase | string` as `string`.
+    const inputSysl = (sysl: SyslCase): string => sysl.input ?? sysl;
+    const expectedSysl = (sysl: SyslCase): string => sysl.output ?? sysl;
 
-    // Types
-    test("Type", async () => {
-        const sysl = realign(`
-    App:
-        !type Type:
-            @annotation = "annotation"
-            nativeTypeField <: string
-            reference <: RestEndpoint.Type
-            optional <: string?
-            set <: set of string
-            sequence <: sequence of string
-            aliasSequence <: AliasSequence
-            with_anno <: string:
-                @annotation = "this is an annotation"
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("Table", async () => {
-        const sysl = realign(`
-    App:
-        !table Table [~tag]:
-            primaryKey <: string [~pk]
-            nativeTypeField <: string
-            reference <: RestEndpoint.Type
-            optional <: string?
-            set <: set of string
-            sequence <: sequence of string
-            with_anno <: string:
-                @annotation = "this is an annotation"
-            decimal_with_precision <: decimal(5.8)
-            string_max_constraint <: string(5)
-            string_range_constraint <: string(5..10)
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("Enum", async () => {
-        const sysl = realign(`
-    App:
-        !enum Enum [~tag]:
-            ENUM_1: 1
-            ENUM_2: 2
-            ENUM_3: 3
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("TypeRef", async () => {
-        const sysl = realign(`
-    Namespace :: App:
-        !type Type:
-            shortRef <: Type
-            fullRef <: Namespace :: App.Type
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
-    });
-
-    test("UnsafeNames", async () => {
-        const sysl = realign(`
-    %28App%29Name%21:
-        !type %28Type%29Name%21:
-            %28Field%29Name%21 <: %28App%29Name%21.%28Type%29Name%21 [~%28Tag%29Name%21]
-    `);
-        const model = await Model.fromText(sysl);
-        expect(model.toSysl()).toEqual(sysl);
+    test.each(Object.entries(cases))("%s", async (_, sysl: TestSysl) => {
+        const model = await Model.fromText(inputSysl(sysl as SyslCase));
+        expect(model.toSysl()).toEqual(expectedSysl(sysl as SyslCase));
     });
 });

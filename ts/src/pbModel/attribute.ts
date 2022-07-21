@@ -16,14 +16,14 @@ export class PbAttribute {
     @jsonArrayMember(Location) sourceContexts!: Location[];
 
     getAnnoValue(): AnnoValue {
-        if (this.s) {
+        if (this.s != null) {
             return this.s;
-        } else if (this.n) {
+        } else if (this.n != null) {
             return this.n;
-        } else if (this.a) {
-            return this.a.elt.map(i => i.getAnnoValue());
+        } else if (this.a != null) {
+            return this.a.elt?.map(i => i.getAnnoValue()) ?? [];
         } else {
-            throw new Error("Missing attribute value");
+            throw new Error("Missing attribute value: " + JSON.stringify(this));
         }
     }
 

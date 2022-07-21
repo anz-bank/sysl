@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import {
+    defaultTypeEmitter,
     jsonArrayMember,
     jsonMapMember,
     jsonMember,
@@ -27,6 +28,7 @@ import {
     TypePrimitive,
     Union,
 } from "../model/type";
+import type { PbTypeDefList } from "./type_list";
 import { PbAppName } from "./appname";
 import { PbAttribute } from "./attribute";
 import { serializerFor, serializerForFn } from "./serialize";
@@ -37,11 +39,16 @@ export class PbValue {
     @jsonMember d?: number;
     @jsonMember s?: string;
 
-    toModel(): ValueType {
-        if (this.b) return this.b;
-        else if (this.d) return this.d;
-        else if (this.s) return this.s;
-        else throw new Error("Missing Type value");
+    toModel(): ValueType | undefined {
+        if (this.b != null) {
+            return this.b;
+        } else if (this.d != null) {
+            return this.d;
+        } else if (this.s != null) {
+            return this.s;
+        } else {
+            throw new Error("Missing Type value");
+        }
     }
 }
 
@@ -51,9 +58,11 @@ export class PbTypeConstraintRange {
     @jsonMember max?: PbValue;
 
     toModel(): TypeConstraintRange {
+        const min = this.min?.toModel();
+        const max = this.max?.toModel();
         return new TypeConstraintRange({
-            min: Number(this.min?.toModel()),
-            max: Number(this.max?.toModel()),
+            min: min ? Number(min) : undefined,
+            max: max ? Number(max) : undefined,
         });
     }
 }
@@ -154,7 +163,7 @@ export class PbTypeDefTuple {
 }
 
 @jsonObject
-export class PbTypeDefList {
+export class PbTypeDefUnion {
     @jsonArrayMember(() => PbTypeDef) type!: PbTypeDef[];
 
     toModel(): Union {
@@ -183,17 +192,16 @@ export class PbTypeDef {
     @jsonMember typeRef?: PbScopedRef;
     @jsonMember set?: PbTypeDef;
     @jsonMember sequence?: PbTypeDef;
+    @jsonMember list?: PbTypeDefList;
     @jsonArrayMember(PbTypeConstraint) constraint?: PbTypeConstraint[];
     @jsonMember opt!: boolean;
     @jsonArrayMember(Location) sourceContexts!: Location[];
     @jsonMember enum?: PbTypeDefEnum;
     @jsonMember tuple?: PbTypeDefTuple;
-    @jsonMember list?: PbTypeDefList;
-    @jsonMapMember(PbTypeDef, PbTypeDef, serializerFor(PbTypeDef)) map?: Map<
-        PbTypeDef,
-        PbTypeDef
-    >;
-    @jsonMember oneOf?: PbTypeDefList;
+    // FIXME: Defaults to an empty map even if not defined in the deserialized source.
+    @jsonMapMember(PbTypeDef, PbTypeDef, serializerFor(PbTypeDef))
+    map?: Map<PbTypeDef, PbTypeDef>;
+    @jsonMember oneOf?: PbTypeDefUnion;
     @jsonMember noType?: Object;
     @jsonMapMember(String, PbAttribute, serializerFor(PbAttribute)) attrs!: Map<
         string,
@@ -209,20 +217,21 @@ export class PbTypeDef {
             this.sequence ||
             this.enum ||
             this.tuple ||
-            this.list?.type?.length ||
+            this.list ||
             this.map?.size
         );
     }
 
     static defsToModel(attrDefs: Map<string, PbTypeDef>): Type[] {
         return sortLocationalArray(
-            Array.from(attrDefs).map(([key, value]) => value.toModel(key))
+            Array.from(attrDefs).map(([key, value]) => value?.toModel(key))
         );
     }
 
     // `isInner` specifies whether a type exists within something else and is not a type definition.
     // It is true by default, meaning the type is a nested definition or a parameter.
-    // When it is false, it means it is a top level `Type` definition and therefore may be an `Alias`
+    // When it is false, it means it is a top level `Type` definition and therefore may be an
+    // `Alias`.
     toModel(name?: string | undefined, isInner: boolean = true): Type {
         let value:
             | Primitive
@@ -255,6 +264,12 @@ export class PbTypeDef {
             value = new TypeDecorator<Type>(
                 this.sequence.toModel(),
                 DecoratorKind.Sequence
+            );
+        } else if (this.list) {
+            console.log(this.list);
+            value = new TypeDecorator<Type>(
+                this.list.toModel(),
+                DecoratorKind.List
             );
         } else if (this.enum) {
             discriminator = "!enum";

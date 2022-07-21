@@ -251,6 +251,7 @@ export enum DecoratorKind {
     Set,
     Sequence,
     Reference,
+    List,
 }
 
 export type ReferenceParams = {
