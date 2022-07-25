@@ -68,6 +68,18 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     )}
                 )}
             ,
+            inline:
+                # FIXME: Weird syntax needed to parse macro properly.
+                let model = (\. {:macro:CREATE TABLE t (c INT REFERENCES ft):})({});
+                let fk = ((model.entities single).foreign_keys single).foreign_keys single;
+                fk = (attribute: 'c', reference_table: 'ft', reference_attribute: 'c')
+            ,
+            inline_with_column:
+                # FIXME: Weird syntax needed to parse macro properly.
+                let model = (\. {:macro:CREATE TABLE t (c INT REFERENCES ft (fc)):})({});
+                let fk = ((model.entities single).foreign_keys single).foreign_keys single;
+                fk = (attribute: 'c', reference_table: 'ft', reference_attribute: 'fc')
+            ,
             namespaced:
                 {:macro:CREATE TABLE t (c INT, FOREIGN KEY (c) REFERENCES namespace.ft (fc)):}.entities
                 --- {(
@@ -347,6 +359,17 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
 
         alter: [
             {:macro:ALTER FUNCTION public.newid() OWNER TO foo:},
+        ] >> . = emptyModel,
+    ),
+
+    change_streams: (
+        create: [
+            {:macro:CREATE CHANGE STREAM foo:},
+            {:macro:CREATE CHANGE STREAM foo FOR ALL:},
+            {:macro:CREATE CHANGE STREAM foo FOR t:},
+            {:macro:CREATE CHANGE STREAM foo FOR t, s, r:},
+            {:macro:CREATE CHANGE STREAM foo FOR t(c):},
+            {:macro:CREATE CHANGE STREAM foo FOR t(c), s(d), r(e):},
         ] >> . = emptyModel,
     ),
 )

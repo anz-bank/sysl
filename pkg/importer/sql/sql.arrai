@@ -17,6 +17,7 @@ ddl                 -> stmt=(create_database
                             |create_trigger
                             |create_extension
                             |comment_on_extension
+                            |create_change_stream
                             |alter_table
                             |alter_sequence
                             |alter_function
@@ -35,7 +36,7 @@ create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
 table_prefix        -> ('`' name=[^`]+ '`' | name=[^(.]+) "."; //'
 create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name "("(
-                              attr=(column_name attr_type generated? options_def? pk?)
+                              attr=(column_name attr_type generated? options_def? pk? references?)
                             | table_constraint
                         ):"," ","? ")"
                         options_def?
@@ -44,9 +45,8 @@ create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name 
 table_constraint    -> ("CONSTRAINT" constraint_name)? (check | unique | fk | pks=(pk "(" key_parts ")"));
 check               -> "CHECK" "(" condition ")";
 unique              -> "UNIQUE"? ("KEY" key_name=name)? "(" column_name:"," ")";
-fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")"
-                       "REFERENCES" foreign=(table_prefix? table_name "(" column_name:"," ")")
-                       on_delete? on_update?;
+fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")" references on_delete? on_update?;
+references          -> "REFERENCES" foreign=(table_prefix? table_name ("(" column_name:"," ")")?);
 cluster             -> "INTERLEAVE" "IN" "PARENT" table_name on_delete?; //# Spanner
 on_delete           -> "ON" "DELETE" on_action;
 on_update           -> "ON" "UPDATE" on_action;
@@ -73,7 +73,8 @@ sequence_opt        -> "START" "WITH" \d+
                      | "CACHE" \d+
                      | "NO" "CYCLE";
 
-alter_sequence      -> "ALTER" "SEQUENCE" table_prefix? sequence_name "OWNED" "BY" dotted_name;
+alter_sequence      -> "ALTER" "SEQUENCE" table_prefix? sequence_name
+                        ("OWNED" "BY" dotted_name | "RESTART" "WITH" value)*;
 alter_function      -> "ALTER" "FUNCTION" table_prefix? function_name=name "(" ")" "OWNER" "TO" owner_name=name;
 
 create_function     -> "CREATE" "FUNCTION" table_prefix? function_name=name "(" ")" "RETURNS" var_name=name
@@ -91,6 +92,9 @@ create_trigger      -> "CREATE" "TRIGGER" trigger_name=name
 
 create_extension    -> "CREATE" "EXTENSION" if_not_exists? name "WITH" "SCHEMA" name;
 comment_on_extension -> "COMMENT" "ON" "EXTENSION" name "IS" string_value;
+
+create_change_stream -> "CREATE" "CHANGE" "STREAM" name ("FOR"
+                        ("ALL" | table_name ("(" column_name:"," ")")?):",")?;
 
 alter_table         -> "ALTER" "TABLE" "ONLY"? table_prefix? table_name (alter=(table_alteration|attr_alteration)):",";
 table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name (attr_type | options_def) generated?)
@@ -160,14 +164,14 @@ STRUCT_TYPE         -> "STRUCT" "<" fields=(column_name attr_type):"," ">"; //# 
 
 SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | INT64     = ("BIGINT" | "INT64")
-                     | INT       = ("INTEGER" | "INT")
+                     | INT       = ("INTEGER" | "INT" | "SERIAL")
                      | FLOAT64   = ("FLOAT64" | "DOUBLE")
                      | FLOAT     = "FLOAT"
                      | DECIMAL   = (("DECIMAL" | "DEC" | "FIXED" | "NUMERIC") ("(" precision=int_value "," scale=int_value ")")?)
                      | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP" (("WITHOUT" | "WITH") "TIME" "ZONE")?)
                      | DATE      = "DATE"
+                     | BYTES     = ("BYTES" ("(" length ")")? | "BYTEA" | "BLOB" | "LONGBLOB" | "JSONB")
                      | STRING    = (("TEXT" | "VARCHAR" | "STRING" | "CHARACTER" "VARYING"? | "JSON") ("(" length ")")?)
-                     | BYTES     = ("BYTES" ("(" length ")")? | "BYTEA" | "BLOB" | "LONGBLOB")
                      | UUID      = "UUID"
                      ;
 
@@ -333,7 +337,7 @@ let evalOnAction = \a cond a {
 };
 
 let evalForeignKeyConstraint = \parsed
-    let reference = parsed.fk.foreign -> (
+    let reference = parsed.fk.references.foreign -> (
         table_name: .table_name.'' rank (:.@),
         attributes: .column_name >> (.'' rank (:.@)),
     );
@@ -442,10 +446,29 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
                 name_prefix: cond val {
                     (:table_prefix, ...): table_prefix.name.'' rank (:.@),
                 },
-                attributes: attributes,
+                :attributes,
+
                 foreign_keys: cond val {
                     (table_constraint: [...constraints], ...):
                         constraints where .@item.fk?:{} => evalConstraint(.@item),
+                    _: cond val.attr where .@item.references?:'' {
+                        # Handle inline references without specific columns.
+                        [fk]:
+                            let name = fk.column_name.'' rank (:.@);
+                            {(
+                                foreign_keys: {(
+                                    attribute: name,
+                                    reference_table: fk.references.foreign.table_name.'' rank (:.@),
+                                    reference_attribute: cond fk.references.foreign.column_name?:[] {
+                                        [name]: name.'' rank (:.@),
+                                        _: name
+                                    },
+                                )},
+                                constraint_name: '',
+                                on_update: {},
+                                on_delete: {},
+                            )}
+                    }
                 },
                 unique_keys: cond val {
                     (table_constraint: [...constraints], ...):
