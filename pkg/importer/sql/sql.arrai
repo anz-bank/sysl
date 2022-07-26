@@ -123,7 +123,7 @@ drop_table          -> "DROP" "TABLE" if_exists? table_name;
 drop_index          -> "DROP" "INDEX" if_exists? index_name;
 drop_view           -> "DROP" "VIEW" if_exists? view_name;
 
-insert              -> "INSERT" "INTO" table_name "(" column_name:"," ")"
+insert              -> "INSERT" "INTO"? table_name "(" column_name:"," ")"
                        ("VALUES" ("(" value:"," ")"):"," on_conflict? | select);
 on_conflict         -> "ON" "CONFLICT" "(" column_name:"," ")" conflict_action?;
 conflict_action     -> "DO" "NOTHING"; // TODO: "DO" "UPDATE" "SET"

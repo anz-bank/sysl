@@ -310,7 +310,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             insert = emptyModel
         ,
         selection:
-            let insert = {:macro:INSERT INTO t (c) SELECT a FROM b:};
+            let insert = {:macro:INSERT t (c) SELECT a FROM b:};
             insert = emptyModel
         ,
     ),
