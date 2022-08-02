@@ -1,13 +1,13 @@
-import "reflect-metadata";
 import { readFile } from "fs/promises";
-import { Location } from "../common/location";
+import "reflect-metadata";
 import { indent, joinedAppName, safeName } from "../common/format";
+import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
-import { IDescribable, ILocational, IRenderable } from "./common";
+import { Annotation, Tag } from "./attribute";
+import { IElement, IElementParams, IRenderable, setParentDeep } from "./common";
+import { addTags, renderAnnos } from "./renderers";
 import { Endpoint } from "./statement";
 import { Type } from "./type";
-import { Annotation, Tag } from "./attribute";
-import { renderAnnos, addTags } from "./renderers";
 
 export type ImportParams = {
     filePath: string;
@@ -49,37 +49,40 @@ export class AppName {
     }
 }
 
-export type ApplicationParams = {
+export type ApplicationParams = IElementParams & {
     name: AppName;
     endpoints?: Endpoint[];
     types?: Type[];
-    locations?: Location[];
-    tags?: Tag[];
-    annos?: Annotation[];
 };
 
-export class Application implements IDescribable, ILocational, IRenderable {
+export class Application implements IElement {
     name: AppName;
     endpoints: Endpoint[];
     types: Type[];
     locations: Location[];
-    tags: Tag[];
     annos: Annotation[];
+    tags: Tag[];
+    parent: undefined;
+    model?: Model;
 
     constructor({
         name,
         endpoints,
         types,
         locations,
-        tags,
         annos,
+        tags,
+        model,
     }: ApplicationParams) {
         this.name = name;
         this.endpoints = endpoints ?? [];
         this.types = types ?? [];
         this.locations = locations ?? [];
-        this.tags = tags ?? [];
         this.annos = annos ?? [];
+        this.tags = tags ?? [];
+        this.model = model;
+
+        setParentDeep(this, this.endpoints, this.types, this.annos, this.tags);
     }
 
     toSysl(): string {

@@ -2,20 +2,46 @@ import "reflect-metadata";
 import { indent, joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { Annotation, Tag } from "./attribute";
-import { IDescribable, ILocational, IRenderable } from "./common";
+import { IElement, IElementParams, setParentDeep } from "./common";
+import { Model } from "./model";
 import { addTags, renderAnnos, renderInlineSections } from "./renderers";
 import { Reference, Type, TypeDecorator } from "./type";
 
 /** Name of an endpoint that represents the absence of endpoints in an {@link Application}. */
 const placeholder = "...";
 
-export class Param {
+export type ParamParams = IElementParams & {
+    name: string;
+    type?: Type;
+};
+
+export class Param implements IElement {
     name: string;
     type: Type | undefined;
+    annos: Annotation[];
+    tags: Tag[];
+    locations: Location[];
+    parent?: IElement;
+    model?: Model;
 
-    constructor(name: string, type?: Type) {
+    constructor({
+        name,
+        type,
+        annos,
+        tags,
+        locations,
+        parent,
+        model,
+    }: ParamParams) {
         this.name = name;
         this.type = type;
+        this.annos = annos ?? [];
+        this.tags = tags ?? [];
+        this.locations = locations ?? [];
+        this.parent = parent;
+        this.model = model;
+
+        setParentDeep(this, this.annos, this.tags);
     }
 
     toSysl(): string {
@@ -210,7 +236,7 @@ export enum LoopMode {
     UNRECOGNIZED = -1,
 }
 
-export type StatementParams = {
+export type StatementParams = IElementParams & {
     value:
         | Action
         | Call
@@ -222,12 +248,9 @@ export type StatementParams = {
         | Group
         | Return
         | undefined;
-    locations?: Location[];
-    tags?: Tag[];
-    annos?: Annotation[];
 };
 
-export class Statement implements IDescribable, ILocational, IRenderable {
+export class Statement implements IElement {
     value:
         | Action
         | Call
@@ -239,20 +262,41 @@ export class Statement implements IDescribable, ILocational, IRenderable {
         | Group
         | Return
         | undefined;
-    locations: Location[];
-    tags: Tag[];
     annos: Annotation[];
+    tags: Tag[];
+    locations: Location[];
+    parent?: IElement;
+    model?: Model;
 
-    constructor({ value, locations, tags, annos }: StatementParams) {
+    constructor({
+        value,
+        annos,
+        tags,
+        locations,
+        parent,
+        model,
+    }: StatementParams) {
         this.value = value;
-        this.locations = locations ?? [];
-        this.tags = tags ?? [];
         this.annos = annos ?? [];
+        this.tags = tags ?? [];
+        this.locations = locations ?? [];
+        this.parent = parent;
+        this.model = model;
+
+        setParentDeep(this, this.children(), this.annos, this.tags);
     }
 
     /** Returns a statement with the given action text. */
     static action(action: string): Statement {
         return new Statement({ value: new Action(action) });
+    }
+
+    /** Returns an array of child statements nested in this statement's {@code value}. */
+    children(): Statement[] {
+        if (this.value && "stmt" in this.value) {
+            return this.value.stmt;
+        }
+        return [];
     }
 
     toSysl(): string {
@@ -290,7 +334,7 @@ export class RestParams {
     }
 }
 
-export type EndpointParams = {
+export type EndpointParams = IElementParams & {
     name: string;
     longName?: string | undefined;
     docstring?: string | undefined;
@@ -299,12 +343,9 @@ export type EndpointParams = {
     statements?: Statement[];
     isPubsub?: boolean;
     pubsubSource?: string[];
-    locations?: Location[];
-    tags?: Tag[];
-    annos?: Annotation[];
 };
 
-export class Endpoint implements IDescribable, ILocational, IRenderable {
+export class Endpoint implements IElement {
     name: string;
     longName: string | undefined;
     docstring: string | undefined;
@@ -313,9 +354,11 @@ export class Endpoint implements IDescribable, ILocational, IRenderable {
     restParams: RestParams | undefined;
     isPubsub: boolean;
     pubsubSource: string[];
-    locations: Location[];
-    tags: Tag[];
     annos: Annotation[];
+    tags: Tag[];
+    locations: Location[];
+    parent?: IElement;
+    model?: Model;
 
     constructor({
         name,
@@ -326,9 +369,11 @@ export class Endpoint implements IDescribable, ILocational, IRenderable {
         statements,
         restParams,
         pubsubSource,
-        locations,
-        tags,
         annos,
+        tags,
+        locations,
+        parent,
+        model,
     }: EndpointParams) {
         this.name = name;
         this.longName = longName;
@@ -338,9 +383,19 @@ export class Endpoint implements IDescribable, ILocational, IRenderable {
         this.restParams = restParams;
         this.isPubsub = isPubsub ?? false;
         this.pubsubSource = pubsubSource ?? [];
-        this.locations = locations ?? [];
-        this.tags = tags ?? [];
         this.annos = annos ?? [];
+        this.tags = tags ?? [];
+        this.locations = locations ?? [];
+        this.parent = parent;
+        this.model = model;
+
+        setParentDeep(
+            this,
+            this.params,
+            this.statements,
+            this.annos,
+            this.tags
+        );
     }
 
     private renderQueryParams(): string {

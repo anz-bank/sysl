@@ -1,7 +1,8 @@
 import "reflect-metadata";
-import { Location } from "../common/location";
 import { indent } from "../common/format";
-import { ILocational, IRenderable } from "./common";
+import { Location } from "../common/location";
+import { IChild, IElement, ILocational, IRenderable } from "./common";
+import { Model } from "./model";
 
 export type AnnoValue = string | number | AnnoValue[];
 
@@ -9,17 +10,21 @@ export type AnnotationParams = {
     name: string;
     value: AnnoValue;
     locations?: Location[];
+    model?: Model;
 };
 
-export class Annotation implements ILocational, IRenderable {
+export class Annotation implements IChild, ILocational, IRenderable {
     value: AnnoValue;
     name: string;
     locations: Location[];
+    parent?: IElement;
+    model?: Model;
 
-    constructor({ name, value, locations }: AnnotationParams) {
+    constructor({ name, value, locations, model }: AnnotationParams) {
         this.name = name;
         this.value = value;
         this.locations = locations ?? [];
+        this.model = model;
     }
 
     toSysl(): string {
@@ -32,7 +37,7 @@ export class Annotation implements ILocational, IRenderable {
                         .map(line => (line ? ` ${line}` : ""));
                     return `:\n` + indent(`|${lines.join("\n|")}`);
                 } else {
-                    return ` "${v}"`;
+                    return ` "${v.replaceAll(`"`, `\\"`)}"`;
                 }
             } else if (typeof v === "number") {
                 return ` "${v}"`;
@@ -53,15 +58,19 @@ export class Annotation implements ILocational, IRenderable {
 export type TagParams = {
     value: AnnoValue;
     locations?: Location[];
+    model?: Model;
 };
 
-export class Tag implements ILocational, IRenderable {
+export class Tag implements IChild, ILocational, IRenderable {
     value: AnnoValue;
     locations: Location[];
+    parent?: IElement;
+    model?: Model;
 
-    constructor({ value, locations }: TagParams) {
+    constructor({ value, locations, model }: TagParams) {
         this.value = value;
         this.locations = locations ?? [];
+        this.model = model;
     }
 
     toSysl(): string {

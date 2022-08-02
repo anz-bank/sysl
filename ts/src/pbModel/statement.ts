@@ -35,10 +35,10 @@ export class PbParam {
     @jsonMember(() => PbTypeDef) type!: PbTypeDef;
 
     toModel(): Param {
-        let param = new Param(
-            this.name,
-            this.type.hasValue() ? this.type.toModel() : undefined
-        );
+        let param = new Param({
+            name: this.name,
+            type: this.type.hasValue() ? this.type.toModel() : undefined,
+        });
         return param;
     }
 }

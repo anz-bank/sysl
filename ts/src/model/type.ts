@@ -2,9 +2,9 @@ import "reflect-metadata";
 import { indent, safeName } from "../common/format";
 import { Location } from "../common/location";
 import { Annotation, Tag } from "./attribute";
-import { IDescribable, ILocational, IRenderable } from "./common";
-import { AppName } from "./model";
-import { renderAnnos, addTags } from "./renderers";
+import { IElement, IElementParams, IRenderable, setParentDeep } from "./common";
+import { AppName, Model } from "./model";
+import { addTags, renderAnnos } from "./renderers";
 
 export type TypeConstraintRangeParams = {
     min?: number | undefined;
@@ -52,15 +52,22 @@ export class TypeConstraintResolution {
     }
 }
 
-export type TypeConstraintParams = TypeConstraintLength;
+export type TypeConstraintParams = {
+    range?: TypeConstraintRange;
+    length?: TypeConstraintLength;
+    resolution?: TypeConstraintResolution;
+    precision?: number;
+    scale?: number;
+    bitWidth?: number;
+};
 
 export class TypeConstraint {
     range: TypeConstraintRange | undefined;
     length: TypeConstraintLength | undefined;
     resolution: TypeConstraintResolution | undefined;
-    precision: number;
-    scale: number;
-    bitWidth: number;
+    precision?: number;
+    scale?: number;
+    bitWidth?: number;
 
     constructor({
         range,
@@ -69,14 +76,7 @@ export class TypeConstraint {
         precision,
         scale,
         bitWidth,
-    }: {
-        range: TypeConstraintRange | undefined;
-        length: TypeConstraintParams | undefined;
-        resolution: TypeConstraintResolution | undefined;
-        precision: number;
-        scale: number;
-        bitWidth: number;
-    }) {
+    }: TypeConstraintParams) {
         this.range = range;
         this.length = length;
         this.resolution = resolution;
@@ -99,29 +99,29 @@ export class Primitive implements IRenderable {
         const constraint = this.constraints?.length
             ? this.constraints[0]
             : null;
-        const isPresentAndNumber = (n: number | undefined) => n && !isNaN(n);
+        const isNumber = (n?: number) => n != null && !isNaN(n);
 
         const lengthStr = (length: TypeConstraintLength) => {
-            if (
-                isPresentAndNumber(length.max) &&
-                isPresentAndNumber(length.min)
-            ) {
+            if (isNumber(length.max) && isNumber(length.min)) {
                 return `(${length.min}..${length.max})`;
-            } else if (isPresentAndNumber(length.max)) {
+            } else if (isNumber(length.max)) {
                 return `(${length.max})`;
-            } else if (isPresentAndNumber(length.min)) {
+            } else if (isNumber(length.min)) {
                 return `(${length.min}..)`;
             }
             return "";
         };
 
         if (constraint) {
-            if (
-                isPresentAndNumber(constraint.precision) &&
-                isPresentAndNumber(constraint.scale)
-            )
+            if (isNumber(constraint.precision) && isNumber(constraint.scale)) {
                 return `(${constraint.precision}.${constraint.scale})`;
-            if (constraint.length) return lengthStr(constraint.length);
+            }
+            if (constraint.length) {
+                return lengthStr(constraint.length);
+            }
+            if (constraint.bitWidth) {
+                return constraint.bitWidth.toString();
+            }
         }
 
         return "";
@@ -211,7 +211,7 @@ export class Struct implements IRenderable {
                 .map(e => {
                     let sysl = addTags(
                         `${safeName(e.name)} <: ${e.value.toSysl()}${
-                            e.opt ? "?" : ""
+                            e.optional ? "?" : ""
                         }`,
                         e.tags
                     );
@@ -295,45 +295,58 @@ export type TypeValue =
     | Union
     | Reference;
 
-export type TypeParams = {
+export type TypeParams = IElementParams & {
     discriminator?: string;
     name: string;
     value: TypeValue;
-    opt?: boolean;
-    locations?: Location[];
-    tags?: Tag[];
-    annos?: Annotation[];
+    optional?: boolean;
 };
 
-export class Type implements IDescribable, ILocational, IRenderable {
-    discriminator: string | undefined;
+export class Type implements IElement {
+    discriminator?: string;
     name: string;
-    opt: boolean;
+    optional: boolean;
     value: TypeValue;
-    locations: Location[];
-    tags: Tag[];
     annos: Annotation[];
+    tags: Tag[];
+    locations: Location[];
+    parent?: IElement;
+    model?: Model;
 
     constructor({
         discriminator,
         name,
-        opt,
+        optional: optional,
         value,
-        locations,
-        tags,
         annos,
+        tags,
+        locations,
+        parent,
+        model,
     }: TypeParams) {
         this.discriminator = discriminator;
         this.name = name;
-        this.opt = opt ?? false;
+        this.optional = optional ?? false;
         this.value = value;
-        this.locations = locations ?? [];
-        this.tags = tags ?? [];
         this.annos = annos ?? [];
+        this.tags = tags ?? [];
+        this.locations = locations ?? [];
+        this.parent = parent;
+        this.model = model;
+
+        setParentDeep(this, this.children(), this.annos, this.tags);
+    }
+
+    /** Returns an array of child types (i.e. fields) nested in this statement's {@code value}. */
+    children(): Type[] {
+        if (this.value && "elements" in this.value) {
+            return this.value.elements;
+        }
+        return [];
     }
 
     toSysl(): string {
-        const optStr = this.opt ? "?" : "";
+        const optStr = this.optional ? "?" : "";
         // Definition rendering
         if (this.discriminator) {
             let sysl = `${addTags(

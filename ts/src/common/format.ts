@@ -1,10 +1,10 @@
 const defaultIndent = "    ";
 
 export function indent(text: string): string {
-    return `${text
+    return text
         .split("\n")
         .map(l => `${defaultIndent}${l}`)
-        .join("\n")}`;
+        .join("\n");
 }
 
 export function joinedAppName(
@@ -14,6 +14,7 @@ export function joinedAppName(
     return name.join(compact ? "::" : " :: ");
 }
 
+/** Sysl reserved keywords that cannot be used in names. */
 const keywords = [
     "int",
     "int32",
@@ -32,11 +33,10 @@ const keywords = [
 
 /** Escapes characters that are unsafe to use in Sysl names. */
 export function safeName(name: string): string {
-    name = name.replaceAll(/[/\\{} ]+/g, "_");
-    name = name.replaceAll(
-        /([^-a-zA-Z0-9_])/g,
-        m => `%${m.charCodeAt(0).toString(16)}`
-    );
+    const percentEncode = (m: string) => `%${m.charCodeAt(0).toString(16)}`;
+    name = name
+        .replaceAll(/[/\\{} ]+/g, "_")
+        .replaceAll(/([^-a-zA-Z0-9_])/g, percentEncode);
     if (keywords.includes(name)) {
         name += "_";
     }

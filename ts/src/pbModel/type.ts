@@ -39,6 +39,10 @@ export class PbValue {
     @jsonMember d?: number;
     @jsonMember s?: string;
 
+    isEmpty(): boolean {
+        return this.b == null && this.d == null && this.s == null;
+    }
+
     toModel(): ValueType | undefined {
         if (this.b != null) {
             return this.b;
@@ -47,7 +51,7 @@ export class PbValue {
         } else if (this.s != null) {
             return this.s;
         } else {
-            throw new Error("Missing Type value");
+            return undefined;
         }
     }
 }
@@ -57,7 +61,14 @@ export class PbTypeConstraintRange {
     @jsonMember min?: PbValue;
     @jsonMember max?: PbValue;
 
-    toModel(): TypeConstraintRange {
+    isEmpty(): boolean {
+        return this.min == null && this.max == null;
+    }
+
+    toModel(): TypeConstraintRange | undefined {
+        if (this.isEmpty()) {
+            return undefined;
+        }
         const min = this.min?.toModel();
         const max = this.max?.toModel();
         return new TypeConstraintRange({
@@ -74,7 +85,17 @@ export class PbTypeConstraintLength {
     @jsonMember({ deserializer: (numStr): number => Number(numStr) })
     max?: number;
 
-    toModel(): TypeConstraintLength {
+    isEmpty(): boolean {
+        return (
+            (this.min == null || isNaN(this.min)) &&
+            (this.max == null || isNaN(this.max))
+        );
+    }
+
+    toModel(): TypeConstraintLength | undefined {
+        if (this.isEmpty()) {
+            return undefined;
+        }
         return new TypeConstraintLength({ min: this.min, max: this.max });
     }
 }
@@ -85,7 +106,17 @@ export class PbTypeConstraintResolution {
     @jsonMember base?: number;
     @jsonMember index?: number;
 
-    toModel(): TypeConstraintResolution {
+    isEmpty(): boolean {
+        return (
+            (this.base == null || isNaN(this.base)) &&
+            (this.index == null || isNaN(this.index))
+        );
+    }
+
+    toModel(): TypeConstraintResolution | undefined {
+        if (this.isEmpty()) {
+            return undefined;
+        }
         return new TypeConstraintResolution({ ...this });
     }
 }
@@ -266,7 +297,6 @@ export class PbTypeDef {
                 DecoratorKind.Sequence
             );
         } else if (this.list) {
-            console.log(this.list);
             value = new TypeDecorator<Type>(
                 this.list.toModel(),
                 DecoratorKind.List
@@ -282,7 +312,7 @@ export class PbTypeDef {
             value = this.oneOf.toModel();
         } else {
             throw new Error(
-                "Error converting type: " + name + " " + JSON.stringify(this)
+                `Error converting type: ${name} ${JSON.stringify(this)}`
             );
         }
         // Catch the case that this is a top level definition and we failed to assign a discriminator above.
@@ -293,7 +323,7 @@ export class PbTypeDef {
         return new Type({
             discriminator,
             name: name ?? "",
-            opt: this.opt,
+            optional: this.opt,
             value,
             locations: this.sourceContexts,
             tags: getTags(this.attrs),

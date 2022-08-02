@@ -1,11 +1,11 @@
-import "jest-extended";
 import { readFile } from "fs/promises";
+import "jest-extended";
 import { realign } from "../common/format";
+import { Annotation, Tag } from "./attribute";
 import { Application, AppName, Model } from "./model";
 import "./renderers";
-import { Primitive, Type, TypePrimitive } from "./type";
 import { Action, Endpoint, Param, Statement } from "./statement";
-import { Annotation, Tag } from "./attribute";
+import { Primitive, Type, TypePrimitive } from "./type";
 
 const allPath = "../ts/test/all.sysl";
 let allModel: Model;
@@ -26,7 +26,7 @@ describe("Constructors", () => {
             new Type({
                 discriminator: "!type",
                 name: "Foo",
-                opt: true,
+                optional: true,
                 value: new Primitive(TypePrimitive.INT),
             })
         ).toHaveProperty("name", "Foo");
@@ -37,7 +37,7 @@ describe("Constructors", () => {
     });
 
     test("New Param", () => {
-        expect(new Param("foo")).toHaveProperty("name", "foo");
+        expect(new Param({ name: "foo" })).toHaveProperty("name", "foo");
     });
 
     test("New Statement", () => {
@@ -71,6 +71,13 @@ describe("Serialization", () => {
                     Foo:
                         ...`)
             );
+        });
+    });
+
+    describe("Annotation", () => {
+        test("escaped quotes", () => {
+            const anno = new Annotation({ name: "foo", value: `"bar"` });
+            expect(anno.toSysl()).toEqual(`foo = "\\"bar\\""`);
         });
     });
 });
@@ -121,6 +128,13 @@ describe("Roundtrip", () => {
             `
             App:
                 @name = "value"
+                ...
+            `
+        ),
+        StringAnnoEscaped: realign(
+            `
+            App:
+                @name = "a \\"value\\""
                 ...
             `
         ),

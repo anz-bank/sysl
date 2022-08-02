@@ -13,11 +13,12 @@ App [~abstract]:
 
 AppWithAnnotation:
     @annotation = "annotation"
-    @annotation1 = "you can do string annotation like this"
-    @annotation2 = ["or", "in", "an", "array"]
+    @annotation1 = "you can do \"string\" annotation like this"
+    @annotation2 = ["or", "in", "an", ["array"]]
     @annotation3 =:
         | you can also do
         | multiline annotations
+        |
         | like this
     ...
 
@@ -86,6 +87,8 @@ Types:
         decimal_with_precision <: decimal(5.8)
         string_max_constraint <: string(5)
         string_range_constraint <: string(5..10)
+        int_with_bitwidth <: int64
+        float_with_bitwidth <: float64
 
     !enum Enum [~tag]:
         ENUM_1: 1
@@ -158,7 +161,7 @@ Statements:
         grouped:
             . <- GroupStatements
 
-    Annotations:
+    AnnotatedEndpoint:
         @annotation1 = "you can do string annotation like this"
         @annotation2 = ["or", "in", "an", "array"]
         @annotation3 =:

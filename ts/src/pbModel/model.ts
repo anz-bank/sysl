@@ -8,15 +8,15 @@ import {
     jsonObject,
     TypedJSON,
 } from "typedjson";
-import { Location } from "../common/location";
 import { joinedAppName } from "../common/format";
-import { Application, AppName, Import, Model } from "../model/model";
+import { Location } from "../common/location";
 import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
-import { PbAttribute } from "./attribute";
+import { Application, AppName, Import, Model } from "../model/model";
 import { PbAppName } from "./appname";
+import { PbAttribute } from "./attribute";
+import { serializerFor } from "./serialize";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
-import { serializerFor } from "./serialize";
 
 @jsonObject
 export class PbImport {
