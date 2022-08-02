@@ -18,19 +18,22 @@
     ],
     "files": [
         "README.md",
-        "dist/**/!(*.test).js",
-        "dist/**/!(*.test).d.ts"
+        "dist"
     ],
     "exports": {
         ".": "./dist/index.js",
-        "model": "./dist/model/index.js",
-        "pbModel": "./dist/pbModel/index.js"
+        "./common": "./dist/common/index.js",
+        "./model": "./dist/model/index.js",
+        "./pbModel": "./dist/pbModel/index.js"
     },
     "types": "dist/index.d.ts",
     "typesVersions": {
         "*": {
             ".": [
                 "dist/index.d.ts"
+            ],
+            "common": [
+                "dist/common/index.d.ts"
             ],
             "model": [
                 "dist/model/index.d.ts"

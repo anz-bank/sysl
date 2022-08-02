@@ -14,5 +14,6 @@
         "outDir": "dist",
         "declaration": true
     },
-    "include": ["src"]
+    "include": ["src"],
+    "exclude": ["vscode", "**/*.test.ts"]
 }
