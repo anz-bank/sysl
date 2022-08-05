@@ -42,3 +42,30 @@ export class PbAttribute {
         });
     }
 }
+
+const tagsAttrName = "patterns";
+
+export function getTags(attrs?: Map<string, PbAttribute>): Tag[] {
+    if (!attrs) {
+        return [];
+    }
+    const tagAttr = Array.from(attrs).find(
+        ([key]) => key === tagsAttrName
+    )?.[1];
+    if (!tagAttr) {
+        return [];
+    }
+    if (!tagAttr.a) {
+        throw new Error("Tags attribute must have an array value");
+    }
+    return tagAttr.a.elt.map(e => e.toTag());
+}
+
+export function getAnnos(attrs?: Map<string, PbAttribute>): Annotation[] {
+    if (!attrs) {
+        return [];
+    }
+    return Array.from(attrs)
+        .filter(([key]) => key !== tagsAttrName)
+        .map(([key, value]) => value.toAnno(key));
+}

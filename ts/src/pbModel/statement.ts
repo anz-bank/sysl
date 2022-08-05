@@ -6,7 +6,7 @@ import {
     jsonObject,
 } from "typedjson";
 import { Location } from "../common/location";
-import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
+import { sortLocationalArray } from "../common/sort";
 import {
     Action,
     Alt,
@@ -25,7 +25,7 @@ import {
     Statement,
 } from "../model/statement";
 import { PbAppName } from "./appname";
-import { PbAttribute } from "./attribute";
+import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
 import { PbTypeDef, PbValue } from "./type";
 

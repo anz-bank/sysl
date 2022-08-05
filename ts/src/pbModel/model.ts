@@ -10,10 +10,10 @@ import {
 } from "typedjson";
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
-import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
+import { sortLocationalArray } from "../common/sort";
 import { Application, AppName, Import, Model } from "../model/model";
 import { PbAppName } from "./appname";
-import { PbAttribute } from "./attribute";
+import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
@@ -59,8 +59,8 @@ export class PbApplication {
                 })
             ),
             locations: this.sourceContexts,
-            tags: this.attrs ? getTags(this.attrs) : [],
-            annos: this.attrs ? getAnnos(this.attrs) : [],
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
         });
     }
 }
@@ -77,6 +77,7 @@ export class PbDocumentModel {
         return this.fromText(syslText, syslFilePath);
     }
 
+    /** Compiles and deserializes a Sysl source string into a model. */
     static async fromText(
         syslText: string,
         syslFilePath: string = "untitled.sysl"
@@ -84,13 +85,14 @@ export class PbDocumentModel {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
         const cmd = `${syslPath} pb --mode=json`;
         const proc = exec(cmd);
-        // console.debug(
-        //     `Sysl Path: ${syslPath}\n${(await exec(`${syslPath} info`)).stdout}`
-        // );
         proc.stdin?.end(
             JSON.stringify([{ path: syslFilePath, content: syslText }])
         );
-        const json = (await proc).stdout;
+        return PbDocumentModel.fromJson((await proc).stdout!);
+    }
+
+    /** Deserializes a compiled JSON string into a model. */
+    static fromJson(json: string | Buffer): PbDocumentModel {
         const serializer = new TypedJSON(PbDocumentModel, {
             errorHandler: error => {
                 throw error;

@@ -2,7 +2,12 @@ import "reflect-metadata";
 import { indent, safeName } from "../common/format";
 import { Location } from "../common/location";
 import { Annotation, Tag } from "./attribute";
-import { IElement, IElementParams, IRenderable, setParentDeep } from "./common";
+import {
+    IElement,
+    IElementParams,
+    IRenderable,
+    setParentAndModelDeep,
+} from "./common";
 import { AppName, Model } from "./model";
 import { addTags, renderAnnos } from "./renderers";
 
@@ -334,7 +339,7 @@ export class Type implements IElement {
         this.parent = parent;
         this.model = model;
 
-        setParentDeep(this, this.children(), this.annos, this.tags);
+        setParentAndModelDeep(this, this.children(), this.annos, this.tags);
     }
 
     /** Returns an array of child types (i.e. fields) nested in this statement's {@code value}. */

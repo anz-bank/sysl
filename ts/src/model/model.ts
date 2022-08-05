@@ -1,10 +1,18 @@
 import { readFile } from "fs/promises";
 import "reflect-metadata";
 import { indent, joinedAppName, safeName } from "../common/format";
+import { allItems, AnyWalkListener, walk } from "../common/iterate";
 import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
 import { Annotation, Tag } from "./attribute";
-import { IElement, IElementParams, IRenderable, setParentDeep } from "./common";
+import {
+    IElement,
+    IElementParams,
+    ILocational,
+    IRenderable,
+    setModelDeep,
+    setParentAndModelDeep,
+} from "./common";
 import { addTags, renderAnnos } from "./renderers";
 import { Endpoint } from "./statement";
 import { Type } from "./type";
@@ -82,7 +90,13 @@ export class Application implements IElement {
         this.tags = tags ?? [];
         this.model = model;
 
-        setParentDeep(this, this.endpoints, this.types, this.annos, this.tags);
+        setParentAndModelDeep(
+            this,
+            this.endpoints,
+            this.types,
+            this.annos,
+            this.tags
+        );
     }
 
     toSysl(): string {
@@ -128,6 +142,9 @@ export class Model implements IRenderable {
         this.imports = imports ?? [];
         this.apps = apps ?? [];
         this.locations = locations ?? [];
+
+        setModelDeep(this, this.apps);
+        allItems(this).forEach(i => (i.model = this));
     }
 
     static async fromFile(syslFilePath: string): Promise<Model> {

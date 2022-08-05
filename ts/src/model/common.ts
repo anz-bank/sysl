@@ -28,7 +28,7 @@ export interface ILocational {
  *
  * {@code parent} can also be undefined if an object has been created detached from a model.
  */
-export interface IChild {
+export interface IChild extends ILocational {
     parent?: IElement;
 }
 
@@ -49,10 +49,30 @@ export type IElementParams = {
     model?: Model;
 };
 
-export function setParent(parent: IElement, children: IChild[]) {
+/**
+ * Sets each of {@code children}'s {@code parent} and {@code model} properties to {@code parent}
+ * and its {@code model}.
+ */
+export function setParentAndModel(parent: IElement, children: IChild[]) {
     children.forEach(child => (child.parent = parent));
+    setModel(parent.model, ...children);
 }
 
-export function setParentDeep(parent: IElement, ...childrenArrays: IChild[][]) {
-    childrenArrays.forEach(children => setParent(parent, children));
+/** Sets each of {@code children}'s model to {@code model}. */
+export function setModel(model?: Model, ...children: IChild[]) {
+    children.forEach(child => (child.model = model));
+}
+
+export function setParentAndModelDeep(
+    parent: IElement,
+    ...childrenArrays: IChild[][]
+) {
+    childrenArrays.forEach(children => {
+        setParentAndModel(parent, children);
+    });
+}
+export function setModelDeep(model?: Model, ...childrenArrays: IChild[][]) {
+    childrenArrays.forEach(children => {
+        setModel(model, ...children);
+    });
 }

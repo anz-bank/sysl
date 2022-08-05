@@ -1,7 +1,9 @@
 import { readFile } from "fs/promises";
 import "jest-extended";
 import { realign } from "../common/format";
+import { allItems, AnyWalkListener, walk } from "../common/iterate";
 import { Annotation, Tag } from "./attribute";
+import { ILocational } from "./common";
 import { Application, AppName, Model } from "./model";
 import "./renderers";
 import { Action, Endpoint, Param, Statement } from "./statement";
@@ -79,6 +81,13 @@ describe("Serialization", () => {
             const anno = new Annotation({ name: "foo", value: `"bar"` });
             expect(anno.toSysl()).toEqual(`foo = "\\"bar\\""`);
         });
+    });
+});
+
+describe("Parent and Model", () => {
+    test("all", async () => {
+        const model = await Model.fromFile(allPath);
+        expect(allItems(model).every(i => i.model === model)).toEqual(true);
     });
 });
 

@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import {
-    defaultTypeEmitter,
     jsonArrayMember,
     jsonMapMember,
     jsonMember,
@@ -8,7 +7,7 @@ import {
     jsonSetMember,
 } from "typedjson";
 import { Location } from "../common/location";
-import { getAnnos, getTags, sortLocationalArray } from "../common/sort";
+import { sortLocationalArray } from "../common/sort";
 import { AppName, ValueType } from "../model";
 import { IRenderable } from "../model/common";
 import {
@@ -28,10 +27,10 @@ import {
     TypePrimitive,
     Union,
 } from "../model/type";
-import type { PbTypeDefList } from "./type_list";
 import { PbAppName } from "./appname";
-import { PbAttribute } from "./attribute";
+import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor, serializerForFn } from "./serialize";
+import type { PbTypeDefList } from "./type_list";
 
 @jsonObject
 export class PbValue {

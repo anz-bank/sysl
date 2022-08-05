@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { indent, joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { Annotation, Tag } from "./attribute";
-import { IElement, IElementParams, setParentDeep } from "./common";
+import { IElement, IElementParams, setParentAndModelDeep } from "./common";
 import { Model } from "./model";
 import { addTags, renderAnnos, renderInlineSections } from "./renderers";
 import { Reference, Type, TypeDecorator } from "./type";
@@ -41,7 +41,7 @@ export class Param implements IElement {
         this.parent = parent;
         this.model = model;
 
-        setParentDeep(this, this.annos, this.tags);
+        setParentAndModelDeep(this, this.annos, this.tags);
     }
 
     toSysl(): string {
@@ -283,7 +283,7 @@ export class Statement implements IElement {
         this.parent = parent;
         this.model = model;
 
-        setParentDeep(this, this.children(), this.annos, this.tags);
+        setParentAndModelDeep(this, this.children(), this.annos, this.tags);
     }
 
     /** Returns a statement with the given action text. */
@@ -389,7 +389,7 @@ export class Endpoint implements IElement {
         this.parent = parent;
         this.model = model;
 
-        setParentDeep(
+        setParentAndModelDeep(
             this,
             this.params,
             this.statements,

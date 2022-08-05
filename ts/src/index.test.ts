@@ -1,6 +1,7 @@
+import "jest-extended";
 import * as index from "./index";
 
-it("exports each directory", () => {
+test("exports each directory", () => {
     const dirs = ["common", "model", "pbModel"];
     dirs.forEach(d => expect(index).toHaveProperty(d));
 
