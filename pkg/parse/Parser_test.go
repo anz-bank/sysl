@@ -1119,6 +1119,12 @@ NotTwo:
 	require.NotNil(t, c.Apps["Two"])
 }
 
+const three = `
+Three:
+	_:
+		...
+`
+
 /* TestParseSyslRetrieverRemote tests a remote import */
 func TestParseSyslRetrieverRemote(t *testing.T) {
 	t.Parallel()
@@ -1133,11 +1139,6 @@ One:
 	two := `
 Two:
 	...
-`
-	three := `
-Three:
-	_:
-		...
 `
 
 	sha := randomSha
@@ -1159,7 +1160,7 @@ Three:
 	require.NotNil(t, c.Apps["Three"])
 }
 
-/* TestParseSyslRetrieverRemoteImport tests that a remote file that imports from it's own repository */
+/* TestParseSyslRetrieverRemoteImport tests a remote file that imports from its own repository */
 func TestParseSyslRetrieverRemoteImport(t *testing.T) {
 	t.Parallel()
 
@@ -1174,10 +1175,6 @@ import three.sysl
 Two:
 	...
 `
-	three := `
-Three:
-	...
-`
 
 	sha := randomSha
 	h, err := retriever.NewHash(sha)
@@ -1186,6 +1183,41 @@ Three:
 		"./one.sysl":                              {one, retriever.ZeroHash, ""},
 		"//github.com/org/repo/two.sysl@master":   {two, h, "master"},
 		"//github.com/org/repo/three.sysl@master": {three, h, "master"},
+	}}
+
+	p := NewParser()
+
+	c, err := p.Parse("./one", r)
+	require.NoError(t, err)
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
+}
+
+/* TestParseSyslRetrieverRemoteImportFromRoot tests a remote file that imports from the root of its own repository */
+func TestParseSyslRetrieverRemoteImportFromRoot(t *testing.T) {
+	t.Parallel()
+
+	one := `
+import //github.com/org/repo/subdir/two.sysl@master
+One:
+	_:
+		...
+`
+	two := `
+import /three.sysl
+Two:
+	...
+`
+
+	sha := randomSha
+	h, err := retriever.NewHash(sha)
+	require.NoError(t, err)
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl": {one, retriever.ZeroHash, ""},
+		"//github.com/org/repo/subdir/two.sysl@master": {two, h, "master"},
+		"//github.com/org/repo/three.sysl@master":      {three, h, "master"},
 	}}
 
 	p := NewParser()

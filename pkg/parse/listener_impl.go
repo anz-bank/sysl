@@ -3347,7 +3347,11 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	if !syslutil.IsRemoteImport(filename) {
 		base := s.base
 		if strings.HasPrefix(filename, "/") {
-			base = "."
+			if syslutil.IsRemoteImport(s.base) {
+				base = syslutil.GetRemoteRepoRoot(s.base)
+			} else {
+				base = "."
+			}
 		}
 
 		if syslutil.IsRemoteImport(s.base) {

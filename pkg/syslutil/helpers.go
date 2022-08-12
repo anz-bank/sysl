@@ -1,6 +1,7 @@
 package syslutil
 
 import (
+	"regexp"
 	"strings"
 
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
@@ -72,4 +73,21 @@ func IsSameCall(a *sysl.Call, b *sysl.Call) bool {
 
 func IsRemoteImport(path string) bool {
 	return strings.HasPrefix(path, "//")
+}
+
+// use the start of the resourceRegexp regex from golden-retriever
+var repoRegexp = `^(//(\w+\.)+\w+(/[\w-]+){2})`
+
+func GetRemoteRepoRoot(path string) string {
+	re, err := regexp.Compile(repoRegexp)
+	if err != nil {
+		return "."
+	}
+
+	m := re.FindStringSubmatch(path)
+	if m == nil {
+		return "."
+	}
+
+	return m[1]
 }
