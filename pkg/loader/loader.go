@@ -57,9 +57,20 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 		modulePath = filepath.Join(root, module)
 	}
 
-	syslRootPath, err := FindRootFromSyslModule(modulePath, fs)
-	if err != nil {
-		return err
+	var syslRootPath string
+	var err error
+	if !rootIsDefined {
+		syslRootPath, err = FindRootFromSyslModule(modulePath, fs, parse.SyslRootMarker)
+		if err != nil {
+			return err
+		}
+
+		if syslRootPath == "" {
+			syslRootPath, err = FindRootFromSyslModule(modulePath, fs, parse.GitRootMarker)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	rootMarkerExists := syslRootPath != ""
@@ -96,7 +107,7 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 	return nil
 }
 
-func FindRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
+func FindRootFromSyslModule(modulePath string, fs afero.Fs, rootMarker string) (string, error) {
 	currentPath, err := filepath.Abs(modulePath)
 	if err != nil {
 		return "", err
@@ -110,7 +121,7 @@ func FindRootFromSyslModule(modulePath string, fs afero.Fs) (string, error) {
 	// Keep walking up the directories to find nearest root marker
 	for {
 		currentPath = filepath.Dir(currentPath)
-		exists, err := afero.Exists(fs, filepath.Join(currentPath, parse.SyslRootMarker))
+		exists, err := afero.Exists(fs, filepath.Join(currentPath, rootMarker))
 		reachedRoot := currentPath == systemRoot || (err != nil && os.IsPermission(err))
 		switch {
 		case exists:

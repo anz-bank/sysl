@@ -17,6 +17,7 @@ import (
 )
 
 const SyslRootMarker = ".sysl"
+const GitRootMarker = ".git"
 
 func NewReader(fs afero.Fs) (reader.Reader, error) {
 	pinner, err := NewPinner(fs)

@@ -26,6 +26,7 @@ import (
 const (
 	currentWorkingDirectory = "."
 	syslRootMarker          = parse.SyslRootMarker
+	gitRootMarker           = parse.GitRootMarker
 )
 
 type folderTestStructure struct {
@@ -793,6 +794,7 @@ func TestSwaggerAppExportDirExists(t *testing.T) {
 	assert.FileExists(t, filepath.Join(outputDir, "multiple.yaml"))
 }
 
+//nolint: funlen
 func TestHandleProjectRoot(t *testing.T) {
 	successfulTest := folderStructure{
 		folders: []string{
@@ -806,6 +808,16 @@ func TestHandleProjectRoot(t *testing.T) {
 			"./SuccessfulTest/test2.sysl",
 			"./SuccessfulTest/path/to/another/module/test3.sysl",
 		},
+	}
+
+	successfulGitRootTest := folderStructure{
+		folders: []string{
+			"./SuccessfulTest/path/to/module",
+			fmt.Sprintf("./SuccessfulTest/%s", gitRootMarker),
+			"./SuccessfulTest/path/to/another/module",
+			fmt.Sprintf("./SuccessfulTest/path/to/another/%s", gitRootMarker),
+		},
+		files: successfulTest.files,
 	}
 
 	definedRootNoMarker := folderStructure{
@@ -858,6 +870,30 @@ func TestHandleProjectRoot(t *testing.T) {
 			root:         "",
 			module:       successfulTest.files[2],
 			structure:    successfulTest,
+			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest/path/to/another"),
+			rootFound:    true,
+		},
+		{
+			name:         "Successful git root test: finding a root marker",
+			root:         "",
+			module:       successfulGitRootTest.files[0],
+			structure:    successfulGitRootTest,
+			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest"),
+			rootFound:    true,
+		},
+		{
+			name:         "Successful git root test: finding a root marker in the same directory as the module",
+			root:         "",
+			module:       successfulGitRootTest.files[1],
+			structure:    successfulGitRootTest,
+			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest"),
+			rootFound:    true,
+		},
+		{
+			name:         "Successful git root test: finding the closest root marker",
+			root:         "",
+			module:       successfulGitRootTest.files[2],
+			structure:    successfulGitRootTest,
 			expectedRoot: syslutil.MustAbsolute(t, "SuccessfulTest/path/to/another"),
 			rootFound:    true,
 		},
