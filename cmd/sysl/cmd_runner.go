@@ -9,10 +9,15 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/loader"
-
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
+
+	"github.com/anz-bank/golden-retriever/pkg/gitfs"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -21,8 +26,9 @@ import (
 type cmdRunner struct {
 	commands map[string]cmdutils.Command
 
-	Root    string
-	modules []string
+	Root         string
+	CloneVersion string
+	modules      []string
 }
 
 // Run identifies the command to run, loads the Sysl modules from the input (if necessary), then
@@ -32,16 +38,19 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 	mainCommand := strings.Split(which, " ")[0]
 	if cmd, ok := r.commands[mainCommand]; ok {
 		if cmd.Name() == mainCommand {
-			var defaultAppName string
 			var modules []*sysl.Module
 			var err error
 
 			if cmd.MaxSyslModule() > 0 {
 				if len(r.modules) > 0 {
-					modules, defaultAppName, err = r.loadFromModules(fs, logger)
+					if r.CloneVersion != "" {
+						modules, err = r.loadFromClone(fs)
+					} else {
+						modules, err = r.loadFromModules(fs, logger)
+					}
 					// stdin may still be provided for use by commands like transform.
 				} else {
-					modules, defaultAppName, err = r.loadFromStdin(stdin, fs, logger)
+					modules, err = r.loadFromStdin(stdin, fs, logger)
 				}
 				if err != nil {
 					return err
@@ -56,7 +65,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 				Modules:        modules,
 				Filesystem:     fs,
 				Logger:         logger,
-				DefaultAppName: defaultAppName,
+				DefaultAppName: "",
 				ModulePaths:    r.modules,
 				Root:           r.Root,
 				Stdin:          stdin,
@@ -92,6 +101,10 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	app.Flag("root",
 		"sysl root directory for input model file. If root is not found, the module directory becomes "+
 			"the root, but the module can not import with absolute paths (or imports must be relative).").StringVar(&r.Root)
+
+	app.Flag("clone-version",
+		"before running the command it will clone the local repo into memory and checkout the specific version",
+	).StringVar(&r.CloneVersion)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
@@ -155,10 +168,10 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 }
 
 // loadFromStdin attempts to load the Sysl modules for the files provided via stdin.
-func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, string, error) {
+func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, error) {
 	stdinFiles, err := loadStdinFiles(stdin)
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	fs = afero.NewCopyOnWriteFs(fs, afero.NewMemMapFs())
@@ -166,25 +179,95 @@ func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs, logger *logrus.L
 		r.modules = append(r.modules, f.Path)
 		absPath, err := filepath.Abs(f.Path)
 		if err != nil {
-			return nil, "", err
+			return nil, err
 		}
 		err = afero.WriteFile(fs, absPath, []byte(f.Content), os.ModePerm)
 		if err != nil {
-			return nil, "", err
+			return nil, err
 		}
 	}
 	return r.loadFromModules(fs, logger)
 }
 
 // loadFromModules attempts to load the Sysl modules for the files specified in r.modules.
-func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, string, error) {
+func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, error) {
 	var mods []*sysl.Module
 	for _, moduleName := range r.modules {
 		mod, _, err := loader.LoadSyslModule(r.Root, moduleName, fs, logger)
 		if err != nil {
-			return nil, "", err
+			return nil, err
 		}
 		mods = append(mods, mod)
 	}
-	return mods, "", nil
+	return mods, nil
+}
+
+// loadFromClone attempts to load the Sysl modules for the files specified in r.modules by cloning a version of the
+// local repo.
+func (r *cmdRunner) loadFromClone(fs afero.Fs) ([]*sysl.Module, error) {
+	var mods []*sysl.Module
+	for _, moduleName := range r.modules {
+		gitRoot, err := loader.FindRootFromSyslModule(filepath.Join(r.Root, moduleName), fs, parse.GitRootMarker)
+		if err != nil {
+			return nil, fmt.Errorf("couldn't find local repo to clone: %w", err)
+		}
+
+		repo, err := clone(gitRoot)
+		if err != nil {
+			return nil, err
+		}
+
+		commitFs, err := getCommitAsFs(repo, r.CloneVersion)
+		if err != nil {
+			return nil, err
+		}
+
+		// make moduleName relative to the repo
+		moduleName, err = filepath.Abs(moduleName)
+		if err != nil {
+			return nil, err
+		}
+		moduleName, err = filepath.Rel(gitRoot, moduleName)
+		if err != nil {
+			return nil, err
+		}
+
+		mod, err := parse.NewParser().ParseFromFs(moduleName, commitFs)
+		if err != nil {
+			return nil, err
+		}
+
+		mods = append(mods, mod)
+	}
+
+	return mods, nil
+}
+
+func clone(projectRoot string) (*git.Repository, error) {
+	// clone to in-memory storage
+	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
+		URL:          projectRoot,
+		SingleBranch: false,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("clone failed: %w", err)
+	}
+
+	return repo, nil
+}
+
+func getCommitAsFs(repo *git.Repository, gitref string) (afero.Fs, error) {
+	// get long git ref
+	ref, err := repo.ResolveRevision(plumbing.Revision(gitref))
+	if err != nil {
+		return nil, fmt.Errorf("repo.ResolveRevision failed: %w", err)
+	}
+
+	// get the commit
+	commit, err := repo.CommitObject(*ref)
+	if err != nil {
+		return nil, fmt.Errorf("repo.CommitObject failed: %w", err)
+	}
+
+	return gitfs.NewGitMemFs(commit), nil
 }

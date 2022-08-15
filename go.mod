@@ -17,6 +17,7 @@ require (
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-git/go-git/v5 v5.4.2
 	github.com/go-openapi/spec v0.20.4
 	github.com/go-openapi/swag v0.19.15
 	github.com/golang/protobuf v1.5.2
