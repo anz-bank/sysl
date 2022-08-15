@@ -84,7 +84,7 @@ export class PbDocumentModel {
     ): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
         const cmd = `${syslPath} pb --mode=json`;
-        const proc = exec(cmd);
+        const proc = exec(cmd, { maxBuffer: undefined }); // Do not limit the maximum stdout of the process.
         proc.stdin?.end(
             JSON.stringify([{ path: syslFilePath, content: syslText }])
         );
