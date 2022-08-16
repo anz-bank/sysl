@@ -159,9 +159,12 @@ func loadSchemaTypes(schema xsd.Schema, logger *logrus.Logger) TypeList {
 					types.Add(makeNamespacedType(name, t))
 				}
 			}
-			x := t.(*StandardType)
-			if !utils.Contains("~xml_root", x.Attributes()) {
-				x.AddAttributes([]string{"~xml_root"})
+			switch x := t.(type) {
+			case *StandardType:
+				if !utils.Contains("~xml_root", x.Attributes()) {
+					x.AddAttributes([]string{"~xml_root"})
+				}
+			default:
 			}
 		} else if t := findType(data, &types); t == nil {
 			types.Add(makeType(name, data, &types, logger))
@@ -184,6 +187,9 @@ func findType(t xsd.Type, knownTypes *TypeList) Type {
 func makeType(_ xml.Name, from xsd.Type, knownTypes *TypeList, logger *logrus.Logger) Type {
 	switch t := from.(type) {
 	case *xsd.ComplexType:
+		if isExtendedType(t) {
+			return makeExtendedType(t, knownTypes, logger)
+		}
 		return makeComplexType(t, knownTypes, logger)
 	case *xsd.SimpleType:
 		return makeSimpleType(t, knownTypes, logger)
@@ -274,6 +280,28 @@ func makeSizeSpecFromAttrs(attrs []xml.Attr) *sizeSpec {
 		return &ss
 	}
 	return nil
+}
+
+// isExtendedType detects if a *xsd.ComplexType is an extended type from the use of <xsd:simpleContent>
+// An extended type is characterised by an xsd.ComplexType with extended true and no Attributes or Elements.
+// An example XSD snippet is as follows:
+//
+// <xs:complexType>
+// 	<xs:simpleContent>
+// 		<xs:extension base="xs:token"/>
+// 	</xs:simpleContent>
+// </xs:complexType>
+//
+// See https://www.obj-sys.com/docs/acv65/CCppHTML/ch04s02s10.html
+func isExtendedType(from *xsd.ComplexType) bool {
+	return from.Extends && len(from.Attributes) == 0 && len(from.Elements) == 0
+}
+
+func makeExtendedType(from *xsd.ComplexType, knownTypes *TypeList, logger *logrus.Logger) Type {
+	return &Alias{
+		baseType: baseType{name: from.Name.Local},
+		Target:   makeType(from.Name, from.Base, knownTypes, logger),
+	}
 }
 
 func makeSimpleType(from *xsd.SimpleType, knownTypes *TypeList, logger *logrus.Logger) Type {
