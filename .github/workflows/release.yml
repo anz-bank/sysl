@@ -53,27 +53,57 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
-      - name: Build and push docker image
-        uses: docker/build-push-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
-          repository: docker.io/anzbank/sysl
-          tag_with_ref: true
-          add_git_labels: true
-          tags: latest
-          labels: org.opencontainers.image.revision=${{ github.sha }},org.opencontainers.image.url=https://sysl.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            docker.io/anzbank/sysl
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha
+
+      - name: Build and push docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+
+      - name: "Docker meta: sysl-version-diff"
+        id: diffmeta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            docker.io/anzbank/sysl-version-diff
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=sha
 
       - name: "Build and push docker image: sysl-version-diff"
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v3
         with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
-          repository: docker.io/anzbank/sysl-version-diff
-          dockerfile: sysl-version-diff/Dockerfile
-          tag_with_ref: true
-          add_git_labels: true
-          tags: latest
+          context: .
+          file: sysl-version-diff/Dockerfile
+          push: true
+          tags: ${{ steps.diffmeta.outputs.tags }}
+          labels: ${{ steps.diffmeta.outputs.labels }}
 
       # FIXME: sysl_js hasn't been rebuilt for months and it is out of date.
       # If sysl_js works again, please add NPM_PUBLISH_TOKEN to GitHub secrets
