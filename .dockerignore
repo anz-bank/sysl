@@ -1,6 +1,5 @@
 **/node_modules
-.dockerignore
 /dist/
-/pkg/antlr*.jar
 /release/
 /scripts/generate
+/.idea
