@@ -74,6 +74,8 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=sha
+          labels: |
+            org.opencontainers.image.url=https://sysl.io
 
       - name: Build and push docker image
         uses: docker/build-push-action@v3

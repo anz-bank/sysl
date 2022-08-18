@@ -158,6 +158,8 @@ jobs:
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=sha
+          labels: |
+            org.opencontainers.image.url=https://sysl.io
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
