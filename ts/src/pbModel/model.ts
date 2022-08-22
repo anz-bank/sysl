@@ -11,7 +11,7 @@ import {
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
-import { Application, AppName, Import, Model } from "../model/model";
+import { Application, AppName, Import, Model } from "../model";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
@@ -42,7 +42,7 @@ export class PbApplication {
     attrs?: Map<string, PbAttribute>;
     @jsonMapMember(String, PbEndpoint, serializerFor(PbEndpoint))
     endpoints?: Map<string, PbEndpoint>;
-    @jsonMapMember(String, PbTypeDef, serializerFor(PbTypeDef))
+    @jsonMapMember(String, () => PbTypeDef, serializerFor(PbTypeDef))
     types?: Map<string, PbTypeDef>;
 
     toModel(): Application {

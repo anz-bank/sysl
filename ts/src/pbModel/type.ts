@@ -8,13 +8,13 @@ import {
 } from "typedjson";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
-import { AppName, ValueType } from "../model";
-import { IRenderable } from "../model/common";
 import {
     Alias,
+    AppName,
     DecoratorKind,
     Enum,
     EnumValue,
+    IRenderable,
     Primitive,
     Reference,
     Struct,
@@ -26,11 +26,12 @@ import {
     TypeDecorator,
     TypePrimitive,
     Union,
-} from "../model/type";
+    ValueType,
+} from "../model";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor, serializerForFn } from "./serialize";
-import type { PbTypeDefList } from "./type_list";
+import { PbTypeDefList } from "./type_list";
 
 @jsonObject
 export class PbValue {
@@ -222,7 +223,7 @@ export class PbTypeDef {
     @jsonMember typeRef?: PbScopedRef;
     @jsonMember set?: PbTypeDef;
     @jsonMember sequence?: PbTypeDef;
-    @jsonMember list?: PbTypeDefList;
+    @jsonMember(() => PbTypeDefList) list?: PbTypeDefList;
     @jsonArrayMember(PbTypeConstraint) constraint?: PbTypeConstraint[];
     @jsonMember opt!: boolean;
     @jsonArrayMember(Location) sourceContexts!: Location[];

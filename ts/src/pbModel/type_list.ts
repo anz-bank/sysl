@@ -7,7 +7,7 @@ import { Type } from "../model";
 
 @jsonObject
 export class PbTypeDefList {
-    @jsonMember type!: PbTypeDef;
+    @jsonMember(() => PbTypeDef) type!: PbTypeDef;
 
     toModel(): Type {
         return this.type.toModel();

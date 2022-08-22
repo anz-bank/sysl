@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { jsonMember, jsonObject } from "typedjson";
 
 @jsonObject

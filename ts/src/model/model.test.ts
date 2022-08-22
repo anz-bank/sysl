@@ -1,9 +1,9 @@
+import "reflect-metadata";
 import { readFile } from "fs/promises";
 import "jest-extended";
 import { realign } from "../common/format";
-import { allItems, AnyWalkListener, walk } from "../common/iterate";
+import { allItems } from "../common/iterate";
 import { Annotation, Tag } from "./attribute";
-import { ILocational } from "./common";
 import { Application, AppName, Model } from "./model";
 import "./renderers";
 import { Action, Endpoint, Param, Statement } from "./statement";
@@ -399,6 +399,23 @@ describe("Roundtrip", () => {
                     %28Field%29Name%21 <: %28App%29Name%21.%28Type%29Name%21 [~%28Tag%29Name%21]
             `
         ),
+        // Lists are not well supported, so we substitute them when serializing to source.
+        List: {
+            input: realign(
+                `
+                App:
+                    !type Type:
+                        list(1..1) <: string
+                `
+            ),
+            output: realign(
+                `
+                App:
+                    !type Type:
+                        list <: sequence of string
+                `
+            ),
+        },
     };
 
     type SyslCase = { input: string; output: string };

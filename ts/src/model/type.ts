@@ -244,6 +244,8 @@ export class TypeDecorator<T extends IRenderable> implements IRenderable {
         switch (this.kind) {
             case DecoratorKind.Set:
                 return `set of ${this.innerType.toSysl()}`;
+            case DecoratorKind.List:
+            // Treat lists as sequences, since lists aren't properly supported.
             case DecoratorKind.Sequence:
                 return `sequence of ${this.innerType.toSysl()}`;
             default:
