@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: 1.19
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -72,8 +72,8 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=sha
+            type=semver,pattern={{raw}}
+            type=sha,prefix=,format=long
           labels: |
             org.opencontainers.image.url=https://sysl.io
 
@@ -81,6 +81,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
+          pull: true
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -95,14 +96,15 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=sha
+            type=semver,pattern={{raw}}
+            type=sha,prefix=,format=long
 
       - name: "Build and push docker image: sysl-version-diff"
         uses: docker/build-push-action@v3
         with:
           context: .
           file: sysl-version-diff/Dockerfile
+          pull: true
           push: true
           tags: ${{ steps.diffmeta.outputs.tags }}
           labels: ${{ steps.diffmeta.outputs.labels }}
