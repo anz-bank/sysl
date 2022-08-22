@@ -40,11 +40,19 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 		if cmd.Name() == mainCommand {
 			var modules []*sysl.Module
 			var err error
+			var gitRoot string
+
+			if r.CloneVersion != "" {
+				fs, gitRoot, err = r.getClonedRepo(fs)
+				if err != nil {
+					return err
+				}
+			}
 
 			if cmd.MaxSyslModule() > 0 {
 				if len(r.modules) > 0 {
 					if r.CloneVersion != "" {
-						modules, err = r.loadFromClone(fs)
+						modules, err = r.loadFromClone(fs, gitRoot)
 					} else {
 						modules, err = r.loadFromModules(fs, logger)
 					}
@@ -202,25 +210,12 @@ func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl
 	return mods, nil
 }
 
-// loadFromClone attempts to load the Sysl modules for the files specified in r.modules by cloning a version of the
-// local repo.
-func (r *cmdRunner) loadFromClone(fs afero.Fs) ([]*sysl.Module, error) {
+// loadFromClone attempts to load the Sysl modules for the files specified in r.modules and assumes that fs is a
+// cloned version of the local repo.
+func (r *cmdRunner) loadFromClone(fs afero.Fs, gitRoot string) ([]*sysl.Module, error) {
 	var mods []*sysl.Module
 	for _, moduleName := range r.modules {
-		gitRoot, err := loader.FindRootFromSyslModule(filepath.Join(r.Root, moduleName), fs, parse.GitRootMarker)
-		if err != nil {
-			return nil, fmt.Errorf("couldn't find local repo to clone: %w", err)
-		}
-
-		repo, err := clone(gitRoot)
-		if err != nil {
-			return nil, err
-		}
-
-		commitFs, err := getCommitAsFs(repo, r.CloneVersion)
-		if err != nil {
-			return nil, err
-		}
+		var err error
 
 		// make moduleName relative to the repo
 		moduleName, err = filepath.Abs(moduleName)
@@ -232,7 +227,7 @@ func (r *cmdRunner) loadFromClone(fs afero.Fs) ([]*sysl.Module, error) {
 			return nil, err
 		}
 
-		mod, err := parse.NewParser().ParseFromFs(moduleName, commitFs)
+		mod, err := parse.NewParser().ParseFromFs(moduleName, fs)
 		if err != nil {
 			return nil, err
 		}
@@ -243,31 +238,36 @@ func (r *cmdRunner) loadFromClone(fs afero.Fs) ([]*sysl.Module, error) {
 	return mods, nil
 }
 
-func clone(projectRoot string) (*git.Repository, error) {
+func (r *cmdRunner) getClonedRepo(fs afero.Fs) (afero.Fs, string, error) {
+	gitRoot := r.Root
+	if gitRoot == "" {
+		var err error
+		gitRoot, err = loader.FindRootFromSyslModule("model.sysl", fs, parse.GitRootMarker)
+		if err != nil || gitRoot == "" {
+			return nil, "", fmt.Errorf("couldn't find local repo to clone: %w", err)
+		}
+	}
+
 	// clone to in-memory storage
 	repo, err := git.Clone(memory.NewStorage(), nil, &git.CloneOptions{
-		URL:          projectRoot,
+		URL:          gitRoot,
 		SingleBranch: false,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("clone failed: %w", err)
+		return nil, "", fmt.Errorf("clone failed: %w", err)
 	}
 
-	return repo, nil
-}
-
-func getCommitAsFs(repo *git.Repository, gitref string) (afero.Fs, error) {
 	// get long git ref
-	ref, err := repo.ResolveRevision(plumbing.Revision(gitref))
+	ref, err := repo.ResolveRevision(plumbing.Revision(r.CloneVersion))
 	if err != nil {
-		return nil, fmt.Errorf("repo.ResolveRevision failed: %w", err)
+		return nil, "", fmt.Errorf("repo.ResolveRevision failed: %w", err)
 	}
 
 	// get the commit
 	commit, err := repo.CommitObject(*ref)
 	if err != nil {
-		return nil, fmt.Errorf("repo.CommitObject failed: %w", err)
+		return nil, "", fmt.Errorf("repo.CommitObject failed: %w", err)
 	}
 
-	return gitfs.NewGitMemFs(commit), nil
+	return gitfs.NewGitMemFs(commit), gitRoot, nil
 }
