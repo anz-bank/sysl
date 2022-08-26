@@ -16,8 +16,10 @@ ddl                 -> stmt=(create_database
                             |create_function
                             |create_trigger
                             |create_extension
+                            |call
                             |comment_on_extension
                             |create_change_stream
+                            |analyze
                             |alter_table
                             |alter_sequence
                             |alter_function
@@ -83,6 +85,7 @@ create_function     -> "CREATE" "FUNCTION" table_prefix? function_name=name "(" 
 function_opt        -> "LANGUAGE" lang_name=name
                      | "VOLATILE"
                      | "COST" cost=\d+;
+call                -> "CALL" function_name=name "(" value:","? ")";
 
 // TODO: Hardcode less.
 create_trigger      -> "CREATE" "TRIGGER" trigger_name=name
@@ -93,6 +96,7 @@ create_trigger      -> "CREATE" "TRIGGER" trigger_name=name
 create_extension    -> "CREATE" "EXTENSION" if_not_exists? name "WITH" "SCHEMA" name;
 comment_on_extension -> "COMMENT" "ON" "EXTENSION" name "IS" string_value;
 
+analyze              -> ("ANALYZE" | "ANALYSE") table_name;
 create_change_stream -> "CREATE" "CHANGE" "STREAM" name ("FOR"
                         ("ALL" | table_name ("(" column_name:"," ")")?):",")?;
 

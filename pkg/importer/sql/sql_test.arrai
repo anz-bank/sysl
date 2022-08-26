@@ -372,4 +372,15 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             {:macro:CREATE CHANGE STREAM foo FOR t(c), s(d), r(e):},
         ] >> . = emptyModel,
     ),
+
+    call: [
+        {:macro:CALL do_thing():},
+        {:macro:CALL do_thing("foo"):},
+        {:macro:CALL do_thing(1, "two", three, NOW()):},
+    ] >> . = emptyModel,
+
+    analyze: [
+        {:macro:ANALYZE this:},
+        {:macro:ANALYSE that:},
+    ] >> . = emptyModel,
 )
