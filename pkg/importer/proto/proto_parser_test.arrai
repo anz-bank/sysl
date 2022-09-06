@@ -253,10 +253,11 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             comments: [" Level 1"],
                                             fields: {
                                                 'enum_field': (type: (name: 'EnumAllowingAlias'), value: (d: 3)),
-                                                'inner_message': (label: "repeated", type: (name: 'Inner'), value: (d: 2))
+                                                'inner_message': (label: "repeated", type: (name: 'Inner'), value: (d: 2)),
                                             },
                                             mapFields: {
-                                                'my_map': (keyType: (name: 'int32'), type: (name: 'string'), value: (d: 4))
+                                                'primitive_map': (keyType: (name: 'int32'), type: (name: 'int32'), value: (d: 4)),
+                                                'message_map': (keyType: (name: 'string'), type: (name: 'Inner'), value: (d: 5)),
                                             },
                                             messages: {
                                                 'Inner': (comments: [" Level 2"], fields: {'ival': (type: (name: 'int64'), value: (d: 1))}),

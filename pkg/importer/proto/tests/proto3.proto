@@ -7,6 +7,8 @@ enum EnumAllowingAlias {
     UNKNOWN = 0;
     STARTED = 1;
     RUNNING = 2 [(custom_option) = "hello world"];
+    reserved 3;
+    reserved "NAME";
 }
 
 // Level 1
@@ -18,7 +20,8 @@ message Outer {
     }
     repeated Inner inner_message = 2;
     EnumAllowingAlias enum_field = 3;
-    map<int32, string> my_map = 4;
+    map<int32, int32> primitive_map = 4;
+    map<string, Inner> message_map = 5;
 }
 service SearchService {
     rpc Search (SearchRequest) returns (SearchResponse);

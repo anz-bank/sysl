@@ -27,6 +27,14 @@ proto3:
         inner_message <: sequence of Inner:
             @json_tag = "innerMessage"
             @rpcId = "2"
+        message_map <: set of Inner:
+            @json_tag = "messageMap"
+            @proto_map_key = "string"
+            @rpcId = "5"
+        primitive_map <: set of int:
+            @json_tag = "primitiveMap"
+            @proto_map_key = "int32"
+            @rpcId = "4"
     
     !type Outer_Inner:
         @description =:

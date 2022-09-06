@@ -29,6 +29,10 @@ proto2:
         inner_message <: sequence of Inner:
             @json_tag = "innerMessage"
             @rpcId = "2"
+        my_map <: set of string:
+            @json_tag = "myMap"
+            @proto_map_key = "int32"
+            @rpcId = "4"
     
     !type Outer_Inner:
         @description =:

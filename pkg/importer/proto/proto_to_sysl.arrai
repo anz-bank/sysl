@@ -166,6 +166,24 @@ let oneOfTypeField = \oneOf \file \appName \imports
     ));
     (@: key, @value: value);
 
+# `mapTypeField` converts a map message field to a type field.
+# `map` the message field being converted.
+# `file` the file the field is located in.
+# `appName` the application the field is being referenced in.
+# `imports` a map of all files in the module.
+let mapTypeField = \map \file \appName \imports
+    let key = syslSafeName(map.@);
+    #  TODO: Clean up building this object. Should be
+    # (
+    #   set: (type_ref/primitive: value),
+    #   attrs: {'json_tag': (s: ''), 'proto_map_key': (s: ''), 'rpcId': (s: '')}
+    # )
+    let value =  (set: typeFieldValue(map, file, appName, imports));
+    let mapAttrs = (attrs: {"proto_map_key": (s: map.@value.keyType.name)});
+    let value = value +> (attrs: mapAttrs.attrs +> value.set.attrs);
+    
+    (@: key, @value: value);
+
 # `type` converts a proto message to a Sysl type.
 # `message` the message being converted.
 # `file` the file the field is located in.
@@ -176,7 +194,8 @@ let rec type = \message \file \appName \imports
     let attrs = baseAttrs(message, file.@);
     let fields = cond message.@value {(:fields, ...): fields => typeField(., file, appName, imports)};
     let oneofs = cond message.@value {(:oneofs, ...): oneofs => oneOfTypeField(., file, appName, imports)};
-    let tuple = (attr_defs: fields +> oneofs);
+    let mapFields = cond message.@value {(:mapFields, ...): mapFields => mapTypeField(., file, appName, imports)};
+    let tuple = (attr_defs: fields +> oneofs +> mapFields);
     (:name, :attrs, :tuple);
 
 # `enum` converts a proto enum to a sysl enum.

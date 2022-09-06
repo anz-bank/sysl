@@ -24,7 +24,7 @@ topLevelDef     -> enum | message | service | extend;
 
 enum            -> c* "enum" enumName enumBody;
 enumName        -> ident;
-enumBody        -> "{" (option | enumField | emptyStatement | c)* "}";
+enumBody        -> "{" (option | enumField | reserved | emptyStatement | c)* "}";
 enumField       -> c* fieldName "=" "-"? intLit ("[" enumValueOption:comma "]")? ";" ($ | c)?;
 enumValueOption -> optionName "=" constant;
 
