@@ -156,7 +156,7 @@ option              -> k=[^=\s]* "=" v=value;
 
 key_parts            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
 attr_type           -> (ARRAY_TYPE | SCALAR_TYPE | STRUCT_TYPE) (NULL | NOT_NULL | default | generated)*;
-default             -> "DEFAULT" value ("::" cast=attr_type)?;
+default             -> "DEFAULT" ((value ("::" cast=attr_type)?) | "(" (value ("::" cast=attr_type)?) ")");
 generated           -> ("GENERATED" "ALWAYS")? "AS" expr ("VIRTUAL" | "STORED");
 expr                -> [^()]* "(" [^()]* expr? [^()]* ")";
 if_exists           -> "IF" "EXISTS";

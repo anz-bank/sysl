@@ -150,6 +150,10 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             let s = {:macro:CREATE TABLE t (c INT); ALTER TABLE t MODIFY COLUMN c SET NOT NULL:};
             (s.entities single).attributes(0).nullable = false
         ,
+        set_default:
+            let s = {:macro:CREATE TABLE t (c INT); ALTER TABLE t MODIFY COLUMN c SET DEFAULT (0):};
+            true
+        ,
     ),
 
     index: (
