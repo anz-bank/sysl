@@ -22,7 +22,7 @@ type ProjectConfiguration struct {
 }
 
 func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
-	return LoadSyslModuleWithMaxDepth(root, filename, fs, logger, -1)
+	return LoadSyslModuleWithMaxDepth(root, filename, fs, logger, 0)
 }
 
 func LoadSyslModuleWithMaxDepth(root,

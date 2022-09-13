@@ -115,7 +115,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		"Before running the command it will clone the local repo into memory and checkout the specific version",
 	).StringVar(&r.CloneVersion)
 
-	app.Flag("maxImportDepth",
+	app.Flag("max-import-depth",
 		"Maximum depth to follow imports, including the original file (ignores any that are deeper)."+
 			" 0 (default) for unlimited."+
 			" eg 1 means just the original file with no imports.",
