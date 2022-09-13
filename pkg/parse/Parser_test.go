@@ -791,6 +791,55 @@ Three:
 	require.NotNil(t, c.Apps["Three"])
 }
 
+func TestImportWithMaxDepth(t *testing.T) {
+	t.Parallel()
+
+	one := `
+import two
+One:
+	...
+`
+	two := `
+import three
+Two:
+	...
+`
+	three := `
+Three:
+	...
+`
+	r := mockReader{contents: map[string]mockContent{
+		"one.sysl":   {one, retriever.ZeroHash, ""},
+		`two.sysl`:   {two, retriever.ZeroHash, ""},
+		`three.sysl`: {three, retriever.ZeroHash, ""},
+	}}
+
+	p := NewParser()
+
+	// Depth not specified
+	c, err := p.Parse("one", r)
+	require.NoError(t, err)
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
+
+	// Depth of 1
+	p.SetMaxImportDepth(1)
+	c, err = p.Parse("one", r)
+	require.NoError(t, err)
+	require.Equal(t, 1, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+
+	// Depth of 2
+	p.SetMaxImportDepth(2)
+	c, err = p.Parse("one", r)
+	require.NoError(t, err)
+	require.Equal(t, 2, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+}
+
 func TestLintValid(t *testing.T) {
 	assertLintLogs(t,
 		"tests/lint_valid.sysl", "")

@@ -42,6 +42,7 @@ type Parser struct {
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
 	allowAbsoluteImport bool
+	maxImportDepth      int
 }
 
 // NewParser intializes and returns a new Parser instance
@@ -118,6 +119,10 @@ func (p *Parser) RestrictToLocalImport() {
 	p.allowAbsoluteImport = false
 }
 
+func (p *Parser) SetMaxImportDepth(depth int) {
+	p.maxImportDepth = depth
+}
+
 // ParseString parses a sysl definition in string form.
 func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 	fs := afero.NewMemMapFs()
@@ -142,6 +147,10 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 
 // ParseFromFsWithVendor parses a sysl definition from an afero filesystem, and vendor remote files in root dir
 func (p *Parser) ParseFromFsWithVendor(filename string, fs afero.Fs) (*sysl.Module, error) {
+	if p.maxImportDepth > 0 {
+		return nil, fmt.Errorf("can not limit import depth while vendoring")
+	}
+
 	r, err := NewReader(fs)
 	if err != nil {
 		return nil, err
@@ -182,6 +191,8 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		importDef{filename: resource},
 		reader,
 		&retrieved,
+		p.maxImportDepth,
+		0,
 	); err != nil {
 		return nil, err
 	}
@@ -261,7 +272,13 @@ func flattenSpecs(specs *[]srcInput, filename string, retrieved *retrievedList) 
 
 // collectSpecs retrieves the contents for a sourceFile. It then parses the source to find all imports and recursively
 // (and in parallel) retrieves those as well. All the results are placed into the retrievedList.
-func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, retrieved *retrievedList) error {
+func collectSpecs(
+	ctx context.Context,
+	source importDef,
+	reader reader.Reader,
+	retrieved *retrievedList,
+	maxImportDepth, currentImportDepth int,
+) error {
 	retrieved.mutex.Lock()
 	if _, has := retrieved.l[source.filename]; has {
 		retrieved.mutex.Unlock()
@@ -271,6 +288,11 @@ func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, r
 	fi := &fileInfo{}
 	retrieved.l[source.filename] = fi
 	retrieved.mutex.Unlock()
+
+	if maxImportDepth > 0 && currentImportDepth >= maxImportDepth {
+		fi.src = srcInput{source, ""}
+		return nil
+	}
 
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
 	if err != nil {
@@ -302,7 +324,7 @@ func collectSpecs(ctx context.Context, source importDef, reader reader.Reader, r
 	for _, c := range children {
 		c := c
 		g.Go(func() error {
-			return collectSpecs(ctx, c, reader, retrieved)
+			return collectSpecs(ctx, c, reader, retrieved, maxImportDepth, currentImportDepth+1)
 		})
 	}
 
