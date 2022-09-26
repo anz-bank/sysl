@@ -38,8 +38,9 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} Sysl (Apache-2.0 License)`,
     },
     algolia: {
-      apiKey: "e746801b8fd0862b43f994ad13cff9b5",
-      indexName: "sysl",
+      apiKey: '08d286c27eda46cef3d50258cff88735',
+      appId: 'VYFVE8W6RM',
+      indexName: 'sysl',
     },
     colorMode: {
       defaultMode: "light",
