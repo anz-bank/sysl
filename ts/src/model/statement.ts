@@ -1,51 +1,27 @@
 import "reflect-metadata";
+import { Location } from "../common";
 import { indent, joinedAppName } from "../common/format";
-import { Location } from "../common/location";
-import { Annotation, Tag } from "./attribute";
-import { IElement, IElementParams, setParentAndModelDeep } from "./common";
+import { ILocational, IRenderable } from "./common";
+import { CollectionDecorator } from "./decorator";
+import { Element, IElementParams, ParentElement, setParentAndModelDeep } from "./element";
+import { Field } from "./field";
+import { GenericElement } from "./genericElement";
 import { Model } from "./model";
 import { addTags, renderAnnos, renderInlineSections } from "./renderers";
-import { Reference, Type, TypeDecorator } from "./type";
 
 /** Name of an endpoint that represents the absence of endpoints in an {@link Application}. */
 const placeholder = "...";
 
 export type ParamParams = IElementParams & {
     name: string;
-    type?: Type;
+    element?: Element;
 };
 
-export class Param implements IElement {
-    name: string;
-    type: Type | undefined;
-    annos: Annotation[];
-    tags: Tag[];
-    locations: Location[];
-    parent?: IElement;
-    model?: Model;
-
-    constructor({
-        name,
-        type,
-        annos,
-        tags,
-        locations,
-        parent,
-        model,
-    }: ParamParams) {
-        this.name = name;
-        this.type = type;
-        this.annos = annos ?? [];
-        this.tags = tags ?? [];
-        this.locations = locations ?? [];
-        this.parent = parent;
-        this.model = model;
-
-        setParentAndModelDeep(this, this.annos, this.tags);
-    }
+export class Param implements ILocational, IRenderable {
+    constructor(public name: string, public locations: Location[], public element?: Element, public model?: Model) { }
 
     toSysl(): string {
-        return `${this.name}${this.type ? ` <: ${this.type.toSysl()}` : ""}`;
+        return `${this.name}${this.element ? ` <: ${this.element.toSysl()}` : ""}`;
     }
 }
 
@@ -236,54 +212,18 @@ export enum LoopMode {
     UNRECOGNIZED = -1,
 }
 
-export type StatementParams = IElementParams & {
-    value:
-        | Action
-        | Call
-        | Cond
-        | Loop
-        | LoopN
-        | Foreach
-        | Alt
-        | Group
-        | Return
-        | undefined;
-};
+export type StatementValue = Action | Call | Cond | Loop | LoopN | Foreach | Alt | Group | Return | undefined;
 
-export class Statement implements IElement {
-    value:
-        | Action
-        | Call
-        | Cond
-        | Loop
-        | LoopN
-        | Foreach
-        | Alt
-        | Group
-        | Return
-        | undefined;
-    annos: Annotation[];
-    tags: Tag[];
-    locations: Location[];
-    parent?: IElement;
-    model?: Model;
+export type StatementParams = IElementParams & { value: StatementValue; };
 
-    constructor({
-        value,
-        annos,
-        tags,
-        locations,
-        parent,
-        model,
-    }: StatementParams) {
+export class Statement extends ParentElement<Statement> {
+    value: StatementValue;
+
+    constructor({value, annos, tags, locations, parent, model }: StatementParams) {
+        super(value?.constructor.name ?? "", locations ?? [], annos ?? [], tags ?? [], model, parent)
         this.value = value;
-        this.annos = annos ?? [];
-        this.tags = tags ?? [];
-        this.locations = locations ?? [];
-        this.parent = parent;
-        this.model = model;
 
-        setParentAndModelDeep(this, this.children(), this.annos, this.tags);
+        setParentAndModelDeep(this, this.children, this.annos, this.tags);
     }
 
     /** Returns a statement with the given action text. */
@@ -292,7 +232,7 @@ export class Statement implements IElement {
     }
 
     /** Returns an array of child statements nested in this statement's {@code value}. */
-    children(): Statement[] {
+    get children(): Statement[] {
         if (this.value && "stmt" in this.value) {
             return this.value.stmt;
         }
@@ -345,8 +285,7 @@ export type EndpointParams = IElementParams & {
     pubsubSource?: string[];
 };
 
-export class Endpoint implements IElement {
-    name: string;
+export class Endpoint extends ParentElement<Statement> {
     longName: string | undefined;
     docstring: string | undefined;
     params: Param[];
@@ -354,28 +293,9 @@ export class Endpoint implements IElement {
     restParams: RestParams | undefined;
     isPubsub: boolean;
     pubsubSource: string[];
-    annos: Annotation[];
-    tags: Tag[];
-    locations: Location[];
-    parent?: IElement;
-    model?: Model;
 
-    constructor({
-        name,
-        longName,
-        docstring,
-        isPubsub,
-        params,
-        statements,
-        restParams,
-        pubsubSource,
-        annos,
-        tags,
-        locations,
-        parent,
-        model,
-    }: EndpointParams) {
-        this.name = name;
+    constructor({name, longName, docstring, isPubsub, params, statements, restParams, pubsubSource, annos, tags, locations, parent, model }: EndpointParams) {
+        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent)
         this.longName = longName;
         this.docstring = docstring;
         this.params = params ?? [];
@@ -383,11 +303,6 @@ export class Endpoint implements IElement {
         this.restParams = restParams;
         this.isPubsub = isPubsub ?? false;
         this.pubsubSource = pubsubSource ?? [];
-        this.annos = annos ?? [];
-        this.tags = tags ?? [];
-        this.locations = locations ?? [];
-        this.parent = parent;
-        this.model = model;
 
         setParentAndModelDeep(
             this,
@@ -405,10 +320,10 @@ export class Endpoint implements IElement {
 
         return `?${this.restParams!.queryParam.map(p => {
             let s = `${p.name}=`;
-            if (p.type?.value instanceof TypeDecorator<Reference>) {
-                return (s += `{${p.type.toSysl()}}`);
+            if ((p.element instanceof GenericElement || p.element instanceof Field) && p.element?.value instanceof CollectionDecorator) {
+                return (s += `{${p.element.toSysl()}}`);
             }
-            return (s += `${p.type?.toSysl() ?? "Type"}`);
+            return (s += `${p.element?.toSysl() ?? "Type"}`);
         }).join("&")}`;
     }
 
@@ -460,5 +375,9 @@ export class Endpoint implements IElement {
         return this.restParams
             ? this.renderRestEndpoint()
             : this.renderGRPCEndpoint();
+    }
+
+    get children(): Statement[] {
+        return this.statements;
     }
 }

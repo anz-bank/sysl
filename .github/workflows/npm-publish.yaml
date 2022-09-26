@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: "17.x"
+          node-version: 18
           registry-url: "https://registry.npmjs.org"
 
       # This one-liner will exit 1 if the current version in package.json exists in the registry.

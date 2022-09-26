@@ -1,5 +1,6 @@
+import { joinedAppName, safeName } from "../common/format";
 import { Location } from "../common/location";
-import { Annotation, Tag } from "./attribute";
+import { Element } from "./element";
 import { Model } from "./model";
 
 /** An element that can be serialized to Sysl source. */
@@ -29,50 +30,59 @@ export interface ILocational {
  * {@code parent} can also be undefined if an object has been created detached from a model.
  */
 export interface IChild extends ILocational {
-    parent?: IElement;
+    parent?: Element;
+}
+
+export class ElementRef implements IRenderable {
+    readonly kind: ElementKind;
+    
+    constructor(public readonly namespace: string[], public readonly appName: string, public readonly typeName: string = "", public readonly fieldName: string = "") {
+        if (fieldName && !typeName)
+            throw new Error("Cannot specify fieldName but omit typeName");
+        
+        if (fieldName)
+            this.kind = ElementKind.Field;
+        else if (typeName)
+            this.kind = ElementKind.Type;
+        else
+            this.kind = ElementKind.App;
+    }
+
+    toSysl(compact: boolean = false): string {
+        const fullAppName = [...this.namespace, this.appName].map(safeName).join(compact ? "::" : " :: ");
+        const typeName = safeName(this.typeName);
+        const fieldName = safeName(this.fieldName);
+
+        return [fullAppName, typeName, fieldName].filter(n => n).join(".");
+    }
+
+    static parse(refStr: string): ElementRef {
+        const parts = refStr.split(".", 3);
+
+        if (!parts[0])
+            throw new Error(`Invalid string element reference: ${refStr}`)
+
+        const appNameParts: string[] = parts[0].split(/\s*::\s*/);
+        return new ElementRef(appNameParts.slice(0, -1), appNameParts.at(-1)!, parts[1] ?? undefined, parts[2] ?? undefined);
+    }
+
+    equals(other: ElementRef): boolean {
+        return this.namespace.length == other.namespace.length &&
+            this.namespace.every((_, i) => this.namespace[i] == other.namespace[i]) &&
+            this.appName == other.appName &&
+            this.typeName == other.typeName &&
+            this.fieldName == other.fieldName;
+    }
 }
 
 /**
- * An object in a Sysl model that can have nested objects (children, annotations and tags).
+ * The kinds of Sysl element that an annotation can be applied to.
  */
-export interface IElement extends ILocational, IRenderable, IChild {
-    annos: Annotation[];
-    tags: Tag[];
-}
-
-/** Common set of properties that are received by all {@link IElement} constructors. */
-export type IElementParams = {
-    annos?: Annotation[];
-    tags?: Tag[];
-    parent?: IElement;
-    locations?: Location[];
-    model?: Model;
-};
-
-/**
- * Sets each of {@code children}'s {@code parent} and {@code model} properties to {@code parent}
- * and its {@code model}.
- */
-export function setParentAndModel(parent: IElement, children: IChild[]) {
-    children.forEach(child => (child.parent = parent));
-    setModel(parent.model, ...children);
-}
-
-/** Sets each of {@code children}'s model to {@code model}. */
-export function setModel(model?: Model, ...children: IChild[]) {
-    children.forEach(child => (child.model = model));
-}
-
-export function setParentAndModelDeep(
-    parent: IElement,
-    ...childrenArrays: IChild[][]
-) {
-    childrenArrays.forEach(children => {
-        setParentAndModel(parent, children);
-    });
-}
-export function setModelDeep(model?: Model, ...childrenArrays: IChild[][]) {
-    childrenArrays.forEach(children => {
-        setModel(model, ...children);
-    });
+ export enum ElementKind {
+    App = "app",
+    Type = "type",
+    Field = "field",
+    Endpoint = "ep",
+    Parameter = "param",
+    Statement = "stmt",
 }

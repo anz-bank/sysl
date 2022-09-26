@@ -1,6 +1,6 @@
 {
     "name": "@anz-bank/sysl",
-    "version": "0.9.0",
+    "version": "0.10.0",
     "description": "Sysl (pronounced \"sizzle\") is a open source system specification language.",
     "author": "ANZ Bank",
     "publisher": "anz-bank",
@@ -50,7 +50,8 @@
         "test": "jest",
         "test:watch": "jest --watch",
         "prettier:write": "yarn prettier --write .",
-        "prettier:check": "yarn prettier --check ."
+        "prettier:check": "yarn prettier --check .",
+        "analyse": "dpdm ./src/index.ts"
     },
     "dependencies": {
         "promisify-child-process": "^4",
@@ -58,11 +59,12 @@
         "typedjson": "^1"
     },
     "devDependencies": {
-        "@types/jest": "^27",
-        "jest": "^27",
-        "jest-extended": "^2",
-        "prettier": "^2.7.1",
-        "ts-jest": "^27",
+        "@types/jest": "^29",
+        "jest": "^29",
+        "ts-jest": "^29",
+        "jest-extended": "^3",
+        "dpdm": "^3",
+        "prettier": "^2",
         "ts-node": "^10",
         "typescript": "^4"
     }

@@ -1,20 +1,17 @@
 import {
     Annotation,
-    Application,
+    Element,
     Endpoint,
+    Field,
     ILocational,
     Model,
     Param,
+    ParentElement,
     Statement,
-    Struct,
     Tag,
     Type,
-    TypeValue,
 } from "../model";
-
-function isStruct(value: TypeValue): value is Struct {
-    return value.hasOwnProperty("elements");
-}
+import { Application } from "../model/application";
 
 export function allItems(model: Model): ILocational[] {
     const items: ILocational[] = [];
@@ -36,15 +33,13 @@ export interface WalkListener {
     visitType?: (type: Type) => void;
     visitTypeAnno?: (anno: Annotation) => void;
     visitTypeTag?: (tag: Tag) => void;
-    visitField?: (field: Type) => void;
+    visitField?: (field: Field) => void;
     visitFieldAnno?: (anno: Annotation) => void;
     visitFieldTag?: (tag: Tag) => void;
     visitEndpoint?: (endpoint: Endpoint) => void;
     visitEndpointAnno?: (anno: Annotation) => void;
     visitEndpointTag?: (tag: Tag) => void;
     visitParam?: (param: Param) => void;
-    visitParamAnno?: (anno: Annotation) => void;
-    visitParamTag?: (tag: Tag) => void;
     visitStatement?: (statement: Statement) => void;
     visitStatementAnno?: (anno: Annotation) => void;
     visitStatementTag?: (tag: Tag) => void;
@@ -71,7 +66,7 @@ export class AnyWalkListener implements WalkListener {
     visitTypeTag(tag: Tag): void {
         this.visitAny(tag);
     }
-    visitField(field: Type): void {
+    visitField(field: Field): void {
         this.visitAny(field);
     }
     visitFieldAnno(anno: Annotation): void {
@@ -118,24 +113,27 @@ export function walk(model: Model, listener: WalkListener) {
         listener.visitAppTag &&
             app.tags.forEach(listener.visitAppTag.bind(listener));
 
-        app.types.forEach(type => {
-            listener.visitType?.(type);
-            listener.visitTypeAnno &&
-                type.annos.forEach(listener.visitTypeAnno.bind(listener));
-            listener.visitTypeTag &&
-                type.tags.forEach(listener.visitTypeTag.bind(listener));
-
-            if (isStruct(type.value)) {
-                type.value.elements.forEach(field => {
-                    listener.visitField?.(field);
-                    listener.visitFieldAnno &&
-                        field.annos.forEach(
-                            listener.visitFieldAnno.bind(listener)
-                        );
-                    listener.visitFieldTag &&
-                        field.tags.forEach(
-                            listener.visitFieldTag.bind(listener)
-                        );
+        app.children.forEach(element => {
+            if (element instanceof Type) {
+                listener.visitType?.(element);
+                listener.visitTypeAnno &&
+                    element.annos.forEach(listener.visitTypeAnno.bind(listener));
+                listener.visitTypeTag &&
+                    element.tags.forEach(listener.visitTypeTag.bind(listener));
+            }
+            if (element instanceof ParentElement) {
+                (element.children as Element[]).forEach(childElement => {
+                    if (childElement instanceof Field) {
+                        listener.visitField?.(childElement);
+                        listener.visitFieldAnno &&
+                            childElement.annos.forEach(
+                                listener.visitFieldAnno.bind(listener)
+                            );
+                        listener.visitFieldTag &&
+                            childElement.tags.forEach(
+                                listener.visitFieldTag.bind(listener)
+                            );
+                    }
                 });
             }
         });
@@ -149,10 +147,6 @@ export function walk(model: Model, listener: WalkListener) {
 
             ep.params.forEach(p => {
                 listener.visitParam?.(p);
-                listener.visitParamAnno &&
-                    p.annos.forEach(listener.visitParamAnno.bind(listener));
-                listener.visitParamTag &&
-                    p.tags.forEach(listener.visitParamTag.bind(listener));
             });
 
             const visitStatements = (stmts: Statement[]): void => {
@@ -166,7 +160,7 @@ export function walk(model: Model, listener: WalkListener) {
                         stmt.tags.forEach(
                             listener.visitStatementTag.bind(listener)
                         );
-                    visitStatements(stmt.children());
+                    visitStatements(stmt.children);
                 });
             };
             visitStatements(ep.statements);

@@ -1,29 +1,8 @@
 import "reflect-metadata";
-import {
-    jsonArrayMember,
-    jsonMapMember,
-    jsonMember,
-    jsonObject,
-} from "typedjson";
+import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject } from "typedjson";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
-import {
-    Action,
-    Alt,
-    AltChoice,
-    Call,
-    CallArg,
-    Cond,
-    Endpoint,
-    Foreach,
-    Group,
-    Loop,
-    LoopN,
-    Param,
-    RestParams,
-    Return,
-    Statement,
-} from "../model/statement";
+import { Action, Alt, AltChoice, Call, CallArg, Cond, Endpoint, Foreach, Group, Loop, LoopN, Param, RestParams, Return, Statement } from "../model/statement";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
@@ -35,11 +14,7 @@ export class PbParam {
     @jsonMember(() => PbTypeDef) type!: PbTypeDef;
 
     toModel(): Param {
-        let param = new Param({
-            name: this.name,
-            type: this.type.hasValue() ? this.type.toModel() : undefined,
-        });
-        return param;
+        return new Param(this.name, this.type.sourceContexts ?? [], this.type.hasValue() ? this.type.toModel() : undefined);
     }
 }
 

@@ -4,3 +4,16 @@ export * from "./model";
 export * from "./renderers";
 export * from "./statement";
 export * from "./type";
+export * from "./element";
+export * from "./application";
+export * from "./constraint";
+export * from "./field";
+export * from "./primitive"
+export * from "./enum"
+export * from "./alias"
+export * from "./union"
+export * from "./struct"
+export * from "./decorator"
+export * from "./genericElement"
+export * from "../common/iterate"
+export * from "../common/location"

@@ -3,13 +3,13 @@
 
 import { jsonObject, jsonMember } from "typedjson";
 import { PbTypeDef } from "./type";
-import { Type } from "../model";
+import { Element } from "../model";
 
 @jsonObject
 export class PbTypeDefList {
     @jsonMember(() => PbTypeDef) type!: PbTypeDef;
 
-    toModel(): Type {
+    toModel(): Element {
         return this.type.toModel();
     }
 }

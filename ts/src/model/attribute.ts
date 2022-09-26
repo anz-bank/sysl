@@ -1,7 +1,8 @@
 import "reflect-metadata";
 import { indent } from "../common/format";
 import { Location } from "../common/location";
-import { IChild, IElement, ILocational, IRenderable } from "./common";
+import { IChild, ILocational, IRenderable } from "./common";
+import { Element } from "./element";
 import { Model } from "./model";
 
 export type AnnoValue = string | number | AnnoValue[];
@@ -17,7 +18,7 @@ export class Annotation implements IChild, ILocational, IRenderable {
     value: AnnoValue;
     name: string;
     locations: Location[];
-    parent?: IElement;
+    parent?: Element;
     model?: Model;
 
     constructor({ name, value, locations, model }: AnnotationParams) {
@@ -64,7 +65,7 @@ export type TagParams = {
 export class Tag implements IChild, ILocational, IRenderable {
     value: AnnoValue;
     locations: Location[];
-    parent?: IElement;
+    parent?: Element;
     model?: Model;
 
     constructor({ value, locations, model }: TagParams) {

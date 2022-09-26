@@ -1,21 +1,13 @@
 import { readFile } from "fs/promises";
 import "reflect-metadata";
-import { indent, joinedAppName, safeName } from "../common/format";
-import { allItems, AnyWalkListener, walk } from "../common/iterate";
+import { allItems } from "../common/iterate";
 import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
-import { Annotation, Tag } from "./attribute";
+import { Application } from "./application";
 import {
-    IElement,
-    IElementParams,
-    ILocational,
     IRenderable,
-    setModelDeep,
-    setParentAndModelDeep,
 } from "./common";
-import { addTags, renderAnnos } from "./renderers";
-import { Endpoint } from "./statement";
-import { Type } from "./type";
+import { setModelDeep } from "./element";
 
 export type ImportParams = {
     filePath: string;
@@ -38,89 +30,6 @@ export class Import {
         return `import ${this.filePath}${
             this.appAlias ? ` as ${this.appAlias}` : ""
         }`;
-    }
-}
-
-export class AppName {
-    parts: string[];
-
-    constructor(parts: string[]) {
-        this.parts = parts;
-    }
-
-    static fromString(name: string): AppName {
-        return new AppName(name.split(/\s*::\s*/));
-    }
-
-    toSysl() {
-        return joinedAppName(this.parts.map(safeName));
-    }
-}
-
-export type ApplicationParams = IElementParams & {
-    name: AppName;
-    endpoints?: Endpoint[];
-    types?: Type[];
-};
-
-export class Application implements IElement {
-    name: AppName;
-    endpoints: Endpoint[];
-    types: Type[];
-    locations: Location[];
-    annos: Annotation[];
-    tags: Tag[];
-    parent: undefined;
-    model?: Model;
-
-    constructor({
-        name,
-        endpoints,
-        types,
-        locations,
-        annos,
-        tags,
-        model,
-    }: ApplicationParams) {
-        this.name = name;
-        this.endpoints = endpoints ?? [];
-        this.types = types ?? [];
-        this.locations = locations ?? [];
-        this.annos = annos ?? [];
-        this.tags = tags ?? [];
-        this.model = model;
-
-        setParentAndModelDeep(
-            this,
-            this.endpoints,
-            this.types,
-            this.annos,
-            this.tags
-        );
-    }
-
-    toSysl(): string {
-        let sysl = `${addTags(this.name.toSysl(), this.tags)}:`;
-        if (this.annos.length) {
-            sysl += `\n${indent(renderAnnos(this.annos))}`;
-        }
-        if (this.endpoints.length) {
-            sysl += `\n${this.endpoints
-                .filter(e => !e.isPubsub)
-                .map(e => indent(e.toSysl()))
-                .join("\n\n")}`;
-        }
-        if (this.types.length) {
-            sysl += `\n${this.types.map(t => indent(t.toSysl())).join("\n\n")}`;
-        }
-        if (
-            !this.annos.length &&
-            !this.endpoints.length &&
-            !this.types.length
-        ) {
-            sysl += `\n${indent("...")}`;
-        }
-        return sysl;
     }
 }
 

@@ -4,10 +4,11 @@ import "jest-extended";
 import { realign } from "../common/format";
 import { allItems } from "../common/iterate";
 import { Annotation, Tag } from "./attribute";
-import { Application, AppName, Model } from "./model";
+import { Model } from "./model";
 import "./renderers";
 import { Action, Endpoint, Param, Statement } from "./statement";
-import { Primitive, Type, TypePrimitive } from "./type";
+import { Type } from "./type";
+import { Application } from "./application";
 
 const allPath = "../ts/test/all.sysl";
 let allModel: Model;
@@ -19,19 +20,18 @@ describe("Constructors", () => {
     });
 
     test("New Application", () => {
-        const name = AppName.fromString("Foo");
-        expect(new Application({ name })).toHaveProperty("name", name);
+        var app = new Application({ name: "Foo" });
+        expect(app).toHaveProperty("namespace", []);
+        expect(app).toHaveProperty("name", "Foo");
+
+        app = new Application({ namespace: ["Ns1", "Ns2"], name: "Foo" });
+        expect(app).toHaveProperty("namespace", ["Ns1", "Ns2"]);
+        expect(app).toHaveProperty("name", "Foo");
+
     });
 
     test("New Type", () => {
-        expect(
-            new Type({
-                discriminator: "!type",
-                name: "Foo",
-                optional: true,
-                value: new Primitive(TypePrimitive.INT),
-            })
-        ).toHaveProperty("name", "Foo");
+        expect(new Type("Foo")).toHaveProperty("name", "Foo");
     });
 
     test("New Endpoint", () => {
@@ -39,7 +39,7 @@ describe("Constructors", () => {
     });
 
     test("New Param", () => {
-        expect(new Param({ name: "foo" })).toHaveProperty("name", "foo");
+        expect(new Param("foo", [])).toHaveProperty("name", "foo");
     });
 
     test("New Statement", () => {
@@ -67,7 +67,7 @@ describe("Serialization", () => {
     describe("Application", () => {
         test("empty", () => {
             expect(
-                new Application({ name: AppName.fromString("Foo") }).toSysl()
+                new Application({ name: "Foo" }).toSysl()
             ).toEqual(
                 realign(`
                     Foo:
@@ -384,6 +384,13 @@ describe("Roundtrip", () => {
                     ENUM_3: 3
             `
         ),
+        Alias: realign(
+            `
+            App:
+                !alias A:
+                    int
+            `
+        ),
         TypeRef: realign(
             `
             Namespace :: App:
@@ -422,8 +429,8 @@ describe("Roundtrip", () => {
     type TestSysl = SyslCase | string;
 
     // sysl should be of type TestSysl, but the compiler treats `SyslCase | string` as `string`.
-    const inputSysl = (sysl: SyslCase): string => sysl.input ?? sysl;
-    const expectedSysl = (sysl: SyslCase): string => sysl.output ?? sysl;
+    const inputSysl = (sysl: TestSysl): string => (typeof sysl == "string") ? sysl : sysl.input;
+    const expectedSysl = (sysl: TestSysl): string => (typeof sysl == "string") ? sysl : sysl.output;
 
     test.each(Object.entries(cases))("%s", async (_, sysl: TestSysl) => {
         const model = await Model.fromText(inputSysl(sysl as SyslCase));

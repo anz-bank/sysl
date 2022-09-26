@@ -11,7 +11,8 @@ import {
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
-import { Application, AppName, Import, Model } from "../model";
+import { Import, Model } from "../model";
+import { Application } from "../model/application";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
@@ -47,13 +48,14 @@ export class PbApplication {
 
     toModel(): Application {
         return new Application({
-            name: new AppName(this.name.part),
+            name: this.name.part.at(-1),
+            namespace: this.name.part.slice(0, -1), 
             endpoints: sortLocationalArray(
                 Array.from(this.endpoints ?? new Map()).map(([, e]) =>
                     e.toModel(this.name.part)
                 )
             ),
-            types: sortLocationalArray(
+            children: sortLocationalArray(
                 Array.from(this.types ?? new Map()).map(([name, t]) => {
                     return t.toModel(name, false);
                 })
