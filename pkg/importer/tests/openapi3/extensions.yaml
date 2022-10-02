@@ -121,3 +121,4 @@ components:
         - this is array extension index 1
         - this is array extension index 2
       x-number-ext: 1
+      x-empty:

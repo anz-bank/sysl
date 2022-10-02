@@ -31,6 +31,7 @@ TestApp "Extensions":
     
     !alias complex-extensions:
         @array-ext = ["this is array extension index 0", "this is array extension index 1", "this is array extension index 2"]
+        @empty = ""
         @number-ext = "1"
         @object-ext = [["a", "this is an object extension"], ["b", "this is just another field to object extension"], ["c", "2"]]
         string

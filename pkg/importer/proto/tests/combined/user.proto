@@ -1,6 +1,8 @@
 syntax = "proto3";
 package foo.user;
 
+option go_package = "github.com/test/user";
+
 import "user_type.proto";
 
 service UserService {

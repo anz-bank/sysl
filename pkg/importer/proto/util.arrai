@@ -1,8 +1,8 @@
 # getNamespace returns the value of an option split and cleaned to resemble an app name, or an
 # empty array if the given option is not present.
-# 
+#
 # Intend for the retrieval of namespace and app name values from options.
-let getNamespace = \file 
+let getNamespace = \file
 	let re = //re.compile(`(?m)\{"sysl":.*}`);
     let matches = cond {file.comments?:{}: (file.comments >> re.match(.)) where .@item rank (:.@)};
 
@@ -36,6 +36,19 @@ let includeImport = \import import != "google/protobuf/descriptor.proto";
 # `forwardSlashedPath` ensures paths use forward slashes regardless of OS
 let forwardSlashedPath = \path //seq.sub("\\", "/", path);
 
+let primitiveTypes = {
+    'int','integer','int32','int64',
+    'uint32','uint64','sint32','sint64',
+    'fixed32', 'fixed64','sfixed32','sfixed64',
+    'bool', 'boolean',
+    'number', 'double', 'float',
+    'string', 'str',
+    'date',
+    'datetime',
+    'byte', 'bytes',
+    'binary',
+};
+
 (
     :getNamespace,
     :getPackage,
@@ -43,5 +56,6 @@ let forwardSlashedPath = \path //seq.sub("\\", "/", path);
     :annoFromOption,
     :annoFromComment,
     :includeImport,
-    :forwardSlashedPath
+    :forwardSlashedPath,
+    :primitiveTypes,
 )

@@ -37,6 +37,14 @@ let evalNumber = \number
         (:d): d,
     };
 
+# `getTypeAppName` returns the name of the application that contains all the types for a file.
+# `file` is the file dictionary where key is the path of the file and the value is a data in that file.
+let getTypeAppName = \file
+    let ns = getNamespace(file.@value);
+    let appPackage = packageToApp(getPackage(file));
+    cond { ns: partsToAppName(ns ++ [typeAppSuffix]) } || appPackage
+;
+
 # `referencedType` returns a tuple that contains a type's app context and name for non-primitive referenced type.
 # `t` the type being referenced.
 # `file` the file that is referencing the type.
@@ -50,9 +58,14 @@ let referencedType = \t \file \appName \imports
         let ref = (resolvedImports where fileContainsType(imports(.), t.name)) single;
         getNamespace(imports(ref));
 
+    let samePackage = \t t.package?:'' = getPackage(file);
+
+    let appTypeName = getTypeAppName(file);
     # `refObj` creates a type reference object based on available information.
     let refObj = \t \ns
         cond {
+            # this happens when this is called by type applications
+            appTypeName = appName: (path: [name]),
             # Generate appName from namespace if present
             ns: (appName: partsToAppName(ns ++ [typeAppSuffix]), path: [name]),
             # Generate path from t.package if present
@@ -61,6 +74,7 @@ let referencedType = \t \file \appName \imports
             _: (path: [name])
         };
     typeRef(cond {
+            samePackage(t): refObj(t, {}),
             t.package?:{}:
                 refObj(t, referencedNs(t, file, imports)),
             _:
@@ -181,7 +195,6 @@ let mapTypeField = \map \file \appName \imports
     let value =  (set: typeFieldValue(map, file, appName, imports));
     let mapAttrs = (attrs: {"proto_map_key": (s: map.@value.keyType.name)});
     let value = value +> (attrs: mapAttrs.attrs +> value.set.attrs);
-    
     (@: key, @value: value);
 
 # `type` converts a proto message to a Sysl type.
@@ -224,6 +237,15 @@ let endpoint = \rpc \appName \file \imports
     );
     {rpc.@: endpoint};
 
+# appLevelOptions are a collection of special options that need to be rendered
+# as application level annotations.
+let appLevelOptions = {
+    'go_package',
+    'java_package',
+};
+
+let getAppLevelOptions = \options options where .@ <: appLevelOptions;
+
 # `application` creates an application out of a service.
 # `service` the service the application is being created from.
 # `ns` the namespace the application is located under.
@@ -232,11 +254,15 @@ let endpoint = \rpc \appName \file \imports
 let application = \service \ns \file \imports
     let appName = partsToAppName(ns ++ [service.@]);
     let attrs = //rel.union({
+        let options = service.@value.options?:{};
+        let appLevelOptions = getAppLevelOptions(options);
+        let options = options &~ appLevelOptions;
         {"package": (s: packageToApp(getPackage(file)))}
         +> {"source_path": (s: forwardSlashedPath(file.@))}
         +> {"patterns": (a: (elt: [("s": "gRPC")]))}
+        +> appLevelOptions
         +> cond service.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}}
-        +> cond service.@value {(:options, ...): {"proto_options":
+        +> cond {options: {"proto_options":
             (a: (elt: (options => (s: $`${.@} = ${annoFromOption(.@value)}`)) orderby .))}}
         +> cond service.@value {(:fileOptions, ...): {"proto_file_options":
             (a: (elt: (fileOptions => (s: $`${.@} = ${annoFromOption(.@value)}`)) orderby .))}
@@ -279,17 +305,24 @@ let fileApps = \file \imports
     let content = file.@value;
     let ns = getNamespace(content);
     let appPackage = packageToApp(getPackage(file));
+    let typeAppName = getTypeAppName(file);
     let typeApp = cond {content.messages?:{} || content.enums?:{}:
-        let typeAppName = cond { ns: partsToAppName(ns ++ [typeAppSuffix]) } || appPackage;
         {typeAppName:
             (
-                attrs: {"package": (s: packageToApp(getPackage(file)))},
+                attrs: {"package": (s: appPackage)} +> getAppLevelOptions(content.options?:{}),
                 name: appNameToAppNameMessage(typeAppName),
                 types: fileTypes(file.@value, {}, typeAppName, file, imports)
             )
         }
     };
-    //rel.union(content.services?:{} => {partsToAppName(ns ++ [.@]): application(., ns, file, imports)}) +> typeApp;
+    //rel.union(
+        content.services?:{} => {
+            partsToAppName(ns ++ [.@]): application(
+                . +> (@value +>: (options: content.options?:{})),
+                ns, file, imports,
+            )
+        }
+    ) +> typeApp;
 
 # `module` generates a Sysl model for a map of files
 # `imports` a map of file names to parsed proto content

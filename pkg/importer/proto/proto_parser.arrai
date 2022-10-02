@@ -1,4 +1,4 @@
-let (:includeImport, ...) = //{./util};
+let (:includeImport, :primitiveTypes, ...) = //{./util};
 
 # Tools for parsing and importing Protocol Buffers.
 #
@@ -118,13 +118,17 @@ let evalName = \parsed
         (:ident, ...): evalIdent(ident),
     };
 
-let evalType = \parsed
+let evalType = \currentPackage \parsed
    let fullName = cond parsed {
         (:messageType, ...): evalIdent(messageType.ident),
         (:ident, ...): evalIdent(ident),
         _: parsed.'' rank (:.@)
     };
     let [...package, name] = //seq.split(".", fullName);
+    let package = cond {
+        (!package && name !<: primitiveTypes && currentPackage): [currentPackage],
+        _: package,
+    };
     cond {package: (package: //seq.join(".", package), :name)} || (:name);
 
 let evalLabel = \parsed parsed.'' rank (:.@) ;
@@ -159,34 +163,29 @@ let evalComments = \parsed
 
 let evalOption = \parsed { evalOptionName(parsed.optionName): evalConstant(parsed.constant) +> evalComments(parsed) };
 
-let evalField = \parsed
+let evalField = \currentPackage \parsed
     {
         evalName(parsed.fieldName): (
         value: evalConstant(parsed.fieldNumber),
-        type: evalType(parsed.type))
+        type: evalType(currentPackage, parsed.type))
         +> (cond parsed {(:label, ...): (label: evalLabel(label))} || ())
         +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
 
-let evalOneofField = \parsed
+let evalOneofField = \currentPackage \parsed
     {
         evalName(parsed.oneofName): (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
-            +> (cond parsed {(:oneofField, ...): (fields: //rel.union(oneofField => evalField(.@item)))} || ()) +> evalComments(parsed)
+            +> (cond parsed {(:oneofField, ...): (fields: //rel.union(oneofField => evalField(currentPackage, .@item)))} || ()) +> evalComments(parsed)
     };
 
-let evalMapField = \parsed
+let evalMapField = \currentPackage \parsed
     {
         evalName(parsed.mapName): (
-            type: evalType(parsed.type),
-            keyType: evalType(parsed.keyType),
+            type: evalType(currentPackage, parsed.type),
+            keyType: evalType(currentPackage, parsed.keyType),
             value: evalConstant(parsed.fieldNumber)
         ) +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
      };
-
-let evalGroupField = \parsed
-    {
-        evalName(parsed.groupName): (label: evalLabel(parsed.label)) +> evalMessageBody(parsed.messageBody)
-    };
 
 let evalRange = \parsed
     cond {
@@ -211,46 +210,41 @@ let evalEnumBody = \parsed
 
 let evalEnum = \parsed { evalName(parsed.enumName): evalEnumBody(parsed.enumBody) +> evalComments(parsed) };
 
-let evalRPC = \parsed
+let evalRPC = \currentPackage \parsed
     {
         evalName(parsed.rpcName):(
-            in: evalType(parsed.inputMessage.messageType),
-            out: evalType(parsed.returnMessage.messageType)
+            in: evalType(currentPackage, parsed.inputMessage.messageType),
+            out: evalType(currentPackage, parsed.returnMessage.messageType)
         )+> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
     };
 
-let rec evalMessageBody = \parsed
-    (cond parsed {(:field, ...): (fields: //rel.union(field => evalField(.@item)))} || ())
+let rec evalMessageBody = \currentPackage \parsed
+    (cond parsed {(:field, ...): (fields: //rel.union(field => evalField(currentPackage, .@item)))} || ())
     +> (cond parsed {(:enum, ...): (enums: //rel.union(enum => evalEnum(.@item)))} || ())
-    +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(group.messageBody)}))} || ())
-    +> (cond parsed {(:message, ...): (messages: //rel.union(message => {evalName(.@item.messageName): evalMessageBody(.@item.messageBody) +> evalComments(.@item)}))} || ())
+    +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(currentPackage, group.messageBody)}))} || ())
+    +> (cond parsed {(:message, ...): (messages: //rel.union(message => {evalName(.@item.messageName): evalMessageBody(currentPackage, .@item.messageBody) +> evalComments(.@item)}))} || ())
     +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
-    +> (cond parsed {(:oneof, ...): (oneofs: //rel.union(oneof => evalOneofField(.@item)))} || ())
-    +> (cond parsed {(:mapField, ...): (mapFields: //rel.union(mapField => evalMapField(.@item)))} || ())
+    +> (cond parsed {(:oneof, ...): (oneofs: //rel.union(oneof => evalOneofField(currentPackage, .@item)))} || ())
+    +> (cond parsed {(:mapField, ...): (mapFields: //rel.union(mapField => evalMapField(currentPackage, .@item)))} || ())
     +> (cond parsed {(:reserved, ...): (reserveds: reserved => evalReserved(.@item))} || ());
 
-let evalGroupField = \parsed
-    {
-        evalName(parsed.groupName): evalMessageBody(parsed.messageBody)
-    };
-
-let evalService = \parsed
+let evalService = \currentPackage \parsed
     {
         evalName(parsed.serviceName): ()
         +> (cond parsed {(:option, ...): (options: option => evalOption(.@item))} || ())
-        +> (cond parsed {(:rpc, ...): (rpcs: //rel.union(rpc => evalRPC(.@item)))} || ())
+        +> (cond parsed {(:rpc, ...): (rpcs: //rel.union(rpc => evalRPC(currentPackage, .@item)))} || ())
         +> evalComments(parsed)
     };
 
-let evalExtend = \parsed
+let evalExtend = \currentPackage \parsed
     {
         evalName(parsed.messageType): ()
-        +> (cond parsed {(:field, ...): (fields: //rel.union(field => evalField(.@item)))} || ())
-        +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(group.messageBody)}))} || ())
+        +> (cond parsed {(:field, ...): (fields: //rel.union(field => evalField(currentPackage, .@item)))} || ())
+        +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(currentPackage, group.messageBody)}))} || ())
         +> evalComments(parsed)
     };
 
-let evalStmt = \parsed
+let evalStmt = \(?:currentPackage:'', ...) \parsed
     cond parsed {
         (:import, ...):
             (import: {import.strLit.''(1) rank (:.@): () +> (cond import.modifier?:{} {('':mod, ...): (modifier: mod rank (:.@))} || ())}),
@@ -264,17 +258,24 @@ let evalStmt = \parsed
                 (:enum, ...):
                     (enum: evalEnum(enum)),
                 (:message, ...):
-                    (message: {evalName(message.messageName): evalMessageBody(message.messageBody) +> evalComments(message)}),
+                    (message: {evalName(message.messageName): evalMessageBody(currentPackage, message.messageBody) +> evalComments(message)}),
                 (:service, ...):
-                    (service: evalService(service)),
+                    (service: evalService(currentPackage, service)),
                 (:extend, ...):
-                    (extend: evalExtend(extend))
+                    (extend: evalExtend(currentPackage, extend))
             }
     };
 
 let evalFile = \parsed
     let syntax = parsed.syntax.proto.'' rank (:.@);
-    let stmts = parsed.stmt?:{} => evalStmt(.@item);
+    let currentPackage =
+        let package = (parsed.stmt?:{} where .@item.package?:{});
+        (package count) = 1 &&
+            let package = (package single).@item;
+            (evalStmt((), package).package single).@
+    ;
+    let stmts = parsed.stmt?:{} => evalStmt((:currentPackage), .@item);
+    # FIXME: only one package per file, should add a check here.
     let package = //rel.union(stmts where (.).package?:{} => .package);
     let imports = //rel.union(stmts where (.).import?:{} => .import);
     let options = //rel.union(stmts where (.).option?:{} => .option);

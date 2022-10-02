@@ -90,7 +90,7 @@ let specialAnno = {
                 a: (elt: (v => (a: (elt: [(s: .@), (s: $`${simplify(.@value)}`)]))) orderby .)
             ),
             _: v && (s: $`${v}`),
-        }
+        } || (s: '')
     ;
 
     let extPrefix = 'x-';
@@ -259,7 +259,8 @@ let specialAnno = {
         };
 
         let examples =
-            let attr = annoValToAnnoValMessage(t('example')?:{} || t(exampleAnno)?:{});  attr && {exampleAnno: attr}
+            let example = t('example')?:{} || t(exampleAnno)?:{};
+            example && {exampleAnno: annoValToAnnoValMessage(example)}
         ;
         # FIXME: sysl doesn't allow proper escaping in annotations
         let regex = let regex = t('pattern')?:{}; regex && {'regex': (s: escapeRegex.sub('\\\\', regex.s))};

@@ -216,17 +216,17 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                         'Outer': (
                                             comments: [" Level 1"],
                                             fields: {
-                                                'enum_field': (label: "optional", type: (name: 'EnumAllowingAlias'), value: (d: 3)),
-                                                'inner_message': (label: "repeated", type: (name: 'Inner'), value: (d: 2)),
+                                                'enum_field': (label: "optional", type: (name: 'EnumAllowingAlias', package: 'proto2'), value: (d: 3)),
+                                                'inner_message': (label: "repeated", type: (name: 'Inner', package: 'proto2'), value: (d: 2)),
                                             },
                                             mapFields: {'my_map': (keyType: (name: 'int32'), type: (name: 'string'), value: (d: 4))},
                                             messages: {'Inner': (comments: [" Level 2", " Description"], fields: {'ival': (label: "required", type: (name: 'int64'), value: (d: 1))})},
                                             options: {'(my_option).a': ( b: true)}
                                         ),
                                     },
-                                    options: {'java_package': (s: 'com.example.foo')},
+                                    options: {'java_package': (s: 'com.example.foo'), 'go_package': (s: 'github.com/test/package'), 'random': (s: 'random')},
                                     package: {'proto2': ()},
-                                    services: {'SearchService': (rpcs: {"Search": (in: (name: "SearchRequest"), out: (name: "SearchResponse"))})},
+                                    services: {'SearchService': (rpcs: {"Search": (in: (name: "SearchRequest", package: 'proto2'), out: (name: "SearchResponse", package: 'proto2'))})},
                                     syntax: 'proto2',
                                 );
                 //test.assert.equal(expected, actual),
@@ -252,12 +252,12 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                         'Outer': (
                                             comments: [" Level 1"],
                                             fields: {
-                                                'enum_field': (type: (name: 'EnumAllowingAlias'), value: (d: 3)),
-                                                'inner_message': (label: "repeated", type: (name: 'Inner'), value: (d: 2)),
+                                                'enum_field': (type: (name: 'EnumAllowingAlias', package: 'proto3'), value: (d: 3)),
+                                                'inner_message': (label: "repeated", type: (name: 'Inner', package: 'proto3'), value: (d: 2)),
                                             },
                                             mapFields: {
                                                 'primitive_map': (keyType: (name: 'int32'), type: (name: 'int32'), value: (d: 4)),
-                                                'message_map': (keyType: (name: 'string'), type: (name: 'Inner'), value: (d: 5)),
+                                                'message_map': (keyType: (name: 'string'), type: (name: 'Inner', package: 'proto3'), value: (d: 5)),
                                             },
                                             messages: {
                                                 'Inner': (comments: [" Level 2"], fields: {'ival': (type: (name: 'int64'), value: (d: 1))}),
@@ -265,9 +265,13 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             options: {'(my_option).a': (b: true)},
                                         ),
                                     },
-                                    options: {'java_package': (s: 'com.example.foo')},
+                                    options: {'java_package': (s: 'com.example.foo'), 'go_package': (s: 'github.com/test/package'), 'random': (s: 'random')},
                                     package: {'proto3': ()},
-                                    services: {'SearchService': (rpcs: {"Search": (in: (name: "SearchRequest"), out: (name: "SearchResponse"))})},
+                                    services: {
+                                        'SearchService': (rpcs: {"Search": (
+                                            in: (name: "SearchRequest", package: 'proto3'),
+                                            out: (name: "SearchResponse", package: 'proto3'),
+                                    )})},
                                     syntax: 'proto3',
                                 );
                 //test.assert.equal(expected, actual)
