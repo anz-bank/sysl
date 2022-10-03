@@ -51,6 +51,8 @@ TestApp "Twilio - Conversations":
     !type get_v1_Conversations_200_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_v1_Conversations_200_resp_type_body [~body]:
             @json_tag = "body"
+        header <: get_v1_Conversations_200_resp_type_header [~header]:
+            @json_tag = "header"
     
     !type get_v1_Conversations_200_resp_type_body:
         @mediatype = "application/json"
@@ -64,9 +66,14 @@ TestApp "Twilio - Conversations":
             @json_tag = "url"
             @openapi_format = "uri"
     
+    !type get_v1_Conversations_200_resp_type_header:
+        @openapi_type = "object"
+    
     !type get_v1_Conversations_ConversationSid_Messages_200_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_v1_Conversations_ConversationSid_Messages_200_resp_type_body [~body]:
             @json_tag = "body"
+        header <: get_v1_Conversations_ConversationSid_Messages_200_resp_type_header [~header]:
+            @json_tag = "header"
     
     !type get_v1_Conversations_ConversationSid_Messages_200_resp_type_body:
         @mediatype = "application/json"
@@ -79,3 +86,6 @@ TestApp "Twilio - Conversations":
         url <: string?:
             @json_tag = "url"
             @openapi_format = "uri"
+    
+    !type get_v1_Conversations_ConversationSid_Messages_200_resp_type_header:
+        @openapi_type = "object"

@@ -48,6 +48,8 @@ TestApp "Extensions":
     !type get_path_param1__400_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_path_param1__400_resp_type_body [~body]:
             @json_tag = "body"
+        header <: get_path_param1__400_resp_type_header [~header]:
+            @json_tag = "header"
     
     !union get_path_param1__400_resp_type_body:
         get_path_param1__400_resp_type_body_application_json
@@ -63,6 +65,9 @@ TestApp "Extensions":
         @get-400-resp = "this anno is for text 400"
         @mediatype = "plain/text"
         string
+    
+    !type get_path_param1__400_resp_type_header:
+        @openapi_type = "object"
     
     !alias simple:
         @simple-anno = "this is annotation for a simple type"

@@ -49,6 +49,8 @@ TestApp "Simple":
     !type get_deep_deeeeeeep_test%2Estuff_200_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_deep_deeeeeeep_test%2Estuff_200_resp_type_body [~body]:
             @json_tag = "body"
+        header <: get_deep_deeeeeeep_test%2Estuff_200_resp_type_header [~header]:
+            @json_tag = "header"
     
     !union get_deep_deeeeeeep_test%2Estuff_200_resp_type_body:
         get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_%2A
@@ -61,6 +63,9 @@ TestApp "Simple":
     !alias get_deep_deeeeeeep_test%2Estuff_200_resp_type_body_application_json:
         @mediatype = "application/json"
         SimpleObj
+    
+    !type get_deep_deeeeeeep_test%2Estuff_200_resp_type_header:
+        @openapi_type = "object"
     
     !type get_withHeaders%3AandSpecialChars_404_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_withHeaders%3AandSpecialChars_404_resp_type_body [~body]:

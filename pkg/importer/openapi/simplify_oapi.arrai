@@ -121,6 +121,7 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
             examples && {'example': examples}
         ;
         cond (content count) {
+            (0): {typeName: {'properties': {}}},
             # single media type becomes one type
             (1):
                 let (@: mediatype, @value: config) = content single;
@@ -189,8 +190,8 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
     let typesFromResponse = \typeName \response
         let body = response('content')?:{};
         let headers = response('headers')?:{};
-        let headerTypeName = headers && $`${typeName}_header`;
-        let headerSchema = headers && {
+        let headerTypeName = $`${typeName}_header`;
+        let headerSchema = {
             headerTypeName: {
                 'type': (s: 'object'),
                 'properties':
@@ -200,13 +201,13 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
                 ,
             }
         };
-        let bodyTypeName = body && $`${typeName}_body`;
-        let bodySchema = body && contentToSchemas(body, bodyTypeName);
+        let bodyTypeName = $`${typeName}_body`;
+        let bodySchema = contentToSchemas(body, bodyTypeName);
         let responseSchema =
-            let header = headerSchema && {
+            let header = {
                 'header': schemaRef(headerTypeName) +> schemaSyslTag('header')
             };
-            let body = bodySchema && {'body': schemaRef(bodyTypeName) +> schemaSyslTag('body')};
+            let body = {'body': schemaRef(bodyTypeName) +> schemaSyslTag('body')};
             {
                 typeName: {
                     'type': (s: 'object'),

@@ -20,8 +20,13 @@ TestApp "Goat CRUD API":
             @json_tag = "name"
     
     !type post_goat_create-goat_201_resp_type [~GeneratedOpenAPIResponse]:
+        body <: post_goat_create-goat_201_resp_type_body [~body]:
+            @json_tag = "body"
         header <: post_goat_create-goat_201_resp_type_header [~header]:
             @json_tag = "header"
+    
+    !type post_goat_create-goat_201_resp_type_body:
+        @openapi_type = "object"
     
     !type post_goat_create-goat_201_resp_type_header:
         Location <: post_goat_create-goat_201_resp_type_header_Location?:

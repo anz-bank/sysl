@@ -22,8 +22,13 @@ TestApp "Meta API Test":
             return 200 <: get_endpoint-1_200_resp_type 
     
     !type get_endpoint-1_200_resp_type [~GeneratedOpenAPIResponse]:
+        body <: get_endpoint-1_200_resp_type_body [~body]:
+            @json_tag = "body"
         header <: get_endpoint-1_200_resp_type_header [~header]:
             @json_tag = "header"
+    
+    !type get_endpoint-1_200_resp_type_body:
+        @openapi_type = "object"
     
     !type get_endpoint-1_200_resp_type_header:
         content-type <: string?:

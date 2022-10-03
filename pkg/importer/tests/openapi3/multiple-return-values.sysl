@@ -31,6 +31,8 @@ TestApp "Simple":
     !type get_test_200_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_test_200_resp_type_body [~body]:
             @json_tag = "body"
+        header <: get_test_200_resp_type_header [~header]:
+            @json_tag = "header"
     
     !union get_test_200_resp_type_body:
         get_test_200_resp_type_body_application_json
@@ -43,3 +45,6 @@ TestApp "Simple":
     !alias get_test_200_resp_type_body_application_pdf:
         @mediatype = "application/pdf"
         bytes
+    
+    !type get_test_200_resp_type_header:
+        @openapi_type = "object"

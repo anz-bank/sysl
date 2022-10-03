@@ -18,6 +18,8 @@ TestApp "Simple":
     !type get_docs_docId__200_resp_type [~GeneratedOpenAPIResponse]:
         body <: get_docs_docId__200_resp_type_body [~body]:
             @json_tag = "body"
+        header <: get_docs_docId__200_resp_type_header [~header]:
+            @json_tag = "header"
     
     !union get_docs_docId__200_resp_type_body:
         get_docs_docId__200_resp_type_body_application_json
@@ -40,3 +42,6 @@ TestApp "Simple":
     !alias get_docs_docId__200_resp_type_body_text_plain:
         @mediatype = "text/plain"
         SimpleObj
+    
+    !type get_docs_docId__200_resp_type_header:
+        @openapi_type = "object"
