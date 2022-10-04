@@ -1,0 +1,17 @@
+// {"sysl": {"namespace": "Name :: Space"}}
+syntax = "proto3";
+package namespace;
+
+option go_package = "github.com/test/namespace";
+
+service Namespaced {
+    rpc Get (Request) returns (Response);
+}
+
+message Request {
+    string name = 1;
+}
+
+  message Response {
+    string message = 1;
+}

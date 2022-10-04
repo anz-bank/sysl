@@ -64,17 +64,17 @@ let referencedType = \t \file \appName \imports
     # `refObj` creates a type reference object based on available information.
     let refObj = \t \ns
         cond {
-            # this happens when this is called by type applications
-            appTypeName = appName: (path: [name]),
             # Generate appName from namespace if present
             ns: (appName: partsToAppName(ns ++ [typeAppSuffix]), path: [name]),
+            # this happens when this is called by type applications
+            appTypeName = appName: (path: [name]),
             # Generate path from t.package if present
             t.package?:{}: (path: [packageToApp(t.package), name]),
             # Just return the name
             _: (path: [name])
         };
     typeRef(cond {
-            samePackage(t): refObj(t, {}),
+            samePackage(t): refObj(t, getNamespace(file.@value)),
             t.package?:{}:
                 refObj(t, referencedNs(t, file, imports)),
             _:

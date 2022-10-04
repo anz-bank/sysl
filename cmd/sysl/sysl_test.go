@@ -794,7 +794,7 @@ func TestSwaggerAppExportDirExists(t *testing.T) {
 	assert.FileExists(t, filepath.Join(outputDir, "multiple.yaml"))
 }
 
-//nolint: funlen
+// nolint: funlen
 func TestHandleProjectRoot(t *testing.T) {
 	successfulTest := folderStructure{
 		folders: []string{
@@ -987,23 +987,23 @@ func (ts folderTestStructure) getExpectedModule(t *testing.T) string {
 }
 
 /*
-func TestCodegenGrammarImportDefOut(t *testing.T) {
-	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "import", "-i",
-		syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, os.Stdin, main3)
-	syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
-}
+	func TestCodegenGrammarImportDefOut(t *testing.T) {
+		t.Parallel()
+		logger, _ := test.NewNullLogger()
+		memFs, fs := syslutil.WriteToMemOverlayFs("/")
+		main2([]string{"sysl", "import", "-i",
+			syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, os.Stdin, main3)
+		syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
+	}
 
-func TestCodegenGrammarImport(t *testing.T) {
-	t.Parallel()
-	logger, _ := test.NewNullLogger()
-	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "import", "-i", syslDir + "importer/tests-grammar/unions.gen.g",
-		"-o", "out.sysl", "-a", "go"}, fs, logger, os.Stdin, main3)
-	syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
-}
+	func TestCodegenGrammarImport(t *testing.T) {
+		t.Parallel()
+		logger, _ := test.NewNullLogger()
+		memFs, fs := syslutil.WriteToMemOverlayFs("/")
+		main2([]string{"sysl", "import", "-i", syslDir + "importer/tests-grammar/unions.gen.g",
+			"-o", "out.sysl", "-a", "go"}, fs, logger, os.Stdin, main3)
+		syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
+	}
 */
 func TestTemplating(t *testing.T) {
 	t.Parallel()
@@ -1067,6 +1067,14 @@ func TestProtobufImportWithoutPaths(t *testing.T) {
 	runSyslWithOutput(t, "", nil,
 		"import",
 		"--input", "../../pkg/importer/proto/tests/proto3.proto",
+		"--format", "protobuf")
+}
+
+func TestProtobufImportNamespace(t *testing.T) {
+	t.Parallel()
+	runSyslWithOutput(t, "", nil,
+		"import",
+		"--input", "../../pkg/importer/proto/tests/namespace.proto",
 		"--format", "protobuf")
 }
 
