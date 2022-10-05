@@ -9,8 +9,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
+	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -31,11 +33,18 @@ type testConfig struct {
 	format        string
 }
 
+func mustCreateReader(t *testing.T) reader.Reader {
+	reader, err := syslutil.NewReader(afero.NewOsFs())
+	require.NoError(t, err)
+	return reader
+}
+
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
 	t.Helper()
 
 	files, err := ioutil.ReadDir(cfg.testDir)
 	require.NoError(t, err)
+	reader := mustCreateReader(t)
 	for _, f := range files {
 		if f.IsDir() {
 			continue
@@ -53,7 +62,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				absFilePath, err := filepath.Abs(filepath.Join(cfg.testDir, filename+cfg.testExtension))
 				require.NoError(t, err)
-				imp, err := Factory(absFilePath, false, cfg.format, input, logger)
+				imp, err := Factory(absFilePath, false, cfg.format, input, logger, reader)
 				require.NoError(t, err)
 				imp, err = imp.Configure("TestApp", "com.example.package", ".")
 				require.NoError(t, err)
@@ -87,7 +96,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	logger, _ := test.NewNullLogger()
 	syslFile := filepath.Join(cfg.testDir, filepath.Base(cfg.testDir)+".sysl")
 	path := syslutil.MustAbsolute(t, cfg.testDir)
-	imp, err := Factory(path, true, cfg.format, nil, logger)
+	imp, err := Factory(path, true, cfg.format, nil, logger, mustCreateReader(t))
 	require.NoError(t, err)
 	imp, err = imp.Configure("TestApp", "com.example.package", ".")
 	require.NoError(t, err)
@@ -245,6 +254,7 @@ type errTestConfig struct {
 }
 
 func runImportErrorTest(t *testing.T, cfg errTestConfig) {
+	r := mustCreateReader(t)
 	for filename, expectedErr := range cfg.cases {
 		logger, _ := test.NewNullLogger()
 		t.Run(
@@ -252,7 +262,7 @@ func runImportErrorTest(t *testing.T, cfg errTestConfig) {
 			func(t *testing.T) {
 				t.Parallel()
 				fileToImport := syslutil.MustAbsolute(t, filepath.Join(cfg.testDir, filename)+cfg.testExtension)
-				imp, err := Factory(fileToImport, true, cfg.format, nil, logger)
+				imp, err := Factory(fileToImport, true, cfg.format, nil, logger, r)
 				require.NoError(t, err)
 				imp, err = imp.Configure("TestApp", "com.example.package", "")
 				require.NoError(t, err)

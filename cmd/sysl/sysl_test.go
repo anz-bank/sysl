@@ -19,14 +19,13 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/anz-bank/sysl/pkg/loader"
-	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 const (
 	currentWorkingDirectory = "."
-	syslRootMarker          = parse.SyslRootMarker
-	gitRootMarker           = parse.GitRootMarker
+	syslRootMarker          = syslutil.SyslRootMarker
+	gitRootMarker           = syslutil.GitRootMarker
 )
 
 type folderTestStructure struct {

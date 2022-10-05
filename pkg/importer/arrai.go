@@ -3,6 +3,7 @@ package importer
 import (
 	"fmt"
 
+	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -14,13 +15,15 @@ type ArraiImporter struct {
 	pkg     string
 	asset   []byte
 	logger  *logrus.Logger
+	reader  reader.Reader
 }
 
 // MakeArraiImporterImporter returns a new ArraiImporter.
-func MakeArraiImporterImporter(asset []byte, logger *logrus.Logger) *ArraiImporter {
+func MakeArraiImporterImporter(asset []byte, logger *logrus.Logger, reader reader.Reader) *ArraiImporter {
 	return &ArraiImporter{
 		asset:  asset,
 		logger: logger,
+		reader: reader,
 	}
 }
 
@@ -45,7 +48,7 @@ func (i *ArraiImporter) LoadFile(path string) (string, error) {
 		return "", err
 	}
 
-	val, err := arrai.EvaluateBundle(i.asset, args...)
+	val, err := arrai.EvaluateBundleWithReader(i.asset, i.reader, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`)", i.appName, path),
@@ -67,7 +70,7 @@ func (i *ArraiImporter) Load(content string) (string, error) {
 		return "", err
 	}
 
-	val, err := arrai.EvaluateBundle(i.asset, args...)
+	val, err := arrai.EvaluateBundleWithReader(i.asset, i.reader, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("AppName: %s, Content: %s", i.appName, content),

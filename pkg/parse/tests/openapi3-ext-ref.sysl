@@ -1,0 +1,3 @@
+import /pkg/importer/tests/openapi3/ext-ref-1.yaml as App ~openapi3
+App:
+    ...

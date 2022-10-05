@@ -1,4 +1,4 @@
-package parse
+package syslutil
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/anz-bank/golden-retriever/retriever"
 	"github.com/anz-bank/sysl/pkg/env"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/golden-retriever/reader/filesystem"
@@ -77,7 +76,7 @@ func NewPinner(fs afero.Fs) (retriever.Retriever, error) {
 
 func SyslRootDir(fs afero.Fs) string {
 	root := "."
-	if v, is := fs.(*syslutil.ChrootFs); is {
+	if v, is := fs.(*ChrootFs); is {
 		root = v.Root()
 	}
 	return filepath.Join(root, SyslRootMarker)

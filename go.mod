@@ -4,15 +4,17 @@ go 1.16
 
 require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
-	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
+	github.com/alecthomas/assert v1.0.0
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
+	github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
-	github.com/anz-bank/golden-retriever v0.20.0
+	github.com/anz-bank/golden-retriever v0.21.0
 	github.com/anz-bank/mermaid-go v0.1.1
-	github.com/anz-bank/pkg v0.0.39
-	github.com/arr-ai/arrai v0.309.0
+	github.com/anz-bank/pkg v0.0.48
+	github.com/arr-ai/arrai v0.313.0
 	github.com/arr-ai/frozen v0.20.1
 	github.com/arr-ai/proto v0.0.0-20180422074755-2ffbedebee50
-	github.com/arr-ai/wbnf v0.34.0
+	github.com/arr-ai/wbnf v0.35.1
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
@@ -27,13 +29,13 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/rjeczalik/notify v0.9.2
-	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/afero v1.8.2
-	github.com/stretchr/testify v1.7.0
+	github.com/sirupsen/logrus v1.9.0
+	github.com/spf13/afero v1.9.2
+	github.com/stretchr/testify v1.8.0
 	github.com/tidwall/gjson v1.11.0
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
-	google.golang.org/grpc v1.42.0
-	google.golang.org/protobuf v1.27.1
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
+	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f
+	google.golang.org/grpc v1.49.0
+	google.golang.org/protobuf v1.28.1
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )

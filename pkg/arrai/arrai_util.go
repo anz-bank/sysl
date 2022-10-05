@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/arr-ai/arrai/translate/pb"
@@ -14,6 +15,7 @@ import (
 	"github.com/arr-ai/frozen"
 
 	"github.com/arr-ai/arrai/pkg/arraictx"
+	"github.com/arr-ai/arrai/pkg/ctxfs"
 	"github.com/arr-ai/arrai/rel"
 	"github.com/arr-ai/arrai/syntax"
 )
@@ -52,8 +54,20 @@ func EvaluateScript(arraiScript string, scriptParams ...interface{}) (rel.Value,
 // RunBundle runs an arr.ai bundle with the passed parameters set as //os.args[1:].
 // It help to pass Go's type parameters to arrai script explicitly.
 func EvaluateBundle(bundle []byte, args ...string) (rel.Value, error) {
+	return syntax.EvaluateBundleCtx(context.Background(), bundle, args...)
+}
+
+// EvaluateBundleCtx runs an arr.ai bundle with the passed parameters set as //os.args[1:].
+// It help to pass Go's type parameters to arrai script explicitly.
+func EvaluateBundleCtx(ctx context.Context, bundle []byte, args ...string) (rel.Value, error) {
 	args = append([]string{""}, args...)
-	return syntax.EvaluateBundle(bundle, args...)
+	return syntax.EvaluateBundleCtx(ctx, bundle, args...)
+}
+
+// EvaluateBundleWithReader runs arr.ai bundle using golden-retriever Reader as its runtime Fs.
+func EvaluateBundleWithReader(bundle []byte, reader reader.Reader, args ...string) (rel.Value, error) {
+	ctx := ctxfs.RuntimeFsOnto(arraictx.InitRunCtx(context.Background()), reader)
+	return EvaluateBundleCtx(ctx, bundle, args...)
 }
 
 // EvaluateGrammar parses a wbnf grammar from source, uses the grammar (and a root rule) to
