@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
@@ -13,8 +12,8 @@ import (
 )
 
 // NewAvroImporter returns a new avroImporter.
-func NewAvroImporter(logger *logrus.Logger, reader reader.Reader) Importer {
-	return &avroImporter{logger: logger, reader: reader}
+func NewAvroImporter(logger *logrus.Logger) Importer {
+	return &avroImporter{logger: logger}
 }
 
 // avroImporter represents Avro specification importer.
@@ -22,7 +21,6 @@ type avroImporter struct {
 	appName string
 	pkg     string
 	logger  *logrus.Logger
-	reader  reader.Reader
 }
 
 func (i *avroImporter) LoadFile(path string) (string, error) {
@@ -39,7 +37,7 @@ func (i *avroImporter) Load(avroSpec string) (string, error) {
 		return "", errors.New("application name not provided")
 	}
 	b := bundles.Transformer
-	val, err := arrai.EvaluateBundleWithReader(b, i.reader, avroSpec, i.appName, i.pkg)
+	val, err := arrai.EvaluateBundle(b, avroSpec, i.appName, i.pkg)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("import(`%s`, `%s`, `%s`)", avroSpec, i.appName, i.pkg),

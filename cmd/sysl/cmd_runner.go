@@ -13,7 +13,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/anz-bank/golden-retriever/pkg/gitfs"
 	"github.com/go-git/go-git/v5"
@@ -252,7 +251,7 @@ func (r *cmdRunner) getClonedRepo(fs afero.Fs) (afero.Fs, string, error) {
 	gitRoot := r.Root
 	if gitRoot == "" {
 		var err error
-		gitRoot, err = loader.FindRootFromSyslModule("model.sysl", fs, syslutil.GitRootMarker)
+		gitRoot, err = loader.FindRootFromSyslModule("model.sysl", fs, parse.GitRootMarker)
 		if err != nil || gitRoot == "" {
 			return nil, "", fmt.Errorf("couldn't find local repo to clone: %w", err)
 		}

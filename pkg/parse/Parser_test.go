@@ -1104,9 +1104,6 @@ App:
 }
 
 type mockReader struct {
-	// This is added so that it implements afero.Fs which golden retriever needs.
-	// Currently unused
-	afero.Fs
 	contents map[string]mockContent
 }
 
@@ -1282,10 +1279,8 @@ Two:
 	require.NotNil(t, c.Apps["Three"])
 }
 
-/*
-TestParseSyslRetrieverRemoteImportNotMaster tests that a remote file imported not from master branch will import
-
-	a local file from the same branch
+/* TestParseSyslRetrieverRemoteImportNotMaster tests that a remote file imported not from master branch will import
+   a local file from the same branch
 */
 func TestParseSyslRetrieverRemoteImportNotMaster(t *testing.T) {
 	t.Parallel()

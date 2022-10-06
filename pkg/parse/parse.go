@@ -73,7 +73,7 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	return tree, nil
 }
 
-func importForeign(def importDef, input antlr.CharStream, reader reader.Reader) (antlr.CharStream, error) {
+func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, error) {
 	logger := logrus.StandardLogger()
 	fileName, _ := mod.ExtractVersion(def.filename)
 	file := input.GetText(0, input.Size())
@@ -85,8 +85,8 @@ func importForeign(def importDef, input antlr.CharStream, reader reader.Reader) 
 	switch fileType.Name {
 	case importer.SYSL.Name:
 		return input, nil
-	case importer.OpenAPI3.Name, importer.OpenAPI2.Name, importer.Protobuf.Name:
-		imp, err := importer.Factory(fileName, false, "", []byte(file), logger, reader)
+	case importer.OpenAPI3.Name, importer.OpenAPI2.Name:
+		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
 		}
@@ -95,8 +95,7 @@ func importForeign(def importDef, input antlr.CharStream, reader reader.Reader) 
 			return nil, syslutil.Exitf(ParseError, err.Error())
 		}
 		// FIXME: because filepath information is not provided, external references are ignored in OpenAPI3.
-		// output, err := imp.Load(file)
-		output, err := imp.LoadFile(fileName)
+		output, err := imp.Load(file)
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
 		}
@@ -111,8 +110,6 @@ func detectFileType(fileName string, file []byte) (importer.Format, error) {
 		importer.OpenAPI3,
 		importer.OpenAPI2,
 		importer.SYSL,
-		importer.Protobuf,
-		importer.ProtobufDir,
 	}
 	return importer.GuessFileType(fileName, false, file, ParserFormats)
 }
@@ -141,7 +138,7 @@ func (p *Parser) ParseString(content string) (*sysl.Module, error) {
 
 // ParseFromFs parses a sysl definition from an afero filesystem
 func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error) {
-	r, err := syslutil.NewReader(fs)
+	r, err := NewReader(fs)
 	if err != nil {
 		return nil, err
 	}
@@ -154,12 +151,12 @@ func (p *Parser) ParseFromFsWithVendor(filename string, fs afero.Fs) (*sysl.Modu
 		return nil, fmt.Errorf("can not limit import depth while vendoring")
 	}
 
-	r, err := syslutil.NewReader(fs)
+	r, err := NewReader(fs)
 	if err != nil {
 		return nil, err
 	}
 
-	r.(*remotefs.RemoteFs).Vendor(syslutil.SyslRootDir(fs))
+	r.(*remotefs.RemoteFs).Vendor(SyslRootDir(fs))
 	return p.Parse(filename, r)
 }
 
@@ -203,12 +200,10 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 	specs := []srcInput{}
 	flattenSpecs(&specs, resource, &retrieved)
 
-	return p.parseSpecs(specs, listener, reader)
+	return p.parseSpecs(specs, listener)
 }
 
-func (p *Parser) parseSpecs(
-	specs []srcInput, listener *TreeShapeListener, reader reader.Reader,
-) (*sysl.Module, error) { //nolint:funlen
+func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sysl.Module, error) { //nolint:funlen
 	for _, v := range specs {
 		src := v.src
 		logrus.Debug("Parsing: ", src.filename)
@@ -239,7 +234,7 @@ func (p *Parser) parseSpecs(
 		}
 
 		fsinput := &fsFileStream{antlr.NewInputStream(v.input), src.filename}
-		str, err := importForeign(src, fsinput, reader)
+		str, err := importForeign(src, fsinput)
 		if err != nil {
 			return nil, err
 		}

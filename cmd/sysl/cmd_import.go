@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 
 	"github.com/anz-bank/sysl/pkg/importer"
@@ -31,9 +30,9 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd := app.Command(p.Name(), "Import foreign type to Sysl. Supported types: ["+optsText+"]")
 	cmd.Flag("input", "path of file to import").Short('i').Required().StringVar(&p.filename)
 	cmd.Flag("app-name",
-		"name of the Sysl app to define in Sysl model.").Short('a').StringVar(&p.AppName) //nolint:typecheck
+		"name of the Sysl app to define in Sysl model.").Short('a').StringVar(&p.AppName)
 	cmd.Flag("package",
-		"name of the Sysl package to define in Sysl model.").Short('p').StringVar(&p.Package) //nolint:typecheck
+		"name of the Sysl package to define in Sysl model.").Short('p').StringVar(&p.Package)
 	cmd.Flag("output", "path of file to write the imported sysl, writes to stdout when not specified").
 		Short('o').StringVar(&p.outFile)
 	cmd.Flag("format", fmt.Sprintf("format of the input filename, options: [%s]. "+
@@ -41,7 +40,7 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 		StringVar(&p.format)
 	cmd.Flag("import-paths", "comma separated list of paths used to resolve imports in "+
 		"the input file. Currently only used for protobuf input.").Short('I').
-		StringVar(&p.ImportPaths) //nolint:typecheck
+		StringVar(&p.ImportPaths)
 	return cmd
 }
 
@@ -62,15 +61,11 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	reader, err := syslutil.NewReader(args.Filesystem)
+	imp, err = importer.Factory(inputFilePath, isDir, p.format, content, logrus.New())
 	if err != nil {
 		return err
 	}
-	imp, err = importer.Factory(inputFilePath, isDir, p.format, content, logrus.New(), reader)
-	if err != nil {
-		return err
-	}
-	imp, err = imp.Configure(p.AppName, p.Package, p.ImportPaths) //nolint:typecheck
+	imp, err = imp.Configure(p.AppName, p.Package, p.ImportPaths)
 	if err != nil {
 		return err
 	}

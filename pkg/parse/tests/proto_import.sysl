@@ -1,4 +1,0 @@
-import /pkg/importer/proto/tests/proto3.proto
-
-App:
-    ...

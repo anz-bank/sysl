@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/sirupsen/logrus"
 )
 
@@ -39,10 +38,9 @@ var Formats = []Format{
 	JSONSchema,
 }
 
-// FIXME: change reader.Reader to implement afero.Fs
 // Factory takes in an absolute path and its contents (if path is a file) and returns an importer
 // for the detected file type.
-func Factory(path string, isDir bool, formatName string, content []byte, logger *logrus.Logger, reader reader.Reader) (Importer, error) {
+func Factory(path string, isDir bool, formatName string, content []byte, logger *logrus.Logger) (Importer, error) {
 	var format Format
 	if formatName != "" {
 		for _, f := range Formats {
@@ -80,7 +78,7 @@ func Factory(path string, isDir bool, formatName string, content []byte, logger 
 	case OpenAPI3.Name:
 		logger.Debugln("Detected OpenAPI3")
 		// FIXME: revert back to the arrai importer once regression test is done.
-		return NewOpenAPIV3Importer(logger, reader), nil
+		return NewOpenAPIV3Importer(logger), nil
 	case XSD.Name:
 		logger.Debugln("Detected XSD")
 		return MakeXSDImporter(logger), nil
@@ -89,13 +87,13 @@ func Factory(path string, isDir bool, formatName string, content []byte, logger 
 		return nil, fmt.Errorf("importer disabled for: %s", format.Name)
 	case Avro.Name:
 		logger.Debugln("Detected Avro")
-		return NewAvroImporter(logger, reader), nil
+		return NewAvroImporter(logger), nil
 	case SpannerSQL.Name, SpannerSQLDir.Name, Postgres.Name, PostgresDir.Name, MySQL.Name, MySQLDir.Name, BigQuery.Name:
 		logger.Debugln("Detected SQL")
-		return MakeSQLImporter(logger, reader), nil
+		return MakeSQLImporter(logger), nil
 	case Protobuf.Name, ProtobufDir.Name:
 		logger.Debugln("Detected Protobuf")
-		return MakeProtobufImporter(logger, reader), nil
+		return MakeProtobufImporter(logger), nil
 	default:
 		logger.Debugln("Defaulting to transform-based importing")
 		return MakeTransformImporter(logger, format.Name), nil

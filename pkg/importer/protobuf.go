@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/pkg/errors"
@@ -15,12 +14,11 @@ type ProtobufImporter struct {
 	pkg         string
 	importPaths string
 	logger      *logrus.Logger
-	reader      reader.Reader
 }
 
 // MakeProtobufImporter is a factory method for creating new Protobuf importer.
-func MakeProtobufImporter(logger *logrus.Logger, reader reader.Reader) *ProtobufImporter {
-	return &ProtobufImporter{logger: logger, reader: reader}
+func MakeProtobufImporter(logger *logrus.Logger) *ProtobufImporter {
+	return &ProtobufImporter{logger: logger}
 }
 
 func (p *ProtobufImporter) LoadFile(path string) (string, error) {
@@ -35,7 +33,7 @@ func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 		return "", err
 	}
 
-	val, err := arrai.EvaluateBundleWithReader(b, p.reader, args...)
+	val, err := arrai.EvaluateBundle(b, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("File: %s, ImportPaths: %s", path, p.importPaths),
@@ -59,7 +57,7 @@ func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 		return "", err
 	}
 
-	val, err := arrai.EvaluateBundleWithReader(b, p.reader, args...)
+	val, err := arrai.EvaluateBundle(b, args...)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
 			Context:  fmt.Sprintf("Content: %s, ImportPaths: %s", protoSpec, p.importPaths),

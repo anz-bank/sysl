@@ -71,13 +71,13 @@ func (pc *ProjectConfiguration) ConfigureProject(root, module string, fs afero.F
 	var syslRootPath string
 	var err error
 	if !rootIsDefined {
-		syslRootPath, err = FindRootFromSyslModule(modulePath, fs, syslutil.SyslRootMarker)
+		syslRootPath, err = FindRootFromSyslModule(modulePath, fs, parse.SyslRootMarker)
 		if err != nil {
 			return err
 		}
 
 		if syslRootPath == "" {
-			syslRootPath, err = FindRootFromSyslModule(modulePath, fs, syslutil.GitRootMarker)
+			syslRootPath, err = FindRootFromSyslModule(modulePath, fs, parse.GitRootMarker)
 			if err != nil {
 				return err
 			}
