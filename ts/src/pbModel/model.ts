@@ -74,18 +74,19 @@ export class PbDocumentModel {
     @jsonMapMember(String, PbApplication, serializerFor(PbApplication))
     apps!: Map<string, PbApplication>;
 
-    static async fromFile(syslFilePath: string): Promise<PbDocumentModel> {
+    static async fromFile(syslFilePath: string, maxImportDepth: number): Promise<PbDocumentModel> {
         const syslText = (await readFile(syslFilePath)).toString();
-        return this.fromText(syslText, syslFilePath);
+        return this.fromText(syslText, syslFilePath, maxImportDepth);
     }
 
     /** Compiles and deserializes a Sysl source string into a model. */
     static async fromText(
         syslText: string,
-        syslFilePath: string = "untitled.sysl"
+        syslFilePath: string,
+        maxImportDepth: number
     ): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
-        const cmd = `${syslPath} pb --mode=json`;
+        const cmd = `${syslPath} pb --mode=json --max-import-depth=${maxImportDepth}`;
         const proc = exec(cmd, { maxBuffer: undefined }); // Do not limit the maximum stdout of the process.
         proc.stdin?.end(
             JSON.stringify([{ path: syslFilePath, content: syslText }])

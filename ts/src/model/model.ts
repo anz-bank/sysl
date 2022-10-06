@@ -56,21 +56,22 @@ export class Model implements IRenderable {
         allItems(this).forEach(i => (i.model = this));
     }
 
-    static async fromFile(syslFilePath: string): Promise<Model> {
+    static async fromFile(syslFilePath: string, maxImportDepth: number = 0): Promise<Model> {
         const syslText = (await readFile(syslFilePath)).toString();
-        return this.fromText(syslText, syslFilePath);
+        return this.fromText(syslText, syslFilePath, maxImportDepth);
     }
 
     static async fromText(
         syslText: string,
-        syslFilePath: string = "untitled.sysl"
+        syslFilePath: string = "untitled.sysl",
+        maxImportDepth: number = 0
     ): Promise<Model> {
         // TODO: Improve performance by only reading the first part of the file
         const lines = syslText.split(/\r?\n/);
         const until = lines.findIndex(l => !l.startsWith("#"));
         const header = lines.slice(0, until).join("\n");
 
-        const pb = await PbDocumentModel.fromText(syslText, syslFilePath);
+        const pb = await PbDocumentModel.fromText(syslText, syslFilePath, maxImportDepth);
 
         let newModel = pb.toModel();
         if (header) {
