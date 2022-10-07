@@ -646,6 +646,12 @@ func TestOpenAPI3(t *testing.T) {
 	testParseAgainstGoldenWithSourceContext(t, "tests/openapi3.sysl")
 }
 
+func TestProto(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "pkg/parse/tests/proto_import.sysl", "../../")
+}
+
 func TestImportProtoJSON(t *testing.T) {
 	t.Parallel()
 

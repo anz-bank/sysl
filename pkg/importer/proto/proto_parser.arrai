@@ -358,6 +358,6 @@ let import = \files \paths
 
 (
     :evalConstant, # Visible for testing
-    :parseFile, # Visible for testing
+    :parseFile,
     :import
 )

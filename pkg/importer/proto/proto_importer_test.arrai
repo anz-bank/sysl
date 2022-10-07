@@ -1,0 +1,11 @@
+let (:importString, ...) = //{./proto_importer};
+(
+    importString: (
+        noImportPaths:
+            let input = //[//encoding.bytes]{./tests/proto3.proto} => (:.@, @char: .@byte);
+            let actual = importString((), input);
+            let expected = //[//encoding.bytes]{./tests/proto3_import_string.sysl} => (:.@, @char: .@byte);
+            actual = expected
+    )
+)
+

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "proto_test";
+package proto_test;
+
+service Server {
+  rpc Send (Request) returns (Response) {}
+}
+
+message Request {
+  string name = 1;
+}
+
+message Response {
+  string message = 1;
+}

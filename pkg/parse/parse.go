@@ -85,7 +85,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	switch fileType.Name {
 	case importer.SYSL.Name:
 		return input, nil
-	case importer.OpenAPI3.Name, importer.OpenAPI2.Name:
+	case importer.OpenAPI3.Name, importer.OpenAPI2.Name, importer.Protobuf.Name:
 		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
@@ -110,6 +110,7 @@ func detectFileType(fileName string, file []byte) (importer.Format, error) {
 		importer.OpenAPI3,
 		importer.OpenAPI2,
 		importer.SYSL,
+		importer.Protobuf,
 	}
 	return importer.GuessFileType(fileName, false, file, ParserFormats)
 }

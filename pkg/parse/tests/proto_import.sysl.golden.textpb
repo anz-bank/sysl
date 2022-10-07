@@ -1,0 +1,682 @@
+apps:  {
+ key:  "App"
+ value:  {
+  name:  {
+   part:  "App"
+  }
+  endpoints:  {
+   key:  "..."
+   value:  {
+    name:  "..."
+   }
+  }
+  source_context:  {
+   file:  "pkg/parse/tests/proto_import.sysl"
+   start:  {
+    line:  2
+   }
+   end:  {
+    line:  2
+    col:  3
+   }
+  }
+  source_contexts:  {
+   file:  "pkg/parse/tests/proto_import.sysl"
+   start:  {
+    line:  2
+   }
+   end:  {
+    line:  2
+    col:  3
+   }
+  }
+ }
+}
+apps:  {
+ key:  "Server"
+ value:  {
+  name:  {
+   part:  "Server"
+  }
+  attrs:  {
+   key:  "go_package"
+   value:  {
+    s:  "proto_test"
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  3
+      col:  18
+     }
+     end:  {
+      line:  3
+      col:  30
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  3
+      col:  18
+     }
+     end:  {
+      line:  3
+      col:  30
+     }
+    }
+   }
+  }
+  attrs:  {
+   key:  "package"
+   value:  {
+    s:  "proto_test"
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  4
+      col:  15
+     }
+     end:  {
+      line:  4
+      col:  27
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  4
+      col:  15
+     }
+     end:  {
+      line:  4
+      col:  27
+     }
+    }
+   }
+  }
+  attrs:  {
+   key:  "patterns"
+   value:  {
+    a:  {
+     elt:  {
+      s:  "gRPC"
+      source_context:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  2
+        col:  8
+       }
+       end:  {
+        line:  2
+        col:  13
+       }
+      }
+      source_contexts:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  2
+        col:  8
+       }
+       end:  {
+        line:  2
+        col:  13
+       }
+      }
+     }
+    }
+   }
+  }
+  attrs:  {
+   key:  "source_path"
+   value:  {
+    s:  ""
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  5
+      col:  19
+     }
+     end:  {
+      line:  5
+      col:  21
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  5
+      col:  19
+     }
+     end:  {
+      line:  5
+      col:  21
+     }
+    }
+   }
+  }
+  endpoints:  {
+   key:  "Send"
+   value:  {
+    name:  "Send"
+    attrs:  {
+     key:  "patterns"
+     value:  {
+      a:  {
+       elt:  {
+        s:  "gRPC"
+        source_context:  {
+         file:  "pkg/parse/tests/proto_to_import.proto"
+         start:  {
+          line:  7
+          col:  40
+         }
+         end:  {
+          line:  7
+          col:  45
+         }
+        }
+        source_contexts:  {
+         file:  "pkg/parse/tests/proto_to_import.proto"
+         start:  {
+          line:  7
+          col:  40
+         }
+         end:  {
+          line:  7
+          col:  45
+         }
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "source_path"
+     value:  {
+      s:  ""
+      source_context:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  8
+        col:  23
+       }
+       end:  {
+        line:  8
+        col:  25
+       }
+      }
+      source_contexts:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  8
+        col:  23
+       }
+       end:  {
+        line:  8
+        col:  25
+       }
+      }
+     }
+    }
+    param:  {
+     name:  "input"
+     type:  {
+      type_ref:  {
+       ref:  {
+        appname:  {
+         part:  "proto_test"
+        }
+        path:  "Request"
+       }
+      }
+     }
+    }
+    stmt:  {
+     ret:  {
+      payload:  "ok <: proto_test.Response"
+     }
+     source_context:  {
+      file:  "pkg/parse/tests/proto_to_import.proto"
+      start:  {
+       line:  9
+       col:  8
+      }
+      end:  {
+       line:  9
+       col:  40
+      }
+     }
+     source_contexts:  {
+      file:  "pkg/parse/tests/proto_to_import.proto"
+      start:  {
+       line:  9
+       col:  8
+      }
+      end:  {
+       line:  9
+       col:  40
+      }
+     }
+    }
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  9
+      col:  40
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  7
+      col:  4
+     }
+     end:  {
+      line:  9
+      col:  40
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "pkg/parse/tests/proto_to_import.proto"
+   start:  {
+    line:  2
+   }
+   end:  {
+    line:  9
+    col:  40
+   }
+  }
+  source_contexts:  {
+   file:  "pkg/parse/tests/proto_to_import.proto"
+   start:  {
+    line:  2
+   }
+   end:  {
+    line:  9
+    col:  40
+   }
+  }
+ }
+}
+apps:  {
+ key:  "proto_test"
+ value:  {
+  name:  {
+   part:  "proto_test"
+  }
+  attrs:  {
+   key:  "go_package"
+   value:  {
+    s:  "proto_test"
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  12
+      col:  18
+     }
+     end:  {
+      line:  12
+      col:  30
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  12
+      col:  18
+     }
+     end:  {
+      line:  12
+      col:  30
+     }
+    }
+   }
+  }
+  attrs:  {
+   key:  "package"
+   value:  {
+    s:  "proto_test"
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  13
+      col:  15
+     }
+     end:  {
+      line:  13
+      col:  27
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  13
+      col:  15
+     }
+     end:  {
+      line:  13
+      col:  27
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Request"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "name"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "json_tag"
+        value:  {
+         s:  "name"
+         source_context:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  18
+           col:  24
+          }
+          end:  {
+           line:  18
+           col:  30
+          }
+         }
+         source_contexts:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  18
+           col:  24
+          }
+          end:  {
+           line:  18
+           col:  30
+          }
+         }
+        }
+       }
+       attrs:  {
+        key:  "rpcId"
+        value:  {
+         s:  "1"
+         source_context:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  19
+           col:  21
+          }
+          end:  {
+           line:  19
+           col:  24
+          }
+         }
+         source_contexts:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  19
+           col:  21
+          }
+          end:  {
+           line:  19
+           col:  24
+          }
+         }
+        }
+       }
+       source_context:  {
+        file:  "pkg/parse/tests/proto_to_import.proto"
+        start:  {
+         line:  17
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  5
+        }
+       }
+       source_contexts:  {
+        file:  "pkg/parse/tests/proto_to_import.proto"
+        start:  {
+         line:  17
+         col:  8
+        }
+        end:  {
+         line:  21
+         col:  5
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "source_path"
+     value:  {
+      s:  ""
+      source_context:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  16
+        col:  23
+       }
+       end:  {
+        line:  16
+        col:  25
+       }
+      }
+      source_contexts:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  16
+        col:  23
+       }
+       end:  {
+        line:  16
+        col:  25
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  15
+      col:  4
+     }
+     end:  {
+      line:  19
+      col:  24
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  15
+      col:  4
+     }
+     end:  {
+      line:  19
+      col:  24
+     }
+    }
+   }
+  }
+  types:  {
+   key:  "Response"
+   value:  {
+    tuple:  {
+     attr_defs:  {
+      key:  "message"
+      value:  {
+       primitive:  STRING
+       attrs:  {
+        key:  "json_tag"
+        value:  {
+         s:  "message"
+         source_context:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  24
+           col:  24
+          }
+          end:  {
+           line:  24
+           col:  33
+          }
+         }
+         source_contexts:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  24
+           col:  24
+          }
+          end:  {
+           line:  24
+           col:  33
+          }
+         }
+        }
+       }
+       attrs:  {
+        key:  "rpcId"
+        value:  {
+         s:  "1"
+         source_context:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  25
+           col:  21
+          }
+          end:  {
+           line:  25
+           col:  24
+          }
+         }
+         source_contexts:  {
+          file:  "pkg/parse/tests/proto_to_import.proto"
+          start:  {
+           line:  25
+           col:  21
+          }
+          end:  {
+           line:  25
+           col:  24
+          }
+         }
+        }
+       }
+       source_context:  {
+        file:  "pkg/parse/tests/proto_to_import.proto"
+        start:  {
+         line:  23
+         col:  8
+        }
+        end:  {
+         line:  26
+         col:  1
+        }
+       }
+       source_contexts:  {
+        file:  "pkg/parse/tests/proto_to_import.proto"
+        start:  {
+         line:  23
+         col:  8
+        }
+        end:  {
+         line:  26
+         col:  1
+        }
+       }
+      }
+     }
+    }
+    attrs:  {
+     key:  "source_path"
+     value:  {
+      s:  ""
+      source_context:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  22
+        col:  23
+       }
+       end:  {
+        line:  22
+        col:  25
+       }
+      }
+      source_contexts:  {
+       file:  "pkg/parse/tests/proto_to_import.proto"
+       start:  {
+        line:  22
+        col:  23
+       }
+       end:  {
+        line:  22
+        col:  25
+       }
+      }
+     }
+    }
+    source_context:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  21
+      col:  4
+     }
+     end:  {
+      line:  25
+      col:  24
+     }
+    }
+    source_contexts:  {
+     file:  "pkg/parse/tests/proto_to_import.proto"
+     start:  {
+      line:  21
+      col:  4
+     }
+     end:  {
+      line:  25
+      col:  24
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "pkg/parse/tests/proto_to_import.proto"
+   start:  {
+    line:  11
+   }
+   end:  {
+    line:  25
+    col:  24
+   }
+  }
+  source_contexts:  {
+   file:  "pkg/parse/tests/proto_to_import.proto"
+   start:  {
+    line:  11
+   }
+   end:  {
+    line:  25
+    col:  24
+   }
+  }
+ }
+}
+imports:  {
+ target:  "./proto_to_import.proto"
+ source_context:  {
+  file:  "pkg/parse/tests/proto_import.sysl"
+  start:  {}
+  end:  {
+   col:  30
+  }
+ }
+}

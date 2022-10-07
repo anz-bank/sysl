@@ -1,0 +1,4 @@
+import ./proto_to_import.proto
+
+App:
+    ...
