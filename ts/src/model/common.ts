@@ -35,21 +35,25 @@ export interface IChild extends ILocational {
 
 export class ElementRef implements IRenderable {
     readonly kind: ElementKind;
-    
-    constructor(public readonly namespace: string[], public readonly appName: string, public readonly typeName: string = "", public readonly fieldName: string = "") {
+
+    constructor(
+        public readonly namespace: string[],
+        public readonly appName: string,
+        public readonly typeName: string = "",
+        public readonly fieldName: string = ""
+    ) {
         if (fieldName && !typeName)
             throw new Error("Cannot specify fieldName but omit typeName");
-        
-        if (fieldName)
-            this.kind = ElementKind.Field;
-        else if (typeName)
-            this.kind = ElementKind.Type;
-        else
-            this.kind = ElementKind.App;
+
+        if (fieldName) this.kind = ElementKind.Field;
+        else if (typeName) this.kind = ElementKind.Type;
+        else this.kind = ElementKind.App;
     }
 
     toSysl(compact: boolean = false): string {
-        const fullAppName = [...this.namespace, this.appName].map(safeName).join(compact ? "::" : " :: ");
+        const fullAppName = [...this.namespace, this.appName]
+            .map(safeName)
+            .join(compact ? "::" : " :: ");
         const typeName = safeName(this.typeName);
         const fieldName = safeName(this.fieldName);
 
@@ -60,25 +64,34 @@ export class ElementRef implements IRenderable {
         const parts = refStr.split(".", 3);
 
         if (!parts[0])
-            throw new Error(`Invalid string element reference: ${refStr}`)
+            throw new Error(`Invalid string element reference: ${refStr}`);
 
         const appNameParts: string[] = parts[0].split(/\s*::\s*/);
-        return new ElementRef(appNameParts.slice(0, -1), appNameParts.at(-1)!, parts[1] ?? undefined, parts[2] ?? undefined);
+        return new ElementRef(
+            appNameParts.slice(0, -1),
+            appNameParts.at(-1)!,
+            parts[1] ?? undefined,
+            parts[2] ?? undefined
+        );
     }
 
     equals(other: ElementRef): boolean {
-        return this.namespace.length == other.namespace.length &&
-            this.namespace.every((_, i) => this.namespace[i] == other.namespace[i]) &&
+        return (
+            this.namespace.length == other.namespace.length &&
+            this.namespace.every(
+                (_, i) => this.namespace[i] == other.namespace[i]
+            ) &&
             this.appName == other.appName &&
             this.typeName == other.typeName &&
-            this.fieldName == other.fieldName;
+            this.fieldName == other.fieldName
+        );
     }
 }
 
 /**
  * The kinds of Sysl element that an annotation can be applied to.
  */
- export enum ElementKind {
+export enum ElementKind {
     App = "app",
     Type = "type",
     Field = "field",

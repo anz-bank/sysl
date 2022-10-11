@@ -1,6 +1,11 @@
 import { indent, joinedAppName, safeName } from "../common/format";
 import { ElementRef } from "./common";
-import { Element, IElementParams, ParentElement, setParentAndModelDeep } from "./element";
+import {
+    Element,
+    IElementParams,
+    ParentElement,
+    setParentAndModelDeep,
+} from "./element";
 import { addTags, renderAnnos } from "./renderers";
 import { Endpoint } from "./statement";
 import { Type } from "./type";
@@ -10,12 +15,22 @@ export class Application extends ParentElement<Element> {
     endpoints: Endpoint[];
     children: Element[];
 
-    constructor({namespace, name, endpoints, children: types, locations, annos, tags, model }: ApplicationParams) {
-
+    constructor({
+        namespace,
+        name,
+        endpoints,
+        children: types,
+        locations,
+        annos,
+        tags,
+        model,
+    }: ApplicationParams) {
         if (!name)
-            throw new Error("'name' must be specified, and optionally 'namespace'.")
+            throw new Error(
+                "'name' must be specified, and optionally 'namespace'."
+            );
 
-        super(name, locations ?? [], annos ?? [], tags ?? [], model)
+        super(name, locations ?? [], annos ?? [], tags ?? [], model);
         this.namespace = namespace ?? [];
         this.endpoints = endpoints ?? [];
         this.children = types ?? [];
@@ -28,8 +43,8 @@ export class Application extends ParentElement<Element> {
             this.tags
         );
     }
-    
-    public get types() : Type[] {
+
+    public get types(): Type[] {
         return this.children.filter(c => c instanceof Type) as Type[];
     }
 
@@ -45,11 +60,15 @@ export class Application extends ParentElement<Element> {
                 .join("\n\n")}`;
         }
         if (this.children.length) {
-            sysl += `\n${this.children.map(t => indent(t.toSysl())).join("\n\n")}`;
+            sysl += `\n${this.children
+                .map(t => indent(t.toSysl()))
+                .join("\n\n")}`;
         }
-        if (!this.annos.length &&
+        if (
+            !this.annos.length &&
             !this.endpoints.length &&
-            !this.children.length) {
+            !this.children.length
+        ) {
             sysl += `\n${indent("...")}`;
         }
         return sysl;

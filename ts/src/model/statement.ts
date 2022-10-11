@@ -3,7 +3,12 @@ import { Location } from "../common";
 import { indent, joinedAppName } from "../common/format";
 import { ILocational, IRenderable } from "./common";
 import { CollectionDecorator } from "./decorator";
-import { Element, IElementParams, ParentElement, setParentAndModelDeep } from "./element";
+import {
+    Element,
+    IElementParams,
+    ParentElement,
+    setParentAndModelDeep,
+} from "./element";
 import { Field } from "./field";
 import { GenericElement } from "./genericElement";
 import { Model } from "./model";
@@ -18,10 +23,17 @@ export type ParamParams = IElementParams & {
 };
 
 export class Param implements ILocational, IRenderable {
-    constructor(public name: string, public locations: Location[], public element?: Element, public model?: Model) { }
+    constructor(
+        public name: string,
+        public locations: Location[],
+        public element?: Element,
+        public model?: Model
+    ) {}
 
     toSysl(): string {
-        return `${this.name}${this.element ? ` <: ${this.element.toSysl()}` : ""}`;
+        return `${this.name}${
+            this.element ? ` <: ${this.element.toSysl()}` : ""
+        }`;
     }
 }
 
@@ -212,15 +224,39 @@ export enum LoopMode {
     UNRECOGNIZED = -1,
 }
 
-export type StatementValue = Action | Call | Cond | Loop | LoopN | Foreach | Alt | Group | Return | undefined;
+export type StatementValue =
+    | Action
+    | Call
+    | Cond
+    | Loop
+    | LoopN
+    | Foreach
+    | Alt
+    | Group
+    | Return
+    | undefined;
 
-export type StatementParams = IElementParams & { value: StatementValue; };
+export type StatementParams = IElementParams & { value: StatementValue };
 
 export class Statement extends ParentElement<Statement> {
     value: StatementValue;
 
-    constructor({value, annos, tags, locations, parent, model }: StatementParams) {
-        super(value?.constructor.name ?? "", locations ?? [], annos ?? [], tags ?? [], model, parent)
+    constructor({
+        value,
+        annos,
+        tags,
+        locations,
+        parent,
+        model,
+    }: StatementParams) {
+        super(
+            value?.constructor.name ?? "",
+            locations ?? [],
+            annos ?? [],
+            tags ?? [],
+            model,
+            parent
+        );
         this.value = value;
 
         setParentAndModelDeep(this, this.children, this.annos, this.tags);
@@ -294,8 +330,22 @@ export class Endpoint extends ParentElement<Statement> {
     isPubsub: boolean;
     pubsubSource: string[];
 
-    constructor({name, longName, docstring, isPubsub, params, statements, restParams, pubsubSource, annos, tags, locations, parent, model }: EndpointParams) {
-        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent)
+    constructor({
+        name,
+        longName,
+        docstring,
+        isPubsub,
+        params,
+        statements,
+        restParams,
+        pubsubSource,
+        annos,
+        tags,
+        locations,
+        parent,
+        model,
+    }: EndpointParams) {
+        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
         this.longName = longName;
         this.docstring = docstring;
         this.params = params ?? [];
@@ -320,7 +370,11 @@ export class Endpoint extends ParentElement<Statement> {
 
         return `?${this.restParams!.queryParam.map(p => {
             let s = `${p.name}=`;
-            if ((p.element instanceof GenericElement || p.element instanceof Field) && p.element?.value instanceof CollectionDecorator) {
+            if (
+                (p.element instanceof GenericElement ||
+                    p.element instanceof Field) &&
+                p.element?.value instanceof CollectionDecorator
+            ) {
                 return (s += `{${p.element.toSysl()}}`);
             }
             return (s += `${p.element?.toSysl() ?? "Type"}`);

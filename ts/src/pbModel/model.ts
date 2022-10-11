@@ -49,7 +49,7 @@ export class PbApplication {
     toModel(): Application {
         return new Application({
             name: this.name.part.at(-1),
-            namespace: this.name.part.slice(0, -1), 
+            namespace: this.name.part.slice(0, -1),
             endpoints: sortLocationalArray(
                 Array.from(this.endpoints ?? new Map()).map(([, e]) =>
                     e.toModel(this.name.part)
@@ -74,7 +74,10 @@ export class PbDocumentModel {
     @jsonMapMember(String, PbApplication, serializerFor(PbApplication))
     apps!: Map<string, PbApplication>;
 
-    static async fromFile(syslFilePath: string, maxImportDepth: number): Promise<PbDocumentModel> {
+    static async fromFile(
+        syslFilePath: string,
+        maxImportDepth: number
+    ): Promise<PbDocumentModel> {
         const syslText = (await readFile(syslFilePath)).toString();
         return this.fromText(syslText, syslFilePath, maxImportDepth);
     }

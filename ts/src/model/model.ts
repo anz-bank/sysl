@@ -4,9 +4,7 @@ import { allItems } from "../common/iterate";
 import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
 import { Application } from "./application";
-import {
-    IRenderable,
-} from "./common";
+import { IRenderable } from "./common";
 import { setModelDeep } from "./element";
 
 export type ImportParams = {
@@ -56,7 +54,10 @@ export class Model implements IRenderable {
         allItems(this).forEach(i => (i.model = this));
     }
 
-    static async fromFile(syslFilePath: string, maxImportDepth: number = 0): Promise<Model> {
+    static async fromFile(
+        syslFilePath: string,
+        maxImportDepth: number = 0
+    ): Promise<Model> {
         const syslText = (await readFile(syslFilePath)).toString();
         return this.fromText(syslText, syslFilePath, maxImportDepth);
     }
@@ -71,7 +72,11 @@ export class Model implements IRenderable {
         const until = lines.findIndex(l => !l.startsWith("#"));
         const header = lines.slice(0, until).join("\n");
 
-        const pb = await PbDocumentModel.fromText(syslText, syslFilePath, maxImportDepth);
+        const pb = await PbDocumentModel.fromText(
+            syslText,
+            syslFilePath,
+            maxImportDepth
+        );
 
         let newModel = pb.toModel();
         if (header) {

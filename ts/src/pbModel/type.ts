@@ -195,13 +195,22 @@ export class PbTypeDefUnion {
     @jsonArrayMember(() => PbTypeDef) type!: PbTypeDef[];
 
     toModel(): Union {
-
         const values = this.type.map(t => t.toValue());
 
-        if (values.every(v => v instanceof Primitive || v instanceof ElementRef || v instanceof CollectionDecorator))
+        if (
+            values.every(
+                v =>
+                    v instanceof Primitive ||
+                    v instanceof ElementRef ||
+                    v instanceof CollectionDecorator
+            )
+        )
             return new Union(values as FieldValue[]);
 
-        throw new Error("Cannot produce Union, some members are not a Primitive/Reference/TypeDecorator: " + values.map(v => v.constructor.name).join(", "));
+        throw new Error(
+            "Cannot produce Union, some members are not a Primitive/Reference/TypeDecorator: " +
+                values.map(v => v.constructor.name).join(", ")
+        );
     }
 }
 
@@ -237,27 +246,48 @@ export class PbTypeDef {
     map?: Map<PbTypeDef, PbTypeDef>;
     @jsonMember oneOf?: PbTypeDefUnion;
     @jsonMember noType?: Object;
-    @jsonMapMember(String, PbAttribute, serializerFor(PbAttribute)) attrs!: Map<string, PbAttribute>;
+    @jsonMapMember(String, PbAttribute, serializerFor(PbAttribute)) attrs!: Map<
+        string,
+        PbAttribute
+    >;
 
     hasValue(): boolean {
-        return !!(this.primitive || this.relation || this.typeRef || this.set || this.sequence || this.enum || this.tuple || this.list || this.map?.size);
+        return !!(
+            this.primitive ||
+            this.relation ||
+            this.typeRef ||
+            this.set ||
+            this.sequence ||
+            this.enum ||
+            this.tuple ||
+            this.list ||
+            this.map?.size
+        );
     }
 
     static defsToFields(attrDefs: Map<string, PbTypeDef>): Field[] {
-        return sortLocationalArray(Array.from(attrDefs).map(([key, value]) => value?.toField(key)));
+        return sortLocationalArray(
+            Array.from(attrDefs).map(([key, value]) => value?.toField(key))
+        );
     }
 
     toValue(): GenericValue {
-        if (this.primitive) return new Primitive(this.primitive, (this.constraint ?? []).map(c => c.toModel()));
-        if (this.relation)  return this.relation.toModel();
-        if (this.typeRef)   return this.typeRef.ref.toModel();
-        if (this.set)       return new CollectionDecorator(this.set.toModel(), true);
-        if (this.sequence)  return new CollectionDecorator(this.sequence.toModel(), false);
-        if (this.list)      return new CollectionDecorator(this.list.toModel(), false);
-        if (this.enum)      return this.enum.toModel();
-        if (this.tuple)     return this.tuple.toModel();
-        if (this.oneOf)     return this.oneOf.toModel();
-        
+        if (this.primitive)
+            return new Primitive(
+                this.primitive,
+                (this.constraint ?? []).map(c => c.toModel())
+            );
+        if (this.relation) return this.relation.toModel();
+        if (this.typeRef) return this.typeRef.ref.toModel();
+        if (this.set) return new CollectionDecorator(this.set.toModel(), true);
+        if (this.sequence)
+            return new CollectionDecorator(this.sequence.toModel(), false);
+        if (this.list)
+            return new CollectionDecorator(this.list.toModel(), false);
+        if (this.enum) return this.enum.toModel();
+        if (this.tuple) return this.tuple.toModel();
+        if (this.oneOf) return this.oneOf.toModel();
+
         throw new Error(`Error converting type: ${JSON.stringify(this)}`);
     }
 
@@ -275,26 +305,36 @@ export class PbTypeDef {
             tags: getTags(this.attrs),
             annos: getAnnos(this.attrs),
         };
-        
+
         if (value instanceof Struct) {
             if (name)
                 return new Type(name, !!this.relation, value.fields, params);
-            
+
             params.discriminator = this.relation ? "!table" : "!type";
         }
-        if (value instanceof Enum)
-            params.discriminator = "!enum";
-        if (value instanceof Union)
-            params.discriminator = "!union";
+        if (value instanceof Enum) params.discriminator = "!enum";
+        if (value instanceof Union) params.discriminator = "!union";
 
-        if (!isInner && (value instanceof Primitive || value instanceof CollectionDecorator || value instanceof ElementRef))
+        if (
+            !isInner &&
+            (value instanceof Primitive ||
+                value instanceof CollectionDecorator ||
+                value instanceof ElementRef)
+        )
             params.discriminator = "!alias";
 
         if (!params.discriminator) {
-            if (value instanceof Primitive || value instanceof CollectionDecorator || value instanceof ElementRef)
+            if (
+                value instanceof Primitive ||
+                value instanceof CollectionDecorator ||
+                value instanceof ElementRef
+            )
                 return new Field(params.name, value, this.opt, params);
             else
-                throw new Error("No discriminator but not a Field-compatible value. Type of value is " + value.constructor.name)
+                throw new Error(
+                    "No discriminator but not a Field-compatible value. Type of value is " +
+                        value.constructor.name
+                );
         }
 
         return new GenericElement(params);
@@ -303,7 +343,9 @@ export class PbTypeDef {
     toField(name: string): Field {
         const field = this.toModel(name);
         if (!(field instanceof Field))
-            throw new Error("Cannot produce Field, requested PbTypeDef is not a Field");
+            throw new Error(
+                "Cannot produce Field, requested PbTypeDef is not a Field"
+            );
         return field;
     }
 }

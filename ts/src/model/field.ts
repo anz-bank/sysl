@@ -5,12 +5,23 @@ import { Primitive } from "./primitive";
 import { CollectionDecorator } from "./decorator";
 import { ElementRef } from "./common";
 
-export type FieldValue = Primitive |  ElementRef | CollectionDecorator;
+export type FieldValue = Primitive | ElementRef | CollectionDecorator;
 
 export class Field extends Element {
-
-    constructor(name: string, public value: FieldValue, public optional: boolean = false, p?: IElementParams) {
-        super(name, p?.locations ?? [], p?.annos ?? [], p?.tags ?? [], p?.model, p?.parent);
+    constructor(
+        name: string,
+        public value: FieldValue,
+        public optional: boolean = false,
+        p?: IElementParams
+    ) {
+        super(
+            name,
+            p?.locations ?? [],
+            p?.annos ?? [],
+            p?.tags ?? [],
+            p?.model,
+            p?.parent
+        );
         setParentAndModelDeep(this, this.annos, this.tags);
     }
 

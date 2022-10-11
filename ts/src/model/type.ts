@@ -1,14 +1,29 @@
 import "reflect-metadata";
 import { indent, safeName } from "../common/format";
-import { IElementParams, setParentAndModelDeep, ParentElement } from "./element";
+import {
+    IElementParams,
+    setParentAndModelDeep,
+    ParentElement,
+} from "./element";
 import { Field } from "./field";
 import { addTags, renderAnnos } from "./renderers";
 import { Struct } from "./struct";
 
 export class Type extends ParentElement<Field> {
-
-    constructor(name: string, public isTable: boolean = false, public children: Field[] = [], p?: IElementParams) {
-        super(name, p?.locations ?? [], p?.annos ?? [], p?.tags ?? [], p?.model, p?.parent)
+    constructor(
+        name: string,
+        public isTable: boolean = false,
+        public children: Field[] = [],
+        p?: IElementParams
+    ) {
+        super(
+            name,
+            p?.locations ?? [],
+            p?.annos ?? [],
+            p?.tags ?? [],
+            p?.model,
+            p?.parent
+        );
         setParentAndModelDeep(this, this.children, this.annos, this.tags);
     }
 

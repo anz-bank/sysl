@@ -7,7 +7,14 @@ import { Model } from "./model";
  * An object in a Sysl model that can have nested objects (children, annotations and tags).
  */
 export abstract class Element implements ILocational, IRenderable, IChild {
-    constructor(public name: string, public locations: Location[], public annos: Annotation[], public tags: Tag[], public model?: Model, public parent?: Element) { }
+    constructor(
+        public name: string,
+        public locations: Location[],
+        public annos: Annotation[],
+        public tags: Tag[],
+        public model?: Model,
+        public parent?: Element
+    ) {}
     abstract toSysl(): string;
 }
 

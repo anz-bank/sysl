@@ -117,7 +117,9 @@ export function walk(model: Model, listener: WalkListener) {
             if (element instanceof Type) {
                 listener.visitType?.(element);
                 listener.visitTypeAnno &&
-                    element.annos.forEach(listener.visitTypeAnno.bind(listener));
+                    element.annos.forEach(
+                        listener.visitTypeAnno.bind(listener)
+                    );
                 listener.visitTypeTag &&
                     element.tags.forEach(listener.visitTypeTag.bind(listener));
             }

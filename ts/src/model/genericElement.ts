@@ -14,11 +14,19 @@ export class GenericElement extends Element {
     discriminator: string;
     value: GenericValue;
 
-    constructor({ discriminator, name, value, annos, tags, locations, parent, model }: GenericElementParams) {
-        if (!discriminator)
-            throw new Error("You must specify a discriminator")
+    constructor({
+        discriminator,
+        name,
+        value,
+        annos,
+        tags,
+        locations,
+        parent,
+        model,
+    }: GenericElementParams) {
+        if (!discriminator) throw new Error("You must specify a discriminator");
 
-        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent)
+        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
         this.value = value;
         this.discriminator = discriminator;
 
