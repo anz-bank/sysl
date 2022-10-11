@@ -119,7 +119,7 @@ update_table        -> "UPDATE" table_name
 update_item         -> column_name "=" (value | "DEFAULT");
 //#FIXME: stack breaks in macros
 condition           -> cond_stmt:("AND"|"OR");
-cond_stmt           -> "(" condition ")" | (column_name | value) (("IS" "NOT"? NULL) | comparison value);
+cond_stmt           -> bool_value | "(" condition ")" | (column_name | value) (("IS" "NOT"? NULL) | comparison value);
 comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
 
 
