@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"math"
 	"path/filepath"
 	"strings"
@@ -27,14 +26,8 @@ type stdinFile struct {
 }
 
 // loadFromStdin reads in a list of stdinFiles from the Reader.
-func loadStdinFiles(stdin io.Reader) ([]stdinFile, error) {
+func loadStdinFiles(src []byte) ([]stdinFile, error) {
 	var files []stdinFile
-
-	src, err := io.ReadAll(stdin)
-	if err != nil {
-		return nil, err
-	}
-
 	if len(src) > 0 {
 		if err := json.Unmarshal(src, &files); err != nil || len(files) == 0 {
 			errMsg := fmt.Sprintf("stdin must be a JSON array of {path, content} file objects. "+

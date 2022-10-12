@@ -12,6 +12,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 
 	"github.com/anz-bank/golden-retriever/pkg/gitfs"
@@ -184,9 +185,20 @@ func EnsureFlagsNonEmpty(cmd *kingpin.CmdClause, excludes ...string) {
 
 // loadFromStdin attempts to load the Sysl modules for the files provided via stdin.
 func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, error) {
-	stdinFiles, err := loadStdinFiles(stdin)
+	src, err := io.ReadAll(stdin)
 	if err != nil {
 		return nil, err
+	}
+
+	stdinFiles, filesErr := loadStdinFiles(src)
+	if filesErr != nil {
+		mod, pbErr := pbutil.FromPBByteContents("stdin.pb", src)
+		if pbErr != nil {
+			return nil, fmt.Errorf(
+				"failed to parse module from stdin: content is not valid file list JSON or compiled pb\n├─ JSON: %v\n└─ pb: %v",
+				filesErr, pbErr)
+		}
+		return []*sysl.Module{mod}, nil
 	}
 
 	fs = afero.NewCopyOnWriteFs(fs, afero.NewMemMapFs())

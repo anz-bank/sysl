@@ -49,6 +49,7 @@
         "build:watch": "tsc -w",
         "test": "jest",
         "test:watch": "jest --watch",
+        "generate": "sysl pb --mode=pb test/all.sysl > test/all.pb && sysl pb --mode=json test/all.sysl > test/all.json",
         "prettier:write": "yarn prettier --write .",
         "prettier:check": "yarn prettier --check .",
         "analyse": "dpdm ./src/index.ts"

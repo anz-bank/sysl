@@ -10,6 +10,8 @@ import (
 	"testing"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
@@ -45,12 +47,24 @@ func TestLoadModule_path(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestLoadModule_stdinBytes(t *testing.T) {
+	var mods []*sysl.Module
+	r := buildRunner(t, modsCmd(&mods))
+
+	m, err := parse.NewParser().ParseString(emptyAppSrc)
+	require.NoError(t, err)
+	stdin := new(bytes.Buffer)
+	require.NoError(t, pbutil.GeneratePBBinaryMessage(stdin, m))
+
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+
+	assert.Len(t, mods, 1)
+	assert.NotEmpty(t, mods[0].Apps["Stdin :: App"])
+}
+
 func TestLoadModule_stdin(t *testing.T) {
 	var mods []*sysl.Module
-	cmd := &testCmd{name: cmdName, maxSyslModule: 1, exec: func(args cmdutils.ExecuteArgs) {
-		mods = args.Modules
-	}}
-	r := buildRunner(t, cmd)
+	r := buildRunner(t, modsCmd(&mods))
 
 	stdin := toStdin(t, stdinFile{Path: filepath.Join(cwd(), "test.sysl"), Content: emptyAppSrc})
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
@@ -61,10 +75,7 @@ func TestLoadModule_stdin(t *testing.T) {
 
 func TestLoadModule_stdinImport(t *testing.T) {
 	var mods []*sysl.Module
-	cmd := &testCmd{name: cmdName, maxSyslModule: 1, exec: func(args cmdutils.ExecuteArgs) {
-		mods = args.Modules
-	}}
-	r := buildRunner(t, cmd)
+	r := buildRunner(t, modsCmd(&mods))
 
 	stdin := toStdin(t, stdinFile{Path: "test.sysl", Content: importSrc})
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
@@ -78,10 +89,7 @@ func TestLoadModule_stdinImport(t *testing.T) {
 
 func TestLoadModule_stdinPathImport(t *testing.T) {
 	var mods []*sysl.Module
-	cmd := &testCmd{name: cmdName, maxSyslModule: 1, exec: func(args cmdutils.ExecuteArgs) {
-		mods = args.Modules
-	}}
-	r := buildRunner(t, cmd)
+	r := buildRunner(t, modsCmd(&mods))
 
 	stdin := toStdin(t, stdinFile{Path: filepath.Join("..", "..", "tests", "test.sysl"), Content: "import simple.sysl"})
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
@@ -136,6 +144,13 @@ type testCmd struct {
 	maxSyslModule int
 	exec          func(cmdutils.ExecuteArgs)
 	modules       []string
+}
+
+// modsCmd returns a command that will set the mods arg to the array of loaded modules.
+func modsCmd(mods *[]*sysl.Module) *testCmd {
+	return &testCmd{name: cmdName, maxSyslModule: 1, exec: func(args cmdutils.ExecuteArgs) {
+		*mods = args.Modules
+	}}
 }
 
 func (c *testCmd) Execute(args cmdutils.ExecuteArgs) error {

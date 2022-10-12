@@ -86,15 +86,10 @@ export class PbDocumentModel {
     static async fromText(
         syslText: string,
         syslFilePath: string,
-        maxImportDepth: number
+        maxImportDepth?: number
     ): Promise<PbDocumentModel> {
-        const syslPath = process.env["SYSL_PATH"] ?? "sysl";
-        const cmd = `${syslPath} pb --mode=json --max-import-depth=${maxImportDepth}`;
-        const proc = exec(cmd, { maxBuffer: undefined }); // Do not limit the maximum stdout of the process.
-        proc.stdin?.end(
-            JSON.stringify([{ path: syslFilePath, content: syslText }])
-        );
-        return PbDocumentModel.fromJson((await proc).stdout!);
+        const files = [{ path: syslFilePath, content: syslText }];
+        return this.fromPbOrJson(JSON.stringify(files), maxImportDepth);
     }
 
     /** Deserializes a compiled JSON string into a model. */
@@ -105,6 +100,34 @@ export class PbDocumentModel {
             },
         });
         return serializer.parse(json)!;
+    }
+
+    /**
+     * Returns a model compiled by invoking {@code sysl pb} passing {@code content} to
+     * {@code stdin}.
+     *
+     * @param content is the content to construct a model from. This can be either the bytes of a
+     *        precompiled {@code .pb} file, or a JSON object of the form
+     *        <code>[{"path": "path/to/file.sysl", "content": "sysl source"}, ...]</code>.
+     *        In the first (simple) case, the precompiled model loaded directly into a TypeScript
+     *        object. In the second case, the Sysl source in the {@code content} property is
+     *        compiled and then loaded.
+     * @param maxImportDepth sets the max import depth for the compiler. This has no effect if
+     *        {@code content} is a precompiled {@code .pb} file.
+     */
+    static async fromPbOrJson(
+        content: string | Buffer,
+        maxImportDepth?: number
+    ): Promise<PbDocumentModel> {
+        const syslPath = process.env["SYSL_PATH"] ?? "sysl";
+        const cmd = `${syslPath} pb --mode=json --max-import-depth=${
+            maxImportDepth ?? 0
+        }`;
+        // Do not limit the maximum stdout of the process.
+        const execOpts = { maxBuffer: undefined };
+        const proc = exec(cmd, execOpts);
+        proc.stdin?.end(content);
+        return PbDocumentModel.fromJson((await proc).stdout!);
     }
 
     toModel(): Model {

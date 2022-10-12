@@ -1,0 +1,4351 @@
+{
+ "apps": {
+  "App": {
+   "name": {
+    "part": [
+     "App"
+    ]
+   },
+   "attrs": {
+    "patterns": {
+     "a": {
+      "elt": [
+       {
+        "s": "abstract",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 10,
+          "col": 5
+         },
+         "end": {
+          "line": 10,
+          "col": 14
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 10,
+           "col": 5
+          },
+          "end": {
+           "line": 10,
+           "col": 14
+          }
+         }
+        ]
+       }
+      ]
+     }
+    }
+   },
+   "endpoints": {
+    "...": {
+     "name": "..."
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 10
+    },
+    "end": {
+     "line": 10,
+     "col": 15
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 10
+     },
+     "end": {
+      "line": 10,
+      "col": 15
+     }
+    }
+   ]
+  },
+  "App :: with :: subpackages": {
+   "name": {
+    "part": [
+     "App",
+     "with",
+     "subpackages"
+    ]
+   },
+   "endpoints": {
+    "...": {
+     "name": "..."
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 24
+    },
+    "end": {
+     "line": 24,
+     "col": 26
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 24
+     },
+     "end": {
+      "line": 24,
+      "col": 26
+     }
+    }
+   ]
+  },
+  "AppWithAnnotation": {
+   "name": {
+    "part": [
+     "AppWithAnnotation"
+    ]
+   },
+   "attrs": {
+    "annotation": {
+     "s": "annotation",
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 14,
+       "col": 18
+      },
+      "end": {
+       "line": 14,
+       "col": 30
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 14,
+        "col": 18
+       },
+       "end": {
+        "line": 14,
+        "col": 30
+       }
+      }
+     ]
+    },
+    "annotation1": {
+     "s": "you can do \"string\" annotation like this",
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 15,
+       "col": 19
+      },
+      "end": {
+       "line": 15,
+       "col": 63
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 15,
+        "col": 19
+       },
+       "end": {
+        "line": 15,
+        "col": 63
+       }
+      }
+     ]
+    },
+    "annotation2": {
+     "a": {
+      "elt": [
+       {
+        "s": "or",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 16,
+          "col": 20
+         },
+         "end": {
+          "line": 16,
+          "col": 24
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 16,
+           "col": 20
+          },
+          "end": {
+           "line": 16,
+           "col": 24
+          }
+         }
+        ]
+       },
+       {
+        "s": "in",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 16,
+          "col": 26
+         },
+         "end": {
+          "line": 16,
+          "col": 30
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 16,
+           "col": 26
+          },
+          "end": {
+           "line": 16,
+           "col": 30
+          }
+         }
+        ]
+       },
+       {
+        "s": "an",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 16,
+          "col": 32
+         },
+         "end": {
+          "line": 16,
+          "col": 36
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 16,
+           "col": 32
+          },
+          "end": {
+           "line": 16,
+           "col": 36
+          }
+         }
+        ]
+       },
+       {
+        "a": {
+         "elt": [
+          {
+           "s": "array",
+           "sourceContext": {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 16,
+             "col": 39
+            },
+            "end": {
+             "line": 16,
+             "col": 46
+            }
+           },
+           "sourceContexts": [
+            {
+             "file": "ts/test/all.sysl",
+             "start": {
+              "line": 16,
+              "col": 39
+             },
+             "end": {
+              "line": 16,
+              "col": 46
+             }
+            }
+           ]
+          }
+         ]
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 16,
+          "col": 38
+         },
+         "end": {
+          "line": 16,
+          "col": 47
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 16,
+           "col": 38
+          },
+          "end": {
+           "line": 16,
+           "col": 47
+          }
+         }
+        ]
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 16,
+       "col": 19
+      },
+      "end": {
+       "line": 16,
+       "col": 48
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 16,
+        "col": 19
+       },
+       "end": {
+        "line": 16,
+        "col": 48
+       }
+      }
+     ]
+    },
+    "annotation3": {
+     "s": "you can also do\nmultiline annotations\n\nlike this\n",
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 17,
+       "col": 18
+      },
+      "end": {
+       "line": 22,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 17,
+        "col": 18
+       },
+       "end": {
+        "line": 22,
+        "col": 5
+       }
+      }
+     ]
+    }
+   },
+   "endpoints": {
+    "...": {
+     "name": "..."
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 13
+    },
+    "end": {
+     "line": 22,
+     "col": 5
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 13
+     },
+     "end": {
+      "line": 22,
+      "col": 5
+     }
+    }
+   ]
+  },
+  "RestEndpoint": {
+   "name": {
+    "part": [
+     "RestEndpoint"
+    ]
+   },
+   "endpoints": {
+    "GET /": {
+     "name": "GET /",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 30,
+         "col": 12
+        },
+        "end": {
+         "line": 30,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 30,
+          "col": 12
+         },
+         "end": {
+          "line": 30,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "GET",
+      "path": "/"
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 29,
+       "col": 8
+      },
+      "end": {
+       "line": 32,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 29,
+        "col": 8
+       },
+       "end": {
+        "line": 32,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "GET /pathwithtype/{native}": {
+     "name": "GET /pathwithtype/{native}",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 34,
+         "col": 12
+        },
+        "end": {
+         "line": 34,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 34,
+          "col": 12
+         },
+         "end": {
+          "line": 34,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "GET",
+      "path": "/pathwithtype/{native}",
+      "urlParam": [
+       {
+        "name": "native",
+        "type": {
+         "primitive": "INT",
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 32,
+           "col": 18
+          },
+          "end": {
+           "line": 32,
+           "col": 33
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 32,
+            "col": 18
+           },
+           "end": {
+            "line": 32,
+            "col": 33
+           }
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 33,
+       "col": 8
+      },
+      "end": {
+       "line": 36,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 33,
+        "col": 8
+       },
+       "end": {
+        "line": 36,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "GET /query": {
+     "name": "GET /query",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 38,
+         "col": 12
+        },
+        "end": {
+         "line": 38,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 38,
+          "col": 12
+         },
+         "end": {
+          "line": 38,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "GET",
+      "path": "/query",
+      "queryParam": [
+       {
+        "name": "native",
+        "type": {
+         "primitive": "STRING",
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 37,
+           "col": 12
+          },
+          "end": {
+           "line": 37,
+           "col": 25
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 37,
+            "col": 12
+           },
+           "end": {
+            "line": 37,
+            "col": 25
+           }
+          }
+         ]
+        }
+       },
+       {
+        "name": "optional",
+        "type": {
+         "primitive": "STRING",
+         "opt": true,
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 37,
+           "col": 26
+          },
+          "end": {
+           "line": 37,
+           "col": 42
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 37,
+            "col": 26
+           },
+           "end": {
+            "line": 37,
+            "col": 42
+           }
+          }
+         ]
+        }
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 37,
+       "col": 8
+      },
+      "end": {
+       "line": 40,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 37,
+        "col": 8
+       },
+       "end": {
+        "line": 40,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "PATCH /param": {
+     "name": "PATCH /param",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "param": [
+      {
+       "name": "t",
+       "type": {
+        "typeRef": {
+         "ref": {
+          "appname": {
+           "part": [
+            "Types"
+           ]
+          },
+          "path": [
+           "Type"
+          ]
+         }
+        },
+        "attrs": {
+         "patterns": {
+          "a": {
+           "elt": [
+            {
+             "s": "body",
+             "sourceContext": {
+              "file": "ts/test/all.sysl",
+              "start": {
+               "line": 41,
+               "col": 32
+              },
+              "end": {
+               "line": 41,
+               "col": 37
+              }
+             },
+             "sourceContexts": [
+              {
+               "file": "ts/test/all.sysl",
+               "start": {
+                "line": 41,
+                "col": 32
+               },
+               "end": {
+                "line": 41,
+                "col": 37
+               }
+              }
+             ]
+            }
+           ]
+          }
+         }
+        }
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 42,
+         "col": 12
+        },
+        "end": {
+         "line": 42,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 42,
+          "col": 12
+         },
+         "end": {
+          "line": 42,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "PATCH",
+      "path": "/param"
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 41,
+       "col": 8
+      },
+      "end": {
+       "line": 44,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 41,
+        "col": 8
+       },
+       "end": {
+        "line": 44,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "POST /param": {
+     "name": "POST /param",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "param": [
+      {
+       "name": "native",
+       "type": {
+        "primitive": "STRING"
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 46,
+         "col": 12
+        },
+        "end": {
+         "line": 46,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 46,
+          "col": 12
+         },
+         "end": {
+          "line": 46,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "POST",
+      "path": "/param"
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 45,
+       "col": 8
+      },
+      "end": {
+       "line": 48,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 45,
+        "col": 8
+       },
+       "end": {
+        "line": 48,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "PUT /param": {
+     "name": "PUT /param",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "param": [
+      {
+       "name": "unlimited",
+       "type": {
+        "primitive": "STRING",
+        "constraint": [
+         {
+          "length": {
+           "min": "5"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "name": "limited",
+       "type": {
+        "primitive": "STRING",
+        "constraint": [
+         {
+          "length": {
+           "min": "5",
+           "max": "10"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "name": "num",
+       "type": {
+        "primitive": "INT",
+        "constraint": [
+         {
+          "length": {
+           "max": "5"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 50,
+         "col": 12
+        },
+        "end": {
+         "line": 50,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 50,
+          "col": 12
+         },
+         "end": {
+          "line": 50,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "PUT",
+      "path": "/param"
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 49,
+       "col": 8
+      },
+      "end": {
+       "line": 52,
+       "col": 15
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 49,
+        "col": 8
+       },
+       "end": {
+        "line": 52,
+        "col": 15
+       }
+      }
+     ]
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 27
+    },
+    "end": {
+     "line": 50,
+     "col": 15
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 27
+     },
+     "end": {
+      "line": 50,
+      "col": 15
+     }
+    }
+   ]
+  },
+  "SimpleEndpoint": {
+   "name": {
+    "part": [
+     "SimpleEndpoint"
+    ]
+   },
+   "endpoints": {
+    "SimpleEp": {
+     "name": "SimpleEp",
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 54,
+         "col": 8
+        },
+        "end": {
+         "line": 54,
+         "col": 11
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 54,
+          "col": 8
+         },
+         "end": {
+          "line": 54,
+          "col": 11
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 53,
+       "col": 4
+      },
+      "end": {
+       "line": 54,
+       "col": 11
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 53,
+        "col": 4
+       },
+       "end": {
+        "line": 54,
+        "col": 11
+       }
+      }
+     ]
+    },
+    "SimpleEpWithArray": {
+     "name": "SimpleEpWithArray",
+     "param": [
+      {
+       "name": "unlimited",
+       "type": {
+        "primitive": "STRING",
+        "constraint": [
+         {
+          "length": {
+           "min": "5"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "name": "limited",
+       "type": {
+        "primitive": "STRING",
+        "constraint": [
+         {
+          "length": {
+           "min": "5",
+           "max": "10"
+          }
+         }
+        ]
+       }
+      },
+      {
+       "name": "num",
+       "type": {
+        "primitive": "INT",
+        "constraint": [
+         {
+          "length": {
+           "max": "5"
+          }
+         }
+        ]
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 63,
+         "col": 8
+        },
+        "end": {
+         "line": 63,
+         "col": 11
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 63,
+          "col": 8
+         },
+         "end": {
+          "line": 63,
+          "col": 11
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 62,
+       "col": 4
+      },
+      "end": {
+       "line": 63,
+       "col": 11
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 62,
+        "col": 4
+       },
+       "end": {
+        "line": 63,
+        "col": 11
+       }
+      }
+     ]
+    },
+    "SimpleEpWithParamsRef": {
+     "name": "SimpleEpWithParamsRef",
+     "param": [
+      {
+       "name": "Types.type",
+       "type": {
+        "noType": {}
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 57,
+         "col": 8
+        },
+        "end": {
+         "line": 57,
+         "col": 11
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 57,
+          "col": 8
+         },
+         "end": {
+          "line": 57,
+          "col": 11
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 56,
+       "col": 4
+      },
+      "end": {
+       "line": 57,
+       "col": 11
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 56,
+        "col": 4
+       },
+       "end": {
+        "line": 57,
+        "col": 11
+       }
+      }
+     ]
+    },
+    "SimpleEpWithTypes": {
+     "name": "SimpleEpWithTypes",
+     "param": [
+      {
+       "name": "native",
+       "type": {
+        "primitive": "STRING"
+       }
+      }
+     ],
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 60,
+         "col": 8
+        },
+        "end": {
+         "line": 60,
+         "col": 11
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 60,
+          "col": 8
+         },
+         "end": {
+          "line": 60,
+          "col": 11
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 59,
+       "col": 4
+      },
+      "end": {
+       "line": 60,
+       "col": 11
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 59,
+        "col": 4
+       },
+       "end": {
+        "line": 60,
+        "col": 11
+       }
+      }
+     ]
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 52
+    },
+    "end": {
+     "line": 63,
+     "col": 11
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 52
+     },
+     "end": {
+      "line": 63,
+      "col": 11
+     }
+    }
+   ]
+  },
+  "Statements": {
+   "name": {
+    "part": [
+     "Statements"
+    ]
+   },
+   "endpoints": {
+    "AnnotatedEndpoint": {
+     "name": "AnnotatedEndpoint",
+     "attrs": {
+      "annotation1": {
+       "s": "you can do string annotation like this",
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 165,
+         "col": 23
+        },
+        "end": {
+         "line": 165,
+         "col": 63
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 165,
+          "col": 23
+         },
+         "end": {
+          "line": 165,
+          "col": 63
+         }
+        }
+       ]
+      },
+      "annotation2": {
+       "a": {
+        "elt": [
+         {
+          "s": "or",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 166,
+            "col": 24
+           },
+           "end": {
+            "line": 166,
+            "col": 28
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 166,
+             "col": 24
+            },
+            "end": {
+             "line": 166,
+             "col": 28
+            }
+           }
+          ]
+         },
+         {
+          "s": "in",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 166,
+            "col": 30
+           },
+           "end": {
+            "line": 166,
+            "col": 34
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 166,
+             "col": 30
+            },
+            "end": {
+             "line": 166,
+             "col": 34
+            }
+           }
+          ]
+         },
+         {
+          "s": "an",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 166,
+            "col": 36
+           },
+           "end": {
+            "line": 166,
+            "col": 40
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 166,
+             "col": 36
+            },
+            "end": {
+             "line": 166,
+             "col": 40
+            }
+           }
+          ]
+         },
+         {
+          "s": "array",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 166,
+            "col": 42
+           },
+           "end": {
+            "line": 166,
+            "col": 49
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 166,
+             "col": 42
+            },
+            "end": {
+             "line": 166,
+             "col": 49
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 166,
+         "col": 23
+        },
+        "end": {
+         "line": 166,
+         "col": 50
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 166,
+          "col": 23
+         },
+         "end": {
+          "line": 166,
+          "col": 50
+         }
+        }
+       ]
+      },
+      "annotation3": {
+       "s": "you can also do\nmultiline annotations\nlike this\n",
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 167,
+         "col": 22
+        },
+        "end": {
+         "line": 172,
+         "col": 5
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 167,
+          "col": 22
+         },
+         "end": {
+          "line": 172,
+          "col": 5
+         }
+        }
+       ]
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 164,
+       "col": 4
+      },
+      "end": {
+       "line": 172,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 164,
+        "col": 4
+       },
+       "end": {
+        "line": 172,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "AnnotatedStatements": {
+     "name": "AnnotatedStatements",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "Statements"
+         ]
+        },
+        "endpoint": "Miscellanous"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 173,
+         "col": 8
+        },
+        "end": {
+         "line": 173,
+         "col": 24
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 173,
+          "col": 8
+         },
+         "end": {
+          "line": 173,
+          "col": 24
+         }
+        }
+       ]
+      },
+      {
+       "ret": {
+        "payload": "ok <: string [annotation=[\"as\", \"an\", \"array\"]]"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 174,
+         "col": 8
+        },
+        "end": {
+         "line": 174,
+         "col": 62
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 174,
+          "col": 8
+         },
+         "end": {
+          "line": 174,
+          "col": 62
+         }
+        }
+       ]
+      },
+      {
+       "action": {
+        "action": "\"statement\""
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 175,
+         "col": 8
+        },
+        "end": {
+         "line": 175,
+         "col": 19
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 175,
+          "col": 8
+         },
+         "end": {
+          "line": 175,
+          "col": 19
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 172,
+       "col": 4
+      },
+      "end": {
+       "line": 175,
+       "col": 19
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 172,
+        "col": 4
+       },
+       "end": {
+        "line": 175,
+        "col": 19
+       }
+      }
+     ]
+    },
+    "Calls": {
+     "name": "Calls",
+     "stmt": [
+      {
+       "call": {
+        "target": {
+         "part": [
+          "Statements"
+         ]
+        },
+        "endpoint": "Returns"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 146,
+         "col": 8
+        },
+        "end": {
+         "line": 146,
+         "col": 19
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 146,
+          "col": 8
+         },
+         "end": {
+          "line": 146,
+          "col": 19
+         }
+        }
+       ]
+      },
+      {
+       "call": {
+        "target": {
+         "part": [
+          "RestEndpoint"
+         ]
+        },
+        "endpoint": "GET /param"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 147,
+         "col": 8
+        },
+        "end": {
+         "line": 147,
+         "col": 34
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 147,
+          "col": 8
+         },
+         "end": {
+          "line": 147,
+          "col": 34
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 145,
+       "col": 4
+      },
+      "end": {
+       "line": 147,
+       "col": 34
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 145,
+        "col": 4
+       },
+       "end": {
+        "line": 147,
+        "col": 34
+       }
+      }
+     ]
+    },
+    "GroupStatements": {
+     "name": "GroupStatements",
+     "stmt": [
+      {
+       "group": {
+        "title": "grouped",
+        "stmt": [
+         {
+          "call": {
+           "target": {
+            "part": [
+             "Statements"
+            ]
+           },
+           "endpoint": "GroupStatements"
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 162,
+            "col": 12
+           },
+           "end": {
+            "line": 162,
+            "col": 31
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 162,
+             "col": 12
+            },
+            "end": {
+             "line": 162,
+             "col": 31
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 161,
+         "col": 8
+        },
+        "end": {
+         "line": 162,
+         "col": 31
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 161,
+          "col": 8
+         },
+         "end": {
+          "line": 162,
+          "col": 31
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 160,
+       "col": 4
+      },
+      "end": {
+       "line": 162,
+       "col": 31
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 160,
+        "col": 4
+       },
+       "end": {
+        "line": 162,
+        "col": 31
+       }
+      }
+     ]
+    },
+    "IfStmt": {
+     "name": "IfStmt",
+     "stmt": [
+      {
+       "cond": {
+        "test": "predicate1",
+        "stmt": [
+         {
+          "ret": {
+           "payload": "ok <: string"
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 120,
+            "col": 12
+           },
+           "end": {
+            "line": 120,
+            "col": 31
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 120,
+             "col": 12
+            },
+            "end": {
+             "line": 120,
+             "col": 31
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 119,
+         "col": 8
+        },
+        "end": {
+         "line": 121,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 119,
+          "col": 8
+         },
+         "end": {
+          "line": 121,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "group": {
+        "title": "else if predicate2",
+        "stmt": [
+         {
+          "call": {
+           "target": {
+            "part": [
+             "Statements"
+            ]
+           },
+           "endpoint": "IfStmt"
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 122,
+            "col": 12
+           },
+           "end": {
+            "line": 122,
+            "col": 22
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 122,
+             "col": 12
+            },
+            "end": {
+             "line": 122,
+             "col": 22
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 121,
+         "col": 8
+        },
+        "end": {
+         "line": 123,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 121,
+          "col": 8
+         },
+         "end": {
+          "line": 123,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "group": {
+        "title": "else",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 124,
+            "col": 12
+           },
+           "end": {
+            "line": 124,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 124,
+             "col": 12
+            },
+            "end": {
+             "line": 124,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 123,
+         "col": 8
+        },
+        "end": {
+         "line": 124,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 123,
+          "col": 8
+         },
+         "end": {
+          "line": 124,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 118,
+       "col": 4
+      },
+      "end": {
+       "line": 124,
+       "col": 15
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 118,
+        "col": 4
+       },
+       "end": {
+        "line": 124,
+        "col": 15
+       }
+      }
+     ]
+    },
+    "Loops": {
+     "name": "Loops",
+     "stmt": [
+      {
+       "group": {
+        "title": "alt predicate",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 128,
+            "col": 12
+           },
+           "end": {
+            "line": 128,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 128,
+             "col": 12
+            },
+            "end": {
+             "line": 128,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 127,
+         "col": 8
+        },
+        "end": {
+         "line": 129,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 127,
+          "col": 8
+         },
+         "end": {
+          "line": 129,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "loop": {
+        "mode": "UNTIL",
+        "criterion": "predicate",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 130,
+            "col": 12
+           },
+           "end": {
+            "line": 130,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 130,
+             "col": 12
+            },
+            "end": {
+             "line": 130,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 129,
+         "col": 8
+        },
+        "end": {
+         "line": 131,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 129,
+          "col": 8
+         },
+         "end": {
+          "line": 131,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "foreach": {
+        "collection": "predicate",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 132,
+            "col": 12
+           },
+           "end": {
+            "line": 132,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 132,
+             "col": 12
+            },
+            "end": {
+             "line": 132,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 131,
+         "col": 8
+        },
+        "end": {
+         "line": 133,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 131,
+          "col": 8
+         },
+         "end": {
+          "line": 133,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "group": {
+        "title": "for predicate",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 134,
+            "col": 12
+           },
+           "end": {
+            "line": 134,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 134,
+             "col": 12
+            },
+            "end": {
+             "line": 134,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 133,
+         "col": 8
+        },
+        "end": {
+         "line": 135,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 133,
+          "col": 8
+         },
+         "end": {
+          "line": 135,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "group": {
+        "title": "loop predicate",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 136,
+            "col": 12
+           },
+           "end": {
+            "line": 136,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 136,
+             "col": 12
+            },
+            "end": {
+             "line": 136,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 135,
+         "col": 8
+        },
+        "end": {
+         "line": 137,
+         "col": 9
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 135,
+          "col": 8
+         },
+         "end": {
+          "line": 137,
+          "col": 9
+         }
+        }
+       ]
+      },
+      {
+       "loop": {
+        "mode": "WHILE",
+        "criterion": "predicate",
+        "stmt": [
+         {
+          "action": {
+           "action": "..."
+          },
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 138,
+            "col": 12
+           },
+           "end": {
+            "line": 138,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 138,
+             "col": 12
+            },
+            "end": {
+             "line": 138,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 137,
+         "col": 8
+        },
+        "end": {
+         "line": 138,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 137,
+          "col": 8
+         },
+         "end": {
+          "line": 138,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 126,
+       "col": 4
+      },
+      "end": {
+       "line": 138,
+       "col": 15
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 126,
+        "col": 4
+       },
+       "end": {
+        "line": 138,
+        "col": 15
+       }
+      }
+     ]
+    },
+    "Miscellanous": {
+     "name": "Miscellanous",
+     "stmt": [
+      {
+       "action": {
+        "action": "SimpleEndpoint -> SimpleEp"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 178,
+         "col": 8
+        },
+        "end": {
+         "line": 178,
+         "col": 34
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 178,
+          "col": 8
+         },
+         "end": {
+          "line": 178,
+          "col": 34
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 177,
+       "col": 4
+      },
+      "end": {
+       "line": 178,
+       "col": 34
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 177,
+        "col": 4
+       },
+       "end": {
+        "line": 178,
+        "col": 34
+       }
+      }
+     ]
+    },
+    "OneOfStatements": {
+     "name": "OneOfStatements",
+     "stmt": [
+      {
+       "alt": {
+        "choice": [
+         {
+          "cond": "case1",
+          "stmt": [
+           {
+            "ret": {
+             "payload": "ok <: string"
+            },
+            "sourceContext": {
+             "file": "ts/test/all.sysl",
+             "start": {
+              "line": 152,
+              "col": 16
+             },
+             "end": {
+              "line": 152,
+              "col": 35
+             }
+            },
+            "sourceContexts": [
+             {
+              "file": "ts/test/all.sysl",
+              "start": {
+               "line": 152,
+               "col": 16
+              },
+              "end": {
+               "line": 152,
+               "col": 35
+              }
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "cond": "case number 2",
+          "stmt": [
+           {
+            "ret": {
+             "payload": "ok <: int"
+            },
+            "sourceContext": {
+             "file": "ts/test/all.sysl",
+             "start": {
+              "line": 154,
+              "col": 16
+             },
+             "end": {
+              "line": 154,
+              "col": 32
+             }
+            },
+            "sourceContexts": [
+             {
+              "file": "ts/test/all.sysl",
+              "start": {
+               "line": 154,
+               "col": 16
+              },
+              "end": {
+               "line": 154,
+               "col": 32
+              }
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "cond": "\"case 3\"",
+          "stmt": [
+           {
+            "ret": {
+             "payload": "ok <: Types.Type"
+            },
+            "sourceContext": {
+             "file": "ts/test/all.sysl",
+             "start": {
+              "line": 156,
+              "col": 16
+             },
+             "end": {
+              "line": 156,
+              "col": 39
+             }
+            },
+            "sourceContexts": [
+             {
+              "file": "ts/test/all.sysl",
+              "start": {
+               "line": 156,
+               "col": 16
+              },
+              "end": {
+               "line": 156,
+               "col": 39
+              }
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "stmt": [
+           {
+            "ret": {
+             "payload": "error <: string"
+            },
+            "sourceContext": {
+             "file": "ts/test/all.sysl",
+             "start": {
+              "line": 158,
+              "col": 16
+             },
+             "end": {
+              "line": 158,
+              "col": 38
+             }
+            },
+            "sourceContexts": [
+             {
+              "file": "ts/test/all.sysl",
+              "start": {
+               "line": 158,
+               "col": 16
+              },
+              "end": {
+               "line": 158,
+               "col": 38
+              }
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 150,
+         "col": 8
+        },
+        "end": {
+         "line": 158,
+         "col": 38
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 150,
+          "col": 8
+         },
+         "end": {
+          "line": 158,
+          "col": 38
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 149,
+       "col": 4
+      },
+      "end": {
+       "line": 158,
+       "col": 38
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 149,
+        "col": 4
+       },
+       "end": {
+        "line": 158,
+        "col": 38
+       }
+      }
+     ]
+    },
+    "Returns": {
+     "name": "Returns",
+     "stmt": [
+      {
+       "ret": {
+        "payload": "ok <: string"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 141,
+         "col": 8
+        },
+        "end": {
+         "line": 141,
+         "col": 27
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 141,
+          "col": 8
+         },
+         "end": {
+          "line": 141,
+          "col": 27
+         }
+        }
+       ]
+      },
+      {
+       "ret": {
+        "payload": "ok <: Types.Type"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 142,
+         "col": 8
+        },
+        "end": {
+         "line": 142,
+         "col": 31
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 142,
+          "col": 8
+         },
+         "end": {
+          "line": 142,
+          "col": 31
+         }
+        }
+       ]
+      },
+      {
+       "ret": {
+        "payload": "error <: Types.Type"
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 143,
+         "col": 8
+        },
+        "end": {
+         "line": 143,
+         "col": 34
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 143,
+          "col": 8
+         },
+         "end": {
+          "line": 143,
+          "col": 34
+         }
+        }
+       ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 140,
+       "col": 4
+      },
+      "end": {
+       "line": 143,
+       "col": 34
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 140,
+        "col": 4
+       },
+       "end": {
+        "line": 143,
+        "col": 34
+       }
+      }
+     ]
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 117
+    },
+    "end": {
+     "line": 178,
+     "col": 34
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 117
+     },
+     "end": {
+      "line": 178,
+      "col": 34
+     }
+    }
+   ]
+  },
+  "Types": {
+   "name": {
+    "part": [
+     "Types"
+    ]
+   },
+   "types": {
+    "Alias": {
+     "primitive": "INT",
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 102,
+       "col": 4
+      },
+      "end": {
+       "line": 105,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 102,
+        "col": 4
+       },
+       "end": {
+        "line": 105,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "AliasForeignRef": {
+     "typeRef": {
+      "context": {
+       "appname": {
+        "part": [
+         "Types"
+        ]
+       },
+       "path": [
+        "AliasForeignRef"
+       ]
+      },
+      "ref": {
+       "appname": {
+        "part": [
+         "RestEndpoint"
+        ]
+       },
+       "path": [
+        "Type"
+       ]
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 111,
+       "col": 4
+      },
+      "end": {
+       "line": 114,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 111,
+        "col": 4
+       },
+       "end": {
+        "line": 114,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "AliasForeignRefSet": {
+     "set": {
+      "typeRef": {
+       "context": {
+        "appname": {
+         "part": [
+          "Types"
+         ]
+        },
+        "path": [
+         "AliasForeignRefSet"
+        ]
+       },
+       "ref": {
+        "appname": {
+         "part": [
+          "RestEndpoint"
+         ]
+        },
+        "path": [
+         "Type"
+        ]
+       }
+      },
+      "sourceContext": {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 114,
+        "col": 4
+       },
+       "end": {
+        "line": 117,
+        "col": 11
+       }
+      },
+      "sourceContexts": [
+       {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 114,
+         "col": 4
+        },
+        "end": {
+         "line": 117,
+         "col": 11
+        }
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 114,
+       "col": 4
+      },
+      "end": {
+       "line": 117,
+       "col": 11
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 114,
+        "col": 4
+       },
+       "end": {
+        "line": 117,
+        "col": 11
+       }
+      }
+     ]
+    },
+    "AliasRef": {
+     "typeRef": {
+      "context": {
+       "appname": {
+        "part": [
+         "Types"
+        ]
+       },
+       "path": [
+        "AliasRef"
+       ]
+      },
+      "ref": {
+       "path": [
+        "Type"
+       ]
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 108,
+       "col": 4
+      },
+      "end": {
+       "line": 111,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 108,
+        "col": 4
+       },
+       "end": {
+        "line": 111,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "AliasSequence": {
+     "sequence": {
+      "primitive": "STRING",
+      "sourceContext": {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 105,
+        "col": 4
+       },
+       "end": {
+        "line": 108,
+        "col": 5
+       }
+      },
+      "sourceContexts": [
+       {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 105,
+         "col": 4
+        },
+        "end": {
+         "line": 108,
+         "col": 5
+        }
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 105,
+       "col": 4
+      },
+      "end": {
+       "line": 108,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 105,
+        "col": 4
+       },
+       "end": {
+        "line": 108,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "Enum": {
+     "enum": {
+      "items": {
+       "ENUM_1": "1",
+       "ENUM_2": "2",
+       "ENUM_3": "3"
+      }
+     },
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "tag",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 92,
+            "col": 16
+           },
+           "end": {
+            "line": 92,
+            "col": 20
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 92,
+             "col": 16
+            },
+            "end": {
+             "line": 92,
+             "col": 20
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 92,
+       "col": 4
+      },
+      "end": {
+       "line": 97,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 92,
+        "col": 4
+       },
+       "end": {
+        "line": 97,
+        "col": 5
+       }
+      }
+     ]
+    },
+    "Table": {
+     "relation": {
+      "attrDefs": {
+       "decimal_with_precision": {
+        "primitive": "DECIMAL",
+        "constraint": [
+         {
+          "length": {
+           "max": "5"
+          },
+          "precision": 5,
+          "scale": 8
+         }
+        ],
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 86,
+          "col": 8
+         },
+         "end": {
+          "line": 86,
+          "col": 46
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 86,
+           "col": 8
+          },
+          "end": {
+           "line": 86,
+           "col": 46
+          }
+         }
+        ]
+       },
+       "float_with_bitwidth": {
+        "primitive": "FLOAT",
+        "constraint": [
+         {
+          "bitWidth": 64
+         }
+        ],
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 90,
+          "col": 8
+         },
+         "end": {
+          "line": 90,
+          "col": 38
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 90,
+           "col": 8
+          },
+          "end": {
+           "line": 90,
+           "col": 38
+          }
+         }
+        ]
+       },
+       "int_with_bitwidth": {
+        "primitive": "INT",
+        "constraint": [
+         {
+          "range": {
+           "min": {
+            "i": "-9223372036854775808"
+           },
+           "max": {
+            "i": "9223372036854775807"
+           }
+          },
+          "bitWidth": 64
+         }
+        ],
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 89,
+          "col": 8
+         },
+         "end": {
+          "line": 89,
+          "col": 34
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 89,
+           "col": 8
+          },
+          "end": {
+           "line": 89,
+           "col": 34
+          }
+         }
+        ]
+       },
+       "nativeTypeField": {
+        "primitive": "STRING",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 79,
+          "col": 8
+         },
+         "end": {
+          "line": 79,
+          "col": 33
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 79,
+           "col": 8
+          },
+          "end": {
+           "line": 79,
+           "col": 33
+          }
+         }
+        ]
+       },
+       "optional": {
+        "primitive": "STRING",
+        "opt": true,
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 81,
+          "col": 8
+         },
+         "end": {
+          "line": 81,
+          "col": 27
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 81,
+           "col": 8
+          },
+          "end": {
+           "line": 81,
+           "col": 27
+          }
+         }
+        ]
+       },
+       "primaryKey": {
+        "primitive": "STRING",
+        "attrs": {
+         "patterns": {
+          "a": {
+           "elt": [
+            {
+             "s": "pk",
+             "sourceContext": {
+              "file": "ts/test/all.sysl",
+              "start": {
+               "line": 78,
+               "col": 30
+              },
+              "end": {
+               "line": 78,
+               "col": 33
+              }
+             },
+             "sourceContexts": [
+              {
+               "file": "ts/test/all.sysl",
+               "start": {
+                "line": 78,
+                "col": 30
+               },
+               "end": {
+                "line": 78,
+                "col": 33
+               }
+              }
+             ]
+            }
+           ]
+          }
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 78,
+          "col": 8
+         },
+         "end": {
+          "line": 78,
+          "col": 34
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 78,
+           "col": 8
+          },
+          "end": {
+           "line": 78,
+           "col": 34
+          }
+         }
+        ]
+       },
+       "reference": {
+        "typeRef": {
+         "context": {
+          "appname": {
+           "part": [
+            "Types"
+           ]
+          },
+          "path": [
+           "Table"
+          ]
+         },
+         "ref": {
+          "appname": {
+           "part": [
+            "RestEndpoint"
+           ]
+          },
+          "path": [
+           "Type"
+          ]
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 80,
+          "col": 8
+         },
+         "end": {
+          "line": 80,
+          "col": 38
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 80,
+           "col": 8
+          },
+          "end": {
+           "line": 80,
+           "col": 38
+          }
+         }
+        ]
+       },
+       "sequence": {
+        "sequence": {
+         "primitive": "STRING",
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 83,
+           "col": 8
+          },
+          "end": {
+           "line": 83,
+           "col": 38
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 83,
+            "col": 8
+           },
+           "end": {
+            "line": 83,
+            "col": 38
+           }
+          }
+         ]
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 83,
+          "col": 8
+         },
+         "end": {
+          "line": 83,
+          "col": 38
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 83,
+           "col": 8
+          },
+          "end": {
+           "line": 83,
+           "col": 38
+          }
+         }
+        ]
+       },
+       "set": {
+        "set": {
+         "primitive": "STRING",
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 82,
+           "col": 8
+          },
+          "end": {
+           "line": 82,
+           "col": 28
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 82,
+            "col": 8
+           },
+           "end": {
+            "line": 82,
+            "col": 28
+           }
+          }
+         ]
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 82,
+          "col": 8
+         },
+         "end": {
+          "line": 82,
+          "col": 28
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 82,
+           "col": 8
+          },
+          "end": {
+           "line": 82,
+           "col": 28
+          }
+         }
+        ]
+       },
+       "string_max_constraint": {
+        "primitive": "STRING",
+        "constraint": [
+         {
+          "length": {
+           "max": "5"
+          }
+         }
+        ],
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 87,
+          "col": 8
+         },
+         "end": {
+          "line": 87,
+          "col": 42
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 87,
+           "col": 8
+          },
+          "end": {
+           "line": 87,
+           "col": 42
+          }
+         }
+        ]
+       },
+       "string_range_constraint": {
+        "primitive": "STRING",
+        "constraint": [
+         {
+          "length": {
+           "min": "5",
+           "max": "10"
+          }
+         }
+        ],
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 88,
+          "col": 8
+         },
+         "end": {
+          "line": 88,
+          "col": 48
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 88,
+           "col": 8
+          },
+          "end": {
+           "line": 88,
+           "col": 48
+          }
+         }
+        ]
+       },
+       "with_anno": {
+        "primitive": "STRING",
+        "attrs": {
+         "annotation": {
+          "s": "this is an annotation",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 85,
+            "col": 26
+           },
+           "end": {
+            "line": 85,
+            "col": 49
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 85,
+             "col": 26
+            },
+            "end": {
+             "line": 85,
+             "col": 49
+            }
+           }
+          ]
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 84,
+          "col": 8
+         },
+         "end": {
+          "line": 86,
+          "col": 9
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 84,
+           "col": 8
+          },
+          "end": {
+           "line": 86,
+           "col": 9
+          }
+         }
+        ]
+       }
+      },
+      "primaryKey": {
+       "attrName": [
+        "primaryKey"
+       ]
+      }
+     },
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "tag",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 77,
+            "col": 18
+           },
+           "end": {
+            "line": 77,
+            "col": 22
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 77,
+             "col": 18
+            },
+            "end": {
+             "line": 77,
+             "col": 22
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 77,
+       "col": 4
+      },
+      "end": {
+       "line": 90,
+       "col": 38
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 77,
+        "col": 4
+       },
+       "end": {
+        "line": 90,
+        "col": 38
+       }
+      }
+     ]
+    },
+    "Type": {
+     "tuple": {
+      "attrDefs": {
+       "aliasSequence": {
+        "typeRef": {
+         "context": {
+          "appname": {
+           "part": [
+            "Types"
+           ]
+          },
+          "path": [
+           "Type"
+          ]
+         },
+         "ref": {
+          "path": [
+           "AliasSequence"
+          ]
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 73,
+          "col": 8
+         },
+         "end": {
+          "line": 73,
+          "col": 38
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 73,
+           "col": 8
+          },
+          "end": {
+           "line": 73,
+           "col": 38
+          }
+         }
+        ]
+       },
+       "nativeTypeField": {
+        "primitive": "STRING",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 68,
+          "col": 8
+         },
+         "end": {
+          "line": 68,
+          "col": 33
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 68,
+           "col": 8
+          },
+          "end": {
+           "line": 68,
+           "col": 33
+          }
+         }
+        ]
+       },
+       "optional": {
+        "primitive": "STRING",
+        "opt": true,
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 70,
+          "col": 8
+         },
+         "end": {
+          "line": 70,
+          "col": 27
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 70,
+           "col": 8
+          },
+          "end": {
+           "line": 70,
+           "col": 27
+          }
+         }
+        ]
+       },
+       "reference": {
+        "typeRef": {
+         "context": {
+          "appname": {
+           "part": [
+            "Types"
+           ]
+          },
+          "path": [
+           "Type"
+          ]
+         },
+         "ref": {
+          "appname": {
+           "part": [
+            "RestEndpoint"
+           ]
+          },
+          "path": [
+           "Type"
+          ]
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 69,
+          "col": 8
+         },
+         "end": {
+          "line": 69,
+          "col": 38
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 69,
+           "col": 8
+          },
+          "end": {
+           "line": 69,
+           "col": 38
+          }
+         }
+        ]
+       },
+       "sequence": {
+        "sequence": {
+         "primitive": "STRING",
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 72,
+           "col": 8
+          },
+          "end": {
+           "line": 72,
+           "col": 38
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 72,
+            "col": 8
+           },
+           "end": {
+            "line": 72,
+            "col": 38
+           }
+          }
+         ]
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 72,
+          "col": 8
+         },
+         "end": {
+          "line": 72,
+          "col": 38
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 72,
+           "col": 8
+          },
+          "end": {
+           "line": 72,
+           "col": 38
+          }
+         }
+        ]
+       },
+       "set": {
+        "set": {
+         "primitive": "STRING",
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 71,
+           "col": 8
+          },
+          "end": {
+           "line": 71,
+           "col": 28
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 71,
+            "col": 8
+           },
+           "end": {
+            "line": 71,
+            "col": 28
+           }
+          }
+         ]
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 71,
+          "col": 8
+         },
+         "end": {
+          "line": 71,
+          "col": 28
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 71,
+           "col": 8
+          },
+          "end": {
+           "line": 71,
+           "col": 28
+          }
+         }
+        ]
+       },
+       "with_anno": {
+        "primitive": "STRING",
+        "attrs": {
+         "annotation": {
+          "s": "this is an annotation",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 75,
+            "col": 26
+           },
+           "end": {
+            "line": 75,
+            "col": 49
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 75,
+             "col": 26
+            },
+            "end": {
+             "line": 75,
+             "col": 49
+            }
+           }
+          ]
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 74,
+          "col": 8
+         },
+         "end": {
+          "line": 77,
+          "col": 5
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 74,
+           "col": 8
+          },
+          "end": {
+           "line": 77,
+           "col": 5
+          }
+         }
+        ]
+       }
+      }
+     },
+     "attrs": {
+      "annotation": {
+       "s": "annotation",
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 67,
+         "col": 22
+        },
+        "end": {
+         "line": 67,
+         "col": 34
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 67,
+          "col": 22
+         },
+         "end": {
+          "line": 67,
+          "col": 34
+         }
+        }
+       ]
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 66,
+       "col": 4
+      },
+      "end": {
+       "line": 75,
+       "col": 49
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 66,
+        "col": 4
+       },
+       "end": {
+        "line": 75,
+        "col": 49
+       }
+      }
+     ]
+    },
+    "Union": {
+     "oneOf": {
+      "type": [
+       {
+        "primitive": "INT",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 98,
+          "col": 8
+         },
+         "end": {
+          "line": 98,
+          "col": 11
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 98,
+           "col": 8
+          },
+          "end": {
+           "line": 98,
+           "col": 11
+          }
+         }
+        ]
+       },
+       {
+        "primitive": "STRING",
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 99,
+          "col": 8
+         },
+         "end": {
+          "line": 99,
+          "col": 14
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 99,
+           "col": 8
+          },
+          "end": {
+           "line": 99,
+           "col": 14
+          }
+         }
+        ]
+       },
+       {
+        "sequence": {
+         "primitive": "DECIMAL",
+         "constraint": [
+          {
+           "length": {
+            "max": "5"
+           },
+           "precision": 5,
+           "scale": 8
+          }
+         ],
+         "sourceContext": {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 100,
+           "col": 8
+          },
+          "end": {
+           "line": 100,
+           "col": 32
+          }
+         },
+         "sourceContexts": [
+          {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 100,
+            "col": 8
+           },
+           "end": {
+            "line": 100,
+            "col": 32
+           }
+          }
+         ]
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 100,
+          "col": 8
+         },
+         "end": {
+          "line": 100,
+          "col": 32
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 100,
+           "col": 8
+          },
+          "end": {
+           "line": 100,
+           "col": 32
+          }
+         }
+        ]
+       }
+      ]
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 97,
+       "col": 4
+      },
+      "end": {
+       "line": 102,
+       "col": 5
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 97,
+        "col": 4
+       },
+       "end": {
+        "line": 102,
+        "col": 5
+       }
+      }
+     ]
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 65
+    },
+    "end": {
+     "line": 117,
+     "col": 11
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 65
+     },
+     "end": {
+      "line": 117,
+      "col": 11
+     }
+    }
+   ]
+  }
+ }
+}
