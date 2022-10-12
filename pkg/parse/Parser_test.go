@@ -807,6 +807,7 @@ One:
 `
 	two := `
 import three
+import four.yaml as Four
 Two:
 	...
 `
@@ -814,10 +815,21 @@ Two:
 Three:
 	...
 `
+	four := `
+openapi: "3.0"
+info:
+  title: Four
+components:
+  schemas:
+    ImportedObj:
+      type: object
+`
+
 	r := mockReader{contents: map[string]mockContent{
 		"one.sysl":   {one, retriever.ZeroHash, ""},
 		`two.sysl`:   {two, retriever.ZeroHash, ""},
 		`three.sysl`: {three, retriever.ZeroHash, ""},
+		`four.yaml`:  {four, retriever.ZeroHash, ""},
 	}}
 
 	p := NewParser()
@@ -825,10 +837,11 @@ Three:
 	// Depth not specified
 	c, err := p.Parse("one", r)
 	require.NoError(t, err)
-	require.Equal(t, 3, len(c.Apps))
+	require.Equal(t, 4, len(c.Apps))
 	require.NotNil(t, c.Apps["One"])
 	require.NotNil(t, c.Apps["Two"])
 	require.NotNil(t, c.Apps["Three"])
+	require.NotNil(t, c.Apps["Four"])
 
 	// Depth of 1
 	p.SetMaxImportDepth(1)
@@ -844,6 +857,16 @@ Three:
 	require.Equal(t, 2, len(c.Apps))
 	require.NotNil(t, c.Apps["One"])
 	require.NotNil(t, c.Apps["Two"])
+
+	// Depth of 3
+	p.SetMaxImportDepth(3)
+	c, err = p.Parse("one", r)
+	require.NoError(t, err)
+	require.Equal(t, 4, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
+	require.NotNil(t, c.Apps["Four"])
 }
 
 func TestLintValid(t *testing.T) {

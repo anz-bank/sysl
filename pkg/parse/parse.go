@@ -264,10 +264,13 @@ func flattenSpecs(specs *[]srcInput, filename string, retrieved *retrievedList) 
 		}
 	}
 
-	fi := retrieved.l[filename]
-	*specs = append(*specs, fi.src)
-	for _, v := range fi.imports {
-		flattenSpecs(specs, v.filename, retrieved)
+	fi, found := retrieved.l[filename]
+	// If it wasn't found it must have been ignored due to depth
+	if found {
+		*specs = append(*specs, fi.src)
+		for _, v := range fi.imports {
+			flattenSpecs(specs, v.filename, retrieved)
+		}
 	}
 }
 
@@ -280,6 +283,10 @@ func collectSpecs(
 	retrieved *retrievedList,
 	maxImportDepth, currentImportDepth int,
 ) error {
+	if maxImportDepth > 0 && currentImportDepth >= maxImportDepth {
+		return nil
+	}
+
 	retrieved.mutex.Lock()
 	if _, has := retrieved.l[source.filename]; has {
 		retrieved.mutex.Unlock()
@@ -289,11 +296,6 @@ func collectSpecs(
 	fi := &fileInfo{}
 	retrieved.l[source.filename] = fi
 	retrieved.mutex.Unlock()
-
-	if maxImportDepth > 0 && currentImportDepth >= maxImportDepth {
-		fi.src = srcInput{source, ""}
-		return nil
-	}
 
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
 	if err != nil {
