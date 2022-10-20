@@ -64,6 +64,7 @@ let rec isComplexSchema = \schema
         {}: false,
         _:
             schema('properties')?:false         ||
+            schema('type')?.s:'' = 'object'       ||
 
             # FIXME: currently enum is just mapped into string, uncomment this when there's a proper mapping for it.
             # schema('enum')?:false               ||

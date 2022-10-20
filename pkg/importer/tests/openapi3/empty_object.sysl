@@ -7,7 +7,24 @@
 TestApp "Simple":
     @package = "com.example.package"
     
+    /:
+        GET:
+            return 200 <: get__200_resp_type 
+    
     !type emptyProps:
+        @openapi_type = "object"
+    
+    !type get__200_resp_type [~GeneratedOpenAPIResponse]:
+        body <: get__200_resp_type_body [~body]:
+            @json_tag = "body"
+        header <: get__200_resp_type_header [~header]:
+            @json_tag = "header"
+    
+    !type get__200_resp_type_body:
+        @mediatype = "application/json"
+        @openapi_type = "object"
+    
+    !type get__200_resp_type_header:
         @openapi_type = "object"
     
     !type object:

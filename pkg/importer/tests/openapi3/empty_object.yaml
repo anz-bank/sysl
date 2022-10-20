@@ -1,6 +1,16 @@
 openapi: "3.0"
 info:
   title: Simple
+paths:
+  "/":
+    get:
+      responses:
+        "200":
+          description: "returning empty object"
+          content:
+            application/json:
+              schema:
+                type: object
 components:
   schemas:
     object:
