@@ -868,6 +868,7 @@ func (s *TreeShapeListener) EnterUnion(ctx *parser.UnionContext) {
 	types := s.currentApp().Types
 	if types == nil {
 		types = map[string]*sysl.Type{}
+		s.currentApp().Types = types
 	}
 
 	if types[s.currentTypePath.Get()].GetOneOf().GetType() != nil {
