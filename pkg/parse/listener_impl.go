@@ -833,6 +833,9 @@ func (s *TreeShapeListener) applyAnnotations(
 	// Copy the annotations from the parent (tuple or relation) to each child
 	collection := s.currentApp().Types[s.currentTypePath.Get()]
 
+	if collection == nil {
+		return
+	}
 	switch collection.Type.(type) {
 	case *sysl.Type_Tuple_, *sysl.Type_Relation_:
 	default:
