@@ -1,0 +1,17 @@
+let (:import, ...) = //{./proto_parser};
+let (:module, ...) = //{./proto_to_sysl};
+
+(
+    import: (
+        conflicting:
+            let model = import(['pkg/importer/proto/tests/google.proto'], ['pkg/importer/proto/bundled_files']);
+            let sysl = module(model);
+
+            let actualPackage = sysl.apps('google_protobuf').attrs('go_package').s;
+            # typepb is not the package for either any.proto or api.proto, but imported by them.
+            # Most importantly it's deterministic.
+            # TODO: Handle serialization of applications merged from multiple proto files
+            # (i.e. those with name collisions).
+            //test.assert.equal("google.golang.org/protobuf/types/known/typepb", actualPackage)
+    )
+)

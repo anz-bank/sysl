@@ -331,7 +331,7 @@ let module = \imports
         let existing = apps(appName)?:{};
         let app = existing && (
             name: existing.name,
-            attrs: existing.attrs?:{} | app.attrs?:{},
+            attrs: existing.attrs?:{} +> app.attrs?:{},
             types: existing.types?:{} | app.types?:{},
             endpoints: existing.endpoints?:{} | app.endpoints?:{}
         ) || app;

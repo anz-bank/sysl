@@ -1,0 +1,7 @@
+syntax = "proto3";
+package proto3;
+option java_package = "com.example.foo";
+option go_package = "github.com/test/package";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/api.proto";
