@@ -23,7 +23,7 @@ describe("PbDocumentModel", () => {
     });
 
     test("from JSON buffer", async () => {
-        const source = (await readFile(jsonPath)).toString("utf8");
+        const source = await readFile(jsonPath);
         const m = PbDocumentModel.fromJson(source);
         expect(m.apps.size).toEqual(7);
     });

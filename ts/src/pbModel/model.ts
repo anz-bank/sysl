@@ -1,5 +1,4 @@
 import { readFile } from "fs/promises";
-import { exec } from "promisify-child-process";
 import "reflect-metadata";
 import {
     jsonArrayMember,
@@ -18,6 +17,7 @@ import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
+import { spawn, SpawnOptions } from "child_process";
 
 @jsonObject
 export class PbImport {
@@ -99,7 +99,7 @@ export class PbDocumentModel {
                 throw error;
             },
         });
-        return serializer.parse(json)!;
+        return serializer.parse(json.toString("utf-8"))!;
     }
 
     /**
@@ -120,14 +120,12 @@ export class PbDocumentModel {
         maxImportDepth?: number
     ): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
-        const cmd = `${syslPath} pb --mode=json --max-import-depth=${
-            maxImportDepth ?? 0
-        }`;
-        // Do not limit the maximum stdout of the process.
-        const execOpts = { maxBuffer: undefined };
-        const proc = exec(cmd, execOpts);
-        proc.stdin?.end(content);
-        return PbDocumentModel.fromJson((await proc).stdout!);
+        const out = await spawnBuffer(
+            syslPath,
+            ["pb", "--mode=json", `--max-import-depth=${maxImportDepth ?? 0}`],
+            { input: content }
+        );
+        return PbDocumentModel.fromJson(out);
     }
 
     toModel(): Model {
@@ -139,4 +137,38 @@ export class PbDocumentModel {
             ),
         });
     }
+}
+
+/** Spawns a child process and returns a promise that resolves to the buffer content of stdout. */
+function spawnBuffer(
+    command: string,
+    args: ReadonlyArray<string> = [],
+    options: SpawnOptions & { input?: any } = {}
+): Promise<Buffer> {
+    return new Promise<Buffer>((resolve, reject) => {
+        console.debug(
+            `spawn: ${command} ${args.join(" ")} ${
+                options.input ? "<stdin>" : ""
+            }`
+        );
+        const process = spawn(command, args, options);
+        if (options.input) {
+            options.input && process.stdin?.write(options.input);
+        }
+        process.stdin?.end();
+
+        let chunks: any[] = [];
+        let result: Buffer;
+        process.stdout?.on("data", (data: Buffer) => chunks.push(data));
+        process.stdout?.on("end", () => (result = Buffer.concat(chunks)));
+        process.stderr?.on("data", data =>
+            console.error(`spawn stderr: ${data}`)
+        );
+        process.on("error", err => reject(`spawn error: ${err}`));
+        process.on("close", code => {
+            code === 0
+                ? resolve(result)
+                : reject(`spawn exited with code ${code}`);
+        });
+    });
 }
