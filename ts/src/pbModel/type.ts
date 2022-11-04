@@ -192,7 +192,7 @@ export class PbTypeDefStruct {
 
 @jsonObject
 export class PbTypeDefUnion {
-    @jsonArrayMember(() => PbTypeDef) type!: PbTypeDef[];
+    @jsonArrayMember(() => PbTypeDef) type: PbTypeDef[] = [];
 
     toModel(): Union {
         const values = this.type.map(t => t.toValue());
