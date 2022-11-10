@@ -1,0 +1,12 @@
+Foo:
+    !table TableWithNoFields:
+        @description = "A table with no fields"
+
+    !type TypeWithNoFields:
+        @description = "A type with no fields"
+
+    !table EmptyTable:
+        ...
+
+    !type EmptyType:
+        ...

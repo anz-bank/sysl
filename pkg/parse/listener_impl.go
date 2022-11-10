@@ -710,8 +710,17 @@ func (s *TreeShapeListener) EnterTable_stmts(ctx *parser.Table_stmtsContext) {
 		}
 	}
 	if ctx.Field(0) == nil {
-		if type1.Attrs == nil && type1.Type.(*sysl.Type_Tuple_).Tuple.AttrDefs == nil {
-			type1.Type = nil
+		if type1.Attrs == nil {
+			switch t := type1.Type.(type) {
+			case *sysl.Type_Relation_:
+				if t.Relation.AttrDefs == nil {
+					type1.Type = nil
+				}
+			case *sysl.Type_Tuple_:
+				if t.Tuple.AttrDefs == nil {
+					type1.Type = nil
+				}
+			}
 		}
 	}
 }

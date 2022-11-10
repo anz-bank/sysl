@@ -1,0 +1,192 @@
+apps: {
+ key: "Foo"
+ value: {
+  name: {
+   part: "Foo"
+  }
+  types: {
+   key: "EmptyTable"
+   value: {
+    relation: {}
+    source_context: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 7
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 7
+      col: 4
+     }
+     end: {
+      line: 10
+      col: 5
+     }
+    }
+   }
+  }
+  types: {
+   key: "EmptyType"
+   value: {
+    tuple: {}
+    source_context: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 12
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 10
+      col: 4
+     }
+     end: {
+      line: 12
+      col: 1
+     }
+    }
+   }
+  }
+  types: {
+   key: "TableWithNoFields"
+   value: {
+    relation: {}
+    attrs: {
+     key: "description"
+     value: {
+      s: "A table with no fields"
+      source_context: {
+       file: "tests/empty_type_table.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 47
+       }
+      }
+      source_contexts: {
+       file: "tests/empty_type_table.sysl"
+       start: {
+        line: 2
+        col: 23
+       }
+       end: {
+        line: 2
+        col: 47
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 47
+     }
+    }
+    source_contexts: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 1
+      col: 4
+     }
+     end: {
+      line: 2
+      col: 47
+     }
+    }
+   }
+  }
+  types: {
+   key: "TypeWithNoFields"
+   value: {
+    tuple: {}
+    attrs: {
+     key: "description"
+     value: {
+      s: "A type with no fields"
+      source_context: {
+       file: "tests/empty_type_table.sysl"
+       start: {
+        line: 5
+        col: 23
+       }
+       end: {
+        line: 5
+        col: 46
+       }
+      }
+      source_contexts: {
+       file: "tests/empty_type_table.sysl"
+       start: {
+        line: 5
+        col: 23
+       }
+       end: {
+        line: 5
+        col: 46
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 46
+     }
+    }
+    source_contexts: {
+     file: "tests/empty_type_table.sysl"
+     start: {
+      line: 4
+      col: 4
+     }
+     end: {
+      line: 5
+      col: 46
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/empty_type_table.sysl"
+   start: {}
+   end: {
+    line: 12
+    col: 1
+   }
+  }
+  source_contexts: {
+   file: "tests/empty_type_table.sysl"
+   start: {}
+   end: {
+    line: 12
+    col: 1
+   }
+  }
+ }
+}

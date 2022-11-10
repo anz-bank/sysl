@@ -715,7 +715,7 @@ func TestAnnotationMerge(t *testing.T) {
 func TestEmptyTable(t *testing.T) {
 	t.Parallel()
 
-	testParseAgainstGoldenWithSourceContext(t, "tests/empty_table.sysl")
+	testParseAgainstGoldenWithSourceContext(t, "tests/empty_type_table.sysl")
 }
 
 func TestViewAttr(t *testing.T) {
