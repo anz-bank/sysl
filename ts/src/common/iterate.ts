@@ -104,7 +104,7 @@ export class AnyWalkListener implements WalkListener {
     }
 }
 
-/** Walks a model tree and invokes callbacks on {@code listener} for each kind of content. */
+/** Walks a model tree and invokes callbacks on {@link listener} for each kind of content. */
 export function walk(model: Model, listener: WalkListener) {
     model.apps.forEach(app => {
         listener.visitApp?.(app);

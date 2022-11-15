@@ -40,7 +40,7 @@ export function serializerFor<T>(
 }
 
 /**
- * Same as {@link serializerFor} but takes the {@code rootType} as a function evaluated on demand to
+ * Same as {@link serializerFor} but takes the {@link getType} as a function evaluated on demand to
  * allow for forward type references.
  */
 export function serializerForFn<T>(

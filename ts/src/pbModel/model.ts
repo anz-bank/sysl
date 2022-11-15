@@ -103,17 +103,17 @@ export class PbDocumentModel {
     }
 
     /**
-     * Returns a model compiled by invoking {@code sysl pb} passing {@code content} to
-     * {@code stdin}.
+     * Returns a model compiled by invoking `sysl pb` and passing it the {@link content} via
+     * the standard input.
      *
      * @param content is the content to construct a model from. This can be either the bytes of a
-     *        precompiled {@code .pb} file, or a JSON object of the form
-     *        <code>[{"path": "path/to/file.sysl", "content": "sysl source"}, ...]</code>.
+     *        precompiled `.pb` file, or a JSON object of the form
+     *        `[{"path": "path/to/file.sysl", "content": "sysl source"}, ...]`.
      *        In the first (simple) case, the precompiled model loaded directly into a TypeScript
-     *        object. In the second case, the Sysl source in the {@code content} property is
+     *        object. In the second case, the Sysl source in the {@link content} property is
      *        compiled and then loaded.
      * @param maxImportDepth sets the max import depth for the compiler. This has no effect if
-     *        {@code content} is a precompiled {@code .pb} file.
+     *        {@link content} is a precompiled `.pb` file.
      */
     static async fromPbOrJson(
         content: string | Buffer,
@@ -146,11 +146,6 @@ function spawnBuffer(
     options: SpawnOptions & { input?: any } = {}
 ): Promise<Buffer> {
     return new Promise<Buffer>((resolve, reject) => {
-        console.debug(
-            `spawn: ${command} ${args.join(" ")} ${
-                options.input ? "<stdin>" : ""
-            }`
-        );
         const process = spawn(command, args, options);
         if (options.input) {
             options.input && process.stdin?.write(options.input);
@@ -161,14 +156,13 @@ function spawnBuffer(
         let result: Buffer;
         process.stdout?.on("data", (data: Buffer) => chunks.push(data));
         process.stdout?.on("end", () => (result = Buffer.concat(chunks)));
-        process.stderr?.on("data", data =>
-            console.error(`spawn stderr: ${data}`)
-        );
+        let err = "";
+        process.stderr?.on("data", data => { err += data; });
         process.on("error", err => reject(`spawn error: ${err}`));
         process.on("close", code => {
             code === 0
                 ? resolve(result)
-                : reject(`spawn exited with code ${code}`);
+                : reject(`spawn exited with code ${code}:\n${err}`);
         });
     });
 }

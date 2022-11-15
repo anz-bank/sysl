@@ -12,6 +12,7 @@ export type AnnotationParams = {
     value: AnnoValue;
     locations?: Location[];
     model?: Model;
+    parent?: Element;
 };
 
 export class Annotation implements IChild, ILocational, IRenderable {
@@ -21,11 +22,13 @@ export class Annotation implements IChild, ILocational, IRenderable {
     parent?: Element;
     model?: Model;
 
-    constructor({ name, value, locations, model }: AnnotationParams) {
+    constructor({ name, value, locations, model, parent }: AnnotationParams) {
+        // TODO: Check validity of name, throw if invalid.
         this.name = name;
         this.value = value;
         this.locations = locations ?? [];
-        this.model = model;
+        this.model = model ?? parent?.model;
+        this.parent = parent;
     }
 
     toSysl(): string {
@@ -57,24 +60,26 @@ export class Annotation implements IChild, ILocational, IRenderable {
 }
 
 export type TagParams = {
-    value: AnnoValue;
+    name: string;
     locations?: Location[];
     model?: Model;
+    parent?: Element;
 };
 
 export class Tag implements IChild, ILocational, IRenderable {
-    value: AnnoValue;
+    name: string;
     locations: Location[];
     parent?: Element;
     model?: Model;
 
-    constructor({ value, locations, model }: TagParams) {
-        this.value = value;
+    constructor({ name, locations, model, parent }: TagParams) {
+        this.name = name;
         this.locations = locations ?? [];
-        this.model = model;
+        this.model = model ?? parent?.model;
+        this.parent = parent;
     }
 
     toSysl(): string {
-        return `~${this.value}`;
+        return `~${this.name}`;
     }
 }

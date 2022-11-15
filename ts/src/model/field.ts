@@ -1,4 +1,4 @@
-import { safeName } from "../common/format";
+import { toSafeName } from "../common/format";
 import { Element, IElementParams, setParentAndModelDeep } from "./element";
 import { addTags, renderAnnos } from "./renderers";
 import { Primitive } from "./primitive";
@@ -25,9 +25,13 @@ export class Field extends Element {
         setParentAndModelDeep(this, this.annos, this.tags);
     }
 
+    toRef(): ElementRef {
+        return this.parent!.toRef().with({fieldName: this.name});
+    }
+
     override toSysl(): string {
         const optStr = this.optional ? "?" : "";
-        let sysl = `${safeName(this.name)}${this.value.toSysl()}${optStr}`;
+        let sysl = `${toSafeName(this.name)}${this.value.toSysl()}${optStr}`;
         sysl = addTags(sysl, this.tags);
         if (this.annos.length) {
             sysl += `:\n${renderAnnos(this.annos)}`;

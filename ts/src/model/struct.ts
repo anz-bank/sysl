@@ -1,4 +1,4 @@
-import { indent, safeName } from "../common/format";
+import { indent, toSafeName } from "../common/format";
 import { IRenderable } from "./common";
 import { Field } from "./field";
 import { addTags, renderAnnos } from "./renderers";
@@ -16,7 +16,7 @@ export class Struct implements IRenderable {
             this.fields
                 .map(e => {
                     let sysl = addTags(
-                        `${safeName(e.name)} <: ${e.value.toSysl()}${
+                        `${toSafeName(e.name)} <: ${e.value.toSysl()}${
                             e.optional ? "?" : ""
                         }`,
                         e.tags

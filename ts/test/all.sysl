@@ -180,3 +180,8 @@ Statements:
 
     Miscellanous:
         SimpleEndpoint -> SimpleEp
+
+Unsafe%2FNamespace :: Unsafe%2FApp:
+    !type Unsafe%2EType:
+        Unsafe%2EField <: int:
+            @description = "Unsafe Field Description"

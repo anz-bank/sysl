@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Location } from "../common";
 import { indent, joinedAppName } from "../common/format";
-import { ILocational, IRenderable } from "./common";
+import { ElementRef, ILocational, IRenderable } from "./common";
 import { CollectionDecorator } from "./decorator";
 import {
     Element,
@@ -267,12 +267,16 @@ export class Statement extends ParentElement<Statement> {
         return new Statement({ value: new Action(action) });
     }
 
-    /** Returns an array of child statements nested in this statement's {@code value}. */
+    /** Returns an array of child statements nested in this statement's {@link value}. */
     get children(): Statement[] {
         if (this.value && "stmt" in this.value) {
             return this.value.stmt;
         }
         return [];
+    }
+
+    toRef(): ElementRef {
+        throw new Error("Method not implemented.");
     }
 
     toSysl(): string {
@@ -423,6 +427,10 @@ export class Endpoint extends ParentElement<Statement> {
         }
         sysl += this.statements.map(s => `\n${indent(s.toSysl())}`).join("");
         return sysl;
+    }
+
+    toRef(): ElementRef {
+        throw new Error("Method not implemented.");
     }
 
     toSysl(): string {

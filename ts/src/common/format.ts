@@ -32,11 +32,9 @@ const keywords = [
 ];
 
 /** Escapes characters that are unsafe to use in Sysl names. */
-export function safeName(name: string): string {
-    const percentEncode = (m: string) => `%${m.charCodeAt(0).toString(16)}`;
-    name = name
-        .replaceAll(/[/\\{} ]+/g, "_")
-        .replaceAll(/([^-a-zA-Z0-9_])/g, percentEncode);
+export function toSafeName(name: string): string {
+    const percentEncode = (m: string) => `%${m.charCodeAt(0).toString(16).toUpperCase()}`;
+    name = name.replaceAll(/([^-a-zA-Z0-9_])/g, percentEncode);
     if (keywords.includes(name)) {
         name += "_";
     }
@@ -44,8 +42,8 @@ export function safeName(name: string): string {
 }
 
 /** Unescapes characters in Sysl names that are unsafe to use in Sysl names. */
-export function unescapeName(name: string): string {
-    return name.replaceAll(/%([0-9A-Fa-f]{2})/g, m =>
+export function fromSafeName(name: string): string {
+    return name.trim().replaceAll(/%([0-9A-Fa-f]{2})/g, m =>
         String.fromCharCode(parseInt(m.slice(1), 16))
     );
 }

@@ -1,4 +1,4 @@
-import { realign, safeName, unescapeName } from "./format";
+import { realign, toSafeName, fromSafeName } from "./format";
 
 test("realign", () => {
     expect(
@@ -16,7 +16,7 @@ test("realign", () => {
 describe("safeName", () => {
     test("safe", () => {
         expect(
-            safeName("abcdefgihjklmnopqrstuvwxyz-ABCDEFGIHJKLMNOPQRSTUVWXYZ_")
+            toSafeName("abcdefgihjklmnopqrstuvwxyz-ABCDEFGIHJKLMNOPQRSTUVWXYZ_")
         ).toEqual("abcdefgihjklmnopqrstuvwxyz-ABCDEFGIHJKLMNOPQRSTUVWXYZ_");
     });
 
@@ -36,17 +36,13 @@ describe("safeName", () => {
             "bytes",
             "any",
         ].forEach(keyword => {
-            expect(safeName(keyword)).toEqual(keyword + "_");
+            expect(toSafeName(keyword)).toEqual(keyword + "_");
         });
     });
 
-    test("special characaters underscore", () => {
-        expect(safeName(`a/b\\c{d}e f`)).toEqual("a_b_c_d_e_f");
-    });
-
-    test("special characaters hex escaped", () => {
-        expect(safeName(`hello;,?:@&=+$.!~*'()"world`)).toEqual(
-            `hello%3b%2c%3f%3a%40%26%3d%2b%24%2e%21%7e%2a%27%28%29%22world`
+    test("special characters hex escaped", () => {
+        expect(toSafeName(`hello;,?:@&=+$.!~*'()"/\\world`)).toEqual(
+            `hello%3B%2C%3F%3A%40%26%3D%2B%24%2E%21%7E%2A%27%28%29%22%2F%5Cworld`
         );
     });
 });
@@ -54,11 +50,18 @@ describe("safeName", () => {
 describe("unescapeName", () => {
     test("no escaping", () => {});
 
-    test("escaped", () => {
+    test("escaped lowercase", () => {
         expect(
-            unescapeName(
-                `hello%3b%2c%3f%3a%40%26%3d%2b%24%2e%21%7e%2a%27%28%29%22world`
+            fromSafeName(
+                `hello%3b%2c%3f%3a%40%26%3d%2b%24%2e%21%7e%2a%27%28%29%22%2f%5cworld`
             )
-        ).toEqual(`hello;,?:@&=+$.!~*'()"world`);
+        ).toEqual(`hello;,?:@&=+$.!~*'()"/\\world`);
+    });
+    test("escaped uppercase", () => {
+        expect(
+            fromSafeName(
+                `hello%3B%2C%3F%3A%40%26%3D%2B%24%2E%21%7E%2A%27%28%29%22%2F%5Cworld`
+            )
+        ).toEqual(`hello;,?:@&=+$.!~*'()"/\\world`);
     });
 });

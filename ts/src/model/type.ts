@@ -1,5 +1,6 @@
 import "reflect-metadata";
-import { indent, safeName } from "../common/format";
+import { indent, toSafeName } from "../common/format";
+import { ElementRef } from "./common";
 import {
     IElementParams,
     setParentAndModelDeep,
@@ -27,15 +28,30 @@ export class Type extends ParentElement<Field> {
         setParentAndModelDeep(this, this.children, this.annos, this.tags);
     }
 
+    toRef(): ElementRef {
+        return this.parent!.toRef().with({typeName: this.name});
+    }
+
     toSysl(): string {
         const discriminator = this.isTable ? "!table" : "!type";
+
         let sysl = `${addTags(
-            `${discriminator} ${safeName(this.name)}`,
+            `${discriminator} ${toSafeName(this.name)}`,
             this.tags
         )}:`;
+
         if (this.annos.length) {
             sysl += `\n${indent(renderAnnos(this.annos))}`;
         }
-        return (sysl += `\n${new Struct(this.children).toSysl()}`);
+
+        if (this.children.length) {
+            sysl += `\n${new Struct(this.children).toSysl()}`;
+        }
+
+        if (!this.annos.length && !this.children.length) {
+            sysl += `\n${indent("...")}`;
+        }
+
+        return sysl;
     }
 }

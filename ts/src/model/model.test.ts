@@ -58,7 +58,7 @@ describe("Constructors", () => {
     });
 
     test("New Tag", () => {
-        expect(new Tag({ value: "foo" })).toHaveProperty("value", "foo");
+        expect(new Tag({ name: "foo" })).toHaveProperty("name", "foo");
     });
 });
 
@@ -130,11 +130,25 @@ describe("Roundtrip", () => {
                 `
             ),
         },
-        StringAnno: realign(
+        StringAnnoInApp: realign(
             `
             App:
                 @name = "value"
-                ...
+            `
+        ),
+        StringAnnoInType: realign(
+            `
+            App:
+                !type Type:
+                    @name = "value"
+            `
+        ),
+        StringAnnoInField: realign(
+            `
+            App:
+                !type Type:
+                    Field <: int:
+                        @name = "value"
             `
         ),
         StringAnnoEscaped: realign(

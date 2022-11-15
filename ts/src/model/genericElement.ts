@@ -1,4 +1,4 @@
-import { safeName, indent } from "../common/format";
+import { toSafeName, indent } from "../common/format";
 import { ElementRef } from "./common";
 import { CollectionDecorator } from "./decorator";
 import { setParentAndModelDeep, Element, IElementParams } from "./element";
@@ -33,9 +33,13 @@ export class GenericElement extends Element {
         setParentAndModelDeep(this, this.annos, this.tags);
     }
 
+    toRef(): ElementRef {
+        throw new Error("Method not implemented.");
+    }
+
     toSysl(): string {
         let sysl = `${addTags(
-            `${this.discriminator} ${safeName(this.name)}`,
+            `${this.discriminator} ${toSafeName(this.name)}`,
             this.tags
         )}:`;
         if (this.annos.length) {

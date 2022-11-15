@@ -4373,6 +4373,124 @@
      }
     }
    ]
+  },
+  "Unsafe/Namespace :: Unsafe/App": {
+   "name": {
+    "part": [
+     "Unsafe/Namespace",
+     "Unsafe/App"
+    ]
+   },
+   "types": {
+    "Unsafe.Type": {
+     "tuple": {
+      "attrDefs": {
+       "Unsafe.Field": {
+        "primitive": "INT",
+        "attrs": {
+         "description": {
+          "s": "Unsafe Field Description",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 186,
+            "col": 27
+           },
+           "end": {
+            "line": 186,
+            "col": 53
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 186,
+             "col": 27
+            },
+            "end": {
+             "line": 186,
+             "col": 53
+            }
+           }
+          ]
+         }
+        },
+        "sourceContext": {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 185,
+          "col": 8
+         },
+         "end": {
+          "line": 187,
+          "col": 1
+         }
+        },
+        "sourceContexts": [
+         {
+          "file": "ts/test/all.sysl",
+          "start": {
+           "line": 185,
+           "col": 8
+          },
+          "end": {
+           "line": 187,
+           "col": 1
+          }
+         }
+        ]
+       }
+      }
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 184,
+       "col": 4
+      },
+      "end": {
+       "line": 186,
+       "col": 53
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 184,
+        "col": 4
+       },
+       "end": {
+        "line": 186,
+        "col": 53
+       }
+      }
+     ]
+    }
+   },
+   "sourceContext": {
+    "file": "ts/test/all.sysl",
+    "start": {
+     "line": 183
+    },
+    "end": {
+     "line": 186,
+     "col": 53
+    }
+   },
+   "sourceContexts": [
+    {
+     "file": "ts/test/all.sysl",
+     "start": {
+      "line": 183
+     },
+     "end": {
+      "line": 186,
+      "col": 53
+     }
+    }
+   ]
   }
  }
 }

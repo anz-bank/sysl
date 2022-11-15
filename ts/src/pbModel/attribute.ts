@@ -28,8 +28,10 @@ export class PbAttribute {
     }
 
     toTag(): Tag {
+        const tagName = this.getAnnoValue();
+        if (typeof tagName != "string") throw new Error("Cannot create tag with non-string name");
         return new Tag({
-            value: this.getAnnoValue(),
+            name: tagName,
             locations: this.sourceContexts ?? [],
         });
     }

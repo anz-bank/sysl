@@ -1,4 +1,4 @@
-import { indent, joinedAppName, safeName } from "../common/format";
+import { indent } from "../common/format";
 import { ElementRef } from "./common";
 import {
     Element,
