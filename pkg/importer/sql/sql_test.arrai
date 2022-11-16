@@ -80,6 +80,15 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                 let fk = ((model.entities single).foreign_keys single).foreign_keys single;
                 fk = (attribute: 'c', reference_table: 'ft', reference_attribute: 'fc')
             ,
+            inline_multiple:
+                # FIXME: Weird syntax needed to parse macro properly.
+                let model = (\. {:macro:CREATE TABLE t (d INT REFERENCES ft, e INT REFERENCES ft (fe)):})({});
+                let fks = ((model.entities single).foreign_keys) => .foreign_keys single;
+                fks = {
+                    (attribute: 'd', reference_table: 'ft', reference_attribute: 'd'),
+                    (attribute: 'e', reference_table: 'ft', reference_attribute: 'fe'),
+                }
+            ,
             namespaced:
                 {:macro:CREATE TABLE t (c INT, FOREIGN KEY (c) REFERENCES namespace.ft (fc)):}.entities
                 --- {(

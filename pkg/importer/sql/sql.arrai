@@ -454,12 +454,12 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
 
                 foreign_keys: cond val {
                     (table_constraint: [...constraints], ...):
-                        constraints where .@item.fk?:{} => evalConstraint(.@item),
-                    _: cond val.attr where .@item.references?:'' {
-                        # Handle inline references without specific columns.
-                        [fk]:
+                        constraints where .@item.fk?:{} => evalConstraint(.@item)
+                    ,
+                    _:
+                        (val.attr where .@item.references?:'') => .@item => \fk
                             let name = fk.column_name.'' rank (:.@);
-                            {(
+                            (
                                 foreign_keys: {(
                                     attribute: name,
                                     reference_table: fk.references.foreign.table_name.'' rank (:.@),
@@ -471,8 +471,8 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
                                 constraint_name: '',
                                 on_update: {},
                                 on_delete: {},
-                            )}
-                    }
+                            )
+                    ,
                 },
                 unique_keys: cond val {
                     (table_constraint: [...constraints], ...):
