@@ -434,6 +434,24 @@ describe("Roundtrip", () => {
                 `
             ),
         },
+        PreservesOrder: realign(`
+            App2 [~tag2, ~tag1]:
+                @anno2 = "2"
+                @anno1 = "1"
+                !table Table2 [~tag2, ~tag1]:
+                    @anno2 = "2"
+                    @anno1 = "1"
+                    Field2 <: int [~tag2, ~tag1]:
+                        @anno2 = "2"
+                        @anno1 = "1"
+                    Field1 <: int
+            
+                !table Table1:
+                    ...
+
+            App1:
+                ...
+            `)
     };
 
     type SyslCase = { input: string; output: string };

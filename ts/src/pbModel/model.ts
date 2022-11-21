@@ -61,8 +61,8 @@ export class PbApplication {
                 })
             ),
             locations: this.sourceContexts,
-            tags: getTags(this.attrs),
-            annos: getAnnos(this.attrs),
+            tags: sortLocationalArray(getTags(this.attrs)),
+            annos: sortLocationalArray(getAnnos(this.attrs)),
         });
     }
 }

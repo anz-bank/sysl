@@ -4,8 +4,8 @@ import path from "path";
 
 @jsonObject
 export class Offset {
-    @jsonMember col!: number;
-    @jsonMember line!: number;
+    @jsonMember col: number = 0;
+    @jsonMember line: number = 0;
 }
 
 @jsonObject

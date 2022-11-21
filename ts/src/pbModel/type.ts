@@ -302,13 +302,13 @@ export class PbTypeDef {
             optional: this.opt,
             value,
             locations: this.sourceContexts,
-            tags: getTags(this.attrs),
-            annos: getAnnos(this.attrs),
+            tags: sortLocationalArray(getTags(this.attrs)),
+            annos: sortLocationalArray(getAnnos(this.attrs)),
         };
 
         if (value instanceof Struct) {
             if (name)
-                return new Type(name, !!this.relation, value.fields, params);
+                return new Type(name, !!this.relation, sortLocationalArray(value.fields), params);
 
             params.discriminator = this.relation ? "!table" : "!type";
         }
