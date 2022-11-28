@@ -407,7 +407,7 @@ describe("Roundtrip", () => {
             Namespace :: App:
                 !type Type:
                     shortRef <: Type
-                    fullRef <: Namespace :: App.Type
+                    fullRef <: Namespace::App.Type
             `
         ),
         UnsafeNames: realign(

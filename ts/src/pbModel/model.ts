@@ -97,9 +97,15 @@ export class PbDocumentModel {
         const serializer = new TypedJSON(PbDocumentModel, {
             errorHandler: error => {
                 throw error;
-            },
+            }
         });
-        return serializer.parse(json.toString("utf-8"))!;
+
+        try {
+            return serializer.parse(json.toString("utf-8"))!;
+        } catch (error: any) { 
+            throw new Error("Parsing of the following document failed. See cause for details.\n" + json.toString(),
+                {cause: error})
+        }
     }
 
     /**

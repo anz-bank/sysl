@@ -1,4 +1,4 @@
-import { toSafeName } from "../common/format";
+import { indent, toSafeName } from "../common/format";
 import { Element, IElementParams, setParentAndModelDeep } from "./element";
 import { addTags, renderAnnos } from "./renderers";
 import { Primitive } from "./primitive";
@@ -31,10 +31,14 @@ export class Field extends Element {
 
     override toSysl(): string {
         const optStr = this.optional ? "?" : "";
-        let sysl = `${toSafeName(this.name)}${this.value.toSysl()}${optStr}`;
+        let sysl: string = `${this.value.toSysl(true)}${optStr}`;
+
+        if (this.name)
+            sysl = `${toSafeName(this.name)} <: ${sysl}`;
+
         sysl = addTags(sysl, this.tags);
         if (this.annos.length) {
-            sysl += `:\n${renderAnnos(this.annos)}`;
+            sysl += `:\n${indent(renderAnnos(this.annos))}`;
         }
         return sysl;
     }

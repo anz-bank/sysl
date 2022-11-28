@@ -1,7 +1,5 @@
-import { indent, toSafeName } from "../common/format";
 import { IRenderable } from "./common";
 import { Field } from "./field";
-import { addTags, renderAnnos } from "./renderers";
 
 // The type of `!type`, `!table` and endpoints.
 export class Struct implements IRenderable {
@@ -12,21 +10,6 @@ export class Struct implements IRenderable {
     }
 
     toSysl(): string {
-        return indent(
-            this.fields
-                .map(e => {
-                    let sysl = addTags(
-                        `${toSafeName(e.name)} <: ${e.value.toSysl()}${
-                            e.optional ? "?" : ""
-                        }`,
-                        e.tags
-                    );
-                    if (e.annos.length) {
-                        sysl += `:\n${indent(renderAnnos(e.annos))}`;
-                    }
-                    return sysl;
-                })
-                .join("\n")
-        );
+        throw new Error("Not implemented");
     }
 }

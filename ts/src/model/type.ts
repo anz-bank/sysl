@@ -8,7 +8,6 @@ import {
 } from "./element";
 import { Field } from "./field";
 import { addTags, renderAnnos } from "./renderers";
-import { Struct } from "./struct";
 
 export class Type extends ParentElement<Field> {
     constructor(
@@ -45,7 +44,8 @@ export class Type extends ParentElement<Field> {
         }
 
         if (this.children.length) {
-            sysl += `\n${new Struct(this.children).toSysl()}`;
+            // sysl += `\n${new Struct(this.children).toSysl()}`;
+            sysl += `\n${indent(this.children.map(f => f.toSysl()).join("\n"))}`;
         }
 
         if (!this.annos.length && !this.children.length) {
