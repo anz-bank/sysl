@@ -15,9 +15,7 @@ import { Application } from "../model/application";
 
 export function allItems(model: Model): ILocational[] {
     const items: ILocational[] = [];
-    const listener = new AnyWalkListener((item: ILocational) =>
-        items.push(item)
-    );
+    const listener = new AnyWalkListener((item: ILocational) => items.push(item));
     walk(model, listener);
     return items;
 }
@@ -108,33 +106,21 @@ export class AnyWalkListener implements WalkListener {
 export function walk(model: Model, listener: WalkListener) {
     model.apps.forEach(app => {
         listener.visitApp?.(app);
-        listener.visitAppAnno &&
-            app.annos.forEach(listener.visitAppAnno.bind(listener));
-        listener.visitAppTag &&
-            app.tags.forEach(listener.visitAppTag.bind(listener));
+        listener.visitAppAnno && app.annos.forEach(listener.visitAppAnno.bind(listener));
+        listener.visitAppTag && app.tags.forEach(listener.visitAppTag.bind(listener));
 
         app.children.forEach(element => {
             if (element instanceof Type) {
                 listener.visitType?.(element);
-                listener.visitTypeAnno &&
-                    element.annos.forEach(
-                        listener.visitTypeAnno.bind(listener)
-                    );
-                listener.visitTypeTag &&
-                    element.tags.forEach(listener.visitTypeTag.bind(listener));
+                listener.visitTypeAnno && element.annos.forEach(listener.visitTypeAnno.bind(listener));
+                listener.visitTypeTag && element.tags.forEach(listener.visitTypeTag.bind(listener));
             }
             if (element instanceof ParentElement) {
                 (element.children as Element[]).forEach(childElement => {
                     if (childElement instanceof Field) {
                         listener.visitField?.(childElement);
-                        listener.visitFieldAnno &&
-                            childElement.annos.forEach(
-                                listener.visitFieldAnno.bind(listener)
-                            );
-                        listener.visitFieldTag &&
-                            childElement.tags.forEach(
-                                listener.visitFieldTag.bind(listener)
-                            );
+                        listener.visitFieldAnno && childElement.annos.forEach(listener.visitFieldAnno.bind(listener));
+                        listener.visitFieldTag && childElement.tags.forEach(listener.visitFieldTag.bind(listener));
                     }
                 });
             }
@@ -142,10 +128,8 @@ export function walk(model: Model, listener: WalkListener) {
 
         app.endpoints.forEach(ep => {
             listener.visitEndpoint?.(ep);
-            listener.visitEndpointAnno &&
-                ep.annos.forEach(listener.visitEndpointAnno.bind(listener));
-            listener.visitEndpointTag &&
-                ep.tags.forEach(listener.visitEndpointTag.bind(listener));
+            listener.visitEndpointAnno && ep.annos.forEach(listener.visitEndpointAnno.bind(listener));
+            listener.visitEndpointTag && ep.tags.forEach(listener.visitEndpointTag.bind(listener));
 
             ep.params.forEach(p => {
                 listener.visitParam?.(p);
@@ -154,14 +138,8 @@ export function walk(model: Model, listener: WalkListener) {
             const visitStatements = (stmts: Statement[]): void => {
                 stmts.forEach(stmt => {
                     listener.visitStatement?.(stmt);
-                    listener.visitStatementAnno &&
-                        stmt.annos.forEach(
-                            listener.visitStatementAnno.bind(listener)
-                        );
-                    listener.visitStatementTag &&
-                        stmt.tags.forEach(
-                            listener.visitStatementTag.bind(listener)
-                        );
+                    listener.visitStatementAnno && stmt.annos.forEach(listener.visitStatementAnno.bind(listener));
+                    listener.visitStatementTag && stmt.tags.forEach(listener.visitStatementTag.bind(listener));
                     visitStatements(stmt.children);
                 });
             };

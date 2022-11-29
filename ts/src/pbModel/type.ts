@@ -1,11 +1,5 @@
 import "reflect-metadata";
-import {
-    jsonArrayMember,
-    jsonMapMember,
-    jsonMember,
-    jsonObject,
-    jsonSetMember,
-} from "typedjson";
+import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, jsonSetMember } from "typedjson";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
 import {
@@ -84,10 +78,7 @@ export class PbTypeConstraintLength {
     max?: number;
 
     isEmpty(): boolean {
-        return (
-            (this.min == null || isNaN(this.min)) &&
-            (this.max == null || isNaN(this.max))
-        );
+        return (this.min == null || isNaN(this.min)) && (this.max == null || isNaN(this.max));
     }
 
     toModel(): TypeConstraintLength | undefined {
@@ -105,10 +96,7 @@ export class PbTypeConstraintResolution {
     @jsonMember index?: number;
 
     isEmpty(): boolean {
-        return (
-            (this.base == null || isNaN(this.base)) &&
-            (this.index == null || isNaN(this.index))
-        );
+        return (this.base == null || isNaN(this.base)) && (this.index == null || isNaN(this.index));
     }
 
     toModel(): TypeConstraintResolution | undefined {
@@ -197,14 +185,7 @@ export class PbTypeDefUnion {
     toModel(): Union {
         const values = this.type.map(t => t.toValue());
 
-        if (
-            values.every(
-                v =>
-                    v instanceof Primitive ||
-                    v instanceof ElementRef ||
-                    v instanceof CollectionDecorator
-            )
-        )
+        if (values.every(v => v instanceof Primitive || v instanceof ElementRef || v instanceof CollectionDecorator))
             return new Union(values as FieldValue[]);
 
         throw new Error(
@@ -220,11 +201,7 @@ export class PbTypeDefEnum {
     items!: Map<string, number>;
 
     toModel(): Enum {
-        return new Enum(
-            Array.from(this.items).map(
-                ([key, value]) => new EnumValue(key, value)
-            )
-        );
+        return new Enum(Array.from(this.items).map(([key, value]) => new EnumValue(key, value)));
     }
 }
 
@@ -246,10 +223,7 @@ export class PbTypeDef {
     map?: Map<PbTypeDef, PbTypeDef>;
     @jsonMember oneOf?: PbTypeDefUnion;
     @jsonMember noType?: Object;
-    @jsonMapMember(String, PbAttribute, serializerFor(PbAttribute)) attrs!: Map<
-        string,
-        PbAttribute
-    >;
+    @jsonMapMember(String, PbAttribute, serializerFor(PbAttribute)) attrs!: Map<string, PbAttribute>;
 
     hasValue(): boolean {
         return !!(
@@ -266,9 +240,7 @@ export class PbTypeDef {
     }
 
     static defsToFields(attrDefs: Map<string, PbTypeDef>): Field[] {
-        return sortLocationalArray(
-            Array.from(attrDefs).map(([key, value]) => value?.toField(key))
-        );
+        return sortLocationalArray(Array.from(attrDefs).map(([key, value]) => value?.toField(key)));
     }
 
     toValue(): GenericValue {
@@ -280,10 +252,8 @@ export class PbTypeDef {
         if (this.relation) return this.relation.toModel();
         if (this.typeRef) return this.typeRef.ref.toModel();
         if (this.set) return new CollectionDecorator(this.set.toModel(), true);
-        if (this.sequence)
-            return new CollectionDecorator(this.sequence.toModel(), false);
-        if (this.list)
-            return new CollectionDecorator(this.list.toModel(), false);
+        if (this.sequence) return new CollectionDecorator(this.sequence.toModel(), false);
+        if (this.list) return new CollectionDecorator(this.list.toModel(), false);
         if (this.enum) return this.enum.toModel();
         if (this.tuple) return this.tuple.toModel();
         if (this.oneOf) return this.oneOf.toModel();
@@ -307,8 +277,7 @@ export class PbTypeDef {
         };
 
         if (value instanceof Struct) {
-            if (name)
-                return new Type(name, !!this.relation, sortLocationalArray(value.fields), params);
+            if (name) return new Type(name, !!this.relation, sortLocationalArray(value.fields), params);
 
             params.discriminator = this.relation ? "!table" : "!type";
         }
@@ -317,23 +286,16 @@ export class PbTypeDef {
 
         if (
             !isInner &&
-            (value instanceof Primitive ||
-                value instanceof CollectionDecorator ||
-                value instanceof ElementRef)
+            (value instanceof Primitive || value instanceof CollectionDecorator || value instanceof ElementRef)
         )
             params.discriminator = "!alias";
 
         if (!params.discriminator) {
-            if (
-                value instanceof Primitive ||
-                value instanceof CollectionDecorator ||
-                value instanceof ElementRef
-            )
+            if (value instanceof Primitive || value instanceof CollectionDecorator || value instanceof ElementRef)
                 return new Field(params.name, value, this.opt, params);
             else
                 throw new Error(
-                    "No discriminator but not a Field-compatible value. Type of value is " +
-                        value.constructor.name
+                    "No discriminator but not a Field-compatible value. Type of value is " + value.constructor.name
                 );
         }
 
@@ -342,10 +304,7 @@ export class PbTypeDef {
 
     toField(name: string): Field {
         const field = this.toModel(name);
-        if (!(field instanceof Field))
-            throw new Error(
-                "Cannot produce Field, requested PbTypeDef is not a Field"
-            );
+        if (!(field instanceof Field)) throw new Error("Cannot produce Field, requested PbTypeDef is not a Field");
         return field;
     }
 }

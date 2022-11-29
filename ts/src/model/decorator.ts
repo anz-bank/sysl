@@ -6,8 +6,6 @@ export class CollectionDecorator implements IRenderable {
     constructor(public innerType: IRenderable, public isSet: boolean) {}
 
     toSysl(): string {
-        return (
-            (this.isSet ? "set of " : "sequence of ") + this.innerType.toSysl()
-        );
+        return (this.isSet ? "set of " : "sequence of ") + this.innerType.toSysl();
     }
 }

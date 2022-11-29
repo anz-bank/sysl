@@ -51,9 +51,7 @@ export function getTags(attrs?: Map<string, PbAttribute>): Tag[] {
     if (!attrs) {
         return [];
     }
-    const tagAttr = Array.from(attrs).find(
-        ([key]) => key === tagsAttrName
-    )?.[1];
+    const tagAttr = Array.from(attrs).find(([key]) => key === tagsAttrName)?.[1];
     if (!tagAttr) {
         return [];
     }

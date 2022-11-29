@@ -1,12 +1,6 @@
 import { readFile } from "fs/promises";
 import "reflect-metadata";
-import {
-    jsonArrayMember,
-    jsonMapMember,
-    jsonMember,
-    jsonObject,
-    TypedJSON,
-} from "typedjson";
+import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, TypedJSON } from "typedjson";
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
@@ -51,9 +45,7 @@ export class PbApplication {
             name: this.name.part.at(-1),
             namespace: this.name.part.slice(0, -1),
             endpoints: sortLocationalArray(
-                Array.from(this.endpoints ?? new Map()).map(([, e]) =>
-                    e.toModel(this.name.part)
-                )
+                Array.from(this.endpoints ?? new Map()).map(([, e]) => e.toModel(this.name.part))
             ),
             children: sortLocationalArray(
                 Array.from(this.types ?? new Map()).map(([name, t]) => {
@@ -74,20 +66,13 @@ export class PbDocumentModel {
     @jsonMapMember(String, PbApplication, serializerFor(PbApplication))
     apps!: Map<string, PbApplication>;
 
-    static async fromFile(
-        syslFilePath: string,
-        maxImportDepth: number
-    ): Promise<PbDocumentModel> {
+    static async fromFile(syslFilePath: string, maxImportDepth: number): Promise<PbDocumentModel> {
         const syslText = (await readFile(syslFilePath)).toString();
         return this.fromText(syslText, syslFilePath, maxImportDepth);
     }
 
     /** Compiles and deserializes a Sysl source string into a model. */
-    static async fromText(
-        syslText: string,
-        syslFilePath: string,
-        maxImportDepth?: number
-    ): Promise<PbDocumentModel> {
+    static async fromText(syslText: string, syslFilePath: string, maxImportDepth?: number): Promise<PbDocumentModel> {
         const files = [{ path: syslFilePath, content: syslText }];
         return this.fromPbOrJson(JSON.stringify(files), maxImportDepth);
     }
@@ -97,14 +82,15 @@ export class PbDocumentModel {
         const serializer = new TypedJSON(PbDocumentModel, {
             errorHandler: error => {
                 throw error;
-            }
+            },
         });
 
         try {
             return serializer.parse(json.toString("utf-8"))!;
-        } catch (error: any) { 
-            throw new Error("Parsing of the following document failed. See cause for details.\n" + json.toString(),
-                {cause: error})
+        } catch (error: any) {
+            throw new Error("Parsing of the following document failed. See cause for details.\n" + json.toString(), {
+                cause: error,
+            });
         }
     }
 
@@ -121,16 +107,11 @@ export class PbDocumentModel {
      * @param maxImportDepth sets the max import depth for the compiler. This has no effect if
      *        {@link content} is a precompiled `.pb` file.
      */
-    static async fromPbOrJson(
-        content: string | Buffer,
-        maxImportDepth?: number
-    ): Promise<PbDocumentModel> {
+    static async fromPbOrJson(content: string | Buffer, maxImportDepth?: number): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
-        const out = await spawnBuffer(
-            syslPath,
-            ["pb", "--mode=json", `--max-import-depth=${maxImportDepth ?? 0}`],
-            { input: content }
-        );
+        const out = await spawnBuffer(syslPath, ["pb", "--mode=json", `--max-import-depth=${maxImportDepth ?? 0}`], {
+            input: content,
+        });
         return PbDocumentModel.fromJson(out);
     }
 
@@ -138,9 +119,7 @@ export class PbDocumentModel {
         return new Model({
             imports: (this.imports ?? []).map(i => i.toModel()),
             locations: this.sourceContexts,
-            apps: sortLocationalArray(
-                Array.from(this.apps).map(([, a]) => a.toModel())
-            ),
+            apps: sortLocationalArray(Array.from(this.apps).map(([, a]) => a.toModel())),
         });
     }
 }
@@ -163,12 +142,12 @@ function spawnBuffer(
         process.stdout?.on("data", (data: Buffer) => chunks.push(data));
         process.stdout?.on("end", () => (result = Buffer.concat(chunks)));
         let err = "";
-        process.stderr?.on("data", data => { err += data; });
+        process.stderr?.on("data", data => {
+            err += data;
+        });
         process.on("error", err => reject(`spawn error: ${err}`));
         process.on("close", code => {
-            code === 0
-                ? resolve(result)
-                : reject(`spawn exited with code ${code}:\n${err}`);
+            code === 0 ? resolve(result) : reject(`spawn exited with code ${code}:\n${err}`);
         });
     });
 }

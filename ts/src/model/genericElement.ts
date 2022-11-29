@@ -14,16 +14,7 @@ export class GenericElement extends Element {
     discriminator: string;
     value: GenericValue;
 
-    constructor({
-        discriminator,
-        name,
-        value,
-        annos,
-        tags,
-        locations,
-        parent,
-        model,
-    }: GenericElementParams) {
+    constructor({ discriminator, name, value, annos, tags, locations, parent, model }: GenericElementParams) {
         if (!discriminator) throw new Error("You must specify a discriminator");
 
         super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
@@ -38,17 +29,13 @@ export class GenericElement extends Element {
     }
 
     toSysl(): string {
-        let sysl = `${addTags(
-            `${this.discriminator} ${toSafeName(this.name)}`,
-            this.tags
-        )}:`;
+        let sysl = `${addTags(`${this.discriminator} ${toSafeName(this.name)}`, this.tags)}:`;
         if (this.annos.length) {
             sysl += `\n${indent(renderAnnos(this.annos))}`;
         }
 
         // TODO: Make Alias class be independent of GenericElement to remove this special-casing
-        if (this.discriminator == "!alias")
-            return (sysl += `\n${indent(this.value.toSysl())}`);
+        if (this.discriminator == "!alias") return (sysl += `\n${indent(this.value.toSysl())}`);
 
         return (sysl += `\n${this.value.toSysl()}`);
     }
@@ -61,10 +48,4 @@ export type GenericElementParams = IElementParams & {
     optional?: boolean;
 };
 
-export type GenericValue =
-    | Primitive
-    | Struct
-    | CollectionDecorator
-    | Enum
-    | Union
-    | ElementRef;
+export type GenericValue = Primitive | Struct | CollectionDecorator | Enum | Union | ElementRef;

@@ -47,11 +47,7 @@ export class Annotation implements IChild, ILocational, IRenderable {
                 return ` "${v}"`;
             } else {
                 return ` [${v
-                    .map((item, index) =>
-                        index > 0
-                            ? valueString(item)
-                            : valueString(item).trimStart()
-                    )
+                    .map((item, index) => (index > 0 ? valueString(item) : valueString(item).trimStart()))
                     .join(",")}]`;
             }
         }

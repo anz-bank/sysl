@@ -33,9 +33,7 @@ const model1 = new Model({
                 new Endpoint({
                     name: "Endpoint1",
                     params: [new Param("param1")],
-                    statements: [
-                        new Statement({ value: new Action("statement1") }),
-                    ],
+                    statements: [new Statement({ value: new Action("statement1") })],
                 }),
             ],
         }),

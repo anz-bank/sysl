@@ -61,14 +61,7 @@ export class TypeConstraint {
     scale?: number;
     bitWidth?: number;
 
-    constructor({
-        range,
-        length,
-        resolution,
-        precision,
-        scale,
-        bitWidth,
-    }: TypeConstraintParams) {
+    constructor({ range, length, resolution, precision, scale, bitWidth }: TypeConstraintParams) {
         this.range = range;
         this.length = length;
         this.resolution = resolution;

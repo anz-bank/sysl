@@ -9,9 +9,7 @@ export function renderInlineSections(sections: string[]): string {
 }
 
 export function addTags(existing: string, tags: Tag[]): string {
-    return tags.length
-        ? `${existing} [${tags.map(t => t.toSysl()).join(", ")}]`
-        : existing;
+    return tags.length ? `${existing} [${tags.map(t => t.toSysl()).join(", ")}]` : existing;
 }
 
 export function renderAnnos(annos: Annotation[]): string {

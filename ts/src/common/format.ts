@@ -7,10 +7,7 @@ export function indent(text: string): string {
         .join("\n");
 }
 
-export function joinedAppName(
-    name: string[],
-    compact: boolean = false
-): string {
+export function joinedAppName(name: string[], compact: boolean = false): string {
     return name.join(compact ? "::" : " :: ");
 }
 
@@ -43,16 +40,12 @@ export function toSafeName(name: string): string {
 
 /** Unescapes characters in Sysl names that are unsafe to use in Sysl names. */
 export function fromSafeName(name: string): string {
-    return name.trim().replaceAll(/%([0-9A-Fa-f]{2})/g, m =>
-        String.fromCharCode(parseInt(m.slice(1), 16))
-    );
+    return name.trim().replaceAll(/%([0-9A-Fa-f]{2})/g, m => String.fromCharCode(parseInt(m.slice(1), 16)));
 }
 
 export function realign(str: string) {
     // Remove the first newline to flatten final output, split on the remaining new lines.
     const lines = str.replace("\n", "").split(/\r?\n/);
-    const minIndent = Math.min(
-        ...lines.filter(l => !!l.trim()).map((l: string) => l.search(/[^ ]/))
-    );
+    const minIndent = Math.min(...lines.filter(l => !!l.trim()).map((l: string) => l.search(/[^ ]/)));
     return lines.map(l => l.substring(minIndent)).join("\n");
 }

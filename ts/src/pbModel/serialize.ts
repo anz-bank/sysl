@@ -10,29 +10,19 @@ export function serializeMap<T>(mapObject: Map<string, T>): {
     return obj;
 }
 
-export function deserializeMap<T>(
-    rootType: Serializable<T>,
-    stringifiedMapObject: { [key: string]: T }
-) {
+export function deserializeMap<T>(rootType: Serializable<T>, stringifiedMapObject: { [key: string]: T }) {
     const map = new Map<string, T>();
     if (stringifiedMapObject) {
-        Object.entries(stringifiedMapObject).forEach(
-            ([type, displayFields]) => {
-                map.set(type, TypedJSON.parse(displayFields, rootType) as T);
-            }
-        );
+        Object.entries(stringifiedMapObject).forEach(([type, displayFields]) => {
+            map.set(type, TypedJSON.parse(displayFields, rootType) as T);
+        });
     }
     return map;
 }
 
-export function serializerFor<T>(
-    type: Serializable<T>,
-    nestedUnder?: string
-): IJsonMapMemberOptions {
-    const deserializer = (stringifiedMapObject: { [key: string]: T }) =>
-        deserializeMap(type, stringifiedMapObject);
-    const nestedDeserializer = (wrapper: any) =>
-        wrapper ? deserializer(wrapper[nestedUnder!]) : wrapper;
+export function serializerFor<T>(type: Serializable<T>, nestedUnder?: string): IJsonMapMemberOptions {
+    const deserializer = (stringifiedMapObject: { [key: string]: T }) => deserializeMap(type, stringifiedMapObject);
+    const nestedDeserializer = (wrapper: any) => (wrapper ? deserializer(wrapper[nestedUnder!]) : wrapper);
     return {
         serializer: serializeMap,
         deserializer: nestedUnder ? nestedDeserializer : deserializer,
@@ -43,14 +33,10 @@ export function serializerFor<T>(
  * Same as {@link serializerFor} but takes the {@link getType} as a function evaluated on demand to
  * allow for forward type references.
  */
-export function serializerForFn<T>(
-    getType: () => Serializable<T>,
-    nestedUnder?: string
-): IJsonMapMemberOptions {
+export function serializerForFn<T>(getType: () => Serializable<T>, nestedUnder?: string): IJsonMapMemberOptions {
     const deserializer = (stringifiedMapObject: { [key: string]: T }) =>
         deserializeMap(getType(), stringifiedMapObject);
-    const nestedDeserializer = (wrapper: any) =>
-        wrapper ? deserializer(wrapper[nestedUnder!]) : wrapper;
+    const nestedDeserializer = (wrapper: any) => (wrapper ? deserializer(wrapper[nestedUnder!]) : wrapper);
     return {
         serializer: serializeMap,
         deserializer: nestedUnder ? nestedDeserializer : deserializer,

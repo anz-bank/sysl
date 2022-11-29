@@ -62,13 +62,10 @@ export abstract class Element implements ILocational, IRenderable, IChild {
                 this.annos = this.annos.filter(a => a !== anno);
                 anno.parent = undefined;
             }
-        }
-        else {
-            
+        } else {
             if (anno) {
                 anno.value = value;
-            }
-            else {
+            } else {
                 anno = new Annotation({ name, value });
                 this.insertAnnoOrdered(anno);
             }
@@ -89,8 +86,8 @@ export abstract class Element implements ILocational, IRenderable, IChild {
 
         for (let i = this.annos.length - 1; i >= 0; i--) {
             if (anno.name >= this.annos[i].name) {
-                this.annos.splice(i+1, 0, anno);
-                return i+1;
+                this.annos.splice(i + 1, 0, anno);
+                return i + 1;
             }
         }
 
@@ -129,8 +126,8 @@ export abstract class Element implements ILocational, IRenderable, IChild {
     public setTag(name: string): Tag {
         let tag = this.tryTag(name);
         if (!tag) {
-            tag = new Tag({name, parent: this});
-            this.tags.push(tag)
+            tag = new Tag({ name, parent: this });
+            this.tags.push(tag);
         }
         return tag;
     }
@@ -177,10 +174,7 @@ export function setModel(model?: Model, ...children: IChild[]) {
     children.forEach(child => (child.model = model));
 }
 
-export function setParentAndModelDeep(
-    parent: Element,
-    ...childrenArrays: IChild[][]
-) {
+export function setParentAndModelDeep(parent: Element, ...childrenArrays: IChild[][]) {
     childrenArrays.forEach(children => {
         setParentAndModel(parent, children);
     });

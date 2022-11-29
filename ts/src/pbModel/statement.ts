@@ -1,10 +1,5 @@
 import "reflect-metadata";
-import {
-    jsonArrayMember,
-    jsonMapMember,
-    jsonMember,
-    jsonObject,
-} from "typedjson";
+import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject } from "typedjson";
 import { Location } from "../common/location";
 import { sortLocationalArray } from "../common/sort";
 import {
@@ -198,17 +193,7 @@ export class PbStatement {
     @jsonMapMember(String, () => PbAttribute, serializerFor(PbAttribute))
     attrs!: Map<string, PbAttribute>;
 
-    getValue():
-        | PbAction
-        | PbCall
-        | PbCond
-        | PbLoop
-        | PbLoopN
-        | PbForeach
-        | PbAlt
-        | PbGroup
-        | PbReturn
-        | undefined {
+    getValue(): PbAction | PbCall | PbCond | PbLoop | PbLoopN | PbForeach | PbAlt | PbGroup | PbReturn | undefined {
         return (
             this.action ||
             this.call ||
@@ -278,12 +263,8 @@ export class PbEndpoint {
             longName: this.longName,
             docstring: this.docstring,
             isPubsub: this.isPubsub ?? false,
-            params: (this.param ?? [])
-                .filter(p => p.name || p.type)
-                .map(p => p.toModel()),
-            statements: sortLocationalArray(
-                this.stmt?.map(s => s.toModel(appName)) ?? []
-            ),
+            params: (this.param ?? []).filter(p => p.name || p.type).map(p => p.toModel()),
+            statements: sortLocationalArray(this.stmt?.map(s => s.toModel(appName)) ?? []),
             restParams: this.restParams?.toModel(),
             pubsubSource: this.source?.part ?? [],
             locations: this.sourceContexts,

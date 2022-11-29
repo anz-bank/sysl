@@ -11,9 +11,7 @@ export class Primitive implements IRenderable {
     }
 
     private constraintStr(): string {
-        const constraint = this.constraints?.length
-            ? this.constraints[0]
-            : null;
+        const constraint = this.constraints?.length ? this.constraints[0] : null;
         const isNumber = (n?: number) => n != null && !isNaN(n);
 
         const lengthStr = (length: TypeConstraintLength) => {

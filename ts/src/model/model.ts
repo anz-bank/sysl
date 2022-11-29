@@ -25,9 +25,7 @@ export class Import {
     }
 
     toSysl(): string {
-        return `import ${this.filePath}${
-            this.appAlias ? ` as ${this.appAlias}` : ""
-        }`;
+        return `import ${this.filePath}${this.appAlias ? ` as ${this.appAlias}` : ""}`;
     }
 }
 
@@ -63,10 +61,7 @@ export class Model implements IRenderable {
      * Limiting the depth may significantly improve performance, especially if it causes remote imports to be skipped.
      * @returns A {@link Model} representing the supplied Sysl file.
      */
-    static async fromFile(
-        syslFilePath: string,
-        maxImportDepth: number = 0
-    ): Promise<Model> {
+    static async fromFile(syslFilePath: string, maxImportDepth: number = 0): Promise<Model> {
         const syslText = (await readFile(syslFilePath)).toString();
         return this.fromText(syslText, syslFilePath, maxImportDepth);
     }
@@ -92,11 +87,7 @@ export class Model implements IRenderable {
         const until = lines.findIndex(l => !l.startsWith("#"));
         const header = lines.slice(0, until).join("\n");
 
-        const pb = await PbDocumentModel.fromText(
-            syslText,
-            syslFilePath,
-            maxImportDepth
-        );
+        const pb = await PbDocumentModel.fromText(syslText, syslFilePath, maxImportDepth);
 
         let newModel = pb.toModel();
         if (header) {
@@ -115,9 +106,7 @@ export class Model implements IRenderable {
      */
     filterByFile(file: string): Model {
         return new Model({
-            imports: this.imports.filter(i =>
-                file.includes(i.locations[0]?.file!)
-            ),
+            imports: this.imports.filter(i => file.includes(i.locations[0]?.file!)),
             locations: this.locations,
             apps: this.apps.filter(a => file.includes(a.locations[0]?.file!)),
             header: this.header,

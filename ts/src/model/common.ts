@@ -42,8 +42,7 @@ export class ElementRef implements IRenderable {
         public readonly typeName: string = "",
         public readonly fieldName: string = ""
     ) {
-        if (fieldName && !typeName)
-            throw new Error("Cannot specify fieldName but omit typeName");
+        if (fieldName && !typeName) throw new Error("Cannot specify fieldName but omit typeName");
 
         if (fieldName) this.kind = ElementKind.Field;
         else if (typeName) this.kind = ElementKind.Type;
@@ -58,9 +57,7 @@ export class ElementRef implements IRenderable {
      * @returns The formatted string representing the element reference. Unsafe characters are escaped.
      */
     toSysl(compact: boolean = false): string {
-        const fullAppName = [...this.namespace, this.appName]
-            .map(toSafeName)
-            .join(compact ? "::" : " :: ");
+        const fullAppName = [...this.namespace, this.appName].map(toSafeName).join(compact ? "::" : " :: ");
         const typeName = toSafeName(this.typeName);
         const fieldName = toSafeName(this.fieldName);
 
@@ -91,8 +88,7 @@ export class ElementRef implements IRenderable {
     static tryParse(refStr: string): ElementRef | undefined {
         const parts = refStr.split(".");
 
-        if (parts.length > 3 || parts.some(p => !p))
-            return undefined;
+        if (parts.length > 3 || parts.some(p => !p)) return undefined;
 
         const appNameParts: string[] = parts[0].split(/\s*::\s*/);
         return new ElementRef(
@@ -103,15 +99,12 @@ export class ElementRef implements IRenderable {
         );
     }
 
-    /** 
+    /**
      * Returns true if the supplied element reference refers to the same element as the current instance, otherwise
      * false.
      */
     equals(other: ElementRef): boolean {
-        return (
-            this.typesEqual(other) &&
-            this.fieldName == other.fieldName
-        );
+        return this.typesEqual(other) && this.fieldName == other.fieldName;
     }
 
     /**
@@ -127,9 +120,11 @@ export class ElementRef implements IRenderable {
      * otherwise false.
      */
     appsEqual(other: ElementRef): boolean {
-        return this.namespace.length == other.namespace.length &&
-               this.namespace.every((_, i) => this.namespace[i] == other.namespace[i]) &&
-               this.appName == other.appName;
+        return (
+            this.namespace.length == other.namespace.length &&
+            this.namespace.every((_, i) => this.namespace[i] == other.namespace[i]) &&
+            this.appName == other.appName
+        );
     }
 
     /**
@@ -138,8 +133,13 @@ export class ElementRef implements IRenderable {
      * is not specified, it will not be modified.
      * @returns A modified clone of the current instance.
      */
-    with(parts: { namespace?: string[], appName?: string, typeName?: string, fieldName?: string }): ElementRef {
-        return new ElementRef(parts.namespace ?? this.namespace, parts.appName ?? this.appName, parts.typeName ?? this.typeName, parts.fieldName ?? this.fieldName);
+    with(parts: { namespace?: string[]; appName?: string; typeName?: string; fieldName?: string }): ElementRef {
+        return new ElementRef(
+            parts.namespace ?? this.namespace,
+            parts.appName ?? this.appName,
+            parts.typeName ?? this.typeName,
+            parts.fieldName ?? this.fieldName
+        );
     }
 }
 

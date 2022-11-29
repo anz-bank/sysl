@@ -3,12 +3,7 @@ import { Location } from "../common";
 import { indent, joinedAppName } from "../common/format";
 import { ElementRef, ILocational, IRenderable } from "./common";
 import { CollectionDecorator } from "./decorator";
-import {
-    Element,
-    IElementParams,
-    ParentElement,
-    setParentAndModelDeep,
-} from "./element";
+import { Element, IElementParams, ParentElement, setParentAndModelDeep } from "./element";
 import { Field } from "./field";
 import { GenericElement } from "./genericElement";
 import { Model } from "./model";
@@ -23,17 +18,10 @@ export type ParamParams = IElementParams & {
 };
 
 export class Param implements ILocational, IRenderable {
-    constructor(
-        public name: string,
-        public locations: Location[],
-        public element?: Element,
-        public model?: Model
-    ) {}
+    constructor(public name: string, public locations: Location[], public element?: Element, public model?: Model) {}
 
     toSysl(): string {
-        return `${this.name}${
-            this.element ? ` <: ${this.element.toSysl()}` : ""
-        }`;
+        return `${this.name}${this.element ? ` <: ${this.element.toSysl()}` : ""}`;
     }
 }
 
@@ -83,11 +71,8 @@ export class Call {
 
     toSysl(): string {
         const joinedTarget = joinedAppName(this.targetApp);
-        const appName =
-            joinedAppName(this.originApp) === joinedTarget ? "." : joinedTarget;
-        return `${appName} <- ${this.endpoint}${
-            this.arg ? this.arg.map(a => a.name).join(",") : ""
-        }`;
+        const appName = joinedAppName(this.originApp) === joinedTarget ? "." : joinedTarget;
+        return `${appName} <- ${this.endpoint}${this.arg ? this.arg.map(a => a.name).join(",") : ""}`;
     }
 }
 
@@ -131,9 +116,7 @@ export class AltChoice {
     }
 
     toSysl(): string {
-        return `${this.cond ? "" + this.cond : ""}:${this.stmt
-            .map(s => `\n${indent(s.toSysl())}`)
-            .join("")}`;
+        return `${this.cond ? "" + this.cond : ""}:${this.stmt.map(s => `\n${indent(s.toSysl())}`).join("")}`;
     }
 }
 
@@ -145,9 +128,7 @@ export class Alt {
     }
 
     toSysl(): string {
-        let sysl = `one of:${this.choice
-            .map(c => `\n${indent(c.toSysl())}`)
-            .join("")}`;
+        let sysl = `one of:${this.choice.map(c => `\n${indent(c.toSysl())}`).join("")}`;
         return sysl;
     }
 }
@@ -199,20 +180,14 @@ export class Loop {
     criterion: string | undefined;
     stmt: Statement[];
 
-    constructor(
-        mode: LoopMode,
-        criterion: string | undefined,
-        stmt: Statement[]
-    ) {
+    constructor(mode: LoopMode, criterion: string | undefined, stmt: Statement[]) {
         this.mode = mode;
         this.criterion = criterion;
         this.stmt = stmt;
     }
 
     toSysl(): string {
-        let sysl = `${this.mode.toString().toLowerCase()}${
-            this.criterion ? " " + this.criterion : ""
-        }:`;
+        let sysl = `${this.mode.toString().toLowerCase()}${this.criterion ? " " + this.criterion : ""}:`;
         return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
 }
@@ -224,39 +199,15 @@ export enum LoopMode {
     UNRECOGNIZED = -1,
 }
 
-export type StatementValue =
-    | Action
-    | Call
-    | Cond
-    | Loop
-    | LoopN
-    | Foreach
-    | Alt
-    | Group
-    | Return
-    | undefined;
+export type StatementValue = Action | Call | Cond | Loop | LoopN | Foreach | Alt | Group | Return | undefined;
 
 export type StatementParams = IElementParams & { value: StatementValue };
 
 export class Statement extends ParentElement<Statement> {
     value: StatementValue;
 
-    constructor({
-        value,
-        annos,
-        tags,
-        locations,
-        parent,
-        model,
-    }: StatementParams) {
-        super(
-            value?.constructor.name ?? "",
-            locations ?? [],
-            annos ?? [],
-            tags ?? [],
-            model,
-            parent
-        );
+    constructor({ value, annos, tags, locations, parent, model }: StatementParams) {
+        super(value?.constructor.name ?? "", locations ?? [], annos ?? [], tags ?? [], model, parent);
         this.value = value;
 
         setParentAndModelDeep(this, this.children, this.annos, this.tags);
@@ -358,13 +309,7 @@ export class Endpoint extends ParentElement<Statement> {
         this.isPubsub = isPubsub ?? false;
         this.pubsubSource = pubsubSource ?? [];
 
-        setParentAndModelDeep(
-            this,
-            this.params,
-            this.statements,
-            this.annos,
-            this.tags
-        );
+        setParentAndModelDeep(this, this.params, this.statements, this.annos, this.tags);
     }
 
     private renderQueryParams(): string {
@@ -375,8 +320,7 @@ export class Endpoint extends ParentElement<Statement> {
         return `?${this.restParams!.queryParam.map(p => {
             let s = `${p.name}=`;
             if (
-                (p.element instanceof GenericElement ||
-                    p.element instanceof Field) &&
+                (p.element instanceof GenericElement || p.element instanceof Field) &&
                 p.element?.value instanceof CollectionDecorator
             ) {
                 return (s += `{${p.element.toSysl()}}`);
@@ -386,9 +330,7 @@ export class Endpoint extends ParentElement<Statement> {
     }
 
     private renderParams(): string {
-        return this.params.length
-            ? `(${this.params.map(p => p.toSysl()).join(", ")})`
-            : "";
+        return this.params.length ? `(${this.params.map(p => p.toSysl()).join(", ")})` : "";
     }
 
     private renderRestEndpoint(): string {
@@ -398,9 +340,7 @@ export class Endpoint extends ParentElement<Statement> {
                 const match = s.match(`^{(\\w+)}$`);
                 if (match) {
                     let name = match[1];
-                    let param = this.restParams?.urlParam
-                        .find(p => p.name === name)
-                        ?.toSysl();
+                    let param = this.restParams?.urlParam.find(p => p.name === name)?.toSysl();
                     return `{${param}}`;
                 }
                 return s;
@@ -434,9 +374,7 @@ export class Endpoint extends ParentElement<Statement> {
     }
 
     toSysl(): string {
-        return this.restParams
-            ? this.renderRestEndpoint()
-            : this.renderGRPCEndpoint();
+        return this.restParams ? this.renderRestEndpoint() : this.renderGRPCEndpoint();
     }
 
     get children(): Statement[] {

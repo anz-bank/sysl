@@ -42,10 +42,7 @@ describe("Constructors", () => {
     });
 
     test("New Statement", () => {
-        expect(new Statement({ value: new Action("foo") })).toHaveProperty(
-            "value.action",
-            "foo"
-        );
+        expect(new Statement({ value: new Action("foo") })).toHaveProperty("value.action", "foo");
 
         expect(Statement.action("foo")).toHaveProperty("value.action", "foo");
     });
@@ -451,17 +448,15 @@ describe("Roundtrip", () => {
 
             App1:
                 ...
-            `)
+            `),
     };
 
     type SyslCase = { input: string; output: string };
     type TestSysl = SyslCase | string;
 
     // sysl should be of type TestSysl, but the compiler treats `SyslCase | string` as `string`.
-    const inputSysl = (sysl: TestSysl): string =>
-        typeof sysl == "string" ? sysl : sysl.input;
-    const expectedSysl = (sysl: TestSysl): string =>
-        typeof sysl == "string" ? sysl : sysl.output;
+    const inputSysl = (sysl: TestSysl): string => (typeof sysl == "string" ? sysl : sysl.input);
+    const expectedSysl = (sysl: TestSysl): string => (typeof sysl == "string" ? sysl : sysl.output);
 
     test.each(Object.entries(cases))("%s", async (_, sysl: TestSysl) => {
         const model = await Model.fromText(inputSysl(sysl as SyslCase));
