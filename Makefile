@@ -92,7 +92,7 @@ internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cl
 internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.arrai
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai
+internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai pkg/importer/cli.arrai $(shell find pkg/importer/openapi -name '*.arrai')
 	$(ARRAI) bundle $< > $@
 
 # There are many files that change the proto importer logic.

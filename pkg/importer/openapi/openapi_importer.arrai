@@ -18,7 +18,10 @@ let importString = \config \str importBytes(config, <<str>>);
 
 let importSpecFile = \config \filepath
     # FIXME: root needs to be configurable
-    let filepath = //seq.trim_prefix(//os.cwd, filepath) -> //seq.trim_prefix(//os.path_separator, .);
+    let minusCwd = //seq.trim_prefix(//os.cwd, filepath);
+    let minusSep = minusCwd -> //seq.trim_prefix(//os.path_separator, .);
+    # don't trim separator if we didn't trim the cwd
+    let filepath = cond {minusCwd=filepath: filepath, _:minusSep};
     importBytes(config +> (filepath: baseFile(filepath), root: baseDir(filepath)), //os.file(filepath));
 
 (
