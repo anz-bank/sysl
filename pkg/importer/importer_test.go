@@ -282,3 +282,19 @@ func TestLoadOpenAPI3Errors(t *testing.T) {
 		},
 	})
 }
+
+func TestIpmortOpenAPI3Relative(t *testing.T) {
+	t.Parallel()
+
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+	// needs to be any valid swagger outside the cwd for test
+	path := syslutil.MustAbsolute(t, cwd+"/../../cmd/sysl/SIMPLE_SWAGGER_EXAMPLE.yaml")
+	logger, _ := test.NewNullLogger()
+	imp, err := Factory(path, false, OpenAPI3.Name, nil, logger)
+	require.NoError(t, err)
+	imp, err = imp.Configure("TestApp", "com.example.package", "")
+	require.NoError(t, err)
+	_, err = imp.LoadFile(path)
+	require.NoError(t, err)
+}
