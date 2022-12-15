@@ -145,6 +145,23 @@ export abstract class Element implements ILocational, IRenderable, IChild {
         }
         return tag;
     }
+
+    /**
+     * Ensures the `.parent` and `.model` properties of this instance and its model are set for all subitems: `annos`,
+     * `tags`, `children` and any additional subitems specified.
+     * @param extraSubitems Additional children to ensure attachment.
+     */
+    protected attachSubitems(extraSubitems: IChild[] = []) {
+        [
+            ...this.annos,
+            ...this.tags,
+            ...((this as unknown as ParentElement<Element>).children ?? []),
+            ...extraSubitems,
+        ].forEach(child => {
+            child.parent = this;
+            child.model = this.model;
+        });
+    }
 }
 
 export abstract class ParentElement<TChild extends Element> extends Element {
@@ -159,28 +176,3 @@ export type IElementParams = {
     locations?: Location[];
     model?: Model;
 };
-
-/**
- * Sets each of `children`'s `parent` and `model` properties to `parent`
- * and its `model`.
- */
-export function setParentAndModel(parent: Element, children: IChild[]) {
-    children.forEach(child => (child.parent = parent));
-    setModel(parent.model, ...children);
-}
-
-/** Sets each of `children`'s model to `model`. */
-export function setModel(model?: Model, ...children: IChild[]) {
-    children.forEach(child => (child.model = model));
-}
-
-export function setParentAndModelDeep(parent: Element, ...childrenArrays: IChild[][]) {
-    childrenArrays.forEach(children => {
-        setParentAndModel(parent, children);
-    });
-}
-export function setModelDeep(model?: Model, ...childrenArrays: IChild[][]) {
-    childrenArrays.forEach(children => {
-        setModel(model, ...children);
-    });
-}

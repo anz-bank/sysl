@@ -1,11 +1,13 @@
 import { readFile } from "fs/promises";
 import "reflect-metadata";
-import { allItems } from "../common/iterate";
+import { walk } from "../common/iterate";
 import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
 import { Application } from "./application";
 import { ElementKind, ElementRef, IRenderable } from "./common";
-import { Element, setModelDeep } from "./element";
+import { Element } from "./element";
+import path from "path";
+import fs from "fs";
 
 export type ImportParams = {
     filePath: string;
@@ -34,6 +36,7 @@ export type ModelParams = {
     imports?: Import[];
     apps?: Application[];
     locations?: Location[];
+    syslRoot?: string;
 };
 
 export class Model implements IRenderable {
@@ -41,29 +44,30 @@ export class Model implements IRenderable {
     imports: Import[];
     apps: Application[];
     locations: Location[];
+    syslRoot: string;
 
-    constructor({ header, imports, apps, locations }: ModelParams = {}) {
+    constructor({ header, imports, apps, locations, syslRoot: rootPath }: ModelParams = {}) {
         this.header = header;
         this.imports = imports ?? [];
         this.apps = apps ?? [];
         this.locations = locations ?? [];
-
-        setModelDeep(this, this.apps);
-        allItems(this).forEach(i => (i.model = this));
+        this.syslRoot = rootPath ?? ".";
+        walk(this, {}); // Attach model and parent
     }
 
     /**
      * Parses Sysl text file into a {@link Model}.
-     * @param syslFilePath The file path that contains the Sysl text to parse.
+     * @param cwdPath The file CWD-based path that contains the Sysl text to parse.
      * @param maxImportDepth Optional. The maximum depth to follow import statements, where 0 means unlimited depth,
      * 1 means to remain at the level of the supplied file (do not to follow imports at all), 2 means to delve one
      * deeper (supplied file plus one extra depth), etc. If not specified, defaults to allowing unlimited depth.
      * Limiting the depth may significantly improve performance, especially if it causes remote imports to be skipped.
      * @returns A {@link Model} representing the supplied Sysl file.
      */
-    static async fromFile(syslFilePath: string, maxImportDepth: number = 0): Promise<Model> {
-        const syslText = (await readFile(syslFilePath)).toString();
-        return this.fromText(syslText, syslFilePath, maxImportDepth);
+    static async fromFile(cwdPath: string, maxImportDepth: number = 0): Promise<Model> {
+        const syslText = (await readFile(cwdPath)).toString();
+        const syslRoot = this.findRoot(cwdPath, ".sysl") || this.findRoot(cwdPath, ".git") || path.resolve(cwdPath);
+        return this.fromText(syslText, cwdPath, syslRoot, maxImportDepth);
     }
 
     /**
@@ -80,6 +84,7 @@ export class Model implements IRenderable {
     static async fromText(
         syslText: string,
         syslFilePath: string = "untitled.sysl",
+        syslRoot: string = ".",
         maxImportDepth: number = 0
     ): Promise<Model> {
         // TODO: Improve performance by only reading the first part of the file
@@ -90,6 +95,7 @@ export class Model implements IRenderable {
         const pb = await PbDocumentModel.fromText(syslText, syslFilePath, maxImportDepth);
 
         let newModel = pb.toModel();
+        newModel.syslRoot = syslRoot;
         if (header) {
             newModel.header = header;
         }
@@ -100,15 +106,16 @@ export class Model implements IRenderable {
     /**
      * Returns a new model with only the apps that were defined in the specified source file. Non-app elements that
      * came from other source and were merged into apps from the specified source file will not be filtered out.
-     * @param file The source file path by which to filter apps.
+     * @param cwdPath The CWD-based file by which to filter apps.
      * @returns A clone of the current {@link Model} instance which only includes apps that were specified by the
      * supplied source file.
      */
-    filterByFile(file: string): Model {
+    filterByFile(cwdPath: string): Model {
+        cwdPath = this.convertSyslPath(cwdPath);
         return new Model({
-            imports: this.imports.filter(i => file.includes(i.locations[0]?.file!)),
+            imports: this.imports.filter(i => cwdPath.includes(i.locations[0]?.file!)),
             locations: this.locations,
-            apps: this.apps.filter(a => file.includes(a.locations[0]?.file!)),
+            apps: this.apps.filter(a => cwdPath.includes(a.locations[0]?.file!)),
             header: this.header,
         });
     }
@@ -151,5 +158,36 @@ export class Model implements IRenderable {
         sysl += "\n";
 
         return sysl;
+    }
+
+    /**
+     * Converts a CWD-based path to a Sysl path that is relative to the {@link syslRoot}, which {@link Location} uses to
+     * specify all paths.
+     *
+     * @param cwdPath A CWD-based path to convert.
+     * @param cwd Optional. The CWD to assume, or if unspecified, uses the real CWD.
+     * @returns A path relative to the sysl root
+     * @throws {@link Error} Thrown when the specified path is outside the {@link syslRoot}, which is not allowed.
+     */
+    public convertSyslPath(cwdPath: string, cwd: string = process.cwd()) {
+        const resolvedPath = path.resolve(cwd, cwdPath);
+        const syslRelativePath = path.relative(this.syslRoot, resolvedPath);
+        if (syslRelativePath.startsWith("..")) {
+            const pathDescription = resolvedPath == cwdPath ? "" : ` (resolved to '${resolvedPath}')`;
+            throw new Error(
+                `The provided path '${cwdPath}'${pathDescription} is outside the Sysl root path of ${this.syslRoot} so it cannot be converted to a Sysl path.`
+            );
+        }
+        return syslRelativePath;
+    }
+
+    private static findRoot(filePath: string, sentinelName: string): string | undefined {
+        var root = path.dirname(path.resolve(filePath));
+        while (true) {
+            if ([...fs.readdirSync(root)].some(f => f == sentinelName)) return root;
+            const parent = path.resolve(path.join(root, ".."));
+            if (parent == root) return undefined;
+            root = parent;
+        }
     }
 }

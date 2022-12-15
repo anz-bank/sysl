@@ -1,7 +1,7 @@
 import { toSafeName, indent } from "../common/format";
 import { ElementRef } from "./common";
 import { CollectionDecorator } from "./decorator";
-import { setParentAndModelDeep, Element, IElementParams } from "./element";
+import { Element, IElementParams } from "./element";
 import { Enum } from "./enum";
 import { Primitive } from "./primitive";
 import { addTags, renderAnnos } from "./renderers";
@@ -20,8 +20,7 @@ export class GenericElement extends Element {
         super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
         this.value = value;
         this.discriminator = discriminator;
-
-        setParentAndModelDeep(this, this.annos, this.tags);
+        this.attachSubitems();
     }
 
     toRef(): ElementRef {

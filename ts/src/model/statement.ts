@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { Location } from "../common";
 import { indent, joinedAppName } from "../common/format";
-import { ElementRef, ILocational, IRenderable } from "./common";
+import { ElementRef, IChild, ILocational, IRenderable } from "./common";
 import { CollectionDecorator } from "./decorator";
-import { Element, IElementParams, ParentElement, setParentAndModelDeep } from "./element";
+import { Element, IElementParams, ParentElement } from "./element";
 import { Field } from "./field";
 import { GenericElement } from "./genericElement";
 import { Model } from "./model";
@@ -209,8 +209,7 @@ export class Statement extends ParentElement<Statement> {
     constructor({ value, annos, tags, locations, parent, model }: StatementParams) {
         super(value?.constructor.name ?? "", locations ?? [], annos ?? [], tags ?? [], model, parent);
         this.value = value;
-
-        setParentAndModelDeep(this, this.children, this.annos, this.tags);
+        this.attachSubitems();
     }
 
     /** Returns a statement with the given action text. */
@@ -309,7 +308,11 @@ export class Endpoint extends ParentElement<Statement> {
         this.isPubsub = isPubsub ?? false;
         this.pubsubSource = pubsubSource ?? [];
 
-        setParentAndModelDeep(this, this.params, this.statements, this.annos, this.tags);
+        this.attachSubitems(this.params);
+    }
+
+    protected override attachSubitems(extraSubitems: IChild[] = []): void {
+        super.attachSubitems([...this.params, ...extraSubitems]);
     }
 
     private renderQueryParams(): string {

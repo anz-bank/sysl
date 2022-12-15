@@ -463,3 +463,25 @@ describe("Roundtrip", () => {
         expect(model.toSysl()).toEqual(expectedSysl(sysl as SyslCase));
     });
 });
+
+describe("General methods", () => {
+    test.concurrent("toSyslPath", () => {
+        const model = new Model({ syslRoot: "/usr/MyShop" });
+        // @ts-ignore
+        expect(model.convertSyslPath("/usr/MyShop/backend.sysl")).toEqual("backend.sysl");
+        // @ts-ignore
+        expect(model.convertSyslPath("/usr/MyShop/schema/backend.sysl")).toEqual("schema/backend.sysl");
+        // @ts-ignore
+        expect(model.convertSyslPath("schema/backend.sysl", "/usr/MyShop")).toEqual("schema/backend.sysl");
+        // @ts-ignore
+        expect(model.convertSyslPath("backend.sysl", "/usr/MyShop/schema")).toEqual("schema/backend.sysl");
+        // @ts-ignore
+        expect(model.convertSyslPath("../index.sysl", "/usr/MyShop/schema")).toEqual("index.sysl");
+        // @ts-ignore
+        expect(() => model.convertSyslPath("../../outside.sysl", "/usr/MyShop/schema")).toThrowError(
+            "is outside the Sysl root path"
+        );
+        // @ts-ignore
+        expect(() => model.convertSyslPath("outside.sysl", "/usr/")).toThrowError("is outside the Sysl root path");
+    });
+});

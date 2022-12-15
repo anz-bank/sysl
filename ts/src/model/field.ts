@@ -1,5 +1,5 @@
 import { indent, toSafeName } from "../common/format";
-import { Element, IElementParams, setParentAndModelDeep } from "./element";
+import { Element, IElementParams } from "./element";
 import { addTags, renderAnnos } from "./renderers";
 import { Primitive } from "./primitive";
 import { CollectionDecorator } from "./decorator";
@@ -10,7 +10,7 @@ export type FieldValue = Primitive | ElementRef | CollectionDecorator;
 export class Field extends Element {
     constructor(name: string, public value: FieldValue, public optional: boolean = false, p?: IElementParams) {
         super(name, p?.locations ?? [], p?.annos ?? [], p?.tags ?? [], p?.model, p?.parent);
-        setParentAndModelDeep(this, this.annos, this.tags);
+        this.attachSubitems();
     }
 
     toRef(): ElementRef {

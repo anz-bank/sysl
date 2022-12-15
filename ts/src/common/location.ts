@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { jsonMember, jsonObject } from "typedjson";
 import path from "path";
+import { Model } from "../model";
 
 /** Describes the offset location within a file by zero-based line and column. */
 @jsonObject
@@ -24,7 +25,7 @@ export class Offset {
 /** Describes the source location of a Sysl document fragment. */
 @jsonObject
 export class Location {
-    /** The file name where the fragment is located. */
+    /** The Sysl path of the file where the fragment is located, relative to {@link Model.syslRoot}. */
     @jsonMember file: string;
     /** The {@link Offset} inside the {@link file} where the fragment begins. */
     @jsonMember start: Offset;
@@ -47,7 +48,7 @@ export class Location {
      * Gets the file extension part of {@link file} path. This is the part of the file name beginning at the first
      * period.
      * @example
-     * If the file is
+     * If the {@link file} is
      * ```//github.com/someone/myproject/program.edg.sysl@master```
      * the returned value will be `.edg.sysl`
      */
@@ -68,5 +69,13 @@ export class Location {
      */
     public get isRemote(): boolean {
         return this.file.startsWith("//");
+    }
+
+    /**
+     * Formats the {@link Location} object as a string using it's start location.
+     * @returns The file, start line and column, each separated by a colon.
+     */
+    public toString(): string {
+        return `${this.file}:${this.start.line}:${this.start.col}`;
     }
 }

@@ -1,6 +1,6 @@
 import { indent } from "../common/format";
-import { ElementRef } from "./common";
-import { Element, IElementParams, ParentElement, setParentAndModelDeep } from "./element";
+import { ElementRef, IChild } from "./common";
+import { Element, IElementParams, ParentElement } from "./element";
 import { addTags, renderAnnos } from "./renderers";
 import { Endpoint } from "./statement";
 import { Type } from "./type";
@@ -17,8 +17,11 @@ export class Application extends ParentElement<Element> {
         this.namespace = namespace ?? [];
         this.endpoints = endpoints ?? [];
         this.children = types ?? [];
+        this.attachSubitems();
+    }
 
-        setParentAndModelDeep(this, this.endpoints, this.children, this.annos, this.tags);
+    protected override attachSubitems(extraSubitems: IChild[] = []): void {
+        super.attachSubitems([...this.endpoints, ...extraSubitems]);
     }
 
     public get types(): Type[] {
