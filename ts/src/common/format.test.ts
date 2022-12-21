@@ -4,7 +4,7 @@ test("realign", () => {
     expect(
         realign(`
     App "display name" [~abstract]:
-        ...
+      ...
     `)
     ).toBe(
         `App "display name" [~abstract]:
