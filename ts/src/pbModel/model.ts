@@ -45,7 +45,9 @@ export class PbApplication {
             name: this.name.part.at(-1),
             namespace: this.name.part.slice(0, -1),
             endpoints: sortLocationalArray(
-                Array.from(this.endpoints ?? new Map()).map(([, e]) => e.toModel(this.name.part))
+                Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
+                    .filter(([, e]) => e.name != "...") // Bug in Sysl where ellipsis under app appears as endpoint
+                    .map(([, e]) => e.toModel(this.name.part))
             ),
             children: sortLocationalArray(
                 Array.from(this.types ?? new Map()).map(([name, t]) => {

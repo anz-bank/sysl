@@ -15,11 +15,11 @@ let allModel: Model;
 let allSysl: string;
 
 describe("Constructors", () => {
-    test("New Model", () => {
+    test.concurrent("New Model", () => {
         expect(new Model({})).not.toBeNull();
     });
 
-    test("New Application", () => {
+    test.concurrent("New Application", () => {
         var app = new Application({ name: "Foo" });
         expect(app).toHaveProperty("namespace", []);
         expect(app).toHaveProperty("name", "Foo");
@@ -29,49 +29,66 @@ describe("Constructors", () => {
         expect(app).toHaveProperty("name", "Foo");
     });
 
-    test("New Type", () => {
+    test.concurrent("New Type", () => {
         expect(new Type("Foo")).toHaveProperty("name", "Foo");
     });
 
-    test("New Endpoint", () => {
+    test.concurrent("New Endpoint", () => {
         expect(new Endpoint({ name: "Foo" })).toHaveProperty("name", "Foo");
     });
 
-    test("New Param", () => {
+    test.concurrent("New Param", () => {
         expect(new Param("foo", [])).toHaveProperty("name", "foo");
     });
 
-    test("New Statement", () => {
+    test.concurrent("New Statement", () => {
         expect(new Statement({ value: new Action("foo") })).toHaveProperty("value.action", "foo");
 
         expect(Statement.action("foo")).toHaveProperty("value.action", "foo");
     });
 
-    test("New Annotation", () => {
+    test.concurrent("New Annotation", () => {
         expect(new Annotation({ name: "foo", value: "bar" })).toMatchObject({
             name: "foo",
             value: "bar",
         });
     });
 
-    test("New Tag", () => {
+    test.concurrent("New Tag", () => {
         expect(new Tag({ name: "foo" })).toHaveProperty("name", "foo");
     });
 });
 
 describe("Serialization", () => {
     describe("Application", () => {
-        test("empty", () => {
+        test.concurrent("empty", () => {
             expect(new Application({ name: "Foo" }).toSysl()).toEqual(
                 realign(`
                     Foo:
                         ...`)
             );
         });
+
+        test.concurrent("reverse", async () => {
+            const model = await Model.fromText(
+                realign(`
+                Foo:
+                    ...
+            `)
+            );
+
+            expect(model.apps).toHaveLength(1);
+            expect(model.apps[0].name).toEqual("Foo");
+            expect(model.apps[0].namespace).toBeEmpty();
+            expect(model.apps[0].children).toBeEmpty();
+            expect(model.apps[0].endpoints).toBeEmpty();
+            expect(model.apps[0].annos).toBeEmpty();
+            expect(model.apps[0].tags).toBeEmpty();
+        });
     });
 
     describe("Annotation", () => {
-        test("escaped quotes", () => {
+        test.concurrent("escaped quotes", () => {
             const anno = new Annotation({ name: "foo", value: `"bar"` });
             expect(anno.toSysl()).toEqual(`foo = "\\"bar\\""`);
         });
@@ -79,7 +96,7 @@ describe("Serialization", () => {
 });
 
 describe("Parent and Model", () => {
-    test("all", async () => {
+    test.concurrent("all", async () => {
         const model = await Model.fromFile(allPath);
         expect(allItems(model).every(i => i.model === model)).toEqual(true);
     });
@@ -87,7 +104,7 @@ describe("Parent and Model", () => {
 
 describe("Roundtrip", () => {
     // All
-    test("AllRoundtrip", async () => {
+    test.concurrent("AllRoundtrip", async () => {
         allModel = await Model.fromFile(allPath);
         allSysl = (await readFile(allPath)).toString();
         expect(allModel.filterByFile(allPath).toSysl()).toEqual(allSysl);
@@ -123,7 +140,6 @@ describe("Roundtrip", () => {
                 `
                 App:
                     @name = "value"
-                    ...
                 `
             ),
         },
@@ -152,7 +168,6 @@ describe("Roundtrip", () => {
             `
             App:
                 @name = "a \\"value\\""
-                ...
             `
         ),
         MultilineAnno: realign(
@@ -164,21 +179,18 @@ describe("Roundtrip", () => {
                     |   across
                     |
                     |    multiple lines
-                ...
             `
         ),
         ArrayAnno: realign(
             `
             App:
                 @name = ["value1", "value2"]
-                ...
             `
         ),
         NestedArrayAnno: realign(
             `
             App:
                 @name = [["value1", "value2"], ["value3", "value4"]]
-                ...
             `
         ),
         Endpoint: realign(
@@ -458,7 +470,7 @@ describe("Roundtrip", () => {
     const inputSysl = (sysl: TestSysl): string => (typeof sysl == "string" ? sysl : sysl.input);
     const expectedSysl = (sysl: TestSysl): string => (typeof sysl == "string" ? sysl : sysl.output);
 
-    test.each(Object.entries(cases))("%s", async (_, sysl: TestSysl) => {
+    test.concurrent.each(Object.entries(cases))("%s", async (_, sysl: TestSysl) => {
         const model = await Model.fromText(inputSysl(sysl as SyslCase));
         expect(model.toSysl()).toEqual(expectedSysl(sysl as SyslCase));
     });

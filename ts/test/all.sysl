@@ -20,7 +20,6 @@ AppWithAnnotation:
         | multiline annotations
         |
         | like this
-    ...
 
 App :: with :: subpackages:
     ...
