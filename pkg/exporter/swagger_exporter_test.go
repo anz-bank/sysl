@@ -2,7 +2,6 @@ package exporter
 
 import (
 	"flag"
-	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -27,7 +26,7 @@ func TestExportAll(t *testing.T) {
 	t.Parallel()
 	modelParser := parse.NewParser()
 	const syslTestDir = "test-data/openapi2/"
-	files, err := ioutil.ReadDir(syslTestDir)
+	files, err := os.ReadDir(syslTestDir)
 	require.NoError(t, err)
 
 	for _, file := range files {
@@ -51,12 +50,12 @@ func TestExportAll(t *testing.T) {
 				out, err := swaggerExporter.SerializeOutput("yaml")
 				require.NoError(t, err)
 				if *update {
-					err = ioutil.WriteFile(openAPIFileName, out, 0600)
+					err = os.WriteFile(openAPIFileName, out, 0600)
 					if err != nil {
 						t.Error(err)
 					}
 				}
-				yamlFileBytes, err := ioutil.ReadFile(openAPIFileName)
+				yamlFileBytes, err := os.ReadFile(openAPIFileName)
 				require.NoError(t, err)
 
 				yamlFileBytes = syslutil.HandleCRLF(yamlFileBytes)

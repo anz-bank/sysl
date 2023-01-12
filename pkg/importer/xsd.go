@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -30,7 +30,7 @@ func MakeXSDImporter(logger *logrus.Logger) *XSDImporter {
 }
 
 func (i *XSDImporter) LoadFile(path string) (string, error) {
-	bs, err := ioutil.ReadFile(path)
+	bs, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}
@@ -287,9 +287,11 @@ func makeSizeSpecFromAttrs(attrs []xml.Attr) *sizeSpec {
 // An example XSD snippet is as follows:
 //
 // <xs:complexType>
-// 	<xs:simpleContent>
-// 		<xs:extension base="xs:token"/>
-// 	</xs:simpleContent>
+//
+//	<xs:simpleContent>
+//		<xs:extension base="xs:token"/>
+//	</xs:simpleContent>
+//
 // </xs:complexType>
 //
 // See https://www.obj-sys.com/docs/acv65/CCppHTML/ch04s02s10.html

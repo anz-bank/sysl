@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
@@ -86,7 +86,7 @@ func TestHTML(t *testing.T) {
 	assert.NoError(t, err)
 	file, err := fs.Open(p.Output)
 	assert.NoError(t, err)
-	html, err := ioutil.ReadAll(file)
+	html, err := io.ReadAll(file)
 	assert.NoError(t, err)
 	expected := fmt.Sprintf(
 		"<img src=\"%s/svg/UDgCaK5hmZ0SnU_v56-"+
@@ -127,7 +127,7 @@ func TestLinkOutput(t *testing.T) {
 	assert.NoError(t, err)
 	file, err := fs.Open(p.Output)
 	assert.NoError(t, err)
-	link, err := ioutil.ReadAll(file)
+	link, err := io.ReadAll(file)
 	assert.NoError(t, err)
 	expected := fmt.Sprintf(
 		"<img src=\"%s/svg/UDgCaK5hmZ0SnU_v56-"+
@@ -168,7 +168,7 @@ func TestSequence(t *testing.T) {
 	assert.NoError(t, err)
 	file, err := fs.Open(p.Output)
 	assert.NoError(t, err)
-	link, err := ioutil.ReadAll(file)
+	link, err := io.ReadAll(file)
 	assert.NoError(t, err)
 	expected := `@startuml
 ''''''''''''''''''''''''''''''''''''''''''

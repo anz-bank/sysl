@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"io/ioutil"
+	"os"
 
 	"github.com/anz-bank/mermaid-go/mermaid"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -46,7 +46,7 @@ func (p *diagramCmd) Execute(args cmdutils.ExecuteArgs) error {
 	}
 	g := mermaid.Init()
 	svg := g.Execute(out)
-	if err := ioutil.WriteFile(p.Output, []byte(svg), 0600); err != nil {
+	if err := os.WriteFile(p.Output, []byte(svg), 0600); err != nil {
 		panic(err)
 	}
 	return nil

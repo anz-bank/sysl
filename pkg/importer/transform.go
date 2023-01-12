@@ -1,7 +1,7 @@
 package importer
 
 import (
-	"io/ioutil"
+	"os"
 	"path"
 	"strings"
 
@@ -38,7 +38,7 @@ func (i *TransformImporter) Configure(appName, _, _ string) (Importer, error) {
 
 // LoadFile generates a Sysl spec by invoking the arr.ai transform.
 func (i *TransformImporter) LoadFile(path string) (string, error) {
-	bs, err := ioutil.ReadFile(path)
+	bs, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}

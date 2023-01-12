@@ -2,7 +2,7 @@ package impl
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"os"
 
@@ -83,7 +83,7 @@ func (s *Server) didClose(ctx context.Context, params *protocol.DidCloseTextDocu
 	}
 	defer fh.Close()
 
-	if _, err := ioutil.ReadAll(fh); err != nil {
+	if _, err := io.ReadAll(fh); err != nil {
 		return s.client.PublishDiagnostics(ctx, &protocol.PublishDiagnosticsParams{
 			URI:         uri,
 			Diagnostics: []protocol.Diagnostic{},

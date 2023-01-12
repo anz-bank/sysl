@@ -25,7 +25,7 @@ lint-docker: generate
 		-e GOCACHE=/cache/go \
 		-v ${GOPATH}/pkg:/go/pkg \
 		-w /app \
-		golangci/golangci-lint:v1.41.1 \
+		golangci/golangci-lint:v1.50.1 \
 			golangci-lint run -v
 
 tidy:

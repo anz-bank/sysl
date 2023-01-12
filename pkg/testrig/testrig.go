@@ -4,7 +4,7 @@ package testrig
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -81,7 +81,7 @@ func readUserData(fs afero.Fs, templateFileName string) (ServiceVarsMap, error) 
 	}
 	defer templateFile.Close()
 
-	byteValue, err := ioutil.ReadAll(templateFile)
+	byteValue, err := io.ReadAll(templateFile)
 	if err != nil {
 		return nil, err
 	}

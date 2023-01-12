@@ -2,7 +2,6 @@ package loader
 
 import (
 	"context"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -31,9 +30,9 @@ func TestNormalize(t *testing.T) {
 	actual, err := syntax.PrettifyString(v, 0)
 	require.NoError(t, err)
 
-	expected, err := ioutil.ReadFile("../arrai/out/all_normalize.arrai")
+	expected, err := os.ReadFile("../arrai/out/all_normalize.arrai")
 	require.NoError(t, err)
-	err = ioutil.WriteFile("../arrai/out/tmp_all_normalize.arrai", []byte(actual), os.ModePerm)
+	err = os.WriteFile("../arrai/out/tmp_all_normalize.arrai", []byte(actual), os.ModePerm)
 	require.NoError(t, err)
 
 	// TODO: Test that the output is correct. For now just test that it didn't error out.

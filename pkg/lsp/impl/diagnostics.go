@@ -2,7 +2,7 @@ package impl
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 
@@ -52,7 +52,7 @@ func (s *Server) provideSyntaxDiagnostics(ctx context.Context, uri protocol.Docu
 	}
 	defer fh.Close()
 
-	content, err := ioutil.ReadAll(fh)
+	content, err := io.ReadAll(fh)
 	if err != nil {
 		return errors.Wrapf(err, "file not found (%v)", jsonrpc2.ErrInternal)
 	}

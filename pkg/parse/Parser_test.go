@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -232,7 +231,7 @@ func parseAndCompare(
 		return false, err
 	}
 	if env.SYSL_DEV_UPDATE_GOLDEN_TESTS.On() {
-		if err := ioutil.WriteFile(golden, actualBytes, 0600); err != nil {
+		if err := os.WriteFile(golden, actualBytes, 0600); err != nil {
 			logrus.Errorf("Error updating golden file %q: %v", golden, err)
 		} else {
 			logrus.Errorf("Updated golden file %q", golden)
@@ -262,7 +261,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 		if err = pbutil.FTextPB(&updated, mod); err != nil {
 			return false, err
 		}
-		err = ioutil.WriteFile(goldenFilename, updated.Bytes(), 0600)
+		err = os.WriteFile(goldenFilename, updated.Bytes(), 0600)
 		if err != nil {
 			return false, err
 		}
@@ -1308,8 +1307,10 @@ Two:
 	require.NotNil(t, c.Apps["Three"])
 }
 
-/* TestParseSyslRetrieverRemoteImportNotMaster tests that a remote file imported not from master branch will import
-   a local file from the same branch
+/*
+TestParseSyslRetrieverRemoteImportNotMaster tests that a remote file imported not from master branch will import
+
+	a local file from the same branch
 */
 func TestParseSyslRetrieverRemoteImportNotMaster(t *testing.T) {
 	t.Parallel()

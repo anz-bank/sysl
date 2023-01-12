@@ -45,10 +45,12 @@ paths:
                 value:
                   id: 10
                   name: Jessica Smith
+                  date: 2023-01-01
               Ron:
                 value:
                   id: 11
                   name: Ron Stewart
+                  date: 2023-01-02
       responses:
         "200":
           description: OK

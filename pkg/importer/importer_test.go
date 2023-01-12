@@ -3,7 +3,6 @@ package importer
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -34,7 +33,7 @@ type testConfig struct {
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
 	t.Helper()
 
-	files, err := ioutil.ReadDir(cfg.testDir)
+	files, err := os.ReadDir(cfg.testDir)
 	require.NoError(t, err)
 	for _, f := range files {
 		if f.IsDir() {
@@ -49,7 +48,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				t.Parallel()
 				syslFile := filepath.Join(cfg.testDir, filename+".sysl")
 				fileToImport := syslutil.MustAbsolute(t, filepath.Join(cfg.testDir, filename+cfg.testExtension))
-				input, err := ioutil.ReadFile(fileToImport)
+				input, err := os.ReadFile(fileToImport)
 				require.NoError(t, err)
 				absFilePath, err := filepath.Abs(filepath.Join(cfg.testDir, filename+cfg.testExtension))
 				require.NoError(t, err)
@@ -66,12 +65,12 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				}
 				require.NoError(t, err)
 				if *update {
-					err = ioutil.WriteFile(syslFile, []byte(result), 0600)
+					err = os.WriteFile(syslFile, []byte(result), 0600)
 					if err != nil {
 						t.Error(err)
 					}
 				}
-				expected, err := ioutil.ReadFile(syslFile)
+				expected, err := os.ReadFile(syslFile)
 				require.NoError(t, err)
 				expected = syslutil.HandleCRLF(expected)
 				require.NoError(t, err)
@@ -99,7 +98,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 		out, err = imp.LoadFile(path)
 	}
 	require.NoError(t, err)
-	expected, err := ioutil.ReadFile(syslFile)
+	expected, err := os.ReadFile(syslFile)
 	require.NoError(t, err)
 	expected = syslutil.HandleCRLF(expected)
 	require.NoError(t, err)

@@ -179,7 +179,7 @@ func (v *DataModelView) DrawPrimitive(
 	v.StringBuilder.WriteString("}\n")
 }
 
-//nolint: funlen
+// nolint: funlen
 func (v *DataModelView) DrawTuple(
 	viewParam EntityViewParam,
 	entity *sysl.Type_Tuple,

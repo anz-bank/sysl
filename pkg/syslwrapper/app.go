@@ -375,18 +375,21 @@ func (am *AppMapper) MapSyslType(t *sysl.Type) (*sysl.Type, error) {
 
 // TypeRefs can have various formats.
 // Case 1: When a type defined in the same app is referenced in a TYPE
-// 	- no appname is provided in the path
-// 	- the ref.path[0] element is the type name
+//   - no appname is provided in the path
+//   - the ref.path[0] element is the type name
+//
 // Case 2: When a type from another app is referenced in a TYPE
-// 	- context is provided
-// 	- the ref.path[0] element is the application name
+//   - context is provided
+//   - the ref.path[0] element is the application name
+//
 // Case 3: When a type from another app is referenced in a parameter
-// 	- context is NOT provided
-//  - ref.appName is provided
-// 	- the ref.path[0] element is the type name
+//   - context is NOT provided
+//   - ref.appName is provided
+//   - the ref.path[0] element is the type name
+//
 // Case 4: When a type from the same app is referenced in a parameter
-// 	- context is NOT provided
-//  - ref.appName is provided AND is the type name (This is crazy and needs to be fixed)
+//   - context is NOT provided
+//   - ref.appName is provided AND is the type name (This is crazy and needs to be fixed)
 func (am *AppMapper) GetRefDetails(t *sysl.Type) (appName string, typeName string) {
 	ref := t.GetTypeRef().GetRef()
 	if ref.GetPath() == nil {

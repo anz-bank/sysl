@@ -22,6 +22,7 @@ var (
 )
 
 // BundlesFs is a filesystem that can be used to dynamically load the available bundles.
+//
 //go:embed *
 var BundlesFs embed.FS
 

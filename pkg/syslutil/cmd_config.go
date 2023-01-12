@@ -2,13 +2,13 @@ package syslutil
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 )
 
 func ReadCMDFlags(configPath string) ([]string, error) {
 	var flags []string
-	data, ferr := ioutil.ReadFile(configPath)
+	data, ferr := os.ReadFile(configPath)
 	if ferr != nil {
 		return flags, ferr
 	}

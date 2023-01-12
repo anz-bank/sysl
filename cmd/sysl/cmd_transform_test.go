@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -50,7 +49,7 @@ func TestTransformInlineScriptWithStdinModules(t *testing.T) {
 			"Rel: can't make \\input (output: input.models(0).rel.app => .appName(1)) relative to .")
 	}
 
-	src, err := ioutil.ReadFile(testSyslPath)
+	src, err := os.ReadFile(testSyslPath)
 	require.NoError(t, err)
 	stdin := toStdin(t, stdinFile{Path: testSyslPath, Content: string(src)})
 
@@ -71,7 +70,7 @@ func TestTransformTextFile(t *testing.T) {
 func TestTransformTextFile_moduleStdin(t *testing.T) {
 	t.Parallel()
 
-	src, err := ioutil.ReadFile(testSyslPath)
+	src, err := os.ReadFile(testSyslPath)
 	require.NoError(t, err)
 	scriptPath := writeTempFile(t, "transform.arrai", []byte(transformScript))
 	stdin := toStdin(t, stdinFile{Path: testSyslPath, Content: string(src)})

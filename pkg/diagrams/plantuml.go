@@ -1,7 +1,6 @@
 package diagrams
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -54,10 +53,10 @@ func (p *Plantumlmixin) GenerateFromMap(m map[string]string, fs afero.Fs) error 
 
 func ComparePUML(t *testing.T, expected, actual map[string]string) {
 	for name, goldenFile := range expected {
-		golden, err := ioutil.ReadFile(goldenFile)
+		golden, err := os.ReadFile(goldenFile)
 		assert.Nil(t, err)
 		if string(golden) != actual[name] {
-			err := ioutil.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0600)
+			err := os.WriteFile(filepath.Join(testDir, name+".puml"), []byte(actual[name]), 0600)
 			assert.Nil(t, err)
 		}
 		a := strings.TrimSuffix(string(syslutil.HandleCRLF(golden)), "\n")

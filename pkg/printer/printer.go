@@ -65,7 +65,8 @@ func Application(w io.Writer, a *sysl.Application) {
 
 // TypeDecl prints Type decelerations:
 // !type Foo:
-//     this <: string
+//
+//	this <: string
 func TypeDecl(w io.Writer, key string, t *sysl.Type) {
 	switch t.Type.(type) {
 	case *sysl.Type_Enum_:

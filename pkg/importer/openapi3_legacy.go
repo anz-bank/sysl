@@ -11,8 +11,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/url"
+	"os"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -49,7 +49,7 @@ func NewLegacyOpenAPIV3Importer(logger *logrus.Logger, fs afero.Fs) Importer {
 }
 
 func (o *OpenAPI3Importer) LoadFile(path string) (string, error) {
-	bs, err := ioutil.ReadFile(path)
+	bs, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}

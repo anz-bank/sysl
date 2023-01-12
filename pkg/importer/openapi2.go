@@ -3,8 +3,8 @@ package importer
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -42,7 +42,7 @@ func MakeOpenAPI2Importer(logger *logrus.Logger, basePath string, filePath strin
 }
 
 func (l *OpenAPI2Importer) LoadFile(path string) (string, error) {
-	bs, err := ioutil.ReadFile(path)
+	bs, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}

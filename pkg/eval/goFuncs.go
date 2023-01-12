@@ -8,6 +8,8 @@ import (
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type goFunc struct {
@@ -64,6 +66,8 @@ var (
 		},
 	}
 
+	titleCaser = cases.Title(language.English)
+
 	// GoFuncMap is Map of Function Names to goFunc{}
 	GoFuncMap = map[string]goFunc{
 		"Contains":      {reflect.ValueOf(strings.Contains), []*sysl.Type{stringType, stringType}, boolType},
@@ -77,7 +81,7 @@ var (
 		"MatchString":   {reflect.ValueOf(MatchString), []*sysl.Type{stringType, stringType}, boolType},
 		"Replace":       {reflect.ValueOf(strings.Replace), []*sysl.Type{stringType, stringType, stringType, intType}, stringType}, // nolint:lll
 		"Split":         {reflect.ValueOf(strings.Split), []*sysl.Type{stringType, stringType}, listStringType},
-		"Title":         {reflect.ValueOf(strings.Title), []*sysl.Type{stringType}, stringType},
+		"Title":         {reflect.ValueOf(titleCaser.String), []*sysl.Type{stringType}, stringType},
 		"ToLower":       {reflect.ValueOf(strings.ToLower), []*sysl.Type{stringType}, stringType},
 		"ToTitle":       {reflect.ValueOf(strings.ToTitle), []*sysl.Type{stringType}, stringType},
 		"ToUpper":       {reflect.ValueOf(strings.ToUpper), []*sysl.Type{stringType}, stringType},

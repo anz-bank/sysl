@@ -11,6 +11,7 @@ import (
 // BuildDate - Binary build date
 // GoVersion - Binary build GoVersion
 // BuildOS   - Operating System used to build binary
+//
 //nolint:gochecknoglobals
 var (
 	Version       = "unspecified"

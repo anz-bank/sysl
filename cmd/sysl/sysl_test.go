@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
@@ -64,7 +63,7 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	actual, err := afero.ReadFile(fs, output)
 	assert.NoError(t, err)
 
-	expected, err := ioutil.ReadFile(golden)
+	expected, err := os.ReadFile(golden)
 	assert.NoError(t, err)
 
 	expected = syslutil.HandleCRLF(expected)
@@ -195,7 +194,7 @@ func testMain2Stdout(t *testing.T, args []string, golden string) {
 	rc := main2(append([]string{"sysl", "pb", "-o", " - "}, args...), fs, logger, os.Stdin, main3)
 	assert.Zero(t, rc)
 
-	_, err := ioutil.ReadFile(golden)
+	_, err := os.ReadFile(golden)
 	require.NoError(t, err)
 
 	_, err = os.Stat("-")
@@ -1015,7 +1014,7 @@ func TestTemplating(t *testing.T) {
 		"--outdir", "../../demo/codegen/AuthorisationAPI/", "authorisation"}, fs, logger, os.Stdin, main3)
 	outputFilename := "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto"
 	syslutil.AssertFsHasExactly(t, memFs, outputFilename)
-	expected, err := ioutil.ReadFile(outputFilename)
+	expected, err := os.ReadFile(outputFilename)
 	assert.NoError(t, err)
 	expected = syslutil.HandleCRLF(expected)
 	actual, err := afero.ReadFile(memFs, syslutil.MustAbsolute(t, outputFilename))
@@ -1091,7 +1090,7 @@ func TestProtobufImportWithPaths(t *testing.T) {
 // with a file directed at a temporary output directory. The content of the file are verified to be identical to the
 // file specified in the expectedPathFromRepoRoot parameter (no need for "../../" in its path).
 func runSyslWithExpectedOutput(t *testing.T, expectedPathFromRepoRoot string, args ...string) {
-	expectedBytes, err := ioutil.ReadFile(filepath.Join("..", "..", expectedPathFromRepoRoot))
+	expectedBytes, err := os.ReadFile(filepath.Join("..", "..", expectedPathFromRepoRoot))
 	require.NoError(t, err)
 	expected := string(expectedBytes)
 
@@ -1110,7 +1109,7 @@ func runSyslWithOutput(t *testing.T, outFileExt string, stdin io.Reader, args ..
 	args = append(args, "--output", outputPath)
 	runSysl(t, 0, stdin, args...)
 	require.FileExists(t, outputPath)
-	output, err := ioutil.ReadFile(outputPath)
+	output, err := os.ReadFile(outputPath)
 	require.NoError(t, err)
 	return string(output)
 }
@@ -1190,7 +1189,7 @@ func TestSyslSyntaxValidate(t *testing.T) {
 
 	for _, dir := range dirs {
 		logger, _ := test.NewNullLogger()
-		files, err := ioutil.ReadDir(dir)
+		files, err := os.ReadDir(dir)
 		assert.NoError(t, err)
 		for _, file := range files {
 			if strings.HasSuffix(file.Name(), ".sysl") {

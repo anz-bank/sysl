@@ -2,7 +2,7 @@ package importer
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -122,7 +122,7 @@ var JSONSchema = Format{
 // `swagger: "2.0"`.
 func GuessFileType(path string, isDir bool, content []byte, validFormats []Format) (Format, error) {
 	if isDir {
-		if files, err := ioutil.ReadDir(path); err == nil {
+		if files, err := os.ReadDir(path); err == nil {
 			for _, info := range files {
 				if strings.HasSuffix(info.Name(), ".up.sql") || strings.HasSuffix(info.Name(), ".up.ddl") {
 					return Format{}, fmt.Errorf(

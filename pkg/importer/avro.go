@@ -2,7 +2,7 @@ package importer
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/anz-bank/sysl/internal/bundles"
@@ -24,7 +24,7 @@ type avroImporter struct {
 }
 
 func (i *avroImporter) LoadFile(path string) (string, error) {
-	bs, err := ioutil.ReadFile(path)
+	bs, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}

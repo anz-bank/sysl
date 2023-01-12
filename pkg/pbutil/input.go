@@ -3,7 +3,7 @@ package pbutil
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/sysl"
@@ -21,7 +21,7 @@ func FromPB(pbPath string, fs afero.Fs) (*sysl.Module, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading file: %w", err)
 	}
-	in, err := ioutil.ReadAll(f)
+	in, err := io.ReadAll(f)
 	if err != nil {
 		return nil, fmt.Errorf("error reading file: %w", err)
 	}
