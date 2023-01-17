@@ -1,6 +1,7 @@
 # Generates a Sysl spec equivalent to the model produced by applying the sequence of statements in
 # the input SQL file(s).
 
+let (:naturalOrder, ...) = //{github.com/arr-ai/arrai/contrib/util};
 let (:parseSchema, :parseDdl, :applyStmt, :emptyModel, ...) = //{./sql};
 let (:transformModel, ...) = //{./sysl};
 
@@ -41,7 +42,7 @@ let importDir = \appName \dir
     let isSql = \path {'.sql', '.ddl'} => //seq.has_suffix(., path) where .;
 
     let paths = //os.tree(dir) => .path;
-    let sqls = (paths where isUpSql(.)) || (paths where isSql(.)) orderby .;
+    let sqls = (paths where isUpSql(.)) || (paths where isSql(.)) orderby naturalOrder(.);
 
     importFiles(appName, sqls)
 ;

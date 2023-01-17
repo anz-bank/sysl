@@ -1,6 +1,7 @@
+let (:naturalOrder, ...) = //{github.com/arr-ai/arrai/contrib/util};
 let (:import, ...) = //{./import};
 
-let upSqlsIn = \dir //os.tree(dir) where //seq.has_suffix('.up.sql', .path) => .path orderby .;
+let upSqlsIn = \dir //os.tree(dir) where //seq.has_suffix('.up.sql', .path) => .path orderby naturalOrder(.);
 
 # Assume working directory is repo root.
 let testDir = 'pkg/importer/sql/tests';
@@ -20,14 +21,14 @@ let config = (appName: 'Foo');
 (
     mysql: (
         import: (
-            file: import(config, $'${testDir}/mysql/migrations/01_create_foo.up.sql') = simple,
+            file: import(config, $'${testDir}/mysql/migrations/1_create_foo.up.sql') = simple,
             files: import(config, upSqlsIn($'${testDir}/mysql/migrations')) = simple,
             migrations: import(config, $'${testDir}/mysql/migrations') = simple,
         ),
     ),
     postgresql: (
         import: (
-            file: import(config, $'${testDir}/postgresql/migrations/01_create_foo.up.sql') = simple,
+            file: import(config, $'${testDir}/postgresql/migrations/1_create_foo.up.sql') = simple,
             files: import(config, upSqlsIn($'${testDir}/postgresql/migrations')) = simple,
             migrations: import(config, $'${testDir}/postgresql/migrations') = simple,
         ),
@@ -35,7 +36,7 @@ let config = (appName: 'Foo');
 
     spanner: (
         import: (
-            file: import(config, $'${testDir}/spanner/migrations/01_create_foo.up.sql') = simple,
+            file: import(config, $'${testDir}/spanner/migrations/1_create_foo.up.sql') = simple,
             files: import(config, upSqlsIn($'${testDir}/spanner/migrations')) = simple,
             migrations: import(config, $'${testDir}/spanner/migrations') = simple,
         ),
