@@ -67,10 +67,18 @@ let syslSafePath =
 
 let syslSafeName =
     let syslSafeRegex = //re.compile(`[/\\{} ]+`);
+    let unsafePrefixRegex = //re.compile(`^[^a-zA-Z_]`);
     \name
         let name = syslSafeRegex.sub('_', name);
         # this is to avoid double escaping.
         let name = shallowEscape(name);
+
+        # add _ prefix to unsafe names
+        let name = cond {
+            unsafePrefixRegex.match(name): '_' ++ name,
+            _: name,
+        };
+
         let keywords = {
             'int',
             'int32',

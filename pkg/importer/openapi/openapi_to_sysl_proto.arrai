@@ -179,7 +179,7 @@ let specialAnno = {
                             ['#', 'components', 'schemas', type]:
                                 let safeType = cond {
                                     !(t(movedToRef)?:false) && filepath: extRefToName(filepath, ref),
-                                    _:                                   shallowEscape(type),
+                                    _:                                   syslSafeName(type),
                                 };
                                 # if the referenced type is an alias with constraints, return the type instead of typeref
                                 let obj = oapi('components', 'schemas', type)?:{};
@@ -433,7 +433,7 @@ let specialAnno = {
         ) -> //rel.union(.) where .
     ;
 
-    let componentsSchemasToTypesMessages = \schemas schemas => (@: shallowEscape(.@), @value: schemaToTypeMessage(.@value));
+    let componentsSchemasToTypesMessages = \schemas schemas => (@: syslSafeName(.@), @value: schemaToTypeMessage(.@value));
 
     let oapiToAppMessage = \appName
         let (:long_name, :docstring, :attrs) = infoToAppMessageData(oapi('info')?:{});
