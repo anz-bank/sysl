@@ -37,7 +37,7 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Validate goreleaser config
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
           args: check -f .goreleaser.yml
@@ -47,7 +47,7 @@ jobs:
 
       # GoReleaser release process is customized in `.goreleaser.yml` file
       - name: Release binaries via goreleaser
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v4
         with:
           version: latest
           args: release --rm-dist --debug -f .goreleaser.yml

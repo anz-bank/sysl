@@ -30,18 +30,11 @@ archives:
   format_overrides:
     - goos: windows
       format: zip
-  replacements:
-    darwin: darwin
-    linux: linux
-    windows: windows
-    openbsd: openBSD
-    netbsd: netBSD
-    freebsd: freeBSD
-    dragonfly: dragonFlyBSD
   name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   files:
     - README.md
     - LICENSE
+  rlcp: true
 
 checksum:
   name_template: '{{.ProjectName}}_{{.Version}}_checksums.txt'
