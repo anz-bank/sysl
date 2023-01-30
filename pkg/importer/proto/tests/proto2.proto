@@ -17,6 +17,10 @@ enum EnumAllowingAlias {
 // Level 1
 message Outer {
     option (my_option).a = true;
+    option (object_option).a = {
+        array: [1, "string", {foo: "bar"}],
+        object: {foo: "bar"}
+    };
     // Level 2
     // Description
     message Inner {

@@ -19,8 +19,9 @@ let rec annoFromOption = \annoValue
     cond annoValue {
         (:fields, ...): fields => $`${.@}: ${annoFromOption(.@value)}`,
         (:s, ...): s,
+        (:b, ...): cond {b: "true", _: "false"},
         [...]: annoValue >> annoFromOption(.),
-        {...}: let _ = _; $`${annoValue.@}: ${annoFromOption(annoValue.@value)}`
+        {_: ...}: $`${annoValue.@}: ${annoFromOption(annoValue.@value)}`
     }
 ;
 

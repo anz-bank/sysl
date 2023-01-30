@@ -16,7 +16,7 @@ proto3:
     @java_package = "com.example.foo"
     @package = "proto3"
     
-    !enum EnumAllowingAlias [proto_options=["allow_alias = "], source_path="proto/tests/proto3.proto"]:
+    !enum EnumAllowingAlias [proto_options=["allow_alias = true"], source_path="proto/tests/proto3.proto"]:
         UNKNOWN : 0
         STARTED : 1
         RUNNING : 2
@@ -24,7 +24,7 @@ proto3:
     !type Outer:
         @description =:
             | Level 1
-        @proto_options = ["(my_option).a = "]
+        @proto_options = ["(my_option).a = true", "(object_option).a = \"array: [{}, 'string', {'foo: bar'}\",\"object: {'foo: bar'\"}"]
         @source_path = "proto/tests/proto3.proto"
         enum_field <: EnumAllowingAlias:
             @json_tag = "enumField"

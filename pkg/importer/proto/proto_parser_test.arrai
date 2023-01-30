@@ -76,7 +76,6 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                 let expected = {'(foo.java_package).bar': (s: 'com.example.foo'), '(foo.java_package).baz': (s: 'true')};
                 let actual = file.options;
                 //test.assert.equal(expected, actual),
-
         ),
 
         enum: (
@@ -221,7 +220,10 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             },
                                             mapFields: {'my_map': (keyType: (name: 'int32'), type: (name: 'string'), value: (d: 4))},
                                             messages: {'Inner': (comments: [" Level 2", " Description"], fields: {'ival': (label: "required", type: (name: 'int64'), value: (d: 1))})},
-                                            options: {'(my_option).a': ( b: true)}
+                                            options: {
+                                                '(my_option).a': (b: true),
+                                                '(object_option).a': (fields: {'array': [(d: 1), (s: 'string'), (fields: {'foo': (s: 'bar')})], 'object': (fields: {'foo': (s: 'bar')})}),
+                                            },
                                         ),
                                     },
                                     options: {'java_package': (s: 'com.example.foo'), 'go_package': (s: 'github.com/test/package'), 'random': (s: 'random')},
@@ -262,7 +264,10 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             messages: {
                                                 'Inner': (comments: [" Level 2"], fields: {'ival': (type: (name: 'int64'), value: (d: 1))}),
                                             },
-                                            options: {'(my_option).a': (b: true)},
+                                            options: {
+                                                '(my_option).a': (b: true),
+                                                '(object_option).a': (fields: {'array': [(d: 1), (s: 'string'), (fields: {'foo': (s: 'bar')})], 'object': (fields: {'foo': (s: 'bar')})}),
+                                            },
                                         ),
                                     },
                                     options: {'java_package': (s: 'com.example.foo'), 'go_package': (s: 'github.com/test/package'), 'random': (s: 'random')},
