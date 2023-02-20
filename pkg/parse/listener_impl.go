@@ -3353,9 +3353,16 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 	raw := strings.TrimSpace(ctx.IMPORT_PATH().GetText())
 	filename := raw
 
-	if filepath.Ext(filename) == "" {
-		filename += syslExt
+	// append .sysl to filename ignoring the version
+	parts := strings.Split(filename, "@")
+	namePos := len(parts) - 2
+	if namePos < 0 {
+		namePos = 0
 	}
+	if filepath.Ext(parts[namePos]) == "" {
+		parts[namePos] += syslExt
+	}
+	filename = strings.Join(parts, "@")
 
 	if !syslutil.IsRemoteImport(filename) {
 		base := s.base

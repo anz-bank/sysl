@@ -15,4 +15,4 @@ jobs:
 
     - name: yarn build docs
       working-directory: docs
-      run: yarn install && yarn build
+      run: yarn install && export NODE_OPTIONS=--openssl-legacy-provider && yarn build

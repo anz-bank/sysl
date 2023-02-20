@@ -68,8 +68,8 @@ github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239 h1:kFOfPq6dUM1hTo
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
 github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f h1:KMP3yDavCzCyQUz8YWIJ1Kh8xlQoJexBiVO8lcFfaDs=
 github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f/go.mod h1:F7bn7fEU90QkQ3tnmaTx3LTKLEDqnwWODIYppRQ5hnY=
-github.com/anz-bank/golden-retriever v0.20.0 h1:aeXSLw7O1230fxacSiF1UmDm7nvuh6gvA8sKd/W+odY=
-github.com/anz-bank/golden-retriever v0.20.0/go.mod h1:wcB8bMIqqeaPg7tgtE0C3vrJSmarmHH5XDDjPX+q1ig=
+github.com/anz-bank/golden-retriever v0.24.0 h1:XLm7H8KPr4FZYpJ8xUPgD5lfOvpRcOSjSooJuGW67JQ=
+github.com/anz-bank/golden-retriever v0.24.0/go.mod h1:wcB8bMIqqeaPg7tgtE0C3vrJSmarmHH5XDDjPX+q1ig=
 github.com/anz-bank/mermaid-go v0.1.1 h1:nTtJKas+gx0cyChwjZn61iLDpGCN/MSzAl4VTVXWB0A=
 github.com/anz-bank/mermaid-go v0.1.1/go.mod h1:vo8d6wJgGhqvyjBNBjbGvg7PtgYL/JS6JqXwfVD+bZk=
 github.com/anz-bank/pkg v0.0.48 h1:zst9uNs9DyDsnvuNN4/6TwZOV5Z2IRULT2gnxaBnvR4=

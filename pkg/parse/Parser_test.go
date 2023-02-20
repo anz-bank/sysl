@@ -12,23 +12,23 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/anz-bank/golden-retriever/retriever"
-	"github.com/pmezard/go-difflib/difflib"
-	"google.golang.org/protobuf/encoding/prototext"
-	"google.golang.org/protobuf/reflect/protoreflect"
-
 	"github.com/anz-bank/sysl/pkg/env"
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
+	"github.com/pmezard/go-difflib/difflib"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 var (
@@ -196,7 +196,6 @@ var textProtoExtraSpaceAfterColonRE = regexp.MustCompile(`^([ \t]*: ) `)
 func parseAndCompare(
 	filename, root, golden string,
 	goldenProto protoreflect.ProtoMessage,
-	retainOnError bool,
 	stripSourceContext bool,
 ) (bool, error) {
 	module, err := parseComparable(filename, root, stripSourceContext)
@@ -271,7 +270,7 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 	if err != nil {
 		return false, err
 	}
-	return parseAndCompare(filename, root, golden, goldenModule, true, stripSourceContext)
+	return parseAndCompare(filename, root, golden, goldenModule, stripSourceContext)
 }
 
 func testParseAgainstGolden(t *testing.T, filename, root string) {
@@ -1160,6 +1159,58 @@ func (r mockReader) ReadHashBranch(_ context.Context, resource string) ([]byte, 
 		return []byte(c.content), r.contents[resource].hash, r.contents[resource].branch, nil
 	}
 	return nil, retriever.ZeroHash, "", fmt.Errorf("file not found")
+}
+
+func (r mockReader) Create(_ string) (afero.File, error) {
+	panic("unimplemented")
+}
+
+func (r mockReader) Mkdir(_ string, _ os.FileMode) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) MkdirAll(_ string, _ os.FileMode) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) Open(_ string) (afero.File, error) {
+	panic("unimplemented")
+}
+
+func (r mockReader) OpenFile(_ string, _ int, _ os.FileMode) (afero.File, error) {
+	panic("unimplemented")
+}
+
+func (r mockReader) Remove(_ string) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) RemoveAll(_ string) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) Rename(_, _ string) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) Stat(_ string) (os.FileInfo, error) {
+	panic("unimplemented")
+}
+
+func (r mockReader) Name() string {
+	panic("unimplemented")
+}
+
+func (r mockReader) Chmod(_ string, _ os.FileMode) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) Chown(_ string, _, _ int) error {
+	panic("unimplemented")
+}
+
+func (r mockReader) Chtimes(_ string, _ time.Time, _ time.Time) error {
+	panic("unimplemented")
 }
 
 /* TestParseSyslRetriever tests that a file can be imported */
