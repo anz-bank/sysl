@@ -1,0 +1,11 @@
+// this is to skipping a file
+// sysl protobufDir skip
+
+syntax = "proto3";
+package foo.ignore;
+
+option go_package = "github.com/test/ignore";
+
+service IgnoreService {
+    rpc GetIgnore (GetIgnoreRequest) returns (GetIgnoreResponse);
+}

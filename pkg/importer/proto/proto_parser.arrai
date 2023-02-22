@@ -286,8 +286,12 @@ let evalFile = \parsed
     (:syntax, :package, :imports, :options, :messages, :enums, :services, :extends) +> evalComments(parsed);
 
 # `parseFile` parses a byte array against the `file` grammar rule and evaluates it into an arr.ai model.
-let parseFile = \bytes
-    evalFile(//grammar.parse(grammar, "file", bytes));
+let parseFile =
+    let re = //re.compile(`^\s*sysl protobufDir skip`);
+    \bytes
+        let file = evalFile(//grammar.parse(grammar, "file", bytes));
+        let matches = (file.comments?:[] >> re.match(.)) where .@item;
+        cond {!matches: file};
 
 
 # `import` imports a list of proto files and returns the arrai representation.

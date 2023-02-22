@@ -2,13 +2,14 @@
 # empty array if the given option is not present.
 #
 # Intend for the retrieval of namespace and app name values from options.
-let getNamespace = \file
-	let re = //re.compile(`(?m)\{"sysl":.*}`);
-    let matches = cond {file.comments?:{}: (file.comments >> re.match(.)) where .@item rank (:.@)};
+let getNamespace =
+    let re = //re.compile(`(?m)\{"sysl":.*}`);
+    \file
+        let matches = cond {file.comments?:{}: (file.comments >> re.match(.)) where .@item rank (:.@)};
 
-    cond {
-        matches: //seq.split(" :: ", //encoding.json.decode(matches(0)(0)(0))('sysl')('namespace').s)
-    }
+        cond {
+            matches: //seq.split(" :: ", //encoding.json.decode(matches(0)(0)(0))('sysl')('namespace').s)
+        }
 ;
 
 let getPackage = \file (file.@value.package single).@;
