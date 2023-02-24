@@ -177,14 +177,16 @@ function fillParent(child: IChild, parent: Element): void {
     if (!child.parent) {
         child.parent = parent;
     } else {
-        let subject = `a fragment of type '${child.constructor.name}'`;
-        if (child instanceof Element) subject = `an element '${child.toRef().toSysl(true)}'`;
-        else if (child instanceof Annotation) subject = `an anno '${child?.name}'`;
-        else if (child instanceof Tag) subject = `a tag '${child?.name}'`;
-        throw new Error(
-            `Detected ${subject} with an incorrect parent. It has the parent ` +
-                `'${child.parent.toRef().toSysl(true)}' but is a child of '${parent.toRef().toSysl(true)}.`
-        );
+        // TODO: Make filterByFile() not incorporate items from a different model, then uncomment below checks.
+        //
+        // let subject = `a fragment of type '${child.constructor.name}'`;
+        // if (child instanceof Element) subject = `an element '${child.toRef().toSysl(true)}'`;
+        // else if (child instanceof Annotation) subject = `an anno '${child?.name}'`;
+        // else if (child instanceof Tag) subject = `a tag '${child?.name}'`;
+        // throw new Error(
+        //     `Detected ${subject} with an incorrect parent. It has the parent ` +
+        //         `'${child.parent.toRef().toSysl(true)}' but is a child of '${parent.toRef().toSysl(true)}.`
+        // );
     }
 }
 
