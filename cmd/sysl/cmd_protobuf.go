@@ -12,8 +12,9 @@ import (
 )
 
 type protobufCmd struct {
-	output string
-	mode   string
+	output  string
+	mode    string
+	compact bool
 }
 
 func (p *protobufCmd) Name() string       { return "protobuf" }
@@ -26,6 +27,9 @@ func (p *protobufCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("mode", fmt.Sprintf("output mode: [%s]", strings.Join(opts, ","))).
 		Default(opts[0]).
 		EnumVar(&p.mode, opts...)
+	cmd.Flag("compact", "Output without newlines and indentations").
+		Default("false").
+		BoolVar(&p.compact)
 	EnsureFlagsNonEmpty(cmd)
 	return cmd
 }
@@ -38,18 +42,20 @@ func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 
 	toJSON := p.mode == "json" || p.mode == "" && strings.HasSuffix(p.output, ".json")
 
+	opt := pbutil.OutputOptions{Compact: p.compact}
+
 	if toJSON {
 		if p.output == "-" {
-			return pbutil.FJSONPB(os.Stdout, args.Modules[0])
+			return pbutil.FJSONPBWithOpt(os.Stdout, args.Modules[0], opt)
 		}
-		return pbutil.JSONPB(args.Modules[0], p.output, args.Filesystem)
+		return pbutil.JSONPBWithOpt(args.Modules[0], p.output, args.Filesystem, opt)
 	}
 
 	if p.mode == "" || p.mode == "textpb" {
 		if p.output == "-" {
-			return pbutil.FTextPB(os.Stdout, args.Modules[0])
+			return pbutil.FTextPBWithOpt(os.Stdout, args.Modules[0], opt)
 		}
-		return pbutil.TextPB(args.Modules[0], p.output, args.Filesystem)
+		return pbutil.TextPBWithOpt(args.Modules[0], p.output, args.Filesystem, opt)
 	}
 
 	// output format is binary

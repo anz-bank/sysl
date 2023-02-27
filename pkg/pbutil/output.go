@@ -12,8 +12,16 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+type OutputOptions struct {
+	Compact bool
+}
+
 // JSONPB ...
 func JSONPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
+	return JSONPBWithOpt(m, filename, fs, OutputOptions{})
+}
+
+func JSONPBWithOpt(m protoreflect.ProtoMessage, filename string, fs afero.Fs, o OutputOptions) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
@@ -22,7 +30,7 @@ func JSONPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 		return err
 	}
 	defer f.Close()
-	return FJSONPB(f, m)
+	return FJSONPBWithOpt(f, m, o)
 }
 
 // Recognise extra whitespace after a JSON key.
@@ -30,10 +38,18 @@ var extraSpaceAfterKeyRE = regexp.MustCompile(`(?m)^(\s*"[^"]*": ) `)
 
 // FJSONPB ...
 func FJSONPB(w io.Writer, m protoreflect.ProtoMessage) error {
+	return FJSONPBWithOpt(w, m, OutputOptions{})
+}
+
+func FJSONPBWithOpt(w io.Writer, m protoreflect.ProtoMessage, o OutputOptions) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
 	ma := protojson.MarshalOptions{Multiline: true, Indent: " ", EmitUnpopulated: false}
+	if o.Compact {
+		ma.Multiline = false
+		ma.Indent = ""
+	}
 	mb, err := ma.Marshal(m)
 	if err != nil {
 		return err
@@ -48,6 +64,10 @@ func FJSONPB(w io.Writer, m protoreflect.ProtoMessage) error {
 
 // TextPB ...
 func TextPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
+	return TextPBWithOpt(m, filename, fs, OutputOptions{})
+}
+
+func TextPBWithOpt(m protoreflect.ProtoMessage, filename string, fs afero.Fs, o OutputOptions) error {
 	if m == nil {
 		return fmt.Errorf("module is nil: %#v", filename)
 	}
@@ -57,15 +77,23 @@ func TextPB(m protoreflect.ProtoMessage, filename string, fs afero.Fs) error {
 		return err
 	}
 	defer f.Close()
-	return FTextPB(f, m)
+	return FTextPBWithOpt(f, m, o)
 }
 
 // FTextPB ...
 func FTextPB(w io.Writer, m protoreflect.ProtoMessage) error {
+	return FTextPBWithOpt(w, m, OutputOptions{})
+}
+
+func FTextPBWithOpt(w io.Writer, m protoreflect.ProtoMessage, o OutputOptions) error {
 	if m == nil {
 		return fmt.Errorf("module is nil")
 	}
 	pt := prototext.MarshalOptions{Multiline: true, Indent: " ", EmitUnknown: false}
+	if o.Compact {
+		pt.Multiline = false
+		pt.Indent = ""
+	}
 	mt, err := pt.Marshal(m)
 	if err != nil {
 		return err

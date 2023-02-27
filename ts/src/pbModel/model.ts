@@ -111,9 +111,13 @@ export class PbDocumentModel {
      */
     static async fromPbOrJson(content: string | Buffer, maxImportDepth?: number): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
-        const out = await spawnBuffer(syslPath, ["pb", "--mode=json", `--max-import-depth=${maxImportDepth ?? 0}`], {
-            input: content,
-        });
+        const out = await spawnBuffer(
+            syslPath,
+            ["pb", "--mode=json", "--compact", `--max-import-depth=${maxImportDepth ?? 0}`],
+            {
+                input: content,
+            }
+        );
         return PbDocumentModel.fromJson(out);
     }
 
