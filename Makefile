@@ -79,34 +79,34 @@ build-sysl-version-diff-docker: generate
 	docker build -t sysl-version-diff -f sysl-version-diff/Dockerfile .
 
 # Assumes that every arr.ai script depends on every other arr.ai script.
-%.arraiz: %.arrai $(shell find . -name '*.arrai')
+%.arraiz: %.arrai $(shell find . -name '*.arrai') go.mod
 	$(ARRAI) bundle $< > $@
 
 .PHONY: plugins
 plugins: \
 		pkg/plugins/integration_model_plugin.arraiz
 
-internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cli.arrai
+internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cli.arrai go.mod
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.arrai
+internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.arrai go.mod
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai pkg/importer/cli.arrai $(shell find pkg/importer/openapi -name '*.arrai')
+internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai pkg/importer/cli.arrai $(shell find pkg/importer/openapi -name '*.arrai') go.mod
 	$(ARRAI) bundle $< > $@
 
 # There are many files that change the proto importer logic.
 # Check all arrai files within the directory for changes before bundling.
-internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai $(shell find pkg/importer/proto -name '*.arrai')
+internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai $(shell find pkg/importer/proto -name '*.arrai') go.mod
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/exporters/proto/transform.arraiz: transforms/exporters/proto/transform.arrai $(shell find transforms/exporters/proto -name '*.arrai')
+internal/bundles/exporters/proto/transform.arraiz: transforms/exporters/proto/transform.arrai $(shell find transforms/exporters/proto -name '*.arrai') go.mod
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/exporters/spanner/transform.arraiz: transforms/exporters/spanner/transform.arrai $(shell find transforms/exporters/spanner -name '*.arrai')
+internal/bundles/exporters/spanner/transform.arraiz: transforms/exporters/spanner/transform.arrai $(shell find transforms/exporters/spanner -name '*.arrai') go.mod
 	$(ARRAI) bundle $< > $@
 
-internal/bundles/importers/%/transform.arraiz: transforms/importers/%/transform.arrai
+internal/bundles/importers/%/transform.arraiz: transforms/importers/%/transform.arrai go.mod
 	$(ARRAI) bundle $< > $@
 
 internal/bundles/bundles.go: \
