@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -29,6 +31,12 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+type Settings struct {
+	MaxImportDepth   int
+	OperationSummary bool
+	SkipParsing      bool
+}
+
 // TypeData contains referenced type and actual tuple of referenced type
 type TypeData struct {
 	RefType *sysl.Type
@@ -42,7 +50,7 @@ type Parser struct {
 	LetTypes            map[string]TypeData
 	Messages            map[string][]msg.Msg
 	allowAbsoluteImport bool
-	maxImportDepth      int
+	Settings
 }
 
 // NewParser intializes and returns a new Parser instance
@@ -120,8 +128,8 @@ func (p *Parser) RestrictToLocalImport() {
 	p.allowAbsoluteImport = false
 }
 
-func (p *Parser) SetMaxImportDepth(depth int) {
-	p.maxImportDepth = depth
+func (p *Parser) Set(settings Settings) {
+	p.Settings = settings
 }
 
 // ParseString parses a sysl definition in string form.
@@ -148,7 +156,7 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 
 // ParseFromFsWithVendor parses a sysl definition from an afero filesystem, and vendor remote files in root dir
 func (p *Parser) ParseFromFsWithVendor(filename string, fs afero.Fs) (*sysl.Module, error) {
-	if p.maxImportDepth > 0 {
+	if p.MaxImportDepth > 0 {
 		return nil, fmt.Errorf("can not limit import depth while vendoring")
 	}
 
@@ -192,7 +200,7 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		importDef{filename: resource},
 		reader,
 		&retrieved,
-		p.maxImportDepth,
+		p.MaxImportDepth,
 		0,
 	); err != nil {
 		return nil, err
@@ -200,6 +208,27 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 
 	specs := []srcInput{}
 	flattenSpecs(&specs, resource, &retrieved)
+
+	if p.OperationSummary {
+		out := struct {
+			FilesProcessed []string `json:"filesProcessed"`
+		}{
+			FilesProcessed: make([]string, len(specs)),
+		}
+		for i := range specs {
+			out.FilesProcessed[i] = specs[i].src.filename
+		}
+		b, err := json.MarshalIndent(out, "", "  ")
+		if err != nil {
+			return nil, err
+		}
+		os.Stdout.Write(b)
+		os.Stdout.Write([]byte("\n"))
+	}
+
+	if p.SkipParsing {
+		return listener.module, nil
+	}
 
 	return p.parseSpecs(specs, listener)
 }

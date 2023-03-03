@@ -27,10 +27,10 @@ import (
 type cmdRunner struct {
 	commands map[string]cmdutils.Command
 
-	Root           string
-	CloneVersion   string
-	modules        []string
-	maxImportDepth int
+	Root          string
+	CloneVersion  string
+	modules       []string
+	parseSettings parse.Settings
 }
 
 // Run identifies the command to run, loads the Sysl modules from the input (if necessary), then
@@ -43,6 +43,14 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 			var modules []*sysl.Module
 			var err error
 			var gitRoot string
+
+			preExecuter, ok := cmd.(cmdutils.PreExecuteCommand)
+			if ok {
+				err = preExecuter.PreExecute(&r.parseSettings)
+				if err != nil {
+					return err
+				}
+			}
 
 			if r.CloneVersion != "" {
 				fs, gitRoot, err = r.getClonedRepo(fs)
@@ -105,6 +113,7 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		&testRigCmd{},
 		&transformCmd{},
 		&validateCmd{},
+		&displaySummaryCmd{},
 	}
 	r.commands = map[string]cmdutils.Command{}
 
@@ -120,7 +129,11 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		"Maximum depth to follow imports, including the original file (ignores any that are deeper)."+
 			" 0 (default) for unlimited."+
 			" eg 1 means just the original file with no imports.",
-	).IntVar(&r.maxImportDepth)
+	).IntVar(&r.parseSettings.MaxImportDepth)
+
+	app.Flag("operation-summary",
+		"Currently just outputs the names of the files parsed.",
+	).BoolVar(&r.parseSettings.OperationSummary)
 
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
@@ -220,7 +233,7 @@ func (r *cmdRunner) loadFromStdin(stdin io.Reader, fs afero.Fs, logger *logrus.L
 func (r *cmdRunner) loadFromModules(fs afero.Fs, logger *logrus.Logger) ([]*sysl.Module, error) {
 	var mods []*sysl.Module
 	for _, moduleName := range r.modules {
-		mod, _, err := loader.LoadSyslModuleWithMaxDepth(r.Root, moduleName, fs, logger, r.maxImportDepth)
+		mod, _, err := loader.LoadSyslModuleWithSettings(r.Root, moduleName, fs, logger, r.parseSettings)
 		if err != nil {
 			return nil, err
 		}
@@ -247,7 +260,7 @@ func (r *cmdRunner) loadFromClone(fs afero.Fs, gitRoot string) ([]*sysl.Module, 
 		}
 
 		modelParser := parse.NewParser()
-		modelParser.SetMaxImportDepth(r.maxImportDepth)
+		modelParser.Set(r.parseSettings)
 		mod, err := modelParser.ParseFromFs(moduleName, fs)
 		if err != nil {
 			return nil, err

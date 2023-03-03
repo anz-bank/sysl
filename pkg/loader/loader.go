@@ -22,14 +22,14 @@ type ProjectConfiguration struct {
 }
 
 func LoadSyslModule(root, filename string, fs afero.Fs, logger *logrus.Logger) (*sysl.Module, string, error) {
-	return LoadSyslModuleWithMaxDepth(root, filename, fs, logger, 0)
+	return LoadSyslModuleWithSettings(root, filename, fs, logger, parse.Settings{})
 }
 
-func LoadSyslModuleWithMaxDepth(root,
+func LoadSyslModuleWithSettings(root,
 	filename string,
 	fs afero.Fs,
 	logger *logrus.Logger,
-	maxImportDepth int,
+	settings parse.Settings,
 ) (*sysl.Module, string, error) {
 	logger.Debugf("Attempting to load module:%s (root:%s)", filename, root)
 	projectConfig := NewProjectConfiguration()
@@ -41,7 +41,7 @@ func LoadSyslModuleWithMaxDepth(root,
 	if !projectConfig.RootIsFound {
 		modelParser.RestrictToLocalImport()
 	}
-	modelParser.SetMaxImportDepth(maxImportDepth)
+	modelParser.Set(settings)
 
 	return parse.LoadAndGetDefaultApp(projectConfig.Module, projectConfig.Fs, modelParser)
 }

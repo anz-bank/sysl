@@ -842,14 +842,14 @@ components:
 	require.NotNil(t, c.Apps["Four"])
 
 	// Depth of 1
-	p.SetMaxImportDepth(1)
+	p.Set(Settings{MaxImportDepth: 1})
 	c, err = p.Parse("one", r)
 	require.NoError(t, err)
 	require.Equal(t, 1, len(c.Apps))
 	require.NotNil(t, c.Apps["One"])
 
 	// Depth of 2
-	p.SetMaxImportDepth(2)
+	p.Set(Settings{MaxImportDepth: 2})
 	c, err = p.Parse("one", r)
 	require.NoError(t, err)
 	require.Equal(t, 2, len(c.Apps))
@@ -857,7 +857,7 @@ components:
 	require.NotNil(t, c.Apps["Two"])
 
 	// Depth of 3
-	p.SetMaxImportDepth(3)
+	p.Set(Settings{MaxImportDepth: 3})
 	c, err = p.Parse("one", r)
 	require.NoError(t, err)
 	require.Equal(t, 4, len(c.Apps))
