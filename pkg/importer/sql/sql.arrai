@@ -49,7 +49,11 @@ check               -> "CHECK" "(" condition ")";
 unique              -> "UNIQUE"? ("KEY" key_name=name)? "(" column_name:"," ")";
 fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")" references on_delete? on_update?;
 references          -> "REFERENCES" foreign=(table_prefix? table_name ("(" column_name:"," ")")?);
-cluster             -> "INTERLEAVE" "IN" "PARENT" table_name on_delete?; //# Spanner
+cluster             -> interleave=("INTERLEAVE" "IN" "PARENT" table_name on_delete?)
+                     | rowDeletionPolicy=("ROW" "DELETION" "POLICY" "("
+                         "OLDER_THAN" "(" column_name "," "INTERVAL" int_value "DAY" ")"
+                       ")")
+                     ; //# Spanner
 on_delete           -> "ON" "DELETE" on_action;
 on_update           -> "ON" "UPDATE" on_action;
 on_action           -> CASCADE     = "CASCADE"
@@ -158,7 +162,7 @@ key_parts            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
 attr_type           -> (ARRAY_TYPE | SCALAR_TYPE | STRUCT_TYPE) (NULL | NOT_NULL | default | generated)*;
 default             -> "DEFAULT" ((value ("::" cast=attr_type)?) | "(" (value ("::" cast=attr_type)?) ")");
 generated           -> ("GENERATED" "ALWAYS")? "AS" expr ("VIRTUAL" | "STORED");
-expr                -> [^()]* "(" [^()]* expr? [^()]* ")";
+expr                -> [^()]* "(" [^()]* (expr:[^()]*)? [^()]* ")";
 if_exists           -> "IF" "EXISTS";
 if_not_exists       -> "IF" "NOT" "EXISTS";
 pk                  -> "PRIMARY" "KEY";
@@ -486,12 +490,15 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
                     ,
                     _: val.attr >> cond . {(:pk, ...): .column_name.'' rank (:.@)} where .@item,
                 },
-                cluster: cond {
-                    (val.cluster?:false): val.cluster >> (
+                cluster: (val.cluster?:[] filter . {
+                    (:@, @item: (interleave: ., ...)): (:@, @item: (
                         interleaved_in: (.table_name.'' rank (:.@)),
                         on_delete: evalOnAction((.).on_delete?.on_action?:{}),
-                    ),
-                },
+                    )),
+                    # (:@, @item: (rowDeletionPolicy: .)): (:@, @item: (
+                    #     # ...
+                    # )),
+                }) rank (:.@),
             ),
         )
     ,

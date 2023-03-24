@@ -177,7 +177,7 @@ let interleaved = applyStmt(parseDdl('
         interleaved:
             let a = (name: 'a', type: 'int64', length: 0, nullable: true, options: {}, scale: 0);
             let t = (name: 't', type: 'datetime', length: 0, nullable: true, options: {'allow_commit_timestamp': 'true'}, scale: 0);
-            interleaved = (
+            let expected = (
                 entities: {
                     |name , attributes, primary_key, foreign_keys, unique_keys, name_prefix, cluster                                 |
                     ('foo', [a]       , ['a']      , {}          , {}         , ''         , {}                                      ),
@@ -185,6 +185,7 @@ let interleaved = applyStmt(parseDdl('
                 },
                 indexes: {},
                 schema: {(name: 'test')},
-            ),
+            );
+            interleaved = expected,
     ),
 )

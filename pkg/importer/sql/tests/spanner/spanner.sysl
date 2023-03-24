@@ -9,6 +9,14 @@ customeraccounts:
         CreationDate <: date
         Table <: string(32)?
 
+    !table Account2 [interleave_in_parent="Consent", interleave_on_delete="cascade"]:
+        @primary_key = ["AccountID"]
+        AccountID <: string(20) [~pk]
+        DisplayName <: string(512)
+        AcctBalance <: decimal(38.9)
+        CreditLimit <: decimal(38.9)?
+        Tag <: int64?
+
     !table AccountAddress [interleave_in_parent="Account", interleave_on_delete="cascade"]:
         @primary_key = ["AccountNum", "AddressPostCode", "LastUpdated"]
         AccountNum <: Account.AccountNum [~pk, ~asc]
