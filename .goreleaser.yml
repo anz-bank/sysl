@@ -6,8 +6,8 @@ before:
   hooks:
     - go mod tidy
 
-build:
-  main: ./cmd/sysl
+builds:
+- main: ./cmd/sysl
   ldflags:
     - -s -w -X main.Version=v{{.Version}}
     - -X main.GitCommit={{.ShortCommit}}
