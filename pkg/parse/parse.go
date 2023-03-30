@@ -234,7 +234,44 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 }
 
 func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sysl.Module, error) { //nolint:funlen
-	for _, v := range specs {
+	// Import all foreign types in parallel
+	type syslInput struct {
+		src             importDef
+		syslProtoImport *sysl.Module
+		err             error
+		str             antlr.CharStream
+	}
+	syslInputs := make([]syslInput, len(specs))
+
+	g := new(errgroup.Group)
+	for i := range specs {
+		v := &specs[i]
+		out := &syslInputs[i]
+		g.Go(func() error {
+			out.src = v.src
+
+			// Import Sysl Proto
+			out.syslProtoImport, out.err = pbutil.FromPBStringContents(v.src.filename, v.input)
+			if !errors.Is(pbutil.ErrUnknownExtension, out.err) {
+				return nil
+			}
+
+			fsinput := &fsFileStream{antlr.NewInputStream(v.input), v.src.filename}
+			var err error
+			out.str, err = importForeign(v.src, fsinput)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
+	gerr := g.Wait()
+	if gerr != nil {
+		return nil, gerr
+	}
+
+	for _, v := range syslInputs {
 		src := v.src
 		logrus.Debug("Parsing: ", src.filename)
 
@@ -248,14 +285,13 @@ func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sys
 		listener.sc = sourceCtxHelper{srcCtxFile, version}
 
 		// Import Sysl Proto
-		syslProtoImport, err := pbutil.FromPBStringContents(src.filename, v.input)
-		if !errors.Is(pbutil.ErrUnknownExtension, err) {
-			if err != nil {
-				return nil, fmt.Errorf("error parsing %s: %w", src.filename, err)
+		if !errors.Is(pbutil.ErrUnknownExtension, v.err) {
+			if v.err != nil {
+				return nil, fmt.Errorf("error parsing %s: %w", src.filename, v.err)
 			}
-			if syslProtoImport != nil {
+			if v.syslProtoImport != nil {
 				// Merge structs recursively
-				if err := mergo.Merge(listener.module, syslProtoImport); err != nil {
+				if err := mergo.Merge(listener.module, v.syslProtoImport); err != nil {
 					return nil, err
 				}
 			}
@@ -263,13 +299,7 @@ func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sys
 			continue
 		}
 
-		fsinput := &fsFileStream{antlr.NewInputStream(v.input), src.filename}
-		str, err := importForeign(src, fsinput)
-		if err != nil {
-			return nil, err
-		}
-
-		tree, err := parseString(src.filename, str)
+		tree, err := parseString(src.filename, v.str)
 		if err != nil {
 			return nil, err
 		}
