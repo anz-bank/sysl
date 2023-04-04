@@ -86,11 +86,11 @@ func main2(
 ) int {
 	if err := main3(args, fs, logger, stdin); err != nil {
 		arraiErr, ok := errors.Cause(err).(arrai.ExecutionError)
+		var exitCode = 1
 		if ok {
 			logger.Debugln(err)
 			logger.Errorln(arraiErr.ShortMsg)
 		} else {
-			var exitCode = 1
 			if err, ok := err.(syslutil.Exit); ok {
 				exitCode = err.Code
 			}
@@ -103,9 +103,8 @@ func main2(
 			default:
 				logger.Errorln(err.Error())
 			}
-
-			return exitCode
 		}
+		return exitCode
 	}
 	return 0
 }
