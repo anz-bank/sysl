@@ -33,12 +33,6 @@ let dropIndexSql = 'DROP INDEX i;';
 let [dropIndex] = parseDdl(dropIndexSql);
 let foo_ix = applyDropIndex(dropIndex.data, foo_i);
 
-let interleaved = applyStmt(parseDdl('
-    CREATE DATABASE test;
-    CREATE TABLE foo (a INT64) PRIMARY KEY (a);
-    CREATE TABLE bar (a INT64, t TIMESTAMP OPTIONS (allow_commit_timestamp = true)) PRIMARY KEY (a, t), INTERLEAVE IN PARENT foo;
-'), empty);
-
 (
     parseDdl: (
         createTable: createTable = (
@@ -175,6 +169,12 @@ let interleaved = applyStmt(parseDdl('
 
     applyStmt: (
         interleaved:
+            let actual = applyStmt(parseDdl('
+                CREATE DATABASE test;
+                CREATE TABLE foo (a INT64) PRIMARY KEY (a);
+                CREATE TABLE bar (a INT64, t TIMESTAMP OPTIONS (allow_commit_timestamp = true)) PRIMARY KEY (a, t), INTERLEAVE IN PARENT foo;
+            '), empty);
+
             let a = (name: 'a', type: 'int64', length: 0, nullable: true, options: {}, scale: 0);
             let t = (name: 't', type: 'datetime', length: 0, nullable: true, options: {'allow_commit_timestamp': 'true'}, scale: 0);
             let expected = (
@@ -184,8 +184,33 @@ let interleaved = applyStmt(parseDdl('
                     ('bar', [a, t]    , ['a', 't'] , {}          , {}         , ''         , [(interleaved_in: 'foo', on_delete: {})]),
                 },
                 indexes: {},
-                schema: {(name: 'test')},
+                schema: {|name| ('test')},
             );
-            interleaved = expected,
+
+            actual = expected,
+
+        defaultNumeric:
+            let actual = applyStmt(parseDdl(`
+                CREATE TABLE foo (
+                    a INT64 DEFAULT (NUMERIC '0')
+                );
+            `), empty);
+
+            let a = (name: 'a', type: 'int64', length: 0, nullable: true, options: {}, scale: 0);
+            let expected = (
+                entities: {
+                    |name , attributes, primary_key, foreign_keys, unique_keys, name_prefix, cluster|
+                    ('foo', [a]       , []         , {}          , {}         , ''         , {}     ),
+                },
+                indexes: {},
+                schema: {},
+            );
+
+            actual = expected,
+
+        stringWithColon:
+            let expected = (entities: {}, indexes: {}, schema: {});
+            let actual = applyStmt(parseDdl(`SELECT ":" AS a FROM X;`), empty);
+            actual = expected,
     ),
 )

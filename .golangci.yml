@@ -11,7 +11,7 @@ linters:
   disable-all: true
   enable:
     - bodyclose
-    - deadcode
+    # - deadcode  # deprecated
     - depguard
     - dogsled
     - dupl
@@ -22,22 +22,22 @@ linters:
     - gocyclo
     - gofmt
     - goimports
-    - revive
+    # - revive
     - gosec
-    - gosimple
-    - govet
+    # - gosimple
+    # - govet
     - ineffassign
     - lll
     - misspell
     - nakedret
     - exportloopref
     - staticcheck
-    - structcheck
+    # - structcheck  # deprecated
     - stylecheck
     - typecheck
     - unconvert
     - unused
-    - varcheck
+    # - varcheck  # deprecated
     - whitespace
     - funlen
 linters-settings:

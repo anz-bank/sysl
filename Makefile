@@ -63,10 +63,10 @@ golden: generate
 check-clean: generate
 	git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
-build: generate
+build: generate internal/bundles/bundles.go
 	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
-build-windows: generate
+build-windows: generate internal/bundles/bundles.go
 	go build -o ./dist/sysl.exe -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp: generate
@@ -117,6 +117,7 @@ internal/bundles/bundles.go: \
 		internal/bundles/exporters/proto/transform.arraiz \
 		internal/bundles/exporters/spanner/transform.arraiz \
 		internal/bundles/importers/jsonschema/transform.arraiz
+	touch $@
 
 pkg/importer/proto/bundled_files/local_imports.arrai: pkg/importer/proto/bundled_files/bundler.arrai
 	$(ARRAI) run $< > pkg/importer/proto/bundled_files/tmp.arrai && \
