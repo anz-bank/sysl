@@ -12,3 +12,42 @@ Model:
 
   !alias Terms:
     sequence of Term
+
+  !alias TermsWithTag [~tag]:
+    sequence of Term
+
+  !alias TermsWithAnnotations:
+    @anno = "anno"
+    sequence of Term
+
+  !alias TermsWithAnnotationsAndTag [~tag]:
+    @anno = "anno"
+    sequence of Term
+
+  !alias Requests:
+    set of Request
+
+  !alias RequestsWithTag [~tag]:
+    set of Request
+
+  !alias RequestsWithAnnotations:
+    @anno = "anno"
+    set of Request
+
+  !alias RequestsWithAnnotationsAndTag [~tag]:
+    @anno = "anno"
+    set of Request
+
+  !alias Primitives:
+    sequence of string
+
+  !alias PrimitivesWithTag [~tag]:
+    sequence of string
+
+  !alias PrimitivesWithAnnotations:
+    @anno = "anno"
+    sequence of string
+
+  !alias PrimitivesWithAnnotationsAndTag [~tag]:
+    @anno = "anno"
+    sequence of string

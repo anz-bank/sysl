@@ -93,6 +93,334 @@ apps: {
    }
   }
   types: {
+   key: "Primitives"
+   value: {
+    sequence: {
+     primitive: STRING
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 40
+       col: 2
+      }
+      end: {
+       line: 43
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 40
+       col: 2
+      }
+      end: {
+       line: 43
+       col: 3
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 40
+      col: 2
+     }
+     end: {
+      line: 43
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 40
+      col: 2
+     }
+     end: {
+      line: 43
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "PrimitivesWithAnnotations"
+   value: {
+    sequence: {
+     primitive: STRING
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 46
+       col: 2
+      }
+      end: {
+       line: 50
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 46
+       col: 2
+      }
+      end: {
+       line: 50
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: "anno"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 47
+        col: 12
+       }
+       end: {
+        line: 47
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 47
+        col: 12
+       }
+       end: {
+        line: 47
+        col: 18
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 46
+      col: 2
+     }
+     end: {
+      line: 50
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 46
+      col: 2
+     }
+     end: {
+      line: 50
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "PrimitivesWithAnnotationsAndTag"
+   value: {
+    sequence: {
+     primitive: STRING
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 50
+       col: 2
+      }
+      end: {
+       line: 53
+       col: 1
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 50
+       col: 2
+      }
+      end: {
+       line: 53
+       col: 1
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: "anno"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 51
+        col: 12
+       }
+       end: {
+        line: 51
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 51
+        col: 12
+       }
+       end: {
+        line: 51
+        col: 18
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "tag"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 50
+          col: 42
+         }
+         end: {
+          line: 50
+          col: 46
+         }
+        }
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 50
+          col: 42
+         }
+         end: {
+          line: 50
+          col: 46
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 50
+      col: 2
+     }
+     end: {
+      line: 53
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 50
+      col: 2
+     }
+     end: {
+      line: 53
+      col: 1
+     }
+    }
+   }
+  }
+  types: {
+   key: "PrimitivesWithTag"
+   value: {
+    sequence: {
+     primitive: STRING
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 43
+       col: 2
+      }
+      end: {
+       line: 46
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 43
+       col: 2
+      }
+      end: {
+       line: 46
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "tag"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 43
+          col: 28
+         }
+         end: {
+          line: 43
+          col: 32
+         }
+        }
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 43
+          col: 28
+         }
+         end: {
+          line: 43
+          col: 32
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 43
+      col: 2
+     }
+     end: {
+      line: 46
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 43
+      col: 2
+     }
+     end: {
+      line: 46
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
    key: "Request"
    value: {
     tuple: {
@@ -145,6 +473,374 @@ apps: {
      end: {
       line: 6
       col: 24
+     }
+    }
+   }
+  }
+  types: {
+   key: "Requests"
+   value: {
+    set: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "Requests"
+      }
+      ref: {
+       path: "Request"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 26
+       col: 2
+      }
+      end: {
+       line: 29
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 26
+       col: 2
+      }
+      end: {
+       line: 29
+       col: 3
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 26
+      col: 2
+     }
+     end: {
+      line: 29
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 26
+      col: 2
+     }
+     end: {
+      line: 29
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "RequestsWithAnnotations"
+   value: {
+    set: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "RequestsWithAnnotations"
+      }
+      ref: {
+       path: "Request"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 32
+       col: 2
+      }
+      end: {
+       line: 36
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 32
+       col: 2
+      }
+      end: {
+       line: 36
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: "anno"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 33
+        col: 12
+       }
+       end: {
+        line: 33
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 33
+        col: 12
+       }
+       end: {
+        line: 33
+        col: 18
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 32
+      col: 2
+     }
+     end: {
+      line: 36
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 32
+      col: 2
+     }
+     end: {
+      line: 36
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "RequestsWithAnnotationsAndTag"
+   value: {
+    set: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "RequestsWithAnnotationsAndTag"
+      }
+      ref: {
+       path: "Request"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 36
+       col: 2
+      }
+      end: {
+       line: 40
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 36
+       col: 2
+      }
+      end: {
+       line: 40
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: "anno"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 37
+        col: 12
+       }
+       end: {
+        line: 37
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 37
+        col: 12
+       }
+       end: {
+        line: 37
+        col: 18
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "tag"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 36
+          col: 40
+         }
+         end: {
+          line: 36
+          col: 44
+         }
+        }
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 36
+          col: 40
+         }
+         end: {
+          line: 36
+          col: 44
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 36
+      col: 2
+     }
+     end: {
+      line: 40
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 36
+      col: 2
+     }
+     end: {
+      line: 40
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "RequestsWithTag"
+   value: {
+    set: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "RequestsWithTag"
+      }
+      ref: {
+       path: "Request"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 29
+       col: 2
+      }
+      end: {
+       line: 32
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 29
+       col: 2
+      }
+      end: {
+       line: 32
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "tag"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 29
+          col: 26
+         }
+         end: {
+          line: 29
+          col: 30
+         }
+        }
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 29
+          col: 26
+         }
+         end: {
+          line: 29
+          col: 30
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 29
+      col: 2
+     }
+     end: {
+      line: 32
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 29
+      col: 2
+     }
+     end: {
+      line: 32
+      col: 3
      }
     }
    }
@@ -266,8 +962,8 @@ apps: {
        col: 2
       }
       end: {
-       line: 14
-       col: 1
+       line: 15
+       col: 3
       }
      }
      source_contexts: {
@@ -277,8 +973,8 @@ apps: {
        col: 2
       }
       end: {
-       line: 14
-       col: 1
+       line: 15
+       col: 3
       }
      }
     }
@@ -289,8 +985,8 @@ apps: {
       col: 2
      }
      end: {
-      line: 14
-      col: 1
+      line: 15
+      col: 3
      }
     }
     source_contexts: {
@@ -300,8 +996,314 @@ apps: {
       col: 2
      }
      end: {
-      line: 14
-      col: 1
+      line: 15
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "TermsWithAnnotations"
+   value: {
+    sequence: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "TermsWithAnnotations"
+      }
+      ref: {
+       path: "Term"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 18
+       col: 2
+      }
+      end: {
+       line: 22
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 18
+       col: 2
+      }
+      end: {
+       line: 22
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: "anno"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 19
+        col: 12
+       }
+       end: {
+        line: 19
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 19
+        col: 12
+       }
+       end: {
+        line: 19
+        col: 18
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 18
+      col: 2
+     }
+     end: {
+      line: 22
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 18
+      col: 2
+     }
+     end: {
+      line: 22
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "TermsWithAnnotationsAndTag"
+   value: {
+    sequence: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "TermsWithAnnotationsAndTag"
+      }
+      ref: {
+       path: "Term"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 22
+       col: 2
+      }
+      end: {
+       line: 26
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 22
+       col: 2
+      }
+      end: {
+       line: 26
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: "anno"
+      source_context: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 23
+        col: 12
+       }
+       end: {
+        line: 23
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/alias.sysl"
+       start: {
+        line: 23
+        col: 12
+       }
+       end: {
+        line: 23
+        col: 18
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "tag"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 22
+          col: 37
+         }
+         end: {
+          line: 22
+          col: 41
+         }
+        }
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 22
+          col: 37
+         }
+         end: {
+          line: 22
+          col: 41
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 22
+      col: 2
+     }
+     end: {
+      line: 26
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 22
+      col: 2
+     }
+     end: {
+      line: 26
+      col: 3
+     }
+    }
+   }
+  }
+  types: {
+   key: "TermsWithTag"
+   value: {
+    sequence: {
+     type_ref: {
+      context: {
+       appname: {
+        part: "Model"
+       }
+       path: "TermsWithTag"
+      }
+      ref: {
+       path: "Term"
+      }
+     }
+     source_context: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 15
+       col: 2
+      }
+      end: {
+       line: 18
+       col: 3
+      }
+     }
+     source_contexts: {
+      file: "tests/alias.sysl"
+      start: {
+       line: 15
+       col: 2
+      }
+      end: {
+       line: 18
+       col: 3
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "tag"
+        source_context: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 15
+          col: 23
+         }
+         end: {
+          line: 15
+          col: 27
+         }
+        }
+        source_contexts: {
+         file: "tests/alias.sysl"
+         start: {
+          line: 15
+          col: 23
+         }
+         end: {
+          line: 15
+          col: 27
+         }
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 15
+      col: 2
+     }
+     end: {
+      line: 18
+      col: 3
+     }
+    }
+    source_contexts: {
+     file: "tests/alias.sysl"
+     start: {
+      line: 15
+      col: 2
+     }
+     end: {
+      line: 18
+      col: 3
      }
     }
    }
@@ -310,16 +1312,16 @@ apps: {
    file: "tests/alias.sysl"
    start: {}
    end: {
-    line: 14
-    col: 1
+    line: 51
+    col: 18
    }
   }
   source_contexts: {
    file: "tests/alias.sysl"
    start: {}
    end: {
-    line: 14
-    col: 1
+    line: 51
+    col: 18
    }
   }
  }

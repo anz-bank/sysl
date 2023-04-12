@@ -3291,8 +3291,8 @@ func (s *TreeShapeListener) EnterAlias(ctx *parser.AliasContext) {
 		if type1.Attrs == nil {
 			type1.Attrs = map[string]*sysl.Attribute{}
 		}
-		s.pushScope(type1)
 	}
+	s.pushScope(type1)
 	type1.SourceContext = s.getSrcCtx(ctx.BaseParserRuleContext)             //nolint:staticcheck
 	type1.SourceContexts = append(type1.SourceContexts, type1.SourceContext) //nolint:staticcheck
 }
