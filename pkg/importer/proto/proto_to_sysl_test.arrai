@@ -4,7 +4,7 @@ let (:module, ...) = //{./proto_to_sysl};
 (
     import: (
         conflicting:
-            let model = import(['pkg/importer/proto/tests/google.proto'], ['pkg/importer/proto/bundled_files']);
+            let model = import((importPaths: ['pkg/importer/proto/bundled_files']), ['pkg/importer/proto/tests/google.proto']);
             let sysl = module(model);
 
             let actualPackage = sysl.apps('google_protobuf').attrs('go_package').s;
@@ -12,6 +12,13 @@ let (:module, ...) = //{./proto_to_sysl};
             # Most importantly it's deterministic.
             # TODO: Handle serialization of applications merged from multiple proto files
             # (i.e. those with name collisions).
-            //test.assert.equal("google.golang.org/protobuf/types/known/typepb", actualPackage)
+            //test.assert.equal("google.golang.org/protobuf/types/known/typepb", actualPackage),
+        shallow:
+            let model = import((shallow: true), ['pkg/importer/proto/tests/shallow.proto']);
+            # only check for the module on shallow.proto while removing list of imports
+            # imports are removed because they're irrelevant in this test.
+            let model = (model single).@value.~|imports|;
+            let expected = (import((shallow: true), ['pkg/importer/proto/tests/namespace.proto']) single).@value.~|imports|;
+            model = expected
     )
 )

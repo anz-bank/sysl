@@ -66,12 +66,12 @@ func (o *OpenAPI3Importer) Load(file string) (string, error) {
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (o *OpenAPI3Importer) Configure(appName, packageName, _ string) (Importer, error) {
-	if appName == "" {
+func (o *OpenAPI3Importer) Configure(arg *ImporterArg) (Importer, error) {
+	if arg.AppName == "" {
 		return nil, errors.New("application name not provided")
 	}
-	o.appName = appName
-	o.pkg = packageName
+	o.appName = arg.AppName
+	o.pkg = arg.PackageName
 	return o, nil
 }
 

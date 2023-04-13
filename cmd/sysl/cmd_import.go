@@ -41,6 +41,9 @@ func (p *importCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 	cmd.Flag("import-paths", "comma separated list of paths used to resolve imports in "+
 		"the input file. Currently only used for protobuf input.").Short('I').
 		StringVar(&p.ImportPaths)
+	cmd.Flag("shallow", "does shallow parsing of input and excludes definitions imported by the specification").
+		Short('s').
+		BoolVar(&p.Shallow)
 	return cmd
 }
 
@@ -65,7 +68,12 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if err != nil {
 		return err
 	}
-	imp, err = imp.Configure(p.AppName, p.Package, p.ImportPaths)
+	imp, err = imp.Configure(&importer.ImporterArg{
+		AppName:     p.AppName,
+		PackageName: p.Package,
+		Imports:     p.ImportPaths,
+		Shallow:     p.Shallow,
+	})
 	if err != nil {
 		return err
 	}

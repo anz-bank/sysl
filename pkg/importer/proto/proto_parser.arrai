@@ -323,7 +323,7 @@ let parseFile =
 #       syntax: 'proto3'
 #   )
 # }
-let import = \files \paths
+let import = \(importPaths?:paths:[], ?:shallow:false, ...) \files
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let isLocal = \path localImports(path)?:false && true;
     let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
@@ -353,7 +353,7 @@ let import = \files \paths
                 cond {
                     parsed:
                         let result = result +> {file: parsed};
-                        let importFiles = ((parsed.imports => cond {includeImport(.@): .@}) where .) orderby .;
+                        let importFiles = !shallow && ((parsed.imports => cond {includeImport(.@): .@}) where .) orderby .;
                         _import(tail ++ importFiles, result),
                     _: _import(tail, result)
                 }

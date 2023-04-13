@@ -28,6 +28,7 @@ type testConfig struct {
 	testDir       string
 	testExtension string
 	format        string
+	excludeFiles  map[string]bool
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
@@ -44,6 +45,9 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 		ext := filepath.Ext(f.Name())
 		if strings.EqualFold(ext, cfg.testExtension) {
 			filename := strings.TrimSuffix(f.Name(), ext)
+			if cfg.excludeFiles != nil && cfg.excludeFiles[f.Name()] {
+				continue
+			}
 			t.Run(fmt.Sprintf("%s-%s", cfg.name, filename), func(t *testing.T) {
 				t.Parallel()
 				syslFile := filepath.Join(cfg.testDir, filename+".sysl")
@@ -54,7 +58,9 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				require.NoError(t, err)
 				imp, err := Factory(absFilePath, false, cfg.format, input, logger)
 				require.NoError(t, err)
-				imp, err = imp.Configure("TestApp", "com.example.package", ".")
+				imp, err = imp.Configure(&ImporterArg{
+					AppName: "TestApp", PackageName: "com.example.package", Imports: ".",
+				})
 				require.NoError(t, err)
 				var result string
 				switch imp.(type) {
@@ -88,7 +94,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	path := syslutil.MustAbsolute(t, cfg.testDir)
 	imp, err := Factory(path, true, cfg.format, nil, logger)
 	require.NoError(t, err)
-	imp, err = imp.Configure("TestApp", "com.example.package", ".")
+	imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package", Imports: "."})
 	require.NoError(t, err)
 	var out string
 	switch imp.(type) {
@@ -206,6 +212,8 @@ func TestLoadProtobufFromTestFiles(t *testing.T) {
 		testDir:       "proto/tests",
 		testExtension: ".proto",
 		format:        "protobuf",
+		// shallow.proto output is tested in proto_to_sysl_test.arrai
+		excludeFiles: map[string]bool{"shallow.proto": true},
 	})
 }
 
@@ -253,7 +261,7 @@ func runImportErrorTest(t *testing.T, cfg errTestConfig) {
 				fileToImport := syslutil.MustAbsolute(t, filepath.Join(cfg.testDir, filename)+cfg.testExtension)
 				imp, err := Factory(fileToImport, true, cfg.format, nil, logger)
 				require.NoError(t, err)
-				imp, err = imp.Configure("TestApp", "com.example.package", "")
+				imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package"})
 				require.NoError(t, err)
 				_, err = imp.LoadFile(fileToImport)
 				// some errors can be non-deterministic e.g. circular errors can point to different types that have
@@ -292,7 +300,7 @@ func TestIpmortOpenAPI3Relative(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	imp, err := Factory(path, false, OpenAPI3.Name, nil, logger)
 	require.NoError(t, err)
-	imp, err = imp.Configure("TestApp", "com.example.package", "")
+	imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package"})
 	require.NoError(t, err)
 	_, err = imp.LoadFile(path)
 	require.NoError(t, err)

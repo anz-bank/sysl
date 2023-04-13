@@ -64,12 +64,12 @@ func (l *OpenAPI2Importer) Load(oas2spec string) (string, error) {
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (l *OpenAPI2Importer) Configure(appName, packageName, _ string) (Importer, error) {
-	if appName == "" {
+func (l *OpenAPI2Importer) Configure(arg *ImporterArg) (Importer, error) {
+	if arg.AppName == "" {
 		return nil, errors.New("application name not provided")
 	}
-	l.appName = appName
-	l.pkg = packageName
+	l.appName = arg.AppName
+	l.pkg = arg.PackageName
 	return l, nil
 }
 

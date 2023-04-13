@@ -7,6 +7,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type ImporterArg struct {
+	AppName, PackageName, Imports string
+	Shallow                       bool
+}
+
 // Importer is an interface implemented by all sysl importers
 type Importer interface {
 	// LoadFile reads in a file from path and returns the generated Sysl.
@@ -15,7 +20,7 @@ type Importer interface {
 	// It returns the converted Sysl as a string.
 	Load(content string) (string, error)
 	// Configure allows the imported Sysl application name, package and import directories to be specified.
-	Configure(appName, packageName, imports string) (Importer, error)
+	Configure(arg *ImporterArg) (Importer, error)
 }
 
 // Formats lists all supported import formats

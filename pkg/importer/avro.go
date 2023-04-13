@@ -49,11 +49,11 @@ func (i *avroImporter) Load(avroSpec string) (string, error) {
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (i *avroImporter) Configure(appName, packageName, _ string) (Importer, error) {
-	if appName == "" {
+func (i *avroImporter) Configure(arg *ImporterArg) (Importer, error) {
+	if arg.AppName == "" {
 		return nil, errors.New("application name not provided")
 	}
-	i.appName = appName
-	i.pkg = packageName
+	i.appName = arg.AppName
+	i.pkg = arg.PackageName
 	return i, nil
 }

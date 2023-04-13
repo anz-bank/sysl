@@ -13,6 +13,7 @@ import (
 type ProtobufImporter struct {
 	pkg         string
 	importPaths string
+	shallow     bool
 	logger      *logrus.Logger
 }
 
@@ -27,6 +28,7 @@ func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specPath:    path,
 		importPaths: p.importPaths,
+		shallow:     p.shallow,
 	})
 
 	if err != nil {
@@ -51,6 +53,7 @@ func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specContent: protoSpec,
 		importPaths: p.importPaths,
+		shallow:     p.shallow,
 	})
 
 	if err != nil {
@@ -69,14 +72,16 @@ func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (p *ProtobufImporter) Configure(_, packageName, importPaths string) (Importer, error) {
-	p.pkg = packageName
-	p.importPaths = importPaths
+func (p *ProtobufImporter) Configure(arg *ImporterArg) (Importer, error) {
+	p.pkg = arg.PackageName
+	p.importPaths = arg.Imports
+	p.shallow = arg.Shallow
 	return p, nil
 }
 
 type protobufImporterArgs struct {
 	importPaths, specPath, specContent string
+	shallow                            bool
 }
 
 func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
@@ -99,6 +104,10 @@ func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
 
 	if a.importPaths != "" {
 		args = append(args, "--import-paths", a.importPaths)
+	}
+
+	if a.shallow {
+		args = append(args, "--shallow")
 	}
 
 	return args, nil

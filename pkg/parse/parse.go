@@ -98,7 +98,7 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
 		}
-		imp, err = imp.Configure(def.appname, def.pkg, "")
+		imp, err = imp.Configure(&importer.ImporterArg{AppName: def.appname, PackageName: def.pkg, Imports: ""})
 		if err != nil {
 			return nil, syslutil.Exitf(ParseError, err.Error())
 		}

@@ -5,6 +5,7 @@ let config = {
     'package': (type: 'string', alias: 'p', usage: 'Defines the package of imported app'),
     'import-paths': (type: 'string', alias: 'I', usage: "comma separated list of paths used to resolve imports in " ++
 		"the input file. Currently only used for protobuf input."),
+    'shallow': (type: 'bool', usage: "Excludes any definitions not imported in the provided file", default: false),
 };
 
 let args = //flag.parser(config).parse(//os.args);
@@ -13,7 +14,8 @@ let args = //flag.parser(config).parse(//os.args);
     let config = (
         appName: args.flags('app-name')?:'',
         packageName: args.flags('package')?:'',
-        importPaths: args.flags('import-paths')?:{}
+        importPaths: args.flags('import-paths')?:{},
+        shallow: args.flags('shallow')?:false,
     );
     cond args {
         (flags: {'input': input, ...}, ...): importPath(config, input),

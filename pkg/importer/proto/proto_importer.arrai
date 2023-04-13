@@ -9,8 +9,10 @@ let importParsed = \parsed
     ${renderAllInOne(module(parsed))}
 ` ++ '\n';
 
-let importFiles = \files \importPaths
-    importParsed(import(files, cond {importPaths:  //seq.split(",", importPaths)} || []))
+let importFiles = \config \files
+    let (?:importPaths:'', ?:shallow:false, ...) = config;
+    let importPaths = cond {importPaths: //seq.split(",", importPaths)} || [];
+    importParsed(import((:importPaths, :shallow), files))
 ;
 
 let importDir = \dir \importPaths
@@ -19,16 +21,16 @@ let importDir = \dir \importPaths
     let paths = //os.tree(dir) => .path;
     let files = (paths where isProto(.)) orderby .;
 
-    importFiles(files, importPaths)
+    importFiles((:importPaths), files)
 ;
 
-let import = \(:importPaths, ...) \input
+let import = \config \input
     cond input {
-        [...]: importFiles(input, importPaths),
+        [...]: importFiles(config, input),
         _:
             cond {
-                //seq.has_suffix('.proto', input): importFiles([input], importPaths),
-                _: importDir(input, importPaths),
+                //seq.has_suffix('.proto', input): importFiles(config, [input]),
+                _: importDir(input, config.importPaths),
             }
     }
 ;

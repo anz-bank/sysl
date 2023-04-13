@@ -25,12 +25,12 @@ func MakeArraiImporterImporter(asset []byte, logger *logrus.Logger) *ArraiImport
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (i *ArraiImporter) Configure(appName, packageName, _ string) (Importer, error) {
-	if appName == "" {
+func (i *ArraiImporter) Configure(arg *ImporterArg) (Importer, error) {
+	if arg.AppName == "" {
 		return nil, errors.New("application name not provided")
 	}
-	i.appName = appName
-	i.pkg = packageName
+	i.appName = arg.AppName
+	i.pkg = arg.PackageName
 	return i, nil
 }
 

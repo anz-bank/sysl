@@ -28,11 +28,11 @@ type TransformImporter struct {
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (i *TransformImporter) Configure(appName, _, _ string) (Importer, error) {
-	if appName == "" {
+func (i *TransformImporter) Configure(arg *ImporterArg) (Importer, error) {
+	if arg.AppName == "" {
 		return nil, errors.New("application name not provided")
 	}
-	i.appName = appName
+	i.appName = arg.AppName
 	return i, nil
 }
 

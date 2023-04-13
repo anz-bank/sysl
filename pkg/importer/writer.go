@@ -21,6 +21,7 @@ type OutputData struct {
 	ImportPaths string
 	SwaggerRoot string
 	Mode        string
+	Shallow     bool
 }
 
 type SyslInfo struct {

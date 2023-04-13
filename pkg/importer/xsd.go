@@ -70,12 +70,12 @@ func (i *XSDImporter) Load(input string) (string, error) {
 }
 
 // Configure allows the imported Sysl application name, package and import directories to be specified.
-func (i *XSDImporter) Configure(appName, packageName, _ string) (Importer, error) {
-	if appName == "" {
+func (i *XSDImporter) Configure(arg *ImporterArg) (Importer, error) {
+	if arg.AppName == "" {
 		return nil, errors.New("application name not provided")
 	}
-	i.appName = appName
-	i.pkg = packageName
+	i.appName = arg.AppName
+	i.pkg = arg.PackageName
 	return i, nil
 }
 
