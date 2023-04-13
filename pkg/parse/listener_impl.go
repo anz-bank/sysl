@@ -3250,7 +3250,12 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 	items := map[string]int64{}
 	for _, enumeration := range stmts.AllEnumeration() {
 		e := enumeration.(*parser.EnumerationContext)
-		name := e.Name().GetText()
+		var name string
+		if e.Name() != nil {
+			name = e.Name().GetText()
+		} else {
+			name = e.NativeDataTypes().GetText()
+		}
 		valstr := e.DIGITS().GetText()
 		if val, err := strconv.ParseInt(valstr, 10, 64); err == nil {
 			items[name] = val

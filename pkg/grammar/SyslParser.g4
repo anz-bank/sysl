@@ -388,7 +388,8 @@ alias: ALIAS name_str attribs_or_modifiers? COLON (
         | (INDENT annotation* (types | collection_type) DEDENT)
         );
 
-enumeration: Name COLON DIGITS;
+// (Name | NativeDataTypes) is used as a quick hack to allow some keywords in enums
+enumeration: (Name | NativeDataTypes) COLON DIGITS;
 enum_stmts : INDENT (enumeration | WHATEVER)+ DEDENT;
 enum       : ENUM Name attribs_or_modifiers? COLON (WHATEVER | enum_stmts);
 

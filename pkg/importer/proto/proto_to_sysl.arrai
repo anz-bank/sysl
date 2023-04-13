@@ -55,7 +55,14 @@ let referencedType = \t \file \appName \imports
     # `referencedNs` finds the file that had the original type definition and returns the namespace of that file.
     let referencedNs = \t \file \imports
         let resolvedImports = (file.@value.imports => cond {includeImport(.@): resolveImport(.@, imports)}) where .;
-        let ref = (resolvedImports where fileContainsType(imports(.), t.name)) single;
+        let ref = (
+            (resolvedImports where fileContainsType(imports(.), t.name)) ||
+            # FIXME: this is a hack. Currently the proto importer has problems parsing types references which references
+            # nested types (types defined in a type). When this happens, imports cannot be resolved as it will not be
+            # able to find the referenced types in imported definitions. What this hack does is ensure that if a type
+            # is not found in imported definitions, it will attempt to find the type in the main file.
+            {file.@}
+        ) single;
         getNamespace(imports(ref));
 
     let samePackage = \t t.package?:'' = getPackage(file);
@@ -326,7 +333,7 @@ let fileApps = \file \imports
 
 # `module` generates a Sysl model for a map of files
 # `imports` a map of file names to parsed proto content
-let module = \imports
+let module = \(?:filesToExclude:{}, ...) \imports
     let merge = \apps \appName \app
         let existing = apps(appName)?:{};
         let app = existing && (
@@ -337,7 +344,8 @@ let module = \imports
         ) || app;
         {appName: app};
 
-    let apps = imports => fileApps(., imports);
+    let apps = (imports where .@ !<: filesToExclude) => fileApps(., imports);
+
     # Merge the contents of applications with the same name together.
     let apps = reduce(apps orderby ., \v \k v +> //rel.union(k => merge(v, .@, .@value)), {});
     (:apps);

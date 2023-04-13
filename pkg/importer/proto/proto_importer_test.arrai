@@ -1,4 +1,4 @@
-let (:importString, ...) = //{./proto_importer};
+let (:importString, :importFiles, ...) = //{./proto_importer};
 (
     importString: (
         noImportPaths:
@@ -6,6 +6,15 @@ let (:importString, ...) = //{./proto_importer};
             let actual = importString((), input);
             let expected = //[//encoding.bytes]{./tests/proto3_import_string.sysl} => (:.@, @char: .@byte);
             //test.assert.equal(actual, expected)
-    )
+    ),
+    importFiles: (
+        shallow:
+            let result = importFiles(
+                (shallow: true, importPaths: 'pkg/importer/proto/tests'),
+                ['pkg/importer/proto/tests/shallow.proto'],
+            );
+            let expected = //[//encoding.bytes]{./tests/shallow.sysl} => (:.@, @char: .@byte);
+            result = expected
+    ),
 )
 

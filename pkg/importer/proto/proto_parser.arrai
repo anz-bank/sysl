@@ -276,13 +276,13 @@ let evalFile = \parsed
     ;
     let stmts = parsed.stmt?:{} => evalStmt((:currentPackage), .@item);
     # FIXME: only one package per file, should add a check here.
-    let package = //rel.union(stmts where (.).package?:{} => .package);
-    let imports = //rel.union(stmts where (.).import?:{} => .import);
-    let options = //rel.union(stmts where (.).option?:{} => .option);
-    let enums = //rel.union(stmts where (.).enum?:{} => .enum);
-    let messages = //rel.union(stmts where (.).message?:{} => .message);
-    let services = //rel.union(stmts where (.).service?:{} => .service);
-    let extends = //rel.union(stmts where (.).extend?:{} => .extend);
+    let package  = //rel.union(stmts filter . {(:package): package});
+    let imports  = //rel.union(stmts filter . {(:import ): import });
+    let options  = //rel.union(stmts filter . {(:option ): option });
+    let enums    = //rel.union(stmts filter . {(:enum   ): enum   });
+    let messages = //rel.union(stmts filter . {(:message): message});
+    let services = //rel.union(stmts filter . {(:service): service});
+    let extends  = //rel.union(stmts filter . {(:extend ): extend });
     (:syntax, :package, :imports, :options, :messages, :enums, :services, :extends) +> evalComments(parsed);
 
 # `parseFile` parses a byte array against the `file` grammar rule and evaluates it into an arr.ai model.
@@ -323,7 +323,7 @@ let parseFile =
 #       syntax: 'proto3'
 #   )
 # }
-let import = \(importPaths?:paths:[], ?:shallow:false, ...) \files
+let import = \(importPaths?:paths:[], ...) \files
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let isLocal = \path localImports(path)?:false && true;
     let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
@@ -353,13 +353,13 @@ let import = \(importPaths?:paths:[], ?:shallow:false, ...) \files
                 cond {
                     parsed:
                         let result = result +> {file: parsed};
-                        let importFiles = !shallow && ((parsed.imports => cond {includeImport(.@): .@}) where .) orderby .;
+                        let importFiles = ((parsed.imports => cond {includeImport(.@): .@}) where .) orderby .;
                         _import(tail ++ importFiles, result),
                     _: _import(tail, result)
                 }
     };
-    _import(files, {});
-
+    _import(files, {})
+;
 (
     :evalConstant, # Visible for testing
     :parseFile,

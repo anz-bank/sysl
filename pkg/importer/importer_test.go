@@ -212,7 +212,7 @@ func TestLoadProtobufFromTestFiles(t *testing.T) {
 		testDir:       "proto/tests",
 		testExtension: ".proto",
 		format:        "protobuf",
-		// shallow.proto output is tested in proto_to_sysl_test.arrai
+		// shallow.proto output is tested in proto_importer_test.arrai
 		excludeFiles: map[string]bool{"shallow.proto": true},
 	})
 }

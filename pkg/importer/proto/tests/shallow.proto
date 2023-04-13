@@ -4,7 +4,7 @@ syntax = "proto3";
 option go_package = "helloworld";
 package helloworld;
 
-import "./proto3.proto";
+import "proto3.proto";
 
 service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
