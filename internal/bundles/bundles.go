@@ -1,24 +1,15 @@
 package bundles
 
-import "embed"
+import (
+	"embed"
+	"sync"
+)
 
-// TODO: refactor these into transform plugins and move them into exporters or importers.
 var (
-	// OpenAPIImporter returns the bytes that represents the bundled script for openapi importer.
-	//go:embed assets/import_openapi_cli.arraiz
-	OpenAPIImporter []byte
-
-	// SQLImporter returns the bytes that represents the bundled script for SQL importer.
-	//go:embed assets/import_sql_cli.arraiz
-	SQLImporter []byte
-
-	// ProtoImporter returns the bytes that represents the bundled script for SQL importer.
-	//go:embed assets/import_proto_cli.arraiz
-	ProtoImporter []byte
-
-	// Transformer returns the bytes that represents the bundled script for avro importer.
-	//go:embed assets/transformer_cli.arraiz
-	Transformer []byte
+	OpenAPIImporter = &BundledFile{path: "assets/import_openapi_cli.arraiz"}
+	SQLImporter     = &BundledFile{path: "assets/import_sql_cli.arraiz"}
+	ProtoImporter   = &BundledFile{path: "assets/import_proto_cli.arraiz"}
+	Transformer     = &BundledFile{path: "assets/transformer_cli.arraiz"}
 )
 
 // BundlesFs is a filesystem that can be used to dynamically load the available bundles.
@@ -32,4 +23,17 @@ func MustRead(path string) []byte {
 		panic(err)
 	}
 	return b
+}
+
+type BundledFile struct {
+	path  string
+	once  sync.Once
+	bytes []byte
+}
+
+func (p *BundledFile) Bytes() []byte {
+	p.once.Do(func() {
+		p.bytes = MustRead(p.path)
+	})
+	return p.bytes
 }

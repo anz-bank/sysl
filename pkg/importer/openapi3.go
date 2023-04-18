@@ -6,5 +6,5 @@ import (
 )
 
 func NewOpenAPIV3Importer(logger *logrus.Logger) Importer {
-	return MakeArraiImporterImporter(bundles.OpenAPIImporter, logger)
+	return MakeArraiImporterImporter(bundles.OpenAPIImporter.Bytes(), logger)
 }

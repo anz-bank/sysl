@@ -42,7 +42,7 @@ gen: generate
 
 test: test-arrai coverage
 
-test-arrai:
+test-arrai: internal/bundles/bundles.go
 	$(ARRAI) test
 
 coverage: generate
@@ -78,36 +78,38 @@ build-docker: generate
 build-sysl-version-diff-docker: generate
 	docker build -t sysl-version-diff -f sysl-version-diff/Dockerfile .
 
+BUNDLE = mkdir -p $(dir $@) && $(ARRAI) bundle $< > $@
+
 # Assumes that every arr.ai script depends on every other arr.ai script.
 %.arraiz: %.arrai $(shell find . -name '*.arrai') go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 .PHONY: plugins
 plugins: \
 		pkg/plugins/integration_model_plugin.arraiz
 
 internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cli.arrai go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.arrai go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai pkg/importer/cli.arrai $(shell find pkg/importer/openapi -name '*.arrai') go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 # There are many files that change the proto importer logic.
 # Check all arrai files within the directory for changes before bundling.
 internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai $(shell find pkg/importer/proto -name '*.arrai') go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 internal/bundles/exporters/proto/transform.arraiz: transforms/exporters/proto/transform.arrai $(shell find transforms/exporters/proto -name '*.arrai') go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 internal/bundles/exporters/spanner/transform.arraiz: transforms/exporters/spanner/transform.arrai $(shell find transforms/exporters/spanner -name '*.arrai') go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 internal/bundles/importers/%/transform.arraiz: transforms/importers/%/transform.arrai go.mod
-	$(ARRAI) bundle $< > $@
+	$(BUNDLE)
 
 internal/bundles/bundles.go: \
 		internal/bundles/assets/transformer_cli.arraiz \
@@ -121,7 +123,7 @@ internal/bundles/bundles.go: \
 
 pkg/importer/proto/bundled_files/local_imports.arrai: pkg/importer/proto/bundled_files/bundler.arrai
 	$(ARRAI) run $< > pkg/importer/proto/bundled_files/tmp.arrai && \
-	mv -f pkg/importer/proto/bundled_files/tmp.arrai $@
+		mv -f pkg/importer/proto/bundled_files/tmp.arrai $@
 
 .PHONY: bundled-proto
 bundled-proto: pkg/importer/proto/bundled_files/local_imports.arrai

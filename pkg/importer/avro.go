@@ -36,7 +36,7 @@ func (i *avroImporter) Load(avroSpec string) (string, error) {
 	if i.appName == "" {
 		return "", errors.New("application name not provided")
 	}
-	b := bundles.Transformer
+	b := bundles.Transformer.Bytes()
 	val, err := arrai.EvaluateBundle(b, avroSpec, i.appName, i.pkg)
 	if err != nil {
 		return "", errors.Wrap(arrai.ExecutionError{
