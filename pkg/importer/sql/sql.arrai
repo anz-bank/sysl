@@ -50,10 +50,10 @@ unique              -> "UNIQUE"? ("KEY" key_name=name)? "(" column_name:"," ")";
 fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")" references on_delete? on_update?;
 references          -> "REFERENCES" foreign=(table_prefix? table_name ("(" column_name:"," ")")?);
 cluster             -> interleave=("INTERLEAVE" "IN" "PARENT" table_name on_delete?)
-                     | rowDeletionPolicy=("ROW" "DELETION" "POLICY" "("
-                         "OLDER_THAN" "(" column_name "," "INTERVAL" int_value "DAY" ")"
-                       ")")
+                     | row_deletion_policy
                      ; //# Spanner
+row_deletion_policy -> "ROW" "DELETION" "POLICY" "(" older_than ")";
+older_than          -> "OLDER_THAN" "(" column_name "," "INTERVAL" int_value "DAY" ")";
 on_delete           -> "ON" "DELETE" on_action;
 on_update           -> "ON" "UPDATE" on_action;
 on_action           -> CASCADE     = "CASCADE"
@@ -101,8 +101,12 @@ create_extension    -> "CREATE" "EXTENSION" if_not_exists? name "WITH" "SCHEMA" 
 comment_on_extension -> "COMMENT" "ON" "EXTENSION" name "IS" string_value;
 
 analyze              -> ("ANALYZE" | "ANALYSE") table_name;
-create_change_stream -> "CREATE" "CHANGE" "STREAM" name ("FOR"
-                        ("ALL" | table_name ("(" column_name:"," ")")?):",")?;
+create_change_stream -> "CREATE" "CHANGE" "STREAM" name
+                        ("FOR" (table_columns:"," | "ALL"))?
+                        ("OPTIONS" "(" change_stream_option:"," ")")?;
+table_columns        -> table_name ("(" column_name:"," ")")?;
+change_stream_option -> "retention_period" "=" /{'\d+[dhms]'}
+                      | "value_capture_type" "=" ( "'OLD_AND_NEW_VALUES'" | "'NEW_ROW'" | "'NEW_VALUES'" );
 
 alter_table         -> "ALTER" "TABLE" "ONLY"? table_prefix? table_name (alter=(table_alteration|attr_alteration)):",";
 table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name (attr_type | options_def) generated?)
@@ -112,6 +116,9 @@ table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name (attr_type
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
                      | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name)
                      | OWNER_TO        = ("OWNER" "TO" name)
+                     | ADD_ROW_DELETION_POLICY = ("ADD" row_deletion_policy)
+                     | DROP_ROW_DELETION_POLICY = ("DROP" "ROW" "DELETION" "POLICY")
+                     | REPLACE_ROW_DELETION_POLICY = ("REPLACE" row_deletion_policy)
                      | drop_index;
 attr_alteration     -> ("ALTER" | "MODIFY") "COLUMN"? column_name
                        (action=("SET" | "DROP") NOT_NULL | "SET" (options_def | default) | "TYPE"? attr_type);
@@ -420,6 +427,21 @@ let evalTableAlteration = \parsed cond parsed {
         alteration: data,
     ),
 
+    (table_alteration: (ADD_ROW_DELETION_POLICY: data, ...), ...): (
+        type: "add_row_deletion_policy",
+        alteration: data,
+    ),
+
+    (table_alteration: (DROP_ROW_DELETION_POLICY: data, ...), ...): (
+        type: "drop_row_deletion_policy",
+        alteration: data,
+    ),
+
+    (table_alteration: (REPLACE_ROW_DELETION_POLICY: data, ...), ...): (
+        type: "replace_row_deletion_policy",
+        alteration: data,
+    ),
+
     (attr_alteration: data, ...): (
         type: "alter_column",
         alteration: evalAttribute(data),
@@ -494,7 +516,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
                         interleaved_in: (.table_name.'' rank (:.@)),
                         on_delete: evalOnAction((.).on_delete?.on_action?:{}),
                     )),
-                    # (:@, @item: (rowDeletionPolicy: .)): (:@, @item: (
+                    # (:@, @item: (row_deletion_policy: .)): (:@, @item: (
                     #     # ...
                     # )),
                 }) rank (:.@),

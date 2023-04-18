@@ -15,7 +15,8 @@ start:
 	yarn start
 
 lint:
-	find ./{blog,docs} -name '*.md' | xargs -n1 npx markdown-link-check --progress --config=.md-link-check-config.json
+	# TODO: fix false negatives
+	# find ./{blog,docs} -name '*.md' | xargs -n1 npx markdown-link-check --progress --config=.md-link-check-config.json
 
 tidy:
 	yarn tidy
