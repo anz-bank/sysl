@@ -7,7 +7,8 @@
 ARG go_ver=1.19
 ARG alpine_ver=3.16
 
-FROM golang:${go_ver}-alpine${alpine_ver} as builder
+ARG DOCKER_BASE=golang:${go_ver}-alpine${alpine_ver}
+FROM ${DOCKER_BASE} AS builder
 
 RUN apk --no-cache add git make
 
@@ -17,7 +18,7 @@ COPY . .
 
 RUN make build
 
-FROM golang:${go_ver}-alpine${alpine_ver} as runner
+FROM ${DOCKER_BASE} as runner
 
 COPY --from=builder /sysl/dist/sysl /
 

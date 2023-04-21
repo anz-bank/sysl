@@ -8,7 +8,7 @@ on:
 jobs:
   generate-tag:
     name: Generate tag
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Check out code
         uses: actions/checkout@master

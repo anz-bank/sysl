@@ -3,16 +3,19 @@ name: Build and Test
 on: [pull_request]
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  SYSL_PLANTUML: http://www.plantuml.com/plantuml
+  GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
+  SYSL_GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}
+  SYSL_PLANTUML:       http://www.plantuml.com/plantuml
+  GOPROXY:             ${{ vars.GOPROXY }}
+  NPM_CONFIG_REGISTRY: ${{ vars.NPM_CONFIG_REGISTRY }}
+  DOCKER_BUILD_ARGS:   ${{ vars.DOCKER_BUILD_ARGS }}
 
 jobs:
   build-and-test:
     name: Build and Test
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
+        os: ${{ vars.BUILD_AND_TEST_OS_MATRIX && fromJSON(vars.BUILD_AND_TEST_OS_MATRIX) || fromJSON('[ "ubuntu-latest", "macOS-latest", "windows-latest" ]') }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go
@@ -22,120 +25,95 @@ jobs:
           check-latest: true
 
       - name: Set up Node
+        if: runner.os != 'Windows'
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          registry-url: "https://registry.npmjs.org"
 
       - uses: actions/cache@v3
         with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
+          key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-
+            ${{ runner.os }}-go-cache-
 
       - name: Check out code
         uses: actions/checkout@v3
 
+      - name: Generate intermediate files
+        run: make generate
+
       - name: Run unit tests
+        if: runner.os != 'Windows'
         run: make test
+
+      - name: Run unit tests (Windows)
+        if: runner.os == 'Windows'
+        run: .\scripts\test-with-coverage-windows.bat
 
       - name: Set GOVERSION environment variable
         run: echo "GOVERSION=$(go version | awk '{print $3, $4;}')" >> $GITHUB_ENV
 
       - name: Build sysl binary
+        if: runner.os != 'Windows'
         run: make build
 
       # According to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
       # Ubuntu: sysl_linux_amd64:
       # macOS Catalina: sysl_darwin_amd64
       - name: Install sysl
+        if: runner.os != 'Windows'
         run: |
           mkdir bin && \
           cp dist/sysl bin/sysl
 
       - name: Test installed
+        if: runner.os != 'Windows'
         run: ./scripts/test-gosysl.sh
         env:
           GOPATH: .
 
+      - name: Build sysl binary (Windows)
+        if: runner.os == 'Windows'
+        run: make build-windows
+
+      # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
+      # Windows Server 2019 supports 64-bit applications
+      - name: Install sysl (Windows)
+        if: runner.os == 'Windows'
+        run: md .\bin; copy .\dist\sysl.exe .\bin\sysl.exe
+
+      - name: Test installed (Windows)
+        if: runner.os == 'Windows'
+        run: .\scripts\test-gosysl.bat
+
       - name: Install TypeScript deps
-        run: yarn
+        if: runner.os != 'Windows'
+        run: |
+          # install yarn if needed
+          npm i -g yarn
+
+          # switch registry in lock file
+          if [ -n "${{ env.NPM_CONFIG_REGISTRY }}" ]; then
+            sed -i'.bak' 's#https://registry.npmjs.org#${{ env.NPM_CONFIG_REGISTRY }}#' yarn.lock
+            rm yarn.lock.bak
+          fi
+
+          yarn install --frozen-lockfile
         working-directory: ts
 
       - name: Test TypeScript
+        if: runner.os != 'Windows'
         run: yarn test
         working-directory: ts
         env:
           SYSL_PATH: ../bin/sysl
 
-  test-windows:
-    name: Run unit tests (Windows)
-    runs-on: windows-latest
-    steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
-          check-latest: true
-
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/go/bin
-          key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-cache-
-
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Generate intermediate files
-        run: make generate
-
-      - name: Run unit tests
-        run: .\scripts\test-with-coverage-windows.bat
-
-  build-windows:
-    name: Build Go (Windows)
-    runs-on: windows-latest
-    steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
-          check-latest: true
-
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/go/bin
-          key: ${{ runner.os }}-go-cache-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-cache-
-
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Generate intermediate files
-        run: make generate
-
-      - name: Build sysl binary
-        run: make build-windows
-
-      # sysl_windows_amd64: according to https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on
-      # Windows Server 2019 supports 64-bit applications
-      - name: Install sysl
-        run: md .\bin; copy .\dist\sysl.exe .\bin\sysl.exe
-
-      - name: Test installed
-        run: .\scripts\test-gosysl.bat
-
   build-docker:
     name: Builds the sysl docker image
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Set up Go
         uses: actions/setup-go@v3
@@ -165,16 +143,6 @@ jobs:
           labels: |
             org.opencontainers.image.url=https://sysl.io
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
-
       - name: Build docker image
         uses: docker/build-push-action@v3
         with:
@@ -184,10 +152,11 @@ jobs:
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: ${{ env.DOCKER_BUILD_ARGS }}
 
   Lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Set up Go
         uses: actions/setup-go@v3

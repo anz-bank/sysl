@@ -8,14 +8,16 @@ on:
     paths-ignore:
       - ts/**
       - .github/workflows/npm-publish.yaml
+      - .github/workflows/ts.yaml
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GOPROXY:      ${{ vars.GOPROXY }}
 
 jobs:
   release-sysl:
     name: Release Sysl
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Set up Go
         uses: actions/setup-go@v3

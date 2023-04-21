@@ -7,16 +7,18 @@ on:
       - "ts/**"
       - .github/workflows/npm-publish.yaml
 
+env:
+  NPM_CONFIG_REGISTRY: ${{ vars.NPM_CONFIG_REGISTRY }}
+
 jobs:
   check-version:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          registry-url: "https://registry.npmjs.org"
 
       # This one-liner will exit 1 if the current version in package.json exists in the registry.
       - name: Ensure new version
@@ -25,12 +27,13 @@ jobs:
         working-directory: ts
 
       - name: Install Project
+        if: ${{ github.repository_owner == 'anz-bank' }}
         run: yarn install --frozen-lockfile
         working-directory: ts
 
       - name: Publish Package
-        run: npm publish
         if: ${{ github.repository_owner == 'anz-bank' }}
+        run: npm publish
         working-directory: ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
