@@ -23,7 +23,7 @@ func MakeProtobufImporter(logger *logrus.Logger) *ProtobufImporter {
 }
 
 func (p *ProtobufImporter) LoadFile(path string) (string, error) {
-	b := bundles.ProtoImporter.Bytes()
+	b := bundles.ProtoImporter
 
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specPath:    path,
@@ -48,7 +48,7 @@ func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 
 // Load returns a Sysl spec equivalent to protoSpec.
 func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
-	b := bundles.ProtoImporter.Bytes()
+	b := bundles.ProtoImporter
 
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specContent: protoSpec,

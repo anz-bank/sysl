@@ -7,5 +7,5 @@ import (
 
 // MakeSQLImporter is a factory method for creating new SQL importer.
 func MakeSQLImporter(logger *logrus.Logger) *ArraiImporter {
-	return MakeArraiImporterImporter(bundles.SQLImporter.Bytes(), logger)
+	return MakeArraiImporterImporter(bundles.SQLImporter, logger)
 }
