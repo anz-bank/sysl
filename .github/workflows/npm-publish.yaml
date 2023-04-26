@@ -7,9 +7,6 @@ on:
       - "ts/**"
       - .github/workflows/npm-publish.yaml
 
-env:
-  NPM_CONFIG_REGISTRY: ${{ vars.NPM_CONFIG_REGISTRY }}
-
 jobs:
   check-version:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
@@ -25,14 +22,25 @@ jobs:
         run: |
           ! npm view @anz-bank/sysl versions --json | grep "$(node -e 'console.log(require("./package.json").version)')"
         working-directory: ts
+        env:
+          NPM_CONFIG_REGISTRY: ${{ vars.NPM_CONFIG_REGISTRY }}
+
+  publish:
+    needs: check-version
+    runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
+    if: ${{ github.repository_owner == 'anz-bank' }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Install Project
-        if: ${{ github.repository_owner == 'anz-bank' }}
         run: yarn install --frozen-lockfile
         working-directory: ts
 
       - name: Publish Package
-        if: ${{ github.repository_owner == 'anz-bank' }}
         run: npm publish
         working-directory: ts
         env:
