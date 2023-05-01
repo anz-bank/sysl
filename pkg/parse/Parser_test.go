@@ -809,10 +809,6 @@ import four.yaml as Four
 Two:
 	...
 `
-	three := `
-Three:
-	...
-`
 	four := `
 openapi: "3.0"
 info:
@@ -1247,10 +1243,20 @@ NotTwo:
 	require.NotNil(t, c.Apps["Two"])
 }
 
-const three = `
+const two = `
+import three.sysl
+Two:
+	...
+`
+
+const three_ = `
 Three:
 	_:
 		...
+`
+const three = `
+Three:
+	...
 `
 
 /* TestParseSyslRetrieverRemote tests a remote import */
@@ -1275,7 +1281,7 @@ Two:
 	r := mockReader{contents: map[string]mockContent{
 		"./one.sysl":                            {one, retriever.ZeroHash, ""},
 		"//github.com/org/repo/two.sysl@master": {two, h, "master"},
-		`3.sysl`:                                {three, retriever.ZeroHash, ""},
+		`3.sysl`:                                {three_, retriever.ZeroHash, ""},
 	}}
 
 	p := NewParser()
@@ -1298,11 +1304,6 @@ One:
 	_:
 		...
 `
-	two := `
-import three.sysl
-Two:
-	...
-`
 
 	sha := randomSha
 	h, err := retriever.NewHash(sha)
@@ -1310,7 +1311,7 @@ Two:
 	r := mockReader{contents: map[string]mockContent{
 		"./one.sysl":                              {one, retriever.ZeroHash, ""},
 		"//github.com/org/repo/two.sysl@master":   {two, h, "master"},
-		"//github.com/org/repo/three.sysl@master": {three, h, "master"},
+		"//github.com/org/repo/three.sysl@master": {three_, h, "master"},
 	}}
 
 	p := NewParser()
@@ -1345,7 +1346,7 @@ Two:
 	r := mockReader{contents: map[string]mockContent{
 		"./one.sysl": {one, retriever.ZeroHash, ""},
 		"//github.com/org/repo/subdir/two.sysl@master": {two, h, "master"},
-		"//github.com/org/repo/three.sysl@master":      {three, h, "master"},
+		"//github.com/org/repo/three.sysl@master":      {three_, h, "master"},
 	}}
 
 	p := NewParser()
@@ -1372,15 +1373,6 @@ One:
 	_:
 		...
 `
-	two := `
-import three.sysl
-Two:
-	...
-`
-	three := `
-Three:
-	...
-`
 
 	sha := randomSha
 	h, err := retriever.NewHash(sha)
@@ -1389,6 +1381,39 @@ Three:
 		"./one.sysl":                              {one, retriever.ZeroHash, ""},
 		"//github.com/org/repo/two.sysl@branch":   {two, h, "branch"},
 		"//github.com/org/repo/three.sysl@branch": {three, h, "branch"},
+	}}
+
+	p := NewParser()
+
+	c, err := p.Parse("./one", r)
+	require.NoError(t, err)
+	require.Equal(t, 3, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+	require.NotNil(t, c.Apps["Three"])
+}
+
+/*
+TestParseSyslRetrieverRemoteImportBranchWithSlash tests that a remote file imported from a branch with a slash will
+import a local file from the same branch
+*/
+func TestParseSyslRetrieverRemoteImportBranchWithSlash(t *testing.T) {
+	t.Parallel()
+
+	one := `
+import //github.com/org/repo/two.sysl@feature/x
+One:
+	_:
+		...
+`
+
+	sha := randomSha
+	h, err := retriever.NewHash(sha)
+	require.NoError(t, err)
+	r := mockReader{contents: map[string]mockContent{
+		"./one.sysl": {one, retriever.ZeroHash, ""},
+		"//github.com/org/repo/two.sysl@feature/x":   {two, h, "feature/x"},
+		"//github.com/org/repo/three.sysl@feature/x": {three, h, "feature/x"},
 	}}
 
 	p := NewParser()

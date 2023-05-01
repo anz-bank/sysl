@@ -200,7 +200,7 @@ func cleanImportFilename(filename string) string {
 // importDir returns the directory of a file referenced by an import.
 func importDir(filename string) string {
 	if syslutil.IsRemoteImport(filename) {
-		return "/" + path.Dir(filename)
+		return "/" + path.Dir(strings.Split(filename, "@")[0])
 	}
 	return filepath.Dir(filename)
 }
