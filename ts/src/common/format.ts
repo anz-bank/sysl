@@ -3,7 +3,7 @@ const defaultIndent = "    ";
 export function indent(text: string): string {
     return text
         .split("\n")
-        .map(l => `${defaultIndent}${l}`)
+        .map(l => `${l ? defaultIndent : ""}${l}`) // Don't add indent to empty lines
         .join("\n");
 }
 

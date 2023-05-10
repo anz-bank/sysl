@@ -3,8 +3,8 @@ import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, TypedJSON } from "typedjson";
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
-import { sortLocationalArray } from "../common/sort";
-import { Import, Model } from "../model";
+import { sortByLocation } from "../common/sort";
+import { ElementRef, Import, Model } from "../model";
 import { Application } from "../model/application";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
@@ -41,22 +41,20 @@ export class PbApplication {
     types?: Map<string, PbTypeDef>;
 
     toModel(): Application {
-        return new Application({
-            name: this.name.part.at(-1),
-            namespace: this.name.part.slice(0, -1),
-            endpoints: sortLocationalArray(
+        const name = this.name.part.at(-1);
+        if (!name) throw new Error("Encountered empty app name.");
+        return new Application(new ElementRef(this.name.part.slice(0, -1), name), {
+            endpoints: sortByLocation(
                 Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
                     .filter(([, e]) => e.name != "...") // Bug in Sysl where ellipsis under app appears as endpoint
                     .map(([, e]) => e.toModel(this.name.part))
             ),
-            children: sortLocationalArray(
-                Array.from(this.types ?? new Map()).map(([name, t]) => {
-                    return t.toModel(name, false);
-                })
+            types: sortByLocation(
+                [...(this.types ?? new Map<string, PbTypeDef>())].map(([name, t]) => t.toModel(name, false))
             ),
             locations: this.sourceContexts,
-            tags: sortLocationalArray(getTags(this.attrs)),
-            annos: sortLocationalArray(getAnnos(this.attrs)),
+            tags: sortByLocation(getTags(this.attrs)),
+            annos: sortByLocation(getAnnos(this.attrs)),
         });
     }
 }
@@ -125,7 +123,7 @@ export class PbDocumentModel {
         return new Model({
             imports: (this.imports ?? []).map(i => i.toModel()),
             locations: this.sourceContexts,
-            apps: sortLocationalArray(Array.from(this.apps).map(([, a]) => a.toModel())),
+            apps: sortByLocation(Array.from(this.apps).map(([, a]) => a.toModel())),
         });
     }
 }

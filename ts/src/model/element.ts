@@ -1,12 +1,15 @@
 import { Location } from "../common";
+import { indent, toSafeName } from "../common/format";
 import { Annotation, AnnoValue, Tag } from "./attribute";
 import { ElementRef, IChild, ILocational, IRenderable } from "./common";
+import { CloneContext, ICloneable } from "./clone";
 import { Model } from "./model";
+import { addTags, renderAnnos } from "./renderers";
 
 /**
  * An object in a Sysl model that can have nested objects (children, annotations and tags).
  */
-export abstract class Element implements ILocational, IRenderable, IChild {
+export abstract class Element implements ILocational, IRenderable, IChild, ICloneable {
     constructor(
         public name: string,
         public locations: Location[],
@@ -17,6 +20,11 @@ export abstract class Element implements ILocational, IRenderable, IChild {
     ) {}
 
     abstract toSysl(): string;
+    abstract toString(): string;
+
+    public get safeName(): string {
+        return toSafeName(this.name);
+    }
 
     /**
      * Returns an {@link ElementRef} that references this element.
@@ -24,12 +32,12 @@ export abstract class Element implements ILocational, IRenderable, IChild {
     abstract toRef(): ElementRef;
 
     /**
-     * Tries to retrieve the specified annotation from this element. If it's not found, `undefined` is returned.
+     * Tries to find the specified annotation from this element. If it's not found, `undefined` is returned.
      * If multiple annotations of the same name exist, the first is returned.
      * @param name The name of the annotation to retrieve.
      * @returns The {@link Annotation} of the specified name, or `undefined` if no annotation with that name exists.
      */
-    public tryAnno(name: string): Annotation | undefined {
+    public findAnno(name: string): Annotation | undefined {
         return this.annos.find(a => a.name == name);
     }
 
@@ -39,8 +47,8 @@ export abstract class Element implements ILocational, IRenderable, IChild {
      * @returns The {@link Annotation} of the specified name.
      * @throws {@link Error} Thrown if no annotation matching the specified name is found.
      */
-    public anno(name: string): Annotation {
-        const anno = this.tryAnno(name);
+    public getAnno(name: string): Annotation {
+        const anno = this.findAnno(name);
         if (!anno) throw new Error(`No annotation named '${name}' was found on element '${this.name}'.`);
         return anno;
     }
@@ -55,7 +63,7 @@ export abstract class Element implements ILocational, IRenderable, IChild {
      * an annotation that doesn't exist.
      */
     public setAnno(name: string, value: AnnoValue): Annotation | undefined {
-        let anno = this.tryAnno(name);
+        let anno = this.findAnno(name);
 
         if (value == undefined) {
             if (anno) {
@@ -66,7 +74,7 @@ export abstract class Element implements ILocational, IRenderable, IChild {
             if (anno) {
                 anno.value = value;
             } else {
-                anno = new Annotation({ name, value });
+                anno = new Annotation(name, value);
                 this.insertAnnoOrdered(anno);
             }
         }
@@ -96,12 +104,12 @@ export abstract class Element implements ILocational, IRenderable, IChild {
     }
 
     /**
-     * Tries to retrieve the specified tag from this element. If it's not found, `undefined` is returned.
+     * Tries to find the specified tag from this element. If it's not found, `undefined` is returned.
      * If multiple tags of the same name exist, the first is returned.
      * @param name The name of the tag to retrieve.
      * @returns The {@link Tag} of the specified name, or `undefined` if no tag with that name exists.
      */
-    public tryTag(name: string): Tag | undefined {
+    public findTag(name: string): Tag | undefined {
         return this.tags.find(a => a.name == name);
     }
 
@@ -111,8 +119,8 @@ export abstract class Element implements ILocational, IRenderable, IChild {
      * @returns The {@link Tag} of the specified name.
      * @throws {@link Error} Thrown if no tag matching the specified name is found.
      */
-    public tag(name: string): Tag {
-        const tag = this.tryTag(name);
+    public getTag(name: string): Tag {
+        const tag = this.findTag(name);
         if (!tag) throw new Error(`No tag named '${name}' was found on element '${this.name}'.`);
         return tag;
     }
@@ -124,9 +132,9 @@ export abstract class Element implements ILocational, IRenderable, IChild {
      * @returns The {@link Tag} that was updated or inserted.
      */
     public setTag(name: string): Tag {
-        let tag = this.tryTag(name);
+        let tag = this.findTag(name);
         if (!tag) {
-            tag = new Tag({ name, parent: this });
+            tag = new Tag(name, { parent: this });
             this.tags.push(tag);
         }
         return tag;
@@ -138,13 +146,15 @@ export abstract class Element implements ILocational, IRenderable, IChild {
      * @returns The {@link Tag} that was removed, or `undefined` if no tag with that name was found.
      */
     public removeTag(name: string): Tag | undefined {
-        let tag = this.tryTag(name);
+        let tag = this.findTag(name);
         if (tag) {
             this.tags = this.tags.filter(t => t !== tag);
             tag.parent = undefined;
         }
         return tag;
     }
+
+    public abstract clone(context?: CloneContext): Element;
 
     /**
      * Ensures the `.parent` and `.model` properties of this instance and its model are set for all subitems: `annos`,
@@ -161,6 +171,16 @@ export abstract class Element implements ILocational, IRenderable, IChild {
             child.parent = this;
             child.model = this.model;
         });
+    }
+
+    protected render(prefix: string, body: string | IRenderable[], name?: string, mustHaveBody: boolean = true) {
+        if (prefix) prefix += " ";
+        if (Array.isArray(body)) body = body.map(r => r.toSysl()).join("\n");
+        if (mustHaveBody && !body && !this.annos.length) body = "...";
+        const isExpanded = body || this.annos.length;
+        let sysl = `${addTags(`${prefix}${name ?? this.safeName}`, this.tags)}${isExpanded ? ":" : ""}`;
+        if (this.annos.length) sysl += `\n${indent(renderAnnos(this.annos))}`;
+        return `${sysl}${body ? "\n" + indent(body) : ""}`;
     }
 }
 

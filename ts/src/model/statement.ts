@@ -2,10 +2,10 @@ import "reflect-metadata";
 import { Location } from "../common";
 import { indent, joinedAppName } from "../common/format";
 import { ElementRef, IChild, ILocational, IRenderable } from "./common";
+import { CloneContext } from "./clone";
 import { CollectionDecorator } from "./decorator";
 import { Element, IElementParams, ParentElement } from "./element";
 import { Field } from "./field";
-import { GenericElement } from "./genericElement";
 import { Model } from "./model";
 import { addTags, renderAnnos, renderInlineSections } from "./renderers";
 
@@ -23,6 +23,14 @@ export class Param implements ILocational, IRenderable {
     toSysl(): string {
         return `${this.name}${this.element ? ` <: ${this.element.toSysl()}` : ""}`;
     }
+
+    toString(): string {
+        return this.name;
+    }
+
+    clone(context = new CloneContext()): Param {
+        return new Param(this.name, [], context.applyUnder(this.element), context.model ?? this.model);
+    }
 }
 
 export class Action {
@@ -34,6 +42,14 @@ export class Action {
 
     toSysl(): string {
         return this.action;
+    }
+
+    toString(): string {
+        return this.toSysl();
+    }
+
+    clone(_context: CloneContext): Action {
+        return new Action(this.action);
     }
 }
 
@@ -47,24 +63,28 @@ export class CallArg {
         this.value = value;
         this.name = name;
     }
+
+    clone(_context: CloneContext): CallArg {
+        return new CallArg(this.name, this.value);
+    }
 }
 
 export type CallParams = {
     endpoint: string;
-    arg?: CallArg[];
+    args?: CallArg[];
     targetApp: string[];
     originApp: string[];
 };
 
 export class Call {
     endpoint: string;
-    arg: CallArg[];
+    args: CallArg[];
     targetApp: string[];
     originApp: string[];
 
-    constructor({ endpoint, arg, targetApp, originApp }: CallParams) {
+    constructor({ endpoint, args: arg, targetApp, originApp }: CallParams) {
         this.endpoint = endpoint;
-        this.arg = arg ?? [];
+        this.args = arg ?? [];
         this.targetApp = targetApp;
         this.originApp = originApp;
     }
@@ -72,7 +92,20 @@ export class Call {
     toSysl(): string {
         const joinedTarget = joinedAppName(this.targetApp);
         const appName = joinedAppName(this.originApp) === joinedTarget ? "." : joinedTarget;
-        return `${appName} <- ${this.endpoint}${this.arg ? this.arg.map(a => a.name).join(",") : ""}`;
+        return `${appName} <- ${this.endpoint}${this.args ? this.args.map(a => a.name).join(",") : ""}`;
+    }
+
+    toString(): string {
+        return `${joinedAppName(this.targetApp, true)} <-- ${this.endpoint}`;
+    }
+
+    clone(context = new CloneContext()): Call {
+        return new Call({
+            endpoint: this.endpoint,
+            args: context.recurse(this.args),
+            targetApp: [...this.targetApp],
+            originApp: [...this.originApp],
+        });
     }
 }
 
@@ -89,6 +122,14 @@ export class LoopN {
         // TODO: implement or remove LoopN
         return "";
     }
+
+    toString(): string {
+        return `count=${this.count}`;
+    }
+
+    clone(context = new CloneContext()): LoopN {
+        return new LoopN(this.count, context.recurse(this.stmt));
+    }
 }
 
 export class Foreach {
@@ -104,6 +145,14 @@ export class Foreach {
         let sysl = `for each ${this.collection}:`;
         return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
+
+    toString(): string {
+        return this.collection;
+    }
+
+    clone(context = new CloneContext()): Foreach {
+        return new Foreach(this.collection, context.recurse(this.stmt));
+    }
 }
 
 export class AltChoice {
@@ -118,18 +167,34 @@ export class AltChoice {
     toSysl(): string {
         return `${this.cond ? "" + this.cond : ""}:${this.stmt.map(s => `\n${indent(s.toSysl())}`).join("")}`;
     }
+
+    toString(): string {
+        return this.cond;
+    }
+
+    clone(context = new CloneContext()): AltChoice {
+        return new AltChoice(this.cond, context.recurse(this.stmt));
+    }
 }
 
 export class Alt {
-    choice: AltChoice[];
+    choices: AltChoice[];
 
     constructor(choice: AltChoice[]) {
-        this.choice = choice;
+        this.choices = choice;
     }
 
     toSysl(): string {
-        let sysl = `one of:${this.choice.map(c => `\n${indent(c.toSysl())}`).join("")}`;
+        let sysl = `one of:${this.choices.map(c => `\n${indent(c.toSysl())}`).join("")}`;
         return sysl;
+    }
+
+    toString(): string {
+        return `[${this.choices} choices]`;
+    }
+
+    clone(context = new CloneContext()): Alt {
+        return new Alt(context.recurse(this.choices));
     }
 }
 
@@ -146,6 +211,14 @@ export class Group {
         let sysl = `${this.title}:`;
         return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
+
+    toString(): string {
+        return this.title;
+    }
+
+    clone(context = new CloneContext()): Group {
+        return new Group(this.title, context.recurse(this.stmt));
+    }
 }
 
 export class Return {
@@ -157,6 +230,14 @@ export class Return {
 
     toSysl(): string {
         return `return ${this.payload}`;
+    }
+
+    toString(): string {
+        return this.toSysl();
+    }
+
+    clone(_context: CloneContext): Return {
+        return new Return(this.payload);
     }
 }
 
@@ -172,6 +253,14 @@ export class Cond {
     toSysl(): string {
         let sysl = `if ${this.test}:`;
         return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
+    }
+
+    toString(): string {
+        return this.test;
+    }
+
+    clone(context = new CloneContext()): Cond {
+        return new Cond(this.test, context.recurse(this.stmt));
     }
 }
 
@@ -190,6 +279,14 @@ export class Loop {
         let sysl = `${this.mode.toString().toLowerCase()}${this.criterion ? " " + this.criterion : ""}:`;
         return (sysl += this.stmt.map(s => `\n${indent(s.toSysl())}`).join(""));
     }
+
+    toString(): string {
+        return `[${this.mode}] ${this.criterion}`;
+    }
+
+    clone(context = new CloneContext()): Loop {
+        return new Loop(this.mode, this.criterion, context.recurse(this.stmt));
+    }
 }
 
 export enum LoopMode {
@@ -201,20 +298,15 @@ export enum LoopMode {
 
 export type StatementValue = Action | Call | Cond | Loop | LoopN | Foreach | Alt | Group | Return | undefined;
 
-export type StatementParams = IElementParams & { value: StatementValue };
-
 export class Statement extends ParentElement<Statement> {
-    value: StatementValue;
-
-    constructor({ value, annos, tags, locations, parent, model }: StatementParams) {
+    constructor(public value: StatementValue, { annos, tags, locations, parent, model }: IElementParams = {}) {
         super(value?.constructor.name ?? "", locations ?? [], annos ?? [], tags ?? [], model, parent);
-        this.value = value;
         this.attachSubitems();
     }
 
     /** Returns a statement with the given action text. */
     static action(action: string): Statement {
-        return new Statement({ value: new Action(action) });
+        return new Statement(new Action(action));
     }
 
     /** Returns an array of child statements nested in this statement's {@link value}. */
@@ -232,6 +324,18 @@ export class Statement extends ParentElement<Statement> {
     toSysl(): string {
         return this.value?.toSysl() ?? placeholder;
     }
+
+    toString(): string {
+        return this.value?.constructor.name ?? placeholder;
+    }
+
+    clone(context = new CloneContext(this.model)): Statement {
+        return new Statement(context.applyUnder(this.value), {
+            tags: context.recurse(this.tags),
+            annos: context.recurse(this.annos),
+            model: context.model ?? this.model,
+        });
+    }
 }
 
 export enum RestMethod {
@@ -246,26 +350,38 @@ export enum RestMethod {
 export type RestParamsParams = {
     method: RestMethod;
     path: string;
-    queryParam?: Param[];
-    urlParam?: Param[];
+    queryParams?: Param[];
+    urlParams?: Param[];
 };
 
 export class RestParams {
     method: RestMethod;
     path: string;
-    queryParam: Param[];
-    urlParam: Param[];
+    queryParams: Param[];
+    urlParams: Param[];
 
-    constructor({ method, path, queryParam, urlParam }: RestParamsParams) {
+    constructor({ method, path, queryParams: queryParam, urlParams: urlParam }: RestParamsParams) {
         this.method = method;
         this.path = path;
-        this.queryParam = queryParam ?? [];
-        this.urlParam = urlParam ?? [];
+        this.queryParams = queryParam ?? [];
+        this.urlParams = urlParam ?? [];
+    }
+
+    toString() {
+        return this.method;
+    }
+
+    clone(context = new CloneContext()): RestParams {
+        return new RestParams({
+            method: this.method,
+            path: this.path,
+            queryParams: context.recurse(this.queryParams),
+            urlParams: context.recurse(this.urlParams),
+        });
     }
 }
 
 export type EndpointParams = IElementParams & {
-    name: string;
     longName?: string | undefined;
     docstring?: string | undefined;
     params?: Param[];
@@ -284,8 +400,7 @@ export class Endpoint extends ParentElement<Statement> {
     isPubsub: boolean;
     pubsubSource: string[];
 
-    constructor({
-        name,
+    constructor(name: string, {
         longName,
         docstring,
         isPubsub,
@@ -298,7 +413,7 @@ export class Endpoint extends ParentElement<Statement> {
         locations,
         parent,
         model,
-    }: EndpointParams) {
+    }: EndpointParams = {}) {
         super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
         this.longName = longName;
         this.docstring = docstring;
@@ -316,16 +431,13 @@ export class Endpoint extends ParentElement<Statement> {
     }
 
     private renderQueryParams(): string {
-        if (!this.restParams!.queryParam.length) {
+        if (!this.restParams!.queryParams.length) {
             return "";
         }
 
-        return `?${this.restParams!.queryParam.map(p => {
+        return `?${this.restParams!.queryParams.map(p => {
             let s = `${p.name}=`;
-            if (
-                (p.element instanceof GenericElement || p.element instanceof Field) &&
-                p.element?.value instanceof CollectionDecorator
-            ) {
+            if (p.element instanceof Field && p.element?.value instanceof CollectionDecorator) {
                 return (s += `{${p.element.toSysl()}}`);
             }
             return (s += `${p.element?.toSysl() ?? "Type"}`);
@@ -336,25 +448,30 @@ export class Endpoint extends ParentElement<Statement> {
         return this.params.length ? `(${this.params.map(p => p.toSysl()).join(", ")})` : "";
     }
 
-    private renderRestEndpoint(): string {
-        const segments = this.restParams!.path.split("/");
-        const path = segments
+    private renderRestPath(): string {
+        return this.restParams!.path
+            .split("/")
             .map(s => {
                 const match = s.match(`^{(\\w+)}$`);
                 if (match) {
                     let name = match[1];
-                    let param = this.restParams?.urlParam.find(p => p.name === name)?.toSysl();
+                    let param = this.restParams?.urlParams.find(p => p.name === name)?.toSysl();
                     return `{${param}}`;
                 }
                 return s;
             })
             .join("/");
-        let sysl = `${path}:`;
-        let content = `${this.restParams!.method}${this.renderQueryParams()}${
-            this.params.length ? ` ${this.renderParams()}` : ""
-        }:`;
+    }
+
+    private renderRestEndpoint(): string {
+        let sysl = this.renderRestPath();
+        let content = "";
+        content += this.restParams!.method;
+        content += this.renderQueryParams();
+        content += this.params.length ? ` ${this.renderParams()}` : "";
+        content += ":";
         content += this.statements.map(s => `\n${indent(s.toSysl())}`).join("");
-        return (sysl += `\n${indent(content)}`);
+        return (sysl += `:\n${indent(content)}`);
     }
 
     private renderGRPCEndpoint(): string {
@@ -380,7 +497,25 @@ export class Endpoint extends ParentElement<Statement> {
         return this.restParams ? this.renderRestEndpoint() : this.renderGRPCEndpoint();
     }
 
+    override toString(): string {
+        return this.restParams ? `[REST] ${this.restParams.path}` : `[gRPC] ${this.name}`;
+    }
+
     get children(): Statement[] {
         return this.statements;
+    }
+
+    clone(context = new CloneContext(this.model)): Endpoint {
+        return new Endpoint(this.name, {
+            longName: this.longName,
+            docstring: this.docstring,
+            isPubsub: this.isPubsub,
+            tags: context.recurse(this.tags),
+            annos: context.recurse(this.annos),
+            params: context.recurse(this.params),
+            restParams: context.applyUnder(this.restParams),
+            statements: context.recurse(this.statements),
+            model: context.model ?? this.model,
+        });
     }
 }

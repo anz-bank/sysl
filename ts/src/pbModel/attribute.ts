@@ -30,18 +30,11 @@ export class PbAttribute {
     toTag(): Tag {
         const tagName = this.getAnnoValue();
         if (typeof tagName != "string") throw new Error("Cannot create tag with non-string name");
-        return new Tag({
-            name: tagName,
-            locations: this.sourceContexts ?? [],
-        });
+        return new Tag(tagName, { locations: this.sourceContexts });
     }
 
     toAnno(name: string): Annotation {
-        return new Annotation({
-            name,
-            locations: this.sourceContexts ?? [],
-            value: this.getAnnoValue(),
-        });
+        return new Annotation(name, this.getAnnoValue(), { locations: this.sourceContexts ?? [] });
     }
 }
 

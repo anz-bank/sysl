@@ -1,21 +1,8 @@
 import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, jsonSetMember } from "typedjson";
 import { Location } from "../common/location";
-import { sortLocationalArray } from "../common/sort";
-import {
-    Element,
-    ElementRef,
-    GenericElement,
-    GenericValue,
-    Struct,
-    Type,
-    TypeConstraint,
-    TypeConstraintLength,
-    TypeConstraintRange,
-    TypeConstraintResolution,
-    Union,
-    ValueType,
-} from "../model";
+import { sortByLocation } from "../common/sort";
+import { Element, ElementRef, Type, TypeConstraint, Range, DecimalResolution, Union, ValueType, Alias } from "../model";
 import { CollectionDecorator } from "../model/decorator";
 import { Enum, EnumValue } from "../model/enum";
 import { Field, FieldValue } from "../model/field";
@@ -25,26 +12,23 @@ import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor, serializerForFn } from "./serialize";
 import { PbTypeDefList } from "./type_list";
 
+function noNaN(n?: number): number | undefined {
+    return isNaN(n as number) ? undefined : n;
+}
+
 @jsonObject
 export class PbValue {
     @jsonMember b?: boolean;
     @jsonMember d?: number;
     @jsonMember s?: string;
 
-    isEmpty(): boolean {
-        return this.b == null && this.d == null && this.s == null;
+    toModel(): ValueType | undefined {
+        return this.b || this.d || this.s;
     }
 
-    toModel(): ValueType | undefined {
-        if (this.b != null) {
-            return this.b;
-        } else if (this.d != null) {
-            return this.d;
-        } else if (this.s != null) {
-            return this.s;
-        } else {
-            return undefined;
-        }
+    toNumber(): number | undefined {
+        if (this.b || this.s) throw new Error("Requested number of a PbValue with string/bool");
+        return noNaN(this.d);
     }
 }
 
@@ -53,39 +37,20 @@ export class PbTypeConstraintRange {
     @jsonMember min?: PbValue;
     @jsonMember max?: PbValue;
 
-    isEmpty(): boolean {
-        return this.min == null && this.max == null;
-    }
-
-    toModel(): TypeConstraintRange | undefined {
-        if (this.isEmpty()) {
-            return undefined;
-        }
-        const min = this.min?.toModel();
-        const max = this.max?.toModel();
-        return new TypeConstraintRange({
-            min: min ? Number(min) : undefined,
-            max: max ? Number(max) : undefined,
-        });
+    toModel(): Range | undefined {
+        return this.min || this.max ? new Range(this.min?.toNumber(), this.max?.toNumber()) : undefined;
     }
 }
 
 @jsonObject
 export class PbTypeConstraintLength {
-    @jsonMember({ deserializer: (numStr): number => Number(numStr) })
+    @jsonMember({ deserializer: (numStr): number | undefined => noNaN(Number(numStr)) })
     min?: number;
-    @jsonMember({ deserializer: (numStr): number => Number(numStr) })
+    @jsonMember({ deserializer: (numStr): number | undefined => noNaN(Number(numStr)) })
     max?: number;
 
-    isEmpty(): boolean {
-        return (this.min == null || isNaN(this.min)) && (this.max == null || isNaN(this.max));
-    }
-
-    toModel(): TypeConstraintLength | undefined {
-        if (this.isEmpty()) {
-            return undefined;
-        }
-        return new TypeConstraintLength({ min: this.min, max: this.max });
+    toModel(): Range | undefined {
+        return this.min || this.max ? new Range(this.min, this.max) : undefined;
     }
 }
 
@@ -95,15 +60,8 @@ export class PbTypeConstraintResolution {
     @jsonMember base?: number;
     @jsonMember index?: number;
 
-    isEmpty(): boolean {
-        return (this.base == null || isNaN(this.base)) && (this.index == null || isNaN(this.index));
-    }
-
-    toModel(): TypeConstraintResolution | undefined {
-        if (this.isEmpty()) {
-            return undefined;
-        }
-        return new TypeConstraintResolution({ ...this });
+    toModel(): DecimalResolution | undefined {
+        return this.base || this.index ? new DecimalResolution(noNaN(this.base), noNaN(this.index)) : undefined;
     }
 }
 
@@ -117,14 +75,14 @@ export class PbTypeConstraint {
     @jsonMember bitWidth!: number;
 
     toModel(): TypeConstraint {
-        return new TypeConstraint({
-            range: this.range?.toModel(),
-            length: this.length?.toModel(),
-            resolution: this.resolution?.toModel(),
-            precision: this.precision,
-            scale: this.scale,
-            bitWidth: this.bitWidth,
-        });
+        return new TypeConstraint(
+            this.range?.toModel(),
+            this.length?.toModel(),
+            this.resolution?.toModel(),
+            this.precision,
+            this.scale,
+            this.bitWidth
+        );
     }
 }
 
@@ -162,47 +120,23 @@ export class PbTypeRelation {
     @jsonArrayMember(String) inject!: string[];
     @jsonMapMember(String, () => PbTypeDef, serializerForFn(() => PbTypeDef))
     attrDefs!: Map<string, PbTypeDef>;
-
-    toModel(): Struct {
-        return new Struct(PbTypeDef.defsToFields(this.attrDefs));
-    }
 }
 
 @jsonObject
 export class PbTypeDefStruct {
     @jsonMapMember(String, () => PbTypeDef, serializerForFn(() => PbTypeDef))
     attrDefs!: Map<string, PbTypeDef>;
-
-    toModel(): Struct {
-        return new Struct(PbTypeDef.defsToFields(this.attrDefs));
-    }
 }
 
 @jsonObject
 export class PbTypeDefUnion {
     @jsonArrayMember(() => PbTypeDef) type: PbTypeDef[] = [];
-
-    toModel(): Union {
-        const values = this.type.map(t => t.toValue());
-
-        if (values.every(v => v instanceof Primitive || v instanceof ElementRef || v instanceof CollectionDecorator))
-            return new Union(values as FieldValue[]);
-
-        throw new Error(
-            "Cannot produce Union, some members are not a Primitive/Reference/TypeDecorator: " +
-                values.map(v => v.constructor.name).join(", ")
-        );
-    }
 }
 
 @jsonObject
 export class PbTypeDefEnum {
     @jsonMapMember(String, Number, serializerFor(String))
     items!: Map<string, number>;
-
-    toModel(): Enum {
-        return new Enum(Array.from(this.items).map(([key, value]) => new EnumValue(key, value)));
-    }
 }
 
 @jsonObject
@@ -240,66 +174,32 @@ export class PbTypeDef {
     }
 
     static defsToFields(attrDefs: Map<string, PbTypeDef>): Field[] {
-        return sortLocationalArray(Array.from(attrDefs).map(([key, value]) => value?.toField(key)));
+        return sortByLocation(Array.from(attrDefs).map(([key, value]) => value?.toField(key)));
     }
 
-    toValue(): GenericValue {
-        if (this.primitive)
-            return new Primitive(
-                this.primitive,
-                (this.constraint ?? []).map(c => c.toModel())
-            );
-        if (this.relation) return this.relation.toModel();
+    toValue(): FieldValue {
+        const collection = this.set || this.sequence || this.list;
+        if (collection) return new CollectionDecorator(collection.toModel(), !!this.set);
+        if (this.primitive) return new Primitive(this.primitive, this.constraint?.at(0)?.toModel());
         if (this.typeRef) return this.typeRef.ref.toModel();
-        if (this.set) return new CollectionDecorator(this.set.toModel(), true);
-        if (this.sequence) return new CollectionDecorator(this.sequence.toModel(), false);
-        if (this.list) return new CollectionDecorator(this.list.toModel(), false);
-        if (this.enum) return this.enum.toModel();
-        if (this.tuple) return this.tuple.toModel();
-        if (this.oneOf) return this.oneOf.toModel();
-
         throw new Error(`Error converting type: ${JSON.stringify(this)}`);
     }
 
     // `isInner` specifies whether a type exists within something else and is not a type definition.
     // It is true by default, meaning the type is a nested definition or a parameter.
     // When it is false, it means it is a top level `Type` definition and therefore may be an `Alias`.
-    toModel(name?: string | undefined, isInner: boolean = true): Element {
-        let value = this.toValue();
+    toModel(name: string = "", isInner: boolean = true): Element {
         const params = {
-            discriminator: "",
-            name: name ?? "",
-            optional: this.opt,
-            value,
+            tags: sortByLocation(getTags(this.attrs)),
+            annos: sortByLocation(getAnnos(this.attrs)),
             locations: this.sourceContexts,
-            tags: sortLocationalArray(getTags(this.attrs)),
-            annos: sortLocationalArray(getAnnos(this.attrs)),
         };
 
-        if (value instanceof Struct) {
-            if (name) return new Type(name, !!this.relation, sortLocationalArray(value.fields), params);
-
-            params.discriminator = this.relation ? "!table" : "!type";
-        }
-        if (value instanceof Enum) params.discriminator = "!enum";
-        if (value instanceof Union) params.discriminator = "!union";
-
-        if (
-            !isInner &&
-            (value instanceof Primitive || value instanceof CollectionDecorator || value instanceof ElementRef)
-        )
-            params.discriminator = "!alias";
-
-        if (!params.discriminator) {
-            if (value instanceof Primitive || value instanceof CollectionDecorator || value instanceof ElementRef)
-                return new Field(params.name, value, this.opt, params);
-            else
-                throw new Error(
-                    "No discriminator but not a Field-compatible value. Type of value is " + value.constructor.name
-                );
-        }
-
-        return new GenericElement(params);
+        const type = this.tuple || this.relation;
+        if (type) return new Type(name, !!this.relation, sortByLocation(PbTypeDef.defsToFields(type.attrDefs)), params);
+        if (this.enum) return new Enum(name, [...this.enum.items].map(([k, v]) => new EnumValue(k, v)), params);
+        if (this.oneOf) return new Union(name, this.oneOf.type.map(t => t.toValue()), params);
+        return isInner ? new Field(name, this.toValue(), this.opt, params) : new Alias(name, this.toValue(), params);
     }
 
     toField(name: string): Field {

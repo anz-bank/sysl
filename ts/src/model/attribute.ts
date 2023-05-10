@@ -2,27 +2,24 @@ import "reflect-metadata";
 import { indent } from "../common/format";
 import { Location } from "../common/location";
 import { IChild, ILocational, IRenderable } from "./common";
+import { CloneContext } from "./clone";
 import { Element } from "./element";
 import { Model } from "./model";
 
 export type AnnoValue = string | number | AnnoValue[];
 
 export type AnnotationParams = {
-    name: string;
-    value: AnnoValue;
     locations?: Location[];
     model?: Model;
     parent?: Element;
 };
 
 export class Annotation implements IChild, ILocational, IRenderable {
-    value: AnnoValue;
-    name: string;
     locations: Location[];
     parent?: Element;
     model?: Model;
 
-    constructor({ name, value, locations, model, parent }: AnnotationParams) {
+    constructor(public name: string, public value: AnnoValue, { locations, model, parent }: AnnotationParams = {}) {
         // TODO: Check validity of name, throw if invalid.
         this.name = name;
         this.value = value;
@@ -53,23 +50,33 @@ export class Annotation implements IChild, ILocational, IRenderable {
         }
         return `${this.name} =${valueString(this.value)}`;
     }
+
+    toString(): string {
+        return `@${this.name} = ...`;
+    }
+
+    clone(context = new CloneContext(this.model)): Annotation {
+        return new Annotation(this.name, this.cloneValue(this.value), { model: context.model ?? this.model });
+    }
+
+    private cloneValue(value: AnnoValue): AnnoValue {
+        if (typeof value === "string" || typeof value === "number") return value;
+        return value.map(v => this.cloneValue(v));
+    }
 }
 
 export type TagParams = {
-    name: string;
     locations?: Location[];
     model?: Model;
     parent?: Element;
 };
 
 export class Tag implements IChild, ILocational, IRenderable {
-    name: string;
     locations: Location[];
     parent?: Element;
     model?: Model;
 
-    constructor({ name, locations, model, parent }: TagParams) {
-        this.name = name;
+    constructor(public name: string, { locations, model, parent }: TagParams = {}) {
         this.locations = locations ?? [];
         this.model = model ?? parent?.model;
         this.parent = parent;
@@ -77,5 +84,13 @@ export class Tag implements IChild, ILocational, IRenderable {
 
     toSysl(): string {
         return `~${this.name}`;
+    }
+
+    toString(): string {
+        return `[${this.toSysl()}]`;
+    }
+
+    clone(context = new CloneContext(this.model)): Tag {
+        return new Tag(this.name, { model: context.model ?? this.model });
     }
 }

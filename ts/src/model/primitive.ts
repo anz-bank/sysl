@@ -1,20 +1,17 @@
 import { IRenderable } from "./common";
-import { TypeConstraint, TypeConstraintLength } from "./constraint";
+import { CloneContext } from "./clone";
+import { TypeConstraint, Range } from "./constraint";
 
 export class Primitive implements IRenderable {
-    primitive: TypePrimitive;
-    constraints: TypeConstraint[];
-
-    constructor(primitive: TypePrimitive, constraints?: TypeConstraint[]) {
+    constructor(public primitive: TypePrimitive, public constraint?: TypeConstraint) {
         this.primitive = primitive;
-        this.constraints = constraints ?? [];
+        this.constraint = constraint;
     }
 
     private constraintStr(): string {
-        const constraint = this.constraints?.length ? this.constraints[0] : null;
         const isNumber = (n?: number) => n != null && !isNaN(n);
 
-        const lengthStr = (length: TypeConstraintLength) => {
+        const lengthStr = (length: Range) => {
             if (isNumber(length.max) && isNumber(length.min)) {
                 return `(${length.min}..${length.max})`;
             } else if (isNumber(length.max)) {
@@ -25,15 +22,15 @@ export class Primitive implements IRenderable {
             return "";
         };
 
-        if (constraint) {
-            if (isNumber(constraint.precision) && isNumber(constraint.scale)) {
-                return `(${constraint.precision}.${constraint.scale})`;
+        if (this.constraint) {
+            if (isNumber(this.constraint.precision) && isNumber(this.constraint.scale)) {
+                return `(${this.constraint.precision}.${this.constraint.scale})`;
             }
-            if (constraint.length) {
-                return lengthStr(constraint.length);
+            if (this.constraint.length) {
+                return lengthStr(this.constraint.length);
             }
-            if (constraint.bitWidth) {
-                return constraint.bitWidth.toString();
+            if (this.constraint.bitWidth) {
+                return this.constraint.bitWidth.toString();
             }
         }
 
@@ -42,6 +39,14 @@ export class Primitive implements IRenderable {
 
     toSysl(): string {
         return `${this.primitive.toLowerCase()}${this.constraintStr()}`;
+    }
+
+    toString(): string {
+        return this.primitive.toLowerCase();
+    }
+
+    clone(context = new CloneContext()): Primitive {
+        return new Primitive(this.primitive, context.applyUnder(this.constraint));
     }
 }
 

@@ -1,15 +1,32 @@
-import { indent } from "../common/format";
-import { IRenderable } from "./common";
+import { ElementRef, IRenderable } from "./common";
+import { CloneContext } from "./clone";
+import { Element, IElementParams } from "./element";
 
-export class Enum implements IRenderable {
-    members: EnumValue[];
-
-    constructor(members: EnumValue[]) {
-        this.members = members ?? [];
+export class Enum extends Element {
+    constructor(name: string, public members: EnumValue[], { annos, tags, locations, parent, model }: IElementParams) {
+        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
+        this.attachSubitems();
     }
 
     toSysl(): string {
-        return `${indent(this.members.map(e => e.toSysl()).join("\n"))}`;
+        return this.render("!enum", this.members);
+    }
+
+    override toString(): string {
+        return `!enum ${this.safeName}`;
+    }
+
+    toRef(): ElementRef {
+        throw new Error("Method not implemented.");
+    }
+
+    clone(context = new CloneContext(this.model)): Enum {
+        const params = {
+            tags: context.recurse(this.tags),
+            annos: context.recurse(this.annos),
+            model: context.model ?? this.model,
+        };
+        return new Enum(this.name, context.recurse(this.members), params);
     }
 }
 
@@ -24,5 +41,13 @@ export class EnumValue implements IRenderable {
 
     toSysl(): string {
         return `${this.name}: ${this.value}`;
+    }
+
+    toString(): string {
+        return this.toSysl();
+    }
+
+    clone(_context: CloneContext): EnumValue {
+        return new EnumValue(this.name, this.value);
     }
 }

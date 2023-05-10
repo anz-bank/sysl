@@ -1,5 +1,6 @@
 import { toSafeName, fromSafeName } from "../common/format";
 import { Location } from "../common/location";
+import { CloneContext } from "./clone";
 import { Element } from "./element";
 import { Model } from "./model";
 
@@ -64,13 +65,16 @@ export class ElementRef implements IRenderable {
         return [fullAppName, typeName, fieldName].filter(n => n).join(".");
     }
 
+    toString(): string {
+        return this.toSysl(true);
+    }
+
     /**
      * Parses a string into an {@link ElementRef}. The string can refer to an app, type or field. The element isn't guaranteed
      * to exist in any given model. Decodes escaped characters.
      * @param refStr The element reference string to parse.
      * @returns An {@link ElementRef} that references the element specified in the supplied string.
-     * @throws {@link Error}
-     * Thrown if the syntax of the supplied string is invalid.
+     * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
      */
     static parse(refStr: string): ElementRef {
         const ref = this.tryParse(refStr);
@@ -141,6 +145,10 @@ export class ElementRef implements IRenderable {
             parts.fieldName ?? this.fieldName
         );
     }
+
+    clone(_context?: CloneContext): ElementRef {
+        return this;
+    }
 }
 
 /**
@@ -154,3 +162,5 @@ export enum ElementKind {
     Parameter = "param",
     Statement = "stmt",
 }
+
+export type ElementID = ElementRef | string;

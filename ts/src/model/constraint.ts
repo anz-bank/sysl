@@ -1,72 +1,47 @@
-export type TypeConstraintRangeParams = {
-    min?: number | undefined;
-    max?: number | undefined;
-};
+import { CloneContext } from "./clone";
 
-export class TypeConstraintRange {
-    min: number | undefined;
-    max: number | undefined;
-
-    constructor({ min, max }: TypeConstraintRangeParams) {
-        this.min = min;
-        this.max = max;
-    }
+export class Range {
+    constructor(public min?: number, public max?: number) {}
+    public toString = () => `${this.min ?? ""}..${this.max ?? ""}`;
+    public clone = () => new Range(this.min, this.max);
 }
-
-export type TypeConstraintLengthParams = {
-    min?: number | undefined;
-    max?: number | undefined;
-};
-
-export class TypeConstraintLength {
-    min: number | undefined;
-    max: number | undefined;
-
-    constructor({ min, max }: TypeConstraintLengthParams) {
-        this.min = min;
-        this.max = max;
-    }
-}
-
-export type TypeConstraintResolutionParams = {
-    base?: number | undefined;
-    index?: number | undefined;
-};
 
 /** e.g.: 3 decimal places = {base = 10, index = -3} */
-export class TypeConstraintResolution {
-    base: number | undefined;
-    index: number | undefined;
-
-    constructor({ base, index }: TypeConstraintResolutionParams) {
-        this.base = base;
-        this.index = index;
-    }
+export class DecimalResolution {
+    constructor(public base?: number, public index?: number) {}
+    public toString = () => `${this.base}.${this.index}`;
+    public clone = () => new DecimalResolution(this.base, this.index);
 }
 
-export type TypeConstraintParams = {
-    range?: TypeConstraintRange;
-    length?: TypeConstraintLength;
-    resolution?: TypeConstraintResolution;
-    precision?: number;
-    scale?: number;
-    bitWidth?: number;
-};
-
 export class TypeConstraint {
-    range: TypeConstraintRange | undefined;
-    length: TypeConstraintLength | undefined;
-    resolution: TypeConstraintResolution | undefined;
-    precision?: number;
-    scale?: number;
-    bitWidth?: number;
+    constructor(
+        public range?: Range,
+        public length?: Range,
+        public resolution?: DecimalResolution,
+        public precision?: number,
+        public scale?: number,
+        public bitWidth?: number
+    ) {}
 
-    constructor({ range, length, resolution, precision, scale, bitWidth }: TypeConstraintParams) {
-        this.range = range;
-        this.length = length;
-        this.resolution = resolution;
-        this.precision = precision;
-        this.scale = scale;
-        this.bitWidth = bitWidth;
+    toString(): string {
+        return [
+            this.range ? `range: ${this.range}` : undefined,
+            this.length ? `length: ${this.length}` : undefined,
+            this.resolution ? `resolution: ${this.resolution}` : undefined,
+            this.precision ? `precision: ${this.precision}` : undefined,
+            this.scale ? `scale: ${this.scale}` : undefined,
+            this.bitWidth ? `bitWidth: ${this.bitWidth}` : undefined,
+        ].filter(x => x).join(", ");
+    }
+
+    clone(_context?: CloneContext): TypeConstraint {
+        return new TypeConstraint(
+            this.range?.clone(),
+            this.length?.clone(),
+            this.resolution?.clone(),
+            this.precision,
+            this.scale,
+            this.bitWidth
+        );
     }
 }

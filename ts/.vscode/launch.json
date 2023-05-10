@@ -8,14 +8,18 @@
         "name": "Debug Jest Tests",
         "type": "node",
         "request": "launch",
-        "runtimeArgs": [
-          "--inspect-brk",
-          "${workspaceRoot}/node_modules/.bin/jest",
-          "--runInBand"
-        ],
+        "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand"],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen"
-      }
+      },
+      {
+        "name": "Debug Tests in current file",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/.bin/jest", "--runInBand", "${relativeFile}"],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      },
     ]
   }
   

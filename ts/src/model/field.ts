@@ -1,9 +1,8 @@
-import { indent, toSafeName } from "../common/format";
 import { Element, IElementParams } from "./element";
-import { addTags, renderAnnos } from "./renderers";
 import { Primitive } from "./primitive";
 import { CollectionDecorator } from "./decorator";
 import { ElementRef } from "./common";
+import { CloneContext } from "./clone";
 
 export type FieldValue = Primitive | ElementRef | CollectionDecorator;
 
@@ -18,15 +17,21 @@ export class Field extends Element {
     }
 
     override toSysl(): string {
-        const optStr = this.optional ? "?" : "";
-        let sysl: string = `${this.value.toSysl(true)}${optStr}`;
+        let value: string = `${this.value.toSysl(true)}${this.optional ? "?" : ""}`;
+        //TODO: Everyone who uses Field with empty name should use FieldValue instead.
+        let name = this.name ? `${this.safeName} <:` : "";
+        return this.render(name, "", value, false);
+    }
 
-        if (this.name) sysl = `${toSafeName(this.name)} <: ${sysl}`;
+    override toString(): string {
+        return `${this.name ? this.name : "[param]"} <: ${this.value.toSysl(true)}${this.optional ? "?" : ""}`;
+    }
 
-        sysl = addTags(sysl, this.tags);
-        if (this.annos.length) {
-            sysl += `:\n${indent(renderAnnos(this.annos))}`;
-        }
-        return sysl;
+    clone(context = new CloneContext(this.model)): Field {
+        return new Field(this.name, this.value.clone(context), this.optional, {
+            tags: context.recurse(this.tags),
+            annos: context.recurse(this.annos),
+            model: context.model ?? this.model,
+        });
     }
 }

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject } from "typedjson";
 import { Location } from "../common/location";
-import { sortLocationalArray } from "../common/sort";
+import { sortByLocation } from "../common/sort";
 import {
     Action,
     Alt,
@@ -66,7 +66,7 @@ export class PbCall {
     toModel(appName: string[]): Call {
         return new Call({
             endpoint: this.endpoint,
-            arg: this.arg?.map(a => a.toModel()) ?? [],
+            args: this.arg?.map(a => a.toModel()) ?? [],
             targetApp: this.target.part,
             originApp: appName,
         });
@@ -208,8 +208,7 @@ export class PbStatement {
     }
 
     toModel(appName: string[]): Statement {
-        return new Statement({
-            value: this.getValue()?.toModel(appName),
+        return new Statement(this.getValue()?.toModel(appName), {
             locations: this.sourceContexts,
             tags: getTags(this.attrs),
             annos: getAnnos(this.attrs),
@@ -237,8 +236,8 @@ export class PbRestParams {
         return new RestParams({
             method: this.method,
             path: this.path,
-            queryParam: this.queryParam?.map(p => p.toModel()) ?? [],
-            urlParam: this.urlParam?.map(p => p.toModel()) ?? [],
+            queryParams: this.queryParam?.map(p => p.toModel()) ?? [],
+            urlParams: this.urlParam?.map(p => p.toModel()) ?? [],
         });
     }
 }
@@ -258,13 +257,12 @@ export class PbEndpoint {
     @jsonMember source?: PbAppName;
 
     toModel(appName: string[]): Endpoint {
-        return new Endpoint({
-            name: this.name,
+        return new Endpoint(this.name, {
             longName: this.longName,
             docstring: this.docstring,
             isPubsub: this.isPubsub ?? false,
             params: (this.param ?? []).filter(p => p.name || p.type).map(p => p.toModel()),
-            statements: sortLocationalArray(this.stmt?.map(s => s.toModel(appName)) ?? []),
+            statements: sortByLocation(this.stmt?.map(s => s.toModel(appName)) ?? []),
             restParams: this.restParams?.toModel(),
             pubsubSource: this.source?.part ?? [],
             locations: this.sourceContexts,

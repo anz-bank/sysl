@@ -8,10 +8,12 @@
 # Furthermore comments are not retained during a `sysl pb` command, so they cannot be returned when converting back from json to Sysl.
 # Header comments (such as this one) are extracted before `sysl pb` is called, and then added back at the end, allowing them to be retained
 
+import imported.sysl
+
 App [~abstract]:
     ...
 
-AppWithAnnotation:
+AppWithAnnotation [~tag]:
     @annotation = "annotation"
     @annotation1 = "you can do \"string\" annotation like this"
     @annotation2 = ["or", "in", "an", ["array"]]
@@ -21,10 +23,10 @@ AppWithAnnotation:
         |
         | like this
 
-App :: with :: subpackages:
+App :: with :: subpackages [~tag]:
     ...
 
-RestEndpoint:
+RestEndpoint [~tag]:
     /:
         GET:
             ...
@@ -49,29 +51,36 @@ RestEndpoint:
         PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
             ...
 
-SimpleEndpoint:
-    SimpleEp:
+SimpleEndpoint [~tag]:
+    SimpleEp [~SimpleEpTag]:
+        @annotation = "annotation"
+        @annotation1 = "you can do \"string\" annotation like this"
+        @annotation2 = ["or", "in", "an", ["array"]]
+        @annotation3 =:
+            | you can also do
+            | multiline annotations
+            |
+            | like this
+
+    SimpleEpWithParamsRef (Types.type) [~tag]:
         ...
 
-    SimpleEpWithParamsRef (Types.type):
+    SimpleEpWithTypes (native <: string) [~tag]:
         ...
 
-    SimpleEpWithTypes (native <: string):
-        ...
-
-    SimpleEpWithArray (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+    SimpleEpWithArray (unlimited <: string(5..), limited <: string(5..10), num <: int(5)) [~tag]:
         ...
 
 Types:
-    !type Type:
+    !type Type [~tag]:
         @annotation = "annotation"
-        nativeTypeField <: string
-        reference <: RestEndpoint.Type
-        optional <: string?
-        set <: set of string
-        sequence <: sequence of string
-        aliasSequence <: AliasSequence
-        with_anno <: string:
+        nativeTypeField <: string [~tag]
+        reference <: RestEndpoint.Type [~tag]
+        optional <: string? [~tag]
+        set <: set of string [~tag]
+        sequence <: sequence of string [~tag]
+        aliasSequence <: AliasSequence [~tag]
+        with_anno <: string [~tag]:
             @annotation = "this is an annotation"
 
     !table Table [~tag]:
@@ -94,31 +103,44 @@ Types:
         ENUM_2: 2
         ENUM_3: 3
 
-    !union Union:
+    !union Union [~tag]:
         int
         string
         sequence of decimal(5.8)
-
-    !union EmptyUnion:
-        ...
-
-    !alias Alias:
-        int
-
-    !alias AliasSequence:
-        sequence of string
-
-    !alias AliasRef:
-        Type
-
-    !alias AliasForeignRef:
         RestEndpoint.Type
 
-    !alias AliasForeignRefSet:
+    !union EmptyUnion [~tag]:
+        ...
+
+    !alias Alias [~tag]:
+        @annotation1 = "you can do string annotation like this"
+        @annotation2 = ["or", "in", "an", "array"]
+        @annotation3 =:
+            | you can also do
+            | multiline annotations
+            | like this
+        int
+
+    !alias AliasSequence [~tag]:
+        @annotation1 = "you can do string annotation like this"
+        @annotation2 = ["or", "in", "an", "array"]
+        @annotation3 =:
+            | you can also do
+            | multiline annotations
+            | like this
+        sequence of string
+
+    !alias AliasRef [~tag]:
+        Type
+
+    !alias AliasForeignRef [~tag]:
+        RestEndpoint.Type
+
+    !alias AliasForeignRefSet [~tag]:
         set of RestEndpoint.Type
 
-Statements:
-    IfStmt:
+Statements [~tag]:
+    IfStmt [~tag]:
         if predicate1:
             return ok <: string
         else if predicate2:
@@ -126,7 +148,7 @@ Statements:
         else:
             ...
 
-    Loops:
+    Loops [~tag]:
         alt predicate:
             ...
         until predicate:
@@ -140,16 +162,16 @@ Statements:
         while predicate:
             ...
 
-    Returns:
+    Returns [~tag]:
         return ok <: string
         return ok <: Types.Type
         return error <: Types.Type
 
-    Calls:
+    Calls [~tag]:
         . <- Returns
         RestEndpoint <- GET /param
 
-    OneOfStatements:
+    OneOfStatements [~tag]:
         one of:
             case1:
                 return ok <: string
@@ -160,11 +182,11 @@ Statements:
             :
                 return error <: string
 
-    GroupStatements:
+    GroupStatements [~tag]:
         grouped:
             . <- GroupStatements
 
-    AnnotatedEndpoint:
+    AnnotatedEndpoint [~tag]:
         @annotation1 = "you can do string annotation like this"
         @annotation2 = ["or", "in", "an", "array"]
         @annotation3 =:
@@ -173,14 +195,14 @@ Statements:
             | like this
 
     AnnotatedStatements:
-        . <- Miscellanous
-        return ok <: string [annotation=["as", "an", "array"]]
+        . <- Miscellaneous
+        return ok <: string [annotation=["as", "an", "array"]] #Doesn't work, annos/tags/comments are part of the name
         "statement"
 
-    Miscellanous:
+    Miscellaneous:
         SimpleEndpoint -> SimpleEp
 
-Unsafe%2FNamespace :: Unsafe%2FApp:
-    !type Unsafe%2EType:
-        Unsafe%2EField <: int:
+Unsafe%2FNamespace :: Unsafe%2FApp [~tag]:
+    !type Unsafe%2EType [~tag]:
+        Unsafe%2EField <: int [~tag]:
             @description = "Unsafe Field Description"

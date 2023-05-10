@@ -1,23 +1,33 @@
-import { indent } from "../common/format";
-import { ElementRef, IChild } from "./common";
+import { ElementID, ElementKind, ElementRef, IChild } from "./common";
+import { CloneContext } from "./clone";
 import { Element, IElementParams, ParentElement } from "./element";
-import { addTags, renderAnnos } from "./renderers";
 import { Endpoint } from "./statement";
 import { Type } from "./type";
 
 export class Application extends ParentElement<Element> {
-    namespace: string[];
+    namespace: readonly string[];
     endpoints: Endpoint[];
     children: Element[];
 
-    constructor({ namespace, name, endpoints, children: types, locations, annos, tags, model }: ApplicationParams) {
-        if (!name) throw new Error("'name' must be specified, and optionally 'namespace'.");
+    constructor(name: ElementID, p: ApplicationParams = {}) {
+        if (name instanceof ElementRef) {
+            if (p.namespace) throw new Error("If namespace is specified, it must be a simple string, not ElementRef.");
+        }
 
-        super(name, locations ?? [], annos ?? [], tags ?? [], model);
-        this.namespace = namespace ?? [];
-        this.endpoints = endpoints ?? [];
-        this.children = types ?? [];
+        const parsed = typeof name == "string" ? ElementRef.parse(name) : name;
+        super(parsed.appName, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model);
+
+        if (parsed.kind != ElementKind.App) throw Error(`Expected name to be of kind 'App' but got '${parsed.kind}'.`);
+        if (parsed.namespace.length && p.namespace) throw Error("Found namespace in both 'name' and 'namespace'.");
+
+        this.namespace = [...(p.namespace ?? parsed.namespace)];
+        this.endpoints = p.endpoints ?? [];
+        this.children = p.types ?? [];
         this.attachSubitems();
+    }
+
+    public override get safeName(): string {
+        return this.toRef().toSysl();
     }
 
     protected override attachSubitems(extraSubitems: IChild[] = []): void {
@@ -29,23 +39,9 @@ export class Application extends ParentElement<Element> {
     }
 
     toSysl(): string {
-        let sysl = `${addTags(this.toString(), this.tags)}:`;
-        if (this.annos.length) {
-            sysl += `\n${indent(renderAnnos(this.annos))}`;
-        }
-        if (this.endpoints.length) {
-            sysl += `\n${this.endpoints
-                .filter(e => !e.isPubsub)
-                .map(e => indent(e.toSysl()))
-                .join("\n\n")}`;
-        }
-        if (this.children.length) {
-            sysl += `\n${this.children.map(t => indent(t.toSysl())).join("\n\n")}`;
-        }
-        if (!this.annos.length && !this.endpoints.length && !this.children.length) {
-            sysl += `\n${indent("...")}`;
-        }
-        return sysl;
+        const endpoints = `${this.endpoints.filter(e => !e.isPubsub).map(e => e.toSysl()).join("\n\n")}`;
+        const children = `${this.children.map(t => t.toSysl()).join("\n\n")}`;
+        return this.render("", [endpoints, children].filter(x => x).join("\n"));
     }
 
     toRef(): ElementRef {
@@ -55,11 +51,21 @@ export class Application extends ParentElement<Element> {
     override toString(): string {
         return this.toRef().toSysl();
     }
+
+    clone(context = new CloneContext(this.model)): Application {
+        return new Application(this.name, {
+            namespace: [...this.namespace],
+            tags: context.recurse(this.tags),
+            annos: context.recurse(this.annos),
+            endpoints: context.recurse(this.endpoints),
+            types: context.recurse(this.children),
+            model: context.model ?? this.model,
+        });
+    }
 }
 
 export type ApplicationParams = IElementParams & {
     namespace?: string[];
-    name?: string;
     endpoints?: Endpoint[];
-    children?: Element[];
+    types?: Element[];
 };
