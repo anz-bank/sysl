@@ -20,5 +20,6 @@ Description of how to test the PR, commands to run, and screenshots if relevant.
 
 - [ ] Added related tests
 - [ ] Update documentation for any user-visible changes in `docs/website/content`
+- [ ] Incremented SDK version if needed
 
 @anz-bank/sysl-developers
