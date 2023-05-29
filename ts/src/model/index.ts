@@ -1,4 +1,5 @@
 export * from "./attribute";
+export * from "./clone";
 export * from "./common";
 export * from "./model";
 export * from "./renderers";
