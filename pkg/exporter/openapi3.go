@@ -68,6 +68,15 @@ func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.Swa
 	spec.Info.Contact.Email = app.Attributes["contact.email"]
 	spec.Info.Contact.URL = app.Attributes["contact.url"]
 
+	for k, v := range app.Attributes {
+		if strings.HasPrefix(k, "x-") {
+			if spec.Info.Extensions == nil {
+				spec.Info.Extensions = make(map[string]interface{})
+			}
+			spec.Info.Extensions[k] = v
+		}
+	}
+
 	// TODO: Handle multiple environments in attributes
 	// TODO: Handle server variables
 	server := &openapi3.Server{
@@ -97,6 +106,7 @@ func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.Swa
 		// Convert to multiline string
 		operation.Description = v.Description
 		operation.Summary = v.Summary
+		operation.Extensions = v.Extensions
 		for paramName, paramItem := range v.Params {
 			var param *openapi3.Parameter
 			var payload *openapi3.SchemaRef

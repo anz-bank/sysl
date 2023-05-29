@@ -19,12 +19,13 @@ type App struct {
 
 // Endpoint is a simplified representation of a Sysl endpoint
 type Endpoint struct {
-	Summary     string                // Short human-readable description of what the endpoint does
-	Description string                // Longer description of what the endpoint does
-	Path        string                // Path
-	Params      map[string]*Parameter // Request parameters
-	Response    map[string]*Parameter // Response parameters
-	Downstream  []string              // TODO: Work out the dependency graph of each application. Store downstreams in this field.
+	Summary     string                 // Short human-readable description of what the endpoint does
+	Description string                 // Longer description of what the endpoint does
+	Path        string                 // Path
+	Params      map[string]*Parameter  // Request parameters
+	Response    map[string]*Parameter  // Response parameters
+	Downstream  []string               // TODO: Work out the dependency graph of each application. Store downstreams in this field.
+	Extensions  map[string]interface{} // Any attributes starting with x-
 }
 
 type Parameter struct {
@@ -135,13 +136,23 @@ func (am *AppMapper) mapTypes(appName string, syslTypes map[string]*sysl.Type) m
 func (am *AppMapper) mapEndpoints(appName string, ep map[string]*sysl.Endpoint) map[string]*Endpoint {
 	endpoints := make(map[string]*Endpoint, 15)
 	for key, value := range ep {
-		endpoints[key] = &Endpoint{
-			Summary:     am.GetAttribute(value.GetAttrs(), "summary"),
+		attrs := value.GetAttrs()
+		ep := &Endpoint{
+			Summary:     am.GetAttribute(attrs, "summary"),
 			Path:        key,
 			Params:      am.mapAllParams(value),
 			Response:    am.mapResponse(value.GetStmt(), appName),
 			Description: value.Docstring,
 		}
+		for k, v := range attrs {
+			if strings.HasPrefix(k, "x-") {
+				if ep.Extensions == nil {
+					ep.Extensions = make(map[string]interface{})
+				}
+				ep.Extensions[k] = v.GetS()
+			}
+		}
+		endpoints[key] = ep
 	}
 	return endpoints
 }

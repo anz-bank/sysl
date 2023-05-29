@@ -6,6 +6,7 @@
 
 Swagger Petstore "Swagger Petstore":
     @version = "1.0.0"
+    @x-version = "1.0.1"
     @termsOfService = "http://swagger.io/terms/"
     @license = "Apache 2.0"
     @host = "petstore.swagger.io"
@@ -41,6 +42,7 @@ Swagger Petstore "Swagger Petstore":
             | lorem. Pellentesque vitae felis pretium, pulvinar elit eu, euismod
             | sapien.
             @summary="findPets"
+            @x-operation-param="xOperationParam"
             return error <: Error
             return ok <: NewPetResponse
 

@@ -56,6 +56,11 @@ func TestExportWithFile(t *testing.T) {
 	assert.Equal(t, "#/components/schemas/NewPetResponse", getPetsSuccessResponse.Str)
 	assert.Equal(t, "#/components/schemas/Error", getPetsErrorResponse.Str)
 	assert.True(t, postPetsRequired.Bool())
+
+	xVer := gjson.Get(string(outputSpecJSON), "info.x-version")
+	assert.Equal(t, "1.0.1", xVer.Str)
+	pathXParam := gjson.Get(string(outputSpecJSON), "paths./pets.get.x-operation-param")
+	assert.Equal(t, "xOperationParam", pathXParam.Str)
 }
 func TestExport(t *testing.T) {
 	t.Parallel()
@@ -162,6 +167,49 @@ func TestMapEnums(t *testing.T) {
 		assert.True(t, val.Str == "apple" || val.Str == "orange")
 	}
 }
+
+func TestExtensions(t *testing.T) {
+	t.Parallel()
+
+	simpleApps := map[string]*syslwrapper.App{
+		"TestApp": {
+			Name: "TestApp",
+			Attributes: map[string]string{
+				"version":   "1.0.0",
+				"x-version": "1.0.1",
+			},
+			Endpoints: map[string]*syslwrapper.Endpoint{
+				"TestEndpoint": {
+					Summary: "GetPets",
+					Path:    "GET /pets",
+					Params: map[string]*syslwrapper.Parameter{
+						"limit": {
+							In:   "query",
+							Name: "limit",
+							Type: &syslwrapper.Type{
+								Type: "int",
+							},
+						},
+					},
+					Extensions: map[string]interface{}{
+						"x-operation-param": "xOperationParam",
+					},
+				},
+			},
+		},
+	}
+
+	exporter := MakeOpenAPI3Exporter(simpleApps, &logrus.Logger{})
+	err := exporter.Export()
+	assert.NoError(t, err)
+	outputSpecJSON, err := exporter.SerializeOutput("TestApp", "json")
+	assert.NoError(t, err)
+	xVer := gjson.Get(string(outputSpecJSON), "info.x-version")
+	assert.Equal(t, "1.0.1", xVer.Str)
+	pathXParam := gjson.Get(string(outputSpecJSON), "paths./pets.get.x-operation-param")
+	assert.Equal(t, "xOperationParam", pathXParam.Str)
+}
+
 func TestMakeOpenAPI3Exporter(t *testing.T) {
 	t.Parallel()
 
