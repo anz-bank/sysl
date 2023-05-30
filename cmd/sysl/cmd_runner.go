@@ -16,6 +16,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/sysl"
 
 	"github.com/anz-bank/golden-retriever/pkg/gitfs"
+	"github.com/anz-bank/golden-retriever/reader/remotefs"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/storage/memory"
@@ -124,6 +125,10 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 	app.Flag("clone-version",
 		"Before running the command it will clone the local repo into memory and checkout the specific version",
 	).StringVar(&r.CloneVersion)
+
+	app.Flag("no-forced-fetch",
+		"When retrieving files from external repos, if the cache has the repo don't force a fetch",
+	).BoolVar(&remotefs.NoForcedFetch)
 
 	app.Flag("max-import-depth",
 		"Maximum depth to follow imports, including the original file (ignores any that are deeper)."+

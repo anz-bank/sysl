@@ -72,7 +72,11 @@ func NewPinner(fs afero.Fs) (retriever.Retriever, error) {
 	if ok, err := afero.Exists(fs, pinnerPath); ok && err == nil {
 		return remotefs.NewPinnerGitRetriever(pinnerPath, auth)
 	}
-	return git.NewWithCache(auth, git.NewPlainFscache(remotefs.CacheDir)), nil
+	return git.NewWithOptions(&git.NewGitOptions{
+		AuthOptions:   auth,
+		Cacher:        git.NewPlainFscache(remotefs.CacheDir),
+		NoForcedFetch: remotefs.NoForcedFetch,
+	}), nil
 }
 
 func SyslRootDir(fs afero.Fs) string {
