@@ -818,6 +818,11 @@ describe("Cloning", () => {
                 'PUT': RestParams
                 'Action': Statement
                   '...': Action
+              '[REST] /report.csv': Endpoint
+                '[~rest]': Tag
+                'GET': RestParams
+                'Action': Statement
+                  '...': Action
             'SimpleEndpoint': Application
               '[~tag]': Tag
               '[gRPC] SimpleEp': Endpoint

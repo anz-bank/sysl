@@ -51,6 +51,10 @@ RestEndpoint [~tag]:
         PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
             ...
 
+    /report%2Ecsv:
+        GET:
+            ...
+
 SimpleEndpoint [~tag]:
     SimpleEp [~SimpleEpTag]:
         @annotation = "annotation"

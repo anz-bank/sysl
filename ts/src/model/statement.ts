@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Location } from "../common";
-import { indent, joinedAppName } from "../common/format";
+import { indent, joinedAppName, toSafeName } from "../common/format";
 import { ElementRef, IChild, ILocational, IRenderable } from "./common";
 import { CloneContext } from "./clone";
 import { CollectionDecorator } from "./decorator";
@@ -458,7 +458,7 @@ export class Endpoint extends ParentElement<Statement> {
                     let param = this.restParams?.urlParams.find(p => p.name === name)?.toSysl();
                     return `{${param}}`;
                 }
-                return s;
+                return toSafeName(s);
             })
             .join("/");
     }
