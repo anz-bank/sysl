@@ -17,6 +17,8 @@ let foo = applyCreateTable(createTable.data, empty);
 
 let [addCol] = parseDdl('ALTER TABLE foo ADD COLUMN b INT64;');
 let foo_b = applyAlterTable(addCol.data, foo);
+let [addColT] = parseDdl('ALTER TABLE foo ADD COLUMN t TIMESTAMP OPTIONS (allow_commit_timestamp=TRUE);');
+let foo_t = applyAlterTable(addColT.data, foo);
 
 let [alterCol] = parseDdl('ALTER TABLE foo ALTER COLUMN b INT64 NOT NULL;');
 let foo_b2 = applyAlterTable(alterCol.data, foo_b);
@@ -57,6 +59,16 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
                 )],
             ),
         ),
+        addColT: //test.assert.equal(addColT, (
+            stmt: 'alter_table',
+            data: (
+                table_name: 'foo',
+                alterations: [(
+                    type: 'add_column',
+                    alteration: (name: 't', type: 'datetime', nullable: true, options: {'allow_commit_timestamp': 'TRUE'}, length: 0, scale: 0),
+                )],
+            ),
+        )),
         dropCol: dropCol = (
             stmt: 'alter_table',
             data: (
@@ -150,6 +162,19 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
             name_prefix: '',
             cluster: {},
         )},
+
+        addColT: //test.assert.equal(foo_t.entities, {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int64', nullable: true, options: {}, length: 0, scale: 0),
+                (name: 't', type: 'datetime', nullable: true, options: {'allow_commit_timestamp': 'TRUE'}, length: 0, scale: 0),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            unique_keys: {},
+            name_prefix: '',
+            cluster: {},
+        )}),
 
         alterCol: foo_b2.entities = {(
             name: 'foo',

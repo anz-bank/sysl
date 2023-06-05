@@ -16,6 +16,7 @@ customeraccounts:
         AcctBalance <: decimal(38.9)
         CreditLimit <: decimal(38.9)?
         Tag <: int64?
+        Refresh <: datetime? [allow_commit_timestamp="TRUE"]
 
     !table AccountAddress [interleave_in_parent="Account", interleave_on_delete="cascade"]:
         @primary_key = ["AccountNum", "AddressPostCode", "LastUpdated"]

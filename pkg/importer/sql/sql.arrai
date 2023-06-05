@@ -109,7 +109,7 @@ change_stream_option -> "retention_period" "=" /{'\d+[dhms]'}
                       | "value_capture_type" "=" ( "'OLD_AND_NEW_VALUES'" | "'NEW_ROW'" | "'NEW_VALUES'" );
 
 alter_table         -> "ALTER" "TABLE" "ONLY"? table_prefix? table_name (alter=(table_alteration|attr_alteration)):",";
-table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name (attr_type | options_def) generated?)
+table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name attr_type options_def? generated?)
                      | DROP_COLUMN     = ("DROP" "COLUMN" column_name)
                      | RENAME_COLUMN   = ("RENAME" "COLUMN" from=column_name "TO" to=column_name)
                      | SET_COLUMN      = ("SET" on_delete)
