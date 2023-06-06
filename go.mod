@@ -6,7 +6,7 @@ require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
 	github.com/alecthomas/assert v1.0.0
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
-	github.com/anz-bank/golden-retriever v0.29.0
+	github.com/anz-bank/golden-retriever v0.30.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.48
 	github.com/arr-ai/arrai v0.315.0
@@ -17,7 +17,7 @@ require (
 	github.com/cornelk/hashmap v1.0.1
 	github.com/getkin/kin-openapi v0.8.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-git/go-git/v5 v5.7.1-0.20230529135456-d37c8b92eb84
+	github.com/go-git/go-git/v5 v5.7.1-0.20230605071237-d4b7c8f42f07
 	github.com/go-openapi/spec v0.20.4
 	github.com/go-openapi/swag v0.19.15
 	github.com/golang/protobuf v1.5.2
