@@ -36,7 +36,7 @@ ddl                 -> stmt=(create_database
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 
 
-table_prefix        -> ('`' name=[^`]+ '`' | name=[^(.]+) "."; //'
+table_prefix        -> ('`' name=[^`]+ '`' | name=[^(.\s]+) "."; //'
 create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name "("(
                               attr=(column_name attr_type generated? options_def? pk? references?)
                             | table_constraint

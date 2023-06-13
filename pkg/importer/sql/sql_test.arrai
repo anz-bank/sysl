@@ -397,4 +397,20 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         {:macro:ANALYZE this:},
         {:macro:ANALYSE that:},
     ] >> . = emptyModel,
+
+    comment: (
+        # Regression test for a bug where rules with `table_prefix?` would consume too much, up to the `.` in the comment.
+        dot_following_table_prefix_rule:
+            let _ = {:macro:
+                CREATE TABLE t (c INT);
+                ALTER TABLE t DROP COLUMN c
+                -- .
+            :};
+            let _ = {:macro:
+                CREATE VIEW foo AS SELECT foo;
+                -- .
+            :};
+            true
+        ,
+    ),
 )
