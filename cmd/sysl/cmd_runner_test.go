@@ -62,6 +62,60 @@ func TestLoadModule_stdinBytes(t *testing.T) {
 	assert.NotEmpty(t, mods[0].Apps["Stdin :: App"])
 }
 
+func TestLoadModule_stdinSplitBytes(t *testing.T) {
+	var mods []*sysl.Module
+	opt := pbutil.OutputOptions{Compact: false}
+	r := buildRunner(t, modsCmd(&mods))
+
+	m, err := parse.NewParser().ParseString(emptyAppSrc)
+	require.NoError(t, err)
+	stdin := new(bytes.Buffer)
+	dummyFs := afero.NewMemMapFs()
+	require.NoError(t, pbutil.OutputSplitApplications(m, "binarypb", opt, "/", "test.pb", dummyFs))
+
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+
+	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.pb")
+	assert.NoError(t, err)
+	assert.True(t, fileExists)
+}
+
+func TestLoadModule_stdinSplitJSON(t *testing.T) {
+	var mods []*sysl.Module
+	opt := pbutil.OutputOptions{Compact: false}
+	r := buildRunner(t, modsCmd(&mods))
+
+	m, err := parse.NewParser().ParseString(emptyAppSrc)
+	require.NoError(t, err)
+	stdin := new(bytes.Buffer)
+	dummyFs := afero.NewMemMapFs()
+	require.NoError(t, pbutil.OutputSplitApplications(m, "json", opt, "/", "test.json", dummyFs))
+
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+
+	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.json")
+	assert.NoError(t, err)
+	assert.True(t, fileExists)
+}
+
+func TestLoadModule_stdinSplitTextPB(t *testing.T) {
+	var mods []*sysl.Module
+	opt := pbutil.OutputOptions{Compact: false}
+	r := buildRunner(t, modsCmd(&mods))
+
+	m, err := parse.NewParser().ParseString(emptyAppSrc)
+	require.NoError(t, err)
+	stdin := new(bytes.Buffer)
+	dummyFs := afero.NewMemMapFs()
+	require.NoError(t, pbutil.OutputSplitApplications(m, "textpb", opt, "/", "test.textpb", dummyFs))
+
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+
+	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.textpb")
+	assert.NoError(t, err)
+	assert.True(t, fileExists)
+}
+
 func TestLoadModule_stdin(t *testing.T) {
 	var mods []*sysl.Module
 	r := buildRunner(t, modsCmd(&mods))

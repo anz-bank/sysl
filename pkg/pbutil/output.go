@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"strings"
 
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/spf13/afero"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
@@ -126,5 +128,76 @@ func GeneratePBBinaryMessage(w io.Writer, m protoreflect.ProtoMessage) error {
 		return err
 	}
 	_, err = w.Write(bytes)
+	return err
+}
+
+/*
+	 Creates a directory path based on the Application name. Returns an open file descriptor.
+	 E.g. if the Application is:
+	 		'ANZx :: Foo :: Bar'
+		  it creates the following file and returns the descriptor:
+			<basePath>/ANZx/Foo/Bar/<fileName>
+*/
+func CreatePathForApplication(
+	appName string,
+	basePath string,
+	appdata *sysl.Application,
+	fileName string,
+	fs afero.Fs) (afero.File, error) {
+	dirName := strings.Join(append([]string{basePath}, appdata.Name.GetPart()...), string("/"))
+	err := fs.MkdirAll(dirName, 0755)
+	if err != nil {
+		return nil, err
+	}
+
+	destFileName := fmt.Sprintf("%s/%s", dirName, fileName)
+	fd, err := fs.Create(destFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	return fd, nil
+}
+
+/*
+Iterates through Applications and does the following for each one:
+  - Creates an output path structure based on the Application name/parts
+  - Identifies the correct output method to run based on `outputMode`
+  - Executes the output method
+*/
+func OutputSplitApplications(
+	module *sysl.Module,
+	outputMode string,
+	opt OutputOptions,
+	basePath string,
+	fileName string,
+	fs afero.Fs) error {
+	var err error = nil
+	for appName, app := range module.Apps {
+		fd, err := CreatePathForApplication(appName, basePath, app, fileName, fs)
+		if err != nil {
+			return err
+		}
+
+		outputFilePath := fd.Name()
+
+		writer := func() error {
+			switch outputMode {
+			case "json":
+				return FJSONPBWithOpt(fd, app, opt)
+			case "textpb":
+				fd.Close() // This method takes a filename, not a descriptor so close it.
+				return TextPBWithOpt(app, outputFilePath, fs, opt)
+			default:
+				fd.Close() // This method takes a filename, not a descriptor so close it.
+				return GeneratePBBinaryMessageFile(app, outputFilePath, fs)
+			}
+		}
+		err = writer()
+		fd.Close()
+		if err != nil {
+			break
+		}
+	}
 	return err
 }
