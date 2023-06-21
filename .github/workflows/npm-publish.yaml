@@ -35,15 +35,19 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
           always-auth: true
 
       - name: Install Project
         run: yarn install --frozen-lockfile
         working-directory: ts
 
-      - name: Publish Package
-        run: npm publish
+      - name: Build
+        run: yarn build
         working-directory: ts
+
+      - name: Publish Package
+        run: yarn publish
+        working-directory: ts/dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "name": "sysl",
+      "path": "."
+    },
+    {
+      "name": "ts",
+      "path": "ts"
+    },
+    {
+      "name": "docs",
+      "path": "docs"
+    }
+  ],
+  "settings": {
+    "jest.disabledWorkspaceFolders": ["sysl", "docs"]
+  }
+}
