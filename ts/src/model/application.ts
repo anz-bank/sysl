@@ -53,8 +53,7 @@ export class Application extends ParentElement<Element> {
     }
 
     clone(context = new CloneContext(this.model)): Application {
-        return new Application(this.name, {
-            namespace: [...this.namespace],
+        return new Application(this.toRef(), {
             tags: context.recurse(this.tags),
             annos: context.recurse(this.annos),
             endpoints: context.recurse(this.endpoints),

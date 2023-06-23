@@ -729,6 +729,18 @@ describe("Cloning", () => {
         `));
     });
 
+    test.concurrent("Special chars", async () => {
+        const sysl = realign(`
+            example%2Ecom [~tag1]:
+                @anno = "value1"
+                !table www%2Eexample%2Ecom:
+                    subdomain%2Eexample%2Ecom <: int
+        `);
+        const model = await Model.fromText(sysl);
+        model.apps[0] = model.apps[0].clone();
+        expect(model.toSysl()).toEqual(sysl);
+    });
+
     test.concurrent("All", async () => {
         const model = await Model.fromFile(allPath);
         const clonedModel = model.clone();
