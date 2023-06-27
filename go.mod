@@ -6,11 +6,13 @@ require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
 	github.com/alecthomas/assert v1.0.0
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
+	github.com/anz-bank/decimal v1.0.0
 	github.com/anz-bank/golden-retriever v0.30.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.48
 	github.com/arr-ai/arrai v0.315.0
 	github.com/arr-ai/frozen v0.20.1
+	github.com/arr-ai/hash v0.8.0
 	github.com/arr-ai/proto v0.0.0-20180422074755-2ffbedebee50
 	github.com/arr-ai/wbnf v0.35.1
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
@@ -49,7 +51,6 @@ require (
 	github.com/alecthomas/repr v0.1.0 // indirect
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4 // indirect
-	github.com/arr-ai/hash v0.8.0 // indirect
 	github.com/chromedp/cdproto v0.0.0-20200209033844-7e00b02ea7d2 // indirect
 	github.com/chromedp/chromedp v0.5.3 // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
