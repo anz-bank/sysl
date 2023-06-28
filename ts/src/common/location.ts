@@ -20,8 +20,6 @@ export class Offset {
         this.line = line;
         this.col = col;
     }
-
-    public clone = (): Offset => new Offset(this.line, this.col);
 }
 
 /** Describes the source location of a Sysl document fragment. */
