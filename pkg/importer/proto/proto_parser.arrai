@@ -46,7 +46,7 @@ field           -> c* label? type fieldName "=" fieldNumber ("[" fieldOptions "]
 fieldName       -> ident;
 fieldNumber     -> intLit;
 fieldOptions    -> fieldOption:comma;
-fieldOption     -> optionName "=" constant;
+fieldOption     -> optionName "=" constant c*;
 
 group           -> c* label "group" groupName "=" fieldNumber messageBody;
 groupName       -> ident;
@@ -97,7 +97,7 @@ array           -> "[" (arrayItem comma? c*)* "]";
 arrayItem       -> constant;
 
 c               -> /{ // .* $ | (?: /\* (?: [^*] | \*+[^*/] )* \*/ )};
-comma           -> c* ",";
+comma           -> c* "," c*;
 
 // All tokens may be preceded by whitespace.
 .wrapRE -> /{\s*()};

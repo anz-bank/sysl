@@ -18,7 +18,7 @@ TestApp "Examples":
             return 200 <: ReusedExample [examples=[["registered", "{'$ref': '#/components/examples/resp_verify_pin'}"], ["unregistered", "{'$ref': '#/components/examples/resp_create_prospect'}"]], mediatype="application/json"]
     
     !alias ComplexExample:
-        @examples = "[[['test1',\"{'test1': {'test1': 'some string'}\"]], [['test2',\"{'test2': 'another string'\"]]]"
+        @examples = "[[['test1', \"{'test1': {'test1': 'some string'}}\"]], [['test2', \"{'test2': 'another string'}\"]]]"
         string
     
     !alias ExampleWithCRLFCharacters:
@@ -38,7 +38,7 @@ TestApp "Examples":
             @examples = "true"
             @json_tag = "registered"
         response <: string?:
-            @examples = "[\"assertion\":[\"assertionSchem\"\"tes\"}]}]"
+            @examples = "[{\"assertions\":[{\"assertionScheme\":\"test\"}]}]"
             @json_tag = "response"
         responseCode <: int?:
             @examples = "1200"

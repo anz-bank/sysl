@@ -47,7 +47,10 @@ let rec renderInlineAnnoValue = \v
             (isComplex(v) && renderInlineAnnoValue((s: $`${simplifyAnnoValue(v)}`))) ||
             $`[${elt >> renderInlineAnnoValue(.)::, }]`
         ,
-        (:s, ...): $`"${//re.compile('((?:^|[^\\\\])(?:\\\\{2})*)"').sub(`\"`, $`${trimPrefixWS(s)}`)}"`,
+        (:s, ...): 
+            # Regex limitations mean we're unable to escape double quotes while ignoring already escaped ones.
+            # Replace escaped double quotes then escape all
+            $`"${//seq.sub(`"`, `\"`, $`${//seq.sub(`\"`,`"`, trimPrefixWS(s))}`)}"`,
         _: //error(v),
     }
 ;
