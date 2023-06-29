@@ -39,9 +39,9 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Validate goreleaser config
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v4.3.0
         with:
-          version: latest
+          version: v1.18.2
           args: check -f .goreleaser.yml
 
       - name: Set GOVERSION env var
@@ -49,9 +49,9 @@ jobs:
 
       # GoReleaser release process is customized in `.goreleaser.yml` file
       - name: Release binaries via goreleaser
-        uses: goreleaser/goreleaser-action@v4
+        uses: goreleaser/goreleaser-action@v4.3.0
         with:
-          version: latest
+          version: v1.18.2
           args: release --rm-dist --debug -f .goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}

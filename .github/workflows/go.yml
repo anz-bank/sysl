@@ -181,4 +181,4 @@ jobs:
 
       - name: Validate goreleaser config
         run: |
-          go run github.com/goreleaser/goreleaser@latest check -f .goreleaser.yml
+          go run github.com/goreleaser/goreleaser@v1.18.2 check -f .goreleaser.yml
