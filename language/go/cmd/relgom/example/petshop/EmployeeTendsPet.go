@@ -56,25 +56,25 @@ func (d *employeeTendsPetData) UnmarshalJSON(data []byte) error {
 
 // EmployeeTendsPet is the public representation tuple in the model.
 type EmployeeTendsPet struct {
-	*employeeTendsPetData
+	data  *employeeTendsPetData
 	model PetShopModel
 }
 
 // Employee gets the Employee corresponding to the employeeId attribute from t.
 func (t EmployeeTendsPet) Employee() Employee {
-	u, _ := t.model.GetEmployee().Lookup(t.employeeID)
+	u, _ := t.model.GetEmployee().Lookup(t.data.employeeID)
 	return u
 }
 
 // Pet gets the Pet corresponding to the petId attribute from t.
 func (t EmployeeTendsPet) Pet() Pet {
-	u, _ := t.model.GetPet().Lookup(t.petID)
+	u, _ := t.model.GetPet().Lookup(t.data.petID)
 	return u
 }
 
 // EmployeeTendsPetBuilder builds an instance of EmployeeTendsPet in the model.
 type EmployeeTendsPetBuilder struct {
-	employeeTendsPetData
+	data  employeeTendsPetData
 	model PetShopModel
 	mask  [1]uint64
 	apply func(t *employeeTendsPetData) (frozen.Map, error)
@@ -83,14 +83,14 @@ type EmployeeTendsPetBuilder struct {
 // WithEmployee sets the employeeId attribute of the EmployeeTendsPetBuilder from t.
 func (b *EmployeeTendsPetBuilder) WithEmployee(t Employee) *EmployeeTendsPetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 0))
-	b.employeeID = t.employeeID
+	b.data.employeeID = t.data.employeeID
 	return b
 }
 
 // WithPet sets the petId attribute of the EmployeeTendsPetBuilder from t.
 func (b *EmployeeTendsPetBuilder) WithPet(t Pet) *EmployeeTendsPetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 1))
-	b.petID = t.petID
+	b.data.petID = t.data.petID
 	return b
 }
 
@@ -99,12 +99,12 @@ var employeeTendsPetStaticMetadata = &relgomlib.EntityTypeStaticMetadata{PKMask:
 // Apply applies the built EmployeeTendsPet.
 func (b *EmployeeTendsPetBuilder) Apply() (PetShopModel, EmployeeTendsPet, error) {
 	relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], employeeTendsPetStaticMetadata.RequiredMask, "employeeId,petId")
-	set, err := b.apply(&b.employeeTendsPetData)
+	set, err := b.apply(&b.data)
 	if err != nil {
 		return PetShopModel{}, EmployeeTendsPet{}, err
 	}
 	model := b.model.relations.With(employeeTendsPetKey, employeeTendsPetRelationData{set})
-	return PetShopModel{model}, EmployeeTendsPet{&b.employeeTendsPetData, b.model}, nil
+	return PetShopModel{model}, EmployeeTendsPet{&b.data, b.model}, nil
 }
 
 // employeeTendsPetRelationData represents a set of EmployeeTendsPet.
@@ -156,7 +156,7 @@ func (r EmployeeTendsPetRelation) Insert() *EmployeeTendsPetBuilder {
 
 // Update creates a builder to update t in the model.
 func (r EmployeeTendsPetRelation) Update(t EmployeeTendsPet) *EmployeeTendsPetBuilder {
-	b := &EmployeeTendsPetBuilder{employeeTendsPetData: *t.employeeTendsPetData, model: r.model, apply: func(t *employeeTendsPetData) (frozen.Map, error) {
+	b := &EmployeeTendsPetBuilder{data: *t.data, model: r.model, apply: func(t *employeeTendsPetData) (frozen.Map, error) {
 		set := r.model.GetEmployeeTendsPet().set.With(t.employeeTendsPetPK, t)
 		return set, nil
 	}}
@@ -166,7 +166,7 @@ func (r EmployeeTendsPetRelation) Update(t EmployeeTendsPet) *EmployeeTendsPetBu
 
 // Delete deletes t from the model.
 func (r EmployeeTendsPetRelation) Delete(t EmployeeTendsPet) (PetShopModel, error) {
-	set := r.model.GetEmployeeTendsPet().set.Without(frozen.NewSet(t.employeeTendsPetPK))
+	set := r.model.GetEmployeeTendsPet().set.Without(frozen.NewSet(t.data.employeeTendsPetPK))
 	relations := r.model.relations.With(employeeTendsPetKey, employeeTendsPetRelationData{set: set})
 	return PetShopModel{relations: relations}, nil
 }
@@ -174,7 +174,7 @@ func (r EmployeeTendsPetRelation) Delete(t EmployeeTendsPet) (PetShopModel, erro
 // Lookup searches EmployeeTendsPet by primary key.
 func (r EmployeeTendsPetRelation) Lookup(employeeID int64, petID int64) (EmployeeTendsPet, bool) {
 	if t, has := r.set.Get(employeeTendsPetPK{employeeID: employeeID, petID: petID}); has {
-		return EmployeeTendsPet{employeeTendsPetData: t.(*employeeTendsPetData), model: r.model}, true
+		return EmployeeTendsPet{data: t.(*employeeTendsPetData), model: r.model}, true
 	}
 	return EmployeeTendsPet{}, false
 }
@@ -214,7 +214,7 @@ type employeeTendsPetIterator struct {
 // MoveNext implements seq.Setable.
 func (i *employeeTendsPetIterator) MoveNext() bool {
 	if i.i.Next() {
-		i.t = &EmployeeTendsPet{employeeTendsPetData: i.i.Value().(*employeeTendsPetData), model: i.model}
+		i.t = &EmployeeTendsPet{data: i.i.Value().(*employeeTendsPetData), model: i.model}
 		return true
 	}
 	return false

@@ -25,7 +25,7 @@ func (g *entityGenerator) goTupleTypeDecl() Decl {
 	return Types(TypeSpec{
 		Name: *I(g.tname),
 		Type: Struct(
-			Field{Type: Star(I(g.dataName))},
+			Field{Names: Idents("data"), Type: Star(I(g.dataName))},
 			Field{Names: Idents("model"), Type: I(g.modelName)},
 		),
 	}).WithDoc(Commentf("// %s is the public representation tuple in the model.", g.tname))
@@ -42,7 +42,7 @@ func (g *entityGenerator) tupleMethod(f FuncDecl) *FuncDecl {
 func (g *entityGenerator) goGetterFuncForSyslAttr(attrName string, attr *sysl.Type) Decl {
 	exp := ExportedID(attrName)
 	nexp := NonExportedID(attrName)
-	var field Expr = Dot(I(tupleRecv), nexp.Name.Text)
+	var field Expr = Dot(I(tupleRecv), "data", nexp.Name.Text)
 	typeInfo := g.typeInfoForSyslType(attr)
 	if typeInfo.fkey == nil {
 		return g.tupleMethod(FuncDecl{

@@ -28,3 +28,17 @@ func (s *DateTimeString) Unstage() (*time.Time, error) {
 	t, err := time.Parse(time.RFC3339, string(*s))
 	return &t, err
 }
+
+func NewDateTimeStringReq(t time.Time) DateTimeString {
+	result := DateTimeString(t.Format(time.RFC3339))
+	return result
+}
+
+func (s DateTimeString) UnstageReq() (time.Time, error) {
+	if ymdRE.MatchString(string(s)) {
+		t, err := time.Parse(time.RFC3339, string(s)+"T00:00:00Z")
+		return t, err
+	}
+	t, err := time.Parse(time.RFC3339, string(s))
+	return t, err
+}

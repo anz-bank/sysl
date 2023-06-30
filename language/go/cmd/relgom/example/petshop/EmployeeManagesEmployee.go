@@ -56,25 +56,25 @@ func (d *employeeManagesEmployeeData) UnmarshalJSON(data []byte) error {
 
 // EmployeeManagesEmployee is the public representation tuple in the model.
 type EmployeeManagesEmployee struct {
-	*employeeManagesEmployeeData
+	data  *employeeManagesEmployeeData
 	model PetShopModel
 }
 
 // EmployeeViaBossID gets the Employee corresponding to the bossId attribute from t.
 func (t EmployeeManagesEmployee) EmployeeViaBossID() Employee {
-	u, _ := t.model.GetEmployee().Lookup(t.bossID)
+	u, _ := t.model.GetEmployee().Lookup(t.data.bossID)
 	return u
 }
 
 // EmployeeViaMinionID gets the Employee corresponding to the minionId attribute from t.
 func (t EmployeeManagesEmployee) EmployeeViaMinionID() Employee {
-	u, _ := t.model.GetEmployee().Lookup(t.minionID)
+	u, _ := t.model.GetEmployee().Lookup(t.data.minionID)
 	return u
 }
 
 // EmployeeManagesEmployeeBuilder builds an instance of EmployeeManagesEmployee in the model.
 type EmployeeManagesEmployeeBuilder struct {
-	employeeManagesEmployeeData
+	data  employeeManagesEmployeeData
 	model PetShopModel
 	mask  [1]uint64
 	apply func(t *employeeManagesEmployeeData) (frozen.Map, error)
@@ -83,14 +83,14 @@ type EmployeeManagesEmployeeBuilder struct {
 // WithEmployeeForBossID sets the bossId attribute of the EmployeeManagesEmployeeBuilder from t.
 func (b *EmployeeManagesEmployeeBuilder) WithEmployeeForBossID(t Employee) *EmployeeManagesEmployeeBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 0))
-	b.bossID = t.employeeID
+	b.data.bossID = t.data.employeeID
 	return b
 }
 
 // WithEmployeeForMinionID sets the minionId attribute of the EmployeeManagesEmployeeBuilder from t.
 func (b *EmployeeManagesEmployeeBuilder) WithEmployeeForMinionID(t Employee) *EmployeeManagesEmployeeBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 1))
-	b.minionID = t.employeeID
+	b.data.minionID = t.data.employeeID
 	return b
 }
 
@@ -99,12 +99,12 @@ var employeeManagesEmployeeStaticMetadata = &relgomlib.EntityTypeStaticMetadata{
 // Apply applies the built EmployeeManagesEmployee.
 func (b *EmployeeManagesEmployeeBuilder) Apply() (PetShopModel, EmployeeManagesEmployee, error) {
 	relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], employeeManagesEmployeeStaticMetadata.RequiredMask, "bossId,minionId")
-	set, err := b.apply(&b.employeeManagesEmployeeData)
+	set, err := b.apply(&b.data)
 	if err != nil {
 		return PetShopModel{}, EmployeeManagesEmployee{}, err
 	}
 	model := b.model.relations.With(employeeManagesEmployeeKey, employeeManagesEmployeeRelationData{set})
-	return PetShopModel{model}, EmployeeManagesEmployee{&b.employeeManagesEmployeeData, b.model}, nil
+	return PetShopModel{model}, EmployeeManagesEmployee{&b.data, b.model}, nil
 }
 
 // employeeManagesEmployeeRelationData represents a set of EmployeeManagesEmployee.
@@ -156,7 +156,7 @@ func (r EmployeeManagesEmployeeRelation) Insert() *EmployeeManagesEmployeeBuilde
 
 // Update creates a builder to update t in the model.
 func (r EmployeeManagesEmployeeRelation) Update(t EmployeeManagesEmployee) *EmployeeManagesEmployeeBuilder {
-	b := &EmployeeManagesEmployeeBuilder{employeeManagesEmployeeData: *t.employeeManagesEmployeeData, model: r.model, apply: func(t *employeeManagesEmployeeData) (frozen.Map, error) {
+	b := &EmployeeManagesEmployeeBuilder{data: *t.data, model: r.model, apply: func(t *employeeManagesEmployeeData) (frozen.Map, error) {
 		set := r.model.GetEmployeeManagesEmployee().set.With(t.employeeManagesEmployeePK, t)
 		return set, nil
 	}}
@@ -166,7 +166,7 @@ func (r EmployeeManagesEmployeeRelation) Update(t EmployeeManagesEmployee) *Empl
 
 // Delete deletes t from the model.
 func (r EmployeeManagesEmployeeRelation) Delete(t EmployeeManagesEmployee) (PetShopModel, error) {
-	set := r.model.GetEmployeeManagesEmployee().set.Without(frozen.NewSet(t.employeeManagesEmployeePK))
+	set := r.model.GetEmployeeManagesEmployee().set.Without(frozen.NewSet(t.data.employeeManagesEmployeePK))
 	relations := r.model.relations.With(employeeManagesEmployeeKey, employeeManagesEmployeeRelationData{set: set})
 	return PetShopModel{relations: relations}, nil
 }
@@ -174,7 +174,7 @@ func (r EmployeeManagesEmployeeRelation) Delete(t EmployeeManagesEmployee) (PetS
 // Lookup searches EmployeeManagesEmployee by primary key.
 func (r EmployeeManagesEmployeeRelation) Lookup(bossID int64, minionID int64) (EmployeeManagesEmployee, bool) {
 	if t, has := r.set.Get(employeeManagesEmployeePK{bossID: bossID, minionID: minionID}); has {
-		return EmployeeManagesEmployee{employeeManagesEmployeeData: t.(*employeeManagesEmployeeData), model: r.model}, true
+		return EmployeeManagesEmployee{data: t.(*employeeManagesEmployeeData), model: r.model}, true
 	}
 	return EmployeeManagesEmployee{}, false
 }
@@ -214,7 +214,7 @@ type employeeManagesEmployeeIterator struct {
 // MoveNext implements seq.Setable.
 func (i *employeeManagesEmployeeIterator) MoveNext() bool {
 	if i.i.Next() {
-		i.t = &EmployeeManagesEmployee{employeeManagesEmployeeData: i.i.Value().(*employeeManagesEmployeeData), model: i.model}
+		i.t = &EmployeeManagesEmployee{data: i.i.Value().(*employeeManagesEmployeeData), model: i.model}
 		return true
 	}
 	return false

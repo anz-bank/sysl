@@ -71,48 +71,48 @@ func (d *breedData) UnmarshalJSON(data []byte) error {
 
 // Breed is the public representation tuple in the model.
 type Breed struct {
-	*breedData
+	data  *breedData
 	model PetShopModel
 }
 
 // BreedID gets the breedId attribute from the Breed.
 func (t Breed) BreedID() int64 {
-	return t.breedID
+	return t.data.breedID
 }
 
 // BreedName gets the breedName attribute from the Breed.
 func (t Breed) BreedName() *string {
-	return t.breedName
+	return t.data.breedName
 }
 
 // Species gets the species attribute from the Breed.
 func (t Breed) Species() *string {
-	return t.species
+	return t.data.species
 }
 
 // NumLegs gets the numLegs attribute from the Breed.
 func (t Breed) NumLegs() *int64 {
-	return t.numLegs
+	return t.data.numLegs
 }
 
 // AvgLifespan gets the avgLifespan attribute from the Breed.
 func (t Breed) AvgLifespan() *decimal.Decimal64 {
-	return t.avgLifespan
+	return t.data.avgLifespan
 }
 
 // AvgWeight gets the avgWeight attribute from the Breed.
 func (t Breed) AvgWeight() *decimal.Decimal64 {
-	return t.avgWeight
+	return t.data.avgWeight
 }
 
 // LegRank gets the legRank attribute from the Breed.
 func (t Breed) LegRank() *int64 {
-	return t.legRank
+	return t.data.legRank
 }
 
 // BreedBuilder builds an instance of Breed in the model.
 type BreedBuilder struct {
-	breedData
+	data  breedData
 	model PetShopModel
 	mask  [1]uint64
 	apply func(t *breedData) (frozen.Map, error)
@@ -121,42 +121,42 @@ type BreedBuilder struct {
 // WithBreedName sets the breedName attribute of the BreedBuilder.
 func (b *BreedBuilder) WithBreedName(value string) *BreedBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 1))
-	b.breedName = &value
+	b.data.breedName = &value
 	return b
 }
 
 // WithSpecies sets the species attribute of the BreedBuilder.
 func (b *BreedBuilder) WithSpecies(value string) *BreedBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 2))
-	b.species = &value
+	b.data.species = &value
 	return b
 }
 
 // WithNumLegs sets the numLegs attribute of the BreedBuilder.
 func (b *BreedBuilder) WithNumLegs(value int64) *BreedBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 3))
-	b.numLegs = &value
+	b.data.numLegs = &value
 	return b
 }
 
 // WithAvgLifespan sets the avgLifespan attribute of the BreedBuilder.
 func (b *BreedBuilder) WithAvgLifespan(value decimal.Decimal64) *BreedBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 4))
-	b.avgLifespan = &value
+	b.data.avgLifespan = &value
 	return b
 }
 
 // WithAvgWeight sets the avgWeight attribute of the BreedBuilder.
 func (b *BreedBuilder) WithAvgWeight(value decimal.Decimal64) *BreedBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 5))
-	b.avgWeight = &value
+	b.data.avgWeight = &value
 	return b
 }
 
 // WithLegRank sets the legRank attribute of the BreedBuilder.
 func (b *BreedBuilder) WithLegRank(value int64) *BreedBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 6))
-	b.legRank = &value
+	b.data.legRank = &value
 	return b
 }
 
@@ -165,12 +165,12 @@ var breedStaticMetadata = &relgomlib.EntityTypeStaticMetadata{PKMask: []uint64{0
 // Apply applies the built Breed.
 func (b *BreedBuilder) Apply() (PetShopModel, Breed, error) {
 	relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], breedStaticMetadata.RequiredMask, ",,,,,,")
-	set, err := b.apply(&b.breedData)
+	set, err := b.apply(&b.data)
 	if err != nil {
 		return PetShopModel{}, Breed{}, err
 	}
 	model := b.model.relations.With(breedKey, breedRelationData{set})
-	return PetShopModel{model}, Breed{&b.breedData, b.model}, nil
+	return PetShopModel{model}, Breed{&b.data, b.model}, nil
 }
 
 // breedRelationData represents a set of Breed.
@@ -224,7 +224,7 @@ func (r BreedRelation) Insert() *BreedBuilder {
 
 // Update creates a builder to update t in the model.
 func (r BreedRelation) Update(t Breed) *BreedBuilder {
-	b := &BreedBuilder{breedData: *t.breedData, model: r.model, apply: func(t *breedData) (frozen.Map, error) {
+	b := &BreedBuilder{data: *t.data, model: r.model, apply: func(t *breedData) (frozen.Map, error) {
 		set := r.model.GetBreed().set.With(t.breedPK, t)
 		return set, nil
 	}}
@@ -234,7 +234,7 @@ func (r BreedRelation) Update(t Breed) *BreedBuilder {
 
 // Delete deletes t from the model.
 func (r BreedRelation) Delete(t Breed) (PetShopModel, error) {
-	set := r.model.GetBreed().set.Without(frozen.NewSet(t.breedPK))
+	set := r.model.GetBreed().set.Without(frozen.NewSet(t.data.breedPK))
 	relations := r.model.relations.With(breedKey, breedRelationData{set: set})
 	return PetShopModel{relations: relations}, nil
 }
@@ -242,7 +242,7 @@ func (r BreedRelation) Delete(t Breed) (PetShopModel, error) {
 // Lookup searches Breed by primary key.
 func (r BreedRelation) Lookup(breedID int64) (Breed, bool) {
 	if t, has := r.set.Get(breedPK{breedID: breedID}); has {
-		return Breed{breedData: t.(*breedData), model: r.model}, true
+		return Breed{data: t.(*breedData), model: r.model}, true
 	}
 	return Breed{}, false
 }
@@ -282,7 +282,7 @@ type breedIterator struct {
 // MoveNext implements seq.Setable.
 func (i *breedIterator) MoveNext() bool {
 	if i.i.Next() {
-		i.t = &Breed{breedData: i.i.Value().(*breedData), model: i.model}
+		i.t = &Breed{data: i.i.Value().(*breedData), model: i.model}
 		return true
 	}
 	return false

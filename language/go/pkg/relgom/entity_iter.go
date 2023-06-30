@@ -117,7 +117,7 @@ func (g *entityGenerator) iteratorMoveNextMethodDecl() *FuncDecl {
 				If(nil, Call(recvDot("i", "Next")),
 					Assign(recvDot("t"))("=")(
 						AddrOf(Composite(I(g.tname),
-							KV(I(g.dataName), Assert(Call(Dot(I("i"), "i", "Value")), Star(I(g.dataName)))),
+							KV(I("data"), Assert(Call(Dot(I("i"), "i", "Value")), Star(I(g.dataName)))),
 							KV(I("model"), recvDot("model")),
 						)),
 					),

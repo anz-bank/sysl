@@ -37,23 +37,23 @@ func (d *noKeysAtAllData) UnmarshalJSON(data []byte) error {
 
 // NoKeysAtAll is the public representation tuple in the model.
 type NoKeysAtAll struct {
-	*noKeysAtAllData
+	data  *noKeysAtAllData
 	model PetShopModel
 }
 
 // Name gets the name attribute from the NoKeysAtAll.
 func (t NoKeysAtAll) Name() string {
-	return t.name
+	return t.data.name
 }
 
 // Age gets the age attribute from the NoKeysAtAll.
 func (t NoKeysAtAll) Age() *int64 {
-	return t.age
+	return t.data.age
 }
 
 // NoKeysAtAllBuilder builds an instance of NoKeysAtAll in the model.
 type NoKeysAtAllBuilder struct {
-	noKeysAtAllData
+	data  noKeysAtAllData
 	model PetShopModel
 	mask  [1]uint64
 	apply func(t *noKeysAtAllData) (frozen.Map, error)
@@ -62,14 +62,14 @@ type NoKeysAtAllBuilder struct {
 // WithName sets the name attribute of the NoKeysAtAllBuilder.
 func (b *NoKeysAtAllBuilder) WithName(value string) *NoKeysAtAllBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 0))
-	b.name = value
+	b.data.name = value
 	return b
 }
 
 // WithAge sets the age attribute of the NoKeysAtAllBuilder.
 func (b *NoKeysAtAllBuilder) WithAge(value int64) *NoKeysAtAllBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 1))
-	b.age = &value
+	b.data.age = &value
 	return b
 }
 
@@ -78,12 +78,12 @@ var noKeysAtAllStaticMetadata = &relgomlib.EntityTypeStaticMetadata{PKMask: []ui
 // Apply applies the built NoKeysAtAll.
 func (b *NoKeysAtAllBuilder) Apply() (PetShopModel, NoKeysAtAll, error) {
 	relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], noKeysAtAllStaticMetadata.RequiredMask, "name,")
-	set, err := b.apply(&b.noKeysAtAllData)
+	set, err := b.apply(&b.data)
 	if err != nil {
 		return PetShopModel{}, NoKeysAtAll{}, err
 	}
 	model := b.model.relations.With(noKeysAtAllKey, noKeysAtAllRelationData{set})
-	return PetShopModel{model}, NoKeysAtAll{&b.noKeysAtAllData, b.model}, nil
+	return PetShopModel{model}, NoKeysAtAll{&b.data, b.model}, nil
 }
 
 // noKeysAtAllRelationData represents a set of NoKeysAtAll.
@@ -145,7 +145,7 @@ type noKeysAtAllIterator struct {
 // MoveNext implements seq.Setable.
 func (i *noKeysAtAllIterator) MoveNext() bool {
 	if i.i.Next() {
-		i.t = &NoKeysAtAll{noKeysAtAllData: i.i.Value().(*noKeysAtAllData), model: i.model}
+		i.t = &NoKeysAtAll{data: i.i.Value().(*noKeysAtAllData), model: i.model}
 		return true
 	}
 	return false

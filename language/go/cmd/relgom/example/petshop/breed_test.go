@@ -34,7 +34,7 @@ func TestBreed(t *testing.T) {
 	assert.EqualValues(t, weight, *lab.AvgWeight())
 
 	//nolint:gocritic
-	assert.True(t, lab.breedPK.Equal(lab.breedPK))
+	assert.True(t, lab.data.breedPK.Equal(lab.data.breedPK))
 }
 
 func TestBreedIterator(t *testing.T) {

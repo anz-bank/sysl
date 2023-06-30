@@ -73,44 +73,44 @@ func (d *petData) UnmarshalJSON(data []byte) error {
 
 // Pet is the public representation tuple in the model.
 type Pet struct {
-	*petData
+	data  *petData
 	model PetShopModel
 }
 
 // PetID gets the petId attribute from the Pet.
 func (t Pet) PetID() int64 {
-	return t.petID
+	return t.data.petID
 }
 
 // Breed gets the Breed corresponding to the breedId attribute from t.
 func (t Pet) Breed() Breed {
-	u, _ := t.model.GetBreed().Lookup(*t.breedID)
+	u, _ := t.model.GetBreed().Lookup(*t.data.breedID)
 	return u
 }
 
 // Name gets the name attribute from the Pet.
 func (t Pet) Name() *string {
-	return t.name
+	return t.data.name
 }
 
 // Dob gets the dob attribute from the Pet.
 func (t Pet) Dob() *time.Time {
-	return t.dob
+	return t.data.dob
 }
 
 // NumLegs gets the numLegs attribute from the Pet.
 func (t Pet) NumLegs() *int64 {
-	return t.numLegs
+	return t.data.numLegs
 }
 
 // Desexed gets the desexed attribute from the Pet.
 func (t Pet) Desexed() *bool {
-	return t.desexed
+	return t.data.desexed
 }
 
 // PetBuilder builds an instance of Pet in the model.
 type PetBuilder struct {
-	petData
+	data  petData
 	model PetShopModel
 	mask  [1]uint64
 	apply func(t *petData) (frozen.Map, error)
@@ -119,35 +119,35 @@ type PetBuilder struct {
 // WithBreed sets the breedId attribute of the PetBuilder from t.
 func (b *PetBuilder) WithBreed(t Breed) *PetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 1))
-	b.breedID = &t.breedID
+	b.data.breedID = &t.data.breedID
 	return b
 }
 
 // WithName sets the name attribute of the PetBuilder.
 func (b *PetBuilder) WithName(value string) *PetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 2))
-	b.name = &value
+	b.data.name = &value
 	return b
 }
 
 // WithDob sets the dob attribute of the PetBuilder.
 func (b *PetBuilder) WithDob(value time.Time) *PetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 3))
-	b.dob = &value
+	b.data.dob = &value
 	return b
 }
 
 // WithNumLegs sets the numLegs attribute of the PetBuilder.
 func (b *PetBuilder) WithNumLegs(value int64) *PetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 4))
-	b.numLegs = &value
+	b.data.numLegs = &value
 	return b
 }
 
 // WithDesexed sets the desexed attribute of the PetBuilder.
 func (b *PetBuilder) WithDesexed(value bool) *PetBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 5))
-	b.desexed = &value
+	b.data.desexed = &value
 	return b
 }
 
@@ -156,12 +156,12 @@ var petStaticMetadata = &relgomlib.EntityTypeStaticMetadata{PKMask: []uint64{0x1
 // Apply applies the built Pet.
 func (b *PetBuilder) Apply() (PetShopModel, Pet, error) {
 	relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], petStaticMetadata.RequiredMask, ",,,,,")
-	set, err := b.apply(&b.petData)
+	set, err := b.apply(&b.data)
 	if err != nil {
 		return PetShopModel{}, Pet{}, err
 	}
 	model := b.model.relations.With(petKey, petRelationData{set})
-	return PetShopModel{model}, Pet{&b.petData, b.model}, nil
+	return PetShopModel{model}, Pet{&b.data, b.model}, nil
 }
 
 // petRelationData represents a set of Pet.
@@ -215,7 +215,7 @@ func (r PetRelation) Insert() *PetBuilder {
 
 // Update creates a builder to update t in the model.
 func (r PetRelation) Update(t Pet) *PetBuilder {
-	b := &PetBuilder{petData: *t.petData, model: r.model, apply: func(t *petData) (frozen.Map, error) {
+	b := &PetBuilder{data: *t.data, model: r.model, apply: func(t *petData) (frozen.Map, error) {
 		set := r.model.GetPet().set.With(t.petPK, t)
 		return set, nil
 	}}
@@ -225,7 +225,7 @@ func (r PetRelation) Update(t Pet) *PetBuilder {
 
 // Delete deletes t from the model.
 func (r PetRelation) Delete(t Pet) (PetShopModel, error) {
-	set := r.model.GetPet().set.Without(frozen.NewSet(t.petPK))
+	set := r.model.GetPet().set.Without(frozen.NewSet(t.data.petPK))
 	relations := r.model.relations.With(petKey, petRelationData{set: set})
 	return PetShopModel{relations: relations}, nil
 }
@@ -233,7 +233,7 @@ func (r PetRelation) Delete(t Pet) (PetShopModel, error) {
 // Lookup searches Pet by primary key.
 func (r PetRelation) Lookup(petID int64) (Pet, bool) {
 	if t, has := r.set.Get(petPK{petID: petID}); has {
-		return Pet{petData: t.(*petData), model: r.model}, true
+		return Pet{data: t.(*petData), model: r.model}, true
 	}
 	return Pet{}, false
 }
@@ -273,7 +273,7 @@ type petIterator struct {
 // MoveNext implements seq.Setable.
 func (i *petIterator) MoveNext() bool {
 	if i.i.Next() {
-		i.t = &Pet{petData: i.i.Value().(*petData), model: i.model}
+		i.t = &Pet{data: i.i.Value().(*petData), model: i.model}
 		return true
 	}
 	return false

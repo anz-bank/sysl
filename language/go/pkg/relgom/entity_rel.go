@@ -101,7 +101,7 @@ func (g *entityGenerator) goRelationUpdateMethod() Decl {
 			Body: Block(
 				Init("b")(
 					AddrOf(Composite(I(g.tname+"Builder"),
-						KV(I(g.dataName), Star(Dot(I("t"), g.dataName))),
+						KV(I("data"), Star(Dot(I("t"), "data"))),
 						KV(I("model"), recvDot("model")),
 						KV(I("apply"), FuncT(*g.applyFuncType(),
 							Init("set")(Call(Dot(modelSet, "With"), Dot(entity, g.pkName), entity)),
@@ -142,7 +142,7 @@ func (g *entityGenerator) goRelationDeleteMethod() Decl {
 				),
 			},
 			Body: Block(
-				Init("set")(Call(Dot(modelSet, "Without"), Call(g.frozen("NewSet"), Dot(entity, g.pkName)))),
+				Init("set")(Call(Dot(modelSet, "Without"), Call(g.frozen("NewSet"), Dot(entity, "data", g.pkName)))),
 				Init("relations")(
 					Call(
 						recvDot("model", "relations", "With"),
@@ -242,7 +242,7 @@ func (g *entityGenerator) goRelationLookupMethod() Decl {
 					I("has"),
 					Return(
 						Composite(I(g.tname),
-							KV(I(g.dataName), Assert(I("t"), Star(I(g.dataName)))),
+							KV(I("data"), Assert(I("t"), Star(I(g.dataName)))),
 							KV(I("model"), recvDot("model")),
 						),
 						I("true"),

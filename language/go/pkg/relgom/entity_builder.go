@@ -26,7 +26,7 @@ func (g *entityGenerator) goAppendBuilderDecls(decls []Decl) []Decl {
 
 func (g *entityGenerator) goBuilderTypeDecl() Decl {
 	s := Struct(
-		Field{Type: I(g.dataName)},
+		Field{Names: Idents("data"), Type: I(g.dataName)},
 		Field{Names: Idents("model"), Type: I(g.modelName)},
 		Field{Names: Idents("mask"), Type: ArrayN((g.nAttrs+63)/64, I("uint64"))},
 		Field{Names: Idents("apply"), Type: g.applyFuncType()},
@@ -66,7 +66,7 @@ func (g *entityGenerator) goBuilderSetterFuncForSyslAttr(i int, attrName string,
 			},
 			Body: Block(
 				updateMask,
-				Assign(Dot(I(builderRecv), nexp))("=")(value),
+				Assign(Dot(I(builderRecv), "data", nexp))("=")(value),
 				Return(I(builderRecv)),
 			),
 		})
@@ -78,7 +78,7 @@ func (g *entityGenerator) goBuilderSetterFuncForSyslAttr(i int, attrName string,
 	if ambiguous {
 		exp2 += "For" + ExportedName(attrName)
 	}
-	var field Expr = Dot(I("t"), NonExportedName(fpath[1]))
+	var field Expr = Dot(I("t"), "data", NonExportedName(fpath[1]))
 	if typeInfo.opt {
 		field = AddrOf(field)
 	}
@@ -91,7 +91,7 @@ func (g *entityGenerator) goBuilderSetterFuncForSyslAttr(i int, attrName string,
 		},
 		Body: Block(
 			updateMask,
-			Assign(Dot(I(builderRecv), nexp))("=")(field),
+			Assign(Dot(I(builderRecv), "data", nexp))("=")(field),
 			Return(I(builderRecv)),
 		),
 	})
@@ -139,7 +139,7 @@ func (g *entityGenerator) goBuilderApplyDecl() Decl {
 				Dot(NonExportedID(g.tname+"StaticMetadata"), "RequiredMask"),
 				String(strings.Join(pkeys, ",")),
 			),
-			Init("set", "err")(Call(Dot(I(builderRecv), "apply"), AddrOf(Dot(I(builderRecv), g.dataName)))),
+			Init("set", "err")(Call(Dot(I(builderRecv), "apply"), AddrOf(Dot(I(builderRecv), "data")))),
 			If(nil,
 				Binary(I("err"), "!=", Nil()),
 				Return(Composite(I(g.modelName)), Composite(I(g.tname)), I("err")),
@@ -152,7 +152,7 @@ func (g *entityGenerator) goBuilderApplyDecl() Decl {
 			),
 			Return(
 				Composite(I(g.modelName), I("model")),
-				Composite(I(g.tname), AddrOf(Dot(I(builderRecv), g.dataName)), Dot(I(builderRecv), "model")),
+				Composite(I(g.tname), AddrOf(Dot(I(builderRecv), "data")), Dot(I(builderRecv), "model")),
 				Nil(),
 			),
 		),

@@ -21,7 +21,7 @@ type OSFileSystemWriter struct {
 	Root string
 }
 
-// OpenWriter opens an OS file for writing.
+// Create opens an OS file for writing.
 func (w *OSFileSystemWriter) Create(name string) (io.WriteCloser, error) {
 	p := path.Join(w.Root, name)
 	d := path.Dir(p)
@@ -36,8 +36,14 @@ type MemoryFileSystemWriter struct {
 	files map[string]*closableBuffer
 }
 
-// OpenWriter opens an OS file for writing.
-func (w *MemoryFileSystemWriter) OpenWriter(name string) (io.WriteCloser, error) {
+func NewMemoryFileSystemWriter() *MemoryFileSystemWriter {
+	return &MemoryFileSystemWriter{
+		files: make(map[string]*closableBuffer),
+	}
+}
+
+// Create opens a file for writing.
+func (w *MemoryFileSystemWriter) Create(name string) (io.WriteCloser, error) {
 	var buf closableBuffer
 	w.files[name] = &buf
 	return &buf, nil

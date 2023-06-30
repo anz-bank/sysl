@@ -67,33 +67,33 @@ func (d *employeeData) UnmarshalJSON(data []byte) error {
 
 // Employee is the public representation tuple in the model.
 type Employee struct {
-	*employeeData
+	data  *employeeData
 	model PetShopModel
 }
 
 // EmployeeID gets the employeeId attribute from the Employee.
 func (t Employee) EmployeeID() int64 {
-	return t.employeeID
+	return t.data.employeeID
 }
 
 // Name gets the name attribute from the Employee.
 func (t Employee) Name() *string {
-	return t.name
+	return t.data.name
 }
 
 // Dob gets the dob attribute from the Employee.
 func (t Employee) Dob() *time.Time {
-	return t.dob
+	return t.data.dob
 }
 
 // Error gets the error attribute from the Employee.
 func (t Employee) Error() int64 {
-	return t.error
+	return t.data.error
 }
 
 // EmployeeBuilder builds an instance of Employee in the model.
 type EmployeeBuilder struct {
-	employeeData
+	data  employeeData
 	model PetShopModel
 	mask  [1]uint64
 	apply func(t *employeeData) (frozen.Map, error)
@@ -102,21 +102,21 @@ type EmployeeBuilder struct {
 // WithName sets the name attribute of the EmployeeBuilder.
 func (b *EmployeeBuilder) WithName(value string) *EmployeeBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 1))
-	b.name = &value
+	b.data.name = &value
 	return b
 }
 
 // WithDob sets the dob attribute of the EmployeeBuilder.
 func (b *EmployeeBuilder) WithDob(value time.Time) *EmployeeBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 2))
-	b.dob = &value
+	b.data.dob = &value
 	return b
 }
 
 // WithError sets the error attribute of the EmployeeBuilder.
 func (b *EmployeeBuilder) WithError(value int64) *EmployeeBuilder {
 	relgomlib.UpdateMaskForFieldButPanicIfAlreadySet(&b.mask[0], (uint64(1) << 3))
-	b.error = value
+	b.data.error = value
 	return b
 }
 
@@ -125,12 +125,12 @@ var employeeStaticMetadata = &relgomlib.EntityTypeStaticMetadata{PKMask: []uint6
 // Apply applies the built Employee.
 func (b *EmployeeBuilder) Apply() (PetShopModel, Employee, error) {
 	relgomlib.PanicIfRequiredFieldsNotSet(b.mask[:], employeeStaticMetadata.RequiredMask, ",,,error")
-	set, err := b.apply(&b.employeeData)
+	set, err := b.apply(&b.data)
 	if err != nil {
 		return PetShopModel{}, Employee{}, err
 	}
 	model := b.model.relations.With(employeeKey, employeeRelationData{set})
-	return PetShopModel{model}, Employee{&b.employeeData, b.model}, nil
+	return PetShopModel{model}, Employee{&b.data, b.model}, nil
 }
 
 // employeeRelationData represents a set of Employee.
@@ -184,7 +184,7 @@ func (r EmployeeRelation) Insert() *EmployeeBuilder {
 
 // Update creates a builder to update t in the model.
 func (r EmployeeRelation) Update(t Employee) *EmployeeBuilder {
-	b := &EmployeeBuilder{employeeData: *t.employeeData, model: r.model, apply: func(t *employeeData) (frozen.Map, error) {
+	b := &EmployeeBuilder{data: *t.data, model: r.model, apply: func(t *employeeData) (frozen.Map, error) {
 		set := r.model.GetEmployee().set.With(t.employeePK, t)
 		return set, nil
 	}}
@@ -194,7 +194,7 @@ func (r EmployeeRelation) Update(t Employee) *EmployeeBuilder {
 
 // Delete deletes t from the model.
 func (r EmployeeRelation) Delete(t Employee) (PetShopModel, error) {
-	set := r.model.GetEmployee().set.Without(frozen.NewSet(t.employeePK))
+	set := r.model.GetEmployee().set.Without(frozen.NewSet(t.data.employeePK))
 	relations := r.model.relations.With(employeeKey, employeeRelationData{set: set})
 	return PetShopModel{relations: relations}, nil
 }
@@ -202,7 +202,7 @@ func (r EmployeeRelation) Delete(t Employee) (PetShopModel, error) {
 // Lookup searches Employee by primary key.
 func (r EmployeeRelation) Lookup(employeeID int64) (Employee, bool) {
 	if t, has := r.set.Get(employeePK{employeeID: employeeID}); has {
-		return Employee{employeeData: t.(*employeeData), model: r.model}, true
+		return Employee{data: t.(*employeeData), model: r.model}, true
 	}
 	return Employee{}, false
 }
@@ -242,7 +242,7 @@ type employeeIterator struct {
 // MoveNext implements seq.Setable.
 func (i *employeeIterator) MoveNext() bool {
 	if i.i.Next() {
-		i.t = &Employee{employeeData: i.i.Value().(*employeeData), model: i.model}
+		i.t = &Employee{data: i.i.Value().(*employeeData), model: i.model}
 		return true
 	}
 	return false

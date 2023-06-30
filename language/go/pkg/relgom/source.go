@@ -136,6 +136,9 @@ func (g *sourceGenerator) typeInfoForSyslType(t *sysl.Type) *typeInfo {
 	var ti typeInfo
 	ti.stage = func(value Expr) Expr { return value }
 
+	patterns := syslutil.MakeStrSetFromAttr("patterns", t.Attrs)
+	opt := (t.Opt || forceOptional) && !patterns.Contains("pk")
+
 	switch t := t.Type.(type) {
 	case *sysl.Type_Primitive_:
 		switch t.Primitive {
@@ -151,11 +154,20 @@ func (g *sourceGenerator) typeInfoForSyslType(t *sysl.Type) *typeInfo {
 			relgomlib := g.imported("github.com/anz-bank/sysl/language/go/pkg/relgom/relgomlib")
 			ti.final = g.imported("time")("Time")
 			ti.staging = relgomlib("DateTimeString")
-			ti.stage = func(value Expr) Expr {
-				return Call(relgomlib("NewDateTimeString"), value)
-			}
-			ti.unstage = func(value Expr) Expr {
-				return Call(Dot(value, "Unstage"))
+			if opt {
+				ti.stage = func(value Expr) Expr {
+					return Call(relgomlib("NewDateTimeString"), value)
+				}
+				ti.unstage = func(value Expr) Expr {
+					return Call(Dot(value, "Unstage"))
+				}
+			} else {
+				ti.stage = func(value Expr) Expr {
+					return Call(relgomlib("NewDateTimeStringReq"), value)
+				}
+				ti.unstage = func(value Expr) Expr {
+					return Call(Dot(value, "UnstageReq"))
+				}
 			}
 		case sysl.Type_STRING, sysl.Type_STRING_8:
 			ti.final = I("string")
@@ -170,8 +182,7 @@ func (g *sourceGenerator) typeInfoForSyslType(t *sysl.Type) *typeInfo {
 		panic(fmt.Errorf("type: %#v", t))
 	}
 	ti.param = ti.final
-	patterns := syslutil.MakeStrSetFromAttr("patterns", t.Attrs)
-	if (t.Opt || forceOptional) && !patterns.Contains("pk") {
+	if opt {
 		ti.opt = true
 		ti.final = Star(ti.final)
 		if ti.staging != nil {
