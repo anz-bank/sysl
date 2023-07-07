@@ -59,6 +59,7 @@ export class Application extends ParentElement<Element> {
             endpoints: context.recurse(this.endpoints),
             types: context.recurse(this.children),
             model: context.model ?? this.model,
+            locations: context.keepLocation ? context.recurse(this.locations) : [],
         });
     }
 }

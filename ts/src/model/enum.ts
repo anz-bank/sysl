@@ -25,6 +25,7 @@ export class Enum extends Element {
             tags: context.recurse(this.tags),
             annos: context.recurse(this.annos),
             model: context.model ?? this.model,
+            locations: context.keepLocation ? context.recurse(this.locations) : [],
         };
         return new Enum(this.name, context.recurse(this.members), params);
     }

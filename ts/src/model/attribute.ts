@@ -56,7 +56,10 @@ export class Annotation implements IChild, ILocational, IRenderable {
     }
 
     clone(context = new CloneContext(this.model)): Annotation {
-        return new Annotation(this.name, this.cloneValue(this.value), { model: context.model ?? this.model });
+        return new Annotation(this.name, this.cloneValue(this.value), {
+            model: context.model ?? this.model,
+            locations: context.keepLocation ? context.recurse(this.locations) : [],
+        });
     }
 
     private cloneValue(value: AnnoValue): AnnoValue {
@@ -91,6 +94,9 @@ export class Tag implements IChild, ILocational, IRenderable {
     }
 
     clone(context = new CloneContext(this.model)): Tag {
-        return new Tag(this.name, { model: context.model ?? this.model });
+        return new Tag(this.name, {
+            model: context.model ?? this.model,
+            locations: context.keepLocation ? context.recurse(this.locations) : [],
+        });
     }
 }

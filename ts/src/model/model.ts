@@ -133,7 +133,7 @@ export class Model implements IRenderable {
 
     /**
      * Attempts to finds the element specified by the supplied {@link ElementRef}. Returns `undefined` if no such
-     * element was found.
+     * element was found. Currently only supports apps, types and fields.
      * @param ref The reference used to locate the element in the model. Either a string or an instance of `ElementRef`.
      * @returns An {@link Element} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
      * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
@@ -292,9 +292,10 @@ export class Model implements IRenderable {
         }
     }
 
-    clone(filter?: ModelFilter): Model {
+    clone(filter?: ModelFilter, keepLocation?: boolean): Model {
         const model = new Model({ header: this.header, syslRoot: this.syslRoot });
-        const context = new CloneContext(model, filter ?? ModelFilters.Default);
+        const context = new CloneContext(model, filter ?? ModelFilters.Default, 0, keepLocation);
+        if (context.keepLocation) model.locations = context.recurse(this.locations);
         model.imports = context.recurse(this.imports);
         model.apps = context.recurse(this.apps);
         return model;

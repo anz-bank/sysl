@@ -27,6 +27,7 @@ export class Type extends ParentElement<Field> {
             tags: context.recurse(this.tags),
             annos: context.recurse(this.annos),
             model: context.model ?? this.model,
+            locations: context.keepLocation ? context.recurse(this.locations) : [],
         };
 
         return new Type(this.name, this.isTable, context.recurse(this.children), params);

@@ -78,4 +78,12 @@ export class Location {
     public toString(): string {
         return `${this.file}:${this.start.line}:${this.start.col}`;
     }
+
+    public clone(): Location {
+        return new Location(
+            this.file,
+            new Offset(this.start.line, this.start.col),
+            new Offset(this.end.line, this.end.col)
+        );
+    }
 }

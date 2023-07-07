@@ -26,6 +26,7 @@ export class Union extends Element {
             annos: context.recurse(this.annos),
             tags: context.recurse(this.tags),
             model: context.model ?? this.model,
+            locations: context.keepLocation ? context.recurse(this.locations) : [],
         };
 
         return new Union(this.name, context.recurse(this.members), params);

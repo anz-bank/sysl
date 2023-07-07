@@ -10,7 +10,7 @@ import { Action, Endpoint, Param, Statement } from "./statement";
 import { Type } from "./type";
 import { Application } from "./application";
 import { Field } from "./field";
-import { ElementRef } from "./common";
+import { ElementRef, ILocational } from "./common";
 import { CloneContext, ModelFilters } from "./clone";
 import { Union } from "./union";
 import { Primitive, TypePrimitive } from "./primitive";
@@ -756,6 +756,57 @@ describe("Cloning", () => {
         const allSysl = (await readFile(allPath)).toString();
         expect(clonedModel.toSysl()).toEqual(allSysl);
         expect(clonedModel.toSysl()).not.toEqual(model.toSysl());
+    });
+
+    test.concurrent("Preserve location when keepLocation=true", async () => {
+        const model = await Model.fromFile(allPath);
+        const clonedModel = model.clone(undefined, true);
+
+        expect(clonedModel.getApp("Types").locations)
+            .toEqual(model.getApp("Types").locations);
+
+        expect(clonedModel.getType("Types.Type").locations)
+            .toEqual(model.getType("Types.Type").locations);
+
+        expect(clonedModel.getField("Types.Type.with_anno").locations)
+            .toEqual(model.getField("Types.Type.with_anno").locations);
+
+        expect(clonedModel.getField("Types.Type.with_anno").getAnno("annotation").locations)
+            .toEqual(model.getField("Types.Type.with_anno").getAnno("annotation").locations);
+
+        expect(clonedModel.getField("Types.Type.with_anno").getTag("tag").locations)
+            .toEqual(model.getField("Types.Type.with_anno").getTag("tag").locations);
+
+        expect(clonedModel.getApp("ImportedApp").locations)
+            .toEqual(model.getApp("ImportedApp").locations);
+
+
+        const clonedApp = clonedModel.getApp("Types").children;
+        const app = model.getApp("Types").children;
+
+        expect((clonedApp.find(c => c.name == "Enum") as ILocational).locations)
+            .toEqual((app.find(c => c.name == "Enum") as ILocational).locations);
+        expect((clonedApp.find(c => c.name == "Union") as ILocational).locations)
+            .toEqual((app.find(c => c.name == "Union") as ILocational).locations);
+        expect((clonedApp.find(c => c.name == "Alias") as ILocational).locations)
+            .toEqual((app.find(c => c.name == "Alias") as ILocational).locations);
+    });
+
+    test.concurrent("removes location when keepLocation=false", async () => {
+        const model = await Model.fromFile(allPath);
+        const clonedModel = model.clone();
+
+        expect(clonedModel.getApp("Types").locations).toBeEmpty();
+        expect(clonedModel.getType("Types.Type").locations).toBeEmpty();
+        expect(clonedModel.getField("Types.Type.with_anno").locations).toBeEmpty();
+        expect(clonedModel.getField("Types.Type.with_anno").getAnno("annotation").locations).toBeEmpty();
+        expect(clonedModel.getField("Types.Type.with_anno").getTag("tag").locations).toBeEmpty();
+        expect(clonedModel.getApp("ImportedApp").locations).toBeEmpty();
+
+        const clonedApp = clonedModel.getApp("Types").children;
+        expect((clonedApp.find(c => c.name == "Enum") as ILocational).locations).toBeEmpty();
+        expect((clonedApp.find(c => c.name == "Union") as ILocational).locations).toBeEmpty();
+        expect((clonedApp.find(c => c.name == "Alias") as ILocational).locations).toBeEmpty();
     });
 
     test.concurrent("All filter visits", async () => {
