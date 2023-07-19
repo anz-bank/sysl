@@ -88,12 +88,12 @@ boolLit         -> /{true | false};
 
 strLit          -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //';
 
-object          -> "{" (objectField comma? c*)* "}";
+object          -> "{" (c* objectField comma? c*)* "}";
 objectField     -> objectKey ":"? objectValue;
 objectKey       -> constant;
 objectValue     -> constant ";"?;
 
-array           -> "[" (arrayItem comma? c*)* "]";
+array           -> "[" (c* arrayItem comma? c*)* "]";
 arrayItem       -> constant;
 
 c               -> /{ // .* $ | (?: /\* (?: [^*] | \*+[^*/] )* \*/ )};

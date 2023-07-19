@@ -76,6 +76,21 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                 let expected = {'(foo.java_package).bar': (s: 'com.example.foo'), '(foo.java_package).baz': (s: 'true')};
                 let actual = file.options;
                 //test.assert.equal(expected, actual),
+
+            comment:
+                let file = parseFile(`
+                    syntax = "proto3"; option (foo.java_package).bar = {
+                        // Comment
+                        foo: [
+                            // Comment
+                            "bar"
+                            // Comment
+                        ]
+                        // Comment
+                    };`);
+                let expected = {'(foo.java_package).bar': (fields: {'foo': [(s: 'bar')]})};
+                let actual = file.options;
+                //test.assert.equal(expected, actual),
         ),
 
         enum: (
