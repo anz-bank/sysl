@@ -30,7 +30,7 @@ export class Application extends ParentElement<Element> {
         return this.toRef().toSysl();
     }
 
-    protected override attachSubitems(extraSubitems: IChild[] = []): void {
+    public override attachSubitems(extraSubitems: IChild[] = []): void {
         super.attachSubitems([...this.endpoints, ...extraSubitems]);
     }
 

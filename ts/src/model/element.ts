@@ -157,20 +157,20 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     public abstract clone(context?: CloneContext): Element;
 
     /**
-     * Ensures the `.parent` and `.model` properties of this instance and its model are set for all subitems: `annos`,
-     * `tags`, `children` and any additional subitems specified.
+     * Ensures the `.parent` and `.model` properties of descendants are set. This includes all items in
+     * {@link annos}, {@link tags} and {@link children}, recursively, and any {@link extraSubitems} specified. It does
+     * not set properties on this instance itself, as they are expected to already be set correctly. The `.model`
+     * property is set to the value of this instance, even if set to `undefined`.
      * @param extraSubitems Additional children to ensure attachment.
      */
     protected attachSubitems(extraSubitems: IChild[] = []) {
-        [
-            ...this.annos,
-            ...this.tags,
-            ...((this as unknown as ParentElement<Element>).children ?? []),
-            ...extraSubitems,
-        ].forEach(child => {
+        const children = (this as unknown as ParentElement<Element>).children ?? [];
+        [...this.annos, ...this.tags, ...children, ...extraSubitems].forEach(child => {
             child.parent = this;
             child.model = this.model;
         });
+
+        [...children, ...extraSubitems.filter(i => i instanceof Element) as Element[]].forEach(c => c.attachSubitems());
     }
 
     protected render(prefix: string, body: string | IRenderable[], name?: string, mustHaveBody: boolean = true) {

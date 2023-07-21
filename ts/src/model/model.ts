@@ -63,7 +63,7 @@ export class Model implements IRenderable {
         this.apps = apps ?? [];
         this.locations = locations ?? [];
         this.syslRoot = syslRoot ?? ".";
-        walk(this, {}); // Attach model and parent
+        this.attachSubitems();
     }
 
     /**
@@ -136,7 +136,7 @@ export class Model implements IRenderable {
      * element was found. Currently only supports apps, types and fields.
      * @param ref The reference used to locate the element in the model. Either a string or an instance of `ElementRef`.
      * @returns An {@link Element} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
-     * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
      */
     findElement(ref: ElementID): Element | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
@@ -155,8 +155,8 @@ export class Model implements IRenderable {
      * was found.
      * @param ref The reference used to locate the app in the model. Either a string or an instance of `ElementRef`.
      * @returns An {@link Application} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
-     * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
-     * @throws {@link Error} Thrown if `ref` is not reference to an app.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if `ref` is not reference to an app.
      */
     findApp(ref: ElementID): Application | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
@@ -169,8 +169,8 @@ export class Model implements IRenderable {
      * found.
      * @param ref The reference used to locate the type in the model. Either a string or an instance of `ElementRef`.
      * @returns A {@link Type} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
-     * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
-     * @throws {@link Error} Thrown if `ref` is not reference to a type.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if `ref` is not reference to a type.
      */
     findType(ref: ElementID): Type | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
@@ -183,8 +183,8 @@ export class Model implements IRenderable {
      * was found.
      * @param ref The reference used to locate the field in the model. Either a string or an instance of `ElementRef`.
      * @returns A {@link Field} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
-     * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
-     * @throws {@link Error} Thrown if `ref` is not reference to a field.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if `ref` is not reference to a field.
      */
     findField(ref: ElementID): Field | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
@@ -196,8 +196,8 @@ export class Model implements IRenderable {
      * Retrieves the element specified by the supplied {@link ElementRef}. Throws if the element was not found.
      * @param ref The reference used to locate the element in the model. Either a string or an instance of `ElementRef`.
      * @returns An {@link Element} that corresponds to the supplied {@link ElementRef}.
-     * @throws {@link Error} Thrown if the syntax of the supplied string is invalid.
-     * @throws {@link Error} Thrown if `ref` describes an element not present in the current {@link Model}.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if `ref` describes an element not present in the current {@link Model}.
      */
     getElement = (ref: ElementID) => this.getTypedElement<Element>(ref, this.findElement);
 
@@ -205,9 +205,9 @@ export class Model implements IRenderable {
      * Retrieves the app specified by the supplied {@link ElementRef}. Throws if the app was not found.
      * @param ref The reference used to locate the app in the model. Either a string or an instance of `ElementRef`.
      * @returns An {@link Application} that corresponds to the supplied {@link ElementRef}.
-     * @throws {@link Error} Thrown if `ref` is a string with an invalid element reference syntax.
-     * @throws {@link Error} Thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.App}.
-     * @throws {@link Error} Thrown if `ref` describes an app not present in the current {@link Model}.
+     * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
+     * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.App}.
+     * @throws Error thrown if `ref` describes an app not present in the current {@link Model}.
      */
     getApp = (ref: ElementID) => this.getTypedElement<Application>(ref, this.findApp);
 
@@ -215,9 +215,9 @@ export class Model implements IRenderable {
      * Retrieves the type specified by the supplied {@link ElementRef}. Throws if the type was not found.
      * @param ref The reference used to locate the type in the model. Either a string or an instance of `ElementRef`.
      * @returns A {@link Type} that corresponds to the supplied {@link ElementRef}.
-     * @throws {@link Error} Thrown if `ref` is a string with an invalid element reference syntax.
-     * @throws {@link Error} Thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Type}.
-     * @throws {@link Error} Thrown if `ref` describes a type not present in the current {@link Model}.
+     * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
+     * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Type}.
+     * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
      */
     getType = (ref: ElementID) => this.getTypedElement<Type>(ref, this.findType);
 
@@ -225,9 +225,9 @@ export class Model implements IRenderable {
      * Retrieves the field specified by the supplied {@link ElementRef}. Throws if the field was not found.
      * @param ref The reference used to locate the field in the model. Either a string or an instance of `ElementRef`.
      * @returns A {@link Field} that corresponds to the supplied {@link ElementRef}.
-     * @throws {@link Error} Thrown if `ref` is a string with an invalid element reference syntax.
-     * @throws {@link Error} Thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Field}.
-     * @throws {@link Error} Thrown if `ref` describes a type not present in the current {@link Model}.
+     * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
+     * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Field}.
+     * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
      */
     getField = (ref: ElementID) => this.getTypedElement<Field>(ref, this.findField);
 
@@ -268,7 +268,7 @@ export class Model implements IRenderable {
      * @param cwdPath A CWD-based path to convert.
      * @param cwd Optional. The CWD to assume, or if unspecified, uses the real CWD.
      * @returns A path relative to the sysl root
-     * @throws {@link Error} Thrown when the specified path is outside the {@link syslRoot}, which is not allowed.
+     * @throws Error thrown when the specified path is outside the {@link syslRoot}, which is not allowed.
      */
     public convertSyslPath(cwdPath: string, cwd: string = process.cwd()) {
         const resolvedPath = path.resolve(cwd, cwdPath);
@@ -282,6 +282,25 @@ export class Model implements IRenderable {
         return syslRelativePath;
     }
 
+    public clone(filter?: ModelFilter, keepLocation?: boolean): Model {
+        const model = new Model({ header: this.header, syslRoot: this.syslRoot });
+        const context = new CloneContext(model, filter ?? ModelFilters.Default, 0, keepLocation);
+        if (context.keepLocation) model.locations = context.recurse(this.locations);
+        model.imports = context.recurse(this.imports);
+        model.apps = context.recurse(this.apps);
+        return model;
+    }
+
+    /**
+     * Ensures the `.parent` and `.model` properties of descendants are correctly set.
+     */
+    public attachSubitems() {
+        this.apps.forEach(a => {
+            a.model = this;
+            a.attachSubitems();
+        });
+    }
+
     private static findRoot(filePath: string, sentinelName: string): string | undefined {
         var root = path.dirname(path.resolve(filePath));
         while (true) {
@@ -290,14 +309,5 @@ export class Model implements IRenderable {
             if (parent == root) return undefined;
             root = parent;
         }
-    }
-
-    clone(filter?: ModelFilter, keepLocation?: boolean): Model {
-        const model = new Model({ header: this.header, syslRoot: this.syslRoot });
-        const context = new CloneContext(model, filter ?? ModelFilters.Default, 0, keepLocation);
-        if (context.keepLocation) model.locations = context.recurse(this.locations);
-        model.imports = context.recurse(this.imports);
-        model.apps = context.recurse(this.apps);
-        return model;
     }
 }

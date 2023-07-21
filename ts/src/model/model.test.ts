@@ -6,7 +6,7 @@ import { allItems } from "../common/iterate";
 import { Annotation, AnnoValue, Tag } from "./attribute";
 import { Model } from "./model";
 import "./renderers";
-import { Action, Endpoint, Param, Statement } from "./statement";
+import { Action, Endpoint, Group, Param, Statement } from "./statement";
 import { Type } from "./type";
 import { Application } from "./application";
 import { Field } from "./field";
@@ -109,6 +109,34 @@ describe("Parent and Model", () => {
     test.concurrent("all", async () => {
         const model = await Model.fromFile(allPath);
         expect(allItems(model).every(i => i.model === model)).toEqual(true);
+    });
+
+    test.concurrent("move endpoint, attach sub-statement", async () => {
+        const model = await Model.fromText(realign(`
+            App1:
+                Endpoint:
+                    statement:
+                        ...
+        `));
+        model.apps.push(new Application("App2"));
+        const app1 = model.getApp("App1");
+        const app2 = model.getApp("App2");
+        const ep = app1.endpoints.pop()!;
+        const outerSt = ep.statements[0];
+        const innerSt = new Statement(new Group("subStatement", []));
+        outerSt.children.push(innerSt);
+        app2.endpoints.push(ep);
+        model.attachSubitems();
+
+        expect(app1.endpoints).toBeEmpty();
+        expect(app2.model === model).toBeTrue();
+        expect(app2.parent).toBeUndefined();
+        expect(ep.model === model).toBeTrue();
+        expect(ep.parent === app2).toBeTrue();
+        expect(outerSt.model === model).toBeTrue();
+        expect(outerSt.parent === ep).toBeTrue();
+        expect(innerSt.model === model).toBeTrue();
+        expect(innerSt.parent === outerSt).toBeTrue();
     });
 });
 

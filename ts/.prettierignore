@@ -1,3 +1,4 @@
 dist/
 *.json
 *.lock
+src/model/model.test.ts
