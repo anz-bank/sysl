@@ -83,6 +83,7 @@ module.exports = {
           "cmd/cmd-protobuf",
           "cmd/cmd-repl",
           // 'cmd/cmd-template',
+          "cmd/typescript",
         ],
       },
       {

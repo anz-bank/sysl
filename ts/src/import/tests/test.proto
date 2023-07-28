@@ -1,0 +1,18 @@
+// {"sysl": {"namespace": "Test"}}
+syntax = "proto3";
+
+package proto3;
+option java_package = "com.example.foo";
+option go_package = "github.com/test/package";
+
+service SearchService {
+    rpc Search (SearchRequest) returns (SearchResponse);
+}
+
+message SearchRequest {
+    string query = 1;
+}
+
+message SearchResponse {
+    repeated string results = 1;
+}

@@ -11,7 +11,7 @@ import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
-import { spawn, SpawnOptions } from "child_process";
+import { spawnBuffer } from "../common/spawn";
 
 @jsonObject
 export class PbImport {
@@ -126,32 +126,4 @@ export class PbDocumentModel {
             apps: sortByLocation(Array.from(this.apps).map(([, a]) => a.toModel())),
         });
     }
-}
-
-/** Spawns a child process and returns a promise that resolves to the buffer content of stdout. */
-function spawnBuffer(
-    command: string,
-    args: ReadonlyArray<string> = [],
-    options: SpawnOptions & { input?: any } = {}
-): Promise<Buffer> {
-    return new Promise<Buffer>((resolve, reject) => {
-        const process = spawn(command, args, options);
-        if (options.input) {
-            options.input && process.stdin?.write(options.input);
-        }
-        process.stdin?.end();
-
-        let chunks: any[] = [];
-        let result: Buffer;
-        process.stdout?.on("data", (data: Buffer) => chunks.push(data));
-        process.stdout?.on("end", () => (result = Buffer.concat(chunks)));
-        let err = "";
-        process.stderr?.on("data", data => {
-            err += data;
-        });
-        process.on("error", err => reject(`spawn error: ${err}`));
-        process.on("close", code => {
-            code === 0 ? resolve(result) : reject(`spawn exited with code ${code}:\n${err}`);
-        });
-    });
 }
