@@ -41,6 +41,7 @@ var Formats = []Format{
 	MySQLDir,
 	BigQuery,
 	JSONSchema,
+	SyslPB,
 }
 
 // Factory takes in an absolute path and its contents (if path is a file) and returns an importer
@@ -99,6 +100,9 @@ func Factory(path string, isDir bool, formatName string, content []byte, logger 
 	case Protobuf.Name, ProtobufDir.Name:
 		logger.Debugln("Detected Protobuf")
 		return MakeProtobufImporter(logger), nil
+	case SyslPB.Name:
+		logger.Debugln("Detected Sysl PB")
+		return MakeSyslPBImporter(logger), nil
 	default:
 		logger.Debugln("Defaulting to transform-based importing")
 		return MakeTransformImporter(logger, format.Name), nil

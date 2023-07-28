@@ -482,6 +482,18 @@ func TestForeignImportsWithNamespace(t *testing.T) {
 	testParseAgainstGolden(t, "tests/foreign_import_swagger_namespace.sysl", "")
 }
 
+func TestForeignImportSyslPB(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/foreign_import_pb.sysl", "")
+}
+
+func TestForeignImportSyslTextPB(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGolden(t, "tests/foreign_import_textpb.sysl", "")
+}
+
 func TestRootArgAndRelational(t *testing.T) {
 	t.Parallel()
 

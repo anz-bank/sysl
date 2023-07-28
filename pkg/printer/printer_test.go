@@ -1,4 +1,4 @@
-package printer
+package printer_test
 
 import (
 	"bytes"
@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/afero"
 
 	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/printer"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus"
 )
@@ -27,7 +28,7 @@ func TestPrinting(t *testing.T) {
 	fileBytes, err := afero.ReadFile(fs, "printer.sysl")
 	assert.NoError(t, err)
 	var buf bytes.Buffer
-	Module(&buf, module)
+	printer.Module(&buf, module)
 	if buf.String() != string(fileBytes) {
 		fmt.Println(buf.String())
 	}
@@ -61,5 +62,5 @@ Server[~yay]:
 	}
 
 	// Make a New printer to os.Stdout (io.Writer) and Module
-	Module(os.Stdout, module)
+	printer.Module(os.Stdout, module)
 }

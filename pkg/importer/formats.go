@@ -22,6 +22,12 @@ var SYSL = Format{
 	FileExt:   []string{".sysl"},
 }
 
+var SyslPB = Format{
+	Name:      "sysl.pb",
+	Signature: "",
+	FileExt:   []string{".pb", ".textpb"},
+}
+
 var XSD = Format{
 	Name:      "xsd",
 	Signature: ``,

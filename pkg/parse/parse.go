@@ -20,6 +20,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/importer"
 	"github.com/anz-bank/sysl/pkg/msg"
 	"github.com/anz-bank/sysl/pkg/pbutil"
+	"github.com/anz-bank/sysl/pkg/printer"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 
@@ -93,6 +94,16 @@ func importForeign(def importDef, input antlr.CharStream) (antlr.CharStream, err
 	switch fileType.Name {
 	case importer.SYSL.Name:
 		return input, nil
+	case importer.SyslPB.Name:
+		m, err := pbutil.FromPBByteContents(fileName, []byte(file))
+		if err != nil {
+			return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has unknown format: %s", fileName, err))
+		}
+		var buf bytes.Buffer
+		printer.Module(&buf, m)
+		output := buf.String()
+		return antlr.NewInputStream(output), nil
+
 	case importer.OpenAPI3.Name, importer.OpenAPI2.Name, importer.Protobuf.Name:
 		imp, err := importer.Factory(fileName, false, "", []byte(file), logger)
 		if err != nil {

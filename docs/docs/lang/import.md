@@ -160,6 +160,17 @@ import foreign_import_swagger.yaml as Foreign :: App
 
 Refer to the [`sysl import`](https://sysl.io/docs/cmd/cmd-import/#usage) command for all supported non-Sysl types. (Note that not all of them can be imported with the `import` keyword.)
 
+### Compiled Sysl file
+
+In some cases, you may want to import a pre-compiled Sysl model from a `.pb` (or `.textpb`) file using an `import` statement in a Sysl source file. You can do this by simply importing the file (without the `as AppName` suffix, since all the apps within will already have names):
+
+```sysl
+import foreign_import_pb.pb
+import foreign_import_textpb.textpb
+```
+
+This is generally discouraged as a regular modelling practice, but may be useful for debugging or experimenting with Sysl models. For example, in order to test some new Sysl use case, you might want to add a few new annotations to a large, precompiled `.pb` model without recompiling the whole thing from scratch.
+
 ## See also
 
 - [Module](./module.md)

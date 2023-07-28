@@ -1,0 +1,91 @@
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
+  }
+  types: {
+   key: "Foo"
+   value: {
+    tuple: {
+     attr_defs: {
+      key: "field"
+      value: {
+       primitive: INT
+       source_context: {
+        file: "tests/foreign_import_pb.sysl"
+        start: {
+         line: 2
+         col: 4
+        }
+        end: {
+         line: 2
+         col: 16
+        }
+       }
+       source_contexts: {
+        file: "tests/foreign_import_pb.sysl"
+        start: {
+         line: 2
+         col: 4
+        }
+        end: {
+         line: 2
+         col: 16
+        }
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/foreign_import_pb.sysl"
+     start: {
+      line: 1
+      col: 2
+     }
+     end: {
+      line: 2
+      col: 16
+     }
+    }
+    source_contexts: {
+     file: "tests/foreign_import_pb.sysl"
+     start: {
+      line: 1
+      col: 2
+     }
+     end: {
+      line: 2
+      col: 16
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/foreign_import_pb.sysl"
+   start: {}
+   end: {
+    line: 2
+    col: 16
+   }
+  }
+  source_contexts: {
+   file: "tests/foreign_import_pb.sysl"
+   start: {}
+   end: {
+    line: 2
+    col: 16
+   }
+  }
+ }
+}
+imports: {
+ target: "foreign_import_pb.pb"
+ source_context: {
+  file: "tests/foreign_import_pb.sysl"
+  start: {}
+  end: {
+   col: 27
+  }
+ }
+}

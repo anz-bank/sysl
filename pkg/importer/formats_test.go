@@ -28,6 +28,7 @@ var formatTests = []struct {
 	{"Parses XML ext", ".xml", []byte{}, &XSD, nil},
 	{"Parses XSD ext", ".xsd", []byte{}, &XSD, nil},
 	{"Parses sysl ext", ".sysl", []byte{}, &SYSL, nil},
+	{"Parses Sysl PB ext", ".sysl.pb", []byte{}, &SyslPB, nil},
 	{"Parses openapi3 yaml files", ".yaml", []byte(`openapi: "3.0.0"`), &OpenAPI3, nil},
 	{"Parses openapi3 yaml files", ".yaml", []byte(`openapi: "3.0.3"`), &OpenAPI3, nil},
 	{"Parses openapi3 json files", ".json", []byte(`{"openapi": "3.0.0"}`), &OpenAPI3, nil},

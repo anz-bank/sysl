@@ -30,6 +30,7 @@ Currently, the supported formats include:
 - A directory of SQL migration scripts
 - Protobuf
 - A directory of Protobuf files
+- A compiled Sysl protobuf message (`.pb` or `.textpb`)
 
 ## Required Flags
 
