@@ -22,9 +22,10 @@ const opts: ImportOptions = program
     .opts();
 
 importAndMerge(opts).then(async result => {
+    const out = result.model.toSysl();
     if (opts.output) {
-        await fs.writeFile(opts.output, result.output);
+        await fs.writeFile(opts.output, out);
     } else {
-        process.stdout.write(result.output);
+        process.stdout.write(out);
     }
 });

@@ -96,7 +96,7 @@ export class Call {
     }
 
     toString(): string {
-        return `${joinedAppName(this.targetApp, true)} <-- ${this.endpoint}`;
+        return `${joinedAppName(this.targetApp, true)} <- ${this.endpoint}`;
     }
 
     clone(context = new CloneContext()): Call {
@@ -256,7 +256,7 @@ export class Cond {
     }
 
     toString(): string {
-        return this.test;
+        return `if ${this.test}`;
     }
 
     clone(context = new CloneContext()): Cond {

@@ -1,13 +1,29 @@
 app:
-    !enum enum1: ...  # Not emitted in sysl pb ast
-    !enum enum2:  # Not emitted in sysl pb ast
+    # ... enums are not emitted in the sysl.pb AST.
+    !enum enum1: ...
+    !enum enum2:
         ...
-    !enum enum3:
+    !enum enum3 [attr="val", ~pattern]: ...
+    !enum enum4 [attr="val", ~pattern]:
+        # Comment
+        @anno = "val"
+        ...
+
+    !enum enumSimple:
         foo: 1
         bar: 2
-    !enum enum4 [attr="val", ~pattern]:
+
+    !enum enumAttrs [attr="val", ~pattern]:
         baz: 1
-    !enum enum5:
+
+    !enum enumAnnos:
         @attr = "val"
         @foo = "bar"
+        baz: 1
+
+    !enum enumAttrsAndAnnos [attr="val", ~pattern]:
+        # And a comment
+        @attr = "val"
+        @foo = "bar"
+        # And another comment
         baz: 1

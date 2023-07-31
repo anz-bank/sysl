@@ -14,7 +14,7 @@ export type ImportOptions = {
 
 export type ImportResult = {
     /** The content of the imported Sysl spec. */
-    output: string;
+    model: Model;
     /** The path to the existing Sysl spec that was loaded and merged, if any. */
     existingPath?: string;
 };
@@ -26,7 +26,7 @@ export async function importAndMerge(opts: ImportOptions): Promise<ImportResult>
     if (oldMod) mergeExisting(await newMod, oldMod);
 
     return {
-        output: (await newMod).toSysl(),
+        model: await newMod,
         existingPath,
     };
 }

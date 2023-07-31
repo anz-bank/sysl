@@ -1026,13 +1026,13 @@ describe("Cloning", () => {
               '[gRPC] IfStmt': Endpoint
                 '[~tag]': Tag
                 'Cond': Statement
-                  'predicate1': Cond
+                  'if predicate1': Cond
                     'Return': Statement
                       'return ok <: string': Return
                 'Group': Statement
                   'else if predicate2': Group
                     'Call': Statement
-                      'Statements <-- IfStmt': Call
+                      'Statements <- IfStmt': Call
                 'Group': Statement
                   'else': Group
                     'Action': Statement
@@ -1074,9 +1074,9 @@ describe("Cloning", () => {
               '[gRPC] Calls': Endpoint
                 '[~tag]': Tag
                 'Call': Statement
-                  'Statements <-- Returns': Call
+                  'Statements <- Returns': Call
                 'Call': Statement
-                  'RestEndpoint <-- GET /param': Call
+                  'RestEndpoint <- GET /param': Call
               '[gRPC] OneOfStatements': Endpoint
                 '[~tag]': Tag
                 'Alt': Statement
@@ -1098,7 +1098,7 @@ describe("Cloning", () => {
                 'Group': Statement
                   'grouped': Group
                     'Call': Statement
-                      'Statements <-- GroupStatements': Call
+                      'Statements <- GroupStatements': Call
               '[gRPC] AnnotatedEndpoint': Endpoint
                 '[~tag]': Tag
                 '@annotation1 = ...': Annotation
@@ -1106,7 +1106,7 @@ describe("Cloning", () => {
                 '@annotation3 = ...': Annotation
               '[gRPC] AnnotatedStatements': Endpoint
                 'Call': Statement
-                  'Statements <-- Miscellaneous': Call
+                  'Statements <- Miscellaneous': Call
                 'Return': Statement
                   'return ok <: string [annotation=[\"as\", \"an\", \"array\"]] #Doesn't work, annos/tags/comments are part of the name': Return
                 'Action': Statement

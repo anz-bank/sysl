@@ -3244,6 +3244,7 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 	// Build a map of enumerations. If there are none (due to WHATEVER
 	// as the only content), don't add the enum type to the sysl AST.
 	items := map[string]int64{}
+
 	for _, enumeration := range ctx.AllEnumeration() {
 		e := enumeration.(*parser.EnumerationContext)
 		var name string
@@ -3256,9 +3257,6 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 		if val, err := strconv.ParseInt(valstr, 10, 64); err == nil {
 			items[name] = val
 		}
-	}
-	if len(items) == 0 {
-		return
 	}
 
 	enumType := &sysl.Type{
@@ -3278,7 +3276,10 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 	}
 	s.pushScope(enumType)
 
-	s.currentApp().Types[s.currentTypePath.Get()] = enumType
+	// Only include the enum in the model if it has items. Still push and pop scope to support visiting annotations.
+	if len(items) > 0 {
+		s.currentApp().Types[s.currentTypePath.Get()] = enumType
+	}
 }
 
 // ExitEnum is called when production enum is exited.
