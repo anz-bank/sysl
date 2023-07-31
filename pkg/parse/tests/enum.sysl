@@ -7,3 +7,7 @@ app:
         bar: 2
     !enum enum4 [attr="val", ~pattern]:
         baz: 1
+    !enum enum5:
+        @attr = "val"
+        @foo = "bar"
+        baz: 1

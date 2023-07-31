@@ -13,5 +13,12 @@ let (:module, ...) = //{./proto_to_sysl};
             # TODO: Handle serialization of applications merged from multiple proto files
             # (i.e. those with name collisions).
             //test.assert.equal("google.golang.org/protobuf/types/known/typepb", actualPackage),
+
+        backslash:
+            let model = import((), ['pkg/importer/proto/tests/proto3.proto']);
+            let sysl = module((), model);
+
+            let actual = sysl.apps('SearchService').attrs('proto_options').a.elt(0).s;
+            //test.assert.equal("php_namespace = Foo\\\\Bar", actual),
     )
 )

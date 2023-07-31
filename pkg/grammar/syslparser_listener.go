@@ -527,9 +527,6 @@ type SyslParserListener interface {
 	// EnterEnumeration is called when entering the enumeration production.
 	EnterEnumeration(c *EnumerationContext)
 
-	// EnterEnum_stmts is called when entering the enum_stmts production.
-	EnterEnum_stmts(c *Enum_stmtsContext)
-
 	// EnterEnum is called when entering the enum production.
 	EnterEnum(c *EnumContext)
 
@@ -1069,9 +1066,6 @@ type SyslParserListener interface {
 
 	// ExitEnumeration is called when exiting the enumeration production.
 	ExitEnumeration(c *EnumerationContext)
-
-	// ExitEnum_stmts is called when exiting the enum_stmts production.
-	ExitEnum_stmts(c *Enum_stmtsContext)
 
 	// ExitEnum is called when exiting the enum production.
 	ExitEnum(c *EnumContext)

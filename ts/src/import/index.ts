@@ -1,4 +1,51 @@
+import fs from "fs/promises";
+import path from "path";
+import { spawnSysl } from "../common/spawn";
 import { Action, Alt, Cond, Foreach, Group, Loop, LoopN, Model, Return, Statement } from "../model";
+
+export type ImportOptions = {
+    input: string;
+    appName?: string;
+    output?: string;
+    format?: string;
+    importPaths?: string;
+    shallow?: boolean;
+};
+
+export type ImportResult = {
+    /** The content of the imported Sysl spec. */
+    output: string;
+    /** The path to the existing Sysl spec that was loaded and merged, if any. */
+    existingPath?: string;
+};
+
+export async function importAndMerge(opts: ImportOptions): Promise<ImportResult> {
+    const newMod = importNew(opts);
+    const existingPath = opts.output ?? opts.input.replace(path.extname(opts.input), "") + ".sysl";
+    const oldMod = await loadExisting(existingPath);
+    if (oldMod) mergeExisting(await newMod, oldMod);
+
+    return {
+        output: (await newMod).toSysl(),
+        existingPath,
+    };
+}
+
+async function importNew(opts: ImportOptions): Promise<Model> {
+    const passthroughArgs = Object.entries(opts)
+        // Drop any given `output` so we get the output through stdout.
+        // Drop `shallow` since it's a boolean flag
+        .filter(([k]) => k != "output" && k != "shallow")
+        .map(([k, v]) => `--${k.replace(/([A-Z])/g, "-$1").toLowerCase()}=${v}`);
+    if (opts.shallow) passthroughArgs.push("--shallow");
+    return Model.fromText((await spawnSysl(["import", ...passthroughArgs])).toString());
+}
+
+async function loadExisting(existingPath: string): Promise<Model | undefined> {
+    // prettier-ignore
+    const exists = await fs.open(existingPath).then(() => true).catch(() => false);
+    return exists ? Model.fromFile(existingPath) : undefined;
+}
 
 /** Merges aspects of `oldModel` that should be retained when reimported into `newModel`. */
 export function mergeExisting(newModel: Model, oldModel: Model): void {

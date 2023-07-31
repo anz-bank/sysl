@@ -94,22 +94,22 @@ apps: {
       source_context: {
        file: "tests/union.sysl"
        start: {
-        line: 11
+        line: 12
         col: 8
        }
        end: {
-        line: 11
+        line: 12
         col: 11
        }
       }
       source_contexts: {
        file: "tests/union.sysl"
        start: {
-        line: 11
+        line: 12
         col: 8
        }
        end: {
-        line: 11
+        line: 12
         col: 11
        }
       }
@@ -119,22 +119,22 @@ apps: {
       source_context: {
        file: "tests/union.sysl"
        start: {
-        line: 12
+        line: 13
         col: 8
        }
        end: {
-        line: 12
+        line: 13
         col: 14
        }
       }
       source_contexts: {
        file: "tests/union.sysl"
        start: {
-        line: 12
+        line: 13
         col: 8
        }
        end: {
-        line: 12
+        line: 13
         col: 14
        }
       }
@@ -145,22 +145,22 @@ apps: {
        source_context: {
         file: "tests/union.sysl"
         start: {
-         line: 13
+         line: 14
          col: 8
         }
         end: {
-         line: 13
+         line: 14
          col: 26
         }
        }
        source_contexts: {
         file: "tests/union.sysl"
         start: {
-         line: 13
+         line: 14
          col: 8
         }
         end: {
-         line: 13
+         line: 14
          col: 26
         }
        }
@@ -168,22 +168,22 @@ apps: {
       source_context: {
        file: "tests/union.sysl"
        start: {
-        line: 13
+        line: 14
         col: 8
        }
        end: {
-        line: 13
+        line: 14
         col: 26
        }
       }
       source_contexts: {
        file: "tests/union.sysl"
        start: {
-        line: 13
+        line: 14
         col: 8
        }
        end: {
-        line: 13
+        line: 14
         col: 26
        }
       }
@@ -194,22 +194,22 @@ apps: {
        source_context: {
         file: "tests/union.sysl"
         start: {
-         line: 14
+         line: 15
          col: 8
         }
         end: {
-         line: 14
+         line: 15
          col: 20
         }
        }
        source_contexts: {
         file: "tests/union.sysl"
         start: {
-         line: 14
+         line: 15
          col: 8
         }
         end: {
-         line: 14
+         line: 15
          col: 20
         }
        }
@@ -217,22 +217,22 @@ apps: {
       source_context: {
        file: "tests/union.sysl"
        start: {
-        line: 14
+        line: 15
         col: 8
        }
        end: {
-        line: 14
+        line: 15
         col: 20
        }
       }
       source_contexts: {
        file: "tests/union.sysl"
        start: {
-        line: 14
+        line: 15
         col: 8
        }
        end: {
-        line: 14
+        line: 15
         col: 20
        }
       }
@@ -252,22 +252,22 @@ apps: {
       source_context: {
        file: "tests/union.sysl"
        start: {
-        line: 15
+        line: 16
         col: 8
        }
        end: {
-        line: 15
+        line: 16
         col: 9
        }
       }
       source_contexts: {
        file: "tests/union.sysl"
        start: {
-        line: 15
+        line: 16
         col: 8
        }
        end: {
-        line: 15
+        line: 16
         col: 9
        }
       }
@@ -287,23 +287,51 @@ apps: {
       source_context: {
        file: "tests/union.sysl"
        start: {
-        line: 16
+        line: 17
         col: 8
        }
        end: {
-        line: 16
+        line: 17
         col: 9
        }
       }
       source_contexts: {
        file: "tests/union.sysl"
        start: {
-        line: 16
+        line: 17
         col: 8
        }
        end: {
-        line: 16
+        line: 17
         col: 9
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "anno"
+     value: {
+      s: ""
+      source_context: {
+       file: "tests/union.sysl"
+       start: {
+        line: 11
+        col: 16
+       }
+       end: {
+        line: 11
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/union.sysl"
+       start: {
+        line: 11
+        col: 16
+       }
+       end: {
+        line: 11
+        col: 18
        }
       }
      }
@@ -315,7 +343,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 17
+      line: 18
       col: 1
      }
     }
@@ -326,7 +354,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 17
+      line: 18
       col: 1
      }
     }
@@ -470,7 +498,7 @@ apps: {
    file: "tests/union.sysl"
    start: {}
    end: {
-    line: 16
+    line: 17
     col: 9
    }
   }
@@ -478,7 +506,7 @@ apps: {
    file: "tests/union.sysl"
    start: {}
    end: {
-    line: 16
+    line: 17
     col: 9
    }
   }

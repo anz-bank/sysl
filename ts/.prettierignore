@@ -1,4 +1,11 @@
 dist/
 *.json
 *.lock
+
+# TODO: Fix style and/or rules in the following files:
+src/model/application.ts
+src/model/constraint.test.ts
+src/model/constraint.ts
+src/model/element.ts
 src/model/model.test.ts
+src/model/statement.ts

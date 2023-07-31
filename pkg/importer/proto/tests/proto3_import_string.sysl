@@ -4,7 +4,7 @@ SearchService [~gRPC]:
     @go_package = "github.com/test/package"
     @java_package = "com.example.foo"
     @package = "proto3"
-    @proto_options = ["random = random"]
+    @proto_options = ["php_namespace = Foo\\Bar", "random = random"]
     @source_path = ""
     
     Search (input <: proto3.SearchRequest) [~gRPC]:

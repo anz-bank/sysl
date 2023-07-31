@@ -197,8 +197,15 @@ export class PbTypeDef {
 
         const type = this.tuple || this.relation;
         if (type) return new Type(name, !!this.relation, sortByLocation(PbTypeDef.defsToFields(type.attrDefs)), params);
-        if (this.enum) return new Enum(name, [...this.enum.items].map(([k, v]) => new EnumValue(k, v)), params);
-        if (this.oneOf) return new Union(name, this.oneOf.type.map(t => t.toValue()), params);
+        if (this.enum) {
+            // Original order of enum items is not serialized, so assume value (number) order, since it's most common.
+            const values = [...this.enum.items].map(([k, v]) => new EnumValue(k, v)).sort((a, b) => a.value - b.value);
+            return new Enum(name, values, params);
+        }
+        if (this.oneOf) {
+            const values = this.oneOf.type.map(t => t.toValue());
+            return new Union(name, values, params);
+        }
         return isInner ? new Field(name, this.toValue(), this.opt, params) : new Alias(name, this.toValue(), params);
     }
 

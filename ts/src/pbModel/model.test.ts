@@ -3,6 +3,8 @@ import "reflect-metadata";
 import * as path from "path";
 import { PbDocumentModel } from "./model";
 import { readFile } from "fs/promises";
+import { PbAttribute, PbAttributeArray } from "./attribute";
+import { realign } from "../common/format";
 
 const testDir = path.join(__dirname, "..", "..", "test");
 const allPath = path.join(testDir, "all.sysl");
@@ -32,5 +34,29 @@ describe("PbDocumentModel", () => {
         const source = await readFile(pbPath);
         const m = await PbDocumentModel.fromPbOrJson(source);
         expect(m.apps.size).toEqual(9);
+    });
+});
+
+describe("PbAnnotation", () => {
+    test("backslash", async () => {
+        // prettier-ignore
+        const m = await PbDocumentModel.fromText(
+            realign(`
+            App [attr=["foo = C:\\\\bar", "\\t", "\\"quote\\""]]:
+                @anno = ["foo = C:\\\\bar", "\\t", "\\"quote\\""]
+        `),
+            "test.sysl"
+        );
+        const attrs = m.apps.get("App")!.attrs!;
+        const attrValues = attrs.get("attr")!.a!.elt;
+        const annoValues = attrs.get("anno")!.a!.elt;
+
+        expect(annoValues[0].s).toEqual("foo = C:\\\\bar");
+        expect(annoValues[1].s).toEqual("\t");
+        expect(annoValues[2].s).toEqual(`"quote"`);
+
+        expect(attrValues[0].s).toEqual("foo = C:\\\\bar");
+        expect(attrValues[1].s).toEqual("\t");
+        expect(attrValues[2].s).toEqual(`"quote"`);
     });
 });

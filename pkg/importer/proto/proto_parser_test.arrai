@@ -285,7 +285,12 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             },
                                         ),
                                     },
-                                    options: {'java_package': (s: 'com.example.foo'), 'go_package': (s: 'github.com/test/package'), 'random': (s: 'random')},
+                                    options: {
+                                        'java_package': (s: 'com.example.foo'),
+                                        'go_package': (s: 'github.com/test/package'),
+                                        'php_namespace': (s: 'Foo\\\\Bar'),
+                                        'random': (s: 'random'),
+                                    },
                                     package: {'proto3': ()},
                                     services: {
                                         'SearchService': (rpcs: {"Search": (

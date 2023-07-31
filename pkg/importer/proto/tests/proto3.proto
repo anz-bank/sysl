@@ -2,6 +2,7 @@ syntax = "proto3";
 package proto3;
 option java_package = "com.example.foo";
 option go_package = "github.com/test/package";
+option php_namespace = "Foo\\Bar";
 option random = "random";
 
 enum EnumAllowingAlias {

@@ -9,6 +9,7 @@ Test:
         C
 
     !union Mixed:
+        @anno = ""
         int
         string
         sequence of string

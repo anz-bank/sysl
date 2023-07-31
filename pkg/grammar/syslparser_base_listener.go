@@ -1062,12 +1062,6 @@ func (s *BaseSyslParserListener) EnterEnumeration(ctx *EnumerationContext) {}
 // ExitEnumeration is called when production enumeration is exited.
 func (s *BaseSyslParserListener) ExitEnumeration(ctx *EnumerationContext) {}
 
-// EnterEnum_stmts is called when production enum_stmts is entered.
-func (s *BaseSyslParserListener) EnterEnum_stmts(ctx *Enum_stmtsContext) {}
-
-// ExitEnum_stmts is called when production enum_stmts is exited.
-func (s *BaseSyslParserListener) ExitEnum_stmts(ctx *Enum_stmtsContext) {}
-
 // EnterEnum is called when production enum is entered.
 func (s *BaseSyslParserListener) EnterEnum(ctx *EnumContext) {}
 

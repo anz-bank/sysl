@@ -118,7 +118,7 @@ apps: {
      }
      end: {
       line: 9
-      col: 1
+      col: 5
      }
     }
     source_contexts: {
@@ -129,6 +129,95 @@ apps: {
      }
      end: {
       line: 9
+      col: 5
+     }
+    }
+   }
+  }
+  types: {
+   key: "enum5"
+   value: {
+    enum: {
+     items: {
+      key: "baz"
+      value: 1
+     }
+    }
+    attrs: {
+     key: "attr"
+     value: {
+      s: "val"
+      source_context: {
+       file: "tests/enum.sysl"
+       start: {
+        line: 10
+        col: 16
+       }
+       end: {
+        line: 10
+        col: 21
+       }
+      }
+      source_contexts: {
+       file: "tests/enum.sysl"
+       start: {
+        line: 10
+        col: 16
+       }
+       end: {
+        line: 10
+        col: 21
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "foo"
+     value: {
+      s: "bar"
+      source_context: {
+       file: "tests/enum.sysl"
+       start: {
+        line: 11
+        col: 15
+       }
+       end: {
+        line: 11
+        col: 20
+       }
+      }
+      source_contexts: {
+       file: "tests/enum.sysl"
+       start: {
+        line: 11
+        col: 15
+       }
+       end: {
+        line: 11
+        col: 20
+       }
+      }
+     }
+    }
+    source_context: {
+     file: "tests/enum.sysl"
+     start: {
+      line: 9
+      col: 4
+     }
+     end: {
+      line: 13
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/enum.sysl"
+     start: {
+      line: 9
+      col: 4
+     }
+     end: {
+      line: 13
       col: 1
      }
     }
@@ -138,16 +227,16 @@ apps: {
    file: "tests/enum.sysl"
    start: {}
    end: {
-    line: 7
-    col: 37
+    line: 11
+    col: 20
    }
   }
   source_contexts: {
    file: "tests/enum.sysl"
    start: {}
    end: {
-    line: 7
-    col: 37
+    line: 11
+    col: 20
    }
   }
  }

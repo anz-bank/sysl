@@ -1,6 +1,6 @@
 #!/usr/bin/env node -r ts-node/register
 
-// To run this TypeScript source, use:
+// To run this TypeScript source, execute it directly, or use:
 // $ node -r ts-node/register src/cli/main.ts [command] [options]
 
 import { program } from "@commander-js/extra-typings";

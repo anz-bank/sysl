@@ -65,6 +65,7 @@ describe("Constructors", () => {
 
     test.concurrent("New Annotation", () => {
         expect(new Annotation("foo", "bar")).toMatchObject({ name: "foo", value: "bar" });
+        expect(new Annotation("foo", "C:\\\\bar")).toMatchObject({ name: "foo", value: "C:\\\\bar" });
     });
 
     test.concurrent("New Tag", () => {
@@ -101,6 +102,10 @@ describe("Serialization", () => {
         test.concurrent("escaped quotes", () => {
             const anno = new Annotation("foo", `"bar"`);
             expect(anno.toSysl()).toEqual(`foo = "\\"bar\\""`);
+        });
+        test.concurrent("escaped backslash", () => {
+            const anno = new Annotation("proto_options", ["key = Foo\\\\Bar"]);
+            expect(anno.toSysl()).toEqual(`proto_options = ["key = Foo\\\\Bar"]`);
         });
     });
 });
@@ -202,7 +207,7 @@ describe("Roundtrip", () => {
             `),
         ArrayAnno: realign(`
             App:
-                @name = ["value1", "value2"]
+                @name = ["value1", "value2", "value3 = C:\\\\value\\\\4"]
             `),
         NestedArrayAnno: realign(`
             App:
@@ -409,7 +414,7 @@ describe("Roundtrip", () => {
                         @anno2 = "2"
                         @anno1 = "1"
                     Field1 <: int
-            
+
                 !table Table1:
                     ...
 
@@ -508,9 +513,9 @@ describe("Cloning", () => {
             App1:
                 @anno1 = "value1"
                 @annoArr1 = ["v1", ["v2"]]
-            
+
             App2:
-                ...    
+                ...
         `));
 
         const app1 = model.getApp("App1");
@@ -530,7 +535,7 @@ describe("Cloning", () => {
             App1:
                 @anno1 = "value1"
                 @annoArr1 = ["v1", ["v2"]]
-            
+
             App2:
                 @anno2 = "value2"
                 @annoArr2 = ["v3", ["v4"]]
@@ -541,20 +546,20 @@ describe("Cloning", () => {
         const model = await Model.fromText(realign(`
             App1 [~tag1]:
                 ...
-            
+
             App2:
-                ...    
+                ...
         `));
 
         const clonedTag = model.getApp("App1")!.tags[0].clone();
         clonedTag.name = "tag2";                            // Modify name to ensure originals don't change
-        
+
         model.getApp("App2").tags.push(clonedTag);
 
         expect(model.toSysl()).toEqual(realign(`
             App1 [~tag1]:
                 ...
-            
+
             App2 [~tag2]:
                 ...
         `));
@@ -566,7 +571,7 @@ describe("Cloning", () => {
                 !type Type1:
                     Field1 <: int [~tag1]:
                         @anno = "value"
-            
+
             App2:
                 !type Type2:
                     ...
@@ -585,7 +590,7 @@ describe("Cloning", () => {
                 !type Type1:
                     Field1 <: int [~tag1]:
                         @anno = "value"
-            
+
             App2:
                 !type Type2:
                     Field2 <: int [~tag2]:
@@ -599,7 +604,7 @@ describe("Cloning", () => {
                 !type Type1:
                     Field1 <: int [~tag1]:
                         @anno = "value"
-            
+
             App2:
                 !type Type2:
                     ...
@@ -616,7 +621,7 @@ describe("Cloning", () => {
                 !type Type1:
                     Field1 <: int [~tag1]:
                         @anno = "value"
-            
+
             App2:
                 !type Type2:
                     Field2 <: int
@@ -629,7 +634,7 @@ describe("Cloning", () => {
                 !table Type1 [~tag1]:
                     @anno = "value1"
                     Field1 <: int
-            
+
             App2:
                 ...
         `));
@@ -648,7 +653,7 @@ describe("Cloning", () => {
                 !table Type1 [~tag1]:
                     @anno = "value1"
                     Field1 <: int
-            
+
             App2:
                 !table Type2 [~tag2]:
                     @anno2 = "value2"
@@ -678,7 +683,7 @@ describe("Cloning", () => {
                 @anno = "value1"
                 !table Type1:
                     Field1 <: int
-            
+
             App2 [~tag2]:
                 @anno2 = "value2"
                 !table Type2:
@@ -696,7 +701,7 @@ describe("Cloning", () => {
                     sequence of decimal(5.8)
                     RestEndpoint.Type
             App2:
-                ...    
+                ...
         `));
 
         const clonedUnion = model.getApp("App1").children.find(c => c.name == "Union1")!.clone() as Union;
@@ -705,7 +710,7 @@ describe("Cloning", () => {
         clonedUnion.getAnno("anno").value = "value2";
         clonedUnion.members = clonedUnion.members
             .filter(m => !(m instanceof Primitive && m.primitive == TypePrimitive.STRING));
-        
+
         model.getApp("App2").children.push(clonedUnion);
 
         expect(model.toSysl()).toEqual(realign(`
@@ -716,7 +721,7 @@ describe("Cloning", () => {
                     string
                     sequence of decimal(5.8)
                     RestEndpoint.Type
-            
+
             App2:
                 !union Union2 [~tag2]:
                     @anno = "value2"
@@ -733,7 +738,7 @@ describe("Cloning", () => {
                     @anno = "value1"
                     int
             App2:
-                ...    
+                ...
         `));
 
         const clonedAlias = model.getApp("App1").children.find(c => c.name == "Alias1")!.clone() as Alias;
@@ -749,7 +754,7 @@ describe("Cloning", () => {
                 !alias Alias1 [~tag1]:
                     @anno = "value1"
                     int
-            
+
             App2:
                 !alias Alias2 [~tag2]:
                     @anno = "value2"

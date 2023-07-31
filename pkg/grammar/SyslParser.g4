@@ -390,8 +390,11 @@ alias: ALIAS name_str attribs_or_modifiers? COLON (
 
 // (Name | NativeDataTypes) is used as a quick hack to allow some keywords in enums
 enumeration: (Name | NativeDataTypes) COLON DIGITS;
-enum_stmts : INDENT (enumeration | WHATEVER)+ DEDENT;
-enum       : ENUM Name attribs_or_modifiers? COLON (WHATEVER | enum_stmts);
+enum       : ENUM Name attribs_or_modifiers? COLON (WHATEVER |
+               INDENT
+                 annotation*
+                 (enumeration+ | WHATEVER)
+               DEDENT);
 
 app_decl
   locals [bool check]:

@@ -3243,12 +3243,8 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 
 	// Build a map of enumerations. If there are none (due to WHATEVER
 	// as the only content), don't add the enum type to the sysl AST.
-	stmts, ok := ctx.Enum_stmts().(*parser.Enum_stmtsContext)
-	if !ok {
-		return
-	}
 	items := map[string]int64{}
-	for _, enumeration := range stmts.AllEnumeration() {
+	for _, enumeration := range ctx.AllEnumeration() {
 		e := enumeration.(*parser.EnumerationContext)
 		var name string
 		if e.Name() != nil {
@@ -3275,7 +3271,23 @@ func (s *TreeShapeListener) EnterEnum(ctx *parser.EnumContext) {
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		enumType.Attrs = s.makeAttributeArray(attribs)
 	}
+	if ctx.Annotation(0) != nil {
+		if enumType.Attrs == nil {
+			enumType.Attrs = map[string]*sysl.Attribute{}
+		}
+	}
+	s.pushScope(enumType)
+
 	s.currentApp().Types[s.currentTypePath.Get()] = enumType
+}
+
+// ExitEnum is called when production enum is exited.
+func (s *TreeShapeListener) ExitEnum(ctx *parser.EnumContext) {
+	if s.currentApp().Types[s.currentTypePath.Get()] == nil {
+		return
+	}
+	s.applyAnnotations(ctx.AllAnnotation())
+	s.popScope()
 }
 
 // EnterAlias is called when production alias is entered.
