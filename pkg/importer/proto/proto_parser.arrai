@@ -135,7 +135,7 @@ let evalLabel = \parsed parsed.'' rank (:.@) ;
 
 let rec evalConstant = \parsed
     cond parsed {
-        (:strLit, ...): (s: strLit.''(1) rank (:.@)),
+        (:strLit, ...): (s: //re.compile(`\\\\`).sub(`\`, strLit.''(1) rank (:.@))),
         (:intLit, ...): evalConstant(intLit),
         (:decimalLit, ...): (d: //eval.value(decimalLit.'' rank (:.@))),
         (:octalLit, ...): (o: //eval.value(octalLit.'' rank (:.@))),

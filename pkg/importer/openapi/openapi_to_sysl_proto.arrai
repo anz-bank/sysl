@@ -21,7 +21,6 @@ let (
 ) = //{./util};
 
 let intOrFloatRegex = //re.compile(`^(int|float)`);
-let escapeRegex = //re.compile(`\\`);
 
 let descAnno          = 'description';
 let mediatypeAnno     = 'mediatype';
@@ -262,8 +261,7 @@ let specialAnno = {
             let example = t('example')?:{} || t(exampleAnno)?:{};
             example && {exampleAnno: annoValToAnnoValMessage(example)}
         ;
-        # FIXME: sysl doesn't allow proper escaping in annotations
-        let regex = let regex = t('pattern')?:{}; regex && {'regex': (s: escapeRegex.sub('\\\\', regex.s))};
+        let regex = cond t {{'pattern': v, ...}: {'regex': v}};
 
         let additionalAttrs = t(syslAttrs)?:{};
         let additionalTags = type.attrs?(patternsAnno)?:(a: (elt: [])) +> (a: (elt ++: additionalAttrs(patternsAnno)?.a.elt:[]));

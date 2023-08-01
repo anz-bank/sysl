@@ -1,0 +1,22 @@
+let toProto = //{./openapi_to_sysl_proto};
+
+(
+    oapiToAppMessage:
+        let config = (packageName: "Foo\\Bar");
+        let oapi = {'info': {
+            'title': (s: `API\Title`),
+            'version': (s: `1\2\3`),
+            'description': (s: `Escapes: backslash: \, quote: ", pattern: \w+, newline: next line`)}
+        };
+        let appName = "TestApp";
+        let out = toProto(config, //{./simplify_oapi}(config, oapi)).oapiToAppMessage(appName);
+        let appAttrs = out.apps(appName).attrs;
+        # Strings are not escaped in memory, only on serialization.
+        [
+            //test.assert.equal(`API\Title`, out.apps(appName).long_name),
+            //test.assert.equal(`Foo\Bar`, appAttrs('package').s),
+            //test.assert.equal(`1\2\3`, appAttrs('version').s),
+            //test.assert.equal(`Escapes: backslash: \, quote: ", pattern: \w+, newline: next line`, appAttrs('description').s),
+        ]
+    ,
+)
