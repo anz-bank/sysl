@@ -8,7 +8,7 @@ import { spawnSysl } from "../common/spawn";
 
 program
     .executableDir(__dirname)
-    .name("sysl")
+    .name("syslsdk")
     .command("import [options]", "import a file into Sysl")
     .on("command:*", async command => process.stdout.write(await spawnSysl(command)))
     .parse();
