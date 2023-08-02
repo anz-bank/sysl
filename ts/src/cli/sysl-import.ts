@@ -1,4 +1,4 @@
-#!/usr/bin/env node -r ts-node/register
+#!/usr/bin/env -S node -r ts-node/register
 
 import { program } from "@commander-js/extra-typings";
 import fs from "fs/promises";
