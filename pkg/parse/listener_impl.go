@@ -11,11 +11,12 @@ import (
 	"strings"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/anz-bank/golden-retriever/reader/remotefs"
+	"github.com/sirupsen/logrus"
 
 	parser "github.com/anz-bank/sysl/pkg/grammar"
-	sysl "github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/sirupsen/logrus"
 )
 
 const patternsKey = "patterns"
@@ -3396,6 +3397,10 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 			filename = "/" + path.Join(base, filename)
 		} else {
 			filename = filepath.Join(base, filename)
+			// if it's a relative path but reader will think its remote then add ./
+			if base == "." && filename[:1] != "." && (&remotefs.RemoteFs{}).IsRemote(filename) {
+				filename = "./" + filename
+			}
 		}
 		if !strings.Contains(filename, "@") && s.sc.version != "" {
 			filename += "@" + s.sc.version

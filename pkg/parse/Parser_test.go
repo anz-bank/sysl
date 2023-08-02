@@ -875,6 +875,28 @@ components:
 	require.NotNil(t, c.Apps["Four"])
 }
 
+func TestImportWithUrlLikePath(t *testing.T) {
+	t.Parallel()
+
+	one := `
+import sub.folder/one/two/two
+One:
+	...
+`
+	r := mockReader{contents: map[string]mockContent{
+		"one.sysl":                      {one, retriever.ZeroHash, ""},
+		`./sub.folder/one/two/two.sysl`: {two, retriever.ZeroHash, ""},
+	}}
+
+	p := NewParser()
+
+	c, err := p.Parse("one", r)
+	require.NoError(t, err)
+	require.Equal(t, 2, len(c.Apps))
+	require.NotNil(t, c.Apps["One"])
+	require.NotNil(t, c.Apps["Two"])
+}
+
 func TestLintValid(t *testing.T) {
 	assertLintLogs(t,
 		"tests/lint_valid.sysl", "")
@@ -1231,10 +1253,6 @@ One:
 	_:
 		...
 `
-	two := `
-Two:
-	...
-`
 	nottwo := `
 NotTwo:
 	...
@@ -1256,6 +1274,10 @@ NotTwo:
 }
 
 const two = `
+Two:
+	...
+`
+const twoImport = `
 import three.sysl
 Two:
 	...
@@ -1281,10 +1303,6 @@ import 3.sysl
 One:
 	_:
 		...
-`
-	two := `
-Two:
-	...
 `
 
 	sha := randomSha
@@ -1322,7 +1340,7 @@ One:
 	require.NoError(t, err)
 	r := mockReader{contents: map[string]mockContent{
 		"./one.sysl":                              {one, retriever.ZeroHash, ""},
-		"//github.com/org/repo/two.sysl@master":   {two, h, "master"},
+		"//github.com/org/repo/two.sysl@master":   {twoImport, h, "master"},
 		"//github.com/org/repo/three.sysl@master": {three_, h, "master"},
 	}}
 
@@ -1391,7 +1409,7 @@ One:
 	require.NoError(t, err)
 	r := mockReader{contents: map[string]mockContent{
 		"./one.sysl":                              {one, retriever.ZeroHash, ""},
-		"//github.com/org/repo/two.sysl@branch":   {two, h, "branch"},
+		"//github.com/org/repo/two.sysl@branch":   {twoImport, h, "branch"},
 		"//github.com/org/repo/three.sysl@branch": {three, h, "branch"},
 	}}
 
@@ -1424,7 +1442,7 @@ One:
 	require.NoError(t, err)
 	r := mockReader{contents: map[string]mockContent{
 		"./one.sysl": {one, retriever.ZeroHash, ""},
-		"//github.com/org/repo/two.sysl@feature/x":   {two, h, "feature/x"},
+		"//github.com/org/repo/two.sysl@feature/x":   {twoImport, h, "feature/x"},
 		"//github.com/org/repo/three.sysl@feature/x": {three, h, "feature/x"},
 	}}
 
