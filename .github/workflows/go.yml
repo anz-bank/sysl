@@ -3,12 +3,12 @@ name: Build and Test
 on: [pull_request]
 
 env:
-  GITHUB_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
-  SYSL_GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}
-  SYSL_PLANTUML:       http://www.plantuml.com/plantuml
-  GOPROXY:             ${{ vars.GOPROXY }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SYSL_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SYSL_PLANTUML: http://www.plantuml.com/plantuml
+  GOPROXY: ${{ vars.GOPROXY }}
   NPM_CONFIG_REGISTRY: ${{ vars.NPM_CONFIG_REGISTRY }}
-  DOCKER_BUILD_ARGS:   ${{ vars.DOCKER_BUILD_ARGS }}
+  DOCKER_BUILD_ARGS: ${{ vars.DOCKER_BUILD_ARGS }}
 
 jobs:
   build-and-test:
@@ -166,12 +166,14 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Tidy
         run: go mod tidy
 
       - name: Generate intermediate files
-        run: make generate
+        run: make -B generate
 
       - name: Run golangci-lint
         run: make lint-docker
