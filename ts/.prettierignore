@@ -9,3 +9,5 @@ src/model/constraint.ts
 src/model/element.ts
 src/model/model.test.ts
 src/model/statement.ts
+src/model/elementRef.test.ts
+src/common/format.test.ts

@@ -91,10 +91,15 @@ export class PbScope {
     @jsonArrayMember(String) path!: string[];
     @jsonMember appname!: PbAppName;
 
-    toModel(): ElementRef {
+    toModel(parentRef?: ElementRef): ElementRef {
         const [typeName, fieldName] = this.path;
-        const namespace = this.appname?.part.slice(0, -1) ?? [];
-        const appName = this.appname?.part.at(-1) ?? "";
+        let namespace = this.appname?.part.slice(0, -1) ?? [];
+        let appName = this.appname?.part.at(-1) ?? "";
+
+        if (!appName && parentRef?.appName) {
+            appName = parentRef?.appName;
+            namespace = [...parentRef.namespace];
+        }
 
         return new ElementRef(namespace, appName, typeName, fieldName);
     }
@@ -173,22 +178,33 @@ export class PbTypeDef {
         );
     }
 
-    static defsToFields(attrDefs: Map<string, PbTypeDef>): Field[] {
-        return sortByLocation(Array.from(attrDefs).map(([key, value]) => value?.toField(key)));
+    getContext(): PbScope | undefined {
+        return (
+            this.typeRef?.context ||
+            this.set?.typeRef?.context ||
+            this.sequence?.typeRef?.context ||
+            this.list?.type.getContext()
+        );
     }
 
-    toValue(): FieldValue {
+    static defsToFields(attrDefs: Map<string, PbTypeDef>): Field[] {
+        return sortByLocation(
+            Array.from(attrDefs).map(([key, value]) => value?.toField(key, value.getContext()?.toModel()))
+        );
+    }
+
+    toValue(parentRef: ElementRef | undefined): FieldValue {
         const collection = this.set || this.sequence || this.list;
-        if (collection) return new CollectionDecorator(collection.toModel(), !!this.set);
+        if (collection) return new CollectionDecorator(collection.toValue(parentRef), !!this.set);
         if (this.primitive) return new Primitive(this.primitive, this.constraint?.at(0)?.toModel());
-        if (this.typeRef) return this.typeRef.ref.toModel();
+        if (this.typeRef) return this.typeRef.ref.toModel(parentRef);
         throw new Error(`Error converting type: ${JSON.stringify(this)}`);
     }
 
     // `isInner` specifies whether a type exists within something else and is not a type definition.
     // It is true by default, meaning the type is a nested definition or a parameter.
     // When it is false, it means it is a top level `Type` definition and therefore may be an `Alias`.
-    toModel(name: string = "", isInner: boolean = true): Element {
+    toModel(name: string = "", isInner: boolean = true, parentRef?: ElementRef): Element {
         const params = {
             tags: sortByLocation(getTags(this.attrs)),
             annos: sortByLocation(getAnnos(this.attrs)),
@@ -203,14 +219,16 @@ export class PbTypeDef {
             return new Enum(name, values, params);
         }
         if (this.oneOf) {
-            const values = this.oneOf.type.map(t => t.toValue());
+            const values = this.oneOf.type.map(t => t.toValue(parentRef));
             return new Union(name, values, params);
         }
-        return isInner ? new Field(name, this.toValue(), this.opt, params) : new Alias(name, this.toValue(), params);
+        return isInner
+            ? new Field(name, this.toValue(parentRef), this.opt, params)
+            : new Alias(name, this.toValue(parentRef), params);
     }
 
-    toField(name: string): Field {
-        const field = this.toModel(name);
+    toField(name: string, parentRef: ElementRef | undefined): Field {
+        const field = this.toModel(name, true, parentRef);
         if (!(field instanceof Field)) throw new Error("Cannot produce Field, requested PbTypeDef is not a Field");
         return field;
     }

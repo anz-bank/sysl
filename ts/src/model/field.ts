@@ -17,7 +17,8 @@ export class Field extends Element {
     }
 
     override toSysl(): string {
-        let value: string = `${this.value.toSysl(true)}${this.optional ? "?" : ""}`;
+        let value: string = this.value.toSysl(true, this.parent ? this.toRef() : undefined);
+        value += this.optional ? "?" : "";
         //TODO: Everyone who uses Field with empty name should use FieldValue instead.
         let name = this.name ? `${this.safeName} <:` : "";
         return this.render(name, "", value, false);

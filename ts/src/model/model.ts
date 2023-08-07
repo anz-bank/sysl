@@ -142,10 +142,10 @@ export class Model implements IRenderable {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
 
         const app = this.apps.find(a => parsed.appsEqual(a.toRef()));
-        if (!app || parsed.kind == ElementKind.App) return app;
+        if (!app || parsed.isApp) return app;
 
         const type = app.types.find(t => parsed.typesEqual(t.toRef()));
-        if (!type || parsed.kind == ElementKind.Type) return type;
+        if (!type || parsed.isType) return type;
 
         return type.children.find(f => parsed.equals(f.toRef()));
     }
@@ -160,7 +160,7 @@ export class Model implements IRenderable {
      */
     findApp(ref: ElementID): Application | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
-        if (parsed.kind != ElementKind.App) throw new Error(`Supplied reference '${ref.toString()} is not an app.`);
+        if (!parsed.isApp) throw new Error(`Supplied reference '${ref.toString()} is not an app.`);
         return this.findElement(parsed) as Application;
     }
 
@@ -174,7 +174,7 @@ export class Model implements IRenderable {
      */
     findType(ref: ElementID): Type | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
-        if (parsed.kind != ElementKind.Type) throw new Error(`Supplied reference '${ref.toString()} is not a type.`);
+        if (!parsed.isType) throw new Error(`Supplied reference '${ref.toString()} is not a type.`);
         return this.findElement(parsed) as Type;
     }
 
@@ -188,7 +188,7 @@ export class Model implements IRenderable {
      */
     findField(ref: ElementID): Field | undefined {
         const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
-        if (parsed.kind != ElementKind.Field) throw new Error(`Supplied reference '${ref.toString()} is not a field.`);
+        if (!parsed.isField) throw new Error(`Supplied reference '${ref.toString()} is not a field.`);
         return this.findElement(parsed) as Field;
     }
 

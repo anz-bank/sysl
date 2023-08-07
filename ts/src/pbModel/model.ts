@@ -43,14 +43,15 @@ export class PbApplication {
     toModel(): Application {
         const name = this.name.part.at(-1);
         if (!name) throw new Error("Encountered empty app name.");
-        return new Application(new ElementRef(this.name.part.slice(0, -1), name), {
+        const appRef = new ElementRef(this.name.part.slice(0, -1), name);
+        return new Application(appRef, {
             endpoints: sortByLocation(
                 Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
                     .filter(([, e]) => e.name != "...") // Bug in Sysl where ellipsis under app appears as endpoint
                     .map(([, e]) => e.toModel(this.name.part))
             ),
             types: sortByLocation(
-                [...(this.types ?? new Map<string, PbTypeDef>())].map(([name, t]) => t.toModel(name, false))
+                [...(this.types ?? new Map<string, PbTypeDef>())].map(([name, t]) => t.toModel(name, false, appRef))
             ),
             locations: this.sourceContexts,
             tags: sortByLocation(getTags(this.attrs)),

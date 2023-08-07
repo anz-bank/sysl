@@ -11,7 +11,7 @@ export class Alias extends Element {
     }
 
     toSysl(): string {
-        return this.render("!alias", this.value.toSysl());
+        return this.render("!alias", this.value.toSysl(true, this.parent?.toRef()));
     }
 
     override toString(): string {

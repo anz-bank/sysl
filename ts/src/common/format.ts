@@ -28,19 +28,35 @@ const keywords = [
     "any",
 ];
 
-/** Escapes characters that are unsafe to use in Sysl names. */
+/**
+ * Converts a given identifier to a safe name which can be used in a Sysl file. Any characters that is disallowed in
+ * safe names will be escaped. Additionally, if the resulting name is still disallowed due to it being a reserved
+ * keyword or due to it starting with a digit, the first character will be escaped as well.
+ * @param name A string containing the identifier to convert.
+ * @returns A string containing a safe name.
+ */
 export function toSafeName(name: string): string {
-    const percentEncode = (m: string) => `%${m.charCodeAt(0).toString(16).toUpperCase()}`;
-    name = name.replaceAll(/([^-a-zA-Z0-9_])/g, percentEncode);
-    if (keywords.includes(name)) {
-        name += "_";
-    }
-    return name;
+    const encode = (m: string) => `%${m.charCodeAt(0).toString(16).toUpperCase()}`;
+    name = name.replaceAll(/(^[0-9])|([^-a-zA-Z0-9_])/g, encode);
+    return keywords.includes(name) ? encode(name[0]) + name.slice(1) : name;
 }
 
-/** Unescapes characters in Sysl names that are unsafe to use in Sysl names. */
+/**
+ * Converts a given safe name to it's original identifier by decoding escape sequences in the given string.
+ * @param name A string containing the safe name to convert.
+ * @returns A string containing the identifier.
+ */
 export function fromSafeName(name: string): string {
-    return name.trim().replaceAll(/%([0-9A-Fa-f]{2})/g, m => String.fromCharCode(parseInt(m.slice(1), 16)));
+    return decodeURIComponent(name);
+}
+
+/**
+ * Determine if a given string is a safe name which can be directly used in a Sysl file.
+ * @param name The string to test for safety.
+ * @returns True if the string is a safe name, otherwise false.
+ */
+export function isSafeName(name: string): boolean {
+    return /^([-A-Za-z_]|%[0-9A-Fa-f]{2})([-A-Za-z0-9_]|%[0-9A-Fa-f]{2})*$/.test(name) && !keywords.includes(name);
 }
 
 /**

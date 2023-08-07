@@ -17,7 +17,7 @@ export class Application extends ParentElement<Element> {
         const parsed = typeof name == "string" ? ElementRef.parse(name) : name;
         super(parsed.appName, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model);
 
-        if (parsed.kind != ElementKind.App) throw Error(`Expected name to be of kind 'App' but got '${parsed.kind}'.`);
+        if (!parsed.isApp) throw Error(`Expected name to be of kind 'App' but got '${parsed.kind}'.`);
         if (parsed.namespace.length && p.namespace) throw Error("Found namespace in both 'name' and 'namespace'.");
 
         this.namespace = [...(p.namespace ?? parsed.namespace)];

@@ -15,6 +15,7 @@ import { CloneContext, ModelFilters } from "./clone";
 import { Union } from "./union";
 import { Primitive, TypePrimitive } from "./primitive";
 import { Alias } from "./alias";
+import { CollectionDecorator } from "./decorator";
 
 const allPath = "../ts/test/all.sysl";
 let allModel: Model;
@@ -98,16 +99,109 @@ describe("Serialization", () => {
         });
     });
 
-    describe("Annotation", () => {
-        test.concurrent("escaped quotes", () => {
-            const anno = new Annotation("foo", `"bar"`);
-            expect(anno.toSysl()).toEqual(`foo = "\\"bar\\""`);
+    describe("Field", () => {
+        test.concurrent("typed with absolute path", async () => {
+            const model = await Model.fromText(realign(`
+                Company :: App:
+                    !table Customer:
+                        HomeAddress <: Company::App.Address
+                    !type Address:
+                        City <: string
+            `));
+            expect(model.getField("Company::App.Customer.HomeAddress").value).toEqual(model.getType("Company::App.Address").toRef());
+        });
+
+        test.concurrent("typed with relative path", async () => {
+            const model = await Model.fromText(realign(`
+                Company :: App:
+                    !table Customer:
+                        HomeAddress <: Address
+                    !type Address:
+                        City <: string
+            `));
+            expect(model.getField("Company::App.Customer.HomeAddress").value).toEqual(model.getType("Company::App.Address").toRef());
+        });
+
+        test.concurrent("typed with collection with absolute path", async () => {
+            const model = await Model.fromText(realign(`
+                Company :: App:
+                    !table Customer:
+                        HomeAddress <: sequence of Company::App.Address
+                    !type Address:
+                        City <: string
+            `));
+            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
+            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), false));
+        });
+
+        test.concurrent("typed with collection with relative path", async () => {
+            const model = await Model.fromText(realign(`
+                Company :: App:
+                    !table Customer:
+                        HomeAddress <: sequence of Address
+                    !type Address:
+                        City <: string
+            `));
+            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
+            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), false));
+        });
+
+        test.concurrent("typed with collection-list with relative path", async () => {
+            const model = await Model.fromText(realign(`
+                Company :: App:
+                    !table Customer:
+                        HomeAddress(1..1) <: sequence of Address
+                    !type Address:
+                        City <: string
+            `));
+            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
+            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), false));
+        });
+
+        test.concurrent("typed with set-list with relative path", async () => {
+            const model = await Model.fromText(realign(`
+                Company :: App:
+                    !table Customer:
+                        HomeAddress(1..1) <: set of Address
+                    !type Address:
+                        City <: string
+            `));
+            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
+            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), true));
+        });
+
+        test.concurrent("bigger example", async () => {
+            const model = await Model.fromText(realign(`
+                App:
+                    !type ResponseData:
+                        group <: string
+                        list(1..1) <: sequence of DataWrapper
+                    !type DataWrapper:
+                        data <: Data?
+                    !type Data:
+                        merchants <: sequence of Customer?
+                        info <: string
+                        responseMsg <: string
+                    !type Customer:
+                        name <: string
+            `));
+            const fieldType = model.getField("App.ResponseData.list").value as CollectionDecorator;
+            expect(fieldType).toEqual(new CollectionDecorator(model.getType("App.DataWrapper").toRef(), false));
         });
         test.concurrent("escaped backslash", () => {
             const anno = new Annotation("proto_options", ["key = Foo\\\\Bar"]);
             expect(anno.toSysl()).toEqual(`proto_options = ["key = Foo\\\\Bar"]`);
         });
     });
+
+    test.concurrent("Special value handling", () => {
+        expect(new Annotation("foo", `"bar"`).toSysl()).toEqual(`foo = "\\"bar\\""`);
+        expect(new Annotation("foo", "bar\\baz").toSysl()).toEqual(`foo = "bar\\baz"`);
+        expect(new Application(new ElementRef([], "App .")).toSysl()).toEqual("App%20%2E:\n    ...");
+        expect(new Application(new ElementRef([], "int")).toSysl()).toEqual("%69nt:\n    ...");
+        expect(new Application(new ElementRef([], "1App")).toSysl()).toEqual("%31App:\n    ...");
+    });
+    
 });
 
 describe("Parent and Model", () => {
@@ -379,16 +473,46 @@ describe("Roundtrip", () => {
                 !alias A:
                     int
             `),
-        TypeRef: realign(`
-            Namespace :: App:
-                !type Type:
-                    shortRef <: Type
-                    fullRef <: Namespace::App.Type
+        TypeRef: {
+            input: realign(`
+                Namespace :: App:
+                    !type Type:
+                        shortRef <: Type
+                        fullRef <: Namespace::App.Type
+                        extRef <: Namespace::External.Type
+                
+                Namespace :: External:
+                    !type Type:
+                        ...
             `),
+            output: realign(`
+                Namespace :: App:
+                    !type Type:
+                        shortRef <: Type
+                        fullRef <: Type
+                        extRef <: Namespace::External.Type
+                
+                Namespace :: External:
+                    !type Type:
+                        ...
+                `),
+        },
         UnsafeNames: realign(`
             %28App%29Name%21:
                 !type %28Type%29Name%21:
-                    %28Field%29Name%21 <: %28App%29Name%21.%28Type%29Name%21 [~%28Tag%29Name%21]
+                    %28Field%29Name%21 <: %28Namespace%21::%28App%29Name2%21.%28Type%29Name%21 [~%28Tag%29Name%21]
+
+            %28Namespace%21 :: %28App%29Name2%21:
+                !type %28Type%29Name%21:
+                    ...
+            
+            %69nt :: %73tring :: %64ate:
+                !type %62ool:
+                    %61ny <: any
+
+            %31Ns :: %32Ns :: %33App:
+                !type %34Type:
+                    %35Field <: int
             `),
         // Lists are not well supported, so we substitute them when serializing to source.
         List: {
@@ -401,6 +525,30 @@ describe("Roundtrip", () => {
                 App:
                     !type Type:
                         list <: sequence of string
+                `),
+        },
+        ListSequence: {
+            input: realign(`
+                App:
+                    !type Type:
+                        list(1..1) <: sequence of string
+                `),
+            output: realign(`
+                App:
+                    !type Type:
+                        list <: sequence of string
+                `),
+        },
+        ListSet: {
+            input: realign(`
+                App:
+                    !type Type:
+                        list(1..1) <: set of string
+                `),
+            output: realign(`
+                App:
+                    !type Type:
+                        list <: set of string
                 `),
         },
         PreservesOrder: realign(`
@@ -647,6 +795,7 @@ describe("Cloning", () => {
         clonedType.children[0].name = "Field2"             //
 
         model.getApp("App2").children.push(clonedType);
+        model.attachSubitems();
 
         expect(model.toSysl()).toEqual(realign(`
             App1:
@@ -965,7 +1114,7 @@ describe("Cloning", () => {
                   '[~tag]': Tag
                 'sequence <: sequence of string': Field
                   '[~tag]': Tag
-                'aliasSequence <: AliasSequence': Field
+                'aliasSequence <: Types.AliasSequence': Field
                   '[~tag]': Tag
                 'with_anno <: string': Field
                   '[~tag]': Tag
