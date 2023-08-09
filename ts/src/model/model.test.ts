@@ -288,7 +288,7 @@ describe("Roundtrip", () => {
             `),
         StringAnnoEscaped: realign(`
             App:
-                @name = "a \\"value\\""
+                @name = "hello;,?:@&=+$.!~*'()\\"/\\\\ world"
             `),
         MultilineAnno: realign(`
             App:
@@ -298,6 +298,7 @@ describe("Roundtrip", () => {
                     |   across
                     |
                     |    multiple lines
+                    |     with special chars: hello;,?:@&=+$.!~*'()"/\\ world
             `),
         ArrayAnno: realign(`
             App:

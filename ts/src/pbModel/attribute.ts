@@ -27,7 +27,7 @@ export class PbAttribute {
      * character. Therefore we re-esacpe the backslashes to avoid accidentally escaping something else with them.
      */
     static deserializeString(input?: string): string | undefined {
-        return input?.replaceAll("\\", "\\\\");
+        return input?.includes("\n") ? input : input?.replaceAll("\\", "\\\\");
     }
 
     getAnnoValue(): AnnoValue {
