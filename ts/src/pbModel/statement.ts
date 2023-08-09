@@ -23,17 +23,18 @@ import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
 import { PbTypeDef, PbValue } from "./type";
+import { ElementRef } from "../model";
 
 @jsonObject
 export class PbParam {
     @jsonMember name!: string;
     @jsonMember(() => PbTypeDef) type!: PbTypeDef;
 
-    toModel(): Param {
+    toModel(parentRef: ElementRef): Param {
         return new Param(
             this.name,
             this.type.sourceContexts ?? [],
-            this.type.hasValue() ? this.type.toModel() : undefined
+            this.type.hasValue() ? this.type.toModel(undefined, undefined, parentRef) : undefined
         );
     }
 }
@@ -232,12 +233,12 @@ export class PbRestParams {
     @jsonArrayMember(PbParam) queryParam?: PbParam[];
     @jsonArrayMember(PbParam) urlParam?: PbParam[];
 
-    toModel(): RestParams {
+    toModel(parentRef: ElementRef): RestParams {
         return new RestParams({
             method: this.method,
             path: this.path,
-            queryParams: this.queryParam?.map(p => p.toModel()) ?? [],
-            urlParams: this.urlParam?.map(p => p.toModel()) ?? [],
+            queryParams: this.queryParam?.map(p => p.toModel(parentRef)) ?? [],
+            urlParams: this.urlParam?.map(p => p.toModel(parentRef)) ?? [],
         });
     }
 }
@@ -257,13 +258,14 @@ export class PbEndpoint {
     @jsonMember source?: PbAppName;
 
     toModel(appName: string[]): Endpoint {
+        const appRef = ElementRef.fromAppParts(appName);
         return new Endpoint(this.name, {
             longName: this.longName,
             docstring: this.docstring,
             isPubsub: this.isPubsub ?? false,
-            params: (this.param ?? []).filter(p => p.name || p.type).map(p => p.toModel()),
+            params: (this.param ?? []).filter(p => p.name || p.type).map(p => p.toModel(appRef)),
             statements: sortByLocation(this.stmt?.map(s => s.toModel(appName)) ?? []),
-            restParams: this.restParams?.toModel(),
+            restParams: this.restParams?.toModel(appRef),
             pubsubSource: this.source?.part ?? [],
             locations: this.sourceContexts,
             tags: getTags(this.attrs),

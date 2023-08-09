@@ -187,9 +187,9 @@ export class PbTypeDef {
         );
     }
 
-    static defsToFields(attrDefs: Map<string, PbTypeDef>): Field[] {
+    static defsToFields(attrDefs: Map<string, PbTypeDef>, parentRef?: ElementRef): Field[] {
         return sortByLocation(
-            Array.from(attrDefs).map(([key, value]) => value?.toField(key, value.getContext()?.toModel()))
+            Array.from(attrDefs).map(([key, value]) => value?.toField(key, value.getContext()?.toModel() ?? parentRef))
         );
     }
 
@@ -212,7 +212,13 @@ export class PbTypeDef {
         };
 
         const type = this.tuple || this.relation;
-        if (type) return new Type(name, !!this.relation, sortByLocation(PbTypeDef.defsToFields(type.attrDefs)), params);
+        if (type)
+            return new Type(
+                name,
+                !!this.relation,
+                sortByLocation(PbTypeDef.defsToFields(type.attrDefs, parentRef)),
+                params
+            );
         if (this.enum) {
             // Original order of enum items is not serialized, so assume value (number) order, since it's most common.
             const values = [...this.enum.items].map(([k, v]) => new EnumValue(k, v)).sort((a, b) => a.value - b.value);

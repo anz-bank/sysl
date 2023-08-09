@@ -356,6 +356,12 @@ describe("Roundtrip", () => {
                 SimpleEp (param <: Types.type):
                     ...
             `),
+        // TODO: Support relative refs in endpoint params
+        EndpointWithLocalNamedRefParam: realign(`
+            App:
+                SimpleEp (param <: App.type):
+                    ...
+            `),
         EndpointWithPrimitiveParamWithConstraints: realign(`
             App:
                 SimpleEp (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
@@ -431,6 +437,13 @@ describe("Roundtrip", () => {
             RestEndpoint:
                 /param:
                     PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
+                        ...
+            `),
+        // TODO: Support relative refs in endpoint params
+        RestEndpointWithComplexParamType: realign(`
+            RestEndpoint:
+                /param:
+                    POST (arg <: RestEndpoint.Customer):
                         ...
             `),
         Type: realign(`
@@ -569,6 +582,23 @@ describe("Roundtrip", () => {
             App1:
                 ...
             `),
+        // TODO: This is how the pb is generated from the Sysl binary, investigate further
+        InlineComplexType: {
+            input: realign(`
+                App:
+                    !type Type:
+                        Field <:
+                            Subfield <: int
+                `),
+            output: realign(`
+                App:
+                    !type Type:
+                        Field <: Field
+
+                    !type Type%2EField:
+                        Subfield <: int
+                `)
+        },
     };
 
     type SyslCase = { input: string; output: string };

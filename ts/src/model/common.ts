@@ -277,9 +277,9 @@ export class ElementRef implements IRenderable {
     with(parts: { namespace?: string[]; appName?: string; typeName?: string; fieldName?: string }): ElementRef {
         return new ElementRef(
             parts.namespace ?? this.namespace,
-            parts.appName == undefined ? this.appName : parts.appName,
-            parts.typeName == undefined ? this.typeName : parts.typeName,
-            parts.fieldName == undefined ? this.fieldName : parts.fieldName
+            parts.appName ?? this.appName,
+            parts.typeName ?? this.typeName,
+            parts.fieldName ?? this.fieldName
         );
     }
 
