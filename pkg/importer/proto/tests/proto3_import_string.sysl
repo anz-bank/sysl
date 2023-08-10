@@ -29,10 +29,10 @@ proto3:
         enum_field <: EnumAllowingAlias:
             @json_tag = "enumField"
             @rpcId = "3"
-        inner_message <: sequence of Inner:
+        inner_message <: sequence of Outer_Inner:
             @json_tag = "innerMessage"
             @rpcId = "2"
-        message_map <: set of Inner:
+        message_map <: set of Outer_Inner:
             @json_tag = "messageMap"
             @proto_map_key = "string"
             @rpcId = "5"

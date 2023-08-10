@@ -21,12 +21,19 @@ message Outer {
         array: [1, "string", {foo: "bar"}],
         object: {foo: "bar"}
     };
+
+    required int64 ival = 1;
+
     // Level 2
     // Description
-    message Inner {
+    message Middle {
         required int64 ival = 1;
+        message Inner {
+            required int64 ival = 1;
+        }
+        repeated Inner inner_message = 2;
     }
-    repeated Inner inner_message = 2;
+    repeated Middle middle_message = 2;
     optional EnumAllowingAlias enum_field = 3;
     map<int32, string> my_map = 4;
     extensions 20 to 30;

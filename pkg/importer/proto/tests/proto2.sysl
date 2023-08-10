@@ -31,18 +31,30 @@ proto2:
         enum_field <: EnumAllowingAlias?:
             @json_tag = "enumField"
             @rpcId = "3"
-        inner_message <: sequence of Inner:
-            @json_tag = "innerMessage"
+        ival <: int:
+            @json_tag = "ival"
+            @rpcId = "1"
+        middle_message <: sequence of Outer_Middle:
+            @json_tag = "middleMessage"
             @rpcId = "2"
         my_map <: set of string:
             @json_tag = "myMap"
             @proto_map_key = "int32"
             @rpcId = "4"
     
-    !type Outer_Inner:
+    !type Outer_Middle:
         @description =:
             | Level 2
             | Description
+        @source_path = "proto/tests/proto2.proto"
+        inner_message <: sequence of Outer_Middle_Inner:
+            @json_tag = "innerMessage"
+            @rpcId = "2"
+        ival <: int:
+            @json_tag = "ival"
+            @rpcId = "1"
+    
+    !type Outer_Middle_Inner:
         @source_path = "proto/tests/proto2.proto"
         ival <: int:
             @json_tag = "ival"

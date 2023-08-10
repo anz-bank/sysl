@@ -45,13 +45,19 @@ let getTypeAppName = \file
     cond { ns: partsToAppName(ns ++ [typeAppSuffix]) } || appPackage
 ;
 
+let typeNameWithPrefix = \typeName \prefix 
+    syslSafeName(cond {prefix: $`${prefix}_${typeName}`, _: typeName});
+
 # `referencedType` returns a tuple that contains a type's app context and name for non-primitive referenced type.
 # `t` the type being referenced.
 # `file` the file that is referencing the type.
 # `appName` the name of the application, within the file, that is referencing the type.
 # `imports` a map of all files in the module.
-let referencedType = \t \file \appName \imports
-    let name = syslSafeName(t.name);
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let referencedType = \t \file \appName \imports \scope \prefix
+    let usePrefix = cond { scope.messages?(t.name)?:{}: prefix };
+    let name = typeNameWithPrefix(t.name, usePrefix);
     # `referencedNs` finds the file that had the original type definition and returns the namespace of that file.
     let referencedNs = \t \file \imports
         let resolvedImports = (file.@value.imports => cond {includeImport(.@): resolveImport(.@, imports)}) where .;
@@ -104,7 +110,9 @@ let referencedType = \t \file \appName \imports
 # `file` the file that is referencing the type.
 # `appName` the name of the application, within the file, that is referencing the type.
 # `imports` a map of all files in the module.
-let evalType = \t \file \appName \imports
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let evalType = \t \file \appName \imports \scope \prefix
     let integers = {
         'int','integer','int32','int64',
         'uint32','uint64','sint32','sint64',
@@ -119,7 +127,7 @@ let evalType = \t \file \appName \imports
         t.name = 'datetime': primitive('DATETIME'),
         t.name <: {'byte', 'bytes'}: primitive('BYTES'),
         t.name = 'binary':   primitive('BYTES'),
-        _: referencedType(t, file, appName, imports)
+        _: referencedType(t, file, appName, imports, scope, prefix)
     };
 
 # `evalField` evaluates a field and returns the Sysl renderer representation.
@@ -127,14 +135,16 @@ let evalType = \t \file \appName \imports
 # `file` the file the field is located in.
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
-let evalField = \f \file \appName \imports
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let evalField = \f \file \appName \imports \scope \prefix
     cond f {
         (:label, ...):  cond label {
-            "repeated": (sequence: evalType(f.type, file, appName, imports)),
-            "optional": evalType(f.type, file, appName, imports) +> (opt: true),
-            "required": evalType(f.type, file, appName, imports),
+            "repeated": (sequence: evalType(f.type, file, appName, imports, scope, prefix)),
+            "optional": evalType(f.type, file, appName, imports, scope, prefix) +> (opt: true),
+            "required": evalType(f.type, file, appName, imports, scope, prefix),
         },
-        _: evalType(f.type, file, appName, imports)
+        _: evalType(f.type, file, appName, imports, scope, prefix)
     };
 
 # `baseAttrs` returns the base attributes shared by Message/Enum/RPC objects.
@@ -154,8 +164,10 @@ let baseAttrs = \obj \file
 # `file` the file the field is located in.
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
-let typeFieldValue = \messageField \file \appName \imports
-    evalField(messageField.@value, file, appName, imports)
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let typeFieldValue = \messageField \file \appName \imports \scope \prefix
+    evalField(messageField.@value, file, appName, imports, scope, prefix)
     +> let attrs = {"json_tag": (s: camelCaseFromSnakeCase(messageField.@))}
         +> cond messageField.@value {(:value, ...): {"rpcId": (s: $`${evalNumber(value)}`)}}
         +> cond messageField.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}};
@@ -166,10 +178,12 @@ let typeFieldValue = \messageField \file \appName \imports
 # `file` the file the field is located in.
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
-let typeField = \messageField \file \appName \imports
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let typeField = \messageField \file \appName \imports \scope \prefix
     (
         @: syslSafeName(messageField.@),
-        @value: typeFieldValue(messageField, file, appName, imports)
+        @value: typeFieldValue(messageField, file, appName, imports, scope, prefix)
     );
 
 # `oneOfTypeField` converts an oneOf message field to a type field.
@@ -177,10 +191,12 @@ let typeField = \messageField \file \appName \imports
 # `file` the file the field is located in.
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
-let oneOfTypeField = \oneOf \file \appName \imports
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let oneOfTypeField = \oneOf \file \appName \imports \scope \prefix
     let key = $`oneof_${oneOf.@}`;
     let types = oneOf.@value.fields?:{} => \field
-            field -> (name: syslSafeName(.@)) +> typeFieldValue(., file, appName, imports);
+            field -> (name: syslSafeName(.@)) +> typeFieldValue(., file, appName, imports, scope, prefix);
     let value = (one_of: (
         attrs: cond oneOf.@value {(:comments, ...): {"description": (s: annoFromComment(comments))}},
         type: types orderby .
@@ -192,14 +208,16 @@ let oneOfTypeField = \oneOf \file \appName \imports
 # `file` the file the field is located in.
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
-let mapTypeField = \map \file \appName \imports
+# `scope` the current scope containing the messages with type definitions.
+# `prefix` the prefix to use if the type is found in the current scope.
+let mapTypeField = \map \file \appName \imports \scope \prefix
     let key = syslSafeName(map.@);
     #  TODO: Clean up building this object. Should be
     # (
     #   set: (type_ref/primitive: value),
     #   attrs: {'json_tag': (s: ''), 'proto_map_key': (s: ''), 'rpcId': (s: '')}
     # )
-    let value =  (set: typeFieldValue(map, file, appName, imports));
+    let value =  (set: typeFieldValue(map, file, appName, imports, scope, prefix));
     let mapAttrs = (attrs: {"proto_map_key": (s: map.@value.keyType.name)});
     let value = value +> (attrs: mapAttrs.attrs +> value.set.attrs);
     (@: key, @value: value);
@@ -209,12 +227,13 @@ let mapTypeField = \map \file \appName \imports
 # `file` the file the field is located in.
 # `appName` the application the field is being referenced in.
 # `imports` a map of all files in the module.
-let rec type = \message \file \appName \imports
+# `prefix` the prefix to use if the type is found in the current scope.
+let type = \message \file \appName \imports \prefix
     let name = syslSafeName(message.@);
     let attrs = baseAttrs(message, file.@);
-    let fields = cond message.@value {(:fields, ...): fields => typeField(., file, appName, imports)};
-    let oneofs = cond message.@value {(:oneofs, ...): oneofs => oneOfTypeField(., file, appName, imports)};
-    let mapFields = cond message.@value {(:mapFields, ...): mapFields => mapTypeField(., file, appName, imports)};
+    let fields = cond message.@value {(:fields, ...): fields => typeField(., file, appName, imports, message.@value, prefix)};
+    let oneofs = cond message.@value {(:oneofs, ...): oneofs => oneOfTypeField(., file, appName, imports, message.@value, prefix)};
+    let mapFields = cond message.@value {(:mapFields, ...): mapFields => mapTypeField(., file, appName, imports, message.@value, prefix)};
     let tuple = (attr_defs: fields +> oneofs +> mapFields);
     (:name, :attrs, :tuple);
 
@@ -234,8 +253,8 @@ let enum = \enum \file
 # `file` the file the rpc is located in.
 # `imports` a map of all files in the module.
 let endpoint = \rpc \appName \file \imports
-    let payload = $`ok <: ${renderTypeUsageWithInlineAnno(evalType(rpc.@value.out, file, appName, imports))}`;
-    let type = evalType(rpc.@value.in, file, appName, imports) +> ("attrs": {});
+    let payload = $`ok <: ${renderTypeUsageWithInlineAnno(evalType(rpc.@value.out, file, appName, imports, (), {}))}`;
+    let type = evalType(rpc.@value.in, file, appName, imports, (), {}) +> ("attrs": {});
     let endpoint = (:appName,
         name: rpc.@,
         attrs: baseAttrs(rpc, file.@) +> {"patterns": (a: (elt: [("s": "gRPC")]))},
@@ -295,15 +314,15 @@ let application = \service \ns \file \imports
 # Somehow this additional field needs to be grouped with the original definition so they can all be rendered together.
 # TODO: Update sysl_mod_renderers.arrai -> renderTypeOrTable to render the nested messages/enums.
 let rec fileTypes = \content \prefix \appName \file \imports
-    let name = \typeName \prefix syslSafeName(cond {prefix: $`${prefix}_${typeName}`} || typeName);
-    let messages = (content.messages?:{} => ({name(.@, prefix): type(., file, appName, imports)}
-        +> fileTypes(.@value, .@, appName, file, imports)));
-    //rel.union(
-        let messages = content.messages?:{} =>
-            ({name(.@, prefix): type(., file, appName, imports)}
-                +> fileTypes(.@value, .@, appName, file, imports));
-        let enums = content.enums?:{} => {name(.@, {}): enum(., file.@)};
-        messages | enums);
+    let messages = (content.messages?:{} => 
+        let mName = typeNameWithPrefix(.@, prefix);
+        (
+            {mName: type(., file, appName, imports, mName)}
+            +> fileTypes(.@value, mName, appName, file, imports)
+        )
+    );
+    let enums = content.enums?:{} => {typeNameWithPrefix(.@, {}): enum(., file.@)};
+    //rel.union(messages | enums);
 
 # `fileApps` processes a file and returns generated apps.
 # `file` the file being processed.
