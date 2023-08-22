@@ -38,6 +38,12 @@ TestApp "Simple":
         pet_type <: string:
             @json_tag = "pet_type"
     
+    !alias SingularSimple:
+        Pet
+    
+    !union SingularUnhandled:
+        Pet
+    
     !type patch_pets_req_body_type:
         @mediatype = "application/json"
         @openapi_type = "allOf"

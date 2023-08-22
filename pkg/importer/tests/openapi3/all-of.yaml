@@ -9,12 +9,12 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/Feline.Cat'
-                - $ref: '#/components/schemas/Canine.Dog'
+                - $ref: "#/components/schemas/Feline.Cat"
+                - $ref: "#/components/schemas/Canine.Dog"
               discriminator:
                 propertyName: pet_type
       responses:
-        '200':
+        "200":
           description: Updated
 components:
   schemas:
@@ -27,9 +27,9 @@ components:
           type: string
       discriminator:
         propertyName: pet_type
-    Canine.Dog:     # "Dog" is a value for the pet_type property (the discriminator value)
-      allOf: # Combines the main `Pet` schema with `Dog`-specific properties 
-        - $ref: '#/components/schemas/Pet'
+    Canine.Dog: # "Dog" is a value for the pet_type property (the discriminator value)
+      allOf: # Combines the main `Pet` schema with `Dog`-specific properties
+        - $ref: "#/components/schemas/Pet"
         - type: object
           # all other properties specific to a `Dog`
           properties:
@@ -41,9 +41,9 @@ components:
             breed:
               type: string
               enum: [Dingo, Husky, Retriever, Shepherd]
-    Feline.Cat:     # "Cat" is a value for the pet_type property (the discriminator value)
-      allOf: # Combines the main `Pet` schema with `Cat`-specific properties 
-        - $ref: '#/components/schemas/Pet'
+    Feline.Cat: # "Cat" is a value for the pet_type property (the discriminator value)
+      allOf: # Combines the main `Pet` schema with `Cat`-specific properties
+        - $ref: "#/components/schemas/Pet"
         - type: object
           # all other properties specific to a `Cat`
           properties:
@@ -51,3 +51,12 @@ components:
               type: boolean
             age:
               type: integer
+    SingularSimple:
+      allOf:
+        - $ref: "#/components/schemas/Pet"
+    # oneOf is an unhandled scenario for allOf. This should just work as it
+    # resolves the type directly when there is only one type.
+    SingularUnhandled:
+      allOf:
+        - oneOf:
+            - $ref: "#/components/schemas/Pet"

@@ -155,11 +155,15 @@ let specialAnno = {
             # (enum: (items: a => \(@: i, @item: (s: enumVal)) (@: enumVal, @value: i))),
 
             {'oneOf': (:a), ...}: (one_of: (type: a >> schemaToTypeMessageWithConfig(conf, .))),
-            {'allOf': _, ...}:
-                let objs = allOfToObj(t);
-                cond objs('properties')?:{} {
-                    {}: unmappedTypeWithTypeInfo('allOf'),
-                    _: schemaToTypeMessageWithConfig(conf, objs) +> (attrs+>: {openapiTypeAnno: (s: 'allOf')}),
+            {'allOf': (:a), ...}:
+                cond {
+                    (a count = 1): schemaToTypeMessageWithConfig(conf, a(0)),
+                    _:
+                        let objs = allOfToObj(t);
+                        cond objs('properties')?:{} {
+                            {}: unmappedTypeWithTypeInfo('allOf'),
+                            _: schemaToTypeMessageWithConfig(conf, objs) +> (attrs+>: {openapiTypeAnno: (s: 'allOf')}),
+                        }
                 },
             {'items': items, ...}:
                 let (?:attrs:{}, ?:constraint:{}, ...type) = schemaToTypeMessageWithConfig(conf, items);
