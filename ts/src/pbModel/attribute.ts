@@ -34,7 +34,7 @@ export class PbAttribute {
         if (this.s != null) {
             return this.s;
         } else if (this.n != null) {
-            return this.n;
+            return this.n.toString();
         } else if (this.a != null) {
             return this.a.elt?.map(i => i.getAnnoValue()) ?? [];
         } else {

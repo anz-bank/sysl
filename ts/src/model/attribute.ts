@@ -6,7 +6,7 @@ import { CloneContext } from "./clone";
 import { Element } from "./element";
 import { Model } from "./model";
 
-export type AnnoValue = string | number | AnnoValue[];
+export type AnnoValue = string | AnnoValue[];
 
 export type AnnotationParams = {
     locations?: Location[];

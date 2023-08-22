@@ -42,9 +42,12 @@ async function importNew(opts: ImportOptions): Promise<Model> {
 }
 
 async function loadExisting(existingPath: string): Promise<Model | undefined> {
-    // prettier-ignore
-    const exists = await fs.open(existingPath).then(() => true).catch(() => false);
-    return exists ? Model.fromFile(existingPath) : undefined;
+    try {
+        return Model.fromFile(existingPath);
+    } catch (e: any) {
+        if (e.code == "ENOENT") return undefined; // No such file or directory
+        throw e;
+    }
 }
 
 /** Merges aspects of `oldModel` that should be retained when reimported into `newModel`. */

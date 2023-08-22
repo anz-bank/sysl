@@ -38,7 +38,7 @@ const keywords = [
 export function toSafeName(name: string): string {
     const encode = (m: string) => `%${m.charCodeAt(0).toString(16).toUpperCase()}`;
     name = name.replaceAll(/(^[0-9])|([^-a-zA-Z0-9_])/g, encode);
-    return keywords.includes(name) ? encode(name[0]) + name.slice(1) : name;
+    return keywords.includes(name.toLowerCase()) ? encode(name[0]) + name.slice(1) : name;
 }
 
 /**

@@ -4,7 +4,7 @@ import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, TypedJSON } fro
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { sortByLocation } from "../common/sort";
-import { ElementRef, Import, Model } from "../model";
+import { ElementRef, Import, Model, ParseParams } from "../model";
 import { Application } from "../model/application";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
@@ -67,18 +67,38 @@ export class PbDocumentModel {
     @jsonMapMember(String, PbApplication, serializerFor(PbApplication))
     apps!: Map<string, PbApplication>;
 
-    static async fromFile(syslFilePath: string, maxImportDepth: number): Promise<PbDocumentModel> {
+    /**
+     * Creates a {@link PbDocumentModel} from a Sysl file on disk.
+     *
+     * @param syslFilePath The path to the Sysl file.
+     * @param params The parameters used to parse Sysl. {@link ParseParams.syslRoot} is ignored.
+     * @returns A promise of a {@link PbDocumentModel} that corresponds to the provided Sysl file.
+     */
+    static async fromFile(syslFilePath: string, params: ParseParams = {}): Promise<PbDocumentModel> {
         const syslText = (await readFile(syslFilePath)).toString();
-        return this.fromText(syslText, syslFilePath, maxImportDepth);
+        return this.fromText(syslText, syslFilePath, params);
     }
 
-    /** Compiles and deserializes a Sysl source string into a model. */
-    static async fromText(syslText: string, syslFilePath: string, maxImportDepth?: number): Promise<PbDocumentModel> {
+    /**
+     * Creates a {@link PbDocumentModel} from an in-memory Sysl file.
+     *
+     * @param syslText The contents of the Sysl file.
+     * @param syslFilePath The reported path of the Sysl file. This path doesn't have to correspond to an actual file on
+     * the disk, but will be assumed to be one for when reporting locations of sysl elements.
+     * @param params The parameters used to parse Sysl. {@link ParseParams.syslRoot} is ignored.
+     * @returns A promise of a {@link PbDocumentModel} that corresponds to the provided Sysl text.
+     */
+    static async fromText(syslText: string, syslFilePath: string, params: ParseParams = {}): Promise<PbDocumentModel> {
         const files = [{ path: syslFilePath, content: syslText }];
-        return this.fromPbOrJson(JSON.stringify(files), maxImportDepth);
+        return this.fromPbOrJson(JSON.stringify(files), params);
     }
 
-    /** Deserializes a compiled JSON string into a model. */
+    /**
+     * Creates a {@link PbDocumentModel} from an in-memory PB file in JSON format.
+     *
+     * @param json The contents of the JSON-formatted PB file.
+     * @returns A {@link PbDocumentModel} that corresponds to the provided JSON.
+     */
     static fromJson(json: string | Buffer): PbDocumentModel {
         const serializer = new TypedJSON(PbDocumentModel, {
             errorHandler: error => {
@@ -96,27 +116,25 @@ export class PbDocumentModel {
     }
 
     /**
-     * Returns a model compiled by invoking `sysl pb` and passing it the {@link content} via
-     * the standard input.
+     * Creates a {@link PbDocumentModel} from in-memory data, either a pb file or a collection of Sysl files.
      *
-     * @param content is the content to construct a model from. This can be either the bytes of a
-     *        precompiled `.pb` file, or a JSON object of the form
-     *        `[{"path": "path/to/file.sysl", "content": "sysl source"}, ...]`.
-     *        In the first (simple) case, the precompiled model loaded directly into a TypeScript
-     *        object. In the second case, the Sysl source in the {@link content} property is
-     *        compiled and then loaded.
-     * @param maxImportDepth sets the max import depth for the compiler. This has no effect if
-     *        {@link content} is a precompiled `.pb` file.
+     * @param content A string or buffer from which to construct a {@link PbDocumentModel}. This can be either the bytes
+     * of a precompiled `.pb` file, or serialised JSON that contains an in-memory file system in the form of an array of
+     * `{ path, content }` objects. For example:
+     * `[{"path": "model/backend/database.sysl", "content": "MyShop :: Backend :: Database\n  ..."}]`.
+     * @param params The parameters used to parse Sysl. {@link ParseParams.syslRoot} is ignored.
+     * @returns A promise of a {@link PbDocumentModel} that corresponds to the provided content. This setting has no
+     * effect if {@link content} is a precompiled `.pb` file.
      */
-    static async fromPbOrJson(content: string | Buffer, maxImportDepth?: number): Promise<PbDocumentModel> {
+    static async fromPbOrJson(
+        content: string | Buffer,
+        { maxImportDepth, alwaysFetch }: ParseParams = {}
+    ): Promise<PbDocumentModel> {
         const syslPath = process.env["SYSL_PATH"] ?? "sysl";
-        const out = await spawnBuffer(
-            syslPath,
-            ["pb", "--mode=json", "--compact", `--max-import-depth=${maxImportDepth ?? 0}`],
-            {
-                input: content,
-            }
-        );
+        const args = ["pb", "--mode=json", "--compact"];
+        if ((maxImportDepth ?? 0) > 0) args.push(`--max-import-depth=${maxImportDepth}`);
+        if (alwaysFetch == false) args.push("--no-forced-fetch");
+        const out = await spawnBuffer(syslPath, args, { input: content });
         return PbDocumentModel.fromJson(out);
     }
 

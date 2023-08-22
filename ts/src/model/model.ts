@@ -1,6 +1,5 @@
 import { readFile } from "fs/promises";
 import "reflect-metadata";
-import { walk } from "../common/iterate";
 import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
 import { Application } from "./application";
@@ -50,6 +49,27 @@ export type ModelParams = {
     syslRoot?: string;
 };
 
+/** Configures how Sysl files should be parsed. */
+export type ParseParams = {
+    /**
+     * Optional, default depends on method used. Specifies the location of the Sysl root which is stored in
+     * {@link Model.syslRoot}. This value is not passed on to the Sysl binary, it is only recorded in the {@link Model}.
+     */
+    syslRoot?: string;
+    /**
+     * Optional, default 0. Sets the max import depth. A value of 0 means unlimited depth, a value of 1 means ignore all
+     * imports, a value of 2 means follow imports one level deep, etc.
+     */
+    maxImportDepth?: number;
+    /**
+     * Optional, default true. When set to true, the latest version of remote imports will always be fetched via Git.
+     * When set to false, each remote import will only be fetched if that import has no prior cached copy. If there is,
+     * the cached copy will be used and no Git pull will be performed for that import. Specifying false when a previous
+     * operation already performed the fetch can greatly improve performance by skipping the remote fetching.
+     */
+    alwaysFetch?: boolean;
+};
+
 export class Model implements IRenderable {
     header: string | undefined;
     imports: Import[];
@@ -69,16 +89,18 @@ export class Model implements IRenderable {
     /**
      * Parses Sysl text file into a {@link Model}.
      * @param cwdPath The file CWD-based path that contains the Sysl text to parse.
-     * @param maxImportDepth Optional. The maximum depth to follow import statements, where 0 means unlimited depth,
-     * 1 means to remain at the level of the supplied file (do not to follow imports at all), 2 means to delve one
-     * deeper (supplied file plus one extra depth), etc. If not specified, defaults to allowing unlimited depth.
-     * Limiting the depth may significantly improve performance, especially if it causes remote imports to be skipped.
+     * @param params The parameters used to parse Sysl. If {@link ParseParams.syslRoot} is not specified, it is
+     * autodetected from {@link cwdPath} using the same logic that the Sysl binary uses.
      * @returns A {@link Model} representing the supplied Sysl file.
      */
-    static async fromFile(cwdPath: string, maxImportDepth: number = 0): Promise<Model> {
+    static async fromFile(cwdPath: string, params: ParseParams = {}): Promise<Model> {
         const syslText = (await readFile(cwdPath)).toString();
-        const syslRoot = this.findRoot(cwdPath, ".sysl") || this.findRoot(cwdPath, ".git") || path.resolve(cwdPath);
-        return this.fromText(syslText, cwdPath, syslRoot, maxImportDepth);
+        params.syslRoot =
+            params.syslRoot ??
+            this.findRoot(cwdPath, ".sysl") ??
+            this.findRoot(cwdPath, ".git") ??
+            path.resolve(cwdPath);
+        return this.fromText(syslText, cwdPath, params);
     }
 
     /**
@@ -86,27 +108,24 @@ export class Model implements IRenderable {
      * @param syslText The Sysl text to parse.
      * @param syslFilePath Optional. The file path where the Sysl text came from, used to populate the {@link Location}
      * information. If not specified, "untitled.sysl" is used.
-     * @param maxImportDepth Optional. The maximum depth to follow import statements, where 0 means unlimited depth,
-     * 1 means to remain at the level of the supplied file (do not to follow imports at all), 2 means to delve one
-     * deeper (supplied file plus one extra depth), etc. If not specified, defaults to allowing unlimited depth.
-     * Limiting the depth may significantly improve performance, especially if it causes remote imports to be skipped.
+     * @param params The parameters used to parse Sysl. If {@link ParseParams.syslRoot} is not specified, it defaults to
+     * the current working directory.
      * @returns A {@link Model} representing the supplied Sysl text.
      */
     static async fromText(
         syslText: string,
         syslFilePath: string = "untitled.sysl",
-        syslRoot: string = ".",
-        maxImportDepth: number = 0
+        params: ParseParams = {}
     ): Promise<Model> {
         // TODO: Improve performance by only reading the first part of the file
         const lines = syslText.split(/\r?\n/);
         const until = lines.findIndex(l => !l.startsWith("#"));
         const header = lines.slice(0, until).join("\n");
 
-        const pb = await PbDocumentModel.fromText(syslText, syslFilePath, maxImportDepth);
+        const pb = await PbDocumentModel.fromText(syslText, syslFilePath, params);
 
         let newModel = pb.toModel();
-        newModel.syslRoot = syslRoot;
+        newModel.syslRoot = params.syslRoot ?? ".";
         if (header) {
             newModel.header = header;
         }

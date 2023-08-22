@@ -1304,3 +1304,21 @@ describe("Cloning", () => {
             'ImportedApp': Application`, 2))
     });
 });
+
+describe("Imports", () => {
+    jest.setTimeout(20000);
+    test.concurrent("Remote import without fetch", async () => {
+        const sysl = "import //github.com/anz-bank/sysl/ts/test/imported.sysl";
+        await Model.fromText(sysl);  // warm up
+
+        const t = process.hrtime.bigint();
+        await Model.fromText(sysl);
+        const withFetchMs = Number((process.hrtime.bigint() - t) / 1000000n);
+
+        const t2 = process.hrtime.bigint();
+        await Model.fromText(sysl, undefined, { alwaysFetch: false });
+        const withoutFetchMs = Number((process.hrtime.bigint() - t2) / 1000000n);
+        
+        expect(withFetchMs / 2).toBeGreaterThan(withoutFetchMs);
+    });
+});

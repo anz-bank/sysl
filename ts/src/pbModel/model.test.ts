@@ -3,7 +3,6 @@ import "reflect-metadata";
 import * as path from "path";
 import { PbDocumentModel } from "./model";
 import { readFile } from "fs/promises";
-import { PbAttribute, PbAttributeArray } from "./attribute";
 import { realign } from "../common/format";
 
 const testDir = path.join(__dirname, "..", "..", "test");

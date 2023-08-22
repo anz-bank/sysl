@@ -23,6 +23,7 @@ describe("safeName", () => {
     test("special names", () => {
         const names = [
             { identifier: "int",      safeName: "%69nt"      },
+            { identifier: "Int",      safeName: "%49nt"      },
             { identifier: "int32",    safeName: "%69nt32"    },
             { identifier: "int64",    safeName: "%69nt64"    },
             { identifier: "float",    safeName: "%66loat"    },
