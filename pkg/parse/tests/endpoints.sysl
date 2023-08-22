@@ -18,6 +18,10 @@ App:
             My :: Server <- GET /serve%2ehtml [~https]
             return ok <: Response
 
+    /with/keyword/int/string:
+        GET:
+            ...
+
     !type Response:
         response <: string
 App:

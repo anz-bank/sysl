@@ -19,22 +19,22 @@ apps: {
        source_context: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 24
+         line: 28
          col: 47
         }
         end: {
-         line: 24
+         line: 28
          col: 52
         }
        }
        source_contexts: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 24
+         line: 28
          col: 47
         }
         end: {
-         line: 24
+         line: 28
          col: 52
         }
        }
@@ -43,22 +43,22 @@ apps: {
      source_context: {
       file: "tests/endpoints.sysl"
       start: {
-       line: 24
+       line: 28
        col: 8
       }
       end: {
-       line: 24
+       line: 28
        col: 40
       }
      }
      source_contexts: {
       file: "tests/endpoints.sysl"
       start: {
-       line: 24
+       line: 28
        col: 8
       }
       end: {
-       line: 24
+       line: 28
        col: 40
       }
      }
@@ -77,22 +77,22 @@ apps: {
        source_context: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 25
+         line: 29
          col: 37
         }
         end: {
-         line: 25
+         line: 29
          col: 53
         }
        }
        source_contexts: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 25
+         line: 29
          col: 37
         }
         end: {
-         line: 25
+         line: 29
          col: 53
         }
        }
@@ -101,22 +101,22 @@ apps: {
      source_context: {
       file: "tests/endpoints.sysl"
       start: {
-       line: 25
+       line: 29
        col: 8
       }
       end: {
-       line: 25
+       line: 29
        col: 32
       }
      }
      source_contexts: {
       file: "tests/endpoints.sysl"
       start: {
-       line: 25
+       line: 29
        col: 8
       }
       end: {
-       line: 25
+       line: 29
        col: 32
       }
      }
@@ -136,22 +136,22 @@ apps: {
        source_context: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 26
+         line: 30
          col: 46
         }
         end: {
-         line: 26
+         line: 30
          col: 62
         }
        }
        source_contexts: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 26
+         line: 30
          col: 46
         }
         end: {
-         line: 26
+         line: 30
          col: 62
         }
        }
@@ -160,22 +160,22 @@ apps: {
      source_context: {
       file: "tests/endpoints.sysl"
       start: {
-       line: 26
+       line: 30
        col: 8
       }
       end: {
-       line: 26
+       line: 30
        col: 62
       }
      }
      source_contexts: {
       file: "tests/endpoints.sysl"
       start: {
-       line: 26
+       line: 30
        col: 8
       }
       end: {
-       line: 26
+       line: 30
        col: 62
       }
      }
@@ -183,22 +183,22 @@ apps: {
     source_context: {
      file: "tests/endpoints.sysl"
      start: {
-      line: 23
+      line: 27
       col: 4
      }
      end: {
-      line: 27
+      line: 31
       col: 1
      }
     }
     source_contexts: {
      file: "tests/endpoints.sysl"
      start: {
-      line: 23
+      line: 27
       col: 4
      }
      end: {
-      line: 27
+      line: 31
       col: 1
      }
     }
@@ -233,22 +233,22 @@ apps: {
        source_context: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 26
+         line: 30
          col: 46
         }
         end: {
-         line: 26
+         line: 30
          col: 62
         }
        }
        source_contexts: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 26
+         line: 30
          col: 46
         }
         end: {
-         line: 26
+         line: 30
          col: 62
         }
        }
@@ -365,6 +365,75 @@ apps: {
    }
   }
   endpoints: {
+   key: "GET /with/keyword/int/string"
+   value: {
+    name: "GET /with/keyword/int/string"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "..."
+     }
+     source_context: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 22
+       col: 12
+      }
+      end: {
+       line: 22
+       col: 15
+      }
+     }
+     source_contexts: {
+      file: "tests/endpoints.sysl"
+      start: {
+       line: 22
+       col: 12
+      }
+      end: {
+       line: 22
+       col: 15
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/with/keyword/int/string"
+    }
+    source_context: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 21
+      col: 8
+     }
+     end: {
+      line: 24
+      col: 5
+     }
+    }
+    source_contexts: {
+     file: "tests/endpoints.sysl"
+     start: {
+      line: 21
+      col: 8
+     }
+     end: {
+      line: 24
+      col: 5
+     }
+    }
+   }
+  }
+  endpoints: {
    key: "POST /more/stuff.endpoint/{id}"
    value: {
     name: "POST /more/stuff.endpoint/{id}"
@@ -375,22 +444,22 @@ apps: {
       source_context: {
        file: "tests/endpoints.sysl"
        start: {
-        line: 24
+        line: 28
         col: 47
        }
        end: {
-        line: 24
+        line: 28
         col: 52
        }
       }
       source_contexts: {
        file: "tests/endpoints.sysl"
        start: {
-        line: 24
+        line: 28
         col: 47
        }
        end: {
-        line: 24
+        line: 28
         col: 52
        }
       }
@@ -420,22 +489,22 @@ apps: {
        source_context: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 25
+         line: 29
          col: 37
         }
         end: {
-         line: 25
+         line: 29
          col: 53
         }
        }
        source_contexts: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 25
+         line: 29
          col: 37
         }
         end: {
-         line: 25
+         line: 29
          col: 53
         }
        }
@@ -558,22 +627,22 @@ apps: {
        source_context: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 21
+         line: 25
          col: 8
         }
         end: {
-         line: 21
+         line: 25
          col: 26
         }
        }
        source_contexts: {
         file: "tests/endpoints.sysl"
         start: {
-         line: 21
+         line: 25
          col: 8
         }
         end: {
-         line: 21
+         line: 25
          col: 26
         }
        }
@@ -583,22 +652,22 @@ apps: {
     source_context: {
      file: "tests/endpoints.sysl"
      start: {
-      line: 20
+      line: 24
       col: 4
      }
      end: {
-      line: 21
+      line: 25
       col: 26
      }
     }
     source_contexts: {
      file: "tests/endpoints.sysl"
      start: {
-      line: 20
+      line: 24
       col: 4
      }
      end: {
-      line: 21
+      line: 25
       col: 26
      }
     }
@@ -607,10 +676,10 @@ apps: {
   source_context: {
    file: "tests/endpoints.sysl"
    start: {
-    line: 22
+    line: 26
    }
    end: {
-    line: 26
+    line: 30
     col: 62
    }
   }
@@ -620,17 +689,17 @@ apps: {
     line: 9
    }
    end: {
-    line: 21
+    line: 25
     col: 26
    }
   }
   source_contexts: {
    file: "tests/endpoints.sysl"
    start: {
-    line: 22
+    line: 26
    }
    end: {
-    line: 26
+    line: 30
     col: 62
    }
   }
