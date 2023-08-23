@@ -243,7 +243,7 @@ TIMESTAMP_FUNCTION  -> "CURRENT_TIMESTAMP"
                      | "UNIX_MICROS"
                      | "PENDING_COMMIT_TIMESTAMP";
 pair_value          -> "(" value "," value ")"; //# Spanner
-array_value         -> "[" value:"," "]"; //# Spanner
+array_value         -> "[" (value:",")? "]"; //# Spanner
 
 // All tokens are case-insensitive and may be preceded by comments or whitespace.
 .wrapRE -> /{(?i)(--[^\n]*(?:\n|\z)|/\*[^*]*\*/|\s)*()};

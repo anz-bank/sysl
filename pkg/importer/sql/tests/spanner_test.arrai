@@ -20,6 +20,9 @@ let foo_b = applyAlterTable(addCol.data, foo);
 let [addColT] = parseDdl('ALTER TABLE foo ADD COLUMN t TIMESTAMP OPTIONS (allow_commit_timestamp=TRUE);');
 let foo_t = applyAlterTable(addColT.data, foo);
 
+let [addColDefaultEmptyArray] = parseDdl('ALTER TABLE foo ADD COLUMN ea ARRAY<INT64> DEFAULT ([]);');
+let foo_ea = applyAlterTable(addColDefaultEmptyArray.data, foo);
+
 let [alterCol] = parseDdl('ALTER TABLE foo ALTER COLUMN b INT64 NOT NULL;');
 let foo_b2 = applyAlterTable(alterCol.data, foo_b);
 
@@ -57,6 +60,22 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
                     type: 'add_column',
                     alteration: (name: 'b', type: 'int64', nullable: true, options: {}, length: 0, scale: 0),
                 )],
+            ),
+        ),
+        addColDefault: (
+            emptyArray: addColDefaultEmptyArray = (
+                data: (
+                    alterations: [
+                        (
+                            alteration: (array: (length: 0, nullable: true, scale: 0, type: 'int64'),
+                            name: 'ea',
+                            options: {},
+                        ),
+                        type: 'add_column',
+                    )],
+                    table_name: 'foo',
+                ),
+                stmt: 'alter_table',
             ),
         ),
         addColT: //test.assert.equal(addColT, (
@@ -175,6 +194,19 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
             name_prefix: '',
             cluster: {},
         )}),
+
+        addColEmptyArray: foo_ea.entities = {(
+            name: 'foo',
+            attributes: [
+                (length: 0, name: 'a', nullable: true, options: {}, scale: 0, type: 'int64'),
+                (array: (length: 0, nullable: true, scale: 0, type: 'int64'), name: 'ea', options: {}),
+            ],
+            primary_key: ['a'],
+            cluster: {},
+            foreign_keys: {},
+            name_prefix: {},
+            unique_keys: {},
+        )},
 
         alterCol: foo_b2.entities = {(
             name: 'foo',
