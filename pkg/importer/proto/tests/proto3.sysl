@@ -6,7 +6,7 @@ SearchService [~gRPC]:
     @package = "proto3"
     @proto_options = ["php_namespace = Foo\\Bar", "random = random"]
     @source_path = "proto/tests/proto3.proto"
-    
+
     Search (input <: proto3.SearchRequest) [~gRPC]:
         @source_path = "proto/tests/proto3.proto"
         return ok <: proto3.SearchResponse
@@ -15,12 +15,12 @@ proto3:
     @go_package = "github.com/test/package"
     @java_package = "com.example.foo"
     @package = "proto3"
-    
+
     !enum EnumAllowingAlias [proto_options=["allow_alias = true"], source_path="proto/tests/proto3.proto"]:
         UNKNOWN : 0
         STARTED : 1
         RUNNING : 2
-    
+
     !type Outer:
         @description =:
             | Level 1
@@ -40,7 +40,7 @@ proto3:
             @json_tag = "primitiveMap"
             @proto_map_key = "int32"
             @rpcId = "4"
-    
+
     !type Outer_Inner:
         @description =:
             | Level 2

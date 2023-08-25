@@ -4,7 +4,7 @@ Name :: Space :: Namespaced [~gRPC]:
     @go_package = "github.com/test/namespace"
     @package = "namespace"
     @source_path = "proto/tests/combined/namespace.proto"
-    
+
     Get (input <: Name :: Space :: Types.Request) [~gRPC]:
         @source_path = "proto/tests/combined/namespace.proto"
         return ok <: Name :: Space :: Types.Response
@@ -13,7 +13,7 @@ Name :: Space :: Namespaced2 [~gRPC]:
     @go_package = "github.com/test/namespace"
     @package = "namespace"
     @source_path = "proto/tests/combined/namespace2.proto"
-    
+
     Get (input <: Name :: Space :: Types.Request2) [~gRPC]:
         @source_path = "proto/tests/combined/namespace2.proto"
         return ok <: Name :: Space :: Types.Response2
@@ -21,25 +21,25 @@ Name :: Space :: Namespaced2 [~gRPC]:
 Name :: Space :: Types:
     @go_package = "github.com/test/namespace"
     @package = "namespace"
-    
+
     !type Request:
         @source_path = "proto/tests/combined/namespace.proto"
         name <: string:
             @json_tag = "name"
             @rpcId = "1"
-    
+
     !type Request2:
         @source_path = "proto/tests/combined/namespace2.proto"
         name <: string:
             @json_tag = "name"
             @rpcId = "1"
-    
+
     !type Response:
         @source_path = "proto/tests/combined/namespace.proto"
         message <: string:
             @json_tag = "message"
             @rpcId = "1"
-    
+
     !type Response2:
         @source_path = "proto/tests/combined/namespace2.proto"
         message <: string:
@@ -48,38 +48,38 @@ Name :: Space :: Types:
 
 TokenService [~gRPC]:
     @go_package = "github.com/test/token"
-    @package = "foo_token"
+    @package = "foo.token"
     @source_path = "proto/tests/combined/token.proto"
-    
+
     GetToken (input <: foo_token.GetTokenRequest) [~gRPC]:
         @source_path = "proto/tests/combined/token.proto"
         return ok <: foo_token.GetTokenResponse
 
 UserService [~gRPC]:
     @go_package = "github.com/test/user"
-    @package = "foo_user"
+    @package = "foo.user"
     @source_path = "proto/tests/combined/user.proto"
-    
+
     AddUser (input <: foo_user.AddUserRequest) [~gRPC]:
         @source_path = "proto/tests/combined/user.proto"
         return ok <: foo_user.AddUserResponse
-    
+
     GetUser (input <: foo_user.GetUserRequest) [~gRPC]:
         @source_path = "proto/tests/combined/user.proto"
         return ok <: foo_user.GetUserResponse
 
 foo_user:
     @go_package = "github.com/test/user_type"
-    @package = "foo_user"
-    
+    @package = "foo.user"
+
     !type AddUserRequest:
         @source_path = "proto/tests/combined/user_type.proto"
-    
+
     !type AddUserResponse:
         @source_path = "proto/tests/combined/user_type.proto"
-    
+
     !type GetUserRequest:
         @source_path = "proto/tests/combined/user_type.proto"
-    
+
     !type GetUserResponse:
         @source_path = "proto/tests/combined/user_type.proto"

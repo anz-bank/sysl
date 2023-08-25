@@ -6,7 +6,7 @@ SearchService [~gRPC]:
     @package = "proto2"
     @proto_options = ["random = random"]
     @source_path = "proto/tests/proto2.proto"
-    
+
     Search (input <: proto2.SearchRequest) [~gRPC]:
         @source_path = "proto/tests/proto2.proto"
         return ok <: proto2.SearchResponse
@@ -15,14 +15,14 @@ proto2:
     @go_package = "github.com/test/package"
     @java_package = "com.example.foo"
     @package = "proto2"
-    
+
     !enum EnumAllowingAlias [description="A
         Multiline
     Comment ", proto_options=["allow_alias = true"], source_path="proto/tests/proto2.proto"]:
         UNKNOWN : 0
         STARTED : 1
         RUNNING : 2
-    
+
     !type Outer:
         @description =:
             | Level 1
@@ -41,7 +41,7 @@ proto2:
             @json_tag = "myMap"
             @proto_map_key = "int32"
             @rpcId = "4"
-    
+
     !type Outer_Middle:
         @description =:
             | Level 2
@@ -53,7 +53,7 @@ proto2:
         ival <: int:
             @json_tag = "ival"
             @rpcId = "1"
-    
+
     !type Outer_Middle_Inner:
         @source_path = "proto/tests/proto2.proto"
         ival <: int:

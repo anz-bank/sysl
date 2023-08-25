@@ -5,7 +5,7 @@ let (:importString, :importFiles, ...) = //{./proto_importer};
             let input = //[//encoding.bytes]{./tests/proto3.proto} => (:.@, @char: .@byte);
             let actual = importString((), input);
             let expected = //[//encoding.bytes]{./tests/proto3_import_string.sysl} => (:.@, @char: .@byte);
-            //test.assert.equal(actual, expected)
+            //test.assert.equal(expected, actual)
     ),
     importFiles: (
         shallow:

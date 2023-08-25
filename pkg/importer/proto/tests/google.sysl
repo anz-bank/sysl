@@ -3,8 +3,8 @@
 google_protobuf:
     @go_package = "google.golang.org/protobuf/types/known/typepb"
     @java_package = "com.google.protobuf"
-    @package = "google_protobuf"
-    
+    @package = "google.protobuf"
+
     !type Any_:
         @description =:
             | `Any` contains an arbitrary serialized protocol buffer message along with a
@@ -126,7 +126,7 @@ google_protobuf:
                 | Must be a valid serialized protocol buffer of the above specified type.
             @json_tag = "value"
             @rpcId = "2"
-    
+
     !type Api:
         @description =:
             | Api is a light-weight descriptor for an API Interface.
@@ -195,13 +195,13 @@ google_protobuf:
                 |
             @json_tag = "version"
             @rpcId = "4"
-    
+
     !enum Cardinality [description="Whether a field is optional, required, or repeated.", source_path="google/protobuf/type.proto"]:
         CARDINALITY_UNKNOWN : 0
         CARDINALITY_OPTIONAL : 1
         CARDINALITY_REQUIRED : 2
         CARDINALITY_REPEATED : 3
-    
+
     !type Enum:
         @description =:
             | Enum type definition.
@@ -231,7 +231,7 @@ google_protobuf:
                 | The source syntax.
             @json_tag = "syntax"
             @rpcId = "5"
-    
+
     !type EnumValue:
         @description =:
             | Enum value definition.
@@ -251,7 +251,7 @@ google_protobuf:
                 | Protocol buffer options.
             @json_tag = "options"
             @rpcId = "3"
-    
+
     !type Field:
         @description =:
             | A single field of a message type.
@@ -308,7 +308,7 @@ google_protobuf:
                 | types. Example: `"type.googleapis.com/google.protobuf.Timestamp"`.
             @json_tag = "typeUrl"
             @rpcId = "6"
-    
+
     !enum Kind [description="Basic field types.", source_path="google/protobuf/type.proto"]:
         TYPE_UNKNOWN : 0
         TYPE_DOUBLE : 1
@@ -329,7 +329,7 @@ google_protobuf:
         TYPE_SFIXED64 : 16
         TYPE_SINT32 : 17
         TYPE_SINT64 : 18
-    
+
     !type Method:
         @description =:
             | Method represents a method of an API interface.
@@ -369,7 +369,7 @@ google_protobuf:
                 | The source syntax of this method.
             @json_tag = "syntax"
             @rpcId = "7"
-    
+
     !type Mixin:
         @description =:
             | Declares an API Interface to be included in this interface. The including
@@ -462,7 +462,7 @@ google_protobuf:
                 | are rooted.
             @json_tag = "root"
             @rpcId = "2"
-    
+
     !type Option:
         @description =:
             | A protocol buffer option, which can be attached to a message, field,
@@ -484,7 +484,7 @@ google_protobuf:
                 | value using the google.protobuf.Int32Value type.
             @json_tag = "value"
             @rpcId = "2"
-    
+
     !type SourceContext:
         @description =:
             | `SourceContext` represents information about the source of a
@@ -496,11 +496,11 @@ google_protobuf:
                 | protobuf element.  For example: `"google/protobuf/source_context.proto"`.
             @json_tag = "fileName"
             @rpcId = "1"
-    
+
     !enum Syntax [description="The syntax in which a protocol buffer element is defined.", source_path="google/protobuf/type.proto"]:
         SYNTAX_PROTO2 : 0
         SYNTAX_PROTO3 : 1
-    
+
     !type Type:
         @description =:
             | A protocol buffer message type.

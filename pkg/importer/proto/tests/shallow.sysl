@@ -4,7 +4,7 @@ Name :: Space :: Greeter [~gRPC]:
     @go_package = "helloworld"
     @package = "helloworld"
     @source_path = "pkg/importer/proto/tests/shallow.proto"
-    
+
     SayHello (input <: Name :: Space :: Types.HelloRequest) [~gRPC]:
         @source_path = "pkg/importer/proto/tests/shallow.proto"
         return ok <: Name :: Space :: Types.HelloReply
@@ -12,13 +12,13 @@ Name :: Space :: Greeter [~gRPC]:
 Name :: Space :: Types:
     @go_package = "helloworld"
     @package = "helloworld"
-    
+
     !type HelloReply:
         @source_path = "pkg/importer/proto/tests/shallow.proto"
         message <: string:
             @json_tag = "message"
             @rpcId = "1"
-    
+
     !type HelloRequest:
         @source_path = "pkg/importer/proto/tests/shallow.proto"
         name <: string:

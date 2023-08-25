@@ -45,7 +45,7 @@ let getTypeAppName = \file
     cond { ns: partsToAppName(ns ++ [typeAppSuffix]) } || appPackage
 ;
 
-let typeNameWithPrefix = \typeName \prefix 
+let typeNameWithPrefix = \typeName \prefix
     syslSafeName(cond {prefix: $`${prefix}_${typeName}`, _: typeName});
 
 # `referencedType` returns a tuple that contains a type's app context and name for non-primitive referenced type.
@@ -283,7 +283,7 @@ let application = \service \ns \file \imports
         let options = service.@value.options?:{};
         let appLevelOptions = getAppLevelOptions(options);
         let options = options &~ appLevelOptions;
-        {"package": (s: packageToApp(getPackage(file)))}
+        {"package": (s: getPackage(file))}
         +> {"source_path": (s: forwardSlashedPath(file.@))}
         +> {"patterns": (a: (elt: [("s": "gRPC")]))}
         +> appLevelOptions
@@ -314,7 +314,7 @@ let application = \service \ns \file \imports
 # Somehow this additional field needs to be grouped with the original definition so they can all be rendered together.
 # TODO: Update sysl_mod_renderers.arrai -> renderTypeOrTable to render the nested messages/enums.
 let rec fileTypes = \content \prefix \appName \file \imports
-    let messages = (content.messages?:{} => 
+    let messages = (content.messages?:{} =>
         let mName = typeNameWithPrefix(.@, prefix);
         (
             {mName: type(., file, appName, imports, mName)}
@@ -330,12 +330,13 @@ let rec fileTypes = \content \prefix \appName \file \imports
 let fileApps = \file \imports
     let content = file.@value;
     let ns = getNamespace(content);
-    let appPackage = packageToApp(getPackage(file));
+    let package = getPackage(file);
+    let appPackage = packageToApp(package);
     let typeAppName = getTypeAppName(file);
     let typeApp = cond {content.messages?:{} || content.enums?:{}:
         {typeAppName:
             (
-                attrs: {"package": (s: appPackage)} +> getAppLevelOptions(content.options?:{}),
+                attrs: {"package": (s: package)} +> getAppLevelOptions(content.options?:{}),
                 name: appNameToAppNameMessage(typeAppName),
                 types: fileTypes(file.@value, {}, typeAppName, file, imports)
             )
