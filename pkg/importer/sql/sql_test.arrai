@@ -385,6 +385,9 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             {:macro:CREATE CHANGE STREAM foo FOR t(c):},
             {:macro:CREATE CHANGE STREAM foo FOR t(c), s(d), r(e):},
         ] >> . = emptyModel,
+        drop: [
+            {:macro:DROP CHANGE STREAM foo:},
+        ] >> . = emptyModel,
     ),
 
     call: [

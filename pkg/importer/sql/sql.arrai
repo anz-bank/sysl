@@ -27,6 +27,7 @@ ddl                 -> stmt=(create_database
                             |drop_table
                             |drop_index
                             |drop_view
+                            |drop_change_stream
                             |insert
                             |delete
                             |use
@@ -137,6 +138,7 @@ comparison          -> "=" | "!=" | "<>" | "<=" | "<" | ">=" | ">";
 drop_table          -> "DROP" "TABLE" if_exists? table_name;
 drop_index          -> "DROP" "INDEX" if_exists? index_name;
 drop_view           -> "DROP" "VIEW" if_exists? view_name;
+drop_change_stream  -> "DROP" "CHANGE" "STREAM" if_exists? name;
 
 insert              -> "INSERT" "INTO"? table_name "(" column_name:"," ")"
                        ("VALUES" ("(" value:"," ")"):"," on_conflict? | select);
