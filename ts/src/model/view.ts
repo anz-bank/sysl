@@ -20,7 +20,7 @@ export class FlatView {
     #endpoints = new Lazy(() => this.apps.flatMap((a) => a.endpoints));
     #statements = new Lazy(() => flatMapDeep(this.endpoints.flatMap((e) => e.statements), (e) => e.children));
     #dataElements = new Lazy(() => [...this.apps, ...this.types, ...this.fields]);
-    #behaviourElements = new Lazy(() => [...this.apps, ...this.endpoints, ...this.statements]);
+    #behaviorElements = new Lazy(() => [...this.apps, ...this.endpoints, ...this.statements]);
     #allElements = new Lazy(() => [...this.apps, ...this.types, ...this.fields, ...this.endpoints, ...this.statements]);
 
     /** Creates a new instance of {@link FlatView} from the provided array of {@link Application}s. */
@@ -37,7 +37,7 @@ export class FlatView {
     /** Lazily evaluated. Returns all apps, types and fields. */
     get dataElements(): readonly Element[] { return this.#dataElements.value; }
     /** Lazily evaluated. Returns all apps, endpoints and statements. */
-    get behaviourElements(): readonly Element[] { return this.#behaviourElements.value; }
+    get behaviourElements(): readonly Element[] { return this.#behaviorElements.value; }
     /** Lazily evaluated. Returns all elements. */
     get allElements(): readonly Element[] { return this.#allElements.value; }
 }
