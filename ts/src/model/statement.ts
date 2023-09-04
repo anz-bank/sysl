@@ -326,7 +326,7 @@ export class Statement extends ParentElement<Statement> {
     }
 
     toString(): string {
-        return this.value?.constructor.name ?? placeholder;
+        return this.value?.toString() ?? placeholder;
     }
 
     clone(context = new CloneContext(this.model)): Statement {

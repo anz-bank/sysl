@@ -49,7 +49,7 @@ export class Application extends ParentElement<Element> {
     }
 
     override toString(): string {
-        return this.toRef().toSysl();
+        return this.toRef().toString();
     }
 
     clone(context = new CloneContext(this.model)): Application {

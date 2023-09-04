@@ -11,3 +11,4 @@ src/model/model.test.ts
 src/model/statement.ts
 src/model/elementRef.test.ts
 src/common/format.test.ts
+src/model/view.test.ts

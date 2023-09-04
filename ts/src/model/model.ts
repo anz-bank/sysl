@@ -10,6 +10,7 @@ import path from "path";
 import fs from "fs";
 import { Type } from "./type";
 import { Field } from "./field";
+import { FlatView } from "./view";
 
 export type ImportParams = {
     filePath: string;
@@ -289,7 +290,7 @@ export class Model implements IRenderable {
      * @returns A path relative to the sysl root
      * @throws Error thrown when the specified path is outside the {@link syslRoot}, which is not allowed.
      */
-    public convertSyslPath(cwdPath: string, cwd: string = process.cwd()) {
+    convertSyslPath(cwdPath: string, cwd: string = process.cwd()): string {
         const resolvedPath = path.resolve(cwd, cwdPath);
         const syslRelativePath = path.relative(this.syslRoot, resolvedPath);
         if (syslRelativePath.startsWith("..")) {
@@ -301,7 +302,7 @@ export class Model implements IRenderable {
         return syslRelativePath;
     }
 
-    public clone(filter?: ModelFilter, keepLocation?: boolean): Model {
+    clone(filter?: ModelFilter, keepLocation?: boolean): Model {
         const model = new Model({ header: this.header, syslRoot: this.syslRoot });
         const context = new CloneContext(model, filter ?? ModelFilters.Default, 0, keepLocation);
         if (context.keepLocation) model.locations = context.recurse(this.locations);
@@ -313,11 +314,19 @@ export class Model implements IRenderable {
     /**
      * Ensures the `.parent` and `.model` properties of descendants are correctly set.
      */
-    public attachSubitems() {
+    attachSubitems(): void {
         this.apps.forEach(a => {
             a.model = this;
             a.attachSubitems();
         });
+    }
+
+    /**
+     * Provides easy access to categories of elements regardless of their position in the element hierarchy.
+     * @returns A {@link FlatView} object.
+     */
+    flat(): FlatView {
+        return new FlatView(this.apps);
     }
 
     private static findRoot(filePath: string, sentinelName: string): string | undefined {

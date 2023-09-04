@@ -1040,21 +1040,21 @@ describe("Cloning", () => {
               '@annotation1 = ...': Annotation
               '@annotation2 = ...': Annotation
               '@annotation3 = ...': Annotation
-            'App :: with :: subpackages': Application
+            'App::with::subpackages': Application
               '[~tag]': Tag
             'RestEndpoint': Application
               '[~tag]': Tag
               '[REST] /': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[REST] /pathwithtype/{native}': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
                   'native': Param
                     '[param] <: int': Field
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[REST] /query': Endpoint
                 '[~rest]': Tag
@@ -1063,7 +1063,7 @@ describe("Cloning", () => {
                     '[param] <: string': Field
                   'optional': Param
                     '[param] <: string?': Field
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[REST] /param': Endpoint
                 '[~rest]': Tag
@@ -1071,14 +1071,14 @@ describe("Cloning", () => {
                   '[param] <: Types.Type': Field
                     '[~body]': Tag
                 'PATCH': RestParams
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[REST] /param': Endpoint
                 '[~rest]': Tag
                 'native': Param
                   '[param] <: string': Field
                 'POST': RestParams
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[REST] /param': Endpoint
                 '[~rest]': Tag
@@ -1092,12 +1092,12 @@ describe("Cloning", () => {
                   '[param] <: int(5)': Field
                     'length: ..5': TypeConstraint
                 'PUT': RestParams
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[REST] /report.csv': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
-                'Action': Statement
+                '...': Statement
                   '...': Action
             'SimpleEndpoint': Application
               '[~tag]': Tag
@@ -1110,13 +1110,13 @@ describe("Cloning", () => {
               '[gRPC] SimpleEpWithParamsRef': Endpoint
                 '[~tag]': Tag
                 'Types.type': Param
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[gRPC] SimpleEpWithTypes': Endpoint
                 '[~tag]': Tag
                 'native': Param
                   '[param] <: string': Field
-                'Action': Statement
+                '...': Statement
                   '...': Action
               '[gRPC] SimpleEpWithArray': Endpoint
                 '[~tag]': Tag
@@ -1129,7 +1129,7 @@ describe("Cloning", () => {
                 'num': Param
                   '[param] <: int(5)': Field
                     'length: ..5': TypeConstraint
-                'Action': Statement
+                '...': Statement
                   '...': Action
             'Types': Application
               '!type Type': Type
@@ -1205,79 +1205,79 @@ describe("Cloning", () => {
               '[~tag]': Tag
               '[gRPC] IfStmt': Endpoint
                 '[~tag]': Tag
-                'Cond': Statement
+                'if predicate1': Statement
                   'if predicate1': Cond
-                    'Return': Statement
+                    'return ok <: string': Statement
                       'return ok <: string': Return
-                'Group': Statement
+                'else if predicate2': Statement
                   'else if predicate2': Group
-                    'Call': Statement
+                    'Statements <- IfStmt': Statement
                       'Statements <- IfStmt': Call
-                'Group': Statement
+                'else': Statement
                   'else': Group
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
               '[gRPC] Loops': Endpoint
                 '[~tag]': Tag
-                'Group': Statement
+                'alt predicate': Statement
                   'alt predicate': Group
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
-                'Loop': Statement
+                '[UNTIL] predicate': Statement
                   '[UNTIL] predicate': Loop
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
-                'Foreach': Statement
+                'predicate': Statement
                   'predicate': Foreach
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
-                'Group': Statement
+                'for predicate': Statement
                   'for predicate': Group
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
-                'Group': Statement
+                'loop predicate': Statement
                   'loop predicate': Group
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
-                'Loop': Statement
+                '[WHILE] predicate': Statement
                   '[WHILE] predicate': Loop
-                    'Action': Statement
+                    '...': Statement
                       '...': Action
               '[gRPC] Returns': Endpoint
                 '[~tag]': Tag
-                'Return': Statement
+                'return ok <: string': Statement
                   'return ok <: string': Return
-                'Return': Statement
+                'return ok <: Types.Type': Statement
                   'return ok <: Types.Type': Return
-                'Return': Statement
+                'return error <: Types.Type': Statement
                   'return error <: Types.Type': Return
               '[gRPC] Calls': Endpoint
                 '[~tag]': Tag
-                'Call': Statement
+                'Statements <- Returns': Statement
                   'Statements <- Returns': Call
-                'Call': Statement
+                'RestEndpoint <- GET /param': Statement
                   'RestEndpoint <- GET /param': Call
               '[gRPC] OneOfStatements': Endpoint
                 '[~tag]': Tag
-                'Alt': Statement
+                '[case1,case number 2,\"case 3\",undefined choices]': Statement
                   '[case1,case number 2,\"case 3\",undefined choices]': Alt
                     'case1': AltChoice
-                      'Return': Statement
+                      'return ok <: string': Statement
                         'return ok <: string': Return
                     'case number 2': AltChoice
-                      'Return': Statement
+                      'return ok <: int': Statement
                         'return ok <: int': Return
                     '\"case 3\"': AltChoice
-                      'Return': Statement
+                      'return ok <: Types.Type': Statement
                         'return ok <: Types.Type': Return
                     'undefined': AltChoice
-                      'Return': Statement
+                      'return error <: string': Statement
                         'return error <: string': Return
               '[gRPC] GroupStatements': Endpoint
                 '[~tag]': Tag
-                'Group': Statement
+                'grouped': Statement
                   'grouped': Group
-                    'Call': Statement
+                    'Statements <- GroupStatements': Statement
                       'Statements <- GroupStatements': Call
               '[gRPC] AnnotatedEndpoint': Endpoint
                 '[~tag]': Tag
@@ -1285,16 +1285,16 @@ describe("Cloning", () => {
                 '@annotation2 = ...': Annotation
                 '@annotation3 = ...': Annotation
               '[gRPC] AnnotatedStatements': Endpoint
-                'Call': Statement
+                'Statements <- Miscellaneous': Statement
                   'Statements <- Miscellaneous': Call
-                'Return': Statement
+                'return ok <: string [annotation=[\"as\", \"an\", \"array\"]] #Doesn't work, annos/tags/comments are part of the name': Statement
                   'return ok <: string [annotation=[\"as\", \"an\", \"array\"]] #Doesn't work, annos/tags/comments are part of the name': Return
-                'Action': Statement
+                '\"statement\"': Statement
                   '\"statement\"': Action
               '[gRPC] Miscellaneous': Endpoint
-                'Action': Statement
+                'SimpleEndpoint -> SimpleEp': Statement
                   'SimpleEndpoint -> SimpleEp': Action
-            'Unsafe%2FNamespace :: Unsafe%2FApp': Application
+            'Unsafe%2FNamespace::Unsafe%2FApp': Application
               '[~tag]': Tag
               '!type Unsafe%2EType': Type
                 '[~tag]': Tag
