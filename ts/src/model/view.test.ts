@@ -48,7 +48,7 @@ test.concurrent("FlatView", async () => {
         "Statement1_1_2",
         "Statement3_if1_1",
     ]);
-    expectNames(view.behaviourElements).toEqual([
+    expectNames(view.behaviorElements).toEqual([
         "Company::Backend",
         "Company::Frontend",
         "[REST] /",

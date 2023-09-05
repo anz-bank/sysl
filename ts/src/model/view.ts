@@ -37,7 +37,7 @@ export class FlatView {
     /** Lazily evaluated. Returns all apps, types and fields. */
     get dataElements(): readonly Element[] { return this.#dataElements.value; }
     /** Lazily evaluated. Returns all apps, endpoints and statements. */
-    get behaviourElements(): readonly Element[] { return this.#behaviorElements.value; }
+    get behaviorElements(): readonly Element[] { return this.#behaviorElements.value; }
     /** Lazily evaluated. Returns all elements. */
     get allElements(): readonly Element[] { return this.#allElements.value; }
 }
