@@ -6,9 +6,7 @@ import { CloneContext, ICloneable } from "./clone";
 import { Model } from "./model";
 import { addTags, renderAnnos } from "./renderers";
 
-/**
- * An object in a Sysl model that can have nested objects (children, annotations and tags).
- */
+/** An object in a Sysl model that can have metadata (annotations and tags). */
 export abstract class Element implements ILocational, IRenderable, IChild, ICloneable {
     constructor(
         public name: string,
@@ -32,8 +30,8 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     abstract toRef(): ElementRef;
 
     /**
-     * Tries to find the specified annotation from this element. If it's not found, `undefined` is returned.
-     * If multiple annotations of the same name exist, the first is returned.
+     * Tries to find the specified annotation from this element. If it's not found, `undefined` is returned. If multiple
+     * annotations of the same name exist, the first is returned.
      * @param name The name of the annotation to retrieve.
      * @returns The {@link Annotation} of the specified name, or `undefined` if no annotation with that name exists.
      */
@@ -42,40 +40,42 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     }
 
     /**
-     * Retrieves the specified annotation from this element. If it's not found, an error is thrown.
+     * Retrieves the specified annotation from this element. If it's not found, an error is thrown. If multiple
+     * annotations of the same name exist, the first is returned.
      * @param name The name of the annotation to retrieve.
      * @returns The {@link Annotation} of the specified name.
      * @throws {@link Error} Thrown if no annotation matching the specified name is found.
      */
     public getAnno(name: string): Annotation {
         const anno = this.findAnno(name);
-        if (!anno) throw new Error(`No annotation named '${name}' was found on element '${this.name}'.`);
+        if (!anno) throw new Error(`No annotation named '${name}' was found on element '${this.toString()}'.`);
         return anno;
     }
 
     /**
-     * Sets the specified annotation to the specified value, or removes it if the value specified is `undefined`.
-     * If the annotation doesn't already exist on this element, a new one will be inserted with an best effort to
-     * place it alphabetically.
+     * Sets the specified annotation to the specified value. If the annotation doesn't already exist on this element,
+     * a new one will be inserted with an best effort to place it alphabetically. If `undefined` is specified as the
+     * {@link value}, all annotations with that name will be removed.
      * @param name The name of the annotation to set.
      * @param value The value of the annotation to set, or `undefined` to remove the annotation.
-     * @returns The {@link Annotation} that was updated, inserted or removed, or `undefined` if attempting to remove
-     * an annotation that doesn't exist.
+     * @returns The first {@link Annotation} that was updated, inserted or removed, or `undefined` if attempting to
+     * remove an annotation that doesn't exist.
      */
-    public setAnno(name: string, value: AnnoValue): Annotation | undefined {
-        let anno = this.findAnno(name);
+    public setAnno(name: string, value: AnnoValue | undefined): Annotation | undefined {
+        const anno = this.findAnno(name);
 
         if (value == undefined) {
             if (anno) {
-                this.annos = this.annos.filter(a => a !== anno);
+                this.annos = this.annos.filter(a => a.name != name);
                 anno.parent = undefined;
             }
         } else {
             if (anno) {
                 anno.value = value;
             } else {
-                anno = new Annotation(name, value);
-                this.insertAnnoOrdered(anno);
+                const newAnno = new Annotation(name, value);
+                this.insertAnnoOrdered(newAnno);
+                return newAnno;
             }
         }
 
@@ -104,6 +104,15 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     }
 
     /**
+     * Determines if an element has a tag with one of the names specified.
+     * @param names Names of the tag to look for.
+     * @returns `true` if a tag with one of the specified names is present on the element, otherwise `false`.
+     */
+    public hasTag(...names: string[]): boolean {
+        return this.tags.some(t => names.includes(t.name));
+    }
+
+    /**
      * Tries to find the specified tag from this element. If it's not found, `undefined` is returned.
      * If multiple tags of the same name exist, the first is returned.
      * @param name The name of the tag to retrieve.
@@ -114,7 +123,8 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     }
 
     /**
-     * Retrieves the specified tag from this element. If it's not found, an error is thrown.
+     * Retrieves the specified tag from this element. If it's not found, an error is thrown. If multiple tags with the
+     * same name exist, the first will be returned.
      * @param name The name of the tag to retrieve.
      * @returns The {@link Tag} of the specified name.
      * @throws {@link Error} Thrown if no tag matching the specified name is found.
@@ -134,21 +144,21 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     public setTag(name: string): Tag {
         let tag = this.findTag(name);
         if (!tag) {
-            tag = new Tag(name, { parent: this });
+            tag = new Tag(name, { parent: this, model: this.model });
             this.tags.push(tag);
         }
         return tag;
     }
 
     /**
-     * Removes the specified tag from the element, if it exists.
+     * Removes the all tags with the specified name from the element, if it exists.
      * @param name The name of the tag to remove.
-     * @returns The {@link Tag} that was removed, or `undefined` if no tag with that name was found.
+     * @returns The first {@link Tag} that was removed, or `undefined` if no tag with that name was found.
      */
     public removeTag(name: string): Tag | undefined {
-        let tag = this.findTag(name);
+        const tag = this.findTag(name);
         if (tag) {
-            this.tags = this.tags.filter(t => t !== tag);
+            this.tags = this.tags.filter(t => t.name != name);
             tag.parent = undefined;
         }
         return tag;
@@ -184,6 +194,7 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     }
 }
 
+/** An {@link Element} that also has child elements of type {@link TChild}. */
 export abstract class ParentElement<TChild extends Element> extends Element {
     abstract get children(): TChild[];
 }
