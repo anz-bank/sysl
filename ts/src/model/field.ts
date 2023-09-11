@@ -12,6 +12,24 @@ export class Field extends Element {
         this.attachSubitems();
     }
 
+    public override toDto() {
+        let value = this.value;
+
+        let collectionType: "set" | "sequence" | undefined;
+        if (value instanceof CollectionDecorator) {
+            collectionType = value.isSet ? "set" : "sequence";
+            value = value.innerType;
+        }
+
+        return {
+            ...super.toDto(),
+            collectionType,
+            ref: value instanceof ElementRef ? value.toString() : undefined,
+            primitive: value instanceof Primitive ? value.toString() : undefined,
+            constraint: value instanceof Primitive ? value.constraintStr() : undefined,
+        };
+    }
+
     toRef(): ElementRef {
         return this.parent!.toRef().with({ fieldName: this.name });
     }

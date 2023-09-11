@@ -4,7 +4,7 @@ import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, TypedJSON } fro
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
 import { sortByLocation } from "../common/sort";
-import { ElementRef, Import, Model, ParseParams } from "../model";
+import { Element, ElementRef, Model, ParseParams } from "../model";
 import { Application } from "../model/application";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
@@ -12,6 +12,7 @@ import { serializerFor } from "./serialize";
 import { PbEndpoint } from "./statement";
 import { PbTypeDef } from "./type";
 import { spawnBuffer } from "../common/spawn";
+import { Import } from "../model/import";
 
 @jsonObject
 export class PbImport {
@@ -44,15 +45,14 @@ export class PbApplication {
         const name = this.name.part.at(-1);
         if (!name) throw new Error("Encountered empty app name.");
         const appRef = new ElementRef(this.name.part.slice(0, -1), name);
+        const types = Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
+            .filter(([, e]) => e.name != "..." && !e.isPubsub) // Bug where ellipsis under app appears as endpoint
+            .map(([, e]) => e.toModel(this.name.part));
+        const endpoints = Array.from(this.types ?? new Map<string, PbTypeDef>(), ([name, t]) =>
+            t.toModel(name, false, appRef)
+        );
         return new Application(appRef, {
-            endpoints: sortByLocation(
-                Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
-                    .filter(([, e]) => e.name != "...") // Bug in Sysl where ellipsis under app appears as endpoint
-                    .map(([, e]) => e.toModel(this.name.part))
-            ),
-            types: sortByLocation(
-                [...(this.types ?? new Map<string, PbTypeDef>())].map(([name, t]) => t.toModel(name, false, appRef))
-            ),
+            children: sortByLocation([...types, ...endpoints]),
             locations: this.sourceContexts,
             tags: sortByLocation(getTags(this.attrs)),
             annos: sortByLocation(getAnnos(this.attrs)),

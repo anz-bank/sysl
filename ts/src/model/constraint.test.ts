@@ -23,8 +23,6 @@ test.skip("Decimal with precision and scale", async () => {
     expect(constraint.scale).toBe(2);
 
     expect(constraint.bitWidth).toBeUndefined();
-    expect(constraint.range).toBeUndefined();
-    expect(constraint.resolution).toBeUndefined();
     expect(constraint.length).toBeUndefined();
 });
 
@@ -45,7 +43,5 @@ test.skip("Integer with precision", async () => {
     expect(constraint.scale).toBeUndefined();
 
     expect(constraint.bitWidth).toBeUndefined();
-    expect(constraint.range).toBeUndefined();
-    expect(constraint.resolution).toBeUndefined();
     expect(constraint.length).toBeUndefined();
 });

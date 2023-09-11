@@ -8,7 +8,7 @@ export class Primitive implements IRenderable {
         this.constraint = constraint;
     }
 
-    private constraintStr(): string {
+    public constraintStr(): string {
         const isNumber = (n?: number) => n != null && !isNaN(n);
 
         const lengthStr = (length: Range) => {

@@ -15,9 +15,7 @@ export class DecimalResolution {
 
 export class TypeConstraint {
     constructor(
-        public range?: Range,
         public length?: Range,
-        public resolution?: DecimalResolution,
         public precision?: number,
         public scale?: number,
         public bitWidth?: number
@@ -25,9 +23,7 @@ export class TypeConstraint {
 
     toString(): string {
         return [
-            this.range ? `range: ${this.range}` : undefined,
             this.length ? `length: ${this.length}` : undefined,
-            this.resolution ? `resolution: ${this.resolution}` : undefined,
             this.precision ? `precision: ${this.precision}` : undefined,
             this.scale ? `scale: ${this.scale}` : undefined,
             this.bitWidth ? `bitWidth: ${this.bitWidth}` : undefined,
@@ -36,9 +32,7 @@ export class TypeConstraint {
 
     clone(_context?: CloneContext): TypeConstraint {
         return new TypeConstraint(
-            this.range?.clone(),
             this.length?.clone(),
-            this.resolution?.clone(),
             this.precision,
             this.scale,
             this.bitWidth

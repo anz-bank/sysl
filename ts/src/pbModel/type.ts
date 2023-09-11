@@ -75,14 +75,7 @@ export class PbTypeConstraint {
     @jsonMember bitWidth!: number;
 
     toModel(): TypeConstraint {
-        return new TypeConstraint(
-            this.range?.toModel(),
-            this.length?.toModel(),
-            this.resolution?.toModel(),
-            this.precision,
-            this.scale,
-            this.bitWidth
-        );
+        return new TypeConstraint(this.length?.toModel(), this.precision, this.scale, this.bitWidth);
     }
 }
 
@@ -204,7 +197,7 @@ export class PbTypeDef {
     // `isInner` specifies whether a type exists within something else and is not a type definition.
     // It is true by default, meaning the type is a nested definition or a parameter.
     // When it is false, it means it is a top level `Type` definition and therefore may be an `Alias`.
-    toModel(name: string = "", isInner: boolean = true, parentRef?: ElementRef): Element {
+    toModel(name: string = "", isInner: boolean = true, parentRef?: ElementRef): Field | Type | Enum | Union | Alias {
         const params = {
             tags: sortByLocation(getTags(this.attrs)),
             annos: sortByLocation(getAnnos(this.attrs)),

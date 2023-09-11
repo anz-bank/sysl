@@ -4,43 +4,14 @@ import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
 import { Application } from "./application";
 import { ElementID, ElementKind, ElementRef, IRenderable } from "./common";
-import { CloneContext, ICloneable, ModelFilter, ModelFilters } from "./clone";
+import { CloneContext, ModelFilter, ModelFilters } from "./clone";
 import { Element } from "./element";
 import path from "path";
 import fs from "fs";
 import { Type } from "./type";
 import { Field } from "./field";
 import { FlatView } from "./view";
-
-export type ImportParams = {
-    filePath: string;
-    locations?: Location[];
-    appAlias?: string;
-};
-
-export class Import implements ICloneable {
-    filePath: string;
-    locations: Location[];
-    appAlias?: string;
-
-    constructor({ filePath, locations, appAlias }: ImportParams) {
-        this.filePath = filePath;
-        this.locations = locations ?? [];
-        this.appAlias = appAlias ?? undefined;
-    }
-
-    toSysl(): string {
-        return `import ${this.filePath}${this.appAlias ? ` as ${this.appAlias}` : ""}`;
-    }
-
-    toString(): string {
-        return this.filePath;
-    }
-
-    clone(_context?: CloneContext): Import {
-        return new Import({ filePath: this.filePath, appAlias: this.appAlias });
-    }
-}
+import { Import } from "./import";
 
 export type ModelParams = {
     header?: string | undefined;
@@ -279,6 +250,14 @@ export class Model implements IRenderable {
         sysl += "\n";
 
         return sysl;
+    }
+
+    toDto() {
+        return {
+            header: this.header,
+            imports: this.imports.map(i => i.toDto()),
+            apps: this.apps.map(a => a.toDto()),
+        };
     }
 
     /**

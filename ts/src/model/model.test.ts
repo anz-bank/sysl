@@ -74,7 +74,7 @@ describe("Constructors", () => {
     });
 });
 
-describe("Serialization", () => {
+describe("Sysl rendering", () => {
     describe("Application", () => {
         test.concurrent("empty", () => {
             expect(new Application("Foo").toSysl()).toEqual(realign(`
@@ -204,6 +204,80 @@ describe("Serialization", () => {
     
 });
 
+describe("DTO", () => {
+    test.concurrent("Data elements", async () => {
+        const model = await Model.fromText(realign(`
+            # Header
+
+            import other.sysl
+
+            Ns :: App [~appTag]:
+                @appAnno = "App"
+                !type Type [~typeTag]:
+                    @typeAnno = "Type"
+                    Primitive <: string(5..10)
+                    Array <: sequence of decimal(5.8)
+                    Reference <: Other.Type [~fieldTag]:
+                        @fieldAnno = "Field"
+        `), "main.sysl", { maxImportDepth: 1 });
+
+        expect(model.toDto()).toMatchObject(
+            {
+                header: "# Header",
+                imports: [ { filePath: "other.sysl", locations: ["ts/main.sysl:3:1::18"] } ],
+                apps: [
+                    {
+                        namespace: ["Ns"],
+                        name: "App",
+                        metadata: { appTag: undefined, appAnno: "App" },
+                        locations: {
+                            "0": "ts/main.sysl:5:1:12:33",
+                            appTag: "ts/main.sysl:5:12::19",
+                            appAnno: "ts/main.sysl:6:16::21"
+                        },
+                        children: [
+                            {
+                                name: "Type",
+                                metadata: { typeTag: undefined, typeAnno: "Type" },
+                                locations: {
+                                    "0": "ts/main.sysl:7:5:12:33",
+                                    typeTag: "ts/main.sysl:7:17::25",
+                                    typeAnno: "ts/main.sysl:8:21::27"
+                                },
+                                children: [
+                                    {
+                                        name: "Primitive",
+                                        primitive: "string",
+                                        constraint: "(5..10)",
+                                        locations: { "0": "ts/main.sysl:9:9::35" }
+                                    },
+                                    {
+                                        name: "Array",
+                                        primitive: "decimal",
+                                        constraint: "(5.8)",
+                                        collectionType: "sequence",
+                                        locations: { "0": "ts/main.sysl:10:9::42" }
+                                    },
+                                    {
+                                        name: "Reference",
+                                        ref: "Other.Type",
+                                        metadata: { fieldTag: undefined, fieldAnno: "Field" },
+                                        locations: {
+                                            "0": "ts/main.sysl:11:9:13:2",
+                                            fieldTag: "ts/main.sysl:11:34::43",
+                                            fieldAnno: "ts/main.sysl:12:26::33"
+                                        }
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                ],
+            }
+        );
+    });
+});
+
 describe("Parent and Model", () => {
     test.concurrent("all", async () => {
         const model = await Model.fromFile(allPath);
@@ -220,11 +294,11 @@ describe("Parent and Model", () => {
         model.apps.push(new Application("App2"));
         const app1 = model.getApp("App1");
         const app2 = model.getApp("App2");
-        const ep = app1.endpoints.pop()!;
+        const ep = app1.children.pop() as Endpoint;
         const outerSt = ep.statements[0];
         const innerSt = new Statement(new Group("subStatement", []));
         outerSt.children.push(innerSt);
-        app2.endpoints.push(ep);
+        app2.children.push(ep);
         model.attachSubitems();
 
         expect(app1.endpoints).toBeEmpty();
@@ -1168,7 +1242,7 @@ describe("Cloning", () => {
                 'string_range_constraint <: string(5..10)': Field
                   'length: 5..10': TypeConstraint
                 'int_with_bitwidth <: int64': Field
-                  'range: .., bitWidth: 64': TypeConstraint
+                  'bitWidth: 64': TypeConstraint
                 'float_with_bitwidth <: float64': Field
                   'bitWidth: 64': TypeConstraint
               '!enum Enum': Enum

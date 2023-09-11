@@ -25,6 +25,28 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     }
 
     /**
+     * Converts this object to a simple Data Transfer Object (DTO) that makes serializing to other formats easy. The DTO
+     * will not contain any circular references, will simplify certain key-based arrays into objects, and will represent
+     * certain complex structures as strings.
+     * @returns A simple DTO object that can be serialized.
+     */
+    public toDto() {
+        return {
+            name: this.name,
+            kind: this.constructor.name,
+            locations: Object.fromEntries([
+                ...this.locations.map((l, i) => [i, l.toString()]),
+                ...this.tags.map(t => [t.name, t.locations[0]?.toString()]),
+                ...this.annos.map(a => [a.name, a.locations[0]?.toString()]),
+            ]),
+            metadata: Object.fromEntries([
+                ...this.tags.map(t => [t.name, undefined]),
+                ...this.annos.map(a => [a.name, a.value]),
+            ]),
+        };
+    }
+
+    /**
      * Returns an {@link ElementRef} that references this element.
      */
     abstract toRef(): ElementRef;
@@ -180,7 +202,9 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
             child.model = this.model;
         });
 
-        [...children, ...extraSubitems.filter(i => i instanceof Element) as Element[]].forEach(c => c.attachSubitems());
+        [...children, ...(extraSubitems.filter(i => i instanceof Element) as Element[])].forEach(c =>
+            c.attachSubitems()
+        );
     }
 
     protected render(prefix: string, body: string | IRenderable[], name?: string, mustHaveBody: boolean = true) {
@@ -197,6 +221,9 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
 /** An {@link Element} that also has child elements of type {@link TChild}. */
 export abstract class ParentElement<TChild extends Element> extends Element {
     abstract get children(): TChild[];
+    public override toDto() {
+        return { ...super.toDto(), children: this.children.map(e => e.toDto()) };
+    }
 }
 
 /** Common set of properties that are received by all {@link IElement} constructors. */

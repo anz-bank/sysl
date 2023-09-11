@@ -72,11 +72,28 @@ export class Location {
     }
 
     /**
-     * Formats the {@link Location} object as a string using it's start location.
-     * @returns The file, start line and column, each separated by a colon.
+     * Formats the {@link Location} object as a string with five parts joined by the colon character:
+     * - File name
+     * - 1-based start line
+     * - 1-based start column (omitted if 0 and end line/column are omitted)
+     * - 1-based end line (omitted if identical to start line)
+     * - 1-based end column (omitted if not greater than start column and end line is omitted)
+     * This format is backwards-compatible with the file linking in VS Code (for file, and start line/col).
+     * @returns A string representation of the location.
      */
     public toString(): string {
-        return `${this.file}:${this.start.line}:${this.start.col}`;
+        const parts = [this.file, this.start.line + 1];
+        const hasEndLine = this.end.line > this.start.line;
+        const hasEnd = hasEndLine || this.end.col > this.start.col;
+        if (this.start.col > 0 || hasEnd) {
+            parts.push(this.start.col + 1);
+            if (hasEnd) {
+                parts.push(hasEndLine ? this.end.line + 1 : "");
+                parts.push(this.end.col + 1);
+            }
+        }
+
+        return parts.join(":");
     }
 
     public clone(): Location {

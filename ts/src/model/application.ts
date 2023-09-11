@@ -6,7 +6,6 @@ import { Type } from "./type";
 
 export class Application extends ParentElement<Element> {
     namespace: readonly string[];
-    endpoints: Endpoint[];
     children: Element[];
 
     constructor(name: ElementID, p: ApplicationParams = {}) {
@@ -21,8 +20,7 @@ export class Application extends ParentElement<Element> {
         if (parsed.namespace.length && p.namespace) throw Error("Found namespace in both 'name' and 'namespace'.");
 
         this.namespace = [...(p.namespace ?? parsed.namespace)];
-        this.endpoints = p.endpoints ?? [];
-        this.children = p.types ?? [];
+        this.children = p.children ?? [];
         this.attachSubitems();
     }
 
@@ -34,14 +32,20 @@ export class Application extends ParentElement<Element> {
         super.attachSubitems([...this.endpoints, ...extraSubitems]);
     }
 
-    public get types(): Type[] {
+    public get types(): readonly Type[] {
         return this.children.filter(c => c instanceof Type) as Type[];
     }
 
+    public get endpoints(): readonly Endpoint[] {
+        return this.children.filter(c => c instanceof Endpoint) as Endpoint[];
+    }
+
     toSysl(): string {
-        const endpoints = `${this.endpoints.filter(e => !e.isPubsub).map(e => e.toSysl()).join("\n\n")}`;
-        const children = `${this.children.map(t => t.toSysl()).join("\n\n")}`;
-        return this.render("", [endpoints, children].filter(x => x).join("\n"));
+        return this.render("", this.children.map(t => t.toSysl()).join("\n\n"));
+    }
+
+    public override toDto() {
+        return { ...super.toDto(), namespace: this.namespace };        
     }
 
     toRef(): ElementRef {
@@ -56,8 +60,7 @@ export class Application extends ParentElement<Element> {
         return new Application(this.toRef(), {
             tags: context.recurse(this.tags),
             annos: context.recurse(this.annos),
-            endpoints: context.recurse(this.endpoints),
-            types: context.recurse(this.children),
+            children: context.recurse(this.children),
             model: context.model ?? this.model,
             locations: context.keepLocation ? context.recurse(this.locations) : [],
         });
@@ -66,6 +69,5 @@ export class Application extends ParentElement<Element> {
 
 export type ApplicationParams = IElementParams & {
     namespace?: string[];
-    endpoints?: Endpoint[];
-    types?: Element[];
+    children?: Element[];
 };
