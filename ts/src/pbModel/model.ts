@@ -46,7 +46,7 @@ export class PbApplication {
         if (!name) throw new Error("Encountered empty app name.");
         const appRef = new ElementRef(this.name.part.slice(0, -1), name);
         const types = Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
-            .filter(([, e]) => e.name != "..." && !e.isPubsub) // Bug where ellipsis under app appears as endpoint
+            .filter(([, e]) => e.name != "...") // Bug where ellipsis under app appears as endpoint
             .map(([, e]) => e.toModel(this.name.part));
         const endpoints = Array.from(this.types ?? new Map<string, PbTypeDef>(), ([name, t]) =>
             t.toModel(name, false, appRef)

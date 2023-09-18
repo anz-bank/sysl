@@ -1396,3 +1396,24 @@ describe("Imports", () => {
         expect(withFetchMs / 2).toBeGreaterThan(withoutFetchMs);
     });
 });
+
+describe("PubSub", () => {
+    test.concurrent("Simple", async () => {
+        const model = await Model.fromText(realign(`
+        From:
+            <-> Event: ...
+            Endpoint:
+                . <- Event
+        To:
+            From -> Event:
+                receive
+        `));
+
+        expect(model.getApp("From").children).toMatchObject([
+            { name: "Event", isPubsub: true },
+            { name: "Endpoint", isPubsub: false },
+        ]);
+
+        expect(model.getApp("To").children).toMatchObject([ { name: "From -> Event", isPubsub: false } ]);
+    });
+});

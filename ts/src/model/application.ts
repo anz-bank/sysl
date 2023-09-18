@@ -41,11 +41,17 @@ export class Application extends ParentElement<Element> {
     }
 
     toSysl(): string {
-        return this.render("", this.children.map(t => t.toSysl()).join("\n\n"));
+        return this.render(
+            "",
+            this.children
+                .filter(x => !(x as Endpoint).isPubsub) // Pubsub endpoint rendering is not yet implemented
+                .map(t => t.toSysl())
+                .join("\n\n")
+        );
     }
 
     public override toDto() {
-        return { ...super.toDto(), namespace: this.namespace };        
+        return { ...super.toDto(), namespace: this.namespace };
     }
 
     toRef(): ElementRef {
