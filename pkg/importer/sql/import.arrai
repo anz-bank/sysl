@@ -32,17 +32,19 @@ let importString = \(:appName, ...) \sql
 # Imports a database model into Sysl from a SQL file.
 let importFile = \appName \file importFiles(appName, [file]);
 
+# True if the path is a SQL file, except for globs `*.down.*` which are commonly reverse migrations (not relevant).
+let isUpSql =
+    let sqlPattern = //re.compile(`\.(?:sql|ddl)$`);
+    let downPattern = //re.compile(`\.down\.`);
+    \path !!sqlPattern.match(path) && !downPattern.match(path)
+;
+
 # Imports a database model into Sysl from the SQL migration scripts in dir.
 let importDir = \appName \dir
-    # True if the path ends with .up.sql or .up.ddl (a common pattern for reversible migrations).
-    let isUpSql = \path {'.up.sql', '.up.ddl'} => //seq.has_suffix(., path) where .;
 
-    # True if the path ends with .sql or .ddl. isUpSql should be used in preference, but isSql applies
-    # if there are not .up.* scripts.
-    let isSql = \path {'.sql', '.ddl'} => //seq.has_suffix(., path) where .;
 
     let paths = //os.tree(dir) => .path;
-    let sqls = (paths where isUpSql(.)) || (paths where isSql(.)) orderby naturalOrder(.);
+    let sqls = paths where isUpSql(.) orderby naturalOrder(.);
 
     importFiles(appName, sqls)
 ;
@@ -64,6 +66,7 @@ let import = \(:appName, ...) \input
     :importFile,
     :importFiles,
     :importDir,
+    :isUpSql,
 
     :import,
 )

@@ -1,7 +1,7 @@
 let (:naturalOrder, ...) = //{github.com/arr-ai/arrai/contrib/util};
-let (:import, ...) = //{./import};
+let (:isUpSql, :import, ...) = //{./import};
 
-let upSqlsIn = \dir //os.tree(dir) where //seq.has_suffix('.up.sql', .path) => .path orderby naturalOrder(.);
+let upSqlsIn = \dir //os.tree(dir) where isUpSql(.path) => .path orderby naturalOrder(.);
 
 # Assume working directory is repo root.
 let testDir = 'pkg/importer/sql/tests';
