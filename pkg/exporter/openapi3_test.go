@@ -50,6 +50,9 @@ func TestExportWithFile(t *testing.T) {
 	assert.Equal(t, "int64", errorPropertiesCodeFormat.Str)
 	assert.Equal(t, "string", errorPropertiesMessage.Str)
 
+	newPetNameDescription := gjson.Get(string(outputSpecJSON), "components.schemas.NewPet.properties.name.description")
+	assert.Equal(t, "The Pets Name", newPetNameDescription.Str)
+
 	getPetsSuccessResponse := gjson.Get(string(outputSpecJSON), "paths./pets.get.responses.200.content.application/json.schema.$ref")
 	getPetsErrorResponse := gjson.Get(string(outputSpecJSON), "paths./pets.get.responses.default.content.application/json.schema.$ref")
 	postPetsRequired := gjson.Get(string(outputSpecJSON), "paths./pets.post.requestBody.required")

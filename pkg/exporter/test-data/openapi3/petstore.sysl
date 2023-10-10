@@ -80,6 +80,7 @@ Swagger Petstore "Swagger Petstore":
     !type NewPet:
         name <: string:
             @json_tag = "name"
+            @description = "The Pets Name"
         tag <: string?:
             @json_tag = "tag"
 

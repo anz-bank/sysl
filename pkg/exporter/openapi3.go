@@ -202,6 +202,7 @@ func (s *OpenAPI3Exporter) exportType(t *syslwrapper.Type) *openapi3.SchemaRef {
 	case "ref":
 		ref = SyslRefToJSONSchema(t.Reference)
 	}
+	value.Description = t.Description
 	return openapi3.NewSchemaRef(ref, value)
 }
 

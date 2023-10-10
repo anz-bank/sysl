@@ -496,14 +496,20 @@ func (am *AppMapper) MapType(t *sysl.Type) *Type {
 		}
 	}
 
+	description := t.GetDocstring()
+	if description == "" {
+		description = am.GetAttribute(t.GetAttrs(), "description")
+	}
+
 	return &Type{
-		Reference:  ref,
-		Optional:   t.GetOpt(),
-		Type:       simpleType,
-		Items:      items,
-		Properties: properties,
-		Enum:       enum,
-		PrimaryKey: primaryKey,
+		Description: description,
+		Reference:   ref,
+		Optional:    t.GetOpt(),
+		Type:        simpleType,
+		Items:       items,
+		Properties:  properties,
+		Enum:        enum,
+		PrimaryKey:  primaryKey,
 	}
 }
 

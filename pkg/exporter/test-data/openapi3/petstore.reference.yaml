@@ -137,12 +137,13 @@ components:
     NewPet:
       type: object
       required:
-        - name  
+        - name
       properties:
         name:
+          description: The Pets Name
           type: string
         tag:
-          type: string    
+          type: string
 
     Error:
       type: object
