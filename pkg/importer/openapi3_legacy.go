@@ -303,6 +303,13 @@ func makeSizeSpec(min uint64, max *uint64) *sizeSpec {
 }
 
 func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Field, error) {
+	isArray := prop.Value.Type == OpenAPI_ARRAY
+
+	// If type is array, but Items is nil then default to an array of object
+	if isArray && prop.Value.Items == nil {
+		prop.Value.Items = openapi3.NewSchemaRef("", openapi3.NewObjectSchema())
+	}
+
 	f := Field{Name: name}
 	typeName := typeNameFromSchemaRef(prop)
 
@@ -313,14 +320,13 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Fi
 
 	defer o.pushName(name)()
 
-	if prop.Value.Type == OpenAPI_ARRAY && prop.Value.Items.Ref != "" {
+	if isArray && prop.Value.Items.Ref != "" {
 		f.Type = &Array{Items: nameOnlyType(typeNameFromSchemaRef(prop.Value.Items))}
 		f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
 		return f, nil
 	}
 
 	f.Type = o.typeAliasForSchema(prop)
-	isArray := prop.Value.Type == OpenAPI_ARRAY
 	switch typeName {
 	// possible types: string, int, bool, object, date, float
 	case OpenAPI_OBJECT:

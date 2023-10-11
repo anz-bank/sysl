@@ -33,6 +33,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/OtherObject'
+      missingItems:
+        type: array
   OtherObject:
     properties:
       Foo:

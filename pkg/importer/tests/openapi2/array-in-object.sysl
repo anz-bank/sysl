@@ -22,6 +22,8 @@ TestApp "Fruit API" [package="com.example.package"]:
             @json_tag = "applications"
         baselineReferenceNumber <: string?:
             @json_tag = "baselineReferenceNumber"
+        missingItems <: sequence of EXTERNAL_ObjectWithArrayPropsComplicate_missingItems?:
+            @json_tag = "missingItems"
         otherObjArray <: sequence of OtherObject?:
             @json_tag = "otherObjArray"
         resultantId <: string?:
@@ -36,3 +38,6 @@ TestApp "Fruit API" [package="com.example.package"]:
     !type OtherObject:
         Foo <: string?:
             @json_tag = "Foo"
+
+    !alias EXTERNAL_ObjectWithArrayPropsComplicate_missingItems:
+        string
