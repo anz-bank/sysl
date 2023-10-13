@@ -9,6 +9,9 @@ definitions:
     properties:
       date:
         type: string
+      # dateTime with a capital
+      dateTime:
+        type: string
       string:
         type: string
 paths: {}

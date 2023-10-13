@@ -16,6 +16,8 @@ definitions:
       birthday:
         type: string
         format: date
+      with-question?:
+        type: string
     type: object
 
 paths:

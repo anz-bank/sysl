@@ -12,6 +12,10 @@ paths:
           type: string
           required: false
           in: query
+        - name: key.with.dot
+          type: string
+          required: false
+          in: query
         - name: min_date
           type: string
           required: true

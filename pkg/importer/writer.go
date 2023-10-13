@@ -173,7 +173,10 @@ func buildQueryString(params []Param) string {
 			if !syslutil.IsBuiltIn(typeString) {
 				typeString = "{" + typeString + "}"
 			}
-			parts = append(parts, fmt.Sprintf("%s=%s%s", url.QueryEscape(p.Name), typeString, optional))
+			name := url.QueryEscape(p.Name)
+			// sysl can't handle '.' inside a query name
+			name = strings.ReplaceAll(name, ".", "%2E")
+			parts = append(parts, fmt.Sprintf("%s=%s%s", name, typeString, optional))
 		}
 		query = " ?" + strings.Join(parts, "&")
 	}

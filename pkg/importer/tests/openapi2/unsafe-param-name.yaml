@@ -92,7 +92,7 @@ paths:
         200:
           description: 200 OK
           schema:
-            $ref: '#/definitions/unsafe'
+            $ref: '#/definitions/unsafe&ampersand'
       summary: Possible Unsafe Names
       description: correct param name
       parameters:
@@ -102,4 +102,6 @@ paths:
           in: query
 definitions:
   unsafe:
+    type: string
+  unsafe&ampersand:
     type: string

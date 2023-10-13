@@ -253,6 +253,10 @@ func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 	}
 	switch ref.Value.Type {
 	case OpenAPI_ARRAY:
+		// if no Items then default to object
+		if ref.Value.Items == nil {
+			return OpenAPI_OBJECT
+		}
 		return typeNameFromSchemaRef(ref.Value.Items)
 	case OpenAPI_OBJECT, OpenAPI_EMPTY:
 		return OpenAPI_OBJECT
@@ -362,7 +366,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Fi
 func attrsForStrings(schema *openapi3.Schema) []string {
 	var attrs []string
 	if r := schema.Pattern; r != "" {
-		attrs = append(attrs, fmt.Sprintf(`regex="%s"`, getSyslSafeName(r)))
+		attrs = append(attrs, fmt.Sprintf(`regex="%s"`, getSyslSafeURI(r)))
 	}
 	if e := schema.Enum; len(e) != 0 && false { // remove the `&& false` when enum_values are added
 		var vals []string
@@ -518,7 +522,7 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) (
 		}
 
 		ep := &Endpoint{
-			Path:        getSyslSafeName(path),
+			Path:        getSyslSafeURI(path),
 			Description: op.Description,
 			Params:      commonParams.Extend(params),
 			Responses:   nil,
@@ -584,7 +588,7 @@ func (o *OpenAPI3Importer) buildResponses(
 ) error {
 	supportedCode := regexp.MustCompile("^ok|error|[1-5][0-9][0-9]$")
 	errType := regexp.MustCompile("^Error|error$")
-	typePrefix := getSyslSafeName(convertToSyslSafe(cleanEndpointPath(path))) + "_"
+	typePrefix := getSyslSafeURI(convertToSyslSafe(cleanEndpointPath(path))) + "_"
 	text := statusCode
 
 	respType := &StandardType{
@@ -821,6 +825,8 @@ func examplesAttrStr(examples map[string]string) string {
 
 	for _, k := range utils.OrderedKeys(examples) {
 		v := examples[k]
+		// sysl calls MustUnescape on return statements, so encode '%' chars
+		v = strings.ReplaceAll(v, "%", "%25")
 		if b.Len() > len("examples=[") {
 			b.Write([]byte{','})
 		}

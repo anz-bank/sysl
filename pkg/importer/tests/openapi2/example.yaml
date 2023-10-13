@@ -1,0 +1,16 @@
+swagger: "2.0"
+info:
+  title: foo
+paths:
+    "/ping": {
+      "get": {
+        "responses": {
+          "200": {
+            "schema": {
+              "example": "containing a % symbol"
+            }
+          }
+        },
+      }
+    }
+definitions:

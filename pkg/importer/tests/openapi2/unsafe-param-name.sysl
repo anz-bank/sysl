@@ -16,7 +16,7 @@ TestApp "Unsafe Param Names" [package="com.example.package"]:
     /correct_name:
         GET ?correctTestSample=string:
             | correct param name
-            return 200 <: unsafe [mediatype="application/json"]
+            return 200 <: unsafe%26ampersand [mediatype="application/json"]
 
     /hyphens_in_weird_locations:
         GET ?testSamPle=string:
@@ -47,4 +47,7 @@ TestApp "Unsafe Param Names" [package="com.example.package"]:
     # definitions
 
     !alias unsafe:
+        string
+
+    !alias unsafe%26ampersand:
         string

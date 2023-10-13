@@ -18,6 +18,11 @@ TestApp "Simple" [package="com.example.package"]:
             | No description.
             return 200
 
+    /test3:
+        POST (objectRequest <: objectRequest [mediatype="application/json", ~body]):
+            | No description.
+            return 200
+
     #---------------------------------------------------------------------------
     # definitions
 
@@ -26,4 +31,16 @@ TestApp "Simple" [package="com.example.package"]:
             @json_tag = "name"
 
     !alias accountID:
+        string
+
+    !alias object:
+        sequence of EXTERNAL_object_obj
+
+    !alias EXTERNAL_objectRequest:
+        string
+
+    !alias objectRequest:
+        sequence of EXTERNAL_objectRequest
+
+    !alias EXTERNAL_object_obj:
         string

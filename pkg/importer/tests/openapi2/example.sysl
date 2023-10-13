@@ -4,19 +4,17 @@
 ##                                      ##
 ##########################################
 
-TestApp "Fruit API" [package="com.example.package"]:
-    @version = "1.0.0"
-    @basePath = "/fruit-basket"
+TestApp "foo" [package="com.example.package"]:
     @description =:
         | No description.
+
+    /ping:
+        GET:
+            | No description.
+            return 200 <: EXTERNAL_object [examples=[["","containing a %25 symbol"]], mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions
 
-    !type SimpleObj:
-        date_ <: string?:
-            @json_tag = "date"
-        dateTime_ <: string?:
-            @json_tag = "dateTime"
-        string_ <: string?:
-            @json_tag = "string"
+    !alias EXTERNAL_object [examples=[["","containing a %25 symbol"]], mediatype="application/json"]:
+        string

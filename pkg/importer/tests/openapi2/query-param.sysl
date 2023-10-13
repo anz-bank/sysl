@@ -9,7 +9,7 @@ TestApp "Simple" [package="com.example.package"]:
         | No description.
 
     /test:
-        GET ?key=string?&min_date=date:
+        GET ?key=string?&key%2Ewith%2Edot=string?&min_date=date:
             | No description.
             return 200
 

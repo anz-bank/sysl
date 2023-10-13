@@ -86,7 +86,7 @@ var (
 )
 
 func IsBuiltIn(name string) bool {
-	return utils.Contains(name, BuiltInTypes)
+	return utils.Contains(strings.ToLower(name), BuiltInTypes)
 }
 
 // nolint:interfacer

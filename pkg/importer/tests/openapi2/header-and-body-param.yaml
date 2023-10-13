@@ -33,6 +33,16 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/accountID'
+  /test3:
+    post:
+      responses:
+        200:
+          description: 200 OK
+      parameters:
+        - name: arrayWithNoRef
+          in: body
+          schema:
+            type: array
 definitions:
   SimpleObj:
     type: object

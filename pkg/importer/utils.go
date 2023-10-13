@@ -83,8 +83,25 @@ func spaceSeparate(items ...string) string {
 
 // getSyslSafeName escapes special characters
 // returns a string with URL encoded replacements
-func getSyslSafeName(endpoint string) string {
+func getSyslSafeName(name string) string {
 	// url.PathEscape does not escape '. :'
+	charsToReplace := map[string]string{
+		".": `%2E`,
+		":": `%3A`,
+		"+": `%2B`,
+		"$": `%24`,
+		"&": `%26`,
+	}
+	name = url.PathEscape(name)
+	for realChar, hex := range charsToReplace {
+		name = strings.ReplaceAll(name, realChar, hex)
+	}
+	return name
+}
+
+func getSyslSafeURI(endpoint string) string {
+	endpoint = getSyslSafeName(endpoint)
+
 	charsToKeep := map[string]string{
 		`%2F`: "/",
 		`%7B`: "{",
@@ -93,19 +110,10 @@ func getSyslSafeName(endpoint string) string {
 		`%3F`: "?",
 		`%26`: "&",
 	}
-	charsToReplace := map[string]string{
-		".": `%2E`,
-		":": `%3A`,
-		"+": `%2B`,
-		"$": `%24`,
-	}
-	endpoint = url.PathEscape(endpoint)
-	for realChar, hex := range charsToReplace {
-		endpoint = strings.ReplaceAll(endpoint, realChar, hex)
-	}
 	for hex, realChar := range charsToKeep {
 		endpoint = strings.ReplaceAll(endpoint, hex, realChar)
 	}
+
 	return endpoint
 }
 
