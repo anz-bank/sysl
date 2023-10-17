@@ -21,6 +21,11 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
             | No description.
             return 200 <: POST_GoatOps_200 [mediatype="application/json"]
 
+    /goat/type:
+        POST:
+            | No description.
+            return 200 <: POST__goat_type_200 [mediatype="application/json"]
+
     #---------------------------------------------------------------------------
     # definitions
 
@@ -29,5 +34,9 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
             @json_tag = "data"
 
     !type POST_GoatOps_200 [mediatype="application/json"]:
+        data <: float?:
+            @json_tag = "data"
+
+    !type POST__goat_type_200 [mediatype="application/json"]:
         data <: float?:
             @json_tag = "data"

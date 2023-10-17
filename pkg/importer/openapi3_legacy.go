@@ -618,7 +618,8 @@ func (o *OpenAPI3Importer) buildResponses(
 		for mediaType, obj := range content {
 			f, err := o.fieldForMediaType(mediaType, obj, mtType)
 			if f.Type.Name() == OpenAPI_OBJECT {
-				if op.OperationID != "" {
+				validOperationID := regexp.MustCompile("^[a-zA-Z_]+$")
+				if op.OperationID != "" && validOperationID.MatchString(op.OperationID) {
 					f.Type.SetName(fmt.Sprintf("%s_%s_%s", method, op.OperationID, statusCode))
 				} else {
 					f.Type.SetName(fmt.Sprintf("%s_%s", method, respType.Name()))

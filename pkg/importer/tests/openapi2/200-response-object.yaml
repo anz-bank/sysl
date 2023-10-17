@@ -31,3 +31,14 @@ paths:
             properties:
               data:
                 type: float
+
+  /goat/type:
+    post:
+      operationId: Goat Type With Spaces
+      responses:
+        "200":
+          schema:
+            type: object
+            properties:
+              data:
+                type: float
