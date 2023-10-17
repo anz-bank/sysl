@@ -534,7 +534,7 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) (
 		}
 
 		for statusCode, resp := range op.Responses {
-			err = o.buildResponses(statusCode, resp, path, ep)
+			err = o.buildResponses(statusCode, resp, method, path, op, ep)
 			if err != nil {
 				return nil, err
 			}
@@ -583,7 +583,9 @@ func (o *OpenAPI3Importer) buildRequests(req *openapi3.RequestBodyRef, ep *Endpo
 func (o *OpenAPI3Importer) buildResponses(
 	statusCode string,
 	resp *openapi3.ResponseRef,
+	method string,
 	path string,
+	op *openapi3.Operation,
 	ep *Endpoint,
 ) error {
 	supportedCode := regexp.MustCompile("^ok|error|[1-5][0-9][0-9]$")
@@ -615,6 +617,13 @@ func (o *OpenAPI3Importer) buildResponses(
 		}
 		for mediaType, obj := range content {
 			f, err := o.fieldForMediaType(mediaType, obj, mtType)
+			if f.Type.Name() == OpenAPI_OBJECT {
+				if op.OperationID != "" {
+					f.Type.SetName(fmt.Sprintf("%s_%s_%s", method, op.OperationID, statusCode))
+				} else {
+					f.Type.SetName(fmt.Sprintf("%s_%s", method, respType.Name()))
+				}
+			}
 			if err != nil {
 				return err
 			}

@@ -11,10 +11,10 @@ TestApp "foo" [package="com.example.package"]:
     /ping:
         GET:
             | No description.
-            return 200 <: EXTERNAL_object [examples=[["","containing a %25 symbol"]], mediatype="application/json"]
+            return 200 <: EXTERNAL_GET__ping_200 [examples=[["","containing a %25 symbol"]], mediatype="application/json"]
 
     #---------------------------------------------------------------------------
     # definitions
 
-    !alias EXTERNAL_object [examples=[["","containing a %25 symbol"]], mediatype="application/json"]:
+    !alias EXTERNAL_GET__ping_200 [examples=[["","containing a %25 symbol"]], mediatype="application/json"]:
         string

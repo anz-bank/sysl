@@ -14,6 +14,7 @@ type Func func(args OutputData, text string, logger *logrus.Logger) (out string,
 
 type Type interface {
 	Name() string
+	SetName(name string)
 	Attributes() []string
 	AddAttributes([]string) []string
 }
@@ -24,6 +25,7 @@ type baseType struct {
 }
 
 func (s *baseType) Name() string         { return s.name }
+func (s *baseType) SetName(name string)  { s.name = name }
 func (s *baseType) Attributes() []string { return s.attrs }
 func (s *baseType) AddAttributes(attrs []string) []string {
 	s.attrs = append(s.attrs, attrs...)
