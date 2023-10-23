@@ -1,10 +1,10 @@
 # Builds a docker image by building the sysl binary
-# on Go 1.19 (by default) using the current workspace and then copying the binary
+# on Go 1.21 (by default) using the current workspace and then copying the binary
 # to an image and setting up the entrypoint.
 #
 # The produced image is published to https://hub.docker.com/r/anzbank/sysl
 
-ARG go_ver=1.19
+ARG go_ver=1.21
 ARG alpine_ver=3.16
 
 ARG DOCKER_BASE=golang:${go_ver}-alpine${alpine_ver}
