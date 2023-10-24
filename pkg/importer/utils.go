@@ -2,6 +2,7 @@ package importer
 
 import (
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -81,9 +82,9 @@ func spaceSeparate(items ...string) string {
 	return strings.Join(t, " ")
 }
 
-// getSyslSafeName escapes special characters
+// escapeUnsafeSyslChars escapes special characters
 // returns a string with URL encoded replacements
-func getSyslSafeName(name string) string {
+func escapeUnsafeSyslChars(name string) string {
 	// url.PathEscape does not escape '. :'
 	charsToReplace := map[string]string{
 		".": `%2E`,
@@ -99,8 +100,21 @@ func getSyslSafeName(name string) string {
 	return name
 }
 
+func getSyslSafeName(name string) string {
+	name = escapeUnsafeSyslChars(name)
+
+	// Taken from `Name` in the .g4
+	validSyslNameStart := regexp.MustCompile("^(%[0-9a-fA-F][0-9a-fA-F])*[a-zA-Z_]")
+
+	if !validSyslNameStart.MatchString(name) {
+		name = "_" + name
+	}
+
+	return name
+}
+
 func getSyslSafeURI(endpoint string) string {
-	endpoint = getSyslSafeName(endpoint)
+	endpoint = escapeUnsafeSyslChars(endpoint)
 
 	charsToKeep := map[string]string{
 		`%2F`: "/",
