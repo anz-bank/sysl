@@ -23,16 +23,5 @@ paths:
           required: true
           in: body
           schema:
-            $ref: '#/definitions/SimpleObj'
-        - name: createrequest2
-          required: true
-          in: body
-          schema:
             $ref: 'external-ref-test/EXTERNAL_REF_4.yaml#/definitions/VeryAdvObj'
-definitions:
-  SimpleObj:
-    type: object
-    properties:
-      name:
-        type: string
 

@@ -5,18 +5,15 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"strings"
-
-	"github.com/pkg/errors"
-	"github.com/spf13/afero"
 
 	"github.com/ghodss/yaml"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 
 	"github.com/getkin/kin-openapi/openapi2"
 	"github.com/getkin/kin-openapi/openapi2conv"
 	"github.com/getkin/kin-openapi/openapi3"
-
-	"github.com/sirupsen/logrus"
 )
 
 // https://swagger.io/blog/api-strategy/difference-between-swagger-and-openapi/
@@ -74,8 +71,8 @@ func (l *OpenAPI2Importer) Configure(arg *ImporterArg) (Importer, error) {
 }
 
 // convertToOpenAPI3 takes a openapi2 spec and converts it to openapi3
-func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader) (*openapi3.Swagger, string, error) {
-	var openapiv2 openapi2.Swagger
+func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.Loader) (*openapi3.T, string, error) {
+	var openapiv2 openapi2.T
 	jsondata, err := yaml.YAMLToJSON(data)
 	if err != nil {
 		return nil, "", err
@@ -88,24 +85,7 @@ func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.SwaggerLoader
 	if len(openapiv2.Schemes) == 0 {
 		openapiv2.Schemes = []string{"https"}
 	}
-	openapiv3, err := openapi2conv.ToV3Swagger(&openapiv2)
-	if err != nil {
-		return nil, "", err
-	}
-	// openapi2conv doesnt handle external references correctly so to avoid that we need to serialise the converted
-	// v3 doc back to text and manually replace #/components/* references (easier to do it via text instead of walking
-	// the whole object tree again
-	if oa3text, err := json.Marshal(openapiv3); err == nil {
-		replacer := strings.NewReplacer(
-			"#/definitions/", "#/components/schemas/",
-			"#/responses/", "#/components/responses/",
-			"#/parameters/", "#/components/parameters/",
-		)
-		oa3replaced := replacer.Replace(string(oa3text))
-		_ = json.Unmarshal([]byte(oa3replaced), &openapiv3) //nolint: errcheck // we dont care about the error here
-	}
-
-	err = loader.ResolveRefsIn(openapiv3, uri)
+	openapiv3, err := openapi2conv.ToV3WithLoader(&openapiv2, loader, uri)
 	if err != nil {
 		return nil, "", err
 	}

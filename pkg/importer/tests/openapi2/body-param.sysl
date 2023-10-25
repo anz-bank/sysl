@@ -14,7 +14,7 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
     /goat/create-goat:
         POST (GoatRequest <: Goat [mediatype="application/json", ~body]):
             | Creates a goat.
-            return 201
+            return 201 <: _goat_create_goat_201
 
     #---------------------------------------------------------------------------
     # definitions
@@ -26,3 +26,7 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
             @json_tag = "name"
         with-question%3F <: string?:
             @json_tag = "with-question?"
+
+    !type _goat_create_goat_201:
+        Location <: string [~header]:
+            @json_tag = "Location"

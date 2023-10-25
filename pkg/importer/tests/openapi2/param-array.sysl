@@ -9,7 +9,7 @@ TestApp "Simple" [package="com.example.package"]:
         | No description.
 
     /simple:
-        PUT (DocumentRequest <: DocumentRequest [mediatype="application/json", ~body]):
+        PUT (DocumentRequest <: DocumentRequest [mediatype="*/*", ~body]):
             | No description.
             return 204
             return 400

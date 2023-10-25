@@ -11,9 +11,9 @@ import (
 
 func Test_OpenAPI3Importer_loadTypeSchema(t *testing.T) {
 	t.Parallel()
-	loader := openapi3.NewSwaggerLoader()
+	loader := openapi3.NewLoader()
 	loader.IsExternalRefsAllowed = true
-	schema, err := loader.LoadSwaggerFromFile("tests/openapi3/one-of.yaml")
+	schema, err := loader.LoadFromFile("tests/openapi3/one-of.yaml")
 	assert.NoError(t, err)
 	o := &OpenAPI3Importer{logger: logrus.New()}
 

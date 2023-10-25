@@ -9,7 +9,7 @@ TestApp "Simple" [package="com.example.package"]:
         | No description.
 
     /test:
-        POST (AdvObjRequest <: AdvObj [mediatype="application/json", ~body], key <: int? [~header, name="key"], min_date <: date [~header, name="min_date"]):
+        POST (AdvObjRequest <: AdvObj [mediatype="*/*", ~body], key <: int? [~header, name="key"], min_date <: date [~header, name="min_date"]):
             | No description.
             return 200 <: AdvObj [mediatype="application/json"]
 
@@ -18,8 +18,4 @@ TestApp "Simple" [package="com.example.package"]:
 
     !type AdvObj:
         name <: int?:
-            @json_tag = "name"
-
-    !type SimpleObj:
-        name <: string?:
             @json_tag = "name"

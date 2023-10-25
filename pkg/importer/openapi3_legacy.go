@@ -58,9 +58,9 @@ func (o *OpenAPI3Importer) LoadFile(path string) (string, error) {
 
 func (o *OpenAPI3Importer) Load(file string) (string, error) {
 	loader := NewOpenAPI3Loader(o.logger, o.fs)
-	spec, err := loader.LoadSwaggerFromFile(file)
+	spec, err := loader.LoadFromFile(file)
 	if err != nil {
-		spec, _ = loader.LoadSwaggerFromData([]byte(file)) // nolint: errcheck
+		spec, _ = loader.LoadFromData([]byte(file)) // nolint: errcheck
 	}
 	return o.convertSpec(spec)
 }
@@ -75,11 +75,11 @@ func (o *OpenAPI3Importer) Configure(arg *ImporterArg) (Importer, error) {
 	return o, nil
 }
 
-func NewOpenAPI3Loader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoader {
-	loader := openapi3.NewSwaggerLoader()
+func NewOpenAPI3Loader(logger *logrus.Logger, fs afero.Fs) *openapi3.Loader {
+	loader := openapi3.NewLoader()
 	loader.IsExternalRefsAllowed = true
-	loader.LoadSwaggerFromURIFunc = func(
-		loader *openapi3.SwaggerLoader, url *url.URL) (swagger *openapi3.Swagger, err error) {
+	loader.ReadFromURIFunc = func(
+		loader *openapi3.Loader, url *url.URL) ([]byte, error) {
 		if url.Host == "" && url.Scheme == "" {
 			logger.Debugf("Loading OpenAPI3 ref: %s", url)
 
@@ -88,15 +88,7 @@ func NewOpenAPI3Loader(logger *logrus.Logger, fs afero.Fs) *openapi3.SwaggerLoad
 				return nil, err
 			}
 
-			if strings.Contains(string(data), "swagger:") {
-				swagger, _, err = convertToOpenAPI3(data, url, loader)
-			} else {
-				swagger, err = loader.LoadSwaggerFromDataWithPath(data, url)
-			}
-			if err != nil {
-				return nil, err
-			}
-			return swagger, loader.ResolveRefsIn(swagger, url)
+			return data, err
 		}
 		return nil, fmt.Errorf("unable to load OpenAPI3 URI: %s", url.String())
 	}
@@ -112,7 +104,7 @@ func (o *OpenAPI3Importer) pushName(n string) func() {
 
 func (o *OpenAPI3Importer) popName() { o.nameStack = o.nameStack[:len(o.nameStack)-1] }
 
-func (o *OpenAPI3Importer) convertSpec(spec *openapi3.Swagger) (string, error) {
+func (o *OpenAPI3Importer) convertSpec(spec *openapi3.T) (string, error) {
 	// Convert types
 	o.types = TypeList{}
 	for name, ref := range spec.Components.Schemas {
@@ -162,7 +154,7 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.Swagger) (string, error) {
 	return result.String(), err
 }
 
-func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.Swagger, basepath string) SyslInfo {
+func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.T, basepath string) SyslInfo {
 	info := SyslInfo{
 		OutputData: OutputData{
 			AppName: o.appName,
@@ -197,6 +189,7 @@ func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.Swagger, basepath string
 }
 
 const openapiv3DefinitionPrefix = "#/components/schemas/"
+const openapiv2DefinitionPrefix = "#/definitions/"
 
 func attrsForArray(schema *openapi3.Schema) []string {
 	var attrs []string
@@ -250,6 +243,9 @@ func getAttrs(schema *openapi3.Schema) []string {
 func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 	if idx := strings.Index(ref.Ref, openapiv3DefinitionPrefix); idx >= 0 {
 		return getSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv3DefinitionPrefix))
+	}
+	if idx := strings.Index(ref.Ref, openapiv2DefinitionPrefix); idx >= 0 {
+		return getSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv2DefinitionPrefix))
 	}
 	switch ref.Value.Type {
 	case OpenAPI_ARRAY:

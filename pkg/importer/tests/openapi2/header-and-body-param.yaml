@@ -4,6 +4,8 @@ info:
 paths:
   /test:
     post:
+      consumes:
+        - application/json
       responses:
         200:
           description: 200 OK
@@ -24,6 +26,8 @@ paths:
             $ref: '#/definitions/SimpleObj'
   /test2:
     post:
+      consumes:
+        - application/json
       responses:
         200:
           description: 200 OK
@@ -35,6 +39,8 @@ paths:
             $ref: '#/definitions/accountID'
   /test3:
     post:
+      consumes:
+        - application/json
       responses:
         200:
           description: 200 OK

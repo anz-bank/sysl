@@ -219,7 +219,7 @@ func TestMakeOpenAPI3Exporter(t *testing.T) {
 	exporter := MakeOpenAPI3Exporter(map[string]*syslwrapper.App{}, &logrus.Logger{})
 	expected := &OpenAPI3Exporter{
 		apps:     map[string]*syslwrapper.App{},
-		openapi3: map[string]*openapi3.Swagger{},
+		openapi3: map[string]*openapi3.T{},
 		log:      &logrus.Logger{},
 	}
 	assert.Equal(t, exporter, expected)

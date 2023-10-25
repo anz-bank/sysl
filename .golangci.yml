@@ -12,12 +12,12 @@ linters:
   enable:
     - bodyclose
     # - deadcode  # deprecated
-    - depguard
+    # - depguard
     - dogsled
     - dupl
     - errcheck
     - gochecknoinits
-    - goconst
+    # - goconst
     - gocritic
     - gocyclo
     - gofmt

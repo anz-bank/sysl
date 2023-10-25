@@ -14,14 +14,14 @@ import (
 
 type OpenAPI3Exporter struct {
 	apps     map[string]*syslwrapper.App
-	openapi3 map[string]*openapi3.Swagger
+	openapi3 map[string]*openapi3.T
 	log      *logrus.Logger
 }
 
 func MakeOpenAPI3Exporter(apps map[string]*syslwrapper.App, logger *logrus.Logger) *OpenAPI3Exporter {
 	return &OpenAPI3Exporter{
 		apps:     apps,
-		openapi3: make(map[string]*openapi3.Swagger),
+		openapi3: make(map[string]*openapi3.T),
 		log:      logger,
 	}
 }
@@ -56,8 +56,8 @@ func (s *OpenAPI3Exporter) SerializeOutput(appName string, mode string) ([]byte,
 	return yamlSpec, nil
 }
 
-func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.Swagger, error) {
-	spec := &openapi3.Swagger{}
+func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.T, error) {
+	spec := &openapi3.T{}
 	spec.OpenAPI = "3.0.0"
 	spec.Info = &openapi3.Info{}
 	spec.Info.Title = app.Name
@@ -85,7 +85,8 @@ func (s *OpenAPI3Exporter) GenerateOpenAPI3(app *syslwrapper.App) (*openapi3.Swa
 		Variables:   map[string]*openapi3.ServerVariable{},
 	}
 	spec.AddServer(server)
-	spec.Components = openapi3.NewComponents()
+	components := openapi3.NewComponents()
+	spec.Components = &components
 	spec.Components.Schemas = make(map[string]*openapi3.SchemaRef)
 	for k, v := range app.Types {
 		spec.Components.Schemas[k] = s.exportType(v)
