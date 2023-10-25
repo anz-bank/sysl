@@ -1,6 +1,6 @@
 module github.com/anz-bank/sysl
 
-go 1.18
+go 1.20
 
 replace github.com/getkin/kin-openapi => github.com/AriehSchneier/kin-openapi v0.0.0-20231025034027-8d0456138ebd
 
@@ -12,7 +12,7 @@ require (
 	github.com/anz-bank/golden-retriever v0.30.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.48
-	github.com/arr-ai/arrai v0.318.0
+	github.com/arr-ai/arrai v0.319.0
 	github.com/arr-ai/frozen v0.20.1
 	github.com/arr-ai/hash v0.8.0
 	github.com/arr-ai/proto v0.0.0-20180422074755-2ffbedebee50

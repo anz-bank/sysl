@@ -74,8 +74,8 @@ github.com/anz-bank/mermaid-go v0.1.1/go.mod h1:vo8d6wJgGhqvyjBNBjbGvg7PtgYL/JS6
 github.com/anz-bank/pkg v0.0.48 h1:zst9uNs9DyDsnvuNN4/6TwZOV5Z2IRULT2gnxaBnvR4=
 github.com/anz-bank/pkg v0.0.48/go.mod h1:r86zMYZAyLICuMjEaQNw2STximA2njPZWai2uzFv6P4=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
-github.com/arr-ai/arrai v0.318.0 h1:9CcbIhvRpwjpHcyBNNWldWH3Dusqu3UU8gc3rJZFJTE=
-github.com/arr-ai/arrai v0.318.0/go.mod h1:NVdgwmRSOsVwY24O+qdEvkVzl5VBML+41cPUqfBaQGc=
+github.com/arr-ai/arrai v0.319.0 h1:FvBKXFFvUOIY/Bg50EYslaSdoyZx85r32hFFyCODR5s=
+github.com/arr-ai/arrai v0.319.0/go.mod h1:NVdgwmRSOsVwY24O+qdEvkVzl5VBML+41cPUqfBaQGc=
 github.com/arr-ai/frozen v0.20.1 h1:WTW3JJzBIpeOwXeacD1hO6YzKAaeFam1b3CO7vQBq6U=
 github.com/arr-ai/frozen v0.20.1/go.mod h1:cxMBMvycEemXmbAk4DS61947fR5TGBEKtomp2+SDFjk=
 github.com/arr-ai/hash v0.8.0 h1:Nbax1FE4qa7ejhx+CTCjUAyEPADhYDrRjn/L6y03rMI=
