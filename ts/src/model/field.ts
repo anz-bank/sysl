@@ -23,6 +23,7 @@ export class Field extends Element {
 
         return {
             ...super.toDto(),
+            optional: this.optional,
             collectionType,
             ref: value instanceof ElementRef ? value.toString() : undefined,
             primitive: value instanceof Primitive ? value.toString() : undefined,
