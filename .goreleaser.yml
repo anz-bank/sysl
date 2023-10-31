@@ -2,6 +2,7 @@ project_name: sysl
 env:
   - GO111MODULE=on
   - GOPROXY=https://proxy.golang.org
+  - CGO_ENABLED=0
 before:
   hooks:
     - go mod tidy

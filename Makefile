@@ -64,10 +64,10 @@ check-clean: generate
 	git --no-pager diff HEAD && test -z "$$(git status --porcelain)"
 
 build: generate internal/bundles/bundles.go
-	go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
+	CGO_ENABLED=0 go build -o ./dist/sysl -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 build-windows: generate internal/bundles/bundles.go
-	go build -o ./dist/sysl.exe -ldflags=$(LDFLAGS) -v ./cmd/sysl
+	CGO_ENABLED=0 go build -o ./dist/sysl.exe -ldflags=$(LDFLAGS) -v ./cmd/sysl
 
 buildlsp: generate
 	go build -o ./dist/sysllsp -ldflags=$(LDFLAGS) -v ./cmd/sysllsp
