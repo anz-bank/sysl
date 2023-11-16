@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/anz-bank/golden-retriever/reader/remotefs"
@@ -154,7 +156,13 @@ func (s *TreeShapeListener) EnterDoc_string(ctx *parser.Doc_stringContext) {
 		space := ""
 		text := ctx.TEXT().GetText()
 		text = strings.ReplaceAll(text, `"`, `\"`)
-		text = fromQString(`"` + text[1:] + `"`)
+		if len(text) > 0 {
+			c, _ := utf8.DecodeRuneInString(text)
+			if unicode.IsSpace(c) {
+				text = text[1:]
+			}
+		}
+		text = fromQString(`"` + text + `"`)
 
 		if s.currentApp().Endpoints[s.endpointName].GetRestParams() != nil {
 			if x := s.peekScope().(*sysl.Endpoint); x != nil && len(x.Stmt) == 0 {

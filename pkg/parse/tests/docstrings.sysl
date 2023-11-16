@@ -42,3 +42,10 @@ Indented:
         |       that must be retained
         | end
     ...
+
+EmptyLine:
+    Endpoint:
+        | including empty line
+        |
+        |or with no space
+    ...

@@ -168,6 +168,95 @@ apps:  {
  }
 }
 apps:  {
+ key:  "EmptyLine"
+ value:  {
+  name:  {
+   part:  "EmptyLine"
+  }
+  endpoints:  {
+   key:  "..."
+   value:  {
+    name:  "..."
+   }
+  }
+  endpoints:  {
+   key:  "Endpoint"
+   value:  {
+    name:  "Endpoint"
+    stmt:  {
+     action:  {
+      action:  "| including empty line  or with no space"
+     }
+     source_context:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  47
+       col:  8
+      }
+      end:  {
+       line:  47
+       col:  30
+      }
+     }
+     source_contexts:  {
+      file:  "tests/docstrings.sysl"
+      start:  {
+       line:  47
+       col:  8
+      }
+      end:  {
+       line:  47
+       col:  30
+      }
+     }
+    }
+    source_context:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  46
+      col:  4
+     }
+     end:  {
+      line:  47
+      col:  30
+     }
+    }
+    source_contexts:  {
+     file:  "tests/docstrings.sysl"
+     start:  {
+      line:  46
+      col:  4
+     }
+     end:  {
+      line:  47
+      col:  30
+     }
+    }
+   }
+  }
+  source_context:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  45
+   }
+   end:  {
+    line:  47
+    col:  30
+   }
+  }
+  source_contexts:  {
+   file:  "tests/docstrings.sysl"
+   start:  {
+    line:  45
+   }
+   end:  {
+    line:  47
+    col:  30
+   }
+  }
+ }
+}
+apps:  {
  key:  "Indented"
  value:  {
   name:  {
