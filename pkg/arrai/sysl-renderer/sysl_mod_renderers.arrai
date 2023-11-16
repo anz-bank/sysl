@@ -8,7 +8,7 @@ let (
 ) = //{./util};
 
 
-let inCurly = //re.compile(`^{(\w+)}$`).match;
+let inCurly = //re.compile(`^{([-\w]+)}$`).match;
 let trimPrefixWS = //re.compile(`^\s*`).sub('');
 
 # attrsToTagsAndAnno is a util function which splits attrs into two dictionaries, a dictionary with just patterns key

@@ -12,3 +12,7 @@ TestApp "Sample API":
     /users/{id <: int}/{id2 <: string}:
         GET(request-id <: string [~header, description="the request ID.", name="request-id"]) ?metadata=bool?:
             return 200
+    
+    /{with-dash <: string}:
+        GET:
+            return 200

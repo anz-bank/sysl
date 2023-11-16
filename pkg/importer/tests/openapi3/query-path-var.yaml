@@ -42,3 +42,13 @@ paths:
       responses:
         '200':
           description: OK
+  /{with-dash}:
+    parameters:
+      - name: with-dash
+        schema:
+          type: string
+        in: path
+    get:
+      responses:
+        '200':
+          description: OK
