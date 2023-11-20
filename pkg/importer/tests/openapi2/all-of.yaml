@@ -1,0 +1,49 @@
+swagger: '2.0'
+info:
+  version: "1.0.0"
+  title: foo
+definitions:
+  MergedAllOf1:
+    type: object
+    allOf:
+      # Note the second definition of 'foo' will be ignored
+      - $ref: '#/definitions/ContainsFoo'
+      - type: object
+        properties:
+          foo:
+            $ref: '#/definitions/FooWithBar'
+  MergedAllOf2:
+    type: object
+    allOf:
+      # Note the second definition of 'foo' will be ignored
+      - type: object
+        properties:
+          foo:
+            $ref: '#/definitions/FooWithBar'
+      - $ref: '#/definitions/ContainsFoo'
+  ContainsFoo:
+    properties:
+      foo:
+        $ref: '#/definitions/Foo'
+      propertyB:
+        type: string
+  FooWithBar:
+    type: object
+    allOf:
+      - $ref: '#/definitions/Foo'
+      - type: object
+        properties:
+          bar:
+            $ref: '#/definitions/Bar'
+  Foo:
+    properties:
+      propertyA:
+        type: string
+  Bar:
+    type: object
+    properties:
+      propertyC:
+        type: string
+
+paths:
+  {}

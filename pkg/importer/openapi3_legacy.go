@@ -14,8 +14,10 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	"runtime"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -441,7 +443,22 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 			}
 
 			if subObj, ok := subType.(*StandardType); ok {
-				obj.Properties = append(obj.Properties, subObj.Properties...)
+				if len(obj.Properties) == 0 {
+					obj.Properties = subObj.Properties
+				} else {
+					for _, subProp := range subObj.Properties {
+						idx := slices.IndexFunc(obj.Properties, func(f Field) bool { return f.Name == subProp.Name })
+						switch {
+						case idx < 0:
+							obj.Properties = append(obj.Properties, subProp)
+						case reflect.DeepEqual(obj.Properties[idx], subProp):
+							// just ignore duplicates that are identical
+						default:
+							// warn, but ignore
+							o.logger.Warnf("%s contains a duplicate field: '%s', ignoring the second definition", name, subProp.Name)
+						}
+					}
+				}
 			}
 		}
 
