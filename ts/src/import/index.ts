@@ -1,7 +1,6 @@
-import fs from "fs/promises";
 import path from "path";
 import { spawnSysl } from "../common/spawn";
-import { Action, Alt, Cond, Foreach, Group, Loop, LoopN, Model, Return, Statement } from "../model";
+import { ActionStatement, ParentStatement, Endpoint, Model, ReturnStatement, Statement, ellipsis } from "../model";
 
 export type ImportOptions = {
     input: string;
@@ -63,36 +62,23 @@ export function mergeEndpoints(newModel: Model, oldModel: Model): void {
         app.endpoints.forEach(ep => {
             const oldEp = oldModel.findApp(app.toRef())?.endpoints.find(e => e.name == ep.name);
             if (!oldEp) return;
-            if (oldEp.statements.length == 1 && isPlaceholder(oldEp.statements[0])) return;
 
-            const oldRets = oldEp.statements.flatMap(flattenStatement).filter(s => s.value instanceof Return);
-            const oldPayloads = new Set(oldRets.map(r => (r.value as Return).payload));
-            const newRets = ep.statements.flatMap(flattenStatement).filter(s => s.value instanceof Return);
-            const addRets = newRets.filter(r => !oldPayloads.has((r.value as Return).payload));
+            const getRets = (ep: Endpoint) =>
+                ep.children.flatMap(flattenStatement).filter(s => s instanceof ReturnStatement) as ReturnStatement[];
+            const oldRets = getRets(oldEp);
+            const oldPayloads = new Set(oldRets.map(r => r.payload));
+            const newRets = getRets(ep);
+            const addRets = newRets.filter(r => !oldPayloads.has(r.payload));
             if (oldRets.length + addRets.length != newRets.length) {
                 console.warn(`${app.toRef().toSysl()}.${ep.name} has a return not present in the new model`);
             }
-            ep.statements = [...oldEp.statements, ...addRets];
+            ep.children = [...oldEp.children, ...addRets];
         });
     });
 }
 
-function isPlaceholder(s: Statement): boolean {
-    return s.value instanceof Action && s.value.action == "...";
-}
-
-type ParentStatementType = Cond | Loop | LoopN | Foreach | Group;
-const parentStatementClasses = [Cond, Loop, LoopN, Foreach, Group];
-
 export function flattenStatement(s: Statement): Statement[] {
-    if (parentStatementClasses.some(Cls => s.value instanceof Cls)) {
-        return [s, ...(s.value as ParentStatementType).stmt.flatMap(flattenStatement)];
-    }
-    if (s.value instanceof Alt) {
-        const children = s.value.choices.flatMap(c => c.stmt);
-        return [s, ...children.flatMap(flattenStatement)];
-    }
-    return [s];
+    return s instanceof ParentStatement ? [s, ...s.children.flatMap(flattenStatement)] : [s];
 }
 
 /** Adds any unique import statements from `oldModel` to `newModel`. */

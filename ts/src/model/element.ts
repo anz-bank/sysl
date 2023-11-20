@@ -1,20 +1,28 @@
 import { Location } from "../common";
 import { indent, toSafeName } from "../common/format";
 import { Annotation, AnnoValue, Tag } from "./attribute";
-import { ElementRef, IChild, ILocational, IRenderable } from "./common";
+import { IChild, ILocational, IRenderable } from "./common";
+import { ElementRef } from "./elementRef";
 import { CloneContext, ICloneable } from "./clone";
 import { Model } from "./model";
-import { addTags, renderAnnos } from "./renderers";
 
 /** An object in a Sysl model that can have metadata (annotations and tags). */
 export abstract class Element implements ILocational, IRenderable, IChild, ICloneable {
+    public get parent(): Element | undefined {
+        return this._parent;
+    }
+
+    public set parent(p: Element | undefined) {
+        this._parent = p;
+    }
+
     constructor(
         public name: string,
         public locations: Location[],
         public annos: Annotation[],
         public tags: Tag[],
         public model?: Model,
-        public parent?: Element
+        private _parent?: Element
     ) {}
 
     abstract toSysl(): string;
@@ -32,17 +40,17 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
      */
     public toDto() {
         return {
-            name: this.name,
             kind: this.constructor.name,
+            name: this.name,
             locations: Object.fromEntries([
                 ...this.locations.map((l, i) => [i, l.toString()]),
                 ...this.tags.map(t => [t.name, t.locations[0]?.toString()]),
                 ...this.annos.map(a => [a.name, a.locations[0]?.toString()]),
-            ]),
+            ]) as { [index: number]: string; [name: string]: string },
             metadata: Object.fromEntries([
                 ...this.tags.map(t => [t.name, undefined]),
                 ...this.annos.map(a => [a.name, a.value]),
-            ]),
+            ]) as { [name: string]: AnnoValue | undefined },
         };
     }
 
@@ -196,7 +204,7 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
      * @param extraSubitems Additional children to ensure attachment.
      */
     protected attachSubitems(extraSubitems: IChild[] = []) {
-        const children = (this as unknown as ParentElement<Element>).children ?? [];
+        const children = (this as unknown as IParentElement<Element>).children ?? [];
         [...this.annos, ...this.tags, ...children, ...extraSubitems].forEach(child => {
             child.parent = this;
             child.model = this.model;
@@ -208,29 +216,36 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
     }
 
     protected render(prefix: string, body: string | IRenderable[], name?: string, mustHaveBody: boolean = true) {
+        const annos = indent(this.annos.map(a => `@${a.toSysl()}`).join("\n"));
         if (prefix) prefix += " ";
         if (Array.isArray(body)) body = body.map(r => r.toSysl()).join("\n");
-        if (mustHaveBody && !body && !this.annos.length) body = "...";
+        if (mustHaveBody && !body && !annos) body = "...";
         const isExpanded = body || this.annos.length;
-        let sysl = `${addTags(`${prefix}${name ?? this.safeName}`, this.tags)}${isExpanded ? ":" : ""}`;
-        if (this.annos.length) sysl += `\n${indent(renderAnnos(this.annos))}`;
-        return `${sysl}${body ? "\n" + indent(body) : ""}`;
+        const title = this.renderWithTags(`${prefix}${name ?? this.safeName}`, !!isExpanded);
+        return [title, annos, indent(body)].filter(p => p).join("\n");
+    }
+
+    protected renderWithTags(part: string, colonSuffix: boolean = false): string {
+        const hiddenTags = ["rest"];
+        const tagList = this.tags
+            .filter(t => !hiddenTags.includes(t.name))
+            .map(t => t.toSysl())
+            .join(", ");
+        const withTags = tagList ? `${part} [${tagList}]` : part;
+        return withTags + (colonSuffix ? ":" : "");
     }
 }
 
 /** An {@link Element} that also has child elements of type {@link TChild}. */
-export abstract class ParentElement<TChild extends Element> extends Element {
-    abstract get children(): TChild[];
-    public override toDto() {
-        return { ...super.toDto(), children: this.children.map(e => e.toDto()) };
-    }
+export interface IParentElement<TChild extends Element> extends Element {
+    get children(): TChild[];
 }
 
 /** Common set of properties that are received by all {@link IElement} constructors. */
-export type IElementParams = {
+export type IElementParams<TParent extends Element | void> = {
     annos?: Annotation[];
     tags?: Tag[];
-    parent?: Element;
+    parent?: TParent;
     locations?: Location[];
     model?: Model;
 };

@@ -11,3 +11,6 @@ src/model/elementRef.test.ts
 src/common/format.test.ts
 src/model/view.test.ts
 src/model/element.test.ts
+src/model/endpoint.test.ts
+src/pbModel/statement.ts
+src/model/statement.test.ts

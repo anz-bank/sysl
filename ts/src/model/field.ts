@@ -1,13 +1,22 @@
 import { Element, IElementParams } from "./element";
-import { Primitive } from "./primitive";
+import { Primitive, TypePrimitive } from "./primitive";
 import { CollectionDecorator } from "./decorator";
-import { ElementRef } from "./common";
+import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
+import { Type } from "./type";
 
 export type FieldValue = Primitive | ElementRef | CollectionDecorator;
 
 export class Field extends Element {
-    constructor(name: string, public value: FieldValue, public optional: boolean = false, p?: IElementParams) {
+    public override get parent(): Type | undefined {
+        return super.parent as Type;
+    }
+    public override set parent(app: Type | undefined) {
+        super.parent = app;
+    }
+
+    constructor(name: string, public value: FieldValue, public optional: boolean = false, p?: IElementParams<Type>) {
+        if (!name) throw new Error("Field name must be specified.");
         super(name, p?.locations ?? [], p?.annos ?? [], p?.tags ?? [], p?.model, p?.parent);
         this.attachSubitems();
     }
@@ -32,19 +41,27 @@ export class Field extends Element {
     }
 
     toRef(): ElementRef {
+        // Will currently throw when this instance is a param or restParam due to not being supported by ElementRef.
         return this.parent!.toRef().with({ fieldName: this.name });
     }
 
-    override toSysl(): string {
-        let value: string = this.value.toSysl(true, this.parent ? this.toRef() : undefined);
-        value += this.optional ? "?" : "";
-        //TODO: Everyone who uses Field with empty name should use FieldValue instead.
-        let name = this.name ? `${this.safeName} <:` : "";
-        return this.render(name, "", value, false);
+    private toValue(): string {
+        return this.value.toSysl(true, this.parent ? this.parent.toRef() : undefined) + (this.optional ? "?" : "");
+    }
+
+    override toSysl(omitAny: boolean = false): string {
+        if (omitAny && this.value instanceof Primitive && this.value.primitive == TypePrimitive.ANY)
+            return this.render("", "", undefined, false);
+
+        return this.render(`${this.safeName} <:`, "", this.toValue(), false);
+    }
+
+    public toRestParam(): string {
+        return `${this.name}=${this.toValue()}`;
     }
 
     override toString(): string {
-        return `${this.name ? this.name : "[param]"} <: ${this.value.toSysl(true)}${this.optional ? "?" : ""}`;
+        return `${this.name} <: ${this.toValue()}`;
     }
 
     clone(context = new CloneContext(this.model)): Field {

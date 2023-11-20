@@ -3,8 +3,7 @@ import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, TypedJSON } from "typedjson";
 import { joinedAppName } from "../common/format";
 import { Location } from "../common/location";
-import { sortByLocation } from "../common/sort";
-import { Element, ElementRef, Model, ParseParams } from "../model";
+import { ElementRef, Model, ParseParams } from "../model";
 import { Application } from "../model/application";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
@@ -47,15 +46,15 @@ export class PbApplication {
         const appRef = new ElementRef(this.name.part.slice(0, -1), name);
         const types = Array.from(this.endpoints ?? new Map<string, PbEndpoint>())
             .filter(([, e]) => e.name != "...") // Bug where ellipsis under app appears as endpoint
-            .map(([, e]) => e.toModel(this.name.part));
+            .map(([, e]) => e.toModel(ElementRef.fromAppParts(this.name.part)));
         const endpoints = Array.from(this.types ?? new Map<string, PbTypeDef>(), ([name, t]) =>
-            t.toModel(name, false, appRef)
+            t.toAppChild(name, appRef)
         );
         return new Application(appRef, {
-            children: sortByLocation([...types, ...endpoints]),
+            children: [...types, ...endpoints].sort(Location.compareFirst),
             locations: this.sourceContexts,
-            tags: sortByLocation(getTags(this.attrs)),
-            annos: sortByLocation(getAnnos(this.attrs)),
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
         });
     }
 }
@@ -119,7 +118,7 @@ export class PbDocumentModel {
      * Creates a {@link PbDocumentModel} from in-memory data, either a pb file or a collection of Sysl files.
      *
      * @param content A string or buffer from which to construct a {@link PbDocumentModel}. This can be either the bytes
-     * of a precompiled `.pb` file, or serialised JSON that contains an in-memory file system in the form of an array of
+     * of a precompiled `.pb` file, or serialized JSON that contains an in-memory file system in the form of an array of
      * `{ path, content }` objects. For example:
      * `[{"path": "model/backend/database.sysl", "content": "MyShop :: Backend :: Database\n  ..."}]`.
      * @param params The parameters used to parse Sysl. {@link ParseParams.syslRoot} is ignored.
@@ -142,7 +141,9 @@ export class PbDocumentModel {
         return new Model({
             imports: (this.imports ?? []).map(i => i.toModel()),
             locations: this.sourceContexts,
-            apps: sortByLocation(Array.from(this.apps).map(([, a]) => a.toModel())),
+            apps: Array.from(this.apps)
+                .map(([, a]) => a.toModel())
+                .sort(Location.compareFirst),
         });
     }
 }

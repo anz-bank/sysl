@@ -2,7 +2,8 @@ import { Application } from "./application";
 import { Element } from "./element";
 import { Type } from "./type";
 import { Field } from "./field";
-import { Endpoint, Statement } from "./statement";
+import { ParentStatement, Statement } from "./statement";
+import { Endpoint } from "./endpoint";
 import { Lazy, flatMapDeep } from "../common/util";
 
 /**
@@ -18,7 +19,7 @@ export class FlatView {
     #types = new Lazy(() => this.apps.flatMap((a) => a.types));
     #fields = new Lazy(() => this.types.flatMap((t) => t.children));
     #endpoints = new Lazy(() => this.apps.flatMap((a) => a.endpoints));
-    #statements = new Lazy(() => flatMapDeep(this.endpoints.flatMap((e) => e.statements), (e) => e.children));
+    #statements = new Lazy(() => flatMapDeep(this.endpoints.flatMap((e) => e.children), (e) => (e instanceof ParentStatement) ? e.children : []));
     #dataElements = new Lazy(() => [...this.apps, ...this.types, ...this.fields]);
     #behaviorElements = new Lazy(() => [...this.apps, ...this.endpoints, ...this.statements]);
     #allElements = new Lazy(() => [...this.apps, ...this.types, ...this.fields, ...this.endpoints, ...this.statements]);

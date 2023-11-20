@@ -3,15 +3,11 @@
 
 import { jsonObject, jsonMember } from "typedjson";
 import { PbTypeDef } from "./type";
-import { Element, ElementRef, FieldValue } from "../model";
+import { ElementRef, FieldValue } from "../model";
 
 @jsonObject
 export class PbTypeDefList {
     @jsonMember(() => PbTypeDef) type!: PbTypeDef;
-
-    toModel(): Element {
-        return this.type.toModel();
-    }
 
     toValue(parentRef: ElementRef | undefined): FieldValue {
         return this.type.toValue(parentRef);

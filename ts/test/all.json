@@ -837,6 +837,79 @@
       }
      ]
     },
+    "GET /report.csv": {
+     "name": "GET /report.csv",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "rest"
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
+      {
+       "action": {
+        "action": "..."
+       },
+       "sourceContext": {
+        "file": "ts/test/all.sysl",
+        "start": {
+         "line": 55,
+         "col": 12
+        },
+        "end": {
+         "line": 55,
+         "col": 15
+        }
+       },
+       "sourceContexts": [
+        {
+         "file": "ts/test/all.sysl",
+         "start": {
+          "line": 55,
+          "col": 12
+         },
+         "end": {
+          "line": 55,
+          "col": 15
+         }
+        }
+       ]
+      }
+     ],
+     "restParams": {
+      "method": "GET",
+      "path": "/report.csv"
+     },
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 54,
+       "col": 8
+      },
+      "end": {
+       "line": 57,
+       "col": 15
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 54,
+        "col": 8
+       },
+       "end": {
+        "line": 57,
+        "col": 15
+       }
+      }
+     ]
+    },
     "PATCH /param": {
      "name": "PATCH /param",
      "attrs": {
@@ -1143,7 +1216,7 @@
       },
       "end": {
        "line": 53,
-       "col": 15
+       "col": 5
       }
      },
      "sourceContexts": [
@@ -1155,7 +1228,7 @@
        },
        "end": {
         "line": 53,
-        "col": 15
+        "col": 5
        }
       }
      ]
@@ -1167,7 +1240,7 @@
      "line": 28
     },
     "end": {
-     "line": 51,
+     "line": 55,
      "col": 15
     }
    },
@@ -1178,7 +1251,7 @@
       "line": 28
      },
      "end": {
-      "line": 51,
+      "line": 55,
       "col": 15
      }
     }
@@ -1199,11 +1272,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 53,
+          "line": 57,
           "col": 16
          },
          "end": {
-          "line": 53,
+          "line": 57,
           "col": 20
          }
         },
@@ -1211,11 +1284,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 53,
+           "line": 57,
            "col": 16
           },
           "end": {
-           "line": 53,
+           "line": 57,
            "col": 20
           }
          }
@@ -1234,11 +1307,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 55,
+         "line": 59,
          "col": 22
         },
         "end": {
-         "line": 55,
+         "line": 59,
          "col": 34
         }
        },
@@ -1246,11 +1319,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 55,
+          "line": 59,
           "col": 22
          },
          "end": {
-          "line": 55,
+          "line": 59,
           "col": 34
          }
         }
@@ -1261,11 +1334,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 56,
+         "line": 60,
          "col": 23
         },
         "end": {
-         "line": 56,
+         "line": 60,
          "col": 67
         }
        },
@@ -1273,11 +1346,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 56,
+          "line": 60,
           "col": 23
          },
          "end": {
-          "line": 56,
+          "line": 60,
           "col": 67
          }
         }
@@ -1291,11 +1364,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 57,
+            "line": 61,
             "col": 24
            },
            "end": {
-            "line": 57,
+            "line": 61,
             "col": 28
            }
           },
@@ -1303,11 +1376,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 57,
+             "line": 61,
              "col": 24
             },
             "end": {
-             "line": 57,
+             "line": 61,
              "col": 28
             }
            }
@@ -1318,11 +1391,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 57,
+            "line": 61,
             "col": 30
            },
            "end": {
-            "line": 57,
+            "line": 61,
             "col": 34
            }
           },
@@ -1330,11 +1403,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 57,
+             "line": 61,
              "col": 30
             },
             "end": {
-             "line": 57,
+             "line": 61,
              "col": 34
             }
            }
@@ -1345,11 +1418,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 57,
+            "line": 61,
             "col": 36
            },
            "end": {
-            "line": 57,
+            "line": 61,
             "col": 40
            }
           },
@@ -1357,11 +1430,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 57,
+             "line": 61,
              "col": 36
             },
             "end": {
-             "line": 57,
+             "line": 61,
              "col": 40
             }
            }
@@ -1375,11 +1448,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 57,
+               "line": 61,
                "col": 43
               },
               "end": {
-               "line": 57,
+               "line": 61,
                "col": 50
               }
              },
@@ -1387,11 +1460,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 57,
+                "line": 61,
                 "col": 43
                },
                "end": {
-                "line": 57,
+                "line": 61,
                 "col": 50
                }
               }
@@ -1402,11 +1475,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 57,
+            "line": 61,
             "col": 42
            },
            "end": {
-            "line": 57,
+            "line": 61,
             "col": 51
            }
           },
@@ -1414,11 +1487,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 57,
+             "line": 61,
              "col": 42
             },
             "end": {
-             "line": 57,
+             "line": 61,
              "col": 51
             }
            }
@@ -1429,11 +1502,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 57,
+         "line": 61,
          "col": 23
         },
         "end": {
-         "line": 57,
+         "line": 61,
          "col": 52
         }
        },
@@ -1441,11 +1514,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 57,
+          "line": 61,
           "col": 23
          },
          "end": {
-          "line": 57,
+          "line": 61,
           "col": 52
          }
         }
@@ -1456,11 +1529,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 58,
+         "line": 62,
          "col": 22
         },
         "end": {
-         "line": 64,
+         "line": 68,
          "col": 5
         }
        },
@@ -1468,11 +1541,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 58,
+          "line": 62,
           "col": 22
          },
          "end": {
-          "line": 64,
+          "line": 68,
           "col": 5
          }
         }
@@ -1482,28 +1555,28 @@
        "a": {
         "elt": [
          {
-          "s": "tag",
+          "s": "SimpleEpTag",
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 54,
+            "line": 58,
             "col": 14
            },
            "end": {
-            "line": 54,
-            "col": 18
+            "line": 58,
+            "col": 26
            }
           },
           "sourceContexts": [
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 54,
+             "line": 58,
              "col": 14
             },
             "end": {
-             "line": 54,
-             "col": 18
+             "line": 58,
+             "col": 26
             }
            }
           ]
@@ -1515,11 +1588,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 54,
+       "line": 58,
        "col": 4
       },
       "end": {
-       "line": 64,
+       "line": 68,
        "col": 5
       }
      },
@@ -1527,11 +1600,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 54,
+        "line": 58,
         "col": 4
        },
        "end": {
-        "line": 64,
+        "line": 68,
         "col": 5
        }
       }
@@ -1548,11 +1621,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 70,
+            "line": 74,
             "col": 91
            },
            "end": {
-            "line": 70,
+            "line": 74,
             "col": 95
            }
           },
@@ -1560,11 +1633,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 70,
+             "line": 74,
              "col": 91
             },
             "end": {
-             "line": 70,
+             "line": 74,
              "col": 95
             }
            }
@@ -1624,11 +1697,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 71,
+         "line": 75,
          "col": 8
         },
         "end": {
-         "line": 71,
+         "line": 75,
          "col": 11
         }
        },
@@ -1636,11 +1709,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 71,
+          "line": 75,
           "col": 8
          },
          "end": {
-          "line": 71,
+          "line": 75,
           "col": 11
          }
         }
@@ -1650,11 +1723,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 70,
+       "line": 74,
        "col": 4
       },
       "end": {
-       "line": 71,
+       "line": 75,
        "col": 11
       }
      },
@@ -1662,18 +1735,18 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 70,
+        "line": 74,
         "col": 4
        },
        "end": {
-        "line": 71,
+        "line": 75,
         "col": 11
        }
       }
      ]
     },
-    "SimpleEpWithParamsRef": {
-     "name": "SimpleEpWithParamsRef",
+    "SimpleEpWithParam": {
+     "name": "SimpleEpWithParam",
      "attrs": {
       "patterns": {
        "a": {
@@ -1683,24 +1756,24 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 64,
-            "col": 40
+            "line": 68,
+            "col": 38
            },
            "end": {
-            "line": 64,
-            "col": 44
+            "line": 68,
+            "col": 42
            }
           },
           "sourceContexts": [
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 64,
-             "col": 40
+             "line": 68,
+             "col": 38
             },
             "end": {
-             "line": 64,
-             "col": 44
+             "line": 68,
+             "col": 42
             }
            }
           ]
@@ -1711,7 +1784,7 @@
      },
      "param": [
       {
-       "name": "Types.type",
+       "name": "untypedParam",
        "type": {
         "noType": {}
        }
@@ -1725,11 +1798,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 65,
+         "line": 69,
          "col": 8
         },
         "end": {
-         "line": 65,
+         "line": 69,
          "col": 11
         }
        },
@@ -1737,11 +1810,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 65,
+          "line": 69,
           "col": 8
          },
          "end": {
-          "line": 65,
+          "line": 69,
           "col": 11
          }
         }
@@ -1751,11 +1824,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 64,
+       "line": 68,
        "col": 4
       },
       "end": {
-       "line": 65,
+       "line": 69,
        "col": 11
       }
      },
@@ -1763,11 +1836,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 64,
+        "line": 68,
         "col": 4
        },
        "end": {
-        "line": 65,
+        "line": 69,
         "col": 11
        }
       }
@@ -1784,11 +1857,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 67,
+            "line": 71,
             "col": 42
            },
            "end": {
-            "line": 67,
+            "line": 71,
             "col": 46
            }
           },
@@ -1796,11 +1869,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 67,
+             "line": 71,
              "col": 42
             },
             "end": {
-             "line": 67,
+             "line": 71,
              "col": 46
             }
            }
@@ -1826,11 +1899,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 68,
+         "line": 72,
          "col": 8
         },
         "end": {
-         "line": 68,
+         "line": 72,
          "col": 11
         }
        },
@@ -1838,11 +1911,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 68,
+          "line": 72,
           "col": 8
          },
          "end": {
-          "line": 68,
+          "line": 72,
           "col": 11
          }
         }
@@ -1852,11 +1925,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 67,
+       "line": 71,
        "col": 4
       },
       "end": {
-       "line": 68,
+       "line": 72,
        "col": 11
       }
      },
@@ -1864,11 +1937,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 67,
+        "line": 71,
         "col": 4
        },
        "end": {
-        "line": 68,
+        "line": 72,
         "col": 11
        }
       }
@@ -1878,10 +1951,10 @@
    "sourceContext": {
     "file": "ts/test/all.sysl",
     "start": {
-     "line": 53
+     "line": 57
     },
     "end": {
-     "line": 71,
+     "line": 75,
      "col": 11
     }
    },
@@ -1889,10 +1962,10 @@
     {
      "file": "ts/test/all.sysl",
      "start": {
-      "line": 53
+      "line": 57
      },
      "end": {
-      "line": 71,
+      "line": 75,
       "col": 11
      }
     }
@@ -1913,11 +1986,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 141,
+          "line": 145,
           "col": 12
          },
          "end": {
-          "line": 141,
+          "line": 145,
           "col": 16
          }
         },
@@ -1925,11 +1998,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 141,
+           "line": 145,
            "col": 12
           },
           "end": {
-           "line": 141,
+           "line": 145,
            "col": 16
           }
          }
@@ -1948,11 +2021,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 189,
+         "line": 187,
          "col": 23
         },
         "end": {
-         "line": 189,
+         "line": 187,
          "col": 63
         }
        },
@@ -1960,11 +2033,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 189,
+          "line": 187,
           "col": 23
          },
          "end": {
-          "line": 189,
+          "line": 187,
           "col": 63
          }
         }
@@ -1978,11 +2051,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 190,
+            "line": 188,
             "col": 24
            },
            "end": {
-            "line": 190,
+            "line": 188,
             "col": 28
            }
           },
@@ -1990,11 +2063,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 190,
+             "line": 188,
              "col": 24
             },
             "end": {
-             "line": 190,
+             "line": 188,
              "col": 28
             }
            }
@@ -2005,11 +2078,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 190,
+            "line": 188,
             "col": 30
            },
            "end": {
-            "line": 190,
+            "line": 188,
             "col": 34
            }
           },
@@ -2017,11 +2090,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 190,
+             "line": 188,
              "col": 30
             },
             "end": {
-             "line": 190,
+             "line": 188,
              "col": 34
             }
            }
@@ -2032,11 +2105,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 190,
+            "line": 188,
             "col": 36
            },
            "end": {
-            "line": 190,
+            "line": 188,
             "col": 40
            }
           },
@@ -2044,11 +2117,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 190,
+             "line": 188,
              "col": 36
             },
             "end": {
-             "line": 190,
+             "line": 188,
              "col": 40
             }
            }
@@ -2059,11 +2132,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 190,
+            "line": 188,
             "col": 42
            },
            "end": {
-            "line": 190,
+            "line": 188,
             "col": 49
            }
           },
@@ -2071,11 +2144,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 190,
+             "line": 188,
              "col": 42
             },
             "end": {
-             "line": 190,
+             "line": 188,
              "col": 49
             }
            }
@@ -2086,11 +2159,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 190,
+         "line": 188,
          "col": 23
         },
         "end": {
-         "line": 190,
+         "line": 188,
          "col": 50
         }
        },
@@ -2098,11 +2171,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 190,
+          "line": 188,
           "col": 23
          },
          "end": {
-          "line": 190,
+          "line": 188,
           "col": 50
          }
         }
@@ -2113,11 +2186,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 191,
+         "line": 189,
          "col": 22
         },
         "end": {
-         "line": 196,
+         "line": 194,
          "col": 5
         }
        },
@@ -2125,11 +2198,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 191,
+          "line": 189,
           "col": 22
          },
          "end": {
-          "line": 196,
+          "line": 194,
           "col": 5
          }
         }
@@ -2143,11 +2216,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 188,
+            "line": 186,
             "col": 23
            },
            "end": {
-            "line": 188,
+            "line": 186,
             "col": 27
            }
           },
@@ -2155,11 +2228,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 188,
+             "line": 186,
              "col": 23
             },
             "end": {
-             "line": 188,
+             "line": 186,
              "col": 27
             }
            }
@@ -2172,11 +2245,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 188,
+       "line": 186,
        "col": 4
       },
       "end": {
-       "line": 196,
+       "line": 194,
        "col": 5
       }
      },
@@ -2184,11 +2257,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 188,
+        "line": 186,
         "col": 4
        },
        "end": {
-        "line": 196,
+        "line": 194,
         "col": 5
        }
       }
@@ -2209,11 +2282,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 197,
+         "line": 195,
          "col": 8
         },
         "end": {
-         "line": 197,
+         "line": 195,
          "col": 25
         }
        },
@@ -2221,11 +2294,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 197,
+          "line": 195,
           "col": 8
          },
          "end": {
-          "line": 197,
+          "line": 195,
           "col": 25
          }
         }
@@ -2238,11 +2311,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 198,
+         "line": 196,
          "col": 8
         },
         "end": {
-         "line": 198,
+         "line": 196,
          "col": 118
         }
        },
@@ -2250,11 +2323,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 198,
+          "line": 196,
           "col": 8
          },
          "end": {
-          "line": 198,
+          "line": 196,
           "col": 118
          }
         }
@@ -2267,11 +2340,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 199,
+         "line": 197,
          "col": 8
         },
         "end": {
-         "line": 199,
+         "line": 197,
          "col": 19
         }
        },
@@ -2279,11 +2352,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 199,
+          "line": 197,
           "col": 8
          },
          "end": {
-          "line": 199,
+          "line": 197,
           "col": 19
          }
         }
@@ -2293,11 +2366,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 196,
+       "line": 194,
        "col": 4
       },
       "end": {
-       "line": 199,
+       "line": 197,
        "col": 19
       }
      },
@@ -2305,11 +2378,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 196,
+        "line": 194,
         "col": 4
        },
        "end": {
-        "line": 199,
+        "line": 197,
         "col": 19
        }
       }
@@ -2326,11 +2399,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 169,
+            "line": 167,
             "col": 11
            },
            "end": {
-            "line": 169,
+            "line": 167,
             "col": 15
            }
           },
@@ -2338,11 +2411,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 169,
+             "line": 167,
              "col": 11
             },
             "end": {
-             "line": 169,
+             "line": 167,
              "col": 15
             }
            }
@@ -2365,11 +2438,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 170,
+         "line": 168,
          "col": 8
         },
         "end": {
-         "line": 170,
+         "line": 168,
          "col": 19
         }
        },
@@ -2377,11 +2450,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 170,
+          "line": 168,
           "col": 8
          },
          "end": {
-          "line": 170,
+          "line": 168,
           "col": 19
          }
         }
@@ -2399,11 +2472,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 171,
+         "line": 169,
          "col": 8
         },
         "end": {
-         "line": 171,
+         "line": 169,
          "col": 34
         }
        },
@@ -2411,11 +2484,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 171,
+          "line": 169,
           "col": 8
          },
          "end": {
-          "line": 171,
+          "line": 169,
           "col": 34
          }
         }
@@ -2425,11 +2498,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 169,
+       "line": 167,
        "col": 4
       },
       "end": {
-       "line": 171,
+       "line": 169,
        "col": 34
       }
      },
@@ -2437,11 +2510,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 169,
+        "line": 167,
         "col": 4
        },
        "end": {
-        "line": 171,
+        "line": 169,
         "col": 34
        }
       }
@@ -2458,11 +2531,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 184,
+            "line": 182,
             "col": 21
            },
            "end": {
-            "line": 184,
+            "line": 182,
             "col": 25
            }
           },
@@ -2470,11 +2543,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 184,
+             "line": 182,
              "col": 21
             },
             "end": {
-             "line": 184,
+             "line": 182,
              "col": 25
             }
            }
@@ -2501,11 +2574,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 186,
+            "line": 184,
             "col": 12
            },
            "end": {
-            "line": 186,
+            "line": 184,
             "col": 31
            }
           },
@@ -2513,11 +2586,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 186,
+             "line": 184,
              "col": 12
             },
             "end": {
-             "line": 186,
+             "line": 184,
              "col": 31
             }
            }
@@ -2528,11 +2601,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 185,
+         "line": 183,
          "col": 8
         },
         "end": {
-         "line": 186,
+         "line": 184,
          "col": 31
         }
        },
@@ -2540,11 +2613,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 185,
+          "line": 183,
           "col": 8
          },
          "end": {
-          "line": 186,
+          "line": 184,
           "col": 31
          }
         }
@@ -2554,11 +2627,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 184,
+       "line": 182,
        "col": 4
       },
       "end": {
-       "line": 186,
+       "line": 184,
        "col": 31
       }
      },
@@ -2566,11 +2639,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 184,
+        "line": 182,
         "col": 4
        },
        "end": {
-        "line": 186,
+        "line": 184,
         "col": 31
        }
       }
@@ -2587,11 +2660,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 142,
+            "line": 146,
             "col": 12
            },
            "end": {
-            "line": 142,
+            "line": 146,
             "col": 16
            }
           },
@@ -2599,11 +2672,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 142,
+             "line": 146,
              "col": 12
             },
             "end": {
-             "line": 142,
+             "line": 146,
              "col": 16
             }
            }
@@ -2625,11 +2698,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 144,
+            "line": 148,
             "col": 12
            },
            "end": {
-            "line": 144,
+            "line": 148,
             "col": 31
            }
           },
@@ -2637,11 +2710,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 144,
+             "line": 148,
              "col": 12
             },
             "end": {
-             "line": 144,
+             "line": 148,
              "col": 31
             }
            }
@@ -2652,11 +2725,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 143,
+         "line": 147,
          "col": 8
         },
         "end": {
-         "line": 145,
+         "line": 149,
          "col": 9
         }
        },
@@ -2664,11 +2737,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 143,
+          "line": 147,
           "col": 8
          },
          "end": {
-          "line": 145,
+          "line": 149,
           "col": 9
          }
         }
@@ -2690,11 +2763,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 146,
+            "line": 150,
             "col": 12
            },
            "end": {
-            "line": 146,
+            "line": 150,
             "col": 22
            }
           },
@@ -2702,11 +2775,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 146,
+             "line": 150,
              "col": 12
             },
             "end": {
-             "line": 146,
+             "line": 150,
              "col": 22
             }
            }
@@ -2717,11 +2790,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 145,
+         "line": 149,
          "col": 8
         },
         "end": {
-         "line": 147,
+         "line": 151,
          "col": 9
         }
        },
@@ -2729,11 +2802,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 145,
+          "line": 149,
           "col": 8
          },
          "end": {
-          "line": 147,
+          "line": 151,
           "col": 9
          }
         }
@@ -2742,130 +2815,6 @@
       {
        "group": {
         "title": "else",
-        "stmt": [
-         {
-          "action": {
-           "action": "..."
-          },
-          "sourceContext": {
-           "file": "ts/test/all.sysl",
-           "start": {
-            "line": 148,
-            "col": 12
-           },
-           "end": {
-            "line": 148,
-            "col": 15
-           }
-          },
-          "sourceContexts": [
-           {
-            "file": "ts/test/all.sysl",
-            "start": {
-             "line": 148,
-             "col": 12
-            },
-            "end": {
-             "line": 148,
-             "col": 15
-            }
-           }
-          ]
-         }
-        ]
-       },
-       "sourceContext": {
-        "file": "ts/test/all.sysl",
-        "start": {
-         "line": 147,
-         "col": 8
-        },
-        "end": {
-         "line": 148,
-         "col": 15
-        }
-       },
-       "sourceContexts": [
-        {
-         "file": "ts/test/all.sysl",
-         "start": {
-          "line": 147,
-          "col": 8
-         },
-         "end": {
-          "line": 148,
-          "col": 15
-         }
-        }
-       ]
-      }
-     ],
-     "sourceContext": {
-      "file": "ts/test/all.sysl",
-      "start": {
-       "line": 142,
-       "col": 4
-      },
-      "end": {
-       "line": 148,
-       "col": 15
-      }
-     },
-     "sourceContexts": [
-      {
-       "file": "ts/test/all.sysl",
-       "start": {
-        "line": 142,
-        "col": 4
-       },
-       "end": {
-        "line": 148,
-        "col": 15
-       }
-      }
-     ]
-    },
-    "Loops": {
-     "name": "Loops",
-     "attrs": {
-      "patterns": {
-       "a": {
-        "elt": [
-         {
-          "s": "tag",
-          "sourceContext": {
-           "file": "ts/test/all.sysl",
-           "start": {
-            "line": 150,
-            "col": 11
-           },
-           "end": {
-            "line": 150,
-            "col": 15
-           }
-          },
-          "sourceContexts": [
-           {
-            "file": "ts/test/all.sysl",
-            "start": {
-             "line": 150,
-             "col": 11
-            },
-            "end": {
-             "line": 150,
-             "col": 15
-            }
-           }
-          ]
-         }
-        ]
-       }
-      }
-     },
-     "stmt": [
-      {
-       "group": {
-        "title": "alt predicate",
         "stmt": [
          {
           "action": {
@@ -2905,8 +2854,8 @@
          "col": 8
         },
         "end": {
-         "line": 153,
-         "col": 9
+         "line": 152,
+         "col": 15
         }
        },
        "sourceContexts": [
@@ -2917,12 +2866,76 @@
           "col": 8
          },
          "end": {
-          "line": 153,
-          "col": 9
+          "line": 152,
+          "col": 15
          }
         }
        ]
+      }
+     ],
+     "sourceContext": {
+      "file": "ts/test/all.sysl",
+      "start": {
+       "line": 146,
+       "col": 4
       },
+      "end": {
+       "line": 152,
+       "col": 15
+      }
+     },
+     "sourceContexts": [
+      {
+       "file": "ts/test/all.sysl",
+       "start": {
+        "line": 146,
+        "col": 4
+       },
+       "end": {
+        "line": 152,
+        "col": 15
+       }
+      }
+     ]
+    },
+    "Loops": {
+     "name": "Loops",
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "tag",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 154,
+            "col": 11
+           },
+           "end": {
+            "line": 154,
+            "col": 15
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 154,
+             "col": 11
+            },
+            "end": {
+             "line": 154,
+             "col": 15
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     },
+     "stmt": [
       {
        "loop": {
         "mode": "UNTIL",
@@ -2935,11 +2948,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 154,
+            "line": 156,
             "col": 12
            },
            "end": {
-            "line": 154,
+            "line": 156,
             "col": 15
            }
           },
@@ -2947,11 +2960,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 154,
+             "line": 156,
              "col": 12
             },
             "end": {
-             "line": 154,
+             "line": 156,
              "col": 15
             }
            }
@@ -2962,11 +2975,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 153,
+         "line": 155,
          "col": 8
         },
         "end": {
-         "line": 155,
+         "line": 157,
          "col": 9
         }
        },
@@ -2974,11 +2987,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 153,
+          "line": 155,
           "col": 8
          },
          "end": {
-          "line": 155,
+          "line": 157,
           "col": 9
          }
         }
@@ -2995,66 +3008,6 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 156,
-            "col": 12
-           },
-           "end": {
-            "line": 156,
-            "col": 15
-           }
-          },
-          "sourceContexts": [
-           {
-            "file": "ts/test/all.sysl",
-            "start": {
-             "line": 156,
-             "col": 12
-            },
-            "end": {
-             "line": 156,
-             "col": 15
-            }
-           }
-          ]
-         }
-        ]
-       },
-       "sourceContext": {
-        "file": "ts/test/all.sysl",
-        "start": {
-         "line": 155,
-         "col": 8
-        },
-        "end": {
-         "line": 157,
-         "col": 9
-        }
-       },
-       "sourceContexts": [
-        {
-         "file": "ts/test/all.sysl",
-         "start": {
-          "line": 155,
-          "col": 8
-         },
-         "end": {
-          "line": 157,
-          "col": 9
-         }
-        }
-       ]
-      },
-      {
-       "group": {
-        "title": "for predicate",
-        "stmt": [
-         {
-          "action": {
-           "action": "..."
-          },
-          "sourceContext": {
-           "file": "ts/test/all.sysl",
-           "start": {
             "line": 158,
             "col": 12
            },
@@ -3099,66 +3052,6 @@
          },
          "end": {
           "line": 159,
-          "col": 9
-         }
-        }
-       ]
-      },
-      {
-       "group": {
-        "title": "loop predicate",
-        "stmt": [
-         {
-          "action": {
-           "action": "..."
-          },
-          "sourceContext": {
-           "file": "ts/test/all.sysl",
-           "start": {
-            "line": 160,
-            "col": 12
-           },
-           "end": {
-            "line": 160,
-            "col": 15
-           }
-          },
-          "sourceContexts": [
-           {
-            "file": "ts/test/all.sysl",
-            "start": {
-             "line": 160,
-             "col": 12
-            },
-            "end": {
-             "line": 160,
-             "col": 15
-            }
-           }
-          ]
-         }
-        ]
-       },
-       "sourceContext": {
-        "file": "ts/test/all.sysl",
-        "start": {
-         "line": 159,
-         "col": 8
-        },
-        "end": {
-         "line": 161,
-         "col": 9
-        }
-       },
-       "sourceContexts": [
-        {
-         "file": "ts/test/all.sysl",
-         "start": {
-          "line": 159,
-          "col": 8
-         },
-         "end": {
-          "line": 161,
           "col": 9
          }
         }
@@ -3176,11 +3069,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 162,
+            "line": 160,
             "col": 12
            },
            "end": {
-            "line": 162,
+            "line": 160,
             "col": 15
            }
           },
@@ -3188,11 +3081,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 162,
+             "line": 160,
              "col": 12
             },
             "end": {
-             "line": 162,
+             "line": 160,
              "col": 15
             }
            }
@@ -3203,11 +3096,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 161,
+         "line": 159,
          "col": 8
         },
         "end": {
-         "line": 162,
+         "line": 160,
          "col": 15
         }
        },
@@ -3215,11 +3108,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 161,
+          "line": 159,
           "col": 8
          },
          "end": {
-          "line": 162,
+          "line": 160,
           "col": 15
          }
         }
@@ -3229,11 +3122,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 150,
+       "line": 154,
        "col": 4
       },
       "end": {
-       "line": 162,
+       "line": 160,
        "col": 15
       }
      },
@@ -3241,11 +3134,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 150,
+        "line": 154,
         "col": 4
        },
        "end": {
-        "line": 162,
+        "line": 160,
         "col": 15
        }
       }
@@ -3261,11 +3154,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 202,
+         "line": 200,
          "col": 8
         },
         "end": {
-         "line": 202,
+         "line": 200,
          "col": 34
         }
        },
@@ -3273,11 +3166,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 202,
+          "line": 200,
           "col": 8
          },
          "end": {
-          "line": 202,
+          "line": 200,
           "col": 34
          }
         }
@@ -3287,11 +3180,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 201,
+       "line": 199,
        "col": 4
       },
       "end": {
-       "line": 202,
+       "line": 200,
        "col": 34
       }
      },
@@ -3299,11 +3192,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 201,
+        "line": 199,
         "col": 4
        },
        "end": {
-        "line": 202,
+        "line": 200,
         "col": 34
        }
       }
@@ -3320,11 +3213,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 173,
+            "line": 171,
             "col": 21
            },
            "end": {
-            "line": 173,
+            "line": 171,
             "col": 25
            }
           },
@@ -3332,11 +3225,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 173,
+             "line": 171,
              "col": 21
             },
             "end": {
-             "line": 173,
+             "line": 171,
              "col": 25
             }
            }
@@ -3360,11 +3253,11 @@
             "sourceContext": {
              "file": "ts/test/all.sysl",
              "start": {
-              "line": 176,
+              "line": 174,
               "col": 16
              },
              "end": {
-              "line": 176,
+              "line": 174,
               "col": 35
              }
             },
@@ -3372,11 +3265,11 @@
              {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 176,
+               "line": 174,
                "col": 16
               },
               "end": {
-               "line": 176,
+               "line": 174,
                "col": 35
               }
              }
@@ -3394,11 +3287,11 @@
             "sourceContext": {
              "file": "ts/test/all.sysl",
              "start": {
-              "line": 178,
+              "line": 176,
               "col": 16
              },
              "end": {
-              "line": 178,
+              "line": 176,
               "col": 32
              }
             },
@@ -3406,11 +3299,11 @@
              {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 178,
+               "line": 176,
                "col": 16
               },
               "end": {
-               "line": 178,
+               "line": 176,
                "col": 32
               }
              }
@@ -3428,11 +3321,11 @@
             "sourceContext": {
              "file": "ts/test/all.sysl",
              "start": {
-              "line": 180,
+              "line": 178,
               "col": 16
              },
              "end": {
-              "line": 180,
+              "line": 178,
               "col": 39
              }
             },
@@ -3440,11 +3333,11 @@
              {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 180,
+               "line": 178,
                "col": 16
               },
               "end": {
-               "line": 180,
+               "line": 178,
                "col": 39
               }
              }
@@ -3461,11 +3354,11 @@
             "sourceContext": {
              "file": "ts/test/all.sysl",
              "start": {
-              "line": 182,
+              "line": 180,
               "col": 16
              },
              "end": {
-              "line": 182,
+              "line": 180,
               "col": 38
              }
             },
@@ -3473,11 +3366,11 @@
              {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 182,
+               "line": 180,
                "col": 16
               },
               "end": {
-               "line": 182,
+               "line": 180,
                "col": 38
               }
              }
@@ -3490,11 +3383,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 174,
+         "line": 172,
          "col": 8
         },
         "end": {
-         "line": 182,
+         "line": 180,
          "col": 38
         }
        },
@@ -3502,11 +3395,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 174,
+          "line": 172,
           "col": 8
          },
          "end": {
-          "line": 182,
+          "line": 180,
           "col": 38
          }
         }
@@ -3516,11 +3409,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 173,
+       "line": 171,
        "col": 4
       },
       "end": {
-       "line": 182,
+       "line": 180,
        "col": 38
       }
      },
@@ -3528,11 +3421,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 173,
+        "line": 171,
         "col": 4
        },
        "end": {
-        "line": 182,
+        "line": 180,
         "col": 38
        }
       }
@@ -3549,11 +3442,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 164,
+            "line": 162,
             "col": 13
            },
            "end": {
-            "line": 164,
+            "line": 162,
             "col": 17
            }
           },
@@ -3561,11 +3454,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 164,
+             "line": 162,
              "col": 13
             },
             "end": {
-             "line": 164,
+             "line": 162,
              "col": 17
             }
            }
@@ -3583,11 +3476,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 165,
+         "line": 163,
          "col": 8
         },
         "end": {
-         "line": 165,
+         "line": 163,
          "col": 27
         }
        },
@@ -3595,11 +3488,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 165,
+          "line": 163,
           "col": 8
          },
          "end": {
-          "line": 165,
+          "line": 163,
           "col": 27
          }
         }
@@ -3612,11 +3505,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 166,
+         "line": 164,
          "col": 8
         },
         "end": {
-         "line": 166,
+         "line": 164,
          "col": 31
         }
        },
@@ -3624,11 +3517,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 166,
+          "line": 164,
           "col": 8
          },
          "end": {
-          "line": 166,
+          "line": 164,
           "col": 31
          }
         }
@@ -3641,11 +3534,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 167,
+         "line": 165,
          "col": 8
         },
         "end": {
-         "line": 167,
+         "line": 165,
          "col": 34
         }
        },
@@ -3653,11 +3546,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 167,
+          "line": 165,
           "col": 8
          },
          "end": {
-          "line": 167,
+          "line": 165,
           "col": 34
          }
         }
@@ -3667,11 +3560,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 164,
+       "line": 162,
        "col": 4
       },
       "end": {
-       "line": 167,
+       "line": 165,
        "col": 34
       }
      },
@@ -3679,11 +3572,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 164,
+        "line": 162,
         "col": 4
        },
        "end": {
-        "line": 167,
+        "line": 165,
         "col": 34
        }
       }
@@ -3693,10 +3586,10 @@
    "sourceContext": {
     "file": "ts/test/all.sysl",
     "start": {
-     "line": 141
+     "line": 145
     },
     "end": {
-     "line": 202,
+     "line": 200,
      "col": 34
     }
    },
@@ -3704,10 +3597,10 @@
     {
      "file": "ts/test/all.sysl",
      "start": {
-      "line": 141
+      "line": 145
      },
      "end": {
-      "line": 202,
+      "line": 200,
       "col": 34
      }
     }
@@ -3728,11 +3621,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 115,
+         "line": 119,
          "col": 23
         },
         "end": {
-         "line": 115,
+         "line": 119,
          "col": 63
         }
        },
@@ -3740,11 +3633,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 115,
+          "line": 119,
           "col": 23
          },
          "end": {
-          "line": 115,
+          "line": 119,
           "col": 63
          }
         }
@@ -3758,11 +3651,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 116,
+            "line": 120,
             "col": 24
            },
            "end": {
-            "line": 116,
+            "line": 120,
             "col": 28
            }
           },
@@ -3770,11 +3663,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 116,
+             "line": 120,
              "col": 24
             },
             "end": {
-             "line": 116,
+             "line": 120,
              "col": 28
             }
            }
@@ -3785,11 +3678,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 116,
+            "line": 120,
             "col": 30
            },
            "end": {
-            "line": 116,
+            "line": 120,
             "col": 34
            }
           },
@@ -3797,11 +3690,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 116,
+             "line": 120,
              "col": 30
             },
             "end": {
-             "line": 116,
+             "line": 120,
              "col": 34
             }
            }
@@ -3812,11 +3705,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 116,
+            "line": 120,
             "col": 36
            },
            "end": {
-            "line": 116,
+            "line": 120,
             "col": 40
            }
           },
@@ -3824,11 +3717,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 116,
+             "line": 120,
              "col": 36
             },
             "end": {
-             "line": 116,
+             "line": 120,
              "col": 40
             }
            }
@@ -3839,11 +3732,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 116,
+            "line": 120,
             "col": 42
            },
            "end": {
-            "line": 116,
+            "line": 120,
             "col": 49
            }
           },
@@ -3851,11 +3744,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 116,
+             "line": 120,
              "col": 42
             },
             "end": {
-             "line": 116,
+             "line": 120,
              "col": 49
             }
            }
@@ -3866,11 +3759,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 116,
+         "line": 120,
          "col": 23
         },
         "end": {
-         "line": 116,
+         "line": 120,
          "col": 50
         }
        },
@@ -3878,11 +3771,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 116,
+          "line": 120,
           "col": 23
          },
          "end": {
-          "line": 116,
+          "line": 120,
           "col": 50
          }
         }
@@ -3893,11 +3786,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 117,
+         "line": 121,
          "col": 22
         },
         "end": {
-         "line": 121,
+         "line": 125,
          "col": 9
         }
        },
@@ -3905,11 +3798,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 117,
+          "line": 121,
           "col": 22
          },
          "end": {
-          "line": 121,
+          "line": 125,
           "col": 9
          }
         }
@@ -3923,11 +3816,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 114,
+            "line": 118,
             "col": 18
            },
            "end": {
-            "line": 114,
+            "line": 118,
             "col": 22
            }
           },
@@ -3935,11 +3828,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 114,
+             "line": 118,
              "col": 18
             },
             "end": {
-             "line": 114,
+             "line": 118,
              "col": 22
             }
            }
@@ -3952,11 +3845,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 114,
+       "line": 118,
        "col": 4
       },
       "end": {
-       "line": 123,
+       "line": 127,
        "col": 5
       }
      },
@@ -3964,11 +3857,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 114,
+        "line": 118,
         "col": 4
        },
        "end": {
-        "line": 123,
+        "line": 127,
         "col": 5
        }
       }
@@ -4006,11 +3899,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 135,
+            "line": 139,
             "col": 28
            },
            "end": {
-            "line": 135,
+            "line": 139,
             "col": 32
            }
           },
@@ -4018,11 +3911,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 135,
+             "line": 139,
              "col": 28
             },
             "end": {
-             "line": 135,
+             "line": 139,
              "col": 32
             }
            }
@@ -4035,11 +3928,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 135,
+       "line": 139,
        "col": 4
       },
       "end": {
-       "line": 138,
+       "line": 142,
        "col": 5
       }
      },
@@ -4047,11 +3940,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 135,
+        "line": 139,
         "col": 4
        },
        "end": {
-        "line": 138,
+        "line": 142,
         "col": 5
        }
       }
@@ -4084,11 +3977,11 @@
       "sourceContext": {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 138,
+        "line": 142,
         "col": 4
        },
        "end": {
-        "line": 141,
+        "line": 145,
         "col": 11
        }
       },
@@ -4096,24 +3989,59 @@
        {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 138,
+         "line": 142,
          "col": 4
         },
         "end": {
-         "line": 141,
+         "line": 145,
          "col": 11
         }
        }
       ]
      },
+     "attrs": {
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "tag",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 142,
+            "col": 31
+           },
+           "end": {
+            "line": 142,
+            "col": 35
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 142,
+             "col": 31
+            },
+            "end": {
+             "line": 142,
+             "col": 35
+            }
+           }
+          ]
+         }
+        ]
+       }
+      }
+     },
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 138,
+       "line": 142,
        "col": 4
       },
       "end": {
-       "line": 141,
+       "line": 145,
        "col": 11
       }
      },
@@ -4121,11 +4049,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 138,
+        "line": 142,
         "col": 4
        },
        "end": {
-        "line": 141,
+        "line": 145,
         "col": 11
        }
       }
@@ -4158,11 +4086,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 132,
+            "line": 136,
             "col": 21
            },
            "end": {
-            "line": 132,
+            "line": 136,
             "col": 25
            }
           },
@@ -4170,11 +4098,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 132,
+             "line": 136,
              "col": 21
             },
             "end": {
-             "line": 132,
+             "line": 136,
              "col": 25
             }
            }
@@ -4187,11 +4115,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 132,
+       "line": 136,
        "col": 4
       },
       "end": {
-       "line": 135,
+       "line": 139,
        "col": 5
       }
      },
@@ -4199,11 +4127,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 132,
+        "line": 136,
         "col": 4
        },
        "end": {
-        "line": 135,
+        "line": 139,
         "col": 5
        }
       }
@@ -4215,11 +4143,11 @@
       "sourceContext": {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 123,
+        "line": 127,
         "col": 4
        },
        "end": {
-        "line": 132,
+        "line": 136,
         "col": 5
        }
       },
@@ -4227,11 +4155,11 @@
        {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 123,
+         "line": 127,
          "col": 4
         },
         "end": {
-         "line": 132,
+         "line": 136,
          "col": 5
         }
        }
@@ -4243,11 +4171,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 124,
+         "line": 128,
          "col": 23
         },
         "end": {
-         "line": 124,
+         "line": 128,
          "col": 63
         }
        },
@@ -4255,11 +4183,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 124,
+          "line": 128,
           "col": 23
          },
          "end": {
-          "line": 124,
+          "line": 128,
           "col": 63
          }
         }
@@ -4273,11 +4201,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 125,
+            "line": 129,
             "col": 24
            },
            "end": {
-            "line": 125,
+            "line": 129,
             "col": 28
            }
           },
@@ -4285,11 +4213,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 125,
+             "line": 129,
              "col": 24
             },
             "end": {
-             "line": 125,
+             "line": 129,
              "col": 28
             }
            }
@@ -4300,11 +4228,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 125,
+            "line": 129,
             "col": 30
            },
            "end": {
-            "line": 125,
+            "line": 129,
             "col": 34
            }
           },
@@ -4312,11 +4240,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 125,
+             "line": 129,
              "col": 30
             },
             "end": {
-             "line": 125,
+             "line": 129,
              "col": 34
             }
            }
@@ -4327,11 +4255,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 125,
+            "line": 129,
             "col": 36
            },
            "end": {
-            "line": 125,
+            "line": 129,
             "col": 40
            }
           },
@@ -4339,11 +4267,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 125,
+             "line": 129,
              "col": 36
             },
             "end": {
-             "line": 125,
+             "line": 129,
              "col": 40
             }
            }
@@ -4354,11 +4282,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 125,
+            "line": 129,
             "col": 42
            },
            "end": {
-            "line": 125,
+            "line": 129,
             "col": 49
            }
           },
@@ -4366,11 +4294,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 125,
+             "line": 129,
              "col": 42
             },
             "end": {
-             "line": 125,
+             "line": 129,
              "col": 49
             }
            }
@@ -4381,11 +4309,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 125,
+         "line": 129,
          "col": 23
         },
         "end": {
-         "line": 125,
+         "line": 129,
          "col": 50
         }
        },
@@ -4393,11 +4321,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 125,
+          "line": 129,
           "col": 23
          },
          "end": {
-          "line": 125,
+          "line": 129,
           "col": 50
          }
         }
@@ -4408,11 +4336,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 126,
+         "line": 130,
          "col": 22
         },
         "end": {
-         "line": 130,
+         "line": 134,
          "col": 9
         }
        },
@@ -4420,25 +4348,58 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 126,
+          "line": 130,
           "col": 22
          },
          "end": {
-          "line": 130,
+          "line": 134,
           "col": 9
          }
         }
        ]
+      },
+      "patterns": {
+       "a": {
+        "elt": [
+         {
+          "s": "tag",
+          "sourceContext": {
+           "file": "ts/test/all.sysl",
+           "start": {
+            "line": 127,
+            "col": 26
+           },
+           "end": {
+            "line": 127,
+            "col": 30
+           }
+          },
+          "sourceContexts": [
+           {
+            "file": "ts/test/all.sysl",
+            "start": {
+             "line": 127,
+             "col": 26
+            },
+            "end": {
+             "line": 127,
+             "col": 30
+            }
+           }
+          ]
+         }
+        ]
+       }
       }
      },
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 123,
+       "line": 127,
        "col": 4
       },
       "end": {
-       "line": 132,
+       "line": 136,
        "col": 5
       }
      },
@@ -4446,11 +4407,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 123,
+        "line": 127,
         "col": 4
        },
        "end": {
-        "line": 132,
+        "line": 136,
         "col": 5
        }
       }
@@ -4467,11 +4428,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 111,
+            "line": 115,
             "col": 23
            },
            "end": {
-            "line": 111,
+            "line": 115,
             "col": 27
            }
           },
@@ -4479,11 +4440,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 111,
+             "line": 115,
              "col": 23
             },
             "end": {
-             "line": 111,
+             "line": 115,
              "col": 27
             }
            }
@@ -4496,11 +4457,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 111,
+       "line": 115,
        "col": 4
       },
       "end": {
-       "line": 114,
+       "line": 118,
        "col": 5
       }
      },
@@ -4508,11 +4469,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 111,
+        "line": 115,
         "col": 4
        },
        "end": {
-        "line": 114,
+        "line": 118,
         "col": 5
        }
       }
@@ -4535,11 +4496,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 100,
+            "line": 104,
             "col": 16
            },
            "end": {
-            "line": 100,
+            "line": 104,
             "col": 20
            }
           },
@@ -4547,11 +4508,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 100,
+             "line": 104,
              "col": 16
             },
             "end": {
-             "line": 100,
+             "line": 104,
              "col": 20
             }
            }
@@ -4564,11 +4525,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 100,
+       "line": 104,
        "col": 4
       },
       "end": {
-       "line": 105,
+       "line": 109,
        "col": 5
       }
      },
@@ -4576,11 +4537,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 100,
+        "line": 104,
         "col": 4
        },
        "end": {
-        "line": 105,
+        "line": 109,
         "col": 5
        }
       }
@@ -4603,11 +4564,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 94,
+          "line": 98,
           "col": 8
          },
          "end": {
-          "line": 94,
+          "line": 98,
           "col": 46
          }
         },
@@ -4615,11 +4576,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 94,
+           "line": 98,
            "col": 8
           },
           "end": {
-           "line": 94,
+           "line": 98,
            "col": 46
           }
          }
@@ -4635,11 +4596,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 98,
+          "line": 102,
           "col": 8
          },
          "end": {
-          "line": 98,
+          "line": 102,
           "col": 38
          }
         },
@@ -4647,11 +4608,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 98,
+           "line": 102,
            "col": 8
           },
           "end": {
-           "line": 98,
+           "line": 102,
            "col": 38
           }
          }
@@ -4675,11 +4636,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 97,
+          "line": 101,
           "col": 8
          },
          "end": {
-          "line": 97,
+          "line": 101,
           "col": 34
          }
         },
@@ -4687,11 +4648,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 97,
+           "line": 101,
            "col": 8
           },
           "end": {
-           "line": 97,
+           "line": 101,
            "col": 34
           }
          }
@@ -4702,11 +4663,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 87,
+          "line": 91,
           "col": 8
          },
          "end": {
-          "line": 87,
+          "line": 91,
           "col": 33
          }
         },
@@ -4714,11 +4675,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 87,
+           "line": 91,
            "col": 8
           },
           "end": {
-           "line": 87,
+           "line": 91,
            "col": 33
           }
          }
@@ -4730,11 +4691,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 89,
+          "line": 93,
           "col": 8
          },
          "end": {
-          "line": 89,
+          "line": 93,
           "col": 27
          }
         },
@@ -4742,11 +4703,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 89,
+           "line": 93,
            "col": 8
           },
           "end": {
-           "line": 89,
+           "line": 93,
            "col": 27
           }
          }
@@ -4763,11 +4724,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 86,
+               "line": 90,
                "col": 30
               },
               "end": {
-               "line": 86,
+               "line": 90,
                "col": 33
               }
              },
@@ -4775,11 +4736,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 86,
+                "line": 90,
                 "col": 30
                },
                "end": {
-                "line": 86,
+                "line": 90,
                 "col": 33
                }
               }
@@ -4792,11 +4753,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 86,
+          "line": 90,
           "col": 8
          },
          "end": {
-          "line": 86,
+          "line": 90,
           "col": 34
          }
         },
@@ -4804,11 +4765,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 86,
+           "line": 90,
            "col": 8
           },
           "end": {
-           "line": 86,
+           "line": 90,
            "col": 34
           }
          }
@@ -4840,11 +4801,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 88,
+          "line": 92,
           "col": 8
          },
          "end": {
-          "line": 88,
+          "line": 92,
           "col": 38
          }
         },
@@ -4852,11 +4813,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 88,
+           "line": 92,
            "col": 8
           },
           "end": {
-           "line": 88,
+           "line": 92,
            "col": 38
           }
          }
@@ -4868,11 +4829,11 @@
          "sourceContext": {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 91,
+           "line": 95,
            "col": 8
           },
           "end": {
-           "line": 91,
+           "line": 95,
            "col": 38
           }
          },
@@ -4880,11 +4841,11 @@
           {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 91,
+            "line": 95,
             "col": 8
            },
            "end": {
-            "line": 91,
+            "line": 95,
             "col": 38
            }
           }
@@ -4893,11 +4854,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 91,
+          "line": 95,
           "col": 8
          },
          "end": {
-          "line": 91,
+          "line": 95,
           "col": 38
          }
         },
@@ -4905,11 +4866,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 91,
+           "line": 95,
            "col": 8
           },
           "end": {
-           "line": 91,
+           "line": 95,
            "col": 38
           }
          }
@@ -4921,11 +4882,11 @@
          "sourceContext": {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 90,
+           "line": 94,
            "col": 8
           },
           "end": {
-           "line": 90,
+           "line": 94,
            "col": 28
           }
          },
@@ -4933,11 +4894,11 @@
           {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 90,
+            "line": 94,
             "col": 8
            },
            "end": {
-            "line": 90,
+            "line": 94,
             "col": 28
            }
           }
@@ -4946,11 +4907,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 90,
+          "line": 94,
           "col": 8
          },
          "end": {
-          "line": 90,
+          "line": 94,
           "col": 28
          }
         },
@@ -4958,11 +4919,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 90,
+           "line": 94,
            "col": 8
           },
           "end": {
-           "line": 90,
+           "line": 94,
            "col": 28
           }
          }
@@ -4980,11 +4941,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 95,
+          "line": 99,
           "col": 8
          },
          "end": {
-          "line": 95,
+          "line": 99,
           "col": 42
          }
         },
@@ -4992,11 +4953,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 95,
+           "line": 99,
            "col": 8
           },
           "end": {
-           "line": 95,
+           "line": 99,
            "col": 42
           }
          }
@@ -5015,11 +4976,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 96,
+          "line": 100,
           "col": 8
          },
          "end": {
-          "line": 96,
+          "line": 100,
           "col": 48
          }
         },
@@ -5027,11 +4988,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 96,
+           "line": 100,
            "col": 8
           },
           "end": {
-           "line": 96,
+           "line": 100,
            "col": 48
           }
          }
@@ -5045,11 +5006,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 93,
+            "line": 97,
             "col": 26
            },
            "end": {
-            "line": 93,
+            "line": 97,
             "col": 49
            }
           },
@@ -5057,11 +5018,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 93,
+             "line": 97,
              "col": 26
             },
             "end": {
-             "line": 93,
+             "line": 97,
              "col": 49
             }
            }
@@ -5071,11 +5032,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 92,
+          "line": 96,
           "col": 8
          },
          "end": {
-          "line": 94,
+          "line": 98,
           "col": 9
          }
         },
@@ -5083,11 +5044,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 92,
+           "line": 96,
            "col": 8
           },
           "end": {
-           "line": 94,
+           "line": 98,
            "col": 9
           }
          }
@@ -5109,11 +5070,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 85,
+            "line": 89,
             "col": 18
            },
            "end": {
-            "line": 85,
+            "line": 89,
             "col": 22
            }
           },
@@ -5121,11 +5082,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 85,
+             "line": 89,
              "col": 18
             },
             "end": {
-             "line": 85,
+             "line": 89,
              "col": 22
             }
            }
@@ -5138,11 +5099,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 85,
+       "line": 89,
        "col": 4
       },
       "end": {
-       "line": 98,
+       "line": 102,
        "col": 38
       }
      },
@@ -5150,11 +5111,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 85,
+        "line": 89,
         "col": 4
        },
        "end": {
-        "line": 98,
+        "line": 102,
         "col": 38
        }
       }
@@ -5190,11 +5151,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 81,
+               "line": 85,
                "col": 40
               },
               "end": {
-               "line": 81,
+               "line": 85,
                "col": 44
               }
              },
@@ -5202,11 +5163,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 81,
+                "line": 85,
                 "col": 40
                },
                "end": {
-                "line": 81,
+                "line": 85,
                 "col": 44
                }
               }
@@ -5219,11 +5180,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 81,
+          "line": 85,
           "col": 8
          },
          "end": {
-          "line": 81,
+          "line": 85,
           "col": 45
          }
         },
@@ -5231,11 +5192,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 81,
+           "line": 85,
            "col": 8
           },
           "end": {
-           "line": 81,
+           "line": 85,
            "col": 45
           }
          }
@@ -5252,11 +5213,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 76,
+               "line": 80,
                "col": 35
               },
               "end": {
-               "line": 76,
+               "line": 80,
                "col": 39
               }
              },
@@ -5264,11 +5225,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 76,
+                "line": 80,
                 "col": 35
                },
                "end": {
-                "line": 76,
+                "line": 80,
                 "col": 39
                }
               }
@@ -5281,11 +5242,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 76,
+          "line": 80,
           "col": 8
          },
          "end": {
-          "line": 76,
+          "line": 80,
           "col": 40
          }
         },
@@ -5293,11 +5254,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 76,
+           "line": 80,
            "col": 8
           },
           "end": {
-           "line": 76,
+           "line": 80,
            "col": 40
           }
          }
@@ -5314,11 +5275,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 78,
+               "line": 82,
                "col": 29
               },
               "end": {
-               "line": 78,
+               "line": 82,
                "col": 33
               }
              },
@@ -5326,11 +5287,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 78,
+                "line": 82,
                 "col": 29
                },
                "end": {
-                "line": 78,
+                "line": 82,
                 "col": 33
                }
               }
@@ -5344,11 +5305,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 78,
+          "line": 82,
           "col": 8
          },
          "end": {
-          "line": 78,
+          "line": 82,
           "col": 34
          }
         },
@@ -5356,11 +5317,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 78,
+           "line": 82,
            "col": 8
           },
           "end": {
-           "line": 78,
+           "line": 82,
            "col": 34
           }
          }
@@ -5398,11 +5359,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 77,
+               "line": 81,
                "col": 40
               },
               "end": {
-               "line": 77,
+               "line": 81,
                "col": 44
               }
              },
@@ -5410,11 +5371,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 77,
+                "line": 81,
                 "col": 40
                },
                "end": {
-                "line": 77,
+                "line": 81,
                 "col": 44
                }
               }
@@ -5427,11 +5388,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 77,
+          "line": 81,
           "col": 8
          },
          "end": {
-          "line": 77,
+          "line": 81,
           "col": 45
          }
         },
@@ -5439,11 +5400,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 77,
+           "line": 81,
            "col": 8
           },
           "end": {
-           "line": 77,
+           "line": 81,
            "col": 45
           }
          }
@@ -5455,11 +5416,11 @@
          "sourceContext": {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 80,
+           "line": 84,
            "col": 8
           },
           "end": {
-           "line": 80,
+           "line": 84,
            "col": 45
           }
          },
@@ -5467,11 +5428,11 @@
           {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 80,
+            "line": 84,
             "col": 8
            },
            "end": {
-            "line": 80,
+            "line": 84,
             "col": 45
            }
           }
@@ -5486,11 +5447,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 80,
+               "line": 84,
                "col": 40
               },
               "end": {
-               "line": 80,
+               "line": 84,
                "col": 44
               }
              },
@@ -5498,11 +5459,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 80,
+                "line": 84,
                 "col": 40
                },
                "end": {
-                "line": 80,
+                "line": 84,
                 "col": 44
                }
               }
@@ -5515,11 +5476,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 80,
+          "line": 84,
           "col": 8
          },
          "end": {
-          "line": 80,
+          "line": 84,
           "col": 45
          }
         },
@@ -5527,11 +5488,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 80,
+           "line": 84,
            "col": 8
           },
           "end": {
-           "line": 80,
+           "line": 84,
            "col": 45
           }
          }
@@ -5543,11 +5504,11 @@
          "sourceContext": {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 79,
+           "line": 83,
            "col": 8
           },
           "end": {
-           "line": 79,
+           "line": 83,
            "col": 35
           }
          },
@@ -5555,11 +5516,11 @@
           {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 79,
+            "line": 83,
             "col": 8
            },
            "end": {
-            "line": 79,
+            "line": 83,
             "col": 35
            }
           }
@@ -5574,11 +5535,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 79,
+               "line": 83,
                "col": 30
               },
               "end": {
-               "line": 79,
+               "line": 83,
                "col": 34
               }
              },
@@ -5586,11 +5547,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 79,
+                "line": 83,
                 "col": 30
                },
                "end": {
-                "line": 79,
+                "line": 83,
                 "col": 34
                }
               }
@@ -5603,11 +5564,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 79,
+          "line": 83,
           "col": 8
          },
          "end": {
-          "line": 79,
+          "line": 83,
           "col": 35
          }
         },
@@ -5615,11 +5576,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 79,
+           "line": 83,
            "col": 8
           },
           "end": {
-           "line": 79,
+           "line": 83,
            "col": 35
           }
          }
@@ -5633,11 +5594,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 83,
+            "line": 87,
             "col": 26
            },
            "end": {
-            "line": 83,
+            "line": 87,
             "col": 49
            }
           },
@@ -5645,11 +5606,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 83,
+             "line": 87,
              "col": 26
             },
             "end": {
-             "line": 83,
+             "line": 87,
              "col": 49
             }
            }
@@ -5663,11 +5624,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 82,
+               "line": 86,
                "col": 29
               },
               "end": {
-               "line": 82,
+               "line": 86,
                "col": 33
               }
              },
@@ -5675,11 +5636,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 82,
+                "line": 86,
                 "col": 29
                },
                "end": {
-                "line": 82,
+                "line": 86,
                 "col": 33
                }
               }
@@ -5692,11 +5653,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 82,
+          "line": 86,
           "col": 8
          },
          "end": {
-          "line": 85,
+          "line": 89,
           "col": 5
          }
         },
@@ -5704,11 +5665,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 82,
+           "line": 86,
            "col": 8
           },
           "end": {
-           "line": 85,
+           "line": 89,
            "col": 5
           }
          }
@@ -5722,11 +5683,11 @@
        "sourceContext": {
         "file": "ts/test/all.sysl",
         "start": {
-         "line": 75,
+         "line": 79,
          "col": 22
         },
         "end": {
-         "line": 75,
+         "line": 79,
          "col": 34
         }
        },
@@ -5734,11 +5695,11 @@
         {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 75,
+          "line": 79,
           "col": 22
          },
          "end": {
-          "line": 75,
+          "line": 79,
           "col": 34
          }
         }
@@ -5752,11 +5713,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 74,
+            "line": 78,
             "col": 16
            },
            "end": {
-            "line": 74,
+            "line": 78,
             "col": 20
            }
           },
@@ -5764,11 +5725,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 74,
+             "line": 78,
              "col": 16
             },
             "end": {
-             "line": 74,
+             "line": 78,
              "col": 20
             }
            }
@@ -5781,11 +5742,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 74,
+       "line": 78,
        "col": 4
       },
       "end": {
-       "line": 83,
+       "line": 87,
        "col": 49
       }
      },
@@ -5793,11 +5754,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 74,
+        "line": 78,
         "col": 4
        },
        "end": {
-        "line": 83,
+        "line": 87,
         "col": 49
        }
       }
@@ -5811,11 +5772,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 106,
+          "line": 110,
           "col": 8
          },
          "end": {
-          "line": 106,
+          "line": 110,
           "col": 11
          }
         },
@@ -5823,11 +5784,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 106,
+           "line": 110,
            "col": 8
           },
           "end": {
-           "line": 106,
+           "line": 110,
            "col": 11
           }
          }
@@ -5838,11 +5799,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 107,
+          "line": 111,
           "col": 8
          },
          "end": {
-          "line": 107,
+          "line": 111,
           "col": 14
          }
         },
@@ -5850,11 +5811,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 107,
+           "line": 111,
            "col": 8
           },
           "end": {
-           "line": 107,
+           "line": 111,
            "col": 14
           }
          }
@@ -5875,11 +5836,11 @@
          "sourceContext": {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 108,
+           "line": 112,
            "col": 8
           },
           "end": {
-           "line": 108,
+           "line": 112,
            "col": 32
           }
          },
@@ -5887,11 +5848,11 @@
           {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 108,
+            "line": 112,
             "col": 8
            },
            "end": {
-            "line": 108,
+            "line": 112,
             "col": 32
            }
           }
@@ -5900,11 +5861,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 108,
+          "line": 112,
           "col": 8
          },
          "end": {
-          "line": 108,
+          "line": 112,
           "col": 32
          }
         },
@@ -5912,11 +5873,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 108,
+           "line": 112,
            "col": 8
           },
           "end": {
-           "line": 108,
+           "line": 112,
            "col": 32
           }
          }
@@ -5948,11 +5909,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 109,
+          "line": 113,
           "col": 8
          },
          "end": {
-          "line": 109,
+          "line": 113,
           "col": 25
          }
         },
@@ -5960,11 +5921,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 109,
+           "line": 113,
            "col": 8
           },
           "end": {
-           "line": 109,
+           "line": 113,
            "col": 25
           }
          }
@@ -5981,11 +5942,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 105,
+            "line": 109,
             "col": 18
            },
            "end": {
-            "line": 105,
+            "line": 109,
             "col": 22
            }
           },
@@ -5993,11 +5954,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 105,
+             "line": 109,
              "col": 18
             },
             "end": {
-             "line": 105,
+             "line": 109,
              "col": 22
             }
            }
@@ -6010,11 +5971,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 105,
+       "line": 109,
        "col": 4
       },
       "end": {
-       "line": 111,
+       "line": 115,
        "col": 5
       }
      },
@@ -6022,11 +5983,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 105,
+        "line": 109,
         "col": 4
        },
        "end": {
-        "line": 111,
+        "line": 115,
         "col": 5
        }
       }
@@ -6036,10 +5997,10 @@
    "sourceContext": {
     "file": "ts/test/all.sysl",
     "start": {
-     "line": 73
+     "line": 77
     },
     "end": {
-     "line": 141,
+     "line": 145,
      "col": 11
     }
    },
@@ -6047,10 +6008,10 @@
     {
      "file": "ts/test/all.sysl",
      "start": {
-      "line": 73
+      "line": 77
      },
      "end": {
-      "line": 141,
+      "line": 145,
       "col": 11
      }
     }
@@ -6072,11 +6033,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 204,
+          "line": 202,
           "col": 36
          },
          "end": {
-          "line": 204,
+          "line": 202,
           "col": 40
          }
         },
@@ -6084,11 +6045,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 204,
+           "line": 202,
            "col": 36
           },
           "end": {
-           "line": 204,
+           "line": 202,
            "col": 40
           }
          }
@@ -6110,11 +6071,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 207,
+            "line": 205,
             "col": 27
            },
            "end": {
-            "line": 207,
+            "line": 205,
             "col": 53
            }
           },
@@ -6122,11 +6083,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 207,
+             "line": 205,
              "col": 27
             },
             "end": {
-             "line": 207,
+             "line": 205,
              "col": 53
             }
            }
@@ -6140,11 +6101,11 @@
              "sourceContext": {
               "file": "ts/test/all.sysl",
               "start": {
-               "line": 206,
+               "line": 204,
                "col": 31
               },
               "end": {
-               "line": 206,
+               "line": 204,
                "col": 35
               }
              },
@@ -6152,11 +6113,11 @@
               {
                "file": "ts/test/all.sysl",
                "start": {
-                "line": 206,
+                "line": 204,
                 "col": 31
                },
                "end": {
-                "line": 206,
+                "line": 204,
                 "col": 35
                }
               }
@@ -6169,11 +6130,11 @@
         "sourceContext": {
          "file": "ts/test/all.sysl",
          "start": {
-          "line": 206,
+          "line": 204,
           "col": 8
          },
          "end": {
-          "line": 208,
+          "line": 206,
           "col": 1
          }
         },
@@ -6181,11 +6142,11 @@
          {
           "file": "ts/test/all.sysl",
           "start": {
-           "line": 206,
+           "line": 204,
            "col": 8
           },
           "end": {
-           "line": 208,
+           "line": 206,
            "col": 1
           }
          }
@@ -6202,11 +6163,11 @@
           "sourceContext": {
            "file": "ts/test/all.sysl",
            "start": {
-            "line": 205,
+            "line": 203,
             "col": 25
            },
            "end": {
-            "line": 205,
+            "line": 203,
             "col": 29
            }
           },
@@ -6214,11 +6175,11 @@
            {
             "file": "ts/test/all.sysl",
             "start": {
-             "line": 205,
+             "line": 203,
              "col": 25
             },
             "end": {
-             "line": 205,
+             "line": 203,
              "col": 29
             }
            }
@@ -6231,11 +6192,11 @@
      "sourceContext": {
       "file": "ts/test/all.sysl",
       "start": {
-       "line": 205,
+       "line": 203,
        "col": 4
       },
       "end": {
-       "line": 207,
+       "line": 205,
        "col": 53
       }
      },
@@ -6243,11 +6204,11 @@
       {
        "file": "ts/test/all.sysl",
        "start": {
-        "line": 205,
+        "line": 203,
         "col": 4
        },
        "end": {
-        "line": 207,
+        "line": 205,
         "col": 53
        }
       }
@@ -6257,10 +6218,10 @@
    "sourceContext": {
     "file": "ts/test/all.sysl",
     "start": {
-     "line": 204
+     "line": 202
     },
     "end": {
-     "line": 207,
+     "line": 205,
      "col": 53
     }
    },
@@ -6268,10 +6229,10 @@
     {
      "file": "ts/test/all.sysl",
      "start": {
-      "line": 204
+      "line": 202
      },
      "end": {
-      "line": 207,
+      "line": 205,
       "col": 53
      }
     }

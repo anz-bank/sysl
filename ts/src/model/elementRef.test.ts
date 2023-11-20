@@ -1,109 +1,163 @@
 import "jest-extended";
-import { ElementKind, ElementRef } from "./common";
+import { ElementRef } from "./elementRef";
+import { ElementKind } from "./elementKind";
 
 const appRef = ElementRef.parse("Ns::App");
 const typeRef = ElementRef.parse("Ns::App.Type");
 const fieldRef = ElementRef.parse("Ns::App.Type.Field");
+const endpointRef = ElementRef.parse("Ns::App.[Endpoint]");
+const statementRef = ElementRef.parse("Ns::App.[Endpoint].[0]");
 
-describe("Creating", () => {
-    test.concurrent("via constructor, valid", () => {
-        expect(new ElementRef([], "App")).toEqual(expect.objectContaining(
-            { namespace: [], appName: "App", typeName: "", fieldName: "", kind: ElementKind.App }));
-        expect(new ElementRef(["Ns1"], "App")).toEqual(expect.objectContaining(
-            { namespace: ["Ns1"], appName: "App", typeName: "", fieldName: "", kind: ElementKind.App }));
-        expect(new ElementRef(["Ns"], "App", "Type")).toEqual(expect.objectContaining(
-            { namespace: ["Ns"], appName: "App", typeName: "Type", fieldName: "", kind: ElementKind.Type }));
-        expect(new ElementRef(["Ns"], "App", "Type", "Field")).toEqual(expect.objectContaining(
-            { namespace: ["Ns"], appName: "App", typeName: "Type", fieldName: "Field", kind: ElementKind.Field }));
-        expect(new ElementRef(["Ns ."], "App .", "Type .", "Field .")).toEqual(expect.objectContaining(
-            { namespace: ["Ns ."], appName: "App .", typeName: "Type .", fieldName: "Field .", kind: ElementKind.Field }));
-        expect(new ElementRef(["int"], "date", "bool", "any")).toEqual(expect.objectContaining(
-            { namespace: ["int"], appName: "date", typeName: "bool", fieldName: "any", kind: ElementKind.Field }));
-        expect(new ElementRef(["1Ns"], "2App", "3Type", "4Field")).toEqual(expect.objectContaining(
-            { namespace: ["1Ns"], appName: "2App", typeName: "3Type", fieldName: "4Field", kind: ElementKind.Field }));
-        });
+function expectParts(ref: string | ElementRef, ...expected: any[]) {
+    const r = ref instanceof ElementRef ? ref : ElementRef.parse(ref);
+    const actual = [
+        r.namespace,
+        r.appName,
+        r.typeName || r.endpointName,
+        r.endpointName ? r.statementIndices : r.fieldName,
+        r.kind];
+    expect(actual).toEqual(expected);
+}
+
+describe("Constructor", () => {
+    test.concurrent("data elements, valid", () => {
+        expectParts(new ElementRef([], "App"), [], "App", "", "", ElementKind.App);
+        expectParts(new ElementRef(["Ns1"], "App"), ["Ns1"], "App", "", "", ElementKind.App);
+        expectParts(new ElementRef(["Ns"], "App", "Type"), ["Ns"], "App", "Type", "", ElementKind.Type);
+        expectParts(new ElementRef(["Ns"], "App", "Type", "Field"), ["Ns"], "App", "Type", "Field", ElementKind.Field);
+        expectParts(new ElementRef(["Ns ."], "App .", "Type .", "Field ."), ["Ns ."], "App .", "Type .", "Field .", ElementKind.Field);
+        expectParts(new ElementRef(["int"], "date", "bool", "any"), ["int"], "date", "bool", "any", ElementKind.Field);
+        expectParts(new ElementRef(["1Ns"], "2App", "3Type", "4Field"), ["1Ns"], "2App", "3Type", "4Field", ElementKind.Field);
+    });
     
-    test.concurrent("via constructor, invalid", () => {
-        expect(() => new ElementRef([""], "App")).toThrow();
-        expect(() => new ElementRef(["Ns", ""], "App")).toThrow();
-        expect(() => new ElementRef(["", "Ns"], "App")).toThrow();
-        expect(() => new ElementRef([], "")).toThrow();
-        expect(() => new ElementRef([], "App", "", "Field")).toThrow();
-        expect(() => new ElementRef([], "App", undefined, "Field")).toThrow();
+    test.concurrent("data elements, invalid", () => {
+        let err = "All namespace parts must be non-empty";
+        expect(() => new ElementRef([""], "App")).toThrow(err);
+        expect(() => new ElementRef(["Ns", ""], "App")).toThrow(err);
+        expect(() => new ElementRef(["", "Ns"], "App")).toThrow(err);
+
+        expect(() => new ElementRef([], "")).toThrow("appName must not be empty.");
+        expect(() => new ElementRef([], "App", "", "Field")).toThrow("typeName must be specified");
     });
 
-    test.concurrent("via parse, valid", () => {
-        expect(ElementRef.parse("App")).toEqual(expect.objectContaining(
-            { namespace: [], appName: "App", typeName: "", fieldName: "", kind: ElementKind.App }));
-        expect(ElementRef.parse("Ns1 :: App")).toEqual(expect.objectContaining(
-            { namespace: ["Ns1"], appName: "App", typeName: "", fieldName: "", kind: ElementKind.App }));
-        expect(ElementRef.parse("Ns1 :: App.Type")).toEqual(expect.objectContaining(
-            { namespace: ["Ns1"], appName: "App", typeName: "Type", fieldName: "", kind: ElementKind.Type }));
-        expect(ElementRef.parse("Ns1 :: App.Type.Field")).toEqual(expect.objectContaining(
-            { namespace: ["Ns1"], appName: "App", typeName: "Type", fieldName: "Field", kind: ElementKind.Field }));
-        expect(ElementRef.parse("  Ns1:: Ns2  ::App .Type . Field     ")).toEqual(expect.objectContaining(
-            { namespace: ["Ns1", "Ns2"], appName: "App", typeName: "Type", fieldName: "Field", kind: ElementKind.Field }));
-        expect(ElementRef.parse("Ns%20%2E :: App%20%2E.Type%20%2E.Field%20%2E")).toEqual(expect.objectContaining(
-            { namespace: ["Ns ."], appName: "App .", typeName: "Type .", fieldName: "Field .", kind: ElementKind.Field }));
-        expect(ElementRef.parse("%69nt :: %64ate.%62ool.%61ny")).toEqual(expect.objectContaining(
-            { namespace: ["int"], appName: "date", typeName: "bool", fieldName: "any", kind: ElementKind.Field }));
-         expect(ElementRef.parse("%31Ns :: %32App.%33Type.%34Field")).toEqual(expect.objectContaining(
-            { namespace: ["1Ns"], appName: "2App", typeName: "3Type", fieldName: "4Field", kind: ElementKind.Field }));
-        });
+    test.concurrent("behavior elements, valid", () => {
+        expectParts(new ElementRef(["Ns"], "App", "", "", "Endpoint"), ["Ns"], "App", "Endpoint", [], ElementKind.Endpoint);
+        expectParts(new ElementRef(["Ns"], "App", "", "", "Endpoint", [0, 3]), ["Ns"], "App", "Endpoint", [0, 3], ElementKind.Statement);
+        expectParts(new ElementRef(["Ns ."], "App .", "", "", "Endpoint .", [0, 3]), ["Ns ."], "App .", "Endpoint .", [0, 3], ElementKind.Statement);
+        expectParts(new ElementRef(["int"], "date", "", "", "bool", [0, 3]), ["int"], "date", "bool", [0, 3], ElementKind.Statement);
+        expectParts(new ElementRef(["1Ns"], "2App", "", "", "3Endpoint", [0, 3]), ["1Ns"], "2App", "3Endpoint", [0, 3], ElementKind.Statement);
+    });
 
-    test.concurrent("via parse, invalid", () => {
-        expect(() => ElementRef.parse("")).toThrow();
-        expect(() => ElementRef.parse(" ")).toThrow();
-        expect(() => ElementRef.parse("::")).toThrow();
-        expect(() => ElementRef.parse(":: App")).toThrow();
-        expect(() => ElementRef.parse("Ns1 :: :: App")).toThrow();
-        expect(() => ElementRef.parse("Ns1 : App")).toThrow();
-        expect(() => ElementRef.parse("Ns1 ::")).toThrow();
-        expect(() => ElementRef.parse("Ns 1 :: App")).toThrow();
-        expect(() => ElementRef.parse("App.Ty pe")).toThrow();
-        expect(() => ElementRef.parse("int")).toThrow();
-        expect(() => ElementRef.parse("App.int")).toThrow();
-        expect(() => ElementRef.parse("int :: App")).toThrow();
-        expect(() => ElementRef.parse("any.App")).toThrow();
-        expect(() => ElementRef.parse("App.")).toThrow();
-        expect(() => ElementRef.parse("App..Field")).toThrow();
-        expect(() => ElementRef.parse("App.Type.Field.Something")).toThrow();
-        expect(() => ElementRef.parse("App.Type::Field")).toThrow();
-        expect(() => ElementRef.parse("App.Type.Fi eld")).toThrow();
-        expect(() => ElementRef.parse("App.Type.Fi\neld")).toThrow();
-        expect(() => ElementRef.parse("1Ns::App.Type.Field")).toThrow();
-        expect(() => ElementRef.parse("Ns::2App.Type.Field")).toThrow();
-        expect(() => ElementRef.parse("Ns::App.3Type.Field")).toThrow();
-        expect(() => ElementRef.parse("Ns::App.Type.4Field")).toThrow();
+    test.concurrent("behavior elements, invalid", () => {
+        expect(() => new ElementRef([], "App", "", "", "", [0, 3])).toThrow("endpointName must be specified");
+        expect(() => new ElementRef([], "App", "Type", "", "Endpoint")).toThrow("endpointName must not be specified");
 
-        expect(ElementRef.tryParse("")).toBeUndefined();
-        expect(ElementRef.tryParse(" ")).toBeUndefined();
-        expect(ElementRef.tryParse("::")).toBeUndefined();
-        expect(ElementRef.tryParse(":: App")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns1 :: :: App")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns1 : App")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns1 ::")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns 1 :: App")).toBeUndefined();
-        expect(ElementRef.tryParse("App.Ty pe")).toBeUndefined();
-        expect(ElementRef.tryParse("int")).toBeUndefined();
-        expect(ElementRef.tryParse("App.int")).toBeUndefined();
-        expect(ElementRef.tryParse("int :: App")).toBeUndefined();
-        expect(ElementRef.tryParse("any.App")).toBeUndefined();
-        expect(ElementRef.tryParse("App.")).toBeUndefined();
-        expect(ElementRef.tryParse("App..Field")).toBeUndefined();
-        expect(ElementRef.tryParse("App.Type.Field.Something")).toBeUndefined();
-        expect(ElementRef.tryParse("App.Type::Field")).toBeUndefined();
-        expect(ElementRef.tryParse("App.Type.Fi eld")).toBeUndefined();
-        expect(ElementRef.tryParse("App.Type.Fi\neld")).toBeUndefined();
-        expect(ElementRef.tryParse("1Ns::App.Type.Field")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns::2App.Type.Field")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns::App.3Type.Field")).toBeUndefined();
-        expect(ElementRef.tryParse("Ns::App.Type.4Field")).toBeUndefined();
+        const err = "endpointName or statementIndices must not be specified";
+        expect(() => new ElementRef([], "App", "Type", "Field", "Endpoint")).toThrow(err);
+        expect(() => new ElementRef([], "App", "Type", "", "Endpoint", [0, 3])).toThrow(err);
+        expect(() => new ElementRef([], "App", "Type", "Field", "Endpoint", [0, 3])).toThrow(err);
+        expect(() => new ElementRef([], "App", "Type", "", "", [0, 3])).toThrow(err);
+        expect(() => new ElementRef([], "App", "Type", "Field", "", [0, 3])).toThrow(err);
     });
 });
 
-describe("Sysl rendering", () => {
-    test.concurrent("standard", () => {
+describe("Parse", () => {
+    function expectInvalid(strOrFactory: string, error?: string) {
+        expect(() => ElementRef.parse(strOrFactory)).toThrow(error);
+        expect(ElementRef.tryParse(strOrFactory)).toBeUndefined();
+    }
+
+    test.concurrent("data elements, valid", () => {
+        expectParts("App", [], "App", "", "", ElementKind.App);
+        expectParts("Ns1 :: App", ["Ns1"], "App", "", "", ElementKind.App);
+        expectParts("Ns1 :: App.Type", ["Ns1"], "App", "Type", "", ElementKind.Type);
+        expectParts("Ns1 :: App.Type.Field", ["Ns1"], "App", "Type", "Field", ElementKind.Field);
+        expectParts("  Ns1:: Ns2  ::App .Type . Field     ", ["Ns1", "Ns2"], "App", "Type", "Field", ElementKind.Field);
+        expectParts("Ns%20%2E :: App%20%2E.Type%20%2E.Field%20%2E", ["Ns ."], "App .", "Type .", "Field .", ElementKind.Field);
+        expectParts("%69nt :: %64ate.%62ool.%61ny", ["int"], "date", "bool", "any", ElementKind.Field);
+        expectParts("%31Ns :: %32App.%33Type.%34Field", ["1Ns"], "2App", "3Type", "4Field", ElementKind.Field);
+    });
+
+    test.concurrent("data elements, invalid", () => {
+        let err = "Disallowed characters in app";
+        expectInvalid("", err);
+        expectInvalid(" ", err);
+        expectInvalid("::", err);
+        expectInvalid(":: App", err);
+        expectInvalid("Ns1 :: :: App", err);
+        expectInvalid("Ns1 : App", err);
+        expectInvalid("Ns1 ::", err);
+        expectInvalid("Ns 1 :: App", err);
+        expectInvalid("int", err);
+        expectInvalid("int :: App", err);
+        expectInvalid("any.App", err);
+        expectInvalid("1Ns::App.Type.Field", err);
+        expectInvalid("Ns::2App.Type.Field", err);
+
+        err = "Disallowed characters in type/field name.";
+        expectInvalid("App.Ty pe", err);
+        expectInvalid("App.int", err);
+        expectInvalid("App.", err);
+        expectInvalid("App..Field", err);
+        expectInvalid("App.Type::Field", err);
+        expectInvalid("App.Type.Fi eld", err);
+        expectInvalid("App.Type.Fi\neld", err);
+        expectInvalid("Ns::App.3Type.Field", err);
+        expectInvalid("Ns::App.Type.4Field", err);
+
+        err = "Too many dots.";
+        expectInvalid("App.Type.Field.Something", err);
+        expectInvalid("App.Type..Field", err);
+    });
+
+    test.concurrent("behavior elements, valid", () => {
+        expectParts("Ns1 :: App.[Endpoint]", ["Ns1"], "App", "Endpoint", [], ElementKind.Endpoint);
+        expectParts("Ns1 :: App.[Endpoint].[1,0,3]", ["Ns1"], "App", "Endpoint", [1, 0, 3], ElementKind.Statement);
+
+        // Insignificant whitespace
+        expectParts("Ns1 :: App.  [Endpoint]  ", ["Ns1"], "App", "Endpoint", [], ElementKind.Endpoint);
+        expectParts("Ns1 :: App.[Endpoint]  .[1,0,3]", ["Ns1"], "App", "Endpoint", [1, 0, 3], ElementKind.Statement);
+        expectParts("Ns1 :: App.[Endpoint].  [1,0,3]", ["Ns1"], "App", "Endpoint", [1, 0, 3], ElementKind.Statement);
+        expectParts("Ns1 :: App . [Endpoint] . [ 1 ,  0 , 3 ]  ", ["Ns1"], "App", "Endpoint", [1, 0, 3], ElementKind.Statement);
+
+        // Significant chars
+        expectParts("Ns1 :: App.[Hello World]", ["Ns1"], "App", "Hello World", [], ElementKind.Endpoint);
+        expectParts("Ns1 :: App.[/api/customer/{string}]", ["Ns1"], "App", "/api/customer/{string}", [], ElementKind.Endpoint);
+        expectParts("Ns1 :: App.[/api/customer[example.com%5d/{string}].[1]", ["Ns1"], "App", "/api/customer[example.com]/{string}", [1], ElementKind.Statement);
+        expectParts("Ns1 :: App.[int]", ["Ns1"], "App", "int", [], ElementKind.Endpoint);
+    });
+
+    test.concurrent("behavior elements, invalid", () => {
+        expectInvalid("App.[Endpoint", "Missing closing bracket");
+
+        let err = "Unexpected characters";
+        expectInvalid("App.[Endpoint]x", err);
+        expectInvalid("App.x[Endpoint]", err);
+        expectInvalid("App.Type.[4]", err);
+
+        err = "Expected open brackets";
+        expectInvalid("App.[Endpoint].", err);
+        expectInvalid("App.[Endpoint] . ", err);
+ 
+        err = "Invalid statement indices";
+        expectInvalid("App.[Endpoint].[,]", err);
+        expectInvalid("App.[Endpoint].[a]", err);
+        expectInvalid("App.[Endpoint].[1,]", err);
+        expectInvalid("App.[Endpoint].[,2]", err);
+        expectInvalid("App.[Endpoint].[1,,3]", err);
+        expectInvalid("App.[Endpoint].[1,b,3]", err);
+        expectInvalid("App.[Endpoint].[1,-2,3]", err);
+
+        err = "No content";
+        expectInvalid("App.[Endpoint].[]", err);
+        expectInvalid("App.[Endpoint].[  ]", err);
+        expectInvalid("App.[].[1,2,3]", err);
+        expectInvalid("App.[  ].[1,2,3]", err);
+    });
+});
+
+describe("String rendering", () => {
+    test.concurrent("data elements, standard", () => {
         expect(new ElementRef([], "App").toSysl()).toEqual("App");
         expect(new ElementRef(["Ns1"], "App").toSysl()).toEqual("Ns1 :: App");
         expect(new ElementRef(["Ns1", "Ns2"], "App").toSysl()).toEqual("Ns1 :: Ns2 :: App");
@@ -120,19 +174,32 @@ describe("Sysl rendering", () => {
         );
     });
 
-    test.concurrent("compact", () => {
-        expect(new ElementRef([], "App").toSysl(true)).toEqual("App");
-        expect(new ElementRef(["Ns1"], "App").toSysl(true)).toEqual("Ns1::App");
-        expect(new ElementRef(["Ns1", "Ns2"], "App").toSysl(true)).toEqual("Ns1::Ns2::App");
-        expect(new ElementRef(["Ns ."], "App .", "Type .", "Field .").toSysl(true)).toEqual(
+    test.concurrent("data elements, compact", () => {
+        expect(new ElementRef([], "App").toString()).toEqual("App");
+        expect(new ElementRef(["Ns1"], "App").toString()).toEqual("Ns1::App");
+        expect(new ElementRef(["Ns1", "Ns2"], "App").toString()).toEqual("Ns1::Ns2::App");
+        expect(new ElementRef(["Ns ."], "App .", "Type .", "Field .").toString()).toEqual(
             "Ns%20%2E::App%20%2E.Type%20%2E.Field%20%2E"
         );
-        expect(new ElementRef(["int", "string"], "date", "bool", "any").toSysl(true)).toEqual(
+        expect(new ElementRef(["int", "string"], "date", "bool", "any").toString()).toEqual(
             "%69nt::%73tring::%64ate.%62ool.%61ny"
         );
-        expect(new ElementRef(["1Ns", "2Ns"], "3App", "4Type", "5Field").toSysl(true)).toEqual(
+        expect(new ElementRef(["1Ns", "2Ns"], "3App", "4Type", "5Field").toString()).toEqual(
             "%31Ns::%32Ns::%33App.%34Type.%35Field"
         );
+    });
+
+    test.concurrent("behavior elements, toString", () => {
+        expect(new ElementRef(["Ns"], "App", "", "", "Endpoint").toString()).toEqual("Ns::App.[Endpoint]");
+        expect(new ElementRef(["Ns"], "App", "", "", "Endpoint", [0, 3]).toString()).toEqual("Ns::App.[Endpoint].[0,3]");
+        expect(new ElementRef(["[ Ns ]"], "[ App ]", "", "", "[ Endpoint ]", [0, 3]).toString()).toEqual("%5B%20Ns%20%5D::%5B%20App%20%5D.[[ Endpoint %5D].[0,3]");
+        expect(new ElementRef(["int"], "date", "", "", "bool", [0, 3]).toString()).toEqual("%69nt::%64ate.[bool].[0,3]");
+        expect(new ElementRef(["1Ns"], "2App", "", "", "3Endpoint", [0, 3]).toString()).toEqual("%31Ns::%32App.[3Endpoint].[0,3]");
+    });
+
+    test.concurrent("behavior elements, toSysl", () => {
+        expect(() => endpointRef.toSysl()).toThrow();
+        expect(() => statementRef.toSysl()).toThrow();
     });
 });
 
@@ -183,22 +250,35 @@ describe("App parts", () => {
 });
 
 describe("Genealogy", () => {
-    test.concurrent("parent or self", () => {
-        const parent = (r: string) => ElementRef.parse(r).toParentOrSelf().toString();
-        expect(parent("App")).toEqual("App");
+
+    test.concurrent("parent or undefined", () => {
+        const parent = (r: string) => ElementRef.parse(r).toParentOrUndefined()?.toString();
+
+        expect(parent("App")).toBeUndefined();
         expect(parent("Ns1::App")).toEqual("Ns1");
         expect(parent("Ns1::Ns2::App")).toEqual("Ns1::Ns2");
         expect(parent("App.Type")).toEqual("App");
         expect(parent("App.Type.Field")).toEqual("App.Type");
+
+        expect(parent("App.[Endpoint]")).toEqual("App");
+        expect(parent("App.[Endpoint].[0]")).toEqual("App.[Endpoint]");
+        expect(parent("App.[Endpoint].[0,1]")).toEqual("App.[Endpoint].[0]");
+        expect(parent("App.[Endpoint].[0,1,2]")).toEqual("App.[Endpoint].[0,1]");
     });
 
     test.concurrent("parent or throw", () => {
-        const parent = (r: string) => ElementRef.parse(r).toParent().toString();
+        const parent = (r: string) => ElementRef.parse(r).toParent()?.toString();
+
         expect(() => parent("App")).toThrow();
         expect(parent("Ns1::App")).toEqual("Ns1");
         expect(parent("Ns1::Ns2::App")).toEqual("Ns1::Ns2");
         expect(parent("App.Type")).toEqual("App");
         expect(parent("App.Type.Field")).toEqual("App.Type");
+
+        expect(parent("App.[Endpoint]")).toEqual("App");
+        expect(parent("App.[Endpoint].[0]")).toEqual("App.[Endpoint]");
+        expect(parent("App.[Endpoint].[0,1]")).toEqual("App.[Endpoint].[0]");
+        expect(parent("App.[Endpoint].[0,1,2]")).toEqual("App.[Endpoint].[0,1]");
     });
 
     const hasDescent = (descendant: string, ancestor: string) =>
@@ -208,17 +288,54 @@ describe("Genealogy", () => {
         expect(hasDescent("App", "App")).toBeFalse();
         expect(hasDescent("App", "App.Type")).toBeFalse();
         expect(hasDescent("App", "App.Type.Field")).toBeFalse();
+        expect(hasDescent("App", "App.[Endpoint]")).toBeFalse();
+        expect(hasDescent("App", "App.[Endpoint].[0]")).toBeFalse();
+        expect(hasDescent("App", "App.[Endpoint].[0,1]")).toBeFalse();
 
         expect(hasDescent("App.Type", "App")).toBeTrue();
         expect(hasDescent("App.Type", "App1")).toBeFalse();
         expect(hasDescent("App.Type", "App.Type")).toBeFalse();
         expect(hasDescent("App.Type", "App.Type.Field")).toBeFalse();
+        expect(hasDescent("App.Type", "App.[Endpoint]")).toBeFalse();
+        expect(hasDescent("App.Type", "App.[Endpoint].[0]")).toBeFalse();
+        expect(hasDescent("App.Type", "App.[Endpoint].[0,1]")).toBeFalse();
 
         expect(hasDescent("App.Type.Field", "App")).toBeTrue();
         expect(hasDescent("App.Type.Field", "App1")).toBeFalse();
         expect(hasDescent("App.Type.Field", "App.Type")).toBeTrue();
         expect(hasDescent("App.Type.Field", "App.Type1")).toBeFalse();
         expect(hasDescent("App.Type.Field", "App.Type.Field")).toBeFalse();
+        expect(hasDescent("App.Type.Field", "App.[Endpoint]")).toBeFalse();
+        expect(hasDescent("App.Type.Field", "App.[Endpoint].[0]")).toBeFalse();
+        expect(hasDescent("App.Type.Field", "App.[Endpoint].[0,1]")).toBeFalse();
+
+        expect(hasDescent("App.[Endpoint]", "App")).toBeTrue();
+        expect(hasDescent("App.[Endpoint]", "App1")).toBeFalse();
+        expect(hasDescent("App.[Endpoint]", "App.Type")).toBeFalse();
+        expect(hasDescent("App.[Endpoint]", "App.Type.Field")).toBeFalse();
+        expect(hasDescent("App.[Endpoint]", "App.[Endpoint]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint]", "App.[Endpoint].[0]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint]", "App.[Endpoint].[0,1]")).toBeFalse();
+
+        expect(hasDescent("App.[Endpoint].[0]", "App")).toBeTrue();
+        expect(hasDescent("App.[Endpoint].[0]", "App1")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0]", "App.Type")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0]", "App.Type.Field")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0]", "App.[Endpoint]")).toBeTrue();
+        expect(hasDescent("App.[Endpoint].[0]", "App.[Endpoint1]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0]", "App.[Endpoint].[0]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0]", "App.[Endpoint].[0,1]")).toBeFalse();
+
+        expect(hasDescent("App.[Endpoint].[0,1]", "App")).toBeTrue();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App1")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.Type")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.Type.Field")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.[Endpoint]")).toBeTrue();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.[Endpoint1]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.[Endpoint].[0]")).toBeTrue();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.[Endpoint].[5]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0,1]", "App.[Endpoint].[0,1]")).toBeFalse();
+        expect(hasDescent("App.[Endpoint].[0,1,2]", "App.[Endpoint].[0,1]")).toBeTrue();
     });
 
     test.concurrent("is descendant of, with namespace", () => {
@@ -276,67 +393,225 @@ describe("Genealogy", () => {
 
 describe("Equality", () => {
     test.concurrent("equals", () => {
-        expect(ElementRef.parse("App").equals(ElementRef.parse("App"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").equals(ElementRef.parse("App.Type"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").equals(ElementRef.parse("App.Type.Field"))).toBeTrue();
-        expect(ElementRef.parse("Ns::App").equals(ElementRef.parse("Ns::App"))).toBeTrue();
+        const expectEqual = (first: string, second: string) => expect(ElementRef.parse(first).equals(ElementRef.parse(second)));
 
-        expect(ElementRef.parse("App").equals(ElementRef.parse("App1"))).toBeFalse();
-        expect(ElementRef.parse("App").equals(ElementRef.parse("App.Type"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").equals(ElementRef.parse("App"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").equals(ElementRef.parse("App.Type1"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").equals(ElementRef.parse("App1.Type"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").equals(ElementRef.parse("App.Type.Field"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").equals(ElementRef.parse("App.Type.Field1"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").equals(ElementRef.parse("App.Type1.Field"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").equals(ElementRef.parse("App1.Type.Field"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").equals(ElementRef.parse("App.Type"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").equals(ElementRef.parse("App"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").equals(ElementRef.parse("Ns::App1"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").equals(ElementRef.parse("Ns1::App"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").equals(ElementRef.parse("Ns::Ns::App"))).toBeFalse();
+        expectEqual("App", "App").toBeTrue();
+        expectEqual("App.Type", "App.Type").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type.Field").toBeTrue();
+        expectEqual("Ns::App", "Ns::App").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0,1]").toBeTrue();
+
+        expectEqual("App", "App1").toBeFalse();
+        expectEqual("App", "App.Type").toBeFalse();
+        expectEqual("App", "App.Type.Field").toBeFalse();
+        expectEqual("App", "App.[Endpoint]").toBeFalse();
+        expectEqual("App", "App.[Endpoint].[0]").toBeFalse();
+        expectEqual("App", "App.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.Type", "App").toBeFalse();
+        expectEqual("App.Type", "App.Type1").toBeFalse();
+        expectEqual("App.Type", "App1.Type").toBeFalse();
+        expectEqual("App.Type", "App.Type.Field").toBeFalse();
+        expectEqual("App.Type", "App.[Type]").toBeFalse();
+        expectEqual("App.Type", "App.[Type].[0]").toBeFalse();
+        expectEqual("App.Type", "App.[Type].[0,1]").toBeFalse();
+        expectEqual("App.Type.Field", "App").toBeFalse();
+        expectEqual("App.Type.Field", "App.Type").toBeFalse();
+        expectEqual("App.Type.Field", "App.Type.Field1").toBeFalse();
+        expectEqual("App.Type.Field", "App.Type1.Field").toBeFalse();
+        expectEqual("App.Type.Field", "App1.Type.Field").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type]").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type].[0]").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type].[0,1]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.Endpoint").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.Endpoint.Field").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint1]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.Endpoint").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.Endpoint.Field").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[5]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App.Endpoint").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App.Endpoint.Field").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0,5]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0,1,2]").toBeFalse();
+        expectEqual("Ns::App", "App").toBeFalse();
+        expectEqual("Ns::App", "Ns::App1").toBeFalse();
+        expectEqual("Ns::App", "Ns1::App").toBeFalse();
+        expectEqual("Ns::App", "Ns::Ns::App").toBeFalse();
     });
 
     test.concurrent("types equal", () => {
-        expect(ElementRef.parse("App").typesEqual(ElementRef.parse("App"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").typesEqual(ElementRef.parse("App.Type"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").typesEqual(ElementRef.parse("App.Type.Field"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").typesEqual(ElementRef.parse("App.Type"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").typesEqual(ElementRef.parse("App.Type.Field"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").typesEqual(ElementRef.parse("App.Type.Field1"))).toBeTrue();
+        const expectEqual = (first: string, second: string) => expect(ElementRef.parse(first).typesEqual(ElementRef.parse(second)));
 
-        expect(ElementRef.parse("App").typesEqual(ElementRef.parse("App.Type"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").typesEqual(ElementRef.parse("App"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").typesEqual(ElementRef.parse("App.Type1"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").typesEqual(ElementRef.parse("App1.Type"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").typesEqual(ElementRef.parse("App.Type1.Field"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").typesEqual(ElementRef.parse("App1.Type.Field"))).toBeFalse();
+        expectEqual("App", "App").toBeTrue();
+        expectEqual("App.Type", "App.Type").toBeTrue();
+        expectEqual("App.Type", "App.Type.Field").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type.Field").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type.Field1").toBeTrue();
+
+        expectEqual("App", "App.Type").toBeFalse();
+        expectEqual("App", "App.Type.Field").toBeFalse();
+        expectEqual("App", "App.[Endpoint]").toBeFalse();
+        expectEqual("App", "App.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.Type", "App").toBeFalse();
+        expectEqual("App.Type", "App.Type1").toBeFalse();
+        expectEqual("App.Type", "App1.Type").toBeFalse();
+        expectEqual("App.Type", "App.[Type]").toBeFalse();
+        expectEqual("App.Type", "App.[Type].[0]").toBeFalse();
+        expectEqual("App.Type.Field", "App.Type1.Field").toBeFalse();
+        expectEqual("App.Type.Field", "App1.Type.Field").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type]").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type].[0]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.Endpoint").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0]").toBeFalse();
+    });
+
+    test.concurrent("endpoints equal", () => {
+        const expectEqual = (first: string, second: string) => expect(ElementRef.parse(first).endpointsEqual(ElementRef.parse(second)));
+
+        expectEqual("App", "App").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[5]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0,1]").toBeTrue();
+
+        expectEqual("App", "App.Type").toBeFalse();
+        expectEqual("App", "App.Type.Field").toBeFalse();
+        expectEqual("App", "App.[Endpoint]").toBeFalse();
+        expectEqual("App", "App.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.Type", "App").toBeFalse();
+        expectEqual("App.Type", "App.Type").toBeFalse();
+        expectEqual("App.Type", "App.Type.Field").toBeFalse();
+        expectEqual("App.Type", "App.[Type]").toBeFalse();
+        expectEqual("App.Type", "App.[Type].[0]").toBeFalse();
+        expectEqual("App.Type.Field", "App.Type").toBeFalse();
+        expectEqual("App.Type.Field", "App.Type.Field").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type]").toBeFalse();
+        expectEqual("App.Type.Field", "App.[Type].[0]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.Type").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.Type.Field").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint1]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App.[Endpoint1].[0]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.Type").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.Type.Field").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint1]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint1].[0]").toBeFalse();
     });
 
     test.concurrent("apps equal", () => {
-        expect(ElementRef.parse("App").appsEqual(ElementRef.parse("App"))).toBeTrue();
-        expect(ElementRef.parse("App").appsEqual(ElementRef.parse("App.Type"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").appsEqual(ElementRef.parse("App"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").appsEqual(ElementRef.parse("App.Type"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").appsEqual(ElementRef.parse("App.Type1"))).toBeTrue();
-        expect(ElementRef.parse("App.Type").appsEqual(ElementRef.parse("App.Type.Field"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").appsEqual(ElementRef.parse("App.Type.Field"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").appsEqual(ElementRef.parse("App.Type.Field1"))).toBeTrue();
-        expect(ElementRef.parse("App.Type.Field").appsEqual(ElementRef.parse("App.Type1.Field"))).toBeTrue();
-        expect(ElementRef.parse("Ns::App").appsEqual(ElementRef.parse("Ns::App"))).toBeTrue();
+        const expectEqual = (first: string, second: string) => expect(ElementRef.parse(first).appsEqual(ElementRef.parse(second)));
 
-        expect(ElementRef.parse("App").appsEqual(ElementRef.parse("App1"))).toBeFalse();
-        expect(ElementRef.parse("App.Type").appsEqual(ElementRef.parse("App1.Type"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").appsEqual(ElementRef.parse("App1.Type.Field"))).toBeFalse();
-        expect(ElementRef.parse("App.Type.Field").appsEqual(ElementRef.parse("App.Type"))).toBeTrue();
-        expect(ElementRef.parse("Ns::App").appsEqual(ElementRef.parse("App"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").appsEqual(ElementRef.parse("Ns::App1"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").appsEqual(ElementRef.parse("Ns1::App"))).toBeFalse();
-        expect(ElementRef.parse("Ns::App").appsEqual(ElementRef.parse("Ns::Ns::App"))).toBeFalse();
+        expectEqual("App", "App").toBeTrue();
+        expectEqual("App", "App.Type").toBeTrue();
+        expectEqual("App", "App.Type.Field").toBeTrue();
+        expectEqual("App", "App.[Endpoint]").toBeTrue();
+        expectEqual("App", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App", "App.[Endpoint].[0,1]").toBeTrue();
+        expectEqual("App.Type", "App").toBeTrue();
+        expectEqual("App.Type", "App.Type").toBeTrue();
+        expectEqual("App.Type", "App.Type1").toBeTrue();
+        expectEqual("App.Type", "App.Type.Field").toBeTrue();
+        expectEqual("App.Type", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.Type", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.Type", "App.[Endpoint].[0,1]").toBeTrue();
+        expectEqual("App.Type.Field", "App").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type1").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type.Field").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type.Field1").toBeTrue();
+        expectEqual("App.Type.Field", "App.Type1.Field").toBeTrue();
+        expectEqual("App.Type.Field", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.Type.Field", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.Type.Field", "App.[Endpoint].[0,1]").toBeTrue();
+        expectEqual("App.[Endpoint]", "App").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.Type").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.Type.Field").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.[Endpoint1]").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.[Endpoint]", "App.[Endpoint].[0,1]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.Type").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.Type.Field").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint1]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[5]").toBeTrue();
+        expectEqual("App.[Endpoint].[0]", "App.[Endpoint].[0,1]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.Type").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.Type.Field").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint1]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[5]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0,1]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0,5]").toBeTrue();
+        expectEqual("App.[Endpoint].[0,1]", "App.[Endpoint].[0,1,2]").toBeTrue();
+        expectEqual("Ns::App", "Ns::App").toBeTrue();
+
+        expectEqual("App", "App1").toBeFalse();
+        expectEqual("App", "App1.Type").toBeFalse();
+        expectEqual("App", "App1.Type.Field").toBeFalse();
+        expectEqual("App", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App", "App1.[Endpoint].[0]").toBeFalse();
+        expectEqual("App", "App1.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.Type", "App1").toBeFalse();
+        expectEqual("App.Type", "App1.Type").toBeFalse();
+        expectEqual("App.Type", "App1.Type.Field").toBeFalse();
+        expectEqual("App.Type", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.Type", "App1.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.Type", "App1.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.Type.Field", "App1").toBeFalse();
+        expectEqual("App.Type.Field", "App1.Type").toBeFalse();
+        expectEqual("App.Type.Field", "App1.Type.Field").toBeFalse();
+        expectEqual("App.Type.Field", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.Type.Field", "App1.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.Type.Field", "App1.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App1").toBeFalse();
+        expectEqual("App.[Endpoint]", "App1.Type").toBeFalse();
+        expectEqual("App.[Endpoint]", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App1.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.[Endpoint]", "App1.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App1").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App1.Type").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App1.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.[Endpoint].[0]", "App1.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App1").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App1.Type").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App1.[Endpoint]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App1.[Endpoint].[0]").toBeFalse();
+        expectEqual("App.[Endpoint].[0,1]", "App1.[Endpoint].[0,1]").toBeFalse();
+        expectEqual("Ns::App", "App").toBeFalse();
+        expectEqual("Ns::App", "Ns::App1").toBeFalse();
+        expectEqual("Ns::App", "Ns1::App").toBeFalse();
+        expectEqual("Ns::App", "Ns::Ns::App").toBeFalse();
     });
 });
 
-describe("copying",() => {
+describe("Copying",() => {
     test.concurrent("with", () => {
         expect(appRef.with({ typeName: "Type" })).toEqual(typeRef);
         expect(appRef.with({ typeName: "Type", fieldName: "Field" })).toEqual(fieldRef);
@@ -364,44 +639,96 @@ describe("copying",() => {
         expect(() => fieldRef.with({ namespace: [""] })).toThrow();
         expect(() => fieldRef.with({ appName: "" })).toThrow();
         expect(() => fieldRef.with({ typeName: "" })).toThrow();
+
+        expect(appRef.with({ endpointName: "Endpoint" })).toEqual(endpointRef);
+        expect(appRef.with({ endpointName: "Endpoint", statementIndices: [0] })).toEqual(statementRef);
+        expect(endpointRef.with({ statementIndices: [0] })).toEqual(statementRef);
+
+        expect(() => appRef.with({ statementIndices: [0] })).toThrow();
+        expect(() => typeRef.with({ statementIndices: [0] })).toThrow();
+        expect(() => typeRef.with({ endpointName: "Endpoint" })).toThrow();
     });
 
     test.concurrent("truncate", () => {
         expect(appRef.truncate(ElementKind.App)).toEqual(appRef);
         expect(appRef.truncate(ElementKind.Type)).toEqual(appRef);
         expect(appRef.truncate(ElementKind.Field)).toEqual(appRef);
-        expect(() => appRef.truncate(ElementKind.Endpoint)).toThrow();
-        expect(() => appRef.truncate(ElementKind.Statement)).toThrow();
-        expect(() => appRef.truncate(ElementKind.Parameter)).toThrow();
+        expect(appRef.truncate(ElementKind.Endpoint)).toEqual(appRef);
+        expect(appRef.truncate(ElementKind.Statement)).toEqual(appRef);
 
         expect(typeRef.truncate(ElementKind.App)).toEqual(appRef);
         expect(typeRef.truncate(ElementKind.Type)).toEqual(typeRef);
         expect(typeRef.truncate(ElementKind.Field)).toEqual(typeRef);
         expect(() => typeRef.truncate(ElementKind.Endpoint)).toThrow();
         expect(() => typeRef.truncate(ElementKind.Statement)).toThrow();
-        expect(() => typeRef.truncate(ElementKind.Parameter)).toThrow();
 
         expect(fieldRef.truncate(ElementKind.App)).toEqual(appRef);
         expect(fieldRef.truncate(ElementKind.Type)).toEqual(typeRef);
         expect(fieldRef.truncate(ElementKind.Field)).toEqual(fieldRef);
         expect(() => fieldRef.truncate(ElementKind.Endpoint)).toThrow();
         expect(() => fieldRef.truncate(ElementKind.Statement)).toThrow();
-        expect(() => fieldRef.truncate(ElementKind.Parameter)).toThrow();    });
+
+        expect(endpointRef.truncate(ElementKind.App)).toEqual(appRef);
+        expect(() => endpointRef.truncate(ElementKind.Type)).toThrow();
+        expect(() => endpointRef.truncate(ElementKind.Field)).toThrow();
+        expect(endpointRef.truncate(ElementKind.Endpoint)).toEqual(endpointRef);
+        expect(endpointRef.truncate(ElementKind.Statement)).toEqual(endpointRef);
+
+        expect(statementRef.truncate(ElementKind.App)).toEqual(appRef);
+        expect(() => statementRef.truncate(ElementKind.Type)).toThrow();
+        expect(() => statementRef.truncate(ElementKind.Field)).toThrow();
+        expect(statementRef.truncate(ElementKind.Endpoint)).toEqual(endpointRef);
+        expect(statementRef.truncate(ElementKind.Statement)).toEqual(statementRef);
+    });
 
     test.concurrent("clone", () => {
         expect(appRef.clone()).toEqual(appRef);
         expect(typeRef.clone()).toEqual(typeRef);
         expect(fieldRef.clone()).toEqual(fieldRef);
+        expect(endpointRef.clone()).toEqual(endpointRef);
+        expect(statementRef.clone()).toEqual(statementRef);
+    });
+
+    test.concurrent("push/pop app", () => {
+        const rootApp = ElementRef.parse("App");
+        expect(rootApp.pushApp("App2").toString()).toEqual("App::App2");
+        expect(appRef.pushApp("App2").toString()).toEqual("Ns::App::App2");
+        expect(typeRef.pushApp("App2").toString()).toEqual("Ns::App::App2.Type");
+        expect(fieldRef.pushApp("App2").toString()).toEqual("Ns::App::App2.Type.Field");
+
+        expect(() => rootApp.popApp().toString()).toThrow();
+        expect(appRef.popApp().toString()).toEqual("Ns");
+        expect(typeRef.popApp().toString()).toEqual("Ns.Type");
+        expect(fieldRef.popApp().toString()).toEqual("Ns.Type.Field");
+        expect(ElementRef.parse("Ns1::Ns2::App").popApp().toString()).toEqual("Ns1::Ns2");
+    });
+
+    test.concurrent("stringify", () => {
+        const before = {
+            num: 42,
+            str: "Foo",
+            ref: appRef,
+            arr: [5, typeRef, "Bar", [fieldRef]],
+            obj: { ref: appRef }
+        };
+        const after = {
+            num: 42,
+            str: "Foo",
+            ref: "Ns::App",
+            arr: [5, "Ns::App.Type", "Bar", ["Ns::App.Type.Field"]],
+            obj: { ref: "Ns::App" }
+        };
+        expect(ElementRef.stringSubstitute(before)).toEqual(after);
+        expect(before.ref instanceof ElementRef && before.arr[1] instanceof ElementRef).toBeTrue(); // No mutation
     });
 });
 
-describe("computed properties", () => {
-    test.concurrent("x", () => {
-        expect(appRef).toEqual(expect.objectContaining(
-            { isApp: true, isType: false, isField: false, numericKind: 1 }));
-        expect(typeRef).toEqual(expect.objectContaining(
-            { isApp: false, isType: true, isField: false, numericKind: 2 }));
-        expect(fieldRef).toEqual(expect.objectContaining(
-            { isApp: false, isType: false, isField: true, numericKind: 3 }));
+describe("Computed properties", () => {
+    test.concurrent("flags and kind", () => {
+        expect(appRef)      .toEqual(expect.objectContaining({ isApp: true,  isType: false, isField: false, isEndpoint: false, isStatement: false, isData: true,  isBehavior: true,  kind: ElementKind.App,       numericKind: 1 }));
+        expect(typeRef)     .toEqual(expect.objectContaining({ isApp: false, isType: true,  isField: false, isEndpoint: false, isStatement: false, isData: true,  isBehavior: false, kind: ElementKind.Type,      numericKind: 2 }));
+        expect(endpointRef) .toEqual(expect.objectContaining({ isApp: false, isType: false, isField: false, isEndpoint: true,  isStatement: false, isData: false, isBehavior: true,  kind: ElementKind.Endpoint,  numericKind: 2 }));
+        expect(fieldRef)    .toEqual(expect.objectContaining({ isApp: false, isType: false, isField: true,  isEndpoint: false, isStatement: false, isData: true,  isBehavior: false, kind: ElementKind.Field,     numericKind: 3 }));
+        expect(statementRef).toEqual(expect.objectContaining({ isApp: false, isType: false, isField: false, isEndpoint: false, isStatement: true,  isData: false, isBehavior: true,  kind: ElementKind.Statement, numericKind: 3 }));
     });
 });

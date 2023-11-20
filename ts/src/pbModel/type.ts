@@ -1,8 +1,17 @@
 import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, jsonSetMember } from "typedjson";
 import { Location } from "../common/location";
-import { sortByLocation } from "../common/sort";
-import { Element, ElementRef, Type, TypeConstraint, Range, DecimalResolution, Union, ValueType, Alias } from "../model";
+import {
+    ElementRef,
+    Type,
+    TypeConstraint,
+    Range,
+    DecimalResolution,
+    Union,
+    ValueType,
+    Alias,
+    AppChild,
+} from "../model";
 import { CollectionDecorator } from "../model/decorator";
 import { Enum, EnumValue } from "../model/enum";
 import { Field, FieldValue } from "../model/field";
@@ -181,9 +190,9 @@ export class PbTypeDef {
     }
 
     static defsToFields(attrDefs: Map<string, PbTypeDef>, parentRef?: ElementRef): Field[] {
-        return sortByLocation(
-            Array.from(attrDefs).map(([key, value]) => value?.toField(key, value.getContext()?.toModel() ?? parentRef))
-        );
+        return Array.from(attrDefs)
+            .map(([key, value]) => value?.toField(value.getContext()?.toModel() ?? parentRef, key))
+            .sort(Location.compareFirst);
     }
 
     toValue(parentRef: ElementRef | undefined): FieldValue {
@@ -194,24 +203,15 @@ export class PbTypeDef {
         throw new Error(`Error converting type: ${JSON.stringify(this)}`);
     }
 
-    // `isInner` specifies whether a type exists within something else and is not a type definition.
-    // It is true by default, meaning the type is a nested definition or a parameter.
-    // When it is false, it means it is a top level `Type` definition and therefore may be an `Alias`.
-    toModel(name: string = "", isInner: boolean = true, parentRef?: ElementRef): Field | Type | Enum | Union | Alias {
+    toAppChild(name: string = "", parentRef?: ElementRef): AppChild {
         const params = {
-            tags: sortByLocation(getTags(this.attrs)),
-            annos: sortByLocation(getAnnos(this.attrs)),
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
             locations: this.sourceContexts,
         };
 
         const type = this.tuple || this.relation;
-        if (type)
-            return new Type(
-                name,
-                !!this.relation,
-                sortByLocation(PbTypeDef.defsToFields(type.attrDefs, parentRef)),
-                params
-            );
+        if (type) return new Type(name, !!this.relation, PbTypeDef.defsToFields(type.attrDefs, parentRef), params);
         if (this.enum) {
             // Original order of enum items is not serialized, so assume value (number) order, since it's most common.
             const values = [...this.enum.items].map(([k, v]) => new EnumValue(k, v)).sort((a, b) => a.value - b.value);
@@ -221,14 +221,19 @@ export class PbTypeDef {
             const values = this.oneOf.type.map(t => t.toValue(parentRef));
             return new Union(name, values, params);
         }
-        return isInner
-            ? new Field(name, this.toValue(parentRef), this.opt, params)
-            : new Alias(name, this.toValue(parentRef), params);
+        return new Alias(name, this.toValue(parentRef), params);
     }
 
-    toField(name: string, parentRef: ElementRef | undefined): Field {
-        const field = this.toModel(name, true, parentRef);
-        if (!(field instanceof Field)) throw new Error("Cannot produce Field, requested PbTypeDef is not a Field");
-        return field;
+    toField(parentRef: ElementRef | undefined, name: string): Field {
+        if (this.tuple || this.relation || this.enum || this.oneOf)
+            throw new Error("Cannot produce Field, requested PbTypeDef is not a Field");
+
+        const params = {
+            tags: getTags(this.attrs),
+            annos: getAnnos(this.attrs),
+            locations: this.sourceContexts,
+        };
+
+        return new Field(name, this.toValue(parentRef), this.opt, params);
     }
 }

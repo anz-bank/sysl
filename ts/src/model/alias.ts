@@ -1,12 +1,20 @@
-import { ElementRef } from "./common";
+import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
 import { CollectionDecorator } from "./decorator";
 import { Element, IElementParams } from "./element";
 import { Primitive } from "./primitive";
+import { Application } from "./application";
 
 export class Alias extends Element {
-    constructor(name: string, public value: AliasValue, { annos, tags, locations, parent, model }: IElementParams) {
-        super(name, locations ?? [], annos ?? [], tags ?? [], model, parent);
+    public override get parent(): Application | undefined {
+        return super.parent as Application;
+    }
+    public override set parent(app: Application | undefined) {
+        super.parent = app;
+    }
+
+    constructor(name: string, public value: AliasValue, p: IElementParams<Application>) {
+        super(name, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model, p.parent);
         this.attachSubitems();
     }
 

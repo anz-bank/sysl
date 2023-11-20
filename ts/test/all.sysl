@@ -33,27 +33,27 @@ RestEndpoint [~tag]:
 
     /pathwithtype/{native <: int}:
         GET:
-            ...
+            action
 
     /query:
         GET?native=string&optional=string?:
-            ...
+            action
 
     /param:
         PATCH (t <: Types.Type [~body]):
-            ...
+            action
 
     /param:
         POST (native <: string):
-            ...
+            action
 
     /param:
         PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
-            ...
+            action
 
     /report%2Ecsv:
         GET:
-            ...
+            action
 
 SimpleEndpoint [~tag]:
     SimpleEp [~SimpleEpTag]:
@@ -66,14 +66,14 @@ SimpleEndpoint [~tag]:
             |
             | like this
 
-    SimpleEpWithParamsRef (Types.type) [~tag]:
+    SimpleEpWithParam (untypedParam) [~tag]:
         ...
 
     SimpleEpWithTypes (native <: string) [~tag]:
-        ...
+        action
 
     SimpleEpWithArray (unlimited <: string(5..), limited <: string(5..10), num <: int(5)) [~tag]:
-        ...
+        action
 
 Types:
     !type Type [~tag]:
@@ -153,15 +153,9 @@ Statements [~tag]:
             ...
 
     Loops [~tag]:
-        alt predicate:
-            ...
         until predicate:
-            ...
+            action
         for each predicate:
-            ...
-        for predicate:
-            ...
-        loop predicate:
             ...
         while predicate:
             ...

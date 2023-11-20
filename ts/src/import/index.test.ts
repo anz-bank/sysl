@@ -14,9 +14,13 @@ describe("import and merge", () => {
             shallow: true,
         });
         const app = merged.model.getApp(new ElementRef(["Test"], "SearchService"));
-        expect(
-            app.endpoints[0].statements.flatMap(flattenStatement).map((s: Statement) => s.value?.toString())
-        ).toEqual(["hello", "if world", "world", "return ok <: Test :: Types.SearchResponse", "Foreign <- Endpoint"]);
+        expect(app.endpoints[0].children.flatMap(flattenStatement).map((s: Statement) => s.toString())).toEqual([
+            "hello",
+            "if world",
+            "world",
+            "return ok <: Test :: Types.SearchResponse",
+            "Foreign <- Endpoint",
+        ]);
     }, 10000); // Slow due to arr.ai-based proto import.
 });
 

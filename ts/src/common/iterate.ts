@@ -1,12 +1,12 @@
 import {
     Annotation,
+    ParentStatement,
     Element,
     Endpoint,
     Field,
     IChild,
     ILocational,
     Model,
-    Param,
     Statement,
     Tag,
     Type,
@@ -42,7 +42,7 @@ export interface WalkListener {
     visitEndpoint?: (endpoint: Endpoint) => boolean;
     visitEndpointAnno?: (anno: Annotation) => void;
     visitEndpointTag?: (tag: Tag) => void;
-    visitParam?: (param: Param) => void;
+    visitParam?: (param: Field) => void;
     visitStatement?: (statement: Statement) => boolean;
     visitStatementAnno?: (anno: Annotation) => void;
     visitStatementTag?: (tag: Tag) => void;
@@ -90,7 +90,7 @@ export class AnyWalkListener implements WalkListener {
     visitEndpointTag(tag: Tag): void {
         this.visitAny(tag);
     }
-    visitParam(param: Param): void {
+    visitParam(param: Field): void {
         this.visitAny(param);
     }
     visitParamAnno(anno: Annotation): void {
@@ -151,10 +151,10 @@ export function walk(model: Model, listener: WalkListener) {
                         listener.visitStatementAnno?.bind(listener),
                         listener.visitStatementTag?.bind(listener)
                     );
-                    visitStatements(stmt.children, stmt);
+                    if (stmt instanceof ParentStatement) visitStatements(stmt.children, stmt);
                 });
             };
-            visitStatements(ep.statements, ep);
+            visitStatements(ep.children, ep);
         });
     });
 }

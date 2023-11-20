@@ -34,6 +34,6 @@ jobs:
         working-directory: ts
 
       - name: Check Code Formatting
-        run: yarn prettier:check
+        run: yarn tidy:check
         working-directory: ts
 

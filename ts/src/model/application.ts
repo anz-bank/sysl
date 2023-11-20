@@ -1,12 +1,18 @@
-import { ElementID, ElementKind, ElementRef, IChild } from "./common";
+import { IChild } from "./common";
+import { ElementID, ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
-import { Element, IElementParams, ParentElement } from "./element";
-import { Endpoint } from "./statement";
+import { Element, IElementParams, IParentElement } from "./element";
+import { Endpoint } from "./endpoint";
 import { Type } from "./type";
+import { Enum } from "./enum";
+import { Union } from "./union";
+import { Alias } from "./alias";
 
-export class Application extends ParentElement<Element> {
+export type AppChild = Type | Endpoint | Enum | Union | Alias;
+
+export class Application extends Element implements IParentElement<AppChild> {
     namespace: readonly string[];
-    children: Element[];
+    children: AppChild[];
 
     constructor(name: ElementID, p: ApplicationParams = {}) {
         if (name instanceof ElementRef) {
@@ -51,7 +57,11 @@ export class Application extends ParentElement<Element> {
     }
 
     public override toDto() {
-        return { ...super.toDto(), namespace: this.namespace };
+        return {
+            ...super.toDto(),
+            namespace: this.namespace,
+            children: this.children.map(e => e.toDto()),
+        };
     }
 
     toRef(): ElementRef {
@@ -73,7 +83,7 @@ export class Application extends ParentElement<Element> {
     }
 }
 
-export type ApplicationParams = IElementParams & {
+export type ApplicationParams = IElementParams<void> & {
     namespace?: string[];
-    children?: Element[];
+    children?: AppChild[];
 };

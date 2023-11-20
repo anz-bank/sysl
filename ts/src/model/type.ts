@@ -1,23 +1,39 @@
 import "reflect-metadata";
-import { ElementRef } from "./common";
+import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
-import { IElementParams, ParentElement } from "./element";
+import { Element, IElementParams, IParentElement } from "./element";
 import { Field } from "./field";
+import { Application } from "./application";
 
-export class Type extends ParentElement<Field> {
-    constructor(name: string, public isTable: boolean = false, public children: Field[] = [], p?: IElementParams) {
-        super(name, p?.locations ?? [], p?.annos ?? [], p?.tags ?? [], p?.model, p?.parent);
-        this.attachSubitems();
+export class Type extends Element implements IParentElement<Field> {
+    public override get parent(): Application | undefined {
+        return super.parent as Application;
+    }
+    public override set parent(app: Application | undefined) {
+        super.parent = app;
     }
 
-    toRef(): ElementRef {
-        return this.parent!.toRef().with({ typeName: this.name });
+    constructor(
+        name: string,
+        public isTable: boolean = false,
+        public children: Field[] = [],
+        p?: IElementParams<Application>
+    ) {
+        super(name, p?.locations ?? [], p?.annos ?? [], p?.tags ?? [], p?.model, p?.parent);
+        this.attachSubitems();
     }
 
     toSysl(): string {
         return this.render(this.isTable ? "!table" : "!type", this.children);
     }
 
+    override toDto() {
+        return { ...super.toDto(), children: this.children.map(e => e.toDto()) };
+    }
+
+    toRef(): ElementRef {
+        return this.parent!.toRef().with({ typeName: this.name });
+    }
     override toString(): string {
         return `${this.isTable ? "!table" : "!type"} ${this.safeName}`;
     }

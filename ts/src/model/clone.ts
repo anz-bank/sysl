@@ -76,6 +76,7 @@ export class CloneContext {
  * A function signature used to filter out items when cloning a model. The function accepts a context and the item to be
  * checked, and returns true if the item should be cloned, or false if the item should be skipped.
  */
+// TODO: Place context at end so function can be declared with just item param.
 export type ModelFilter = (context: CloneContext, item: ICloneable | ILocational) => boolean;
 
 export class ModelFilters {

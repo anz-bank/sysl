@@ -1,4 +1,5 @@
-import { ElementRef, IRenderable } from "./common";
+import { IRenderable } from "./common";
+import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
 import { Primitive } from "./primitive";
 import { FieldValue } from "./field";

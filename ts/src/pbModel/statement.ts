@@ -1,50 +1,36 @@
 import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject } from "typedjson";
 import { Location } from "../common/location";
-import { sortByLocation } from "../common/sort";
 import {
-    Action,
-    Alt,
-    AltChoice,
-    Call,
+    ActionStatement,
     CallArg,
-    Cond,
-    Endpoint,
-    Foreach,
-    Group,
-    Loop,
-    LoopN,
-    Param,
+    CallStatement,
+    CondStatement,
+    ForEachStatement,
+    GroupStatement,
+    LoopStatement,
+    OneOfStatement,
     RestParams,
-    Return,
+    ReturnStatement,
     Statement,
+    ellipsis,
 } from "../model/statement";
+import { Endpoint } from "../model/endpoint";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
 import { PbTypeDef, PbValue } from "./type";
-import { ElementRef } from "../model";
+import { ElementRef, Field, Primitive, TypePrimitive } from "../model";
+import * as util from "util";
 
 @jsonObject
 export class PbParam {
     @jsonMember name!: string;
     @jsonMember(() => PbTypeDef) type!: PbTypeDef;
 
-    toModel(parentRef: ElementRef): Param {
-        return new Param(
-            this.name,
-            this.type.sourceContexts ?? [],
-            this.type.hasValue() ? this.type.toModel(undefined, undefined, parentRef) : undefined
-        );
-    }
-}
-
-@jsonObject
-export class PbAction {
-    @jsonMember action!: string;
-
-    toModel(): Action {
-        return new Action(this.action);
+    toModel(parentRef: ElementRef): Field {
+        if (this.type.hasValue()) return this.type.toField(parentRef, this.name);
+        return new Field(this.name, new Primitive(TypePrimitive.ANY), false, { locations: this.type.sourceContexts });
     }
 }
 
@@ -59,125 +45,53 @@ export class PbCallArg {
 }
 
 @jsonObject
-export class PbCall {
-    @jsonMember endpoint!: string;
-    @jsonArrayMember(PbCallArg) arg?: PbCallArg[];
-    @jsonMember target!: PbAppName;
-
-    toModel(appName: string[]): Call {
-        return new Call({
-            endpoint: this.endpoint,
-            args: this.arg?.map(a => a.toModel()) ?? [],
-            targetApp: this.target.part,
-            originApp: appName,
-        });
-    }
-}
-
-@jsonObject
 export class PbLoopN {
     @jsonMember count!: number;
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
-
-    toModel(appName: string[]): LoopN {
-        return new LoopN(
-            this.count,
-            this.stmt.map(s => s.toModel(appName))
-        );
-    }
 }
 
 @jsonObject
 export class PbForeach {
     @jsonMember collection!: string;
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
-
-    toModel(appName: string[]): Foreach {
-        return new Foreach(
-            this.collection,
-            this.stmt.map(s => s.toModel(appName))
-        );
-    }
 }
 
 @jsonObject
 export class PbAltChoice {
-    @jsonMember cond!: string;
+    @jsonMember cond?: string; // TODO: Remove optionality when Sysl parser rejects empty names for choices.
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
-
-    toModel(appName: string[]): AltChoice {
-        return new AltChoice(
-            this.cond,
-            this.stmt.map(s => s.toModel(appName))
-        );
-    }
-}
-
-@jsonObject
-export class PbAlt {
-    @jsonArrayMember(PbAltChoice) choice!: PbAltChoice[];
-
-    toModel(appName: string[]): Alt {
-        return new Alt(this.choice.map(c => c.toModel(appName)));
-    }
 }
 
 @jsonObject
 export class PbGroup {
     @jsonMember title!: string;
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
-
-    toModel(appName: string[]): Group {
-        return new Group(
-            this.title,
-            this.stmt.map(s => s.toModel(appName))
-        );
-    }
 }
 
-@jsonObject
-export class PbReturn {
-    @jsonMember payload!: string;
-
-    toModel(): Return {
-        return new Return(this.payload);
-    }
-}
 
 @jsonObject
 export class PbCond {
     @jsonMember test!: string;
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
-
-    toModel(appName: string[]): Cond {
-        return new Cond(
-            this.test,
-            this.stmt.map(s => s.toModel(appName))
-        );
-    }
 }
 
 @jsonObject
 export class PbLoop {
-    @jsonMember(String) mode!: LoopMode;
+    @jsonMember mode!: string;
     @jsonMember criterion?: string;
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
-
-    toModel(appName: string[]): Loop {
-        return new Loop(
-            this.mode,
-            this.criterion,
-            this.stmt.map(s => s.toModel(appName))
-        );
-    }
 }
 
-export enum LoopMode {
-    NOMode = 0,
-    WHILE = 1,
-    UNTIL = 2,
-    UNRECOGNIZED = -1,
+@jsonObject
+export class PbCall {
+    @jsonMember endpoint!: string;
+    @jsonArrayMember(PbCallArg) arg?: PbCallArg[];
+    @jsonMember target!: PbAppName;
 }
+
+@jsonObject export class PbAction { @jsonMember action!: string; }
+@jsonObject export class PbReturn { @jsonMember payload!: string; }
+@jsonObject export class PbAlt    { @jsonArrayMember(PbAltChoice) choice!: PbAltChoice[]; }
 
 @jsonObject
 export class PbStatement {
@@ -194,26 +108,51 @@ export class PbStatement {
     @jsonMapMember(String, () => PbAttribute, serializerFor(PbAttribute))
     attrs!: Map<string, PbAttribute>;
 
-    getValue(): PbAction | PbCall | PbCond | PbLoop | PbLoopN | PbForeach | PbAlt | PbGroup | PbReturn | undefined {
-        return (
-            this.action ||
-            this.call ||
-            this.cond ||
-            this.loop ||
-            this.loopN ||
-            this.foreach ||
-            this.alt ||
-            this.group ||
-            this.ret
-        );
-    }
-
-    toModel(appName: string[]): Statement {
-        return new Statement(this.getValue()?.toModel(appName), {
+    toModel(appRef: ElementRef): Statement | undefined {
+        const params = {
             locations: this.sourceContexts,
             tags: getTags(this.attrs),
             annos: getAnnos(this.attrs),
-        });
+        };
+        if (this.action) {
+            if (this.action.action == ellipsis) return undefined
+            return new ActionStatement(this.action.action, params);
+        }
+        if (this.ret) return new ReturnStatement(this.ret.payload, params);
+        if (this.call)
+            return new CallStatement(
+                ElementRef.fromAppParts(this.call.target.part).with({ endpointName: this.call.endpoint }),
+                this.call.arg?.map(c => c.toModel()) ?? [],
+                appRef,
+                params
+            );
+
+        const children = PbStatement.getBlock(this.group ?? this.cond ?? this.loop ?? this.foreach, appRef);
+        const blockParams = { ...params, children };
+        if (this.group) return new GroupStatement(this.group.title, blockParams);
+        if (this.cond) return new CondStatement(this.cond.test, blockParams);
+        if (this.foreach) return new ForEachStatement(this.foreach.collection, blockParams);
+        if (this.alt) {
+            const toGroup = (choice: PbAltChoice) => 
+                // TODO: Remove fallback to empty string when Sysl parser rejects empty names for choices.
+                new GroupStatement(choice.cond ?? "", { ...blockParams, children: PbStatement.getBlock(choice, appRef) });
+            
+            return new OneOfStatement(this.alt.choice.map(c => toGroup(c)), blockParams);
+        }
+        if (this.loop) {
+            if (this.loop.mode == "WHILE" || this.loop.mode == "UNTIL")
+                return new LoopStatement(this.loop.criterion ?? "", this.loop.mode.toLowerCase(), blockParams);
+            throw new Error(`Unrecognized loop mode: ${this.loop.mode.toString()}`);
+        }
+
+        if (this.loopN) throw new Error("LoopN statement is not supported.");
+        throw new Error("Encountered unrecognized statement type in PB:\n" + util.inspect(this));
+    }
+
+    static getBlock(container: { stmt?: PbStatement[] } | undefined, appRef: ElementRef): Statement[] {
+        if (!container?.stmt?.length) return [];
+        const block = container.stmt.map(s => s.toModel(appRef)).filter(s => s) as Statement[];
+        return block.sort(Location.compareFirst);
     }
 }
 
@@ -257,16 +196,13 @@ export class PbEndpoint {
     attrs!: Map<string, PbAttribute>;
     @jsonMember source?: PbAppName;
 
-    toModel(appName: string[]): Endpoint {
-        const appRef = ElementRef.fromAppParts(appName);
+    toModel(appRef: ElementRef): Endpoint {
         return new Endpoint(this.name, {
             longName: this.longName,
-            docstring: this.docstring,
             isPubsub: this.isPubsub ?? false,
             params: (this.param ?? []).filter(p => p.name || p.type).map(p => p.toModel(appRef)),
-            statements: sortByLocation(this.stmt?.map(s => s.toModel(appName)) ?? []),
+            children: PbStatement.getBlock(this, appRef),
             restParams: this.restParams?.toModel(appRef),
-            pubsubSource: this.source?.part ?? [],
             locations: this.sourceContexts,
             tags: getTags(this.attrs),
             annos: getAnnos(this.attrs),

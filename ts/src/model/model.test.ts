@@ -1,21 +1,23 @@
-import "reflect-metadata";
-import { readFile } from "fs/promises";
 import "jest-extended";
+import { readFile } from "fs/promises";
 import { realign } from "../common/format";
 import { allItems } from "../common/iterate";
 import { Annotation, AnnoValue, Tag } from "./attribute";
 import { Model } from "./model";
-import "./renderers";
-import { Action, Endpoint, Group, Param, Statement } from "./statement";
+import { ActionStatement, GroupStatement, ParentStatement, Statement } from "./statement";
+import { Endpoint } from "./endpoint";
 import { Type } from "./type";
 import { Application } from "./application";
-import { Field } from "./field";
-import { ElementRef, ILocational } from "./common";
-import { CloneContext, ModelFilters } from "./clone";
+import { Field, FieldValue } from "./field";
+import { ILocational } from "./common";
+import { ElementRef } from "./elementRef";
+import { CloneContext, ICloneable, ModelFilters } from "./clone";
 import { Union } from "./union";
 import { Primitive, TypePrimitive } from "./primitive";
 import { Alias } from "./alias";
 import { CollectionDecorator } from "./decorator";
+import { Element } from "./element";
+import { Enum } from "./enum";
 
 const allPath = "../ts/test/all.sysl";
 let allModel: Model;
@@ -54,14 +56,10 @@ describe("Constructors", () => {
         expect(new Endpoint("Foo")).toHaveProperty("name", "Foo");
     });
 
-    test.concurrent("New Param", () => {
-        expect(new Param("foo", [])).toHaveProperty("name", "foo");
-    });
-
     test.concurrent("New Statement", () => {
-        expect(new Statement(new Action("foo"))).toHaveProperty("value.action", "foo");
+        expect(new ActionStatement("foo")).toHaveProperty("action", "foo");
 
-        expect(Statement.action("foo")).toHaveProperty("value.action", "foo");
+        expect(new ActionStatement("foo")).toHaveProperty("action", "foo");
     });
 
     test.concurrent("New Annotation", () => {
@@ -100,74 +98,39 @@ describe("Sysl rendering", () => {
     });
 
     describe("Field", () => {
-        test.concurrent("typed with absolute path", async () => {
+        test.concurrent("Reference types", async () => {
             const model = await Model.fromText(realign(`
                 Company :: App:
                     !table Customer:
-                        HomeAddress <: Company::App.Address
-                    !type Address:
-                        City <: string
-            `));
-            expect(model.getField("Company::App.Customer.HomeAddress").value).toEqual(model.getType("Company::App.Address").toRef());
-        });
+                        Abs <: Company::App.Address
+                        Rel <: Address
+                        
+                        SeqAbs <: sequence of Company::App.Address
+                        SeqRel <: sequence of Address
+                        SetAbs <: set of Company::App.Address
+                        SetRel <: set of Address
+                        
+                        ListAbs(1..1) <: Company::App.Address
+                        ListRel(1..1) <: Address
 
-        test.concurrent("typed with relative path", async () => {
-            const model = await Model.fromText(realign(`
-                Company :: App:
-                    !table Customer:
-                        HomeAddress <: Address
+                        ListSeqAbs(1..1) <: sequence of Company::App.Address
+                        ListSeqRel(1..1) <: sequence of Address
+                        ListSetAbs(1..1) <: set of Company::App.Address
+                        ListSetRel(1..1) <: set of Address
                     !type Address:
                         City <: string
             `));
-            expect(model.getField("Company::App.Customer.HomeAddress").value).toEqual(model.getType("Company::App.Address").toRef());
-        });
 
-        test.concurrent("typed with collection with absolute path", async () => {
-            const model = await Model.fromText(realign(`
-                Company :: App:
-                    !table Customer:
-                        HomeAddress <: sequence of Company::App.Address
-                    !type Address:
-                        City <: string
-            `));
-            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
-            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), false));
-        });
-
-        test.concurrent("typed with collection with relative path", async () => {
-            const model = await Model.fromText(realign(`
-                Company :: App:
-                    !table Customer:
-                        HomeAddress <: sequence of Address
-                    !type Address:
-                        City <: string
-            `));
-            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
-            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), false));
-        });
-
-        test.concurrent("typed with collection-list with relative path", async () => {
-            const model = await Model.fromText(realign(`
-                Company :: App:
-                    !table Customer:
-                        HomeAddress(1..1) <: sequence of Address
-                    !type Address:
-                        City <: string
-            `));
-            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
-            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), false));
-        });
-
-        test.concurrent("typed with set-list with relative path", async () => {
-            const model = await Model.fromText(realign(`
-                Company :: App:
-                    !table Customer:
-                        HomeAddress(1..1) <: set of Address
-                    !type Address:
-                        City <: string
-            `));
-            const fieldType = model.getField("Company::App.Customer.HomeAddress").value as CollectionDecorator;
-            expect(fieldType).toEqual(new CollectionDecorator(model.getType("Company::App.Address").toRef(), true));
+            const addressRef = model.getType("Company::App.Address").toRef();
+            const sequenceRef = new CollectionDecorator(addressRef, false);
+            const setRef = new CollectionDecorator(addressRef, true);
+            
+            model.getType("Company::App.Customer").children.forEach(f => {
+                let expected: FieldValue = addressRef;
+                if (f.name.includes("Set")) expected = setRef;
+                else if (f.name.includes("Seq") || f.name.includes("List")) expected = sequenceRef;
+                expect(f.value).toEqual(expected);
+            });
         });
 
         test.concurrent("bigger example", async () => {
@@ -188,6 +151,7 @@ describe("Sysl rendering", () => {
             const fieldType = model.getField("App.ResponseData.list").value as CollectionDecorator;
             expect(fieldType).toEqual(new CollectionDecorator(model.getType("App.DataWrapper").toRef(), false));
         });
+
         test.concurrent("escaped backslash", () => {
             const anno = new Annotation("proto_options", ["key = Foo\\\\Bar"]);
             expect(anno.toSysl()).toEqual(`proto_options = ["key = Foo\\\\Bar"]`);
@@ -201,7 +165,6 @@ describe("Sysl rendering", () => {
         expect(new Application(new ElementRef([], "int")).toSysl()).toEqual("%69nt:\n    ...");
         expect(new Application(new ElementRef([], "1App")).toSysl()).toEqual("%31App:\n    ...");
     });
-    
 });
 
 describe("DTO", () => {
@@ -227,45 +190,50 @@ describe("DTO", () => {
                 imports: [ { filePath: "other.sysl", locations: ["ts/main.sysl:3:1::18"] } ],
                 apps: [
                     {
+                        kind: "Application",
                         namespace: ["Ns"],
                         name: "App",
                         metadata: { appTag: undefined, appAnno: "App" },
                         locations: {
-                            "0": "ts/main.sysl:5:1:12:33",
+                            0: "ts/main.sysl:5:1:12:33",
                             appTag: "ts/main.sysl:5:12::19",
-                            appAnno: "ts/main.sysl:6:16::21"
+                            appAnno: "ts/main.sysl:6:16::21",
                         },
                         children: [
                             {
+                                kind: "Type",
                                 name: "Type",
                                 metadata: { typeTag: undefined, typeAnno: "Type" },
                                 locations: {
-                                    "0": "ts/main.sysl:7:5:12:33",
+                                    0: "ts/main.sysl:7:5:12:33",
                                     typeTag: "ts/main.sysl:7:17::25",
-                                    typeAnno: "ts/main.sysl:8:21::27"
+                                    typeAnno: "ts/main.sysl:8:21::27",
                                 },
                                 children: [
                                     {
+                                        kind: "Field",
                                         name: "Primitive",
                                         primitive: "string",
                                         constraint: "(5..10)",
-                                        locations: { "0": "ts/main.sysl:9:9::35" }
+                                        locations: { 0: "ts/main.sysl:9:9::35" },
                                     },
                                     {
+                                        kind: "Field",
                                         name: "Array",
                                         primitive: "decimal",
                                         constraint: "(5.8)",
                                         collectionType: "sequence",
-                                        locations: { "0": "ts/main.sysl:10:9::42" }
+                                        locations: { 0: "ts/main.sysl:10:9::42" },
                                     },
                                     {
+                                        kind: "Field",
                                         name: "Reference",
                                         ref: "Other.Type",
                                         metadata: { fieldTag: undefined, fieldAnno: "Field" },
                                         locations: {
-                                            "0": "ts/main.sysl:11:9:13:2",
+                                            0: "ts/main.sysl:11:9:13:2",
                                             fieldTag: "ts/main.sysl:11:34::43",
-                                            fieldAnno: "ts/main.sysl:12:26::33"
+                                            fieldAnno: "ts/main.sysl:12:26::33",
                                         }
                                     },
                                 ],
@@ -276,6 +244,200 @@ describe("DTO", () => {
             }
         );
     });
+
+    test.concurrent("Rest endpoint", async () => {
+        const model = await Model.fromText(realign(`
+            Ns :: App:
+                /customer/{id <: int}:
+                    GET(auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]]) ?includeOrders=bool? [~restTag]:
+                        @restAnno = "GET Customer"
+                        if includeOrders == true:
+                            return data <: CustomerAndOrders
+                        else:
+                            throw NotImplementedError
+        `), "main.sysl", { maxImportDepth: 1 });
+
+        expect(model.toDto()).toMatchObject(
+            {
+                apps: [
+                    {
+                        children: [
+                            {
+                                name: "GET /customer/{id}",
+                                params: [
+                                    {
+                                        kind: "Field",
+                                        name: "auth_token",
+                                        optional: false,
+                                        primitive: "string",
+                                        constraint: "(32..64)",
+                                        metadata: {
+                                            paramTag: undefined,
+                                            paramAnno: [["1"],"2"],
+                                        },
+                                        locations: {
+                                            "paramTag": "ts/main.sysl:3:43::52",
+                                            "paramAnno": "ts/main.sysl:3:64::75",
+                                        },
+                                    }
+                                ],
+                                restParams: {
+                                    method: "GET",
+                                    path: "/customer/{id}",
+                                    queryParams: [
+                                        {
+                                            kind: "Field",
+                                            name: "includeOrders",
+                                            optional: true,
+                                            primitive: "bool",
+                                            locations: { 0: "ts/main.sysl:3:79::98" },
+                                        }
+                                    ],
+                                    urlParams: [
+                                        {
+                                            kind: "Field",
+                                            name: "id",
+                                            optional: false,
+                                            primitive: "int",
+                                            locations: { 0: "ts/main.sysl:2:15::26" },
+                                        }
+                                    ],
+                                },
+                                metadata: { restTag: undefined, restAnno: "GET Customer" },
+                                locations: {
+                                    0: "ts/main.sysl:3:9:9:2",
+                                    restTag: "ts/main.sysl:3:100::108",
+                                    restAnno: "ts/main.sysl:4:25::39", // TODO: https://github.com/anzx/sysl/issues/888
+                                },
+                                children: [
+                                    {
+                                        kind: "CondStatement",
+                                        prefix: "if",
+                                        title: "includeOrders == true",
+                                        children: [
+                                            {
+                                                kind: "ReturnStatement",
+                                                payload: "data <: CustomerAndOrders",
+                                                locations: { 0: "ts/main.sysl:6:17::49" },
+                                            }
+                                        ],
+                                        locations: { 0: "ts/main.sysl:5:13:7:14" },
+                                    },
+                                    {
+                                        kind: "GroupStatement",
+                                        prefix: "",
+                                        title: "else",
+                                        children: [
+                                            {
+                                                kind: "ActionStatement",
+                                                action: "throw NotImplementedError",
+                                                locations: { 0: "ts/main.sysl:8:17::42" },
+                                            }
+                                        ],
+                                        locations: { 0: "ts/main.sysl:7:13:8:42" },
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                ],
+            }
+        );
+    });
+
+    test.only("RPC endpoint", async () => {
+        const model = await Model.fromText(realign(`
+            Ns :: App:
+                GetCustomer(id <: int, auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]], includeOrders <: bool?) [~rpcTag]:
+                    @rpcAnno = "GetCustomer"
+                    if includeOrders == true:
+                        return data <: CustomerAndOrders
+                    else:
+                        throw NotImplementedError
+        `), "main.sysl", { maxImportDepth: 1 });
+
+        expect(model.toDto()).toMatchObject(
+            {
+                apps: [
+                    {
+                        children: [
+                            {
+                                name: "GetCustomer",
+                                params: [
+                                    {
+                                        kind: "Field",
+                                        name: "id",
+                                        optional: false,
+                                        primitive: "int",
+                                        locations: { }, // TODO: https://github.com/anzx/sysl/issues/891
+                                    },
+                                    {
+                                        kind: "Field",
+                                        name: "auth_token",
+                                        optional: false,
+                                        primitive: "string",
+                                        constraint: "(32..64)",
+                                        metadata: {
+                                            paramTag: undefined,
+                                            paramAnno: [["1"],"2"],
+                                        },
+                                        locations: {
+                                            "paramAnno": "ts/main.sysl:2:79::90",
+                                            "paramTag": "ts/main.sysl:2:58::67",
+                                        },
+                                    },
+                                    {
+                                        kind: "Field",
+                                        name: "includeOrders",
+                                        optional: true,
+                                        primitive: "bool",
+                                        locations: { },
+                                    }
+
+                                ],
+                                metadata: { rpcTag: undefined, rpcAnno: "GetCustomer" },
+                                locations: {
+                                    "0": "ts/main.sysl:2:5:7:38",
+                                    "rpcAnno": "ts/main.sysl:3:20::33",
+                                    "rpcTag": "ts/main.sysl:2:118::125",
+                                },
+                                children: [
+                                    {
+                                        kind: "CondStatement",
+                                        prefix: "if",
+                                        title: "includeOrders == true",
+                                        children: [
+                                            {
+                                                kind: "ReturnStatement",
+                                                payload: "data <: CustomerAndOrders",
+                                                locations: { 0: "ts/main.sysl:5:13::45" },
+                                            }
+                                        ],
+                                        locations: { 0: "ts/main.sysl:4:9:6:10" },
+                                    },
+                                    {
+                                        kind: "GroupStatement",
+                                        prefix: "",
+                                        title: "else",
+                                        children: [
+                                            {
+                                                kind: "ActionStatement",
+                                                action: "throw NotImplementedError",
+                                                locations: { 0: "ts/main.sysl:7:13::38" },
+                                            }
+                                        ],
+                                        locations: { 0: "ts/main.sysl:6:9:7:38" },
+                                    },
+                                ],
+                            }
+                        ],
+                    }
+                ],
+            }
+        );
+    });
+
+    test.concurrent("All", async () => (await Model.fromFile(allPath)).toDto());
 });
 
 describe("Parent and Model", () => {
@@ -295,8 +457,8 @@ describe("Parent and Model", () => {
         const app1 = model.getApp("App1");
         const app2 = model.getApp("App2");
         const ep = app1.children.pop() as Endpoint;
-        const outerSt = ep.statements[0];
-        const innerSt = new Statement(new Group("subStatement", []));
+        const outerSt = ep.children[0] as GroupStatement;
+        const innerSt = new GroupStatement("subStatement");
         outerSt.children.push(innerSt);
         app2.children.push(ep);
         model.attachSubitems();
@@ -396,7 +558,6 @@ describe("Roundtrip", () => {
             App:
                 SimpleEp:
                     @name = "value"
-                    ...
             `),
         EndpointWithInlineAnno: {
             input: realign(`
@@ -408,7 +569,6 @@ describe("Roundtrip", () => {
                 App:
                     SimpleEp:
                         @name = "value"
-                        ...
                 `),
         },
         EndpointWithUntypedParam: realign(`
@@ -421,20 +581,14 @@ describe("Roundtrip", () => {
                 SimpleEp (param <: string):
                     ...
             `),
-        EndpointWithUnnamedRefParam: realign(`
-            App:
-                SimpleEp (Types.type):
-                    ...
-            `),
         EndpointWithNamedRefParam: realign(`
             App:
                 SimpleEp (param <: Types.type):
                     ...
             `),
-        // TODO: Support relative refs in endpoint params
         EndpointWithLocalNamedRefParam: realign(`
             App:
-                SimpleEp (param <: App.type):
+                SimpleEp (param <: type):
                     ...
             `),
         EndpointWithPrimitiveParamWithConstraints: realign(`
@@ -514,11 +668,10 @@ describe("Roundtrip", () => {
                     PUT (unlimited <: string(5..), limited <: string(5..10), num <: int(5)):
                         ...
             `),
-        // TODO: Support relative refs in endpoint params
         RestEndpointWithComplexParamType: realign(`
             RestEndpoint:
                 /param:
-                    POST (arg <: RestEndpoint.Customer):
+                    POST (arg <: Customer):
                         ...
             `),
         Type: realign(`
@@ -715,35 +868,62 @@ describe("General methods", () => {
             Namespace :: App:
                 !type Type:
                     Field <: int
+                Endpoint:
+                    Statement0:
+                        Statement0_0
+                        Statement0_1:
+                            Statement0_1_0
+                        Statement0_2
+
         `));
 
         // Element not in model
         expect(model.findElement("Namespace::MissingApp")).toBeUndefined();
         expect(model.findElement("Namespace::App.MissingType")).toBeUndefined();
+        expect(model.findElement("Namespace::App.[MissingEndpoint]")).toBeUndefined();
         expect(model.findElement("Namespace::App.Type.MissingField")).toBeUndefined();
+        expect(model.findElement("Namespace::App.[Endpoint].[1]")).toBeUndefined();
+        expect(model.findElement("Namespace::App.[Endpoint].[0,3]")).toBeUndefined();
+        expect(model.findElement("Namespace::App.[Endpoint].[0,0,0]")).toBeUndefined();
         expect(model.findApp("Namespace::MissingApp")).toBeUndefined();
         expect(model.findType("Namespace::App.MissingType")).toBeUndefined();
+        expect(model.findEndpoint("Namespace::App.[MissingEndpoint]")).toBeUndefined();
         expect(model.findField("Namespace::App.Type.MissingField")).toBeUndefined();
+        expect(model.findStatement("Namespace::App.[Endpoint].[1]")).toBeUndefined();
+        expect(model.findStatement("Namespace::App.[Endpoint].[0,3]")).toBeUndefined();
+        expect(model.findStatement("Namespace::App.[Endpoint].[0,0,0]")).toBeUndefined();
         expect(() => model.getApp("Namespace::MissingApp")).toThrow();
         expect(() => model.getType("Namespace::App.MissingType")).toThrow();
+        expect(() => model.getEndpoint("Namespace::App.[MissingEndpoint]")).toThrow();
         expect(() => model.getField("Namespace::App.Type.MissingField")).toThrow();
+        expect(() => model.getStatement("Namespace::App.[Endpoint].[1]")).toThrow();
+        expect(() => model.getStatement("Namespace::App.[Endpoint].[0,3]")).toThrow();
+        expect(() => model.getStatement("Namespace::App.[Endpoint].[0,0,0]")).toThrow();
 
         // Invalid element reference
         expect(() => model.findElement("Namespace::App.Type.Field.Crazy")).toThrow();
         expect(() => model.findApp("Namespace::App.Type.Field.Crazy")).toThrow();
         expect(() => model.findType("Namespace::App.Type.Field.Crazy")).toThrow();
+        expect(() => model.findEndpoint("Namespace::App.[Endpoint].[]")).toThrow();
         expect(() => model.findField("Namespace::App.Type.Field.Crazy")).toThrow();
+        expect(() => model.findStatement("Namespace::App.[Endpoint].[]")).toThrow();
         expect(() => model.getApp("Namespace::App.Type.Field.Crazy")).toThrow();
         expect(() => model.getType("Namespace::App.Type.Field.Crazy")).toThrow();
+        expect(() => model.getEndpoint("Namespace::App.[Endpoint].[]")).toThrow();
         expect(() => model.getField("Namespace::App.Type.Field.Crazy")).toThrow();
+        expect(() => model.getStatement("Namespace::App.[Endpoint].[]")).toThrow();
 
         // Element type mismatch
         expect(() => model.findApp("Namespace::App.Type")).toThrow();
         expect(() => model.findType("Namespace::App.Type.Field")).toThrow();
+        expect(() => model.findEndpoint("Namespace::App.[Endpoint].[0]")).toThrow();
         expect(() => model.findField("Namespace::App")).toThrow();
+        expect(() => model.findStatement("Namespace::App.[Endpoint]")).toThrow();
         expect(() => model.getApp("Namespace::App.Type")).toThrow();
         expect(() => model.getType("Namespace::App.Type.Field")).toThrow();
+        expect(() => model.getEndpoint("Namespace::App.[Endpoint].[0]")).toThrow();
         expect(() => model.getField("Namespace::App")).toThrow();
+        expect(() => model.getStatement("Namespace::App.[Endpoint]")).toThrow();
 
         // Happy path
         expect(model.findElement("Namespace::App")).toBeInstanceOf(Application);
@@ -754,9 +934,23 @@ describe("General methods", () => {
         expect(model.findType("Namespace::App.Type")).toBeInstanceOf(Type);
         expect(model.getType("Namespace::App.Type")).toBeInstanceOf(Type);
 
+        expect(model.findElement("Namespace::App.[Endpoint]")).toBeInstanceOf(Endpoint);
+        expect(model.findEndpoint("Namespace::App.[Endpoint]")).toBeInstanceOf(Endpoint);
+        expect(model.getEndpoint("Namespace::App.[Endpoint]")).toBeInstanceOf(Endpoint);
+
         expect(model.findElement("Namespace::App.Type.Field")).toBeInstanceOf(Field);
         expect(model.findField("Namespace::App.Type.Field")).toBeInstanceOf(Field);
         expect(model.getField("Namespace::App.Type.Field")).toBeInstanceOf(Field);
+
+        expect(model.findElement("Namespace::App.[Endpoint].[0]")).toBeInstanceOf(Statement);
+        expect(model.findStatement("Namespace::App.[Endpoint].[0]")).toBeInstanceOf(Statement);
+        expect(model.getStatement("Namespace::App.[Endpoint].[0]")).toBeInstanceOf(Statement);
+
+        const statement = model.apps[0].endpoints[0].children[0] as ParentStatement;
+        expect(model.getStatement("Namespace::App.[Endpoint].[0]")).toBe(statement);
+        expect(model.getStatement("Namespace::App.[Endpoint].[0,1]")).toBe(statement.children[1]);
+        expect(model.getStatement("Namespace::App.[Endpoint].[0,1,0]"))
+            .toBe((statement.children[1] as ParentStatement).children[0]);
     });
 });
 
@@ -1032,7 +1226,7 @@ describe("Cloning", () => {
         const model = await Model.fromFile(allPath);
         const clonedModel = model.clone();
 
-        expect(model.toSysl()).toEqual(clonedModel.toSysl());
+        expect(clonedModel.toSysl()).toEqual(model.toSysl());
     });
 
     test.concurrent("All filtered to current file", async () => {
@@ -1096,15 +1290,18 @@ describe("Cloning", () => {
         expect((clonedApp.find(c => c.name == "Alias") as ILocational).locations).toBeEmpty();
     });
 
-    test.concurrent("All filter visits", async () => {
-        const model = await Model.fromFile(allPath);
+    function renderAs(model: Model, renderer: (item: ICloneable | ILocational) => string | undefined): string {
         const visits: string[] = [];
         model.clone((context, item) => {
-            visits.push(`${"  ".repeat(context.depth - 1)}'${(item as any)?.toString()}': ${item.constructor.name}`);
-            return true;
+            const render = renderer(item);
+            if (render) visits.push(`${"  ".repeat(context.depth - 1)}${render}`);
+            return !!render;
         });
+        return visits.join("\n");
+    }
 
-        expect(visits.join("\n")).toEqual(realign(`
+    test.concurrent("All filter visits", async () => {
+        expect(renderAs(await Model.fromFile(allPath), i => `'${i}': ${i.constructor.name}`)).toEqual(realign(`
             'imported.sysl': Import
             'App': Application
               '[~abstract]': Tag
@@ -1121,90 +1318,66 @@ describe("Cloning", () => {
               '[REST] /': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
-                '...': Statement
-                  '...': Action
               '[REST] /pathwithtype/{native}': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
-                  'native': Param
-                    '[param] <: int': Field
-                '...': Statement
-                  '...': Action
+                  'native <: int': Field
+                'action': ActionStatement
               '[REST] /query': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
-                  'native': Param
-                    '[param] <: string': Field
-                  'optional': Param
-                    '[param] <: string?': Field
-                '...': Statement
-                  '...': Action
+                  'native <: string': Field
+                  'optional <: string?': Field
+                'action': ActionStatement
               '[REST] /param': Endpoint
                 '[~rest]': Tag
-                't': Param
-                  '[param] <: Types.Type': Field
-                    '[~body]': Tag
+                't <: Types.Type': Field
+                  '[~body]': Tag
                 'PATCH': RestParams
-                '...': Statement
-                  '...': Action
+                'action': ActionStatement
               '[REST] /param': Endpoint
                 '[~rest]': Tag
-                'native': Param
-                  '[param] <: string': Field
+                'native <: string': Field
                 'POST': RestParams
-                '...': Statement
-                  '...': Action
+                'action': ActionStatement
               '[REST] /param': Endpoint
                 '[~rest]': Tag
-                'unlimited': Param
-                  '[param] <: string(5..)': Field
-                    'length: 5..': TypeConstraint
-                'limited': Param
-                  '[param] <: string(5..10)': Field
-                    'length: 5..10': TypeConstraint
-                'num': Param
-                  '[param] <: int(5)': Field
-                    'length: ..5': TypeConstraint
+                'unlimited <: string(5..)': Field
+                  'length: 5..': TypeConstraint
+                'limited <: string(5..10)': Field
+                  'length: 5..10': TypeConstraint
+                'num <: int(5)': Field
+                  'length: ..5': TypeConstraint
                 'PUT': RestParams
-                '...': Statement
-                  '...': Action
+                'action': ActionStatement
               '[REST] /report.csv': Endpoint
                 '[~rest]': Tag
                 'GET': RestParams
-                '...': Statement
-                  '...': Action
+                'action': ActionStatement
             'SimpleEndpoint': Application
               '[~tag]': Tag
-              '[gRPC] SimpleEp': Endpoint
+              '[RPC] SimpleEp': Endpoint
                 '[~SimpleEpTag]': Tag
                 '@annotation = ...': Annotation
                 '@annotation1 = ...': Annotation
                 '@annotation2 = ...': Annotation
                 '@annotation3 = ...': Annotation
-              '[gRPC] SimpleEpWithParamsRef': Endpoint
+              '[RPC] SimpleEpWithParam': Endpoint
                 '[~tag]': Tag
-                'Types.type': Param
-                '...': Statement
-                  '...': Action
-              '[gRPC] SimpleEpWithTypes': Endpoint
+                'untypedParam <: any': Field
+              '[RPC] SimpleEpWithTypes': Endpoint
                 '[~tag]': Tag
-                'native': Param
-                  '[param] <: string': Field
-                '...': Statement
-                  '...': Action
-              '[gRPC] SimpleEpWithArray': Endpoint
+                'native <: string': Field
+                'action': ActionStatement
+              '[RPC] SimpleEpWithArray': Endpoint
                 '[~tag]': Tag
-                'unlimited': Param
-                  '[param] <: string(5..)': Field
-                    'length: 5..': TypeConstraint
-                'limited': Param
-                  '[param] <: string(5..10)': Field
-                    'length: 5..10': TypeConstraint
-                'num': Param
-                  '[param] <: int(5)': Field
-                    'length: ..5': TypeConstraint
-                '...': Statement
-                  '...': Action
+                'unlimited <: string(5..)': Field
+                  'length: 5..': TypeConstraint
+                'limited <: string(5..10)': Field
+                  'length: 5..10': TypeConstraint
+                'num <: int(5)': Field
+                  'length: ..5': TypeConstraint
+                'action': ActionStatement
             'Types': Application
               '!type Type': Type
                 '[~tag]': Tag
@@ -1219,7 +1392,7 @@ describe("Cloning", () => {
                   '[~tag]': Tag
                 'sequence <: sequence of string': Field
                   '[~tag]': Tag
-                'aliasSequence <: Types.AliasSequence': Field
+                'aliasSequence <: AliasSequence': Field
                   '[~tag]': Tag
                 'with_anno <: string': Field
                   '[~tag]': Tag
@@ -1277,97 +1450,54 @@ describe("Cloning", () => {
                 '[~tag]': Tag
             'Statements': Application
               '[~tag]': Tag
-              '[gRPC] IfStmt': Endpoint
+              '[RPC] IfStmt': Endpoint
                 '[~tag]': Tag
-                'if predicate1': Statement
-                  'if predicate1': Cond
-                    'return ok <: string': Statement
-                      'return ok <: string': Return
-                'else if predicate2': Statement
-                  'else if predicate2': Group
-                    'Statements <- IfStmt': Statement
-                      'Statements <- IfStmt': Call
-                'else': Statement
-                  'else': Group
-                    '...': Statement
-                      '...': Action
-              '[gRPC] Loops': Endpoint
+                'if predicate1': CondStatement
+                  'return ok <: string': ReturnStatement
+                'else if predicate2': GroupStatement
+                  'Statements <- IfStmt': CallStatement
+                'else': GroupStatement
+              '[RPC] Loops': Endpoint
                 '[~tag]': Tag
-                'alt predicate': Statement
-                  'alt predicate': Group
-                    '...': Statement
-                      '...': Action
-                '[UNTIL] predicate': Statement
-                  '[UNTIL] predicate': Loop
-                    '...': Statement
-                      '...': Action
-                'predicate': Statement
-                  'predicate': Foreach
-                    '...': Statement
-                      '...': Action
-                'for predicate': Statement
-                  'for predicate': Group
-                    '...': Statement
-                      '...': Action
-                'loop predicate': Statement
-                  'loop predicate': Group
-                    '...': Statement
-                      '...': Action
-                '[WHILE] predicate': Statement
-                  '[WHILE] predicate': Loop
-                    '...': Statement
-                      '...': Action
-              '[gRPC] Returns': Endpoint
+                'until predicate': LoopStatement
+                  'action': ActionStatement
+                'for each predicate': ForEachStatement
+                'while predicate': LoopStatement
+              '[RPC] Returns': Endpoint
                 '[~tag]': Tag
-                'return ok <: string': Statement
-                  'return ok <: string': Return
-                'return ok <: Types.Type': Statement
-                  'return ok <: Types.Type': Return
-                'return error <: Types.Type': Statement
-                  'return error <: Types.Type': Return
-              '[gRPC] Calls': Endpoint
+                'return ok <: string': ReturnStatement
+                'return ok <: Types.Type': ReturnStatement
+                'return error <: Types.Type': ReturnStatement
+              '[RPC] Calls': Endpoint
                 '[~tag]': Tag
-                'Statements <- Returns': Statement
-                  'Statements <- Returns': Call
-                'RestEndpoint <- GET /param': Statement
-                  'RestEndpoint <- GET /param': Call
-              '[gRPC] OneOfStatements': Endpoint
+                'Statements <- Returns': CallStatement
+                'RestEndpoint <- GET /param': CallStatement
+              '[RPC] OneOfStatements': Endpoint
                 '[~tag]': Tag
-                '[case1,case number 2,\"case 3\",undefined choices]': Statement
-                  '[case1,case number 2,\"case 3\",undefined choices]': Alt
-                    'case1': AltChoice
-                      'return ok <: string': Statement
-                        'return ok <: string': Return
-                    'case number 2': AltChoice
-                      'return ok <: int': Statement
-                        'return ok <: int': Return
-                    '\"case 3\"': AltChoice
-                      'return ok <: Types.Type': Statement
-                        'return ok <: Types.Type': Return
-                    'undefined': AltChoice
-                      'return error <: string': Statement
-                        'return error <: string': Return
-              '[gRPC] GroupStatements': Endpoint
+                'one of': OneOfStatement
+                  'case1': GroupStatement
+                    'return ok <: string': ReturnStatement
+                  'case number 2': GroupStatement
+                    'return ok <: int': ReturnStatement
+                  '\"case 3\"': GroupStatement
+                    'return ok <: Types.Type': ReturnStatement
+                  '': GroupStatement
+                    'return error <: string': ReturnStatement
+              '[RPC] GroupStatements': Endpoint
                 '[~tag]': Tag
-                'grouped': Statement
-                  'grouped': Group
-                    'Statements <- GroupStatements': Statement
-                      'Statements <- GroupStatements': Call
-              '[gRPC] AnnotatedEndpoint': Endpoint
+                'grouped': GroupStatement
+                  'Statements <- GroupStatements': CallStatement
+              '[RPC] AnnotatedEndpoint': Endpoint
                 '[~tag]': Tag
                 '@annotation1 = ...': Annotation
                 '@annotation2 = ...': Annotation
                 '@annotation3 = ...': Annotation
-              '[gRPC] AnnotatedStatements': Endpoint
-                'Statements <- Miscellaneous': Statement
-                  'Statements <- Miscellaneous': Call
-                'return ok <: string [annotation=[\"as\", \"an\", \"array\"]] #Doesn't work, annos/tags/comments are part of the name': Statement
-                  'return ok <: string [annotation=[\"as\", \"an\", \"array\"]] #Doesn't work, annos/tags/comments are part of the name': Return
-                '\"statement\"': Statement
-                  '\"statement\"': Action
-              '[gRPC] Miscellaneous': Endpoint
-                'SimpleEndpoint -> SimpleEp': Statement
-                  'SimpleEndpoint -> SimpleEp': Action
+              '[RPC] AnnotatedStatements': Endpoint
+                'Statements <- Miscellaneous': CallStatement
+                'return ok <: string [annotation=[\"as\", \"an\", \"array\"]] #Doesn't work, annos/tags/comments are part of the name': ReturnStatement
+                '\"statement\"': ActionStatement
+              '[RPC] Miscellaneous': Endpoint
+                'SimpleEndpoint -> SimpleEp': ActionStatement
             'Unsafe%2FNamespace::Unsafe%2FApp': Application
               '[~tag]': Tag
               '!type Unsafe%2EType': Type
@@ -1376,6 +1506,121 @@ describe("Cloning", () => {
                   '[~tag]': Tag
                   '@description = ...': Annotation
             'ImportedApp': Application`, 2))
+    });
+
+    
+    const hasRef = (item: any): item is Element => {
+        return (item instanceof Element) &&
+            // TODO: Remove when all elements have toRef();
+            !(
+                item instanceof Enum ||
+                item instanceof Union ||
+                item instanceof Alias ||
+                (item instanceof Field && (!item.parent || item.parent instanceof Endpoint)) // Endpoint param
+            );
+    }
+
+    test.concurrent("All .toRef()s", async () => {
+
+        expect(renderAs(await Model.fromFile(allPath), i => hasRef(i) ? i.toRef().toString() : undefined))
+            .toEqual(realign(`
+            App
+            AppWithAnnotation
+            App::with::subpackages
+            RestEndpoint
+              RestEndpoint.[GET /]
+              RestEndpoint.[GET /pathwithtype/{native}]
+                RestEndpoint.[GET /pathwithtype/{native}].[0]
+              RestEndpoint.[GET /query]
+                RestEndpoint.[GET /query].[0]
+              RestEndpoint.[PATCH /param]
+                RestEndpoint.[PATCH /param].[0]
+              RestEndpoint.[POST /param]
+                RestEndpoint.[POST /param].[0]
+              RestEndpoint.[PUT /param]
+                RestEndpoint.[PUT /param].[0]
+              RestEndpoint.[GET /report.csv]
+                RestEndpoint.[GET /report.csv].[0]
+            SimpleEndpoint
+              SimpleEndpoint.[SimpleEp]
+              SimpleEndpoint.[SimpleEpWithParam]
+              SimpleEndpoint.[SimpleEpWithTypes]
+                SimpleEndpoint.[SimpleEpWithTypes].[0]
+              SimpleEndpoint.[SimpleEpWithArray]
+                SimpleEndpoint.[SimpleEpWithArray].[0]
+            Types
+              Types.Type
+                Types.Type.nativeTypeField
+                Types.Type.reference
+                Types.Type.optional
+                Types.Type.set
+                Types.Type.sequence
+                Types.Type.aliasSequence
+                Types.Type.with_anno
+              Types.Table
+                Types.Table.primaryKey
+                Types.Table.nativeTypeField
+                Types.Table.reference
+                Types.Table.optional
+                Types.Table.set
+                Types.Table.sequence
+                Types.Table.with_anno
+                Types.Table.decimal_with_precision
+                Types.Table.string_max_constraint
+                Types.Table.string_range_constraint
+                Types.Table.int_with_bitwidth
+                Types.Table.float_with_bitwidth
+            Statements
+              Statements.[IfStmt]
+                Statements.[IfStmt].[0]
+                  Statements.[IfStmt].[0,0]
+                Statements.[IfStmt].[1]
+                  Statements.[IfStmt].[1,0]
+                Statements.[IfStmt].[2]
+              Statements.[Loops]
+                Statements.[Loops].[0]
+                  Statements.[Loops].[0,0]
+                Statements.[Loops].[1]
+                Statements.[Loops].[2]
+              Statements.[Returns]
+                Statements.[Returns].[0]
+                Statements.[Returns].[1]
+                Statements.[Returns].[2]
+              Statements.[Calls]
+                Statements.[Calls].[0]
+                Statements.[Calls].[1]
+              Statements.[OneOfStatements]
+                Statements.[OneOfStatements].[0]
+                  Statements.[OneOfStatements].[0,0]
+                    Statements.[OneOfStatements].[0,0,0]
+                  Statements.[OneOfStatements].[0,1]
+                    Statements.[OneOfStatements].[0,1,0]
+                  Statements.[OneOfStatements].[0,2]
+                    Statements.[OneOfStatements].[0,2,0]
+                  Statements.[OneOfStatements].[0,3]
+                    Statements.[OneOfStatements].[0,3,0]
+              Statements.[GroupStatements]
+                Statements.[GroupStatements].[0]
+                  Statements.[GroupStatements].[0,0]
+              Statements.[AnnotatedEndpoint]
+              Statements.[AnnotatedStatements]
+                Statements.[AnnotatedStatements].[0]
+                Statements.[AnnotatedStatements].[1]
+                Statements.[AnnotatedStatements].[2]
+              Statements.[Miscellaneous]
+                Statements.[Miscellaneous].[0]
+            Unsafe%2FNamespace::Unsafe%2FApp
+              Unsafe%2FNamespace::Unsafe%2FApp.Unsafe%2EType
+                Unsafe%2FNamespace::Unsafe%2FApp.Unsafe%2EType.Unsafe%2EField
+            ImportedApp`, 2))
+    });
+
+    test.concurrent("All .toRef() used in get", async () => {
+        const model = await Model.fromFile(allPath);
+        model.clone((_context, item) => {
+            if (hasRef(item)) model.getElement(item.toRef().toString());
+            return true;
+        });
     });
 });
 

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { jsonMember, jsonObject } from "typedjson";
 import path from "path";
-import { Model } from "../model";
+import { ILocational, Model } from "../model";
 
 /** Describes the offset location within a file by zero-based line and column. */
 @jsonObject
@@ -81,15 +81,18 @@ export class Location {
      * This format is backwards-compatible with the file linking in VS Code (for file, and start line/col).
      * @returns A string representation of the location.
      */
-    public toString(): string {
+    public toString(startLineOnly: boolean = false): string {
         const parts = [this.file, this.start.line + 1];
-        const hasEndLine = this.end.line > this.start.line;
-        const hasEnd = hasEndLine || this.end.col > this.start.col;
-        if (this.start.col > 0 || hasEnd) {
-            parts.push(this.start.col + 1);
-            if (hasEnd) {
-                parts.push(hasEndLine ? this.end.line + 1 : "");
-                parts.push(this.end.col + 1);
+
+        if (!startLineOnly) {
+            const hasEndLine = this.end.line > this.start.line;
+            const hasEnd = hasEndLine || this.end.col > this.start.col;
+            if (this.start.col > 0 || hasEnd) {
+                parts.push(this.start.col + 1);
+                if (hasEnd) {
+                    parts.push(hasEndLine ? this.end.line + 1 : "");
+                    parts.push(this.end.col + 1);
+                }
             }
         }
 
@@ -102,5 +105,19 @@ export class Location {
             new Offset(this.start.line, this.start.col),
             new Offset(this.end.line, this.end.col)
         );
+    }
+
+    public static compare(a: Location, b: Location): number {
+        return (
+            a?.file.localeCompare(b?.file) ||
+            a?.start.line - b?.start.line ||
+            a?.start.col - b?.start.col ||
+            a?.end.line - b?.end.line ||
+            a?.end.col - b?.end.col
+        );
+    }
+
+    public static compareFirst(a: ILocational, b: ILocational): number {
+        return Location.compare(a.locations[0], b.locations[0]);
     }
 }

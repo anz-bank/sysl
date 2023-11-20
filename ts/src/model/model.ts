@@ -3,15 +3,19 @@ import "reflect-metadata";
 import { Location } from "../common/location";
 import { PbDocumentModel } from "../pbModel/model";
 import { Application } from "./application";
-import { ElementID, ElementKind, ElementRef, IRenderable } from "./common";
+import { IRenderable } from "./common";
+import { ElementID, ElementRef } from "./elementRef";
+import { ElementKind } from "./elementKind";
 import { CloneContext, ModelFilter, ModelFilters } from "./clone";
-import { Element } from "./element";
+import { Element, IParentElement } from "./element";
 import path from "path";
 import fs from "fs";
 import { Type } from "./type";
 import { Field } from "./field";
 import { FlatView } from "./view";
 import { Import } from "./import";
+import { Endpoint } from "./endpoint";
+import { ParentStatement, Statement } from "./statement";
 
 export type ModelParams = {
     header?: string | undefined;
@@ -123,79 +127,114 @@ export class Model implements IRenderable {
     }
 
     /**
-     * Attempts to finds the element specified by the supplied {@link ElementRef}. Returns `undefined` if no such
-     * element was found. Currently only supports apps, types and fields.
-     * @param ref The reference used to locate the element in the model. Either a string or an instance of `ElementRef`.
-     * @returns An {@link Element} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
+     * Attempts to finds the element specified by the supplied identifier. Returns `undefined` if no such
+     * element was found.
+     * @param id The identifier used to locate the element in the model. Either a string or an instance of `ElementRef`.
+     * @returns An {@link Element} that corresponds to the supplied identifier, or `undefined` if not found.
      * @throws Error thrown if the syntax of the supplied string is invalid.
      */
-    findElement(ref: ElementID): Element | undefined {
-        const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
+    findElement(id: ElementID, kind?: ElementKind): Element | undefined {
+        const ref = typeof id == "string" ? ElementRef.parse(id) : id;
+        if (kind && ref.kind != kind) throw new Error(`Supplied reference '${id.toString()}' is not '${kind}'.`);
 
-        const app = this.apps.find(a => parsed.appsEqual(a.toRef()));
-        if (!app || parsed.isApp) return app;
+        const app = this.apps.find(a => ref.appsEqual(a.toRef()));
+        if (!app || ref.isApp) return app;
 
-        const type = app.types.find(t => parsed.typesEqual(t.toRef()));
-        if (!type || parsed.isType) return type;
+        if (ref.isBehavior) {
+            const endpoint = app.endpoints.find(ep => ref.endpointsEqual(ep.toRef()));
+            if (!endpoint || ref.isEndpoint) return endpoint;
 
-        return type.children.find(f => parsed.equals(f.toRef()));
+            let curr: IParentElement<Statement> | undefined = endpoint;
+            for (let i = 0; i < ref.statementIndices.length; i++) {
+                const next: Statement = curr.children[ref.statementIndices[i]];
+                if (i == ref.statementIndices.length - 1) return next;
+                curr = next instanceof ParentStatement ? next : undefined;
+                if (!curr) break;
+            }
+            return undefined;
+        }
+
+        const type = app.types.find(t => ref.typesEqual(t.toRef()));
+        if (!type || ref.isType) return type;
+
+        return type.children.find(f => ref.equals(f.toRef()));
     }
 
     /**
-     * Attempts to finds the app specified by the supplied {@link ElementRef}. Returns `undefined` if no such element
+     * Attempts to finds the app specified by the supplied identifier. Returns `undefined` if no such element
      * was found.
-     * @param ref The reference used to locate the app in the model. Either a string or an instance of `ElementRef`.
-     * @returns An {@link Application} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
+     * @param id The identifier used to locate the app in the model. Either a string or an instance of `ElementRef`.
+     * @returns An {@link Application} that corresponds to the supplied identifier, or `undefined` if not found.
      * @throws Error thrown if the syntax of the supplied string is invalid.
-     * @throws Error thrown if `ref` is not reference to an app.
+     * @throws Error thrown if `ref` is not a reference to an app.
      */
-    findApp(ref: ElementID): Application | undefined {
-        const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
-        if (!parsed.isApp) throw new Error(`Supplied reference '${ref.toString()} is not an app.`);
-        return this.findElement(parsed) as Application;
+    findApp(id: ElementID): Application | undefined {
+        return this.findElement(id, ElementKind.App) as Application;
     }
 
     /**
-     * Attempts to finds the type specified by the supplied {@link ElementRef}. Returns `undefined` if no such type was
+     * Attempts to finds the type specified by the supplied identifier. Returns `undefined` if no such type was
      * found.
-     * @param ref The reference used to locate the type in the model. Either a string or an instance of `ElementRef`.
-     * @returns A {@link Type} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
+     * @param id The identifier used to locate the type in the model. Either a string or an instance of `ElementRef`.
+     * @returns A {@link Type} that corresponds to the supplied identifier, or `undefined` if not found.
      * @throws Error thrown if the syntax of the supplied string is invalid.
-     * @throws Error thrown if `ref` is not reference to a type.
+     * @throws Error thrown if `ref` is not a reference to a type.
      */
-    findType(ref: ElementID): Type | undefined {
-        const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
-        if (!parsed.isType) throw new Error(`Supplied reference '${ref.toString()} is not a type.`);
-        return this.findElement(parsed) as Type;
+    findType(id: ElementID): Type | undefined {
+        return this.findElement(id, ElementKind.Type) as Type;
     }
 
     /**
-     * Attempts to finds the field specified by the supplied {@link ElementRef}. Returns `undefined` if no such field
+     * Attempts to finds the endpoint specified by the supplied identifier. Returns `undefined` if no such
+     * endpoint was found.
+     * @param id The identifier used to locate the endpoint in the model. Either a string or an instance of
+     * `ElementRef`.
+     * @returns An {@link Endpoint} that corresponds to the supplied identifier, or `undefined` if not found.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if `ref` is not a reference to an endpoint.
+     */
+    findEndpoint(id: ElementID): Endpoint | undefined {
+        return this.findElement(id, ElementKind.Endpoint) as Endpoint;
+    }
+
+    /**
+     * Attempts to finds the field specified by the supplied identifier. Returns `undefined` if no such field
      * was found.
-     * @param ref The reference used to locate the field in the model. Either a string or an instance of `ElementRef`.
-     * @returns A {@link Field} that corresponds to the supplied {@link ElementRef}, or `undefined` if not found.
+     * @param id The identifier used to locate the field in the model. Either a string or an instance of `ElementRef`.
+     * @returns A {@link Field} that corresponds to the supplied identifier, or `undefined` if not found.
      * @throws Error thrown if the syntax of the supplied string is invalid.
-     * @throws Error thrown if `ref` is not reference to a field.
+     * @throws Error thrown if `ref` is not a reference to a field.
      */
-    findField(ref: ElementID): Field | undefined {
-        const parsed = typeof ref == "string" ? ElementRef.parse(ref) : ref;
-        if (!parsed.isField) throw new Error(`Supplied reference '${ref.toString()} is not a field.`);
-        return this.findElement(parsed) as Field;
+    findField(id: ElementID): Field | undefined {
+        return this.findElement(id, ElementKind.Field) as Field;
     }
 
     /**
-     * Retrieves the element specified by the supplied {@link ElementRef}. Throws if the element was not found.
+     * Attempts to finds the statement specified by the supplied identifier. Returns `undefined` if no such
+     * statement was found.
+     * @param id The identifier used to locate the statement in the model. Either a string or an instance of
+     * `ElementRef`.
+     * @returns A {@link Statement} that corresponds to the supplied identifier, or `undefined` if not found.
+     * @throws Error thrown if the syntax of the supplied string is invalid.
+     * @throws Error thrown if `ref` is not a reference to a statement.
+     */
+    findStatement(id: ElementID): Statement | undefined {
+        return this.findElement(id, ElementKind.Statement) as Statement;
+    }
+
+    /**
+     * Retrieves the element specified by the supplied identifier. Throws if the element was not found.
      * @param ref The reference used to locate the element in the model. Either a string or an instance of `ElementRef`.
-     * @returns An {@link Element} that corresponds to the supplied {@link ElementRef}.
+     * @returns An {@link Element} that corresponds to the supplied identifier.
      * @throws Error thrown if the syntax of the supplied string is invalid.
      * @throws Error thrown if `ref` describes an element not present in the current {@link Model}.
      */
     getElement = (ref: ElementID) => this.getTypedElement<Element>(ref, this.findElement);
 
     /**
-     * Retrieves the app specified by the supplied {@link ElementRef}. Throws if the app was not found.
+     * Retrieves the app specified by the supplied identifier. Throws if the app was not found.
      * @param ref The reference used to locate the app in the model. Either a string or an instance of `ElementRef`.
-     * @returns An {@link Application} that corresponds to the supplied {@link ElementRef}.
+     * @returns An {@link Application} that corresponds to the supplied identifier.
      * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.App}.
      * @throws Error thrown if `ref` describes an app not present in the current {@link Model}.
@@ -203,9 +242,9 @@ export class Model implements IRenderable {
     getApp = (ref: ElementID) => this.getTypedElement<Application>(ref, this.findApp);
 
     /**
-     * Retrieves the type specified by the supplied {@link ElementRef}. Throws if the type was not found.
+     * Retrieves the type specified by the supplied identifier. Throws if the type was not found.
      * @param ref The reference used to locate the type in the model. Either a string or an instance of `ElementRef`.
-     * @returns A {@link Type} that corresponds to the supplied {@link ElementRef}.
+     * @returns A {@link Type} that corresponds to the supplied identifier.
      * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Type}.
      * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
@@ -213,14 +252,36 @@ export class Model implements IRenderable {
     getType = (ref: ElementID) => this.getTypedElement<Type>(ref, this.findType);
 
     /**
-     * Retrieves the field specified by the supplied {@link ElementRef}. Throws if the field was not found.
+     * Retrieves the endpoint specified by the supplied identifier. Throws if the endpoint was not found.
+     * @param ref The reference used to locate the endpoint in the model. Either a string or an instance of
+     * `ElementRef`.
+     * @returns An {@link Endpoint} that corresponds to the supplied identifier.
+     * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
+     * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Endpoint}.
+     * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
+     */
+    getEndpoint = (ref: ElementID) => this.getTypedElement<Endpoint>(ref, this.findEndpoint);
+
+    /**
+     * Retrieves the field specified by the supplied identifier. Throws if the field was not found.
      * @param ref The reference used to locate the field in the model. Either a string or an instance of `ElementRef`.
-     * @returns A {@link Field} that corresponds to the supplied {@link ElementRef}.
+     * @returns A {@link Field} that corresponds to the supplied identifier.
      * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Field}.
      * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
      */
     getField = (ref: ElementID) => this.getTypedElement<Field>(ref, this.findField);
+
+    /**
+     * Retrieves the statement specified by the supplied identifier. Throws if the statement was not found.
+     * @param ref The reference used to locate the statement in the model. Either a string or an instance of
+     * `ElementRef`.
+     * @returns A {@link Statement} that corresponds to the supplied identifier.
+     * @throws Error thrown if `ref` is a string with an invalid element reference syntax.
+     * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Statement}.
+     * @throws Error thrown if `ref` describes a statement not present in the current {@link Model}.
+     */
+    getStatement = (ref: ElementID) => this.getTypedElement<Statement>(ref, this.findStatement);
 
     private getTypedElement<T extends Element>(ref: ElementID, findFunc: (r: ElementID) => T | undefined): T {
         const element = findFunc.bind(this)(ref);
