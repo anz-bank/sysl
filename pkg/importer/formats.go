@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/ghodss/yaml"
@@ -11,92 +12,92 @@ import (
 
 // Format represents a format that can be imported into Sysl
 type Format struct {
-	Name      string   // Name of the format
-	Signature string   // This is a string which can be used to uniquely identify the format
-	FileExt   []string // The file extension of the format
+	Name      string         // Name of the format
+	Signature *regexp.Regexp // This is a regex which can be used to uniquely identify the format
+	FileExt   []string       // The file extension of the format
 }
 
 var SYSL = Format{
 	Name:      "sysl",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".sysl"},
 }
 
 var SyslPB = Format{
 	Name:      "sysl.pb",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".pb", ".textpb"},
 }
 
 var XSD = Format{
 	Name:      "xsd",
-	Signature: ``,
+	Signature: nil,
 	FileExt:   []string{".xsd", ".xml"},
 }
 
 var Grammar = Format{
 	Name:      "grammar",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".g"},
 }
 
 var Avro = Format{
 	Name:      "avro",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".avsc"},
 }
 
 var SpannerSQL = Format{
 	Name:      "spannerSQL",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".sql"},
 }
 
 var SpannerSQLDir = Format{
 	Name:      "spannerSQLdir",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".up.sql"},
 }
 
 var Postgres = Format{
 	Name:      "postgres",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".sql"},
 }
 
 var PostgresDir = Format{
 	Name:      "postgresDir",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".up.sql"},
 }
 
 var Protobuf = Format{
 	Name:      "protobuf",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".proto"},
 }
 
 var ProtobufDir = Format{
 	Name:      "protobufDir",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".up.proto"},
 }
 
 var MySQL = Format{
 	Name:      "mysql",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".sql"},
 }
 
 var MySQLDir = Format{
 	Name:      "mysqlDir",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".up.sql"},
 }
 
 var BigQuery = Format{
 	Name:      "bigquery",
-	Signature: "",
+	Signature: nil,
 	FileExt:   []string{".sql"},
 }
 
@@ -104,7 +105,7 @@ var BigQuery = Format{
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasDocument
 var OpenAPI3 = Format{
 	Name:      "openapi3",
-	Signature: `openapi:`,
+	Signature: regexp.MustCompile(`["']?openapi["']?\s*:`),
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
@@ -112,13 +113,13 @@ var OpenAPI3 = Format{
 // For more details refer to https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#swaggerObject
 var OpenAPI2 = Format{
 	Name:      "swagger",
-	Signature: `swagger:`,
+	Signature: regexp.MustCompile(`["']?swagger["']?\s*:`),
 	FileExt:   []string{".yaml", ".json", ".yml"},
 }
 
 var JSONSchema = Format{
 	Name:      "jsonschema",
-	Signature: "$schema",
+	Signature: regexp.MustCompile(`\$schema`),
 	FileExt:   []string{".json"},
 }
 
@@ -165,7 +166,7 @@ func GuessFileType(path string, isDir bool, content []byte, validFormats []Forma
 	}
 
 	for _, format := range matchesExt {
-		if strings.Contains(string(content), format.Signature) {
+		if format.Signature == nil || format.Signature.Match(content) {
 			matchesSignature = append(matchesSignature, format)
 		}
 	}
