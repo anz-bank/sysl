@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
 
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
@@ -77,6 +78,10 @@ func convertToOpenAPI3(data []byte, uri *url.URL, loader *openapi3.Loader) (*ope
 	if err != nil {
 		return nil, "", err
 	}
+	// kin-openapi has a bug where it tries to unmarshal discriminator as openapi3 spec rather than v2
+	// do a find and replace to work around the issue (see https://github.com/getkin/kin-openapi/issues/360)
+	reg := regexp.MustCompile(`"discriminator":(\s*)(".*?")`)
+	jsondata = reg.ReplaceAll(jsondata, []byte(`"discriminator":$1{"propertyName":$1$2}`))
 	err = json.Unmarshal(jsondata, &openapiv2)
 	if err != nil {
 		return nil, "", err

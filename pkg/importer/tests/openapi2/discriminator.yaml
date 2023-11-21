@@ -1,0 +1,19 @@
+swagger: "2.0"
+info:
+  description: foo
+  title: foo
+  version: 0.0.0
+
+paths: {}
+
+definitions:
+  WithDiscriminator:
+    discriminator: type
+    required:
+      - type
+    properties:
+      type:
+        enum:
+          - type1
+          - type2
+        type: string
