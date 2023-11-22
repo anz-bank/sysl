@@ -1420,6 +1420,28 @@ apps: {
         path: "SomeType"
        }
       }
+      source_context: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 5
+        col: 27
+       }
+       end: {
+        line: 5
+        col: 54
+       }
+      }
+      source_contexts: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 5
+        col: 27
+       }
+       end: {
+        line: 5
+        col: 54
+       }
+      }
      }
     }
     stmt: {
@@ -1879,6 +1901,28 @@ apps: {
         }
        }
       }
+      source_context: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 38
+        col: 15
+       }
+       end: {
+        line: 38
+        col: 49
+       }
+      }
+      source_contexts: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 38
+        col: 15
+       }
+       end: {
+        line: 38
+        col: 49
+       }
+      }
      }
     }
     stmt: {
@@ -1975,6 +2019,28 @@ apps: {
          part: "SomeApp"
         }
         path: "SomeType"
+       }
+      }
+      source_context: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 28
+        col: 21
+       }
+       end: {
+        line: 28
+        col: 48
+       }
+      }
+      source_contexts: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 28
+        col: 21
+       }
+       end: {
+        line: 28
+        col: 48
        }
       }
      }
@@ -2264,6 +2330,28 @@ apps: {
      name: "in"
      type: {
       primitive: STRING
+      source_context: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 43
+        col: 19
+       }
+       end: {
+        line: 43
+        col: 31
+       }
+      }
+      source_contexts: {
+       file: "tests/test1.sysl"
+       start: {
+        line: 43
+        col: 19
+       }
+       end: {
+        line: 43
+        col: 31
+       }
+      }
      }
     }
     stmt: {

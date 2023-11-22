@@ -750,6 +750,28 @@ apps: {
         path: "F"
        }
       }
+      source_context: {
+       file: "tests/type_refs.sysl"
+       start: {
+        line: 37
+        col: 13
+       }
+       end: {
+        line: 37
+        col: 19
+       }
+      }
+      source_contexts: {
+       file: "tests/type_refs.sysl"
+       start: {
+        line: 37
+        col: 13
+       }
+       end: {
+        line: 37
+        col: 19
+       }
+      }
      }
     }
     param: {
@@ -761,6 +783,28 @@ apps: {
          part: "B"
         }
         path: "A"
+       }
+      }
+      source_context: {
+       file: "tests/type_refs.sysl"
+       start: {
+        line: 37
+        col: 21
+       }
+       end: {
+        line: 37
+        col: 29
+       }
+      }
+      source_contexts: {
+       file: "tests/type_refs.sysl"
+       start: {
+        line: 37
+        col: 21
+       }
+       end: {
+        line: 37
+        col: 29
        }
       }
      }
@@ -775,6 +819,28 @@ apps: {
          part: "T"
         }
         path: "U"
+       }
+      }
+      source_context: {
+       file: "tests/type_refs.sysl"
+       start: {
+        line: 37
+        col: 31
+       }
+       end: {
+        line: 37
+        col: 44
+       }
+      }
+      source_contexts: {
+       file: "tests/type_refs.sysl"
+       start: {
+        line: 37
+        col: 31
+       }
+       end: {
+        line: 37
+        col: 44
        }
       }
      }

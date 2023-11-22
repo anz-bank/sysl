@@ -1505,8 +1505,6 @@ func (s *TreeShapeListener) ExitParams(*parser.ParamsContext) {
 				NoType: &sysl.Type_NoType{},
 			}
 		}
-		type1.SourceContext = nil //nolint:staticcheck
-		type1.SourceContexts = nil
 
 		p := sysl.Param{
 			Name: fieldname,
@@ -3066,8 +3064,6 @@ func (s *TreeShapeListener) ExitTransform_return_type(ctx *parser.Transform_retu
 		expr := s.TopExpr()
 		expr.Type = type1
 		if type1.GetSet() != nil {
-			type1.SourceContext = nil //nolint:staticcheck
-			type1.SourceContexts = nil
 			type1 = type1.GetSet()
 		}
 		if type1.GetTypeRef() != nil {
@@ -3089,8 +3085,6 @@ func (s *TreeShapeListener) EnterView_return_type(ctx *parser.View_return_typeCo
 func (s *TreeShapeListener) ExitView_return_type(*parser.View_return_typeContext) {
 	type1 := s.typemap[s.fieldname[len(s.fieldname)-1]]
 	if type1.GetSet() != nil {
-		type1.SourceContext = nil //nolint:staticcheck
-		type1.SourceContexts = nil
 		type1 = type1.GetSet()
 	}
 	if type1.GetTypeRef() != nil {
@@ -3150,8 +3144,6 @@ func (s *TreeShapeListener) ExitView_param(*parser.View_paramContext) {
 
 	if type1.GetSet() != nil && type1.GetSet().GetTypeRef() != nil {
 		type1.GetSet().GetTypeRef().Context = nil
-		type1.SourceContext = nil //nolint:staticcheck
-		type1.SourceContexts = nil
 	}
 	if type1.GetTypeRef() != nil {
 		type1.GetTypeRef().Context = nil

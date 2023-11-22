@@ -12,6 +12,28 @@ apps: {
      name: "year"
      type: {
       no_type: {}
+      source_context: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 2
+        col: 19
+       }
+       end: {
+        line: 2
+        col: 23
+       }
+      }
+      source_contexts: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 2
+        col: 19
+       }
+       end: {
+        line: 2
+        col: 23
+       }
+      }
      }
     }
     source_context: {
@@ -46,12 +68,56 @@ apps: {
      name: "year"
      type: {
       no_type: {}
+      source_context: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 3
+        col: 20
+       }
+       end: {
+        line: 3
+        col: 24
+       }
+      }
+      source_contexts: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 3
+        col: 20
+       }
+       end: {
+        line: 3
+        col: 24
+       }
+      }
      }
     }
     param: {
      name: "make"
      type: {
       no_type: {}
+      source_context: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 3
+        col: 26
+       }
+       end: {
+        line: 3
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 3
+        col: 26
+       }
+       end: {
+        line: 3
+        col: 30
+       }
+      }
      }
     }
     source_context: {
@@ -86,18 +152,84 @@ apps: {
      name: "year"
      type: {
       no_type: {}
+      source_context: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 4
+        col: 20
+       }
+       end: {
+        line: 4
+        col: 24
+       }
+      }
+      source_contexts: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 4
+        col: 20
+       }
+       end: {
+        line: 4
+        col: 24
+       }
+      }
      }
     }
     param: {
      name: "make"
      type: {
       no_type: {}
+      source_context: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 4
+        col: 26
+       }
+       end: {
+        line: 4
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 4
+        col: 26
+       }
+       end: {
+        line: 4
+        col: 30
+       }
+      }
      }
     }
     param: {
      name: "model"
      type: {
       no_type: {}
+      source_context: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 4
+        col: 32
+       }
+       end: {
+        line: 4
+        col: 37
+       }
+      }
+      source_contexts: {
+       file: "tests/for_loop.sysl"
+       start: {
+        line: 4
+        col: 32
+       }
+       end: {
+        line: 4
+        col: 37
+       }
+      }
      }
     }
     source_context: {

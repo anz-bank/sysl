@@ -364,6 +364,28 @@ apps: {
      name: "status"
      type: {
       primitive: STRING
+      source_context: {
+       file: "tests/oneof.sysl"
+       start: {
+        line: 3
+        col: 9
+       }
+       end: {
+        line: 3
+        col: 25
+       }
+      }
+      source_contexts: {
+       file: "tests/oneof.sysl"
+       start: {
+        line: 3
+        col: 9
+       }
+       end: {
+        line: 3
+        col: 25
+       }
+      }
      }
     }
     source_context: {

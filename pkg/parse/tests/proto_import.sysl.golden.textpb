@@ -229,6 +229,28 @@ apps: {
         path: "Request"
        }
       }
+      source_context: {
+       file: "pkg/parse/tests/proto_to_import.proto"
+       start: {
+        line: 7
+        col: 10
+       }
+       end: {
+        line: 7
+        col: 37
+       }
+      }
+      source_contexts: {
+       file: "pkg/parse/tests/proto_to_import.proto"
+       start: {
+        line: 7
+        col: 10
+       }
+       end: {
+        line: 7
+        col: 37
+       }
+      }
      }
     }
     stmt: {

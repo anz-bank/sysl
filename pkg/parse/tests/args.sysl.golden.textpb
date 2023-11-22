@@ -16,6 +16,28 @@ apps: {
         path: "type1"
        }
       }
+      source_context: {
+       file: "tests/args.sysl"
+       start: {
+        line: 11
+        col: 13
+       }
+       end: {
+        line: 11
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/args.sysl"
+       start: {
+        line: 11
+        col: 13
+       }
+       end: {
+        line: 11
+        col: 26
+       }
+      }
      }
     }
     param: {
@@ -24,6 +46,28 @@ apps: {
       type_ref: {
        ref: {
         path: "type2"
+       }
+      }
+      source_context: {
+       file: "tests/args.sysl"
+       start: {
+        line: 11
+        col: 28
+       }
+       end: {
+        line: 11
+        col: 41
+       }
+      }
+      source_contexts: {
+       file: "tests/args.sysl"
+       start: {
+        line: 11
+        col: 28
+       }
+       end: {
+        line: 11
+        col: 41
        }
       }
      }

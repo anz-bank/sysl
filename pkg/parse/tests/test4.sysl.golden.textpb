@@ -22,6 +22,28 @@ apps: {
         path: "id"
        }
       }
+      source_context: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 21
+        col: 8
+       }
+       end: {
+        line: 21
+        col: 49
+       }
+      }
+      source_contexts: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 21
+        col: 8
+       }
+       end: {
+        line: 21
+        col: 49
+       }
+      }
      }
     }
     source_context: {
@@ -63,6 +85,28 @@ apps: {
         }
         path: "Todo"
         path: "id"
+       }
+      }
+      source_context: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 22
+        col: 9
+       }
+       end: {
+        line: 22
+        col: 44
+       }
+      }
+      source_contexts: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 22
+        col: 9
+       }
+       end: {
+        line: 22
+        col: 44
        }
       }
      }
@@ -107,6 +151,28 @@ apps: {
         path: "id"
        }
       }
+      source_context: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 23
+        col: 9
+       }
+       end: {
+        line: 23
+        col: 35
+       }
+      }
+      source_contexts: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 23
+        col: 9
+       }
+       end: {
+        line: 23
+        col: 35
+       }
+      }
      }
     }
     source_context: {
@@ -143,6 +209,28 @@ apps: {
       type_ref: {
        ref: {
         path: "id"
+       }
+      }
+      source_context: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 24
+        col: 9
+       }
+       end: {
+        line: 24
+        col: 18
+       }
+      }
+      source_contexts: {
+       file: "tests/test4.sysl"
+       start: {
+        line: 24
+        col: 9
+       }
+       end: {
+        line: 24
+        col: 18
        }
       }
      }

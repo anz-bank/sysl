@@ -339,6 +339,28 @@ apps: {
      name: "foo"
      type: {
       primitive: INT
+      source_context: {
+       file: "tests/rest_api_query_params.sysl"
+       start: {
+        line: 8
+        col: 19
+       }
+       end: {
+        line: 8
+        col: 29
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_api_query_params.sysl"
+       start: {
+        line: 8
+        col: 19
+       }
+       end: {
+        line: 8
+        col: 29
+       }
+      }
      }
     }
     stmt: {
