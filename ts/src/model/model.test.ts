@@ -382,7 +382,7 @@ describe("DTO", () => {
                                             paramAnno: [["1"],"2"],
                                         },
                                         locations: {
-                                            "paramAnno": "ts/main.sysl:2:79::90",
+                                            "paramAnno": "ts/main.sysl:2:69::90",
                                             "paramTag": "ts/main.sysl:2:58::67",
                                         },
                                     },
@@ -398,7 +398,7 @@ describe("DTO", () => {
                                 metadata: { rpcTag: undefined, rpcAnno: "GetCustomer" },
                                 locations: {
                                     "0": "ts/main.sysl:2:5:7:38",
-                                    "rpcAnno": "ts/main.sysl:3:20::33",
+                                    "rpcAnno": "ts/main.sysl:3:9::33",
                                     "rpcTag": "ts/main.sysl:2:118::125",
                                 },
                                 children: [

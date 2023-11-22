@@ -12,7 +12,7 @@ apps: {
      file: "tests/anno_merge.sysl"
      start: {
       line: 3
-      col: 9
+      col: 4
      }
      end: {
       line: 3
@@ -23,7 +23,7 @@ apps: {
      file: "tests/anno_merge.sysl"
      start: {
       line: 3
-      col: 9
+      col: 4
      }
      end: {
       line: 3
@@ -34,7 +34,7 @@ apps: {
      file: "tests/anno_merge_import.sysl"
      start: {
       line: 1
-      col: 9
+      col: 4
      }
      end: {
       line: 1
@@ -59,7 +59,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 7
-           col: 17
+           col: 12
           }
           end: {
            line: 7
@@ -70,7 +70,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 7
-           col: 17
+           col: 12
           }
           end: {
            line: 7
@@ -81,7 +81,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 5
-           col: 17
+           col: 12
           }
           end: {
            line: 5
@@ -98,7 +98,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 6
-           col: 17
+           col: 12
           }
           end: {
            line: 6
@@ -109,7 +109,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 6
-           col: 17
+           col: 12
           }
           end: {
            line: 6
@@ -126,7 +126,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 9
-           col: 25
+           col: 12
           }
           end: {
            line: 12
@@ -137,7 +137,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 9
-           col: 25
+           col: 12
           }
           end: {
            line: 12
@@ -148,7 +148,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 7
-           col: 25
+           col: 12
           }
           end: {
            line: 10
@@ -159,7 +159,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 7
-           col: 25
+           col: 12
           }
           end: {
            line: 10
@@ -215,7 +215,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 13
-           col: 17
+           col: 12
           }
           end: {
            line: 13
@@ -226,7 +226,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 13
-           col: 17
+           col: 12
           }
           end: {
            line: 13
@@ -243,7 +243,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 14
-           col: 25
+           col: 12
           }
           end: {
            line: 20
@@ -254,7 +254,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 14
-           col: 25
+           col: 12
           }
           end: {
            line: 20
@@ -265,7 +265,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 11
-           col: 25
+           col: 12
           }
           end: {
            line: 14
@@ -276,7 +276,7 @@ apps: {
           file: "tests/anno_merge_import.sysl"
           start: {
            line: 11
-           col: 25
+           col: 12
           }
           end: {
            line: 14
@@ -293,7 +293,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 20
-           col: 25
+           col: 12
           }
           end: {
            line: 25
@@ -304,7 +304,7 @@ apps: {
           file: "tests/anno_merge.sysl"
           start: {
            line: 20
-           col: 25
+           col: 12
           }
           end: {
            line: 25
@@ -414,7 +414,7 @@ apps: {
        file: "tests/anno_merge.sysl"
        start: {
         line: 5
-        col: 13
+        col: 8
        }
        end: {
         line: 5
@@ -425,7 +425,7 @@ apps: {
        file: "tests/anno_merge.sysl"
        start: {
         line: 5
-        col: 13
+        col: 8
        }
        end: {
         line: 5
@@ -436,7 +436,7 @@ apps: {
        file: "tests/anno_merge_import.sysl"
        start: {
         line: 3
-        col: 13
+        col: 8
        }
        end: {
         line: 3

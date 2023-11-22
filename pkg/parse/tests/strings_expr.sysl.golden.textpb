@@ -12,7 +12,7 @@ apps: {
     source_context: {
      file: "tests/strings_expr.sysl"
      start: {
-      col: 36
+      col: 28
      }
      end: {
       col: 64
@@ -21,7 +21,7 @@ apps: {
     source_contexts: {
      file: "tests/strings_expr.sysl"
      start: {
-      col: 36
+      col: 28
      }
      end: {
       col: 64

@@ -140,7 +140,7 @@ apps: {
        file: "tests/mixin.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -151,7 +151,7 @@ apps: {
        file: "tests/mixin.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -505,7 +505,7 @@ apps: {
        file: "tests/mixin.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -516,7 +516,7 @@ apps: {
        file: "tests/mixin.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -613,7 +613,7 @@ apps: {
      file: "tests/mixin.sysl"
      start: {
       line: 5
-      col: 21
+      col: 13
      }
      end: {
       line: 5
@@ -624,7 +624,7 @@ apps: {
      file: "tests/mixin.sysl"
      start: {
       line: 5
-      col: 21
+      col: 13
      }
      end: {
       line: 5

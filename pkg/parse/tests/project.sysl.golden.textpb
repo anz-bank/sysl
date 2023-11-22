@@ -967,7 +967,7 @@ apps: {
      file: "tests/project.sysl"
      start: {
       line: 2
-      col: 31
+      col: 25
      }
      end: {
       line: 2
@@ -978,7 +978,7 @@ apps: {
      file: "tests/project.sysl"
      start: {
       line: 2
-      col: 31
+      col: 25
      }
      end: {
       line: 2
@@ -1000,7 +1000,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 4
-        col: 48
+        col: 43
        }
        end: {
         line: 4
@@ -1011,7 +1011,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 4
-        col: 48
+        col: 43
        }
        end: {
         line: 4
@@ -1104,7 +1104,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 4
-        col: 83
+        col: 71
        }
        end: {
         line: 4
@@ -1115,7 +1115,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 4
-        col: 83
+        col: 71
        }
        end: {
         line: 4
@@ -1333,7 +1333,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 21
-         col: 26
+         col: 18
         }
         end: {
          line: 21
@@ -1344,7 +1344,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 21
-         col: 26
+         col: 18
         }
         end: {
          line: 21
@@ -1422,7 +1422,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 21
-        col: 26
+        col: 18
        }
        end: {
         line: 21
@@ -1433,7 +1433,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 21
-        col: 26
+        col: 18
        }
        end: {
         line: 21
@@ -1543,7 +1543,7 @@ apps: {
      file: "tests/test1.sysl"
      start: {
       line: 1
-      col: 16
+      col: 4
      }
      end: {
       line: 1
@@ -1554,7 +1554,7 @@ apps: {
      file: "tests/test1.sysl"
      start: {
       line: 1
-      col: 16
+      col: 4
      }
      end: {
       line: 1
@@ -1613,7 +1613,7 @@ apps: {
     source_context: {
      file: "tests/test1.sysl"
      start: {
-      col: 44
+      col: 38
      }
      end: {
       col: 58
@@ -1622,7 +1622,7 @@ apps: {
     source_contexts: {
      file: "tests/test1.sysl"
      start: {
-      col: 44
+      col: 38
      }
      end: {
       col: 58
@@ -1702,7 +1702,7 @@ apps: {
     source_context: {
      file: "tests/test1.sysl"
      start: {
-      col: 76
+      col: 60
      }
      end: {
       col: 92
@@ -1711,7 +1711,7 @@ apps: {
     source_contexts: {
      file: "tests/test1.sysl"
      start: {
-      col: 76
+      col: 60
      }
      end: {
       col: 92
@@ -1727,7 +1727,7 @@ apps: {
      file: "tests/test1.sysl"
      start: {
       line: 2
-      col: 15
+      col: 4
      }
      end: {
       line: 2
@@ -1738,7 +1738,7 @@ apps: {
      file: "tests/test1.sysl"
      start: {
       line: 2
-      col: 15
+      col: 4
      }
      end: {
       line: 2
@@ -1755,7 +1755,7 @@ apps: {
      file: "tests/test1.sysl"
      start: {
       line: 3
-      col: 22
+      col: 4
      }
      end: {
       line: 3
@@ -1766,7 +1766,7 @@ apps: {
      file: "tests/test1.sysl"
      start: {
       line: 3
-      col: 22
+      col: 4
      }
      end: {
       line: 3
@@ -1782,7 +1782,7 @@ apps: {
     source_context: {
      file: "tests/test1.sysl"
      start: {
-      col: 17
+      col: 9
      }
      end: {
       col: 19
@@ -1791,7 +1791,7 @@ apps: {
     source_contexts: {
      file: "tests/test1.sysl"
      start: {
-      col: 17
+      col: 9
      }
      end: {
       col: 19
@@ -1806,7 +1806,7 @@ apps: {
     source_context: {
      file: "tests/test1.sysl"
      start: {
-      col: 29
+      col: 21
      }
      end: {
       col: 36
@@ -1815,7 +1815,7 @@ apps: {
     source_contexts: {
      file: "tests/test1.sysl"
      start: {
-      col: 29
+      col: 21
      }
      end: {
       col: 36
@@ -1839,7 +1839,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 16
-         col: 29
+         col: 21
         }
         end: {
          line: 16
@@ -1850,7 +1850,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 16
-         col: 29
+         col: 21
         }
         end: {
          line: 16
@@ -1897,7 +1897,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 17
-         col: 47
+         col: 39
         }
         end: {
          line: 17
@@ -1908,7 +1908,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 17
-         col: 47
+         col: 39
         }
         end: {
          line: 17
@@ -2106,7 +2106,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 16
-        col: 29
+        col: 21
        }
        end: {
         line: 16
@@ -2117,7 +2117,7 @@ apps: {
        file: "tests/project.sysl"
        start: {
         line: 16
-        col: 29
+        col: 21
        }
        end: {
         line: 16
@@ -2141,7 +2141,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 17
-         col: 47
+         col: 39
         }
         end: {
          line: 17
@@ -2152,7 +2152,7 @@ apps: {
         file: "tests/project.sysl"
         start: {
          line: 17
-         col: 47
+         col: 39
         }
         end: {
          line: 17
@@ -2533,7 +2533,7 @@ apps: {
        file: "tests/test1.sysl"
        start: {
         line: 39
-        col: 19
+        col: 8
        }
        end: {
         line: 39
@@ -2544,7 +2544,7 @@ apps: {
        file: "tests/test1.sysl"
        start: {
         line: 39
-        col: 19
+        col: 8
        }
        end: {
         line: 39

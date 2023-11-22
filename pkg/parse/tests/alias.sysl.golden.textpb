@@ -16,7 +16,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 2
-        col: 15
+        col: 4
        }
        end: {
         line: 2
@@ -27,7 +27,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 2
-        col: 15
+        col: 4
        }
        end: {
         line: 2
@@ -180,7 +180,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 47
-        col: 12
+        col: 4
        }
        end: {
         line: 47
@@ -191,7 +191,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 47
-        col: 12
+        col: 4
        }
        end: {
         line: 47
@@ -260,7 +260,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 51
-        col: 12
+        col: 4
        }
        end: {
         line: 51
@@ -271,7 +271,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 51
-        col: 12
+        col: 4
        }
        end: {
         line: 51
@@ -585,7 +585,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 33
-        col: 12
+        col: 4
        }
        end: {
         line: 33
@@ -596,7 +596,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 33
-        col: 12
+        col: 4
        }
        end: {
         line: 33
@@ -675,7 +675,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 37
-        col: 12
+        col: 4
        }
        end: {
         line: 37
@@ -686,7 +686,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 37
-        col: 12
+        col: 4
        }
        end: {
         line: 37
@@ -1048,7 +1048,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 19
-        col: 12
+        col: 4
        }
        end: {
         line: 19
@@ -1059,7 +1059,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 19
-        col: 12
+        col: 4
        }
        end: {
         line: 19
@@ -1138,7 +1138,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 23
-        col: 12
+        col: 4
        }
        end: {
         line: 23
@@ -1149,7 +1149,7 @@ apps: {
        file: "tests/alias.sysl"
        start: {
         line: 23
-        col: 12
+        col: 4
        }
        end: {
         line: 23

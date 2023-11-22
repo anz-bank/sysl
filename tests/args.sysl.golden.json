@@ -57,7 +57,7 @@
            {
             "s": "https",
             "sourceContext": {
-             "file": "dev/sysl/tests/args.sysl",
+             "file": "tests/args.sysl",
              "start": {
               "line": 12,
               "col": 33
@@ -69,7 +69,7 @@
             },
             "sourceContexts": [
              {
-              "file": "dev/sysl/tests/args.sysl",
+              "file": "tests/args.sysl",
               "start": {
                "line": 12,
                "col": 33
@@ -84,7 +84,7 @@
            {
             "s": "soap",
             "sourceContext": {
-             "file": "dev/sysl/tests/args.sysl",
+             "file": "tests/args.sysl",
              "start": {
               "line": 12,
               "col": 41
@@ -96,7 +96,7 @@
             },
             "sourceContexts": [
              {
-              "file": "dev/sysl/tests/args.sysl",
+              "file": "tests/args.sysl",
               "start": {
                "line": 12,
                "col": 41
@@ -113,7 +113,7 @@
         }
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 12,
          "col": 8
@@ -125,7 +125,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 12,
           "col": 8
@@ -147,7 +147,7 @@
         "endpoint": "PUT /foo/"
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 13,
          "col": 8
@@ -159,7 +159,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 13,
           "col": 8
@@ -186,7 +186,7 @@
         ]
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 14,
          "col": 8
@@ -198,7 +198,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 14,
           "col": 8
@@ -225,7 +225,7 @@
         ]
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 15,
          "col": 8
@@ -237,7 +237,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 15,
           "col": 8
@@ -251,7 +251,7 @@
       }
      ],
      "sourceContext": {
-      "file": "dev/sysl/tests/args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 11,
        "col": 4
@@ -263,7 +263,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/args.sysl",
+       "file": "tests/args.sysl",
        "start": {
         "line": 11,
         "col": 4
@@ -277,7 +277,7 @@
     }
    },
    "sourceContext": {
-    "file": "dev/sysl/tests/args.sysl",
+    "file": "tests/args.sysl",
     "start": {
      "line": 10
     },
@@ -288,7 +288,7 @@
    },
    "sourceContexts": [
     {
-     "file": "dev/sysl/tests/args.sysl",
+     "file": "tests/args.sysl",
      "start": {
       "line": 10
      },
@@ -314,7 +314,7 @@
         "action": "..."
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 2,
          "col": 8
@@ -326,7 +326,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 2,
           "col": 8
@@ -340,7 +340,7 @@
       }
      ],
      "sourceContext": {
-      "file": "dev/sysl/tests/args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 1,
        "col": 4
@@ -352,7 +352,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/args.sysl",
+       "file": "tests/args.sysl",
        "start": {
         "line": 1,
         "col": 4
@@ -383,7 +383,7 @@
         "action": "..."
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 6,
          "col": 12
@@ -395,7 +395,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 6,
           "col": 12
@@ -413,7 +413,7 @@
       "path": "/foo"
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 5,
        "col": 8
@@ -425,7 +425,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/args.sysl",
+       "file": "tests/args.sysl",
        "start": {
         "line": 5,
         "col": 8
@@ -456,7 +456,7 @@
         "action": "..."
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/args.sysl",
+        "file": "tests/args.sysl",
         "start": {
          "line": 9,
          "col": 16
@@ -468,7 +468,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/args.sysl",
+         "file": "tests/args.sysl",
          "start": {
           "line": 9,
           "col": 16
@@ -486,7 +486,7 @@
       "path": "/foo/"
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/args.sysl",
+      "file": "tests/args.sysl",
       "start": {
        "line": 8,
        "col": 12
@@ -498,7 +498,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/args.sysl",
+       "file": "tests/args.sysl",
        "start": {
         "line": 8,
         "col": 12
@@ -512,7 +512,7 @@
     }
    },
    "sourceContext": {
-    "file": "dev/sysl/tests/args.sysl",
+    "file": "tests/args.sysl",
     "start": {},
     "end": {
      "line": 9,
@@ -521,7 +521,7 @@
    },
    "sourceContexts": [
     {
-     "file": "dev/sysl/tests/args.sysl",
+     "file": "tests/args.sysl",
      "start": {},
      "end": {
       "line": 9,

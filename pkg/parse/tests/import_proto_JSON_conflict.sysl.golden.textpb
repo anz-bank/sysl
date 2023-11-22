@@ -12,7 +12,7 @@ apps: {
      file: "tests/import_proto_JSON_conflict.sysl"
      start: {
       line: 6
-      col: 11
+      col: 4
      }
      end: {
       line: 6
@@ -23,7 +23,7 @@ apps: {
      file: "tests/import_proto_JSON_conflict.sysl"
      start: {
       line: 6
-      col: 11
+      col: 4
      }
      end: {
       line: 6
@@ -887,7 +887,7 @@ apps: {
           file: "tests/import_proto_JSON_conflict.sysl"
           start: {
            line: 15
-           col: 24
+           col: 12
           }
           end: {
            line: 15
@@ -898,7 +898,7 @@ apps: {
           file: "tests/import_proto_JSON_conflict.sysl"
           start: {
            line: 15
-           col: 24
+           col: 12
           }
           end: {
            line: 15
@@ -942,7 +942,7 @@ apps: {
        file: "tests/import_proto_JSON_conflict.sysl"
        start: {
         line: 13
-        col: 41
+        col: 28
        }
        end: {
         line: 13
@@ -953,7 +953,7 @@ apps: {
        file: "tests/import_proto_JSON_conflict.sysl"
        start: {
         line: 13
-        col: 41
+        col: 28
        }
        end: {
         line: 13

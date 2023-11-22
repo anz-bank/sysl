@@ -11,7 +11,7 @@ apps: {
     source_context: {
      file: "tests/math.sysl"
      start: {
-      col: 19
+      col: 11
      }
      end: {
       col: 47
@@ -20,7 +20,7 @@ apps: {
     source_contexts: {
      file: "tests/math.sysl"
      start: {
-      col: 19
+      col: 11
      }
      end: {
       col: 47

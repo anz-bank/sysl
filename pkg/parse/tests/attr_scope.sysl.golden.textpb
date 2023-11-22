@@ -20,7 +20,7 @@ apps: {
           file: "tests/attr_scope.sysl"
           start: {
            line: 4
-           col: 22
+           col: 12
           }
           end: {
            line: 4
@@ -31,7 +31,7 @@ apps: {
           file: "tests/attr_scope.sysl"
           start: {
            line: 4
-           col: 22
+           col: 12
           }
           end: {
            line: 4
@@ -76,7 +76,7 @@ apps: {
           file: "tests/attr_scope.sysl"
           start: {
            line: 6
-           col: 22
+           col: 12
           }
           end: {
            line: 6
@@ -87,7 +87,7 @@ apps: {
           file: "tests/attr_scope.sysl"
           start: {
            line: 6
-           col: 22
+           col: 12
           }
           end: {
            line: 6
@@ -129,7 +129,7 @@ apps: {
        file: "tests/attr_scope.sysl"
        start: {
         line: 2
-        col: 18
+        col: 8
        }
        end: {
         line: 2
@@ -140,7 +140,7 @@ apps: {
        file: "tests/attr_scope.sysl"
        start: {
         line: 2
-        col: 18
+        col: 8
        }
        end: {
         line: 2

@@ -44,7 +44,7 @@ apps: {
          file: "tests/sequence_type.sysl"
          start: {
           line: 17
-          col: 51
+          col: 44
          }
          end: {
           line: 17
@@ -55,7 +55,7 @@ apps: {
          file: "tests/sequence_type.sysl"
          start: {
           line: 17
-          col: 51
+          col: 44
          }
          end: {
           line: 17
@@ -199,7 +199,7 @@ apps: {
          file: "tests/sequence_type.sysl"
          start: {
           line: 21
-          col: 50
+          col: 43
          }
          end: {
           line: 21
@@ -210,7 +210,7 @@ apps: {
          file: "tests/sequence_type.sysl"
          start: {
           line: 21
-          col: 50
+          col: 43
          }
          end: {
           line: 21
@@ -348,7 +348,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 3
-           col: 21
+           col: 10
           }
           end: {
            line: 3
@@ -359,7 +359,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 3
-           col: 21
+           col: 10
           }
           end: {
            line: 3
@@ -435,7 +435,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 5
-           col: 21
+           col: 10
           }
           end: {
            line: 5
@@ -446,7 +446,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 5
-           col: 21
+           col: 10
           }
           end: {
            line: 5
@@ -522,7 +522,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 7
-           col: 21
+           col: 10
           }
           end: {
            line: 7
@@ -533,7 +533,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 7
-           col: 21
+           col: 10
           }
           end: {
            line: 7
@@ -631,7 +631,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 11
-           col: 21
+           col: 10
           }
           end: {
            line: 11
@@ -642,7 +642,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 11
-           col: 21
+           col: 10
           }
           end: {
            line: 11
@@ -718,7 +718,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 13
-           col: 21
+           col: 10
           }
           end: {
            line: 13
@@ -729,7 +729,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 13
-           col: 21
+           col: 10
           }
           end: {
            line: 13
@@ -805,7 +805,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 15
-           col: 21
+           col: 10
           }
           end: {
            line: 15
@@ -816,7 +816,7 @@ apps: {
           file: "tests/sequence_type.sysl"
           start: {
            line: 15
-           col: 21
+           col: 10
           }
           end: {
            line: 15

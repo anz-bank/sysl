@@ -13,7 +13,7 @@ apps: {
      file: "tests/openapi3.sysl"
      start: {
       line: 3
-      col: 16
+      col: 4
      }
      end: {
       line: 3
@@ -24,7 +24,7 @@ apps: {
      file: "tests/openapi3.sysl"
      start: {
       line: 3
-      col: 16
+      col: 4
      }
      end: {
       line: 3
@@ -41,7 +41,7 @@ apps: {
      file: "tests/openapi3.sysl"
      start: {
       line: 2
-      col: 32
+      col: 24
      }
      end: {
       line: 2
@@ -52,7 +52,7 @@ apps: {
      file: "tests/openapi3.sysl"
      start: {
       line: 2
-      col: 32
+      col: 24
      }
      end: {
       line: 2
@@ -146,7 +146,7 @@ apps: {
           file: "tests/openapi3.sysl"
           start: {
            line: 11
-           col: 24
+           col: 12
           }
           end: {
            line: 11
@@ -157,7 +157,7 @@ apps: {
           file: "tests/openapi3.sysl"
           start: {
            line: 11
-           col: 24
+           col: 12
           }
           end: {
            line: 11
@@ -252,7 +252,7 @@ apps: {
      file: "tests/preference.yaml"
      start: {
       line: 7
-      col: 15
+      col: 4
      }
      end: {
       line: 7
@@ -263,7 +263,7 @@ apps: {
      file: "tests/preference.yaml"
      start: {
       line: 7
-      col: 15
+      col: 4
      }
      end: {
       line: 7
@@ -419,7 +419,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 18
-           col: 24
+           col: 12
           }
           end: {
            line: 18
@@ -430,7 +430,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 18
-           col: 24
+           col: 12
           }
           end: {
            line: 18
@@ -475,7 +475,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 20
-           col: 24
+           col: 12
           }
           end: {
            line: 20
@@ -486,7 +486,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 20
-           col: 24
+           col: 12
           }
           end: {
            line: 20
@@ -532,7 +532,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 22
-           col: 27
+           col: 12
           }
           end: {
            line: 22
@@ -543,7 +543,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 22
-           col: 27
+           col: 12
           }
           end: {
            line: 22
@@ -560,7 +560,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 23
-           col: 24
+           col: 12
           }
           end: {
            line: 23
@@ -571,7 +571,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 23
-           col: 24
+           col: 12
           }
           end: {
            line: 23
@@ -689,7 +689,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 24
-           col: 28
+           col: 12
           }
           end: {
            line: 24
@@ -700,7 +700,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 24
-           col: 28
+           col: 12
           }
           end: {
            line: 24
@@ -717,7 +717,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 25
-           col: 30
+           col: 12
           }
           end: {
            line: 25
@@ -728,7 +728,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 25
-           col: 30
+           col: 12
           }
           end: {
            line: 25
@@ -773,7 +773,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 27
-           col: 24
+           col: 12
           }
           end: {
            line: 27
@@ -784,7 +784,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 27
-           col: 24
+           col: 12
           }
           end: {
            line: 27
@@ -801,7 +801,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 28
-           col: 30
+           col: 12
           }
           end: {
            line: 28
@@ -812,7 +812,7 @@ apps: {
           file: "tests/preference.yaml"
           start: {
            line: 28
-           col: 30
+           col: 12
           }
           end: {
            line: 28

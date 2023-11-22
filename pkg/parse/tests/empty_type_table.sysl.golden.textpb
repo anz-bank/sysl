@@ -72,7 +72,7 @@ apps: {
        file: "tests/empty_type_table.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -83,7 +83,7 @@ apps: {
        file: "tests/empty_type_table.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -128,7 +128,7 @@ apps: {
        file: "tests/empty_type_table.sysl"
        start: {
         line: 5
-        col: 23
+        col: 8
        }
        end: {
         line: 5
@@ -139,7 +139,7 @@ apps: {
        file: "tests/empty_type_table.sysl"
        start: {
         line: 5
-        col: 23
+        col: 8
        }
        end: {
         line: 5

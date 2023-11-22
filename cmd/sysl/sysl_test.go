@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -20,6 +21,10 @@ import (
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
+)
+
+var (
+	update = flag.Bool("update", false, "Update golden test files")
 )
 
 const (
@@ -54,6 +59,8 @@ func assertLogEntry(
 	return okLevel && okMessage
 }
 
+var textProtoExtraSpaceAfterColonRE = regexp.MustCompile(`([^ ]+: ) +`)
+
 func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
 	output := "out.textpb"
@@ -62,6 +69,12 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 
 	actual, err := afero.ReadFile(fs, output)
 	assert.NoError(t, err)
+
+	if *update {
+		replaced := textProtoExtraSpaceAfterColonRE.ReplaceAll(actual, []byte(`$1`))
+		err = os.WriteFile(golden, replaced, 0600)
+		require.NoError(t, err)
+	}
 
 	expected, err := os.ReadFile(golden)
 	assert.NoError(t, err)
@@ -83,12 +96,7 @@ func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 		actualStr := reg.ReplaceAllString(string(actual), `file: ""`)
 		// In protobuf text file, the space in case like `apps: {` is not fixed, it can be `apps: {` or
 		// or `apps:  {`. So update it make sure it has only one space in this case.
-		reg = regexp.MustCompile(`[^ ]+: +[^\n ]+`) // indent is 2 or more spaces
-		splitReg := regexp.MustCompile(` +`)
-		actualStr = reg.ReplaceAllStringFunc(actualStr, func(foundStr string) string {
-			newStr := strings.Join(splitReg.Split(foundStr, -1), " ")
-			return newStr
-		})
+		actualStr = textProtoExtraSpaceAfterColonRE.ReplaceAllString(actualStr, `$1`)
 		assert.Equal(t, expectedStr, actualStr)
 	}
 }

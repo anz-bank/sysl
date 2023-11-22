@@ -12,7 +12,7 @@ apps: {
      file: "tests/import_proto_JSON.sysl"
      start: {
       line: 3
-      col: 11
+      col: 4
      }
      end: {
       line: 3
@@ -23,7 +23,7 @@ apps: {
      file: "tests/import_proto_JSON.sysl"
      start: {
       line: 3
-      col: 11
+      col: 4
      }
      end: {
       line: 3

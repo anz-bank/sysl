@@ -11,7 +11,7 @@ apps: {
     source_context: {
      file: "tests/transform.sysl"
      start: {
-      col: 21
+      col: 13
      }
      end: {
       col: 49
@@ -20,7 +20,7 @@ apps: {
     source_contexts: {
      file: "tests/transform.sysl"
      start: {
-      col: 21
+      col: 13
      }
      end: {
       col: 49
@@ -597,7 +597,7 @@ apps: {
        file: "tests/transform.sysl"
        start: {
         line: 6
-        col: 53
+        col: 49
        }
        end: {
         line: 6
@@ -608,7 +608,7 @@ apps: {
        file: "tests/transform.sysl"
        start: {
         line: 6
-        col: 53
+        col: 49
        }
        end: {
         line: 6

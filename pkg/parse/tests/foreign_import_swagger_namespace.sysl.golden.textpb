@@ -16,7 +16,7 @@ apps: {
      file: "tests/foreign_import_swagger.yaml"
      start: {
       line: 7
-      col: 18
+      col: 4
      }
      end: {
       line: 10
@@ -27,7 +27,7 @@ apps: {
      file: "tests/foreign_import_swagger.yaml"
      start: {
       line: 7
-      col: 18
+      col: 4
      }
      end: {
       line: 10
@@ -122,7 +122,7 @@ apps: {
           file: "tests/foreign_import_swagger.yaml"
           start: {
            line: 20
-           col: 24
+           col: 12
           }
           end: {
            line: 20
@@ -133,7 +133,7 @@ apps: {
           file: "tests/foreign_import_swagger.yaml"
           start: {
            line: 20
-           col: 24
+           col: 12
           }
           end: {
            line: 20
@@ -229,7 +229,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 11
-      col: 18
+      col: 4
      }
      end: {
       line: 14
@@ -240,7 +240,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 11
-      col: 18
+      col: 4
      }
      end: {
       line: 14
@@ -257,7 +257,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 10
-      col: 12
+      col: 4
      }
      end: {
       line: 10
@@ -268,7 +268,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 10
-      col: 12
+      col: 4
      }
      end: {
       line: 10
@@ -285,7 +285,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 8
-      col: 33
+      col: 25
      }
      end: {
       line: 8
@@ -296,7 +296,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 8
-      col: 33
+      col: 25
      }
      end: {
       line: 8
@@ -313,7 +313,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 9
-      col: 15
+      col: 4
      }
      end: {
       line: 9
@@ -324,7 +324,7 @@ apps: {
      file: "tests/foreign_import_swagger_namespace.sysl"
      start: {
       line: 9
-      col: 15
+      col: 4
      }
      end: {
       line: 9

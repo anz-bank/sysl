@@ -236,7 +236,7 @@ apps: {
        file: "tests/school.sysl"
        start: {
         line: 4
-        col: 23
+        col: 8
        }
        end: {
         line: 4
@@ -247,7 +247,7 @@ apps: {
        file: "tests/school.sysl"
        start: {
         line: 4
-        col: 23
+        col: 8
        }
        end: {
         line: 4

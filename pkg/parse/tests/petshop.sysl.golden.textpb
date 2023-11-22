@@ -12,7 +12,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 36
-      col: 20
+      col: 12
      }
      end: {
       line: 36
@@ -23,7 +23,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 36
-      col: 20
+      col: 12
      }
      end: {
       line: 36
@@ -848,7 +848,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 123
-      col: 27
+      col: 19
      }
      end: {
       line: 123
@@ -859,7 +859,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 123
-      col: 27
+      col: 19
      }
      end: {
       line: 123
@@ -3376,7 +3376,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 28
-      col: 23
+      col: 15
      }
      end: {
       line: 28
@@ -3387,7 +3387,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 28
-      col: 23
+      col: 15
      }
      end: {
       line: 28
@@ -3452,7 +3452,7 @@ apps: {
     source_context: {
      file: "tests/petshop.sysl"
      start: {
-      col: 22
+      col: 14
      }
      end: {
       col: 50
@@ -3461,7 +3461,7 @@ apps: {
     source_contexts: {
      file: "tests/petshop.sysl"
      start: {
-      col: 22
+      col: 14
      }
      end: {
       col: 50
@@ -4425,7 +4425,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 65
-      col: 27
+      col: 19
      }
      end: {
       line: 65
@@ -4436,7 +4436,7 @@ apps: {
      file: "tests/petshop.sysl"
      start: {
       line: 65
-      col: 27
+      col: 19
      }
      end: {
       line: 65

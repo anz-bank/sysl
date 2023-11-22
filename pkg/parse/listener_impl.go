@@ -47,7 +47,7 @@ type TreeShapeListener struct {
 	fieldname             []string
 	urlPrefixes           PathStack
 	app_name              PathStack
-	annotation_name       string
+	annotation            *nameWithContext
 	typemap               map[string]*sysl.Type
 	pendingDocString      bool
 	lintMode              bool
@@ -63,6 +63,11 @@ type TreeShapeListener struct {
 	opmap                 map[string]sysl.Expr_BinExpr_Op
 	currentMultiLineAnno  []string
 	lastEnd               *sysl.SourceContext_Location
+}
+
+type nameWithContext struct {
+	name   string
+	srcCtx *sysl.SourceContext
 }
 
 // NewTreeShapeListener ...
@@ -297,10 +302,9 @@ func fromQString(str string) string {
 
 // EnterAnnotation_value is called when production annotation_value is entered.
 func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueContext) {
-	sc := s.getSrcCtx(ctx.BaseParserRuleContext)
 	attr := &sysl.Attribute{
-		SourceContext:  sc,
-		SourceContexts: []*sysl.SourceContext{sc},
+		SourceContext:  s.annotation.srcCtx,
+		SourceContexts: []*sysl.SourceContext{s.annotation.srcCtx},
 	}
 	switch {
 	case ctx.Multi_line_docstring() != nil:
@@ -310,25 +314,22 @@ func (s *TreeShapeListener) EnterAnnotation_value(ctx *parser.Annotation_valueCo
 			S: fromQString(ctx.QSTRING().GetText()),
 		}
 	case ctx.Arrays() != nil:
-		attr.Attribute = &sysl.Attribute_A{
-			A: s.makeArraysAttribute(ctx.Arrays().(*parser.ArraysContext)).GetA(),
-		}
+		attr.Attribute = s.makeArraysAttribute(ctx.Arrays().(*parser.ArraysContext))
 	default:
 		panic("unexpected annotation value")
 	}
-	addAttrWithPrecedence(s.peekAttrs(), s.annotation_name, attr)
+	addAttrWithPrecedence(s.peekAttrs(), s.annotation.name, attr)
 }
 
 // ExitAnnotation_value is called when production annotation_value is exited.
 func (s *TreeShapeListener) ExitAnnotation_value(ctx *parser.Annotation_valueContext) {
-	sc := s.getSrcCtx(ctx.BaseParserRuleContext)
 	if ctx.Multi_line_docstring() != nil {
-		addAttrWithPrecedence(s.peekAttrs(), s.annotation_name, &sysl.Attribute{
+		addAttrWithPrecedence(s.peekAttrs(), s.annotation.name, &sysl.Attribute{
 			Attribute: &sysl.Attribute_S{
 				S: strings.TrimLeft(strings.Join(s.currentMultiLineAnno, "\n"), " ") + "\n",
 			},
-			SourceContext:  sc,
-			SourceContexts: []*sysl.SourceContext{sc},
+			SourceContext:  s.annotation.srcCtx,
+			SourceContexts: []*sysl.SourceContext{s.annotation.srcCtx},
 		})
 		s.currentMultiLineAnno = []string{}
 	}
@@ -344,12 +345,12 @@ func (s *TreeShapeListener) EnterAnnotation(ctx *parser.AnnotationContext) {
 	if v, exists := attrs[attr_name]; !exists || v.Attribute == nil {
 		attrs[attr_name] = &sysl.Attribute{}
 	}
-	s.annotation_name = attr_name
+	s.annotation = &nameWithContext{attr_name, s.getSrcCtx(ctx.BaseParserRuleContext)}
 }
 
 // ExitAnnotation is called when production annotation is exited.
 func (s *TreeShapeListener) ExitAnnotation(*parser.AnnotationContext) {
-	s.annotation_name = ""
+	s.annotation = nil
 }
 
 // EnterField_type is called when production field_type is entered.
@@ -496,55 +497,42 @@ func makeArrayConstraint(t *sysl.Type, array_size *parser.Array_sizeContext) []*
 	return c
 }
 
-func (s *TreeShapeListener) makeArraysAttribute(arrays *parser.ArraysContext) *sysl.Attribute {
-	sc := s.getSrcCtx(arrays.BaseParserRuleContext)
-
+func (s *TreeShapeListener) makeArraysAttribute(arrays *parser.ArraysContext) *sysl.Attribute_A {
 	// return empty array
 	if arrays.AllArrays_item() == nil || len(arrays.AllArrays_item()) == 0 {
-		return &sysl.Attribute{
-			Attribute: &sysl.Attribute_A{
-				A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{}},
-			},
-			SourceContext:  sc,
-			SourceContexts: []*sysl.SourceContext{sc},
+		return &sysl.Attribute_A{
+			A: &sysl.Attribute_Array{Elt: []*sysl.Attribute{}},
 		}
 	}
 
 	elements := make([]*sysl.Attribute, 0, len(arrays.AllArrays_item()))
 	for _, item := range arrays.AllArrays_item() {
 		itemCtx := item.GetRuleContext().(*parser.Arrays_itemContext)
-		var itemSrc *sysl.SourceContext
-		var element *sysl.Attribute
+		itemSrc := s.getSrcCtx(itemCtx.BaseParserRuleContext)
+		element := &sysl.Attribute{
+			SourceContext:  itemSrc,
+			SourceContexts: []*sysl.SourceContext{itemSrc},
+		}
+
 		switch {
 		case itemCtx.Quoted_string() != nil:
 			i := itemCtx.Quoted_string().(*parser.Quoted_stringContext)
-			itemSrc = s.getSrcCtx(i.BaseParserRuleContext)
-			element = &sysl.Attribute{
-				Attribute: &sysl.Attribute_S{
-					S: fromQString(i.QSTRING().GetText()),
-				},
+			element.Attribute = &sysl.Attribute_S{
+				S: fromQString(i.QSTRING().GetText()),
 			}
 		case itemCtx.Arrays() != nil:
 			i := itemCtx.Arrays().(*parser.ArraysContext)
-			itemSrc = s.getSrcCtx(i.BaseParserRuleContext)
-			element = s.makeArraysAttribute(i)
+			element.Attribute = s.makeArraysAttribute(i)
 		default:
 			panic(fmt.Errorf("unhandled annotation arrays element"))
 		}
 
-		element.SourceContext = itemSrc //nolint:staticcheck
-		element.SourceContexts = []*sysl.SourceContext{itemSrc}
-
 		elements = append(elements, element)
 	}
-	return &sysl.Attribute{
-		Attribute: &sysl.Attribute_A{
-			A: &sysl.Attribute_Array{
-				Elt: elements,
-			},
+	return &sysl.Attribute_A{
+		A: &sysl.Attribute_Array{
+			Elt: elements,
 		},
-		SourceContext:  sc,
-		SourceContexts: []*sysl.SourceContext{sc},
 	}
 }
 
@@ -597,10 +585,10 @@ func (s *TreeShapeListener) makeAttributeArray(attribs *parser.Attribs_or_modifi
 	for _, e := range attribs.AllEntry() {
 		entry := e.(*parser.EntryContext)
 		if nvp, ok := entry.Nvp().(*parser.NvpContext); ok {
+			sc := s.getSrcCtx(nvp.BaseParserRuleContext)
 			switch {
 			case nvp.Quoted_string() != nil:
 				qs := nvp.Quoted_string().(*parser.Quoted_stringContext)
-				sc := s.getSrcCtx(qs.BaseParserRuleContext)
 				attributes[nvp.Name().GetText()] = &sysl.Attribute{
 					Attribute: &sysl.Attribute_S{
 						S: fromQString(qs.QSTRING().GetText()),
@@ -609,7 +597,11 @@ func (s *TreeShapeListener) makeAttributeArray(attribs *parser.Attribs_or_modifi
 					SourceContexts: []*sysl.SourceContext{sc},
 				}
 			case nvp.Arrays() != nil:
-				attributes[nvp.Name().GetText()] = s.makeArraysAttribute(nvp.Arrays().(*parser.ArraysContext))
+				attributes[nvp.Name().GetText()] = &sysl.Attribute{
+					Attribute:      s.makeArraysAttribute(nvp.Arrays().(*parser.ArraysContext)),
+					SourceContext:  sc,
+					SourceContexts: []*sysl.SourceContext{sc},
+				}
 			}
 		} else if mod, ok := entry.Modifier().(*parser.ModifierContext); ok {
 			sc := s.getSrcCtx(mod.BaseParserRuleContext)

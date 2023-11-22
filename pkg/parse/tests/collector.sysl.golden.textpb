@@ -20,7 +20,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 34
-         col: 25
+         col: 22
         }
         end: {
          line: 34
@@ -31,7 +31,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 34
-         col: 25
+         col: 22
         }
         end: {
          line: 34
@@ -75,7 +75,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 35
-         col: 25
+         col: 22
         }
         end: {
          line: 35
@@ -86,7 +86,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 35
-         col: 25
+         col: 22
         }
         end: {
          line: 35
@@ -134,7 +134,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 36
-         col: 41
+         col: 38
         }
         end: {
          line: 36
@@ -145,7 +145,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 36
-         col: 41
+         col: 38
         }
         end: {
          line: 36
@@ -193,7 +193,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 37
-         col: 41
+         col: 38
         }
         end: {
          line: 37
@@ -204,7 +204,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 37
-         col: 41
+         col: 38
         }
         end: {
          line: 37
@@ -252,7 +252,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 38
-         col: 41
+         col: 38
         }
         end: {
          line: 38
@@ -263,7 +263,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 38
-         col: 41
+         col: 38
         }
         end: {
          line: 38
@@ -311,7 +311,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 39
-         col: 43
+         col: 40
         }
         end: {
          line: 39
@@ -322,7 +322,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 39
-         col: 43
+         col: 40
         }
         end: {
          line: 39
@@ -449,7 +449,7 @@ apps: {
        file: "tests/collector.sysl"
        start: {
         line: 34
-        col: 25
+        col: 22
        }
        end: {
         line: 34
@@ -460,7 +460,7 @@ apps: {
        file: "tests/collector.sysl"
        start: {
         line: 34
-        col: 25
+        col: 22
        }
        end: {
         line: 34
@@ -485,7 +485,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 36
-         col: 41
+         col: 38
         }
         end: {
          line: 36
@@ -496,7 +496,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 36
-         col: 41
+         col: 38
         }
         end: {
          line: 36
@@ -547,7 +547,7 @@ apps: {
           file: "tests/collector.sysl"
           start: {
            line: 38
-           col: 41
+           col: 38
           }
           end: {
            line: 38
@@ -558,7 +558,7 @@ apps: {
           file: "tests/collector.sysl"
           start: {
            line: 38
-           col: 41
+           col: 38
           }
           end: {
            line: 38
@@ -665,7 +665,7 @@ apps: {
           file: "tests/collector.sysl"
           start: {
            line: 38
-           col: 41
+           col: 38
           }
           end: {
            line: 38
@@ -676,7 +676,7 @@ apps: {
           file: "tests/collector.sysl"
           start: {
            line: 38
-           col: 41
+           col: 38
           }
           end: {
            line: 38
@@ -800,7 +800,7 @@ apps: {
        file: "tests/collector.sysl"
        start: {
         line: 35
-        col: 25
+        col: 22
        }
        end: {
         line: 35
@@ -811,7 +811,7 @@ apps: {
        file: "tests/collector.sysl"
        start: {
         line: 35
-        col: 25
+        col: 22
        }
        end: {
         line: 35
@@ -836,7 +836,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 38
-         col: 41
+         col: 38
         }
         end: {
          line: 38
@@ -847,7 +847,7 @@ apps: {
         file: "tests/collector.sysl"
         start: {
          line: 38
-         col: 41
+         col: 38
         }
         end: {
          line: 38
@@ -931,7 +931,7 @@ apps: {
            file: "tests/collector.sysl"
            start: {
             line: 39
-            col: 43
+            col: 40
            }
            end: {
             line: 39
@@ -942,7 +942,7 @@ apps: {
            file: "tests/collector.sysl"
            start: {
             line: 39
-            col: 43
+            col: 40
            }
            end: {
             line: 39
@@ -1025,7 +1025,7 @@ apps: {
            file: "tests/collector.sysl"
            start: {
             line: 39
-            col: 43
+            col: 40
            }
            end: {
             line: 39
@@ -1036,7 +1036,7 @@ apps: {
            file: "tests/collector.sysl"
            start: {
             line: 39
-            col: 43
+            col: 40
            }
            end: {
             line: 39

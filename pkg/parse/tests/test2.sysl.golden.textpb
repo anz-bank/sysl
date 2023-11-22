@@ -225,7 +225,7 @@ apps: {
        file: "tests/test2.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -236,7 +236,7 @@ apps: {
        file: "tests/test2.sysl"
        start: {
         line: 2
-        col: 23
+        col: 8
        }
        end: {
         line: 2
@@ -569,7 +569,7 @@ apps: {
        file: "tests/test2.sysl"
        start: {
         line: 6
-        col: 22
+        col: 8
        }
        end: {
         line: 9
@@ -580,7 +580,7 @@ apps: {
        file: "tests/test2.sysl"
        start: {
         line: 6
-        col: 22
+        col: 8
        }
        end: {
         line: 9

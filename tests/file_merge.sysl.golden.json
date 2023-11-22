@@ -14,10 +14,10 @@
       "action": {
        "s": "Delete user",
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge.sysl",
+        "file": "tests/file_merge.sysl",
         "start": {
          "line": 10,
-         "col": 20
+         "col": 12
         },
         "end": {
          "line": 10,
@@ -26,10 +26,10 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge.sysl",
+         "file": "tests/file_merge.sysl",
          "start": {
           "line": 10,
-          "col": 20
+          "col": 12
          },
          "end": {
           "line": 10,
@@ -54,7 +54,7 @@
         "payload": "ok <: string"
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge.sysl",
+        "file": "tests/file_merge.sysl",
         "start": {
          "line": 11,
          "col": 12
@@ -66,7 +66,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge.sysl",
+         "file": "tests/file_merge.sysl",
          "start": {
           "line": 11,
           "col": 12
@@ -84,7 +84,7 @@
       "path": "/user"
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/file_merge.sysl",
+      "file": "tests/file_merge.sysl",
       "start": {
        "line": 9,
        "col": 8
@@ -96,7 +96,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/file_merge.sysl",
+       "file": "tests/file_merge.sysl",
        "start": {
         "line": 9,
         "col": 8
@@ -114,10 +114,10 @@
       "action": {
        "s": "Get user",
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge_import.sysl",
+        "file": "tests/file_merge_import.sysl",
         "start": {
          "line": 10,
-         "col": 20
+         "col": 12
         },
         "end": {
          "line": 10,
@@ -126,10 +126,10 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 10,
-          "col": 20
+          "col": 12
          },
          "end": {
           "line": 10,
@@ -154,7 +154,7 @@
         "payload": "ok <: string"
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge_import.sysl",
+        "file": "tests/file_merge_import.sysl",
         "start": {
          "line": 11,
          "col": 12
@@ -166,7 +166,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 11,
           "col": 12
@@ -184,7 +184,7 @@
       "path": "/user"
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/file_merge_import.sysl",
+      "file": "tests/file_merge_import.sysl",
       "start": {
        "line": 9,
        "col": 8
@@ -196,7 +196,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/file_merge_import.sysl",
+       "file": "tests/file_merge_import.sysl",
        "start": {
         "line": 9,
         "col": 8
@@ -214,10 +214,10 @@
       "action": {
        "s": "Add user",
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge.sysl",
+        "file": "tests/file_merge.sysl",
         "start": {
          "line": 13,
-         "col": 20
+         "col": 12
         },
         "end": {
          "line": 13,
@@ -226,10 +226,10 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge.sysl",
+         "file": "tests/file_merge.sysl",
          "start": {
           "line": 13,
-          "col": 20
+          "col": 12
          },
          "end": {
           "line": 13,
@@ -237,10 +237,10 @@
          }
         },
         {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 7,
-          "col": 20
+          "col": 12
          },
          "end": {
           "line": 7,
@@ -268,7 +268,7 @@
         "payload": "error <: string"
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge.sysl",
+        "file": "tests/file_merge.sysl",
         "start": {
          "line": 14,
          "col": 12
@@ -280,7 +280,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge.sysl",
+         "file": "tests/file_merge.sysl",
          "start": {
           "line": 14,
           "col": 12
@@ -297,7 +297,7 @@
         "payload": "ok <: string"
        },
        "sourceContext": {
-        "file": "dev/sysl/tests/file_merge_import.sysl",
+        "file": "tests/file_merge_import.sysl",
         "start": {
          "line": 8,
          "col": 12
@@ -309,7 +309,7 @@
        },
        "sourceContexts": [
         {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 8,
           "col": 12
@@ -327,7 +327,7 @@
       "path": "/user"
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/file_merge_import.sysl",
+      "file": "tests/file_merge_import.sysl",
       "start": {
        "line": 6,
        "col": 8
@@ -339,7 +339,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/file_merge.sysl",
+       "file": "tests/file_merge.sysl",
        "start": {
         "line": 12,
         "col": 8
@@ -350,7 +350,7 @@
        }
       },
       {
-       "file": "dev/sysl/tests/file_merge_import.sysl",
+       "file": "tests/file_merge_import.sysl",
        "start": {
         "line": 6,
         "col": 8
@@ -373,10 +373,10 @@
          "tag1": {
           "s": "tag1",
           "sourceContext": {
-           "file": "dev/sysl/tests/file_merge.sysl",
+           "file": "tests/file_merge.sysl",
            "start": {
             "line": 22,
-            "col": 20
+            "col": 12
            },
            "end": {
             "line": 22,
@@ -385,10 +385,10 @@
           },
           "sourceContexts": [
            {
-            "file": "dev/sysl/tests/file_merge.sysl",
+            "file": "tests/file_merge.sysl",
             "start": {
              "line": 22,
-             "col": 20
+             "col": 12
             },
             "end": {
              "line": 22,
@@ -399,7 +399,7 @@
          }
         },
         "sourceContext": {
-         "file": "dev/sysl/tests/file_merge.sysl",
+         "file": "tests/file_merge.sysl",
          "start": {
           "line": 21,
           "col": 8
@@ -411,7 +411,7 @@
         },
         "sourceContexts": [
          {
-          "file": "dev/sysl/tests/file_merge.sysl",
+          "file": "tests/file_merge.sysl",
           "start": {
            "line": 21,
            "col": 8
@@ -426,7 +426,7 @@
        "ID": {
         "primitive": "STRING",
         "sourceContext": {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 14,
           "col": 8
@@ -438,7 +438,7 @@
         },
         "sourceContexts": [
          {
-          "file": "dev/sysl/tests/file_merge_import.sysl",
+          "file": "tests/file_merge_import.sysl",
           "start": {
            "line": 14,
            "col": 8
@@ -456,10 +456,10 @@
          "tag1": {
           "s": "tag1",
           "sourceContext": {
-           "file": "dev/sysl/tests/file_merge.sysl",
+           "file": "tests/file_merge.sysl",
            "start": {
             "line": 18,
-            "col": 20
+            "col": 12
            },
            "end": {
             "line": 18,
@@ -468,10 +468,10 @@
           },
           "sourceContexts": [
            {
-            "file": "dev/sysl/tests/file_merge.sysl",
+            "file": "tests/file_merge.sysl",
             "start": {
              "line": 18,
-             "col": 20
+             "col": 12
             },
             "end": {
              "line": 18,
@@ -483,10 +483,10 @@
          "tag2": {
           "s": "tag2",
           "sourceContext": {
-           "file": "dev/sysl/tests/file_merge_import.sysl",
+           "file": "tests/file_merge_import.sysl",
            "start": {
             "line": 16,
-            "col": 20
+            "col": 12
            },
            "end": {
             "line": 16,
@@ -495,10 +495,10 @@
           },
           "sourceContexts": [
            {
-            "file": "dev/sysl/tests/file_merge_import.sysl",
+            "file": "tests/file_merge_import.sysl",
             "start": {
              "line": 16,
-             "col": 20
+             "col": 12
             },
             "end": {
              "line": 16,
@@ -509,7 +509,7 @@
          }
         },
         "sourceContext": {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 15,
           "col": 8
@@ -521,7 +521,7 @@
         },
         "sourceContexts": [
          {
-          "file": "dev/sysl/tests/file_merge.sysl",
+          "file": "tests/file_merge.sysl",
           "start": {
            "line": 17,
            "col": 8
@@ -532,7 +532,7 @@
           }
          },
          {
-          "file": "dev/sysl/tests/file_merge_import.sysl",
+          "file": "tests/file_merge_import.sysl",
           "start": {
            "line": 15,
            "col": 8
@@ -547,7 +547,7 @@
       }
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/file_merge_import.sysl",
+      "file": "tests/file_merge_import.sysl",
       "start": {
        "line": 13,
        "col": 4
@@ -559,7 +559,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/file_merge.sysl",
+       "file": "tests/file_merge.sysl",
        "start": {
         "line": 16,
         "col": 4
@@ -570,7 +570,7 @@
        }
       },
       {
-       "file": "dev/sysl/tests/file_merge.sysl",
+       "file": "tests/file_merge.sysl",
        "start": {
         "line": 20,
         "col": 4
@@ -581,7 +581,7 @@
        }
       },
       {
-       "file": "dev/sysl/tests/file_merge_import.sysl",
+       "file": "tests/file_merge_import.sysl",
        "start": {
         "line": 13,
         "col": 4
@@ -599,7 +599,7 @@
        "Id": {
         "primitive": "STRING",
         "sourceContext": {
-         "file": "dev/sysl/tests/file_merge_import.sysl",
+         "file": "tests/file_merge_import.sysl",
          "start": {
           "line": 3,
           "col": 8
@@ -611,7 +611,7 @@
         },
         "sourceContexts": [
          {
-          "file": "dev/sysl/tests/file_merge_import.sysl",
+          "file": "tests/file_merge_import.sysl",
           "start": {
            "line": 3,
            "col": 8
@@ -626,7 +626,7 @@
        "Name": {
         "primitive": "STRING",
         "sourceContext": {
-         "file": "dev/sysl/tests/file_merge.sysl",
+         "file": "tests/file_merge.sysl",
          "start": {
           "line": 5,
           "col": 8
@@ -638,7 +638,7 @@
         },
         "sourceContexts": [
          {
-          "file": "dev/sysl/tests/file_merge.sysl",
+          "file": "tests/file_merge.sysl",
           "start": {
            "line": 5,
            "col": 8
@@ -653,7 +653,7 @@
       }
      },
      "sourceContext": {
-      "file": "dev/sysl/tests/file_merge_import.sysl",
+      "file": "tests/file_merge_import.sysl",
       "start": {
        "line": 2,
        "col": 4
@@ -665,7 +665,7 @@
      },
      "sourceContexts": [
       {
-       "file": "dev/sysl/tests/file_merge.sysl",
+       "file": "tests/file_merge.sysl",
        "start": {
         "line": 4,
         "col": 4
@@ -676,7 +676,7 @@
        }
       },
       {
-       "file": "dev/sysl/tests/file_merge_import.sysl",
+       "file": "tests/file_merge_import.sysl",
        "start": {
         "line": 2,
         "col": 4
@@ -690,7 +690,7 @@
     }
    },
    "sourceContext": {
-    "file": "dev/sysl/tests/file_merge_import.sysl",
+    "file": "tests/file_merge_import.sysl",
     "start": {
      "line": 1
     },
@@ -701,7 +701,7 @@
    },
    "sourceContexts": [
     {
-     "file": "dev/sysl/tests/file_merge.sysl",
+     "file": "tests/file_merge.sysl",
      "start": {
       "line": 3
      },
@@ -711,7 +711,7 @@
      }
     },
     {
-     "file": "dev/sysl/tests/file_merge_import.sysl",
+     "file": "tests/file_merge_import.sysl",
      "start": {
       "line": 1
      },
@@ -727,7 +727,7 @@
   {
    "target": "file_merge_import.sysl",
    "sourceContext": {
-    "file": "",
+    "file": "tests/file_merge.sysl",
     "start": {
      "line": 1
     },

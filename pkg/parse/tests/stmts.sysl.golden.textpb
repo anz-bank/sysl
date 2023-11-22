@@ -11,7 +11,7 @@ apps: {
     source_context: {
      file: "tests/stmts.sysl"
      start: {
-      col: 27
+      col: 19
      }
      end: {
       col: 47
@@ -20,7 +20,7 @@ apps: {
     source_contexts: {
      file: "tests/stmts.sysl"
      start: {
-      col: 27
+      col: 19
      }
      end: {
       col: 47

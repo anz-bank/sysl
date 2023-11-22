@@ -12,7 +12,7 @@ apps: {
      file: "tests/duplicate.sysl"
      start: {
       line: 1
-      col: 24
+      col: 4
      }
      end: {
       line: 1
@@ -23,7 +23,7 @@ apps: {
      file: "tests/duplicate.sysl"
      start: {
       line: 1
-      col: 24
+      col: 4
      }
      end: {
       line: 1
@@ -249,7 +249,7 @@ apps: {
        file: "tests/duplicate.sysl"
        start: {
         line: 4
-        col: 28
+        col: 20
        }
        end: {
         line: 4
@@ -260,7 +260,7 @@ apps: {
        file: "tests/duplicate.sysl"
        start: {
         line: 4
-        col: 28
+        col: 20
        }
        end: {
         line: 4

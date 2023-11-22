@@ -253,14 +253,16 @@ func parseAndCompareWithGolden(filename, root string, stripSourceContext bool) (
 			filename += syslExt
 		}
 		// update test files
-		mod, err := NewParser().ParseFromFs(filename, syslutil.NewChrootFs(afero.NewOsFs(), "."))
+		mod, err := NewParser().ParseFromFs(filename, syslutil.NewChrootFs(afero.NewOsFs(), root))
 		if err != nil {
 			return false, err
 		}
 		if err = pbutil.FTextPB(&updated, mod); err != nil {
 			return false, err
 		}
-		err = os.WriteFile(goldenFilename, updated.Bytes(), 0600)
+		// remove random space added by protobuf
+		updatedBytes := textProtoExtraSpaceAfterColonRE.ReplaceAll(updated.Bytes(), []byte(`$1`))
+		err = os.WriteFile(golden, updatedBytes, 0600)
 		if err != nil {
 			return false, err
 		}

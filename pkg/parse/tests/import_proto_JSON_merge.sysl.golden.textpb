@@ -12,7 +12,7 @@ apps: {
      file: "tests/import_proto_JSON_merge.sysl"
      start: {
       line: 3
-      col: 11
+      col: 4
      }
      end: {
       line: 3
@@ -23,7 +23,7 @@ apps: {
      file: "tests/import_proto_JSON_merge.sysl"
      start: {
       line: 3
-      col: 11
+      col: 4
      }
      end: {
       line: 3
@@ -135,7 +135,7 @@ apps: {
        file: "tests/import_proto_JSON_merge.sysl"
        start: {
         line: 11
-        col: 20
+        col: 12
        }
        end: {
         line: 11
@@ -146,7 +146,7 @@ apps: {
        file: "tests/import_proto_JSON_merge.sysl"
        start: {
         line: 11
-        col: 20
+        col: 12
        }
        end: {
         line: 11
@@ -235,7 +235,7 @@ apps: {
        file: "tests/import_proto_JSON_merge.sysl"
        start: {
         line: 7
-        col: 20
+        col: 12
        }
        end: {
         line: 7
@@ -246,7 +246,7 @@ apps: {
        file: "tests/import_proto_JSON_merge.sysl"
        start: {
         line: 7
-        col: 20
+        col: 12
        }
        end: {
         line: 7
@@ -953,7 +953,7 @@ apps: {
           file: "tests/import_proto_JSON_merge.sysl"
           start: {
            line: 21
-           col: 24
+           col: 12
           }
           end: {
            line: 21
@@ -964,7 +964,7 @@ apps: {
           file: "tests/import_proto_JSON_merge.sysl"
           start: {
            line: 21
-           col: 24
+           col: 12
           }
           end: {
            line: 21
@@ -1009,7 +1009,7 @@ apps: {
           file: "tests/import_proto_JSON_merge.sysl"
           start: {
            line: 17
-           col: 24
+           col: 12
           }
           end: {
            line: 17
@@ -1020,7 +1020,7 @@ apps: {
           file: "tests/import_proto_JSON_merge.sysl"
           start: {
            line: 17
-           col: 24
+           col: 12
           }
           end: {
            line: 17
@@ -1067,7 +1067,7 @@ apps: {
           file: "tests/import_proto_JSON_merge.sysl"
           start: {
            line: 19
-           col: 24
+           col: 12
           }
           end: {
            line: 19
@@ -1078,7 +1078,7 @@ apps: {
           file: "tests/import_proto_JSON_merge.sysl"
           start: {
            line: 19
-           col: 24
+           col: 12
           }
           end: {
            line: 19
@@ -1122,7 +1122,7 @@ apps: {
        file: "tests/import_proto_JSON_merge.sysl"
        start: {
         line: 15
-        col: 41
+        col: 28
        }
        end: {
         line: 15
@@ -1133,7 +1133,7 @@ apps: {
        file: "tests/import_proto_JSON_merge.sysl"
        start: {
         line: 15
-        col: 41
+        col: 28
        }
        end: {
         line: 15

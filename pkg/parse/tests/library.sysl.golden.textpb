@@ -236,7 +236,7 @@ apps: {
        file: "tests/school.sysl"
        start: {
         line: 4
-        col: 23
+        col: 8
        }
        end: {
         line: 4
@@ -247,7 +247,7 @@ apps: {
        file: "tests/school.sysl"
        start: {
         line: 4
-        col: 23
+        col: 8
        }
        end: {
         line: 4
@@ -709,7 +709,7 @@ apps: {
           file: "tests/library.sysl"
           start: {
            line: 5
-           col: 27
+           col: 12
           }
           end: {
            line: 5
@@ -720,7 +720,7 @@ apps: {
           file: "tests/library.sysl"
           start: {
            line: 5
-           col: 27
+           col: 12
           }
           end: {
            line: 5

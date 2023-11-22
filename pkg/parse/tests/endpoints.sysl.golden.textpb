@@ -20,7 +20,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 28
-         col: 47
+         col: 42
         }
         end: {
          line: 28
@@ -31,7 +31,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 28
-         col: 47
+         col: 42
         }
         end: {
          line: 28
@@ -78,7 +78,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 29
-         col: 37
+         col: 34
         }
         end: {
          line: 29
@@ -89,7 +89,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 29
-         col: 37
+         col: 34
         }
         end: {
          line: 29
@@ -137,7 +137,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 30
-         col: 46
+         col: 43
         }
         end: {
          line: 30
@@ -148,7 +148,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 30
-         col: 46
+         col: 43
         }
         end: {
          line: 30
@@ -234,7 +234,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 30
-         col: 46
+         col: 43
         }
         end: {
          line: 30
@@ -245,7 +245,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 30
-         col: 46
+         col: 43
         }
         end: {
          line: 30
@@ -445,7 +445,7 @@ apps: {
        file: "tests/endpoints.sysl"
        start: {
         line: 28
-        col: 47
+        col: 42
        }
        end: {
         line: 28
@@ -456,7 +456,7 @@ apps: {
        file: "tests/endpoints.sysl"
        start: {
         line: 28
-        col: 47
+        col: 42
        }
        end: {
         line: 28
@@ -490,7 +490,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 29
-         col: 37
+         col: 34
         }
         end: {
          line: 29
@@ -501,7 +501,7 @@ apps: {
         file: "tests/endpoints.sysl"
         start: {
          line: 29
-         col: 37
+         col: 34
         }
         end: {
          line: 29

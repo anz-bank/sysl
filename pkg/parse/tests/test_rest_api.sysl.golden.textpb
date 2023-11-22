@@ -460,7 +460,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 42
-        col: 22
+        col: 8
        }
        end: {
         line: 45
@@ -471,7 +471,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 42
-        col: 22
+        col: 8
        }
        end: {
         line: 45
@@ -788,7 +788,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 34
-        col: 73
+        col: 70
        }
        end: {
         line: 34
@@ -799,7 +799,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 34
-        col: 73
+        col: 70
        }
        end: {
         line: 34
@@ -1062,7 +1062,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 22
-        col: 61
+        col: 51
        }
        end: {
         line: 22
@@ -1073,7 +1073,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 22
-        col: 61
+        col: 51
        }
        end: {
         line: 22
@@ -1090,7 +1090,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -1101,7 +1101,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -1301,7 +1301,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -1312,7 +1312,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -1398,7 +1398,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -1409,7 +1409,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -1485,7 +1485,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 15
-        col: 20
+        col: 15
        }
        end: {
         line: 15
@@ -1496,7 +1496,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 15
-        col: 20
+        col: 15
        }
        end: {
         line: 15
@@ -1523,7 +1523,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -1534,7 +1534,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -1651,7 +1651,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -1662,7 +1662,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -1801,7 +1801,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -1812,7 +1812,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -1930,7 +1930,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 10
-        col: 18
+        col: 14
        }
        end: {
         line: 10
@@ -1941,7 +1941,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 10
-        col: 18
+        col: 14
        }
        end: {
         line: 10
@@ -1968,7 +1968,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 10
-        col: 38
+        col: 32
        }
        end: {
         line: 10
@@ -1979,7 +1979,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 10
-        col: 38
+        col: 32
        }
        end: {
         line: 10
@@ -1996,7 +1996,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 10
-        col: 27
+        col: 23
        }
        end: {
         line: 10
@@ -2007,7 +2007,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 10
-        col: 27
+        col: 23
        }
        end: {
         line: 10
@@ -2024,7 +2024,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -2035,7 +2035,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 4
-        col: 15
+        col: 10
        }
        end: {
         line: 4
@@ -2146,7 +2146,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
@@ -2157,7 +2157,7 @@ apps: {
        file: "tests/test_rest_api.sysl"
        start: {
         line: 21
-        col: 25
+        col: 20
        }
        end: {
         line: 21
