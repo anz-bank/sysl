@@ -19,7 +19,7 @@ func (p *displaySummaryCmd) Configure(app *kingpin.Application) *kingpin.CmdClau
 
 func (p *displaySummaryCmd) PreExecute(settings *parse.Settings) error {
 	settings.OperationSummary = true
-	settings.SkipParsing = true
+	settings.NoParsing = true
 
 	return nil
 }

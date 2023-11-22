@@ -140,6 +140,10 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		"Currently just outputs the names of the files parsed.",
 	).BoolVar(&r.parseSettings.OperationSummary)
 
+	app.Flag("no-different-version-check",
+		"When parsing imports don't error when a file is imported from multiple branches or into multiple app-names.",
+	).BoolVar(&r.parseSettings.NoDifferentVersionCheck)
+
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
 	})

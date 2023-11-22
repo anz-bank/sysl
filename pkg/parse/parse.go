@@ -33,9 +33,10 @@ import (
 )
 
 type Settings struct {
-	MaxImportDepth   int
-	OperationSummary bool
-	SkipParsing      bool
+	MaxImportDepth          int
+	OperationSummary        bool
+	NoDifferentVersionCheck bool
+	NoParsing               bool
 }
 
 // TypeData contains referenced type and actual tuple of referenced type
@@ -190,9 +191,22 @@ type fileInfo struct {
 	src     srcInput
 }
 
+type retrievedListIndex string
+
 type retrievedList struct {
-	l     map[string]*fileInfo
+	l     map[retrievedListIndex]*fileInfo
 	mutex sync.Mutex
+}
+
+func fileNameToIndex(filename string) retrievedListIndex {
+	ret := cleanImportFilename(filename)
+	// Only use a single version of each file, trim off any version for indexing
+	i := strings.Index(ret, "@")
+	if i > -1 {
+		ret = ret[:i]
+	}
+
+	return retrievedListIndex(ret)
 }
 
 // Parse parses a sysl definition from an retriever interface
@@ -204,9 +218,9 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		resource += syslExt
 	}
 
-	retrieved := retrievedList{make(map[string]*fileInfo), sync.Mutex{}}
+	retrieved := retrievedList{make(map[retrievedListIndex]*fileInfo), sync.Mutex{}}
 
-	if err := collectSpecs(
+	if err := p.collectSpecs(
 		context.Background(),
 		importDef{filename: resource},
 		reader,
@@ -233,11 +247,11 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 		if err != nil {
 			return nil, err
 		}
-		os.Stdout.Write(b)
-		os.Stdout.Write([]byte("\n"))
+		_, _ = os.Stdout.Write(b)
+		_, _ = os.Stdout.Write([]byte("\n"))
 	}
 
-	if p.SkipParsing {
+	if p.NoParsing {
 		return listener.module, nil
 	}
 
@@ -328,13 +342,14 @@ func (p *Parser) parseSpecs(specs []srcInput, listener *TreeShapeListener) (*sys
 // Takes a starting file and flattens all the imports that were already retrieved into an ordered list (recursively)
 func flattenSpecs(specs *[]srcInput, filename string, retrieved *retrievedList) {
 	// Only add each file once
+	filenameIndex := fileNameToIndex(filename)
 	for _, si := range *specs {
-		if si.src.filename == filename {
+		if fileNameToIndex(si.src.filename) == filenameIndex {
 			return
 		}
 	}
 
-	fi, found := retrieved.l[filename]
+	fi, found := retrieved.l[filenameIndex]
 	// If it wasn't found it must have been ignored due to depth
 	if found {
 		*specs = append(*specs, fi.src)
@@ -346,7 +361,7 @@ func flattenSpecs(specs *[]srcInput, filename string, retrieved *retrievedList) 
 
 // collectSpecs retrieves the contents for a sourceFile. It then parses the source to find all imports and recursively
 // (and in parallel) retrieves those as well. All the results are placed into the retrievedList.
-func collectSpecs(
+func (p *Parser) collectSpecs(
 	ctx context.Context,
 	source importDef,
 	reader reader.Reader,
@@ -357,14 +372,54 @@ func collectSpecs(
 		return nil
 	}
 
+	filenameIndex := fileNameToIndex(source.filename)
 	retrieved.mutex.Lock()
-	if _, has := retrieved.l[source.filename]; has {
+	if fi, has := retrieved.l[filenameIndex]; has {
 		retrieved.mutex.Unlock()
+
+		if !p.NoDifferentVersionCheck {
+			appname1 := strings.ReplaceAll(fi.src.src.appname, " :: ", "::")
+			appname2 := strings.ReplaceAll(source.appname, " :: ", "::")
+			if appname1 != appname2 {
+				return syslutil.Exitf(ImportError, fmt.Sprintf(
+					"%#v imported as different appnames: '%v' and '%v'", filenameIndex, appname1, appname2,
+				))
+			}
+
+			ver1 := ""
+			i := strings.Index(fi.src.src.filename, "@")
+			if i > -1 {
+				ver1 = fi.src.src.filename[i+1:]
+			}
+
+			ver2 := ""
+			i = strings.Index(source.filename, "@")
+			if i > -1 {
+				ver2 = source.filename[i+1:]
+			}
+
+			// treat master/main/develop as default
+			switch ver1 {
+			case "master", "main", "develop":
+				ver1 = ""
+			}
+			switch ver2 {
+			case "master", "main", "develop":
+				ver2 = ""
+			}
+
+			if ver1 != ver2 {
+				return syslutil.Exitf(ImportError, fmt.Sprintf(
+					"%#v imported as different versions: '%v' and '%v'", filenameIndex, ver1, ver2,
+				))
+			}
+		}
 
 		return nil
 	}
 	fi := &fileInfo{}
-	retrieved.l[source.filename] = fi
+	fi.src.src = source
+	retrieved.l[filenameIndex] = fi
 	retrieved.mutex.Unlock()
 
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
@@ -373,7 +428,7 @@ func collectSpecs(
 			"error reading %#v: \n%v\n", cleanImportFilename(source.filename), err,
 		))
 	}
-	fi.src = srcInput{source, string(content)}
+	fi.src.input = string(content)
 
 	importsInput := extractImports(source.filename, content)
 
@@ -397,7 +452,7 @@ func collectSpecs(
 	for _, c := range children {
 		c := c
 		g.Go(func() error {
-			return collectSpecs(ctx, c, reader, retrieved, maxImportDepth, currentImportDepth+1)
+			return p.collectSpecs(ctx, c, reader, retrieved, maxImportDepth, currentImportDepth+1)
 		})
 	}
 

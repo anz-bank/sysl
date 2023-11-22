@@ -310,7 +310,7 @@ func TestParseDirectoryAsFile(t *testing.T) {
 	tmproot := os.TempDir()
 	tmpdir := filepath.Join(tmproot, dirname)
 	require.NoError(t, os.Mkdir(tmpdir, 0755))
-	defer os.Remove(tmpdir)
+	defer func() { _ = os.Remove(tmpdir) }()
 	_, err := parseComparable(dirname, tmproot, false)
 	assert.Error(t, err)
 }
@@ -807,6 +807,41 @@ Three:
 	require.NotNil(t, c.Apps["One"])
 	require.NotNil(t, c.Apps["Two"])
 	require.NotNil(t, c.Apps["Three"])
+}
+
+func TestImportAsDifferentApps(t *testing.T) {
+	t.Parallel()
+
+	one := `
+import two.yaml as Two
+import two.yaml as Three
+One:
+	...
+`
+	two := `
+openapi: "3.0"
+info:
+  title: Four
+components:
+  schemas:
+    ImportedObj:
+      type: object
+`
+
+	r := mockReader{contents: map[string]mockContent{
+		"one.sysl": {one, retriever.ZeroHash, ""},
+		`two.yaml`: {two, retriever.ZeroHash, ""},
+	}}
+
+	p := NewParser()
+
+	_, err := p.Parse("one", r)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "imported as different appnames")
+
+	p.Set(Settings{NoDifferentVersionCheck: true})
+	_, err = p.Parse("one", r)
+	require.NoError(t, err)
 }
 
 func TestImportWithMaxDepth(t *testing.T) {
@@ -1456,6 +1491,68 @@ One:
 	require.NotNil(t, c.Apps["One"])
 	require.NotNil(t, c.Apps["Two"])
 	require.NotNil(t, c.Apps["Three"])
+}
+
+func TestParseSyslRetrieverDifferentVersions(t *testing.T) {
+	t.Parallel()
+
+	oneDefaultMaster := `
+import //github.com/org/repo/two.sysl
+import //github.com/org/repo/two.sysl@master
+`
+
+	oneDefaultMain := `
+import //github.com/org/repo/two.sysl
+import //github.com/org/repo/two.sysl@main
+`
+
+	oneDefaultDevelop := `
+import //github.com/org/repo/two.sysl
+import //github.com/org/repo/two.sysl@develop
+`
+
+	oneVersionVersion := `
+import //github.com/org/repo/two.sysl@v1.0.0
+import //github.com/org/repo/two.sysl@v1.0.0
+`
+
+	oneDefaultVersion := `
+import //github.com/org/repo/two.sysl
+import //github.com/org/repo/two.sysl@v1.0.0
+`
+
+	sha := randomSha
+	h, err := retriever.NewHash(sha)
+	require.NoError(t, err)
+	r := mockReader{contents: map[string]mockContent{
+		"./oneDefaultMaster.sysl":                {oneDefaultMaster, retriever.ZeroHash, ""},
+		"./oneDefaultMain.sysl":                  {oneDefaultMain, retriever.ZeroHash, ""},
+		"./oneDefaultDevelop.sysl":               {oneDefaultDevelop, retriever.ZeroHash, ""},
+		"./oneVersionVersion.sysl":               {oneVersionVersion, retriever.ZeroHash, ""},
+		"./oneDefaultVersion.sysl":               {oneDefaultVersion, retriever.ZeroHash, ""},
+		"//github.com/org/repo/two.sysl":         {two, h, ""},
+		"//github.com/org/repo/two.sysl@master":  {two, h, "master"},
+		"//github.com/org/repo/two.sysl@main":    {two, h, "main"},
+		"//github.com/org/repo/two.sysl@develop": {two, h, "develop"},
+		"//github.com/org/repo/two.sysl@v1.0.0":  {two, h, "v1.0.0"},
+	}}
+
+	p := NewParser()
+
+	for _, f := range []string{"./oneDefaultMaster", "./oneDefaultMain", "./oneDefaultDevelop", "./oneVersionVersion"} {
+		c, err := p.Parse(f, r)
+		require.NoError(t, err)
+		require.Equal(t, 1, len(c.Apps))
+		require.NotNil(t, c.Apps["Two"])
+	}
+
+	_, err = p.Parse("./oneDefaultVersion", r)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "imported as different versions")
+
+	p.Set(Settings{NoDifferentVersionCheck: true})
+	_, err = p.Parse("./oneDefaultVersion", r)
+	require.NoError(t, err)
 }
 
 /* TestParseSyslRetrieverRemoteFail tests an invalid remote import (error includes file that tried to import it)*/
