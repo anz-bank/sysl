@@ -98,7 +98,7 @@ apps: {
     name: "DDD"
     stmt: {
      cond: {
-      test: "some condition is true"
+      test: "if some condition is true"
       stmt: {
        action: {
         action: "Test - App -> eventName"
@@ -158,7 +158,7 @@ apps: {
       }
       stmt: {
        cond: {
-        test: "result not ok"
+        test: "If result not ok"
         stmt: {
          ret: {
           payload: "not ok1"
@@ -211,8 +211,8 @@ apps: {
        }
       }
       stmt: {
-       group: {
-        title: "else"
+       cond: {
+        test: "else"
         stmt: {
          ret: {
           payload: "ok"
@@ -289,8 +289,8 @@ apps: {
      }
     }
     stmt: {
-     group: {
-      title: "else some other condition"
+     cond: {
+      test: "else some other condition"
       stmt: {
        action: {
         action: "top level else_statment"
@@ -320,7 +320,7 @@ apps: {
       }
       stmt: {
        cond: {
-        test: "\"some constraint\""
+        test: "IF \"some constraint\""
         stmt: {
          ret: {
           payload: "ok"
@@ -373,8 +373,8 @@ apps: {
        }
       }
       stmt: {
-       group: {
-        title: "Else"
+       cond: {
+        test: "Else"
         stmt: {
          ret: {
           payload: "not ok"
@@ -2108,7 +2108,7 @@ apps: {
     }
     stmt: {
      cond: {
-      test: "value == one"
+      test: "if value == one"
       stmt: {
        action: {
         action: "do something"
@@ -2161,8 +2161,8 @@ apps: {
      }
     }
     stmt: {
-     group: {
-      title: "else if value == two"
+     cond: {
+      test: "else if value == two"
       stmt: {
        action: {
         action: "do something else"
@@ -2215,8 +2215,8 @@ apps: {
      }
     }
     stmt: {
-     group: {
-      title: "else"
+     cond: {
+      test: "else"
       stmt: {
        ret: {
         payload: "ok"

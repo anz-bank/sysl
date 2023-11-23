@@ -10,7 +10,7 @@ apps: {
     name: "Test - Endpoint"
     stmt: {
      cond: {
-      test: "value == one"
+      test: "if value == one"
       stmt: {
        action: {
         action: "do something"
@@ -63,8 +63,8 @@ apps: {
      }
     }
     stmt: {
-     group: {
-      title: "else if value == two"
+     cond: {
+      test: "else if value == two"
       stmt: {
        action: {
         action: "do something else"
@@ -117,8 +117,8 @@ apps: {
      }
     }
     stmt: {
-     group: {
-      title: "else"
+     cond: {
+      test: "else"
       stmt: {
        ret: {
         payload: "ok"

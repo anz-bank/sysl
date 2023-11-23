@@ -361,13 +361,13 @@ activate _0
   _1->_3 : GET /foo
   activate _3
   deactivate _3
- opt value == one
+ opt if value == one
   _1 -> _1 : do something
  end
- group else if value == two
+ opt else if value == two
   _1 -> _1 : do something else
  end
- group else
+ opt else
   _0<--_1 : ok
  end
  deactivate _1
@@ -381,13 +381,13 @@ activate _1
  _1->_3 : GET /foo
  activate _3
  deactivate _3
-opt value == one
+opt if value == one
  _1 -> _1 : do something
 end
-group else if value == two
+opt else if value == two
  _1 -> _1 : do something else
 end
-group else
+opt else
  [<--_1 : ok
 end
 deactivate _1

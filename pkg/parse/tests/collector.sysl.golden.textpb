@@ -530,7 +530,7 @@ apps: {
     }
     stmt: {
      cond: {
-      test: "result not ok"
+      test: "if result not ok"
       stmt: {
        call: {
         target: {
@@ -1315,7 +1315,7 @@ apps: {
     }
     stmt: {
      cond: {
-      test: "result ok"
+      test: "if result ok"
       stmt: {
        action: {
         action: "do further processing"

@@ -312,8 +312,8 @@ describe("DTO", () => {
                                 children: [
                                     {
                                         kind: "CondStatement",
-                                        prefix: "if",
-                                        title: "includeOrders == true",
+                                        prefix: "",
+                                        title: "if includeOrders == true",
                                         children: [
                                             {
                                                 kind: "ReturnStatement",
@@ -404,8 +404,8 @@ describe("DTO", () => {
                                 children: [
                                     {
                                         kind: "CondStatement",
-                                        prefix: "if",
-                                        title: "includeOrders == true",
+                                        prefix: "",
+                                        title: "if includeOrders == true",
                                         children: [
                                             {
                                                 kind: "ReturnStatement",
@@ -416,7 +416,7 @@ describe("DTO", () => {
                                         locations: { 0: "ts/main.sysl:4:9:6:10" },
                                     },
                                     {
-                                        kind: "GroupStatement",
+                                        kind: "CondStatement",
                                         prefix: "",
                                         title: "else",
                                         children: [

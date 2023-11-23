@@ -178,7 +178,7 @@ export class OneOfStatement extends ParentStatement {
 
 export class CondStatement extends ParentStatement {
     // TODO: Also parse `else` and `else if` statements (which are currently treated as group statements).
-    constructor(predicate: string, p: IParentStatementParams = {}) { super("if", predicate, p.children, p); }
+    constructor(predicate: string, p: IParentStatementParams = {}) { super("", predicate, p.children, p); }
     clone(context = new CloneContext(this.model)): CondStatement {
         return new CondStatement(this.title, this.cloneParams(context));
     }

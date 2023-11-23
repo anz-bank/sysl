@@ -1207,10 +1207,15 @@ func (s *TreeShapeListener) EnterCall_stmt(ctx *parser.Call_stmtContext) {
 
 // EnterIf_stmt is called when production if_stmt is entered.
 func (s *TreeShapeListener) EnterIf_stmt(ctx *parser.If_stmtContext) {
+	if_cond := ctx.IF().GetText()
+	if ctx.PREDICATE_VALUE() != nil {
+		if_cond += ctx.PREDICATE_VALUE().GetText()
+	}
+	if_cond = strings.TrimSpace(if_cond)
 	if_stmt := &sysl.Statement{
 		Stmt: &sysl.Statement_Cond{
 			Cond: &sysl.Cond{
-				Test: ctx.PREDICATE_VALUE().GetText(),
+				Test: if_cond,
 				Stmt: []*sysl.Statement{},
 			},
 		},
@@ -1234,17 +1239,17 @@ func (s *TreeShapeListener) EnterElse_stmt(ctx *parser.Else_stmtContext) {
 	}
 	else_cond = strings.TrimSpace(else_cond)
 	else_stmt := &sysl.Statement{
-		Stmt: &sysl.Statement_Group{
-			Group: &sysl.Group{
-				Title: else_cond,
-				Stmt:  []*sysl.Statement{},
+		Stmt: &sysl.Statement_Cond{
+			Cond: &sysl.Cond{
+				Test: else_cond,
+				Stmt: []*sysl.Statement{},
 			},
 		},
 		SourceContext:  s.getSrcCtx(ctx.BaseParserRuleContext),
 		SourceContexts: []*sysl.SourceContext{s.getSrcCtx(ctx.BaseParserRuleContext)},
 	}
 	s.addToCurrentScope(else_stmt)
-	s.pushScope(else_stmt.GetGroup())
+	s.pushScope(else_stmt.GetCond())
 }
 
 // ExitElse_stmt is called when production else_stmt is exited.
