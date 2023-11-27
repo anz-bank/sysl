@@ -381,17 +381,23 @@ func (s *BaseSyslParserListener) EnterHttp_method_comment(ctx *Http_method_comme
 // ExitHttp_method_comment is called when production http_method_comment is exited.
 func (s *BaseSyslParserListener) ExitHttp_method_comment(ctx *Http_method_commentContext) {}
 
+// EnterGroup_label is called when production group_label is entered.
+func (s *BaseSyslParserListener) EnterGroup_label(ctx *Group_labelContext) {}
+
+// ExitGroup_label is called when production group_label is exited.
+func (s *BaseSyslParserListener) ExitGroup_label(ctx *Group_labelContext) {}
+
+// EnterGroup_stmt_impl is called when production group_stmt_impl is entered.
+func (s *BaseSyslParserListener) EnterGroup_stmt_impl(ctx *Group_stmt_implContext) {}
+
+// ExitGroup_stmt_impl is called when production group_stmt_impl is exited.
+func (s *BaseSyslParserListener) ExitGroup_stmt_impl(ctx *Group_stmt_implContext) {}
+
 // EnterGroup_stmt is called when production group_stmt is entered.
 func (s *BaseSyslParserListener) EnterGroup_stmt(ctx *Group_stmtContext) {}
 
 // ExitGroup_stmt is called when production group_stmt is exited.
 func (s *BaseSyslParserListener) ExitGroup_stmt(ctx *Group_stmtContext) {}
-
-// EnterOne_of_case_label is called when production one_of_case_label is entered.
-func (s *BaseSyslParserListener) EnterOne_of_case_label(ctx *One_of_case_labelContext) {}
-
-// ExitOne_of_case_label is called when production one_of_case_label is exited.
-func (s *BaseSyslParserListener) ExitOne_of_case_label(ctx *One_of_case_labelContext) {}
 
 // EnterOne_of_cases is called when production one_of_cases is entered.
 func (s *BaseSyslParserListener) EnterOne_of_cases(ctx *One_of_casesContext) {}

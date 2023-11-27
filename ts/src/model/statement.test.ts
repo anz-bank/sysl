@@ -81,22 +81,7 @@ test.concurrent("REST endpoint special chars", async () => {
     expect(model.toSysl()).toBe(sysl);
 });
 
-test.concurrent("one of choice with empty name", async () => {
-    const sysl = realign(`
-        App:
-            Endpoint:
-                one of:
-                    :
-                        ...
-    `);
-    const model = await Model.fromText(sysl);
-
-    expect((model.getStatement("App.[Endpoint].[0,0]") as OneOfStatement).title).toEqual("");
-    expect(model.toSysl()).toBe(sysl);
-});
-
-// TODO: After parser is fixed to accept quoted group names (like one-of choices), restore test
-test.failing("Quoted names for choice and group", async () => {
+test.concurrent("Quoted names for choice and group", async () => {
     const sysl = realign(`
         App:
             Endpoint:
@@ -111,6 +96,6 @@ test.failing("Quoted names for choice and group", async () => {
     `);
     const model = await Model.fromText(sysl);
 
-    expect((model.getStatement("App.[Endpoint].[0,0]") as OneOfStatement).title).toEqual("");
+    expect((model.getStatement("App.[Endpoint].[0,0]") as OneOfStatement).title).toEqual("unquotedChoice");
     expect(model.toSysl()).toBe(sysl);
 });

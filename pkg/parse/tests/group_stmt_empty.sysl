@@ -1,0 +1,5 @@
+App:
+    EmptyGroupFail:
+        :
+            do something
+            do another thing

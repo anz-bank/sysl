@@ -177,11 +177,13 @@ Statements [~tag]:
                 return ok <: int
             "case 3":
                 return ok <: Types.Type
-            :
+            case4:
                 return error <: string
 
     GroupStatements [~tag]:
         grouped:
+            . <- GroupStatements
+        "grouped quoted":
             . <- GroupStatements
 
     AnnotatedEndpoint [~tag]:

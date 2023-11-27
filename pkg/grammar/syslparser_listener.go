@@ -188,11 +188,14 @@ type SyslParserListener interface {
 	// EnterHttp_method_comment is called when entering the http_method_comment production.
 	EnterHttp_method_comment(c *Http_method_commentContext)
 
+	// EnterGroup_label is called when entering the group_label production.
+	EnterGroup_label(c *Group_labelContext)
+
+	// EnterGroup_stmt_impl is called when entering the group_stmt_impl production.
+	EnterGroup_stmt_impl(c *Group_stmt_implContext)
+
 	// EnterGroup_stmt is called when entering the group_stmt production.
 	EnterGroup_stmt(c *Group_stmtContext)
-
-	// EnterOne_of_case_label is called when entering the one_of_case_label production.
-	EnterOne_of_case_label(c *One_of_case_labelContext)
 
 	// EnterOne_of_cases is called when entering the one_of_cases production.
 	EnterOne_of_cases(c *One_of_casesContext)
@@ -728,11 +731,14 @@ type SyslParserListener interface {
 	// ExitHttp_method_comment is called when exiting the http_method_comment production.
 	ExitHttp_method_comment(c *Http_method_commentContext)
 
+	// ExitGroup_label is called when exiting the group_label production.
+	ExitGroup_label(c *Group_labelContext)
+
+	// ExitGroup_stmt_impl is called when exiting the group_stmt_impl production.
+	ExitGroup_stmt_impl(c *Group_stmt_implContext)
+
 	// ExitGroup_stmt is called when exiting the group_stmt production.
 	ExitGroup_stmt(c *Group_stmtContext)
-
-	// ExitOne_of_case_label is called when exiting the one_of_case_label production.
-	ExitOne_of_case_label(c *One_of_case_labelContext)
 
 	// ExitOne_of_cases is called when exiting the one_of_cases production.
 	ExitOne_of_cases(c *One_of_casesContext)

@@ -91,13 +91,15 @@ for_stmt                : (ALT | UNTIL | FOR_EACH | FOR | LOOP | WHILE ) PREDICA
                                 INDENT statements* DEDENT;
 
 http_method_comment     : SYSL_COMMENT;
-group_stmt              : name_str COLON
+
+group_label             : Name | TEXT_LINE | QSTRING;
+
+group_stmt_impl         : group_label COLON
                                INDENT statements+ DEDENT;
 
-one_of_case_label: (Name | TEXT_LINE | QSTRING)+;
+group_stmt              : group_stmt_impl;
 
-one_of_cases: one_of_case_label? COLON
-                    INDENT statements+ DEDENT;
+one_of_cases            : group_stmt_impl;
 
 one_of_stmt             : ONE_OF COLON
                            INDENT one_of_cases+ DEDENT;

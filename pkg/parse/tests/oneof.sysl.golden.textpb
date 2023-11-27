@@ -160,126 +160,14 @@ apps: {
     }
    }
   }
-  endpoints: {
-   key: "Endpoint with no label"
-   value: {
-    name: "Endpoint with no label"
-    stmt: {
-     alt: {
-      choice: {
-       stmt: {
-        action: {
-         action: "statement 1"
-        }
-        source_context: {
-         file: "tests/oneof.sysl"
-         start: {
-          line: 18
-          col: 16
-         }
-         end: {
-          line: 18
-          col: 27
-         }
-        }
-        source_contexts: {
-         file: "tests/oneof.sysl"
-         start: {
-          line: 18
-          col: 16
-         }
-         end: {
-          line: 18
-          col: 27
-         }
-        }
-       }
-      }
-      choice: {
-       stmt: {
-        action: {
-         action: "statement 2"
-        }
-        source_context: {
-         file: "tests/oneof.sysl"
-         start: {
-          line: 20
-          col: 16
-         }
-         end: {
-          line: 20
-          col: 27
-         }
-        }
-        source_contexts: {
-         file: "tests/oneof.sysl"
-         start: {
-          line: 20
-          col: 16
-         }
-         end: {
-          line: 20
-          col: 27
-         }
-        }
-       }
-      }
-     }
-     source_context: {
-      file: "tests/oneof.sysl"
-      start: {
-       line: 16
-       col: 8
-      }
-      end: {
-       line: 20
-       col: 27
-      }
-     }
-     source_contexts: {
-      file: "tests/oneof.sysl"
-      start: {
-       line: 16
-       col: 8
-      }
-      end: {
-       line: 20
-       col: 27
-      }
-     }
-    }
-    source_context: {
-     file: "tests/oneof.sysl"
-     start: {
-      line: 15
-      col: 4
-     }
-     end: {
-      line: 20
-      col: 27
-     }
-    }
-    source_contexts: {
-     file: "tests/oneof.sysl"
-     start: {
-      line: 15
-      col: 4
-     }
-     end: {
-      line: 20
-      col: 27
-     }
-    }
-   }
-  }
   source_context: {
    file: "tests/oneof.sysl"
    start: {
     line: 5
    }
    end: {
-    line: 20
-    col: 27
+    line: 13
+    col: 43
    }
   }
   source_contexts: {
@@ -288,8 +176,8 @@ apps: {
     line: 5
    }
    end: {
-    line: 20
-    col: 27
+    line: 13
+    col: 43
    }
   }
  }

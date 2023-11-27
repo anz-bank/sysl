@@ -3,3 +3,6 @@ App:
         group in series:
             do something
             do another thing
+        "group in quoted":
+            do something
+            do another thing

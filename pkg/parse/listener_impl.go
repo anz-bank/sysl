@@ -1320,6 +1320,13 @@ func (s *TreeShapeListener) ExitFor_stmt(*parser.For_stmtContext) {
 	s.popScope()
 }
 
+func getTextFromIGroup_stmt_implContext(ctx parser.IGroup_stmt_implContext) string {
+	text := ctx.(*parser.Group_stmt_implContext).Group_label().GetText()
+	text = strings.TrimSpace(text)
+
+	return text
+}
+
 // EnterGroup_stmt is called when production group_stmt is entered.
 func (s *TreeShapeListener) EnterGroup_stmt(ctx *parser.Group_stmtContext) {
 	stmt := &sysl.Statement{
@@ -1327,11 +1334,9 @@ func (s *TreeShapeListener) EnterGroup_stmt(ctx *parser.Group_stmtContext) {
 		SourceContexts: []*sysl.SourceContext{s.getSrcCtx(ctx.BaseParserRuleContext)},
 	}
 
-	text := ctx.Name_str().GetText()
-	text = strings.TrimSpace(text)
 	stmt.Stmt = &sysl.Statement_Group{
 		Group: &sysl.Group{
-			Title: text,
+			Title: getTextFromIGroup_stmt_implContext(ctx.Group_stmt_impl()),
 			Stmt:  []*sysl.Statement{},
 		},
 	}
@@ -1349,9 +1354,7 @@ func (s *TreeShapeListener) EnterOne_of_cases(ctx *parser.One_of_casesContext) {
 	alt := s.peekScope().(*sysl.Alt)
 	choice := &sysl.Alt_Choice{
 		Stmt: []*sysl.Statement{},
-	}
-	if ctx.One_of_case_label() != nil {
-		choice.Cond = ctx.One_of_case_label().GetText()
+		Cond: getTextFromIGroup_stmt_implContext(ctx.Group_stmt_impl()),
 	}
 	alt.Choice = append(alt.Choice, choice)
 	s.pushScope(choice)

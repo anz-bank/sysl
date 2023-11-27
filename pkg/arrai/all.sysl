@@ -203,11 +203,17 @@ Statements:
             "case 3":
                 # more statements
                 return ok <: Types.Type
-            :
+            case4:
                 return error <: string
 
     GroupStatements:
-        grouped:
+        grouped1:
+            # more statements
+            . <- GroupStatements
+        grouped number 2:
+            # more statements
+            . <- GroupStatements
+        "grouped3":
             # more statements
             . <- GroupStatements
 

@@ -191,7 +191,7 @@ func checkSyslEqual(model1 *sysl.Module, model2 *sysl.Module) bool {
 	return false
 }
 
-var textProtoExtraSpaceAfterColonRE = regexp.MustCompile(`^([ \t]*: ) `)
+var textProtoExtraSpaceAfterColonRE = regexp.MustCompile(`([^ ]+: ) +`)
 
 func parseAndCompare(
 	filename, root, golden string,
@@ -388,6 +388,13 @@ func TestOneOfStatements(t *testing.T) {
 	testParseAgainstGolden(t, "tests/oneof.sysl", "")
 }
 
+func TestOneOfStatementsEmpty(t *testing.T) {
+	t.Parallel()
+
+	_, err := parseAndCompareWithGolden("tests/oneof_empty.sysl", "", false)
+	assert.Error(t, err)
+}
+
 func TestDuplicateEndpoints(t *testing.T) {
 	t.Parallel()
 
@@ -440,6 +447,13 @@ func TestGroupStmt(t *testing.T) {
 	t.Parallel()
 
 	testParseAgainstGolden(t, "tests/group_stmt.sysl", "")
+}
+
+func TestGroupStmtEmpty(t *testing.T) {
+	t.Parallel()
+
+	_, err := parseAndCompareWithGolden("tests/group_stmt_empty.sysl", "", false)
+	assert.Error(t, err)
 }
 
 func TestUntilLoop(t *testing.T) {

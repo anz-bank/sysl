@@ -73,8 +73,8 @@ apps: {
        col: 8
       }
       end: {
-       line: 4
-       col: 28
+       line: 5
+       col: 9
       }
      }
      source_contexts: {
@@ -84,7 +84,88 @@ apps: {
        col: 8
       }
       end: {
-       line: 4
+       line: 5
+       col: 9
+      }
+     }
+    }
+    stmt: {
+     group: {
+      title: "\"group in quoted\""
+      stmt: {
+       action: {
+        action: "do something"
+       }
+       source_context: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 6
+         col: 12
+        }
+        end: {
+         line: 6
+         col: 24
+        }
+       }
+       source_contexts: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 6
+         col: 12
+        }
+        end: {
+         line: 6
+         col: 24
+        }
+       }
+      }
+      stmt: {
+       action: {
+        action: "do another thing"
+       }
+       source_context: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 7
+         col: 12
+        }
+        end: {
+         line: 7
+         col: 28
+        }
+       }
+       source_contexts: {
+        file: "tests/group_stmt.sysl"
+        start: {
+         line: 7
+         col: 12
+        }
+        end: {
+         line: 7
+         col: 28
+        }
+       }
+      }
+     }
+     source_context: {
+      file: "tests/group_stmt.sysl"
+      start: {
+       line: 5
+       col: 8
+      }
+      end: {
+       line: 7
+       col: 28
+      }
+     }
+     source_contexts: {
+      file: "tests/group_stmt.sysl"
+      start: {
+       line: 5
+       col: 8
+      }
+      end: {
+       line: 7
        col: 28
       }
      }
@@ -96,7 +177,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 4
+      line: 7
       col: 28
      }
     }
@@ -107,7 +188,7 @@ apps: {
       col: 4
      }
      end: {
-      line: 4
+      line: 7
       col: 28
      }
     }
@@ -117,7 +198,7 @@ apps: {
    file: "tests/group_stmt.sysl"
    start: {}
    end: {
-    line: 4
+    line: 7
     col: 28
    }
   }
@@ -125,7 +206,7 @@ apps: {
    file: "tests/group_stmt.sysl"
    start: {}
    end: {
-    line: 4
+    line: 7
     col: 28
    }
   }
