@@ -86,7 +86,7 @@ export class CallStatement extends Statement {
 
     override toSysl(): string {
         const app = this.sourceApp.appsEqual(this.targetEndpoint) ? ElementRef.CurrentApp : this.targetEndpoint.truncate(ElementKind.App);
-        return `${app} <- ${this.targetEndpoint.endpointName}${this.args ? this.args.map(a => a.name).join(",") : ""}`;
+        return `${app.toSysl(false)} <- ${this.targetEndpoint.endpointName}${this.args ? this.args.map(a => a.name).join(",") : ""}`;
     }
 
     override toString(): string {

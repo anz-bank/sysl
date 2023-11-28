@@ -197,7 +197,7 @@ describe("DTO", () => {
                         locations: {
                             0: "ts/main.sysl:5:1:12:33",
                             appTag: "ts/main.sysl:5:12::19",
-                            appAnno: "ts/main.sysl:6:16::21",
+                            appAnno: "ts/main.sysl:6:5::21",
                         },
                         children: [
                             {
@@ -207,7 +207,7 @@ describe("DTO", () => {
                                 locations: {
                                     0: "ts/main.sysl:7:5:12:33",
                                     typeTag: "ts/main.sysl:7:17::25",
-                                    typeAnno: "ts/main.sysl:8:21::27",
+                                    typeAnno: "ts/main.sysl:8:9::27",
                                 },
                                 children: [
                                     {
@@ -233,7 +233,7 @@ describe("DTO", () => {
                                         locations: {
                                             0: "ts/main.sysl:11:9:13:2",
                                             fieldTag: "ts/main.sysl:11:34::43",
-                                            fieldAnno: "ts/main.sysl:12:26::33",
+                                            fieldAnno: "ts/main.sysl:12:13::33",
                                         }
                                     },
                                 ],
@@ -277,7 +277,7 @@ describe("DTO", () => {
                                         },
                                         locations: {
                                             "paramTag": "ts/main.sysl:3:43::52",
-                                            "paramAnno": "ts/main.sysl:3:64::75",
+                                            "paramAnno": "ts/main.sysl:3:54::75",
                                         },
                                     }
                                 ],
@@ -307,7 +307,7 @@ describe("DTO", () => {
                                 locations: {
                                     0: "ts/main.sysl:3:9:9:2",
                                     restTag: "ts/main.sysl:3:100::108",
-                                    restAnno: "ts/main.sysl:4:25::39", // TODO: https://github.com/anzx/sysl/issues/888
+                                    restAnno: "ts/main.sysl:4:13::39",
                                 },
                                 children: [
                                     {
@@ -324,7 +324,7 @@ describe("DTO", () => {
                                         locations: { 0: "ts/main.sysl:5:13:7:14" },
                                     },
                                     {
-                                        kind: "GroupStatement",
+                                        kind: "CondStatement",
                                         prefix: "",
                                         title: "else",
                                         children: [
@@ -345,7 +345,7 @@ describe("DTO", () => {
         );
     });
 
-    test.only("RPC endpoint", async () => {
+    test.concurrent("RPC endpoint", async () => {
         const model = await Model.fromText(realign(`
             Ns :: App:
                 GetCustomer(id <: int, auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]], includeOrders <: bool?) [~rpcTag]:
@@ -1313,7 +1313,7 @@ describe("Cloning", () => {
               '@annotation3 = ...': Annotation
             'App::with::subpackages': Application
               '[~tag]': Tag
-            'RestEndpoint': Application
+            'Ns::RestEndpoint': Application
               '[~tag]': Tag
               '[REST] /': Endpoint
                 '[~rest]': Tag
@@ -1454,9 +1454,9 @@ describe("Cloning", () => {
                 '[~tag]': Tag
                 'if predicate1': CondStatement
                   'return ok <: string': ReturnStatement
-                'else if predicate2': GroupStatement
+                'else if predicate2': CondStatement
                   'Statements <- IfStmt': CallStatement
-                'else': GroupStatement
+                'else': CondStatement
               '[RPC] Loops': Endpoint
                 '[~tag]': Tag
                 'until predicate': LoopStatement
@@ -1471,7 +1471,7 @@ describe("Cloning", () => {
               '[RPC] Calls': Endpoint
                 '[~tag]': Tag
                 'Statements <- Returns': CallStatement
-                'RestEndpoint <- GET /param': CallStatement
+                'Ns::RestEndpoint <- GET /param': CallStatement
               '[RPC] OneOfStatements': Endpoint
                 '[~tag]': Tag
                 'one of': OneOfStatement
@@ -1481,11 +1481,13 @@ describe("Cloning", () => {
                     'return ok <: int': ReturnStatement
                   '\"case 3\"': GroupStatement
                     'return ok <: Types.Type': ReturnStatement
-                  '': GroupStatement
+                  'case4': GroupStatement
                     'return error <: string': ReturnStatement
               '[RPC] GroupStatements': Endpoint
                 '[~tag]': Tag
                 'grouped': GroupStatement
+                  'Statements <- GroupStatements': CallStatement
+                '"grouped quoted"': GroupStatement
                   'Statements <- GroupStatements': CallStatement
               '[RPC] AnnotatedEndpoint': Endpoint
                 '[~tag]': Tag
@@ -1527,20 +1529,20 @@ describe("Cloning", () => {
             App
             AppWithAnnotation
             App::with::subpackages
-            RestEndpoint
-              RestEndpoint.[GET /]
-              RestEndpoint.[GET /pathwithtype/{native}]
-                RestEndpoint.[GET /pathwithtype/{native}].[0]
-              RestEndpoint.[GET /query]
-                RestEndpoint.[GET /query].[0]
-              RestEndpoint.[PATCH /param]
-                RestEndpoint.[PATCH /param].[0]
-              RestEndpoint.[POST /param]
-                RestEndpoint.[POST /param].[0]
-              RestEndpoint.[PUT /param]
-                RestEndpoint.[PUT /param].[0]
-              RestEndpoint.[GET /report.csv]
-                RestEndpoint.[GET /report.csv].[0]
+            Ns::RestEndpoint
+              Ns::RestEndpoint.[GET /]
+              Ns::RestEndpoint.[GET /pathwithtype/{native}]
+                Ns::RestEndpoint.[GET /pathwithtype/{native}].[0]
+              Ns::RestEndpoint.[GET /query]
+                Ns::RestEndpoint.[GET /query].[0]
+              Ns::RestEndpoint.[PATCH /param]
+                Ns::RestEndpoint.[PATCH /param].[0]
+              Ns::RestEndpoint.[POST /param]
+                Ns::RestEndpoint.[POST /param].[0]
+              Ns::RestEndpoint.[PUT /param]
+                Ns::RestEndpoint.[PUT /param].[0]
+              Ns::RestEndpoint.[GET /report.csv]
+                Ns::RestEndpoint.[GET /report.csv].[0]
             SimpleEndpoint
               SimpleEndpoint.[SimpleEp]
               SimpleEndpoint.[SimpleEpWithParam]
@@ -1602,6 +1604,8 @@ describe("Cloning", () => {
               Statements.[GroupStatements]
                 Statements.[GroupStatements].[0]
                   Statements.[GroupStatements].[0,0]
+                Statements.[GroupStatements].[1]
+                  Statements.[GroupStatements].[1,0]
               Statements.[AnnotatedEndpoint]
               Statements.[AnnotatedStatements]
                 Statements.[AnnotatedStatements].[0]

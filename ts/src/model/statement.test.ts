@@ -99,3 +99,32 @@ test.concurrent("Quoted names for choice and group", async () => {
     expect((model.getStatement("App.[Endpoint].[0,0]") as OneOfStatement).title).toEqual("unquotedChoice");
     expect(model.toSysl()).toBe(sysl);
 });
+
+test.concurrent("Call statement, foreign app", async () => {
+    const sysl = realign(`
+        App:
+            Endpoint:
+                Ns :: OtherApp <- Endpoint
+    `);
+    const model = await Model.fromText(sysl);
+
+    expect(model.getStatement("App.[Endpoint].[0]")).toMatchObject({
+        targetEndpoint: ElementRef.parse("Ns::OtherApp.[Endpoint]")
+    });
+    expect(model.toSysl()).toBe(sysl);
+});
+
+// TODO: Convert parsed CurrentApp into real ref
+test.skip("Call statement, self app", async () => {
+    const sysl = realign(`
+        App:
+            Endpoint:
+                . <- Endpoint
+    `);
+    const model = await Model.fromText(sysl);
+
+    expect(model.getStatement("App.[Endpoint].[0]")).toMatchObject({
+        targetEndpoint: ElementRef.parse("Ns::OtherApp.[Endpoint]")
+    });
+    expect(model.toSysl()).toBe(sysl);
+});

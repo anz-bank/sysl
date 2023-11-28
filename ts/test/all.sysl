@@ -26,7 +26,7 @@ AppWithAnnotation [~tag]:
 App :: with :: subpackages [~tag]:
     ...
 
-RestEndpoint [~tag]:
+Ns :: RestEndpoint [~tag]:
     /:
         GET:
             ...
@@ -167,7 +167,7 @@ Statements [~tag]:
 
     Calls [~tag]:
         . <- Returns
-        RestEndpoint <- GET /param
+        Ns :: RestEndpoint <- GET /param
 
     OneOfStatements [~tag]:
         one of:
