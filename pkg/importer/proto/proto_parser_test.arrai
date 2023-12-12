@@ -272,6 +272,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             },
                                             options: {'allow_alias': (b: true)}
                                         ),
+                                        'State': (fields: {'UNKNOWN': (value: (o: 0))}),
                                     },
                                     extends: {},
                                     imports: {},
@@ -287,7 +288,14 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                                 'message_map': (keyType: (name: 'string'), type: (name: 'Inner', package: 'proto3'), value: (d: 5)),
                                             },
                                             messages: {
-                                                'Inner': (comments: [" Level 2"], fields: {'ival': (type: (name: 'int64'), value: (d: 1))}),
+                                                'Inner': (
+                                                    comments: [" Level 2"],
+                                                    fields: {'ival': (type: (name: 'int64'), value: (d: 1))},
+                                                    enums: {'State': (fields: {'UNKNOWN': (value: (o: 0))})},
+                                                ),
+                                            },
+                                            enums: {
+                                                'State': (fields: {'UNKNOWN': (value: (o: 0))}),
                                             },
                                             options: {
                                                 '(my_option).a': (b: true),

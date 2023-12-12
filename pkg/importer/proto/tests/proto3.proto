@@ -14,6 +14,10 @@ enum EnumAllowingAlias {
     reserved "NAME";
 }
 
+enum State {
+    UNKNOWN = 0;
+}
+
 // Level 1
 message Outer {
     option (my_option).a = true;
@@ -21,9 +25,15 @@ message Outer {
         array: [1, "string", {foo: "bar"}],
         object: {foo: "bar"}
     };
+    enum State {
+        UNKNOWN = 0;
+    }
     // Level 2
     message Inner {
         int64 ival = 1;
+        enum State {
+            UNKNOWN = 0;
+        }
     }
     repeated Inner inner_message = 2;
     EnumAllowingAlias enum_field = 3;

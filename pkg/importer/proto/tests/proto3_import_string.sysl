@@ -48,3 +48,12 @@ proto3:
         ival <: int:
             @json_tag = "ival"
             @rpcId = "1"
+
+    !enum Outer_Inner_State [source_path=""]:
+        UNKNOWN : 0
+
+    !enum Outer_State [source_path=""]:
+        UNKNOWN : 0
+
+    !enum State [source_path=""]:
+        UNKNOWN : 0

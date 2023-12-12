@@ -196,12 +196,6 @@ google_protobuf:
             @json_tag = "version"
             @rpcId = "4"
 
-    !enum Cardinality [description="Whether a field is optional, required, or repeated.", source_path="google/protobuf/type.proto"]:
-        CARDINALITY_UNKNOWN : 0
-        CARDINALITY_OPTIONAL : 1
-        CARDINALITY_REQUIRED : 2
-        CARDINALITY_REPEATED : 3
-
     !type Enum:
         @description =:
             | Enum type definition.
@@ -309,7 +303,13 @@ google_protobuf:
             @json_tag = "typeUrl"
             @rpcId = "6"
 
-    !enum Kind [description="Basic field types.", source_path="google/protobuf/type.proto"]:
+    !enum Field_Cardinality [description="Whether a field is optional, required, or repeated.", source_path="google/protobuf/type.proto"]:
+        CARDINALITY_UNKNOWN : 0
+        CARDINALITY_OPTIONAL : 1
+        CARDINALITY_REQUIRED : 2
+        CARDINALITY_REPEATED : 3
+
+    !enum Field_Kind [description="Basic field types.", source_path="google/protobuf/type.proto"]:
         TYPE_UNKNOWN : 0
         TYPE_DOUBLE : 1
         TYPE_FLOAT : 2
