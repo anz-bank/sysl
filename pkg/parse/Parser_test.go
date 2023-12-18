@@ -540,6 +540,12 @@ func TestSimpleProject(t *testing.T) {
 	testParseAgainstGolden(t, "tests/project.sysl", "")
 }
 
+func TestRestUrlAnnos(t *testing.T) {
+	t.Parallel()
+
+	testParseAgainstGoldenWithSourceContext(t, "tests/rest_url_annotations.sysl")
+}
+
 func TestUrlParamOrder(t *testing.T) {
 	t.Parallel()
 

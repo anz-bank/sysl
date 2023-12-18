@@ -1,0 +1,733 @@
+apps: {
+ key: "App"
+ value: {
+  name: {
+   part: "App"
+  }
+  endpoints: {
+   key: "GET /base"
+   value: {
+    name: "GET /base"
+    attrs: {
+     key: "getAnno"
+     value: {
+      s: "get"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 4
+        col: 12
+       }
+       end: {
+        line: 4
+        col: 28
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 4
+        col: 12
+       }
+       end: {
+        line: 4
+        col: 28
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno1"
+     value: {
+      s: "url1"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "getAction1"
+     }
+     source_context: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 5
+       col: 12
+      }
+      end: {
+       line: 5
+       col: 22
+      }
+     }
+     source_contexts: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 5
+       col: 12
+      }
+      end: {
+       line: 5
+       col: 22
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/base"
+    }
+    source_context: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 3
+      col: 8
+     }
+     end: {
+      line: 6
+      col: 9
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 3
+      col: 8
+     }
+     end: {
+      line: 6
+      col: 9
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /base/bar"
+   value: {
+    name: "GET /base/bar"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno1"
+     value: {
+      s: "url1"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno3"
+     value: {
+      s: "url3"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 14
+        col: 14
+       }
+       end: {
+        line: 14
+        col: 29
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 14
+        col: 14
+       }
+       end: {
+        line: 14
+        col: 29
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno4"
+     value: {
+      s: "url4"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 15
+        col: 12
+       }
+       end: {
+        line: 15
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 15
+        col: 12
+       }
+       end: {
+        line: 15
+        col: 30
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "getAction3"
+     }
+     source_context: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 17
+       col: 16
+      }
+      end: {
+       line: 17
+       col: 26
+      }
+     }
+     source_contexts: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 17
+       col: 16
+      }
+      end: {
+       line: 17
+       col: 26
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/base/bar"
+    }
+    source_context: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 16
+      col: 12
+     }
+     end: {
+      line: 18
+      col: 9
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 16
+      col: 12
+     }
+     end: {
+      line: 18
+      col: 9
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /base/baz"
+   value: {
+    name: "GET /base/baz"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno1"
+     value: {
+      s: "url1"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno5"
+     value: {
+      s: "url5"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 18
+        col: 8
+       }
+       end: {
+        line: 18
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 18
+        col: 8
+       }
+       end: {
+        line: 18
+        col: 26
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno6"
+     value: {
+      s: "url6"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 19
+        col: 14
+       }
+       end: {
+        line: 19
+        col: 29
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 19
+        col: 14
+       }
+       end: {
+        line: 19
+        col: 29
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "getAction4"
+     }
+     source_context: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 21
+       col: 16
+      }
+      end: {
+       line: 21
+       col: 26
+      }
+     }
+     source_contexts: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 21
+       col: 16
+      }
+      end: {
+       line: 21
+       col: 26
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/base/baz"
+    }
+    source_context: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 20
+      col: 12
+     }
+     end: {
+      line: 22
+      col: 1
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 20
+      col: 12
+     }
+     end: {
+      line: 22
+      col: 1
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /base/foo"
+   value: {
+    name: "GET /base/foo"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno1"
+     value: {
+      s: "url1"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno2"
+     value: {
+      s: "url2"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 7
+        col: 12
+       }
+       end: {
+        line: 7
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 7
+        col: 12
+       }
+       end: {
+        line: 7
+        col: 30
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "getAction2"
+     }
+     source_context: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 9
+       col: 16
+      }
+      end: {
+       line: 9
+       col: 26
+      }
+     }
+     source_contexts: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 9
+       col: 16
+      }
+      end: {
+       line: 9
+       col: 26
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/base/foo"
+    }
+    source_context: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 8
+      col: 12
+     }
+     end: {
+      line: 10
+      col: 13
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 8
+      col: 12
+     }
+     end: {
+      line: 10
+      col: 13
+     }
+    }
+   }
+  }
+  endpoints: {
+   key: "GET /base/foo/child"
+   value: {
+    name: "GET /base/foo/child"
+    attrs: {
+     key: "patterns"
+     value: {
+      a: {
+       elt: {
+        s: "rest"
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno1"
+     value: {
+      s: "url1"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 2
+        col: 8
+       }
+       end: {
+        line: 2
+        col: 26
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnno2"
+     value: {
+      s: "url2"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 7
+        col: 12
+       }
+       end: {
+        line: 7
+        col: 30
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 7
+        col: 12
+       }
+       end: {
+        line: 7
+        col: 30
+       }
+      }
+     }
+    }
+    attrs: {
+     key: "urlAnnoChild"
+     value: {
+      s: "urlchild"
+      source_context: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 11
+        col: 16
+       }
+       end: {
+        line: 11
+        col: 42
+       }
+      }
+      source_contexts: {
+       file: "tests/rest_url_annotations.sysl"
+       start: {
+        line: 11
+        col: 16
+       }
+       end: {
+        line: 11
+        col: 42
+       }
+      }
+     }
+    }
+    stmt: {
+     action: {
+      action: "getChild"
+     }
+     source_context: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 13
+       col: 20
+      }
+      end: {
+       line: 13
+       col: 28
+      }
+     }
+     source_contexts: {
+      file: "tests/rest_url_annotations.sysl"
+      start: {
+       line: 13
+       col: 20
+      }
+      end: {
+       line: 13
+       col: 28
+      }
+     }
+    }
+    rest_params: {
+     method: GET
+     path: "/base/foo/child"
+    }
+    source_context: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 12
+      col: 16
+     }
+     end: {
+      line: 14
+      col: 9
+     }
+    }
+    source_contexts: {
+     file: "tests/rest_url_annotations.sysl"
+     start: {
+      line: 12
+      col: 16
+     }
+     end: {
+      line: 14
+      col: 9
+     }
+    }
+   }
+  }
+  source_context: {
+   file: "tests/rest_url_annotations.sysl"
+   start: {}
+   end: {
+    line: 21
+    col: 26
+   }
+  }
+  source_contexts: {
+   file: "tests/rest_url_annotations.sysl"
+   start: {}
+   end: {
+    line: 21
+    col: 26
+   }
+  }
+ }
+}

@@ -1579,7 +1579,7 @@ func (s *TreeShapeListener) peekScope() interface{} {
 
 func (s *TreeShapeListener) lastStatement() *sysl.Statement {
 	switch scope := s.peekScope().(type) {
-	case *sysl.Application, *sysl.Type, *sysl.Alt, *sysl.View:
+	case *sysl.Application, *sysl.Type, *sysl.Alt, *sysl.View, *RestEndpointPath:
 		return nil
 	case *sysl.Endpoint:
 		l := len(scope.Stmt) - 1
@@ -1633,6 +1633,8 @@ func (s *TreeShapeListener) peekAttrs() map[string]*sysl.Attribute {
 		return t.Attrs
 	case *sysl.View:
 		return t.Attrs
+	case *RestEndpointPath:
+		return s.rest_attrs[len(s.rest_attrs)-1]
 	default:
 		fmt.Printf("got unexpected %T\n", t)
 		panic("not implemented")
@@ -1845,6 +1847,8 @@ func (s *TreeShapeListener) ExitSimple_endpoint(ctx *parser.Simple_endpointConte
 	s.endpointName = ""
 }
 
+type RestEndpointPath struct{}
+
 // EnterRest_endpoint is called when production rest_endpoint is entered.
 func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext) {
 	s.rest_queryparams_len = append(s.rest_queryparams_len, len(s.rest_queryparams))
@@ -1853,12 +1857,19 @@ func (s *TreeShapeListener) EnterRest_endpoint(ctx *parser.Rest_endpointContext)
 	if attribs, ok := ctx.Attribs_or_modifiers().(*parser.Attribs_or_modifiersContext); ok {
 		s.rest_attrs = append(s.rest_attrs, s.makeAttributeArray(attribs))
 	} else {
-		s.rest_attrs = append(s.rest_attrs, nil)
+		var attrs map[string]*sysl.Attribute
+		if ctx.Annotation(0) != nil {
+			attrs = map[string]*sysl.Attribute{}
+		}
+
+		s.rest_attrs = append(s.rest_attrs, attrs)
 	}
+	s.pushScope(&RestEndpointPath{})
 }
 
 // ExitRest_endpoint is called when production rest_endpoint is exited.
 func (s *TreeShapeListener) ExitRest_endpoint(*parser.Rest_endpointContext) {
+	s.popScope()
 	s.urlPrefixes.Pop()
 	ltop := len(s.rest_urlparams_len) - 1
 	if ltop >= 0 {

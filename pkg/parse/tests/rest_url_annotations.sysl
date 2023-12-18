@@ -1,0 +1,22 @@
+App:
+    /base:
+        @urlAnno1 = "url1"
+        GET:
+            @getAnno = "get"
+            getAction1
+        /foo:
+            @urlAnno2 = "url2"
+            GET:
+                getAction2
+            /child:
+                @urlAnnoChild = "urlchild"
+                GET:
+                    getChild
+        /bar [urlAnno3="url3"]:
+            @urlAnno4 = "url4"
+            GET:
+                getAction3
+        @urlAnno5 = "url5"
+        /baz [urlAnno6="url6"]:
+            GET:
+                getAction4

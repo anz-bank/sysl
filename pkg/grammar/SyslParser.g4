@@ -145,7 +145,7 @@ simple_endpoint :
 
 
 rest_endpoint: http_path attribs_or_modifiers? COLON
-                                    (INDENT (method_def | rest_endpoint)+ DEDENT)
+                                    (INDENT (method_def | rest_endpoint | annotation)+ DEDENT)
                 ;
 
 collector_query_var: name_str EQ (NativeDataTypes | name_str);
