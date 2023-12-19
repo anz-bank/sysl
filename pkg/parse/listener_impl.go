@@ -1767,13 +1767,6 @@ func (s *TreeShapeListener) ExitMethod_def(*parser.Method_defContext) {
 		qparams = append(qparams, s.method_urlparams...)
 		s.currentApp().Endpoints[s.endpointName].RestParams.QueryParam = qparams
 	}
-	if s.currentApp().Endpoints[s.endpointName].Param != nil {
-		for i, p := range s.currentApp().Endpoints[s.endpointName].Param {
-			if p.GetType().GetNoType() != nil {
-				s.currentApp().Endpoints[s.endpointName].Param[i] = &sysl.Param{}
-			}
-		}
-	}
 
 	if len(s.currentApp().Endpoints[s.endpointName].Stmt) == 0 {
 		s.currentApp().Endpoints[s.endpointName].Stmt = nil

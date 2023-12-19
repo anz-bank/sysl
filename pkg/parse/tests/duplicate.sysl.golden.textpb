@@ -457,8 +457,112 @@ apps: {
       }
      }
     }
-    param: {}
-    param: {}
+    param: {
+     name: "something"
+     type: {
+      no_type: {}
+      source_context: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 15
+        col: 24
+       }
+       end: {
+        line: 15
+        col: 33
+       }
+      }
+      source_contexts: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 15
+        col: 13
+       }
+       end: {
+        line: 15
+        col: 22
+       }
+      }
+      source_contexts: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 15
+        col: 24
+       }
+       end: {
+        line: 15
+        col: 33
+       }
+      }
+     }
+    }
+    param: {
+     name: "something"
+     type: {
+      no_type: {}
+      source_context: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 15
+        col: 24
+       }
+       end: {
+        line: 15
+        col: 33
+       }
+      }
+      source_contexts: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 15
+        col: 13
+       }
+       end: {
+        line: 15
+        col: 22
+       }
+      }
+      source_contexts: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 15
+        col: 24
+       }
+       end: {
+        line: 15
+        col: 33
+       }
+      }
+     }
+    }
+    param: {
+     name: "something"
+     type: {
+      no_type: {}
+      source_context: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 19
+        col: 13
+       }
+       end: {
+        line: 19
+        col: 22
+       }
+      }
+      source_contexts: {
+       file: "tests/duplicate.sysl"
+       start: {
+        line: 19
+        col: 13
+       }
+       end: {
+        line: 19
+        col: 22
+       }
+      }
+     }
+    }
     stmt: {
      ret: {
       payload: "200 ok"

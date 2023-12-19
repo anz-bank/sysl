@@ -719,7 +719,34 @@ apps: {
       }
      }
     }
-    param: {}
+    param: {
+     name: "something"
+     type: {
+      no_type: {}
+      source_context: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 19
+        col: 13
+       }
+       end: {
+        line: 19
+        col: 22
+       }
+      }
+      source_contexts: {
+       file: "tests/test_rest_api.sysl"
+       start: {
+        line: 19
+        col: 13
+       }
+       end: {
+        line: 19
+        col: 22
+       }
+      }
+     }
+    }
     stmt: {
      action: {
       action: "..."

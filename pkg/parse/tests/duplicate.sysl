@@ -13,7 +13,7 @@ App:
 
 Server:
     /first:
-        GET (something):
+        GET (something, something):
             return 200 ok
 
     /first:
