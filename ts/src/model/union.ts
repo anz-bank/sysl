@@ -1,7 +1,7 @@
 import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
 import { Element, IElementParams } from "./element";
-import { FieldValue } from "./field";
+import { FieldValue } from "./fieldValue";
 import { Application } from "./application";
 
 export class Union extends Element {
@@ -12,13 +12,12 @@ export class Union extends Element {
         super.parent = app;
     }
 
-    constructor(name: string, public members: FieldValue[], p: IElementParams<Application>) {
+    constructor(name: string, public children: FieldValue[], p: IElementParams<Application>) {
         super(name, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model, p.parent);
-        this.attachSubitems();
     }
 
     toSysl(): string {
-        return this.render("!union", this.members);
+        return this.render("!union", this.children);
     }
 
     override toString(): string {
@@ -29,6 +28,14 @@ export class Union extends Element {
         throw new Error("Method not implemented.");
     }
 
+    public override toDto() {
+        return { ...super.toDto(), children: this.children.map(v => FieldValue.toDto(v)) };
+    }
+
+    static fromDto(dto: ReturnType<Union["toDto"]>): Union {
+        return new Union(dto.name, dto.children.map(FieldValue.fromDto), Element.paramsFromDto(dto));
+    }
+
     clone(context = new CloneContext(this.model)): Union {
         const params = {
             annos: context.recurse(this.annos),
@@ -37,6 +44,6 @@ export class Union extends Element {
             locations: context.keepLocation ? context.recurse(this.locations) : [],
         };
 
-        return new Union(this.name, context.recurse(this.members), params);
+        return new Union(this.name, [...this.children], params);
     }
 }

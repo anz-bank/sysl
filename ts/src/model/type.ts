@@ -6,10 +6,10 @@ import { Field } from "./field";
 import { Application } from "./application";
 
 export class Type extends Element implements IParentElement<Field> {
-    public override get parent(): Application | undefined {
+    override get parent(): Application | undefined {
         return super.parent as Application;
     }
-    public override set parent(app: Application | undefined) {
+    override set parent(app: Application | undefined) {
         super.parent = app;
     }
 
@@ -31,9 +31,14 @@ export class Type extends Element implements IParentElement<Field> {
         return { ...super.toDto(), children: this.children.map(e => e.toDto()) };
     }
 
+    static fromDto(dto: ReturnType<Type["toDto"]>): Type {
+        return new Type(dto.name, false, dto.children.map(Field.fromDto), Element.paramsFromDto(dto));
+    }
+
     toRef(): ElementRef {
         return this.parent!.toRef().with({ typeName: this.name });
     }
+
     override toString(): string {
         return `${this.isTable ? "!table" : "!type"} ${this.safeName}`;
     }

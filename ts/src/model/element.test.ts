@@ -1,6 +1,7 @@
 import "jest-extended";
 import { realign } from "../common/format";
 import { Model } from "./model";
+import { Element } from "./element";
 
 test.concurrent("anno operations", async () => {
     const model = await Model.fromText(realign(`
@@ -59,4 +60,19 @@ test.concurrent("tag operations", async () => {
         App [~tag2]:
             ...
     `));
+});
+
+test.concurrent("fromDto", async () => {
+    const model = await Model.fromText(realign(`
+        App [~tag1, ~tag2]:
+            @anno1 = "A"
+            @anno2 = "B"
+    `));
+
+    const dto = model.apps[0].toDto();
+    expect(Element.paramsFromDto(dto)).toMatchObject({
+        locations: [{}],
+        annos: [ { name: "anno1", locations: [{}] }, { name: "anno2", locations: [{}] }],
+        tags: [ { name: "tag1", locations: [{}] }, { name: "tag2", locations: [{}] }]
+    });
 });

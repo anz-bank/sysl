@@ -11,6 +11,7 @@ export * from "./element";
 export * from "./application";
 export * from "./constraint";
 export * from "./field";
+export * from "./fieldValue";
 export * from "./primitive";
 export * from "./enum";
 export * from "./alias";

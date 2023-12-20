@@ -12,13 +12,12 @@ export class Enum extends Element {
         super.parent = app;
     }
 
-    constructor(name: string, public members: EnumValue[], p: IElementParams<Application>) {
+    constructor(name: string, public children: EnumValue[], p: IElementParams<Application>) {
         super(name, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model, p.parent);
-        this.attachSubitems();
     }
 
     toSysl(): string {
-        return this.render("!enum", this.members);
+        return this.render("!enum", this.children);
     }
 
     override toString(): string {
@@ -29,6 +28,18 @@ export class Enum extends Element {
         throw new Error("Method not implemented.");
     }
 
+    override toDto() {
+        return { ...super.toDto(), children: Object.fromEntries(this.children.map(c => [c.name, c.value])) };
+    }
+
+    static fromDto(dto: ReturnType<Enum["toDto"]>): Enum {
+        return new Enum(
+            dto.name,
+            Object.entries(dto.children).map(([n, v]) => new EnumValue(n, v)),
+            Element.paramsFromDto(dto)
+        );
+    }
+
     clone(context = new CloneContext(this.model)): Enum {
         const params = {
             tags: context.recurse(this.tags),
@@ -36,7 +47,7 @@ export class Enum extends Element {
             model: context.model ?? this.model,
             locations: context.keepLocation ? context.recurse(this.locations) : [],
         };
-        return new Enum(this.name, context.recurse(this.members), params);
+        return new Enum(this.name, context.recurse(this.children), params);
     }
 }
 

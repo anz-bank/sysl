@@ -1,20 +1,11 @@
 import "reflect-metadata";
 import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject, jsonSetMember } from "typedjson";
 import { Location } from "../common/location";
-import {
-    ElementRef,
-    Type,
-    TypeConstraint,
-    Range,
-    DecimalResolution,
-    Union,
-    ValueType,
-    Alias,
-    AppChild,
-} from "../model";
+import { ElementRef, Type, TypeConstraint, Range, Union, ValueType, Alias, AppChild } from "../model";
 import { CollectionDecorator } from "../model/decorator";
 import { Enum, EnumValue } from "../model/enum";
-import { Field, FieldValue } from "../model/field";
+import { Field } from "../model/field";
+import { FieldValue } from "../model/fieldValue";
 import { Primitive, TypePrimitive } from "../model/primitive";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
@@ -63,28 +54,21 @@ export class PbTypeConstraintLength {
     }
 }
 
-/** e.g.: 3 decimal places = {base = 10, index = -3} */
-@jsonObject
-export class PbTypeConstraintResolution {
-    @jsonMember base?: number;
-    @jsonMember index?: number;
-
-    toModel(): DecimalResolution | undefined {
-        return this.base || this.index ? new DecimalResolution(noNaN(this.base), noNaN(this.index)) : undefined;
-    }
-}
-
 @jsonObject
 export class PbTypeConstraint {
     @jsonMember range?: PbTypeConstraintRange;
     @jsonMember length?: PbTypeConstraintLength;
-    @jsonMember resolution?: PbTypeConstraintResolution;
-    @jsonMember precision!: number;
-    @jsonMember scale!: number;
-    @jsonMember bitWidth!: number;
+    @jsonMember precision?: number;
+    @jsonMember scale?: number;
+    @jsonMember bitWidth?: number;
 
     toModel(): TypeConstraint {
-        return new TypeConstraint(this.length?.toModel(), this.precision, this.scale, this.bitWidth);
+        return new TypeConstraint(
+            this.length?.toModel(),
+            this.precision,
+            this.scale,
+            this.bitWidth as 32 | 64 | undefined
+        );
     }
 }
 
@@ -200,6 +184,7 @@ export class PbTypeDef {
         if (collection) return new CollectionDecorator(collection.toValue(parentRef), !!this.set);
         if (this.primitive) return new Primitive(this.primitive, this.constraint?.at(0)?.toModel());
         if (this.typeRef) return this.typeRef.ref.toModel(parentRef);
+        if (this.noType) return Primitive.Any;
         throw new Error(`Error converting type: ${JSON.stringify(this)}`);
     }
 

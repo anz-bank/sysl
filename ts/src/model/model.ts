@@ -229,7 +229,9 @@ export class Model implements IRenderable {
      * @throws Error thrown if the syntax of the supplied string is invalid.
      * @throws Error thrown if `ref` describes an element not present in the current {@link Model}.
      */
-    getElement = (ref: ElementID) => this.getTypedElement<Element>(ref, this.findElement);
+    getElement(ref: ElementID) {
+        return this.getTypedElement<Element>(ref, this.findElement);
+    }
 
     /**
      * Retrieves the app specified by the supplied identifier. Throws if the app was not found.
@@ -239,7 +241,9 @@ export class Model implements IRenderable {
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.App}.
      * @throws Error thrown if `ref` describes an app not present in the current {@link Model}.
      */
-    getApp = (ref: ElementID) => this.getTypedElement<Application>(ref, this.findApp);
+    getApp(ref: ElementID) {
+        return this.getTypedElement<Application>(ref, this.findApp);
+    }
 
     /**
      * Retrieves the type specified by the supplied identifier. Throws if the type was not found.
@@ -249,7 +253,9 @@ export class Model implements IRenderable {
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Type}.
      * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
      */
-    getType = (ref: ElementID) => this.getTypedElement<Type>(ref, this.findType);
+    getType(ref: ElementID) {
+        return this.getTypedElement<Type>(ref, this.findType);
+    }
 
     /**
      * Retrieves the endpoint specified by the supplied identifier. Throws if the endpoint was not found.
@@ -260,7 +266,9 @@ export class Model implements IRenderable {
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Endpoint}.
      * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
      */
-    getEndpoint = (ref: ElementID) => this.getTypedElement<Endpoint>(ref, this.findEndpoint);
+    getEndpoint(ref: ElementID) {
+        return this.getTypedElement<Endpoint>(ref, this.findEndpoint);
+    }
 
     /**
      * Retrieves the field specified by the supplied identifier. Throws if the field was not found.
@@ -270,7 +278,9 @@ export class Model implements IRenderable {
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Field}.
      * @throws Error thrown if `ref` describes a type not present in the current {@link Model}.
      */
-    getField = (ref: ElementID) => this.getTypedElement<Field>(ref, this.findField);
+    getField(ref: ElementID) {
+        return this.getTypedElement<Field>(ref, this.findField);
+    }
 
     /**
      * Retrieves the statement specified by the supplied identifier. Throws if the statement was not found.
@@ -281,7 +291,9 @@ export class Model implements IRenderable {
      * @throws Error thrown if `ref` is an {@link ElementRef} with `kind` other than {@link ElementKind.Statement}.
      * @throws Error thrown if `ref` describes a statement not present in the current {@link Model}.
      */
-    getStatement = (ref: ElementID) => this.getTypedElement<Statement>(ref, this.findStatement);
+    getStatement(ref: ElementID) {
+        return this.getTypedElement<Statement>(ref, this.findStatement);
+    }
 
     private getTypedElement<T extends Element>(ref: ElementID, findFunc: (r: ElementID) => T | undefined): T {
         const element = findFunc.bind(this)(ref);
@@ -319,6 +331,14 @@ export class Model implements IRenderable {
             imports: this.imports.map(i => i.toDto()),
             apps: this.apps.map(a => a.toDto()),
         };
+    }
+
+    static fromDto(dto: ReturnType<Model["toDto"]>): Model {
+        return new Model({
+            header: dto.header,
+            imports: dto.imports.map(Import.fromDto),
+            apps: dto.apps.map(Application.fromDto),
+        });
     }
 
     /**

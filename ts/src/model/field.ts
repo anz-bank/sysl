@@ -1,11 +1,9 @@
 import { Element, IElementParams } from "./element";
 import { Primitive, TypePrimitive } from "./primitive";
-import { CollectionDecorator } from "./decorator";
 import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
 import { Type } from "./type";
-
-export type FieldValue = Primitive | ElementRef | CollectionDecorator;
+import { FieldValue } from "./fieldValue";
 
 export class Field extends Element {
     public override get parent(): Type | undefined {
@@ -22,22 +20,15 @@ export class Field extends Element {
     }
 
     public override toDto() {
-        let value = this.value;
-
-        let collectionType: "set" | "sequence" | undefined;
-        if (value instanceof CollectionDecorator) {
-            collectionType = value.isSet ? "set" : "sequence";
-            value = value.innerType;
-        }
-
         return {
             ...super.toDto(),
+            ...FieldValue.toDto(this.value),
             optional: this.optional,
-            collectionType,
-            ref: value instanceof ElementRef ? value.toString() : undefined,
-            primitive: value instanceof Primitive ? value.toString() : undefined,
-            constraint: value instanceof Primitive ? value.constraintStr() : undefined,
         };
+    }
+
+    static fromDto(dto: ReturnType<Field["toDto"]>): Field {
+        return new Field(dto.name, FieldValue.fromDto(dto), dto.optional, Element.paramsFromDto(dto));
     }
 
     toRef(): ElementRef {
@@ -65,7 +56,7 @@ export class Field extends Element {
     }
 
     clone(context = new CloneContext(this.model)): Field {
-        return new Field(this.name, this.value.clone(context), this.optional, {
+        return new Field(this.name, this.value, this.optional, {
             tags: context.recurse(this.tags),
             annos: context.recurse(this.annos),
             model: context.model ?? this.model,

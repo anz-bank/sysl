@@ -1,54 +1,5 @@
 import { IRenderable } from "./common";
-import { CloneContext } from "./clone";
-import { TypeConstraint, Range } from "./constraint";
-
-export class Primitive implements IRenderable {
-    constructor(public primitive: TypePrimitive, public constraint?: TypeConstraint) {
-        this.primitive = primitive;
-        this.constraint = constraint;
-    }
-
-    public constraintStr(): string {
-        const isNumber = (n?: number) => n != null && !isNaN(n);
-
-        const lengthStr = (length: Range) => {
-            if (isNumber(length.max) && isNumber(length.min)) {
-                return `(${length.min}..${length.max})`;
-            } else if (isNumber(length.max)) {
-                return `(${length.max})`;
-            } else if (isNumber(length.min)) {
-                return `(${length.min}..)`;
-            }
-            return "";
-        };
-
-        if (this.constraint) {
-            if (isNumber(this.constraint.precision) && isNumber(this.constraint.scale)) {
-                return `(${this.constraint.precision}.${this.constraint.scale})`;
-            }
-            if (this.constraint.length) {
-                return lengthStr(this.constraint.length);
-            }
-            if (this.constraint.bitWidth) {
-                return this.constraint.bitWidth.toString();
-            }
-        }
-
-        return "";
-    }
-
-    toSysl(): string {
-        return `${this.primitive.toLowerCase()}${this.constraintStr()}`;
-    }
-
-    toString(): string {
-        return this.primitive.toLowerCase();
-    }
-
-    clone(context = new CloneContext()): Primitive {
-        return new Primitive(this.primitive, context.applyUnder(this.constraint));
-    }
-}
+import { TypeConstraint } from "./constraint";
 
 export enum TypePrimitive {
     ANY = "ANY",
@@ -63,4 +14,32 @@ export enum TypePrimitive {
     DATE = "DATE",
     DATETIME = "DATETIME",
     UUID = "UUID",
+}
+
+export class Primitive implements IRenderable {
+    public static readonly Any = new Primitive(TypePrimitive.ANY);
+
+    constructor(public readonly primitive: TypePrimitive, public readonly constraint?: TypeConstraint) {
+        // TODO: Check constraint matches TypePrimitive
+        this.primitive = primitive;
+        this.constraint = constraint;
+    }
+
+    toSysl(): string {
+        return `${this.primitive.toLowerCase()}${this.constraint?.toString() ?? ""}`;
+    }
+
+    toString(): string {
+        return this.primitive.toLowerCase();
+    }
+
+    private static readonly names = Object.values(TypePrimitive).map(v =>
+        v.toString().toLowerCase()
+    ) as readonly string[];
+
+    static fromParts(name: string, constraintStr?: string): Primitive {
+        if (!Primitive.names.includes(name)) throw new Error(`Unknown primitive: ${name}`);
+        let constraint = constraintStr ? TypeConstraint.parse(constraintStr) : undefined;
+        return new Primitive(TypePrimitive[name.toUpperCase() as keyof typeof TypePrimitive], constraint);
+    }
 }

@@ -1,9 +1,8 @@
 import { ElementRef } from "./elementRef";
 import { CloneContext } from "./clone";
-import { CollectionDecorator } from "./decorator";
 import { Element, IElementParams } from "./element";
-import { Primitive } from "./primitive";
 import { Application } from "./application";
+import { FieldValue } from "./fieldValue";
 
 export class Alias extends Element {
     public override get parent(): Application | undefined {
@@ -13,7 +12,7 @@ export class Alias extends Element {
         super.parent = app;
     }
 
-    constructor(name: string, public value: AliasValue, p: IElementParams<Application>) {
+    constructor(name: string, public value: FieldValue, p: IElementParams<Application>) {
         super(name, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model, p.parent);
         this.attachSubitems();
     }
@@ -23,15 +22,23 @@ export class Alias extends Element {
     }
 
     override toString(): string {
-        return `!Alias ${this.safeName}`;
+        return `!alias ${this.safeName}`;
     }
 
     toRef(): ElementRef {
         throw new Error("Method not implemented.");
     }
 
+    public override toDto() {
+        return { ...super.toDto(), value: FieldValue.toDto(this.value) };
+    }
+
+    static fromDto(dto: ReturnType<Alias["toDto"]>): Alias {
+        return new Alias(dto.name, FieldValue.fromDto(dto.value), Element.paramsFromDto(dto));
+    }
+
     clone(context = new CloneContext(this.model)): Alias {
-        return new Alias(this.name, this.value.clone(), {
+        return new Alias(this.name, this.value, {
             tags: context.recurse(this.tags),
             annos: context.recurse(this.annos),
             model: context.model ?? this.model,
@@ -39,5 +46,3 @@ export class Alias extends Element {
         });
     }
 }
-
-export type AliasValue = Primitive | CollectionDecorator | ElementRef;

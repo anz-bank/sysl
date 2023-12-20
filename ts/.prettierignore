@@ -4,7 +4,6 @@ dist/
 
 # TODO: Fix style and/or rules in the following files:
 src/model/constraint.test.ts
-src/model/constraint.ts
 src/model/model.test.ts
 src/model/statement.ts
 src/model/elementRef.test.ts
@@ -14,3 +13,4 @@ src/model/element.test.ts
 src/model/endpoint.test.ts
 src/pbModel/statement.ts
 src/model/statement.test.ts
+src/model/field.test.ts

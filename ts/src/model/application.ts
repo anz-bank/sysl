@@ -30,19 +30,19 @@ export class Application extends Element implements IParentElement<AppChild> {
         this.attachSubitems();
     }
 
-    public override get safeName(): string {
+    override get safeName(): string {
         return this.toRef().toSysl();
     }
 
-    public override attachSubitems(extraSubitems: IChild[] = []): void {
+    override attachSubitems(extraSubitems: IChild[] = []): void {
         super.attachSubitems([...this.endpoints, ...extraSubitems]);
     }
 
-    public get types(): readonly Type[] {
+    get types(): readonly Type[] {
         return this.children.filter(c => c instanceof Type) as Type[];
     }
 
-    public get endpoints(): readonly Endpoint[] {
+    get endpoints(): readonly Endpoint[] {
         return this.children.filter(c => c instanceof Endpoint) as Endpoint[];
     }
 
@@ -56,12 +56,31 @@ export class Application extends Element implements IParentElement<AppChild> {
         );
     }
 
-    public override toDto() {
+    override toDto() {
         return {
             ...super.toDto(),
             namespace: this.namespace,
             children: this.children.map(e => e.toDto()),
         };
+    }
+
+    static fromDto(dto: ReturnType<Application["toDto"]>): Application {
+        return new Application(new ElementRef(dto.namespace, dto.name), {
+            ...Element.paramsFromDto(dto),
+            children: dto.children.map(Application.fromChildDto),
+        });
+    }
+
+    private static fromChildDto(dto: ReturnType<Element["toDto"]>): AppChild {
+        // prettier-ignore
+        switch (dto.kind) {
+            case "Type":     return Type.fromDto(dto as ReturnType<Type["toDto"]>);
+            case "Endpoint": return Endpoint.fromDto(dto as ReturnType<Endpoint["toDto"]>);
+            case "Enum":     return Enum.fromDto(dto as ReturnType<Enum["toDto"]>);
+            case "Union":    return Union.fromDto(dto as ReturnType<Union["toDto"]>);
+            case "Alias":    return Alias.fromDto(dto as ReturnType<Alias["toDto"]>);
+            default:         throw new Error(`Unknown app child kind '${dto.kind}'.`);
+        }
     }
 
     toRef(): ElementRef {

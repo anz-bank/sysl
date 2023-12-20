@@ -3,7 +3,6 @@ import { jsonArrayMember, jsonMapMember, jsonMember, jsonObject } from "typedjso
 import { Location } from "../common/location";
 import {
     ActionStatement,
-    CallArg,
     CallStatement,
     CondStatement,
     ForEachStatement,
@@ -19,8 +18,8 @@ import { Endpoint } from "../model/endpoint";
 import { PbAppName } from "./appname";
 import { getAnnos, getTags, PbAttribute } from "./attribute";
 import { serializerFor } from "./serialize";
-import { PbTypeDef, PbValue } from "./type";
-import { ElementRef, Field, Primitive, TypePrimitive } from "../model";
+import { PbTypeDef } from "./type";
+import { ElementRef, Field, Primitive } from "../model";
 import * as util from "util";
 
 @jsonObject
@@ -30,18 +29,13 @@ export class PbParam {
 
     toModel(parentRef: ElementRef): Field {
         if (this.type.hasValue()) return this.type.toField(parentRef, this.name);
-        return new Field(this.name, new Primitive(TypePrimitive.ANY), false, { locations: this.type.sourceContexts });
+        return new Field(this.name, Primitive.Any, false, { locations: this.type.sourceContexts });
     }
 }
 
 @jsonObject
 export class PbCallArg {
-    @jsonMember(() => PbValue) value?: PbValue;
     @jsonMember name!: string;
-
-    toModel(): CallArg {
-        return new CallArg(this.name, this.value?.toModel());
-    }
 }
 
 @jsonObject
@@ -58,7 +52,7 @@ export class PbForeach {
 
 @jsonObject
 export class PbAltChoice {
-    @jsonMember cond?: string; // TODO: Remove optionality when Sysl parser rejects empty names for choices.
+    @jsonMember cond!: string;
     @jsonArrayMember(() => PbStatement) stmt!: PbStatement[];
 }
 
@@ -122,7 +116,7 @@ export class PbStatement {
         if (this.call)
             return new CallStatement(
                 ElementRef.fromAppParts(this.call.target.part).with({ endpointName: this.call.endpoint }),
-                this.call.arg?.map(c => c.toModel()) ?? [],
+                this.call.arg?.map(c => c.name) ?? [],
                 appRef,
                 params
             );
@@ -134,10 +128,9 @@ export class PbStatement {
         if (this.foreach) return new ForEachStatement(this.foreach.collection, blockParams);
         if (this.alt) {
             const toGroup = (choice: PbAltChoice) => 
-                // TODO: Remove fallback to empty string when Sysl parser rejects empty names for choices.
-                new GroupStatement(choice.cond ?? "", { ...blockParams, children: PbStatement.getBlock(choice, appRef) });
+                new GroupStatement(choice.cond, { ...blockParams, children: PbStatement.getBlock(choice, appRef) });
             
-            return new OneOfStatement(this.alt.choice.map(c => toGroup(c)), blockParams);
+            return new OneOfStatement({ ...blockParams, children: this.alt.choice.map(c => toGroup(c)) });
         }
         if (this.loop) {
             if (this.loop.mode == "WHILE" || this.loop.mode == "UNTIL")

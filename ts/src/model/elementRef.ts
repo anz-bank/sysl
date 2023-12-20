@@ -1,6 +1,5 @@
 import { toSafeName, fromSafeName, isSafeName } from "../common/format";
 import { ElementKind } from "./elementKind";
-import { CloneContext } from "./clone";
 import { IRenderable } from "./common";
 
 /** A flexible way to specify the identity of an element. If a string is specified, it will be parsed. */
@@ -438,15 +437,6 @@ export class ElementRef implements IRenderable {
     popApp(): ElementRef {
         if (!this.namespace.length) throw new Error("Cannot pop app from reference with no namespace.");
         return this.with({ namespace: this.namespace.slice(0, -1), appName: this.namespace.at(-1) });
-    }
-
-    /**
-     * Returns the current instance, since ElementRef is immutable and doesn't need cloning.
-     * @param _context Unused.
-     * @returns The current instance.
-     */
-    clone(_context?: CloneContext): ElementRef {
-        return this;
     }
 
     /**

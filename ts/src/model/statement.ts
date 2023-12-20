@@ -24,11 +24,17 @@ export class CallArg {
     }
 }
 
-export interface IStatementParams extends IElementParams<Endpoint | ParentStatement> { };
+export interface IStatementParams extends IElementParams<Endpoint | ParentStatement> {}
+export type StatementKind = "ActionStatement" | "ReturnStatement" | "CallStatement" | "GroupStatement" |
+                            "OneOfStatement" | "CondStatement" | "ForEachStatement" | "LoopStatement";
 
 export abstract class Statement extends Element {
-    public override get parent(): Endpoint | ParentStatement | undefined { return super.parent as Endpoint | ParentStatement; }
-    public override set parent(epOrStatement: Endpoint | ParentStatement | undefined) { super.parent = epOrStatement; }
+    public override get parent(): Endpoint | ParentStatement | undefined {
+        return super.parent as Endpoint | ParentStatement;
+    }
+    public override set parent(epOrStatement: Endpoint | ParentStatement | undefined) {
+        super.parent = epOrStatement;
+    }
 
     constructor(p: IStatementParams) {
         super("", p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model, p.parent);
@@ -39,12 +45,49 @@ export abstract class Statement extends Element {
     toRef(): ElementRef {
         const parentRef = this.parent!.toRef();
         const index = this.parent!.children.indexOf(this);
-        if (index < 0) throw new Error(`Statement '${this.name}' not found in parent '${parentRef}'.`)
+        if (index < 0) throw new Error(`Statement '${this.name}' not found in parent '${parentRef}'.`);
         return parentRef.with({ statementIndices: [...parentRef.statementIndices, index] });
     }
 
     toSysl(): string {
         return this.toString();
+    }
+
+    static fromDto(dto: ReturnType<Element["toDto"]>): Statement {
+        switch (dto.kind) {
+            case "ActionStatement":
+                return Statement.create<ActionStatement>(dto, (dto, p) => new ActionStatement(dto.action, p));
+            case "ReturnStatement":
+                return Statement.create<ReturnStatement>(dto, (dto, p) => new ReturnStatement(dto.payload, p));
+            case "CallStatement":
+                return Statement.create<CallStatement>(dto, (dto, p) => new CallStatement(
+                    ElementRef.parse(dto.targetEndpoint), dto.args, ElementRef.parse(dto.sourceApp), p));
+            case "GroupStatement":
+                return ParentStatement.create<GroupStatement>(dto, (dto, p) => new GroupStatement(dto.title, p));
+            case "OneOfStatement":
+                return ParentStatement.create<OneOfStatement>(dto, (_dto, p) => new OneOfStatement(p));
+            case "CondStatement":
+                return ParentStatement.create<CondStatement>(dto, (dto, p) => new CondStatement(dto.title, p));
+            case "ForEachStatement":
+                return ParentStatement.create<ForEachStatement>(dto, (dto, p) => new ForEachStatement(dto.title, p));
+            case "LoopStatement":
+                return ParentStatement.create<LoopStatement>(dto, (dto, p) => new LoopStatement(
+                    dto.title, dto.prefix, p));
+            default:
+                throw new Error(`Unknown statement kind: ${dto.kind}`);
+        }
+    }
+
+    static create<T extends Statement>(
+        dto: ReturnType<Element["toDto"]>,
+        factory: (dto: ReturnType<T["toDto"]>, p: ReturnType<typeof Element["paramsFromDto"]>) => T
+    ): T {
+        const params = this.getParams(dto);
+        return factory(dto as ReturnType<T["toDto"]>, params);
+    }
+
+    static getParams(dto: ReturnType<Element["toDto"]>): ReturnType<typeof Element["paramsFromDto"]> {
+        return Element.paramsFromDto(dto);
     }
 
     protected cloneParams(context: CloneContext): IStatementParams {
@@ -78,57 +121,55 @@ export class ReturnStatement extends Statement {
 export class CallStatement extends Statement {
     constructor(
         public targetEndpoint: ElementRef,
-        public args: CallArg[],
+        public args: string[],
         public sourceApp: ElementRef,
         p: IStatementParams = {}) {
         super(p);
     }
 
     override toSysl(): string {
-        const app = this.sourceApp.appsEqual(this.targetEndpoint) ? ElementRef.CurrentApp : this.targetEndpoint.truncate(ElementKind.App);
-        return `${app.toSysl(false)} <- ${this.targetEndpoint.endpointName}${this.args ? this.args.map(a => a.name).join(",") : ""}`;
+        const app = this.sourceApp.appsEqual(this.targetEndpoint)
+            ? ElementRef.CurrentApp
+            : this.targetEndpoint.truncate(ElementKind.App);
+        return `${app.toSysl(false)} <- ${this.targetEndpoint.endpointName}` +
+            `${this.args.length ? " (" + this.args.join(", ") + ")" : ""}`;
     }
 
     override toString(): string {
         return `${this.targetEndpoint.truncate(ElementKind.App)} <- ${this.targetEndpoint.endpointName}`;
     }
 
-    override toDto()
-    {
+    override toDto() {
         return {
             ...super.toDto(),
-            action: this.targetEndpoint.toString(),
-            args: Object.fromEntries(this.args.map(a => [a.name, a.value])),
+            targetEndpoint: this.targetEndpoint.toString(),
+            args: this.args,
             sourceApp: this.sourceApp.toString(),
         };
     }
 
     clone(context = new CloneContext(this.model)): CallStatement {
-        return new CallStatement(
-            this.targetEndpoint,
-            context.recurse(this.args),
-            this.sourceApp,
-            this.cloneParams(context)
-        );
+        return new CallStatement(this.targetEndpoint, [...this.args], this.sourceApp, this.cloneParams(context));
     }
 }
 
 export interface IParentStatementParams extends IStatementParams { children?: Statement[] };
+export type ParamsWithChildren = ReturnType<typeof Element["paramsFromDto"]> & { children: Statement[] };
 
 export abstract class ParentStatement extends Statement implements IStatementParams {
     private _children: Statement[];
     public get children(): Statement[] { return this._children ?? []; }
     public set children(value: Statement[]) { this._children = value; }
 
-    constructor(public prefix: string, public title: string, children: Statement[] = [], p: IParentStatementParams = {}) {
+    constructor(public prefix: string, public title: string, p: IParentStatementParams = {}) {
         super(p);
-        this._children = children;
+        this._children = p.children ?? [];
     }
 
     override toString() {
         return [this.prefix, this.title].filter(s => s).join(" ");
     }
-    
+
     override toSysl() {
         const childrenBlock = this.children.map(s => s.toSysl()).join("\n");
         return `${this.toString()}:\n${indent(childrenBlock || ellipsis)}`;
@@ -139,8 +180,12 @@ export abstract class ParentStatement extends Statement implements IStatementPar
             ...super.toDto(),
             prefix: this.prefix,
             title: this.title,
-            children: this.children.map(s => s.toDto())
+            children: this.children.map(s => s.toDto()),
         };
+    }
+
+    static override getParams(dto: ReturnType<ParentStatement["toDto"]>): ParamsWithChildren {
+        return { ...Element.paramsFromDto(dto), children: dto.children.map(s => Statement.fromDto(s)) };
     }
 
     protected override cloneParams(context: CloneContext): IParentStatementParams {
@@ -149,7 +194,7 @@ export abstract class ParentStatement extends Statement implements IStatementPar
 }
 
 export class GroupStatement extends ParentStatement {
-    constructor(title: string, p: IParentStatementParams = {}) { super("", title, p.children, p); }
+    constructor(title: string, p: IParentStatementParams = {}) { super("", title, p); }
     override toDto() { return { ...super.toDto(), title: this.title }; }
     clone(context = new CloneContext(this.model)): GroupStatement {
         return new GroupStatement(this.title, this.cloneParams(context));
@@ -157,7 +202,7 @@ export class GroupStatement extends ParentStatement {
 }
 
 export class OneOfStatement extends ParentStatement {
-    override get children() : GroupStatement[] {
+    override get children(): GroupStatement[] {
         return super.children.filter(c => c instanceof GroupStatement) as GroupStatement[];
     }
 
@@ -166,33 +211,32 @@ export class OneOfStatement extends ParentStatement {
         throw new Error("All children of OneOfStatements must be a GroupStatement.");
     }
 
-    constructor(cases: GroupStatement[], p: IParentStatementParams = {})
-    {
-        super("one of", "", cases, p);
+    constructor(p: IParentStatementParams = {}) {
+        super("one of", "", p);
     }
 
     clone(context = new CloneContext(this.model)): OneOfStatement {
-        return new OneOfStatement(this.children, super.cloneParams(context));
+        return new OneOfStatement(super.cloneParams(context));
     }
 }
 
 export class CondStatement extends ParentStatement {
     // TODO: Also parse `else` and `else if` statements (which are currently treated as group statements).
-    constructor(predicate: string, p: IParentStatementParams = {}) { super("", predicate, p.children, p); }
+    constructor(predicate: string, p: IParentStatementParams = {}) { super("", predicate, p); }
     clone(context = new CloneContext(this.model)): CondStatement {
         return new CondStatement(this.title, this.cloneParams(context));
     }
 }
 
 export class ForEachStatement extends ParentStatement {
-    constructor(collection: string, p: IParentStatementParams = {}) { super("for each", collection, p.children, p); }
+    constructor(collection: string, p: IParentStatementParams = {}) { super("for each", collection, p); }
     clone(context = new CloneContext(this.model)): ForEachStatement {
         return new ForEachStatement(this.title, this.cloneParams(context));
     }
 }
 
 export class LoopStatement extends ParentStatement {
-    constructor(criterion: string, mode: string, p: IParentStatementParams = {}) { super(mode, criterion, p.children, p); }
+    constructor(criterion: string, mode: string, p: IParentStatementParams = {}) { super(mode, criterion, p); }
     clone(context = new CloneContext(this.model)): LoopStatement {
         return new LoopStatement(this.title, this.prefix, this.cloneParams(context));
     }
@@ -233,11 +277,20 @@ export class RestParams {
 
     toDto() {
         return {
-            method: this.method.toString(),
+            method: this.method.toString() as keyof typeof RestMethod,
             path: this.path,
             queryParams: this.queryParams.map(p => p.toDto()),
             urlParams: this.urlParams.map(p => p.toDto()),
-        }
+        };
+    }
+
+    static fromDto(dto: ReturnType<RestParams["toDto"]>): RestParams {
+        return new RestParams({
+            method: RestMethod[dto.method],
+            path: dto.path,
+            queryParams: dto.queryParams.map(p => Field.fromDto(p)),
+            urlParams: dto.urlParams.map(p => Field.fromDto(p)),
+        });
     }
 
     clone(context = new CloneContext()): RestParams {
@@ -249,4 +302,3 @@ export class RestParams {
         });
     }
 }
-

@@ -681,14 +681,6 @@ describe("Copying",() => {
         expect(statementRef.truncate(ElementKind.Statement)).toEqual(statementRef);
     });
 
-    test.concurrent("clone", () => {
-        expect(appRef.clone()).toEqual(appRef);
-        expect(typeRef.clone()).toEqual(typeRef);
-        expect(fieldRef.clone()).toEqual(fieldRef);
-        expect(endpointRef.clone()).toEqual(endpointRef);
-        expect(statementRef.clone()).toEqual(statementRef);
-    });
-
     test.concurrent("push/pop app", () => {
         const rootApp = ElementRef.parse("App");
         expect(rootApp.pushApp("App2").toString()).toEqual("App::App2");

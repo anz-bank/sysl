@@ -49,7 +49,15 @@ export class Endpoint extends Element implements IParentElement<Statement> {
     }
 
     private renderParams(): string {
-        return this.params.length ? `(${this.params.map(p => p.toSysl(true)).join(", ")})` : "";
+        const renderParam = (p: Field) => {
+            if (p.annos.length)
+                throw new Error(
+                    `Inline annotation rendering is not supported, so cannot render annotations` +
+                        ` for param '${p.name}' on endpoint '${this.toRef()}'.`
+                );
+            return p.toSysl(true);
+        };
+        return this.params.length ? `(${this.params.map(renderParam).join(", ")})` : "";
     }
 
     private renderRestPath(): string {
@@ -69,7 +77,7 @@ export class Endpoint extends Element implements IParentElement<Statement> {
     private renderRestEndpoint(): string {
         const params = this.params.length ? ` ${this.renderParams()}` : "";
         const statements = this.children.length ? this.children.map(s => s.toSysl()).join("\n") : "...";
-        let body = `${this.restParams!.method}${this.renderQueryParams()}${params}:\n${indent(statements)}`;
+        let body = `${this.restParams!.method}${params}${this.renderQueryParams()}:\n${indent(statements)}`;
         return this.render("", body, this.renderRestPath());
     }
 
@@ -96,6 +104,17 @@ export class Endpoint extends Element implements IParentElement<Statement> {
             params: this.params.map(p => p.toDto()),
             restParams: this.restParams?.toDto(),
         };
+    }
+
+    static fromDto(dto: ReturnType<Endpoint["toDto"]>): Endpoint {
+        return new Endpoint(dto.name, {
+            longName: dto.longName,
+            isPubsub: dto.isPubsub,
+            children: dto.children.map(e => Statement.fromDto(e)),
+            params: dto.params.map(p => Field.fromDto(p)),
+            restParams: dto.restParams ? RestParams.fromDto(dto.restParams) : undefined,
+            ...Endpoint.paramsFromDto(dto),
+        });
     }
 
     override toString(): string {

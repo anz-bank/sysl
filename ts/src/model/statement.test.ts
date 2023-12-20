@@ -128,3 +128,32 @@ test.skip("Call statement, self app", async () => {
     });
     expect(model.toSysl()).toBe(sysl);
 });
+
+test.concurrent("Multiple REST methods are split correctly", async () => {
+    const sysl = realign(`
+        App:
+            / [~urlTag]:
+                @urlAnno = "url"
+                GET [~getTag]:
+                    @getAnno = "get"
+                    getAction
+                POST [~postTag]:
+                    @postAnno = "post"
+                    postAction
+    `);
+    const model = await Model.fromText(sysl);
+    expect(model.toSysl()).toBe(realign(`
+        App:
+            / [~urlTag, ~getTag]:
+                @urlAnno = "url"
+                @getAnno = "get"
+                GET:
+                    getAction
+
+            / [~urlTag, ~postTag]:
+                @urlAnno = "url"
+                @postAnno = "post"
+                POST:
+                    postAction
+    `));
+});

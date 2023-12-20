@@ -1,10 +1,13 @@
-import { Location } from "../common";
+import { Location } from "../common/location";
 import { indent, toSafeName } from "../common/format";
 import { Annotation, AnnoValue, Tag } from "./attribute";
 import { IChild, ILocational, IRenderable } from "./common";
 import { ElementRef } from "./elementRef";
 import { CloneContext, ICloneable } from "./clone";
 import { Model } from "./model";
+import { StatementKind } from "./statement";
+
+type DtoKind = "Application" | "Type" | "Field" | "Endpoint" | "Enum" | "Union" | "Alias" | StatementKind;
 
 /** An object in a Sysl model that can have metadata (annotations and tags). */
 export abstract class Element implements ILocational, IRenderable, IChild, ICloneable {
@@ -40,7 +43,7 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
      */
     public toDto() {
         return {
-            kind: this.constructor.name,
+            kind: this.constructor.name as DtoKind,
             name: this.name,
             locations: Object.fromEntries([
                 ...this.locations.map((l, i) => [i, l.toString()]),
@@ -52,6 +55,24 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
                 ...this.annos.map(a => [a.name, a.value]),
             ]) as { [name: string]: AnnoValue | undefined },
         };
+    }
+
+    public static paramsFromDto(dto: ReturnType<Element["toDto"]>) {
+        const locations: Location[] = [];
+        let locStr: string;
+
+        // Rehydrate all number-indexed locations that are found, which belong to the element itself (not to metadata).
+        for (let i = 0; (locStr = dto.locations[i]); i++) locations.push(Location.parse(locStr));
+
+        const metadata = Object.entries(dto.metadata).map(([name, value]) => {
+            const loc = dto.locations[name];
+            const params = { locations: loc ? [Location.parse(loc)] : [] };
+            return value == undefined ? new Tag(name, params) : new Annotation(name, value, params);
+        });
+        const tags = metadata.filter(a => a instanceof Tag) as Tag[];
+        const annos = metadata.filter(a => a instanceof Annotation) as Annotation[];
+
+        return { locations, annos, tags };
     }
 
     /**
@@ -204,7 +225,7 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
      * @param extraSubitems Additional children to ensure attachment.
      */
     protected attachSubitems(extraSubitems: IChild[] = []) {
-        const children = (this as unknown as IParentElement<Element>).children ?? [];
+        const children = (this as unknown as IParentElement<Element>).children?.filter(c => c instanceof Element) ?? [];
         [...this.annos, ...this.tags, ...children, ...extraSubitems].forEach(child => {
             child.parent = this;
             child.model = this.model;

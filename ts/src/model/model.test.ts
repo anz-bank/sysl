@@ -8,7 +8,8 @@ import { ActionStatement, GroupStatement, ParentStatement, Statement } from "./s
 import { Endpoint } from "./endpoint";
 import { Type } from "./type";
 import { Application } from "./application";
-import { Field, FieldValue } from "./field";
+import { Field } from "./field";
+import { FieldValue } from "./fieldValue";
 import { ILocational } from "./common";
 import { ElementRef } from "./elementRef";
 import { CloneContext, ICloneable, ModelFilters } from "./clone";
@@ -169,7 +170,7 @@ describe("Sysl rendering", () => {
 
 describe("DTO", () => {
     test.concurrent("Data elements", async () => {
-        const model = await Model.fromText(realign(`
+        const sysl = realign(`
             # Header
 
             import other.sysl
@@ -179,12 +180,14 @@ describe("DTO", () => {
                 !type Type [~typeTag]:
                     @typeAnno = "Type"
                     Primitive <: string(5..10)
-                    Array <: sequence of decimal(5.8)
+                    Array <: sequence of decimal(8.5)
                     Reference <: Other.Type [~fieldTag]:
                         @fieldAnno = "Field"
-        `), "main.sysl", { maxImportDepth: 1 });
+        `);
+        const model = await Model.fromText(sysl, "main.sysl", { maxImportDepth: 1 });
 
-        expect(model.toDto()).toMatchObject(
+        const dto = model.toDto();
+        expect(dto).toMatchObject(
             {
                 header: "# Header",
                 imports: [ { filePath: "other.sysl", locations: ["ts/main.sysl:3:1::18"] } ],
@@ -221,7 +224,7 @@ describe("DTO", () => {
                                         kind: "Field",
                                         name: "Array",
                                         primitive: "decimal",
-                                        constraint: "(5.8)",
+                                        constraint: "(8.5)",
                                         collectionType: "sequence",
                                         locations: { 0: "ts/main.sysl:10:9::42" },
                                     },
@@ -243,21 +246,27 @@ describe("DTO", () => {
                 ],
             }
         );
+
+        const model2 = Model.fromDto(dto);
+        expect(model2).toEqual(model);
+        expect(model2.toSysl()).toEqual(sysl);
     });
 
     test.concurrent("Rest endpoint", async () => {
-        const model = await Model.fromText(realign(`
+        const sysl = realign(`
             Ns :: App:
                 /customer/{id <: int}:
-                    GET(auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]]) ?includeOrders=bool? [~restTag]:
+                    GET(auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]]) ?includeOrders=bool? [~methodTag]:
                         @restAnno = "GET Customer"
                         if includeOrders == true:
                             return data <: CustomerAndOrders
                         else:
                             throw NotImplementedError
-        `), "main.sysl", { maxImportDepth: 1 });
+        `);
+        const model = await Model.fromText(sysl, "main.sysl", { maxImportDepth: 1 });
 
-        expect(model.toDto()).toMatchObject(
+        const dto = model.toDto();
+        expect(dto).toMatchObject(
             {
                 apps: [
                     {
@@ -276,6 +285,7 @@ describe("DTO", () => {
                                             paramAnno: [["1"],"2"],
                                         },
                                         locations: {
+                                            0 : "ts/main.sysl:3:13::76",
                                             "paramTag": "ts/main.sysl:3:43::52",
                                             "paramAnno": "ts/main.sysl:3:54::75",
                                         },
@@ -303,10 +313,10 @@ describe("DTO", () => {
                                         }
                                     ],
                                 },
-                                metadata: { restTag: undefined, restAnno: "GET Customer" },
+                                metadata: { methodTag: undefined, restAnno: "GET Customer" },
                                 locations: {
                                     0: "ts/main.sysl:3:9:9:2",
-                                    restTag: "ts/main.sysl:3:100::108",
+                                    methodTag: "ts/main.sysl:3:100::110",
                                     restAnno: "ts/main.sysl:4:13::39",
                                 },
                                 children: [
@@ -343,20 +353,36 @@ describe("DTO", () => {
                 ],
             }
         );
+
+        const model2 = Model.fromDto(dto);
+        expect(model2).toEqual(model);
+        model2.getEndpoint("Ns::App.[GET /customer/{id}]").params[0].annos = [];
+        expect(model2.toSysl()).toEqual(realign(`
+            Ns :: App:
+                /customer/{id <: int} [~methodTag]:
+                    @restAnno = "GET Customer"
+                    GET (auth_token <: string(32..64) [~paramTag])?includeOrders=bool?:
+                        if includeOrders == true:
+                            return data <: CustomerAndOrders
+                        else:
+                            throw NotImplementedError
+        `));
     });
 
     test.concurrent("RPC endpoint", async () => {
-        const model = await Model.fromText(realign(`
+        const sysl = realign(`
             Ns :: App:
-                GetCustomer(id <: int, auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]], includeOrders <: bool?) [~rpcTag]:
+                GetCustomer (id <: int, auth_token <: string(32..64) [~paramTag, paramAnno=[["1"],"2"]], includeOrders <: bool?) [~rpcTag]:
                     @rpcAnno = "GetCustomer"
                     if includeOrders == true:
                         return data <: CustomerAndOrders
                     else:
                         throw NotImplementedError
-        `), "main.sysl", { maxImportDepth: 1 });
+        `);
+        const model = await Model.fromText(sysl, "main.sysl", { maxImportDepth: 1 });
 
-        expect(model.toDto()).toMatchObject(
+        const dto = model.toDto();
+        expect(dto).toMatchObject(
             {
                 apps: [
                     {
@@ -369,7 +395,7 @@ describe("DTO", () => {
                                         name: "id",
                                         optional: false,
                                         primitive: "int",
-                                        locations: { }, // TODO: https://github.com/anzx/sysl/issues/891
+                                        locations: { 0: "ts/main.sysl:2:18::27" },
                                     },
                                     {
                                         kind: "Field",
@@ -382,8 +408,9 @@ describe("DTO", () => {
                                             paramAnno: [["1"],"2"],
                                         },
                                         locations: {
-                                            "paramAnno": "ts/main.sysl:2:69::90",
-                                            "paramTag": "ts/main.sysl:2:58::67",
+                                            0: "ts/main.sysl:2:29::92",
+                                            "paramAnno": "ts/main.sysl:2:70::91",
+                                            "paramTag": "ts/main.sysl:2:59::68",
                                         },
                                     },
                                     {
@@ -397,9 +424,9 @@ describe("DTO", () => {
                                 ],
                                 metadata: { rpcTag: undefined, rpcAnno: "GetCustomer" },
                                 locations: {
-                                    "0": "ts/main.sysl:2:5:7:38",
+                                    0: "ts/main.sysl:2:5:7:38",
                                     "rpcAnno": "ts/main.sysl:3:9::33",
-                                    "rpcTag": "ts/main.sysl:2:118::125",
+                                    "rpcTag": "ts/main.sysl:2:119::126",
                                 },
                                 children: [
                                     {
@@ -435,9 +462,26 @@ describe("DTO", () => {
                 ],
             }
         );
+
+        const model2 = Model.fromDto(dto);
+        expect(model2).toEqual(model);
+        model2.getEndpoint("Ns::App.[GetCustomer]").params[1].annos = [];
+        expect(model2.toSysl()).toEqual(sysl.replace(`, paramAnno=[["1"],"2"]`, ""));
     });
 
-    test.concurrent("All", async () => (await Model.fromFile(allPath)).toDto());
+    test.concurrent("All", async () => {
+        const model = await Model.fromFile(allPath);
+        
+        const dto = model.toDto();
+        const model2 = Model.fromDto(dto);
+
+        // Not serialized by toDto()
+        model2.syslRoot = model.syslRoot;
+        model2.getType("Types.Table").isTable = true;
+
+        expect(model2).toEqual(model);
+        expect(model2.filterByFile(allPath).toSysl()).toEqual((await readFile(allPath)).toString());
+    });
 });
 
 describe("Parent and Model", () => {
@@ -698,7 +742,7 @@ describe("Roundtrip", () => {
                     sequence <: sequence of string
                     with_anno <: string:
                         @annotation = "this is an annotation"
-                    decimal_with_precision <: decimal(5.8)
+                    decimal_with_precision <: decimal(8.5)
                     string_max_constraint <: string(5)
                     string_range_constraint <: string(5..10)
             `),
@@ -845,21 +889,14 @@ describe("Roundtrip", () => {
 describe("General methods", () => {
     test.concurrent("toSyslPath", () => {
         const model = new Model({ syslRoot: "/usr/MyShop" });
-        // @ts-ignore
         expect(model.convertSyslPath("/usr/MyShop/backend.sysl")).toEqual("backend.sysl");
-        // @ts-ignore
         expect(model.convertSyslPath("/usr/MyShop/schema/backend.sysl")).toEqual("schema/backend.sysl");
-        // @ts-ignore
         expect(model.convertSyslPath("schema/backend.sysl", "/usr/MyShop")).toEqual("schema/backend.sysl");
-        // @ts-ignore
         expect(model.convertSyslPath("backend.sysl", "/usr/MyShop/schema")).toEqual("schema/backend.sysl");
-        // @ts-ignore
         expect(model.convertSyslPath("../index.sysl", "/usr/MyShop/schema")).toEqual("index.sysl");
-        // @ts-ignore
         expect(() => model.convertSyslPath("../../outside.sysl", "/usr/MyShop/schema")).toThrowError(
             "is outside the Sysl root path"
         );
-        // @ts-ignore
         expect(() => model.convertSyslPath("outside.sysl", "/usr/")).toThrowError("is outside the Sysl root path");
     });
 
@@ -1146,7 +1183,7 @@ describe("Cloning", () => {
                     @anno = "value1"
                     int
                     string
-                    sequence of decimal(5.8)
+                    sequence of decimal(8.5)
                     RestEndpoint.Type
             App2:
                 ...
@@ -1156,7 +1193,7 @@ describe("Cloning", () => {
         clonedUnion.name = "Union2";                       // Modify name to ensure originals don't change
         clonedUnion.getTag("tag1").name = "tag2";
         clonedUnion.getAnno("anno").value = "value2";
-        clonedUnion.members = clonedUnion.members
+        clonedUnion.children = clonedUnion.children
             .filter(m => !(m instanceof Primitive && m.primitive == TypePrimitive.STRING));
 
         model.getApp("App2").children.push(clonedUnion);
@@ -1167,14 +1204,14 @@ describe("Cloning", () => {
                     @anno = "value1"
                     int
                     string
-                    sequence of decimal(5.8)
+                    sequence of decimal(8.5)
                     RestEndpoint.Type
 
             App2:
                 !union Union2 [~tag2]:
                     @anno = "value2"
                     int
-                    sequence of decimal(5.8)
+                    sequence of decimal(8.5)
                     RestEndpoint.Type
         `));
     });
@@ -1330,24 +1367,26 @@ describe("Cloning", () => {
                   'optional <: string?': Field
                 'action': ActionStatement
               '[REST] /param': Endpoint
+                '[~methodTag]': Tag
                 '[~rest]': Tag
+                '@urlAnno = ...': Annotation
                 't <: Types.Type': Field
                   '[~body]': Tag
                 'PATCH': RestParams
+                  'optionalQueryParam <: bool?': Field
                 'action': ActionStatement
               '[REST] /param': Endpoint
                 '[~rest]': Tag
-                'native <: string': Field
+                'arg1 <: string': Field
+                'arg2 <: int': Field
                 'POST': RestParams
                 'action': ActionStatement
               '[REST] /param': Endpoint
                 '[~rest]': Tag
                 'unlimited <: string(5..)': Field
-                  'length: 5..': TypeConstraint
                 'limited <: string(5..10)': Field
-                  'length: 5..10': TypeConstraint
                 'num <: int(5)': Field
-                  'length: ..5': TypeConstraint
+                'untyped <: any': Field
                 'PUT': RestParams
                 'action': ActionStatement
               '[REST] /report.csv': Endpoint
@@ -1372,11 +1411,9 @@ describe("Cloning", () => {
               '[RPC] SimpleEpWithArray': Endpoint
                 '[~tag]': Tag
                 'unlimited <: string(5..)': Field
-                  'length: 5..': TypeConstraint
                 'limited <: string(5..10)': Field
-                  'length: 5..10': TypeConstraint
                 'num <: int(5)': Field
-                  'length: ..5': TypeConstraint
+                'untyped <: any': Field
                 'action': ActionStatement
             'Types': Application
               '!type Type': Type
@@ -1408,16 +1445,12 @@ describe("Cloning", () => {
                 'sequence <: sequence of string': Field
                 'with_anno <: string': Field
                   '@annotation = ...': Annotation
-                'decimal_with_precision <: decimal(5.8)': Field
-                  'length: ..5, precision: 5, scale: 8': TypeConstraint
+                'decimal_with_precision <: decimal(8.5)': Field
                 'string_max_constraint <: string(5)': Field
-                  'length: ..5': TypeConstraint
                 'string_range_constraint <: string(5..10)': Field
-                  'length: 5..10': TypeConstraint
                 'int_with_bitwidth <: int64': Field
-                  'bitWidth: 64': TypeConstraint
+                'int_with_bitwidth_and_min_length <: int64(5..)': Field
                 'float_with_bitwidth <: float64': Field
-                  'bitWidth: 64': TypeConstraint
               '!enum Enum': Enum
                 '[~tag]': Tag
                 'ENUM_1: 1': EnumValue
@@ -1425,28 +1458,23 @@ describe("Cloning", () => {
                 'ENUM_3: 3': EnumValue
               '!union Union': Union
                 '[~tag]': Tag
-                'int': Primitive
-                'string': Primitive
-                'sequence of decimal(5.8)': CollectionDecorator
-                  'length: ..5, precision: 5, scale: 8': TypeConstraint
-                'RestEndpoint.Type': ElementRef
               '!union EmptyUnion': Union
                 '[~tag]': Tag
-              '!Alias Alias': Alias
+              '!alias Alias': Alias
                 '[~tag]': Tag
                 '@annotation1 = ...': Annotation
                 '@annotation2 = ...': Annotation
                 '@annotation3 = ...': Annotation
-              '!Alias AliasSequence': Alias
+              '!alias AliasSequence': Alias
                 '[~tag]': Tag
                 '@annotation1 = ...': Annotation
                 '@annotation2 = ...': Annotation
                 '@annotation3 = ...': Annotation
-              '!Alias AliasRef': Alias
+              '!alias AliasRef': Alias
                 '[~tag]': Tag
-              '!Alias AliasForeignRef': Alias
+              '!alias AliasForeignRef': Alias
                 '[~tag]': Tag
-              '!Alias AliasForeignRefSet': Alias
+              '!alias AliasForeignRefSet': Alias
                 '[~tag]': Tag
             'Statements': Application
               '[~tag]': Tag
@@ -1471,7 +1499,7 @@ describe("Cloning", () => {
               '[RPC] Calls': Endpoint
                 '[~tag]': Tag
                 'Statements <- Returns': CallStatement
-                'Ns::RestEndpoint <- GET /param': CallStatement
+                'Ns::RestEndpoint <- POST /param': CallStatement
               '[RPC] OneOfStatements': Endpoint
                 '[~tag]': Tag
                 'one of': OneOfStatement
@@ -1571,6 +1599,7 @@ describe("Cloning", () => {
                 Types.Table.string_max_constraint
                 Types.Table.string_range_constraint
                 Types.Table.int_with_bitwidth
+                Types.Table.int_with_bitwidth_and_min_length
                 Types.Table.float_with_bitwidth
             Statements
               Statements.[IfStmt]

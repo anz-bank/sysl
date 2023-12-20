@@ -30,6 +30,14 @@ export class Import implements ICloneable {
         };
     }
 
+    static fromDto(dto: ReturnType<Import["toDto"]>): Import {
+        return new Import({
+            filePath: dto.filePath,
+            locations: dto.locations.map(Location.parse),
+            appAlias: dto.appAlias,
+        });
+    }
+
     toString(): string {
         return this.filePath;
     }

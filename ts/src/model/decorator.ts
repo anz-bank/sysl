@@ -1,14 +1,13 @@
 import { IRenderable } from "./common";
 import { ElementRef } from "./elementRef";
-import { CloneContext } from "./clone";
 import { Primitive } from "./primitive";
-import { FieldValue } from "./field";
+import { FieldValue } from "./fieldValue";
 
 /** Used for `sequence of` and `set of` prefixes on data types. */
 export class CollectionDecorator implements IRenderable {
-    public innerType: Primitive | ElementRef;
+    public readonly innerType: Primitive | ElementRef;
 
-    constructor(innerType: FieldValue, public isSet: boolean) {
+    constructor(innerType: FieldValue, public readonly isSet: boolean) {
         // Unwrap list of sequences/sets to prevent double decorator, e.g.:  myField(1..1) <: set of int
         if (innerType instanceof CollectionDecorator) {
             this.innerType = innerType.innerType;
@@ -24,9 +23,5 @@ export class CollectionDecorator implements IRenderable {
 
     toString(): string {
         return this.toSysl();
-    }
-
-    clone(context: CloneContext = new CloneContext()): CollectionDecorator {
-        return new CollectionDecorator(this.innerType.clone(context), this.isSet);
     }
 }
