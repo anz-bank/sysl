@@ -9,7 +9,7 @@ test.concurrent("Constructor", () => {
     expect(() => new TypeConstraint(undefined, 10, 2, 64)).toThrow();
     expect(() => new TypeConstraint(new Range(undefined, 10), 10, 2, 64)).toThrow();
 
-    // Scale/precision removes length constraint (TODO: Fix bug in Sysl binary)
+    // Ensure scale/precision removes length constraint (TODO: Fix in Sysl binary so length is omitted)
     expect(new TypeConstraint(new Range(undefined, 10), 10, 2)).toEqual(new TypeConstraint(undefined, 10, 2));
 
     // Invalid values
@@ -17,7 +17,6 @@ test.concurrent("Constructor", () => {
     expect(() => new TypeConstraint(new Range(10, 5))).toThrow();
     expect(() => new TypeConstraint(new Range(NaN, 5))).toThrow();
     expect(() => new TypeConstraint(new Range(10, NaN))).toThrow();
-    expect(() => new TypeConstraint(undefined, 5)).toThrow();
     expect(() => new TypeConstraint(undefined, undefined, 10)).toThrow();
     expect(() => new TypeConstraint(undefined, 0, 0)).toThrow();
     expect(() => new TypeConstraint(undefined, 5, 10)).toThrow();
@@ -29,6 +28,7 @@ test.concurrent("Constructor", () => {
 });
 
 test.concurrent("Parse", () => {
+    expect(TypeConstraint.parse("(8.0)")).toEqual(new TypeConstraint(undefined, 8, 0));
     expect(TypeConstraint.parse("(8.5)")).toEqual(new TypeConstraint(undefined, 8, 5));
     expect(TypeConstraint.parse("(30)")).toEqual(new TypeConstraint(new Range(undefined, 30)));
     expect(TypeConstraint.parse("(..30)")).toEqual(new TypeConstraint(new Range(undefined, 30)));

@@ -18,8 +18,8 @@ export class TypeConstraint {
         /** Optional. The total number of digits in a decimal number, on both sides of the floating point. If specified,
          *  {@link length} is ignored. */
         public readonly precision?: number,
-        /** Must be specified only if {@link precision} is specified. The number of digits to the right of the floating
-         *  point. Must be equal to or less than {@link precision}. */
+        /** Optional. The number of digits to the right of the floating point, defaults to zero if unspecified. Must be
+         * equal to or less than {@link precision}, if specified. */
         public readonly scale?: number,
         /** Optional. The number of bits in a scalar primitive: 32 or 64. Mustn't be specified if {@link precision} is
          *  specified. */
@@ -27,14 +27,15 @@ export class TypeConstraint {
     ) {
         if (precision && bitWidth) throw new Error("Bit width constraint is not compatible with precision/scale.");
         if (bitWidth != undefined && bitWidth != 32 && bitWidth != 64) throw new Error("Bit width must be 32 or 64.");
-        if (precision != undefined && scale == undefined) throw new Error("Precision requires scale.");
-        if (scale != undefined && precision == undefined) throw new Error("Scale requires precision.");
+        if (scale != undefined && precision == undefined) throw new Error(`Scale (${scale}) requires precision.`);
+        if (precision != undefined && scale == undefined) scale = 0;
         if (scale != undefined && precision != undefined) {
-            if (scale < 1 || isNaN(scale)) throw new Error("Scale must be positive.");
-            if (precision < 0 || isNaN(precision)) throw new Error("Precision must be positive or zero.");
-            if (scale > precision) throw new Error("Scale cannot be greater than precision.");
+            if (precision < 1 || isNaN(precision)) throw new Error(`Precision must be positive: ${precision}`);
+            if (scale < 0 || isNaN(scale)) throw new Error(`Scale must be positive or zero: ${scale}`);
+            if (scale > precision) throw new Error(`Scale (${scale}) cannot be greater than precision (${precision}).`);
             this.length = undefined;
         }
+        this.scale = scale;
     }
 
     toString(): string {

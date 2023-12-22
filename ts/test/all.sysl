@@ -112,7 +112,7 @@ Types:
     !union Union [~tag]:
         int
         string
-        sequence of decimal(8.5)
+        sequence of decimal(4.0)
         RestEndpoint.Type
 
     !union EmptyUnion [~tag]:
