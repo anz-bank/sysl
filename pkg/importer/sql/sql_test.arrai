@@ -143,6 +143,10 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             {:macro:CREATE TABLE t (c INT64 AS (IF(X,Y,Z)) STORED):}
             = {:macro:CREATE TABLE t (c INT64):}
         ,
+        partition_by:
+            let _ = {:macro:CREATE TABLE t (c INT64) PARTITION BY c:};
+            true
+        ,
     ),
 
     alter_table: (
@@ -245,6 +249,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     {:macro:CREATE TABLE t (c TIMESTAMP):},
                     {:macro:CREATE TABLE t (c TIMESTAMP WITH TIME ZONE):},
                     {:macro:CREATE TABLE t (c TIMESTAMP WITHOUT TIME ZONE):},
+                    {:macro:CREATE TABLE t (c TIME):},
                 ],
                 (type: 'string'): [
                     {:macro:CREATE TABLE t (c TEXT):},
@@ -306,7 +311,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         let insert = {:macro:INSERT INTO t (c) VALUES (
             "string", 'string', "it""s", 'it''s', "", -42, 0, 42, -0x2A, 0x0, 0x2A,
             TRUE, FALSE, NULL, CURRENT_TIMESTAMP, NOW(), NOW() at time zone 'foo',
-            NEWID(), uuid_generate_v1(), uuid_generate_v4()
+            NEWID(), uuid_generate_v1(), uuid_generate_v4(), 365.0, 10.
         ), (0):};
         # Assert that the values were all parsed, but don't expect a model.
         insert = emptyModel

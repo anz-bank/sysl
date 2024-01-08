@@ -42,6 +42,7 @@ create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name 
                               attr=(column_name attr_type generated? options_def? pk? references?)
                             | table_constraint
                         ):"," ","? ")"
+                        partition_by_def?
                         options_def?
                         pks_outer=(pk "(" key_parts ")")?
                         ("," cluster)*; //# Spanner
@@ -166,6 +167,8 @@ select              -> "SELECT" /{(?: :[^};] | [^:;] )*};
 options_def         -> "OPTIONS" "(" option:",",? ")";
 option              -> k=[^=\s]* "=" v=value;
 
+partition_by_def    -> "PARTITION" "BY" column_name; //# BigQuery
+
 key_parts            -> column_def=(column_name sort_by=("ASC"|"DESC")?):",",?;
 attr_type           -> (ARRAY_TYPE | SCALAR_TYPE | STRUCT_TYPE) (NULL | NOT_NULL | default | generated)*;
 default             -> "DEFAULT" ((value ("::" cast=attr_type)?) | "(" SCALAR_TYPE? (value ("::" cast=attr_type)?) ")");
@@ -184,7 +187,7 @@ SCALAR_TYPE         -> BOOLEAN   = ("BOOLEAN" | "BOOL")
                      | FLOAT64   = ("FLOAT64" | "DOUBLE")
                      | FLOAT     = "FLOAT"
                      | DECIMAL   = (("DECIMAL" | "DEC" | "FIXED" | "NUMERIC") ("(" precision=int_value "," scale=int_value ")")?)
-                     | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP" (("WITHOUT" | "WITH") "TIME" "ZONE")?)
+                     | DATETIME  = ("DATETIME" ("(" length ")")? | "TIMESTAMP" (("WITHOUT" | "WITH") "TIME" "ZONE")? | "TIME")
                      | DATE      = "DATE"
                      | BYTES     = ("BYTES" ("(" length ")")? | "BYTEA" | "BLOB" | "LONGBLOB" | "JSONB")
                      | STRING    = (("TEXT" | "VARCHAR" | "STRING" | "CHARACTER" "VARYING"? | "JSON") ("(" length ")")?)
@@ -203,7 +206,8 @@ view_name           -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 sequence_name       -> [$@A-Za-z_][0-9$@A-Za-z_]*;
 
 value               -> value_type cast=("::" SCALAR_TYPE)?;
-value_type          -> int_value
+value_type          -> float_value
+                     | int_value
                      | bool_value
                      | string_value
                      | time_value
@@ -217,6 +221,7 @@ value_type          -> int_value
 int_value           -> hex_value | decimal_value;
 decimal_value       -> [-]?\d+;
 hex_value           -> /{-?0x[[:xdigit:]]+};
+float_value         -> /{[-]?\d+\.\d*};
 bool_value          -> "TRUE" | "FALSE";
 string_value        -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //'s
 time_value          -> "NOW" "(" ")" ("at" "time" "zone" string_value)?;
@@ -319,6 +324,7 @@ let rec evalType = \parsed
 let evalValue = \(:value_type, ...)
     cond value_type {
         (:int_value, ...): evalInt(int_value),
+        (:float_value, ...): //eval.value(float_value.''),
         (:bool_value, ...): bool_value.'' rank (:.@),
         (:string_value, ...): string_value.'' rank (:.@),
         (:time_value, ...): time_value.'' rank (:.@),
