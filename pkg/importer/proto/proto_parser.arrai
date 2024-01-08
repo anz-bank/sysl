@@ -7,7 +7,7 @@ let (:includeImport, :primitiveTypes, ...) = //{./util};
 # https://developers.google.com/protocol-buffers/docs/reference/proto2-spec
 let grammar = {://grammar.lang.wbnf:
 
-file            -> c* syntax stmt=(import | package | option | topLevelDef | emptyStatement)* \n*;
+file            -> c* syntax stmt=(import | package | option | topLevelDef | emptyStatement)* c* \n*;
 
 syntax          -> "syntax" "=" quote proto quote ";" ($ | c)?;
 

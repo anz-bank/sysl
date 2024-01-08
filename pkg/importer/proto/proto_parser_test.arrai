@@ -87,7 +87,9 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                             // Comment
                         ]
                         // Comment
-                    };`);
+                    };
+                    // Comment
+                `);
                 let expected = {'(foo.java_package).bar': (fields: {'foo': [(s: 'bar')]})};
                 let actual = file.options;
                 //test.assert.equal(expected, actual),
