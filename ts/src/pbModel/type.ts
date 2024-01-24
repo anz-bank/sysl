@@ -126,8 +126,8 @@ export class PbTypeDefUnion {
 
 @jsonObject
 export class PbTypeDefEnum {
-    @jsonMapMember(String, Number, serializerFor(String))
-    items!: Map<string, number>;
+    @jsonMapMember(String, String, serializerFor(String))
+    items!: Map<string, string>;
 }
 
 @jsonObject
@@ -141,6 +141,7 @@ export class PbTypeDef {
     @jsonArrayMember(PbTypeConstraint) constraint?: PbTypeConstraint[];
     @jsonMember opt!: boolean;
     @jsonArrayMember(Location) sourceContexts!: Location[];
+
     @jsonMember enum?: PbTypeDefEnum;
     @jsonMember tuple?: PbTypeDefStruct;
     // FIXME: Defaults to an empty map even if not defined in the deserialized source.
@@ -199,7 +200,9 @@ export class PbTypeDef {
         if (type) return new Type(name, !!this.relation, PbTypeDef.defsToFields(type.attrDefs, parentRef), params);
         if (this.enum) {
             // Original order of enum items is not serialized, so assume value (number) order, since it's most common.
-            const values = [...this.enum.items].map(([k, v]) => new EnumValue(k, v)).sort((a, b) => a.value - b.value);
+            const values = [...this.enum.items]
+                .map(([k, v]) => new EnumValue(k, Number(v)))
+                .sort((a, b) => a.value - b.value);
             return new Enum(name, values, params);
         }
         if (this.oneOf) {

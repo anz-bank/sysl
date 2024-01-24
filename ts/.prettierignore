@@ -14,3 +14,4 @@ src/model/endpoint.test.ts
 src/pbModel/statement.ts
 src/model/statement.test.ts
 src/model/field.test.ts
+src/model/enum.test.ts
