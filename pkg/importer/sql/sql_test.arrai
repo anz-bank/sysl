@@ -340,6 +340,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         ,
         whereEqual: parseDdl(`UPDATE t SET c=1 WHERE 1=1`) = [{}],
         whereTrue: parseDdl(`UPDATE t SET c=1 WHERE TRUE`) = [{}],
+        expr: parseDdl(`UPDATE t SET x = x + 1 WHERE 1 = 1;`) = [{}],
     ),
 
     set: [

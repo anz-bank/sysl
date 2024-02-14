@@ -126,10 +126,7 @@ attr_alteration     -> ("ALTER" | "MODIFY") "COLUMN"? column_name
                        (action=("SET" | "DROP") NOT_NULL | "SET" (options_def | default) | "TYPE"? attr_type);
 
 //# Spanner
-update_table        -> "UPDATE" table_name
-                       "SET" update_item:","
-                       ("WHERE" condition)?;
-update_item         -> column_name "=" (value | "DEFAULT");
+update_table        -> "UPDATE" /{(?: :[^};] | [^:;] )*};
 //#FIXME: stack breaks in macros
 condition           -> cond_stmt:("AND"|"OR");
 cond_stmt           -> bool_value | "(" condition ")" | (column_name | value) (("IS" "NOT"? NULL) | comparison value);
