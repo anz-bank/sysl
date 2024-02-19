@@ -249,6 +249,7 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     {:macro:CREATE TABLE t (c TIMESTAMP):},
                     {:macro:CREATE TABLE t (c TIMESTAMP WITH TIME ZONE):},
                     {:macro:CREATE TABLE t (c TIMESTAMP WITHOUT TIME ZONE):},
+                    {:macro:CREATE TABLE t (c TIMESTAMP DEFAULT (CURRENT_TIMESTAMP())):},
                     {:macro:CREATE TABLE t (c TIME):},
                 ],
                 (type: 'string'): [
@@ -259,6 +260,8 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                     {:macro:CREATE TABLE t (c CHARACTER VARYING):},
                     {:macro:CREATE TABLE t (c JSON):},
                     {:macro:CREATE TABLE t (c UUID):}, # TODO: Capture UUID-ness as well.
+                    {:macro:CREATE TABLE t (c STRING(MAX) DEFAULT (NEWID())):},
+                    {:macro:CREATE TABLE t (c STRING(MAX) DEFAULT (GENERATE_UUID())):},
                 ],
                 (type: 'string', length: 42): [
                     {:macro:CREATE TABLE t (c STRING(42)):},

@@ -223,6 +223,7 @@ bool_value          -> "TRUE" | "FALSE";
 string_value        -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //'s
 time_value          -> "NOW" "(" ")" ("at" "time" "zone" string_value)?;
 id_value            -> ("NEWID" "(" ")")
+                     | ("GENERATE_UUID" "(" ")")
                      | ("uuid_generate_v1" "(" ")" | "uuid_generate_v4" "(" ")");
 function_value      -> name "(" value ("::" name)? ")";
 keyword_value       -> name;
