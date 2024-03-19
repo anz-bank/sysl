@@ -56,7 +56,7 @@ let typeNameWithPrefix = \typeName \prefix
 # `scope` the current scope containing the messages with type definitions.
 # `prefix` the prefix to use if the type is found in the current scope.
 let referencedType = \t \file \appName \imports \scope \prefix
-    let usePrefix = cond { scope.messages?(t.name)?:{}: prefix };
+    let usePrefix = cond { scope.messages?(t.name)?:{} || scope.enums?(t.name)?:{}: prefix };
     let name = typeNameWithPrefix(t.name, usePrefix);
     # `referencedNs` finds the file that had the original type definition and returns the namespace of that file.
     let referencedNs = \t \file \imports

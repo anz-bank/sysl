@@ -250,7 +250,7 @@ google_protobuf:
         @description =:
             | A single field of a message type.
         @source_path = "google/protobuf/type.proto"
-        cardinality <: Cardinality:
+        cardinality <: Field_Cardinality:
             @description =:
                 | The field cardinality.
             @json_tag = "cardinality"
@@ -265,7 +265,7 @@ google_protobuf:
                 | The field JSON name.
             @json_tag = "jsonName"
             @rpcId = "10"
-        kind <: Kind:
+        kind <: Field_Kind:
             @description =:
                 | The field type.
             @json_tag = "kind"
