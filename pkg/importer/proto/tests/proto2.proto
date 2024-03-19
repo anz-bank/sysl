@@ -45,3 +45,7 @@ extend Foo {
 service SearchService {
     rpc Search (SearchRequest) returns (SearchResponse);
 }
+/* deprecated service */
+service  DeprecatedService {
+  option (deprecated) = true;
+}

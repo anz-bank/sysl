@@ -162,6 +162,7 @@ let evalComments = \parsed
     } || ();
 
 let evalOption = \parsed { evalOptionName(parsed.optionName): evalConstant(parsed.constant) +> evalComments(parsed) };
+let evalOptions = \parsed //rel.union(parsed => evalOption(.@item));
 
 let evalField = \currentPackage \parsed
     {
@@ -169,12 +170,12 @@ let evalField = \currentPackage \parsed
         value: evalConstant(parsed.fieldNumber),
         type: evalType(currentPackage, parsed.type))
         +> (cond parsed {(:label, ...): (label: evalLabel(label))} || ())
-        +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
+        +> (cond parsed {(:option, ...): (options: evalOptions(option))} || ()) +> evalComments(parsed)
     };
 
 let evalOneofField = \currentPackage \parsed
     {
-        evalName(parsed.oneofName): (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+        evalName(parsed.oneofName): (cond parsed {(:option, ...): (options: evalOptions(option))} || ())
             +> (cond parsed {(:oneofField, ...): (fields: //rel.union(oneofField => evalField(currentPackage, .@item)))} || ()) +> evalComments(parsed)
     };
 
@@ -184,7 +185,7 @@ let evalMapField = \currentPackage \parsed
             type: evalType(currentPackage, parsed.type),
             keyType: evalType(currentPackage, parsed.keyType),
             value: evalConstant(parsed.fieldNumber)
-        ) +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
+        ) +> (cond parsed {(:option, ...): (options: evalOptions(option))} || ()) +> evalComments(parsed)
      };
 
 let evalRange = \parsed
@@ -201,11 +202,11 @@ let evalEnumField = \parsed
     {
         evalName(parsed.fieldName): (
             value: evalConstant(parsed)
-        ) +> (cond parsed {(:enumValueOption, ...): (options: //rel.union(enumValueOption => evalOption(.@item)))} || ()) +> evalComments(parsed)
+        ) +> (cond parsed {(:enumValueOption, ...): (options: evalOptions(enumValueOption))} || ()) +> evalComments(parsed)
     };
 
 let evalEnumBody = \parsed
-    (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+    (cond parsed {(:option, ...): (options: evalOptions(option))} || ())
      +> (cond parsed {(:enumField, ...): (fields: //rel.union(parsed.enumField?:{} => evalEnumField(.@item)))} || ()) +> evalComments(parsed);
 
 let evalEnum = \parsed { evalName(parsed.enumName): evalEnumBody(parsed.enumBody) +> evalComments(parsed) };
@@ -215,7 +216,7 @@ let evalRPC = \currentPackage \parsed
         evalName(parsed.rpcName):(
             in: evalType(currentPackage, parsed.inputMessage.messageType),
             out: evalType(currentPackage, parsed.returnMessage.messageType)
-        )+> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ()) +> evalComments(parsed)
+        )+> (cond parsed {(:option, ...): (options: evalOptions(option))} || ()) +> evalComments(parsed)
     };
 
 let rec evalMessageBody = \currentPackage \parsed
@@ -223,7 +224,7 @@ let rec evalMessageBody = \currentPackage \parsed
     +> (cond parsed {(:enum, ...): (enums: //rel.union(enum => evalEnum(.@item)))} || ())
     +> (cond parsed {(:group, ...): (groups: //rel.union(group => {evalName(group.groupName): evalMessageBody(currentPackage, group.messageBody)}))} || ())
     +> (cond parsed {(:message, ...): (messages: //rel.union(message => {evalName(.@item.messageName): evalMessageBody(currentPackage, .@item.messageBody) +> evalComments(.@item)}))} || ())
-    +> (cond parsed {(:option, ...): (options: //rel.union(option => evalOption(.@item)))} || ())
+    +> (cond parsed {(:option, ...): (options: evalOptions(option))} || ())
     +> (cond parsed {(:oneof, ...): (oneofs: //rel.union(oneof => evalOneofField(currentPackage, .@item)))} || ())
     +> (cond parsed {(:mapField, ...): (mapFields: //rel.union(mapField => evalMapField(currentPackage, .@item)))} || ())
     +> (cond parsed {(:reserved, ...): (reserveds: reserved => evalReserved(.@item))} || ());
@@ -231,7 +232,7 @@ let rec evalMessageBody = \currentPackage \parsed
 let evalService = \currentPackage \parsed
     {
         evalName(parsed.serviceName): ()
-        +> (cond parsed {(:option, ...): (options: option => evalOption(.@item))} || ())
+        +> (cond parsed {(:option, ...): (options: evalOptions(option))} || ())
         +> (cond parsed {(:rpc, ...): (rpcs: //rel.union(rpc => evalRPC(currentPackage, .@item)))} || ())
         +> evalComments(parsed)
     };

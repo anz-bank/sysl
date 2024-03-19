@@ -255,7 +255,10 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                     },
                                     options: {'java_package': (s: 'com.example.foo'), 'go_package': (s: 'github.com/test/package'), 'random': (s: 'random')},
                                     package: {'proto2': ()},
-                                    services: {'SearchService': (rpcs: {"Search": (in: (name: "SearchRequest", package: 'proto2'), out: (name: "SearchResponse", package: 'proto2'))})},
+                                    services: {
+                                        'DeprecatedService': (comments: [' deprecated service '], options: {'(deprecated)': (b: true)}),
+                                        'SearchService': (rpcs: {"Search": (in: (name: "SearchRequest", package: 'proto2'), out: (name: "SearchResponse", package: 'proto2'))})
+                                    },
                                     syntax: 'proto2',
                                 );
                 //test.assert.equal(expected, actual),

@@ -345,7 +345,7 @@ let fileApps = \file \imports
     //rel.union(
         content.services?:{} => {
             partsToAppName(ns ++ [.@]): application(
-                . +> (@value +>: (options: content.options?:{})),
+                . +> (@value +>: (options: .@value.options?:{} | content.options?:{})),
                 ns, file, imports,
             )
         }
