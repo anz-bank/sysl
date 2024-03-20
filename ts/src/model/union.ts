@@ -12,7 +12,7 @@ export class Union extends Element {
         super.parent = app;
     }
 
-    constructor(name: string, public children: FieldValue[], p: IElementParams<Application>) {
+    constructor(name: string, public children: FieldValue[] = [], p: IElementParams<Application>) {
         super(name, p.locations ?? [], p.annos ?? [], p.tags ?? [], p.model, p.parent);
     }
 
