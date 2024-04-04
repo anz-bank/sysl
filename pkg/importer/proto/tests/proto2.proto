@@ -49,3 +49,8 @@ service SearchService {
 service  DeprecatedService {
   option (deprecated) = true;
 }
+/******************************
+ * comments with lots of stars
+ ******************************/
+/** comment with 2 stars **/
+/**/

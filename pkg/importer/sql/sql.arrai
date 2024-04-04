@@ -251,7 +251,7 @@ pair_value          -> "(" value "," value ")"; //# Spanner
 array_value         -> "[" (value:",")? "]"; //# Spanner
 
 // All tokens are case-insensitive and may be preceded by comments or whitespace.
-.wrapRE -> /{(?i)(--[^\n]*(?:\n|\z)|/\*[^*]*\*/|\s)*()};
+.wrapRE -> /{(?i)(--[^\n]*(?:\n|\z)|/\*(?:[^*]|\*+[^*/])*\*+/|\s)*()};
 :};
 
 #################### PARSE TREE EVALUATORS ####################

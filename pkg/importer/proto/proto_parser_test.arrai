@@ -212,6 +212,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
             proto2:
                 let actual = parseFile(//[//encoding.bytes]{/pkg/importer/proto/tests/proto2.proto});
                 let expected =  (
+                                    comments: ['*****************************\n * comments with lots of stars\n *****************************', '* comment with 2 stars *', ''],
                                     enums: {
                                         'EnumAllowingAlias': (
                                             comments: [" A\n    Multiline\nComment "],

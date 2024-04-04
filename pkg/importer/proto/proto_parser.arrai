@@ -96,7 +96,7 @@ objectValue     -> constant ";"?;
 array           -> "[" (c* arrayItem comma? c*)* "]";
 arrayItem       -> constant;
 
-c               -> /{ // .* $ | (?: /\* (?: [^*] | \*+[^*/] )* \*/ )};
+c               -> /{ // .* $ | (?: /\* (?: [^*] | \*+[^*/] )* \*+/ )};
 comma           -> c* "," c*;
 
 // All tokens may be preceded by whitespace.

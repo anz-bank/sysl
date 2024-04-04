@@ -52,3 +52,16 @@ CREATE TABLE AccountAddress (
     AddressLine3    BYTES(100),
     PRIMARY KEY (AccountNum, AddressPostCode)
 );
+
+-- comments
+/* inline comment */
+/* inline comment with a * in it */
+/* 
+this is a
+multiple-line comment
+*/
+/******************************
+ * comments with lots of stars
+ ******************************/
+/** comment with 2 stars **/
+/**/
