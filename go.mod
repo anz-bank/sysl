@@ -2,8 +2,6 @@ module github.com/anz-bank/sysl
 
 go 1.20
 
-replace github.com/getkin/kin-openapi => github.com/AriehSchneier/kin-openapi v0.0.0-20231025034027-8d0456138ebd
-
 require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
 	github.com/alecthomas/assert v1.0.0
@@ -19,11 +17,11 @@ require (
 	github.com/arr-ai/wbnf v0.35.1
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
 	github.com/cornelk/hashmap v1.0.1
-	github.com/getkin/kin-openapi v0.120.0
+	github.com/getkin/kin-openapi v0.124.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-git/go-git/v5 v5.11.0
 	github.com/go-openapi/spec v0.20.4
-	github.com/go-openapi/swag v0.22.4
+	github.com/go-openapi/swag v0.22.8
 	github.com/golang/protobuf v1.5.2
 	github.com/gorilla/websocket v1.4.2
 	github.com/hashicorp/hcl v1.0.0
@@ -65,7 +63,7 @@ require (
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect
-	github.com/go-openapi/jsonpointer v0.19.6 // indirect
+	github.com/go-openapi/jsonpointer v0.20.2 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/gobwas/httphead v0.0.0-20180130184737-2c6c146eadee // indirect
 	github.com/gobwas/pool v0.2.0 // indirect

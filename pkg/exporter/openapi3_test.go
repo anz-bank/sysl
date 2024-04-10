@@ -5,14 +5,15 @@ import (
 	"testing"
 
 	"github.com/alecthomas/assert"
-	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/anz-bank/sysl/pkg/syslwrapper"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"github.com/tidwall/gjson"
+
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/anz-bank/sysl/pkg/syslwrapper"
 )
 
 func readSyslModule(filename string) (*sysl.Module, error) {
@@ -128,7 +129,7 @@ func TestMapOptional(t *testing.T) {
 	exporter := MakeOpenAPI3Exporter(simpleApps, &logrus.Logger{})
 	err := exporter.Export()
 	assert.NoError(t, err)
-	limitRequired := exporter.openapi3["TestApp"].Paths["/pets"].Get.Parameters.GetByInAndName("query", "limit").Required
+	limitRequired := exporter.openapi3["TestApp"].Paths.Find("/pets").Get.Parameters.GetByInAndName("query", "limit").Required
 	assert.False(t, limitRequired)
 }
 

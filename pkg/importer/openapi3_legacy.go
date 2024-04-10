@@ -22,11 +22,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/anz-bank/sysl/pkg/utils"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
+
+	"github.com/anz-bank/sysl/pkg/syslutil"
+	"github.com/anz-bank/sysl/pkg/utils"
 )
 
 type OpenAPI3Importer struct {
@@ -128,7 +129,7 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.T) (string, error) {
 	for _, k := range methodDisplayOrder {
 		endpoints[k] = nil
 	}
-	for path, ep := range spec.Paths {
+	for path, ep := range spec.Paths.Map() {
 		meps, err := o.buildEndpoint(path, ep)
 		if err != nil {
 			return "", err
@@ -231,13 +232,13 @@ func attrsForString(schema *openapi3.Schema) []string {
 }
 
 func getAttrs(schema *openapi3.Schema) []string {
-	switch schema.Type {
-	case OpenAPI_ARRAY:
+	switch {
+	case schema.Type.Is(openapi3.TypeArray):
 		return attrsForArray(schema)
-	case OpenAPI_OBJECT:
-	case OpenAPI_STRING:
+	case schema.Type.Is(openapi3.TypeObject):
+	case schema.Type.Is(openapi3.TypeString):
 		return attrsForString(schema)
-	case OpenAPI_INTEGER, "int":
+	case schema.Type.Is(openapi3.TypeInteger), schema.Type.Is("int"):
 	}
 	return nil
 }
@@ -249,21 +250,27 @@ func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 	if idx := strings.Index(ref.Ref, openapiv2DefinitionPrefix); idx >= 0 {
 		return getSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv2DefinitionPrefix))
 	}
-	switch ref.Value.Type {
-	case OpenAPI_ARRAY:
+	switch {
+	case ref.Value.Type.Is(openapi3.TypeArray):
 		// if no Items then default to object
 		if ref.Value.Items == nil {
 			return OpenAPI_OBJECT
 		}
 		return typeNameFromSchemaRef(ref.Value.Items)
-	case OpenAPI_OBJECT, OpenAPI_EMPTY:
+	case ref.Value.Type.Is(openapi3.TypeObject), ref.Value.Type.Is(OpenAPI_EMPTY), ref.Value.Type == nil:
 		return OpenAPI_OBJECT
-	case OpenAPI_BOOLEAN:
+	case ref.Value.Type.Is(openapi3.TypeBoolean):
 		return syslutil.Type_BOOL
-	case OpenAPI_STRING, OpenAPI_INTEGER, OpenAPI_NUMBER:
-		return mapOpenAPITypeAndFormatToType(ref.Value.Type, ref.Value.Format, logrus.StandardLogger())
+	case ref.Value.Type.Is(openapi3.TypeString),
+		ref.Value.Type.Is(openapi3.TypeInteger),
+		ref.Value.Type.Is(openapi3.TypeNumber):
+		return mapOpenAPITypeAndFormatToType(ref.Value.Type.Slice()[0], ref.Value.Format, logrus.StandardLogger())
 	default:
-		return getSyslSafeName(ref.Value.Type)
+		refValueType := OpenAPI_EMPTY
+		if len(ref.Value.Type.Slice()) > 0 {
+			refValueType = ref.Value.Type.Slice()[0]
+		}
+		return getSyslSafeName(refValueType)
 	}
 }
 
@@ -281,7 +288,7 @@ func (o *OpenAPI3Importer) typeAliasForSchema(ref *openapi3.SchemaRef) Type {
 		t = nameOnlyType(strings.Join(o.nameStack, "_"))
 	}
 
-	if _, ok := t.(*Array); !ok && ref.Value.Type == OpenAPI_ARRAY {
+	if _, ok := t.(*Array); !ok && ref.Value.Type.Is(openapi3.TypeArray) {
 		return &Array{Items: t}
 	}
 	return t
@@ -305,7 +312,7 @@ func makeSizeSpec(min uint64, max *uint64) *sizeSpec {
 }
 
 func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Field, error) {
-	isArray := prop.Value.Type == OpenAPI_ARRAY
+	isArray := prop.Value.Type.Is(openapi3.TypeArray)
 
 	// If type is array, but Items is nil then default to an array of object
 	if isArray && prop.Value.Items == nil {
@@ -384,8 +391,8 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 	name = getSyslSafeName(name)
 	defer o.pushName(name)()
 	setDefined := func(refName string) { o.refMap[refName] = true }
-	switch schema.Type {
-	case OpenAPI_ARRAY:
+	switch {
+	case schema.Type.Is(openapi3.TypeArray):
 		var items Type
 		if childName := typeNameFromSchemaRef(schema.Items); childName == OpenAPI_OBJECT {
 			defer o.pushName("obj")()
@@ -406,7 +413,7 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		}
 
 		return &Array{baseType: baseType{name: name, attrs: getAttrs(schema)}, Items: items}, nil
-	case OpenAPI_OBJECT, OpenAPI_EMPTY:
+	case schema.Type.Is(openapi3.TypeObject), schema.Type.Is(OpenAPI_EMPTY), schema.Type == nil:
 		obj := &StandardType{
 			baseType: baseType{name: name, attrs: getAttrs(schema)},
 		}
@@ -478,10 +485,14 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		}
 		return obj, nil
 	default:
-		if schema.Type == OpenAPI_STRING && schema.Enum != nil {
+		if schema.Type.Is(openapi3.TypeString) && schema.Enum != nil {
 			return &Enum{baseType{name: name, attrs: attrsForStrings(schema)}}, nil
 		}
-		if t, ok := checkBuiltInTypes(mapOpenAPITypeAndFormatToType(schema.Type, schema.Format, o.logger)); ok {
+		schemaType := OpenAPI_EMPTY
+		if len(schema.Type.Slice()) > 0 {
+			schemaType = schema.Type.Slice()[0]
+		}
+		if t, ok := checkBuiltInTypes(mapOpenAPITypeAndFormatToType(schemaType, schema.Format, o.logger)); ok {
 			return &Alias{baseType: baseType{name: name}, Target: t}, nil
 		}
 		o.logger.Warnf("unknown scheme type: %s", schema.Type)
@@ -546,7 +557,7 @@ func (o *OpenAPI3Importer) buildEndpoint(path string, item *openapi3.PathItem) (
 			return nil, err
 		}
 
-		for statusCode, resp := range op.Responses {
+		for statusCode, resp := range op.Responses.Map() {
 			err = o.buildResponses(statusCode, resp, method, path, op, ep)
 			if err != nil {
 				return nil, err
