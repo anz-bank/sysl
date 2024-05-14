@@ -782,10 +782,23 @@ describe("Roundtrip", () => {
                         ...
                 `),
         },
+        // PubSub is not supported in the SDK, and there are some issues with its PB: github.com/anzx/sysl/issues/919
+        // UnsafePubSub: realign(`
+        //     My%20App:
+        //         My%20Publisher -> My%20Event:
+        //             ...
+        //     `),
         UnsafeNames: realign(`
             %28App%29Name%21:
                 !type %28Type%29Name%21:
                     %28Field%29Name%21 <: %28Namespace%21::%28App%29Name2%21.%28Type%29Name%21 [~%28Tag%29Name%21]
+
+                %28RPC%20Endpoint%29Name%21:
+                    ...
+
+                /%28REST%20Endpoint%29Name%21:
+                    GET:
+                        ...
 
             %28Namespace%21 :: %28App%29Name2%21:
                 !type %28Type%29Name%21:
