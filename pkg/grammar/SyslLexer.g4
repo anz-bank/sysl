@@ -42,7 +42,7 @@ NativeDataTypes     :
                     { ls(p).inSqBrackets == 0 }?
                     ;
 
-HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' ) [ \t]*
+HTTP_VERBS          : ('GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH' | 'OPTIONS' | 'HEAD' | 'TRACE' ) [ \t]*
                     { ls(l).gotHTTPVerb = true }
                     ;
 
