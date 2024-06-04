@@ -86,7 +86,7 @@ floatLit        -> /{\d+(?:\.\d+?)? (?:e[-+]?\d+)? | \. \d+ (?:e[-+]?\d+)? | inf
 
 boolLit         -> /{true | false};
 
-strLit          -> ('"' [^"]*:'""' '"' | "'" [^']*:"''" "'"); //';
+strLit          -> ('"' s=([^"]*:'""') '"' | "'" s=([^']*:"''") "'"):\s; //';
 
 object          -> "{" (c* objectField comma? c*)* "}";
 objectField     -> objectKey ":"? objectValue;
@@ -133,9 +133,22 @@ let evalType = \currentPackage \parsed
 
 let evalLabel = \parsed parsed.'' rank (:.@) ;
 
+let concatStrLit = \strLit 
+    //seq.concat(//seq.concat(
+        (strLit.s >> .'') => \i (
+            @:i.@,
+            @item: i.@item >> \v
+                let s=(v rank (:.@));
+                cond strLit.@choice(i.@) {
+                    0: cond s {'""':'"', _:s},
+                    1: cond s {"''":"'", _:s},
+                }
+        )
+    ));
+
 let rec evalConstant = \parsed
     cond parsed {
-        (:strLit, ...): (s: //re.compile(`\\\\`).sub(`\`, strLit.''(1) rank (:.@))),
+        (:strLit, ...): (s: //re.compile(`\\\\`).sub(`\`, concatStrLit(strLit))),
         (:intLit, ...): evalConstant(intLit),
         (:decimalLit, ...): (d: //eval.value(decimalLit.'' rank (:.@))),
         (:octalLit, ...): (o: //eval.value(octalLit.'' rank (:.@))),
@@ -248,7 +261,7 @@ let evalExtend = \currentPackage \parsed
 let evalStmt = \(?:currentPackage:'', ...) \parsed
     cond parsed {
         (:import, ...):
-            (import: {import.strLit.''(1) rank (:.@): () +> (cond import.modifier?:{} {('':mod, ...): (modifier: mod rank (:.@))} || ())}),
+            (import: {concatStrLit(import.strLit): () +> (cond import.modifier?:{} {('':mod, ...): (modifier: mod rank (:.@))} || ())}),
         (:package, ...):
             (package: {evalFullIdent(package.fullIdent): () +> evalComments(package)}),
         (:option, ...): (

@@ -3,7 +3,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
 (
     constant: (
         string:
-            let constant = (strLit: ('': [153\'"', 154\'test', 231\'"']));
+            let constant = (strLit: ('': [153\'"', 231\'"'], @choice: [0], s: [('': [154\'test'])]));
             let expected = (s: "test");
             let actual = evalConstant(constant);
             //test.assert.equal(expected, actual),
@@ -23,12 +23,12 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
             let actual = evalConstant(constant);
             //test.assert.equal(expected, actual),
         object:
-            let constant = (object: (objectField: [('': 1390\':', objectKey: (constant: (fullIdent: (ident: [('': [1387\'g', 1388\'et'])]))), objectValue: (constant: (strLit: ('': [1392\'"', 1393\'/api/accounts', 1415\'"']))))]));
+            let constant = (object: (objectField: [('': 1390\':', objectKey: (constant: (fullIdent: (ident: [('': [1387\'g', 1388\'et'])]))), objectValue: (constant: (strLit: ('': [1392\'"', 1415\'"'], @choice: [0], s: [('': [1393\'/api/accounts'])]))))]));
             let expected = (fields: {"get": (s: "/api/accounts")});
             let actual = evalConstant(constant);
             //test.assert.equal(expected, actual),
         array:
-            let constant = (array: ('': [1497\'[', 1543\']'], arrayItem: [(constant: (strLit: ('': [1498\'"', 1499\'string', 1542\'"']))), (constant: (intLit: (decimalLit: ('': 235\'2'))))]));
+            let constant = (array: ('': [1497\'[', 1543\']'], arrayItem: [(constant: (strLit: ('': [1498\'"', 1542\'"'], @choice: [0], s: [('': [1499\'string'])]))), (constant: (intLit: (decimalLit: ('': 235\'2'))))]));
             let expected = [(s: "string"), (d: 2)];
             let actual = evalConstant(constant);
             //test.assert.equal(expected, actual),
@@ -251,6 +251,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                             options: {
                                                 '(my_option).a': (b: true),
                                                 '(object_option).a': (fields: {'array': [(d: 1), (s: 'string'), (fields: {'foo': (s: 'bar')})], 'object': (fields: {'foo': (s: 'bar')})}),
+                                                'adjacentString': (s: "firstsec'ondthi\"rdfourthfif't\"h"),
                                             },
                                         ),
                                     },

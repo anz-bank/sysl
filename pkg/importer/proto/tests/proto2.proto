@@ -21,6 +21,8 @@ message Outer {
         array: [1, "string", {foo: "bar"}],
         object: {foo: "bar"}
     };
+    option adjacentString = "first" "sec'ond"
+    "thi""rd" 'fourth'  'fif''t"h';
 
     required int64 ival = 1;
 
