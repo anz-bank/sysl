@@ -331,7 +331,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Fi
 
 	if isArray && prop.Value.Items.Ref != "" {
 		f.Type = &Array{Items: nameOnlyType(typeNameFromSchemaRef(prop.Value.Items))}
-		f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
+		// f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
 		return f, nil
 	}
 

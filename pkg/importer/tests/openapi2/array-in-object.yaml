@@ -33,6 +33,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/OtherObject'
+        minItems: 1
+        maxItems: 10
       missingItems:
         type: array
   OtherObject:
