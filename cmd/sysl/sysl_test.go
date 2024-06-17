@@ -1090,7 +1090,7 @@ func TestProtobufImportWithPaths(t *testing.T) {
 	runSyslWithOutput(t, "", nil,
 		"import",
 		"--input", "../../pkg/importer/proto/tests/combined/user.proto",
-		"--import-paths", "../..",
+		"--import-paths", "../../pkg/importer/proto/tests/combined",
 		"--format", "protobuf")
 }
 

@@ -344,7 +344,7 @@ let import = \(importPaths?:paths:[], ...) \files
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
     let rec path = \file
-        let m = (fileMaps >> \map (map single).@value where //seq.has_suffix(file,  .)) where .@item;
+        let m = (fileMaps >> \maps let map = maps single; map.@value where . = $`${map.@}/${file}`) where .@item;
         cond {m: (m rank (:.@))(0) single, _: file};
     # `_import` returns the parsed files and their imports
     # `files` the files to parse

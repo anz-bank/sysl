@@ -8,10 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 var (
@@ -29,6 +30,7 @@ type testConfig struct {
 	testExtension string
 	format        string
 	excludeFiles  map[string]bool
+	imports       string
 }
 
 func runImportEqualityTests(t *testing.T, cfg testConfig) {
@@ -59,7 +61,7 @@ func runImportEqualityTests(t *testing.T, cfg testConfig) {
 				imp, err := Factory(absFilePath, false, cfg.format, input, logger)
 				require.NoError(t, err)
 				imp, err = imp.Configure(&ImporterArg{
-					AppName: "TestApp", PackageName: "com.example.package", Imports: ".",
+					AppName: "TestApp", PackageName: "com.example.package", Imports: cfg.imports,
 				})
 				require.NoError(t, err)
 				var result string
@@ -94,7 +96,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	path := syslutil.MustAbsolute(t, cfg.testDir)
 	imp, err := Factory(path, true, cfg.format, nil, logger)
 	require.NoError(t, err)
-	imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package", Imports: "."})
+	imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package", Imports: cfg.imports})
 	require.NoError(t, err)
 	var out string
 	switch imp.(type) {
@@ -223,6 +225,7 @@ func TestLoadProtobufDirFromTestDir(t *testing.T) {
 		testDir:       "proto/tests/combined",
 		testExtension: "",
 		format:        "protobufDir",
+		imports:       "proto/tests/combined",
 	})
 }
 
