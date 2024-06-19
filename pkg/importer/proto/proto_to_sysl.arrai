@@ -241,10 +241,21 @@ let type = \message \file \appName \imports \prefix
 # `enum` the enum being converted.
 # `file` the file the enum is located in.
 let enum = \enum \file
+    let fields = enum.@value.fields?:{} => (@: .@, @value: evalNumber(.@value.value), deprecated: .@value.options?('deprecated')?.b?:false);
+    let nested = fields nest|@,deprecated|e;
     (
         name: syslSafeName(enum.@),
         attrs: baseAttrs(enum, file),
-        enum: (items: enum.@value.fields?:{} => (@: .@, @value: evalNumber(.@value.value)))
+        enum: (items: (fields where \f
+            (let n = ((nested where .@value = f.@value) single).e;
+            cond {
+                n count = 1: true, # only entry for value
+                (n where !.deprecated) count > 1: //error($`enum with multiple names for value ${f.@value} found: ${(n where !.deprecated) => .@}`),
+                !f.deprecated: true, # this is the only non-deprecated
+                (n where !.deprecated) count = 1: false, # this is deprecated and there is a non-deprecated value
+                (n => .@ orderby .)(0) = f.@: true, # use the first (alphabetically) deprecated value
+                _: false, # skip it
+            })) => (@: .@, @value: .@value))
     );
 
 # `endpoint` creates an endpoint out of a rpc.

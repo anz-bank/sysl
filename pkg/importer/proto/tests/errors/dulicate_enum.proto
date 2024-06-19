@@ -1,0 +1,6 @@
+syntax = "proto3";
+package enums;
+enum e {
+  E0 = 0;
+  E1 = 0;
+}

@@ -219,6 +219,23 @@ func TestLoadProtobufFromTestFiles(t *testing.T) {
 	})
 }
 
+func TestLoadProtobufTestErrors(t *testing.T) {
+	t.Parallel()
+
+	runImportErrorTest(t, errTestConfig{
+		testConfig: testConfig{
+			name:          "TestLoadProtobufTestErrors",
+			testDir:       "proto/tests/errors",
+			testExtension: ".proto",
+			format:        Protobuf.Name,
+		},
+
+		cases: map[string]string{
+			"dulicate_enum": "enum with multiple names for value 0 found",
+		},
+	})
+}
+
 func TestLoadProtobufDirFromTestDir(t *testing.T) {
 	runImportDirEqualityTests(t, testConfig{
 		name:          "TestLoadProtobufDirFromTestDir",

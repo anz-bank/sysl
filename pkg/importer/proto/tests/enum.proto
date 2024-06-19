@@ -1,0 +1,15 @@
+syntax = "proto3";
+package enums;
+enum e {
+  E0 = 0;
+  E1 = 1;
+  E1_DEP = 1 [deprecated = true];
+  E2 = 2;
+  E2_DEP1 = 2 [deprecated = true];
+  E2_DEP2 = 2 [deprecated = true];
+  E3_DEP = 3 [deprecated = true];
+  E4_DEP1 = 4 [deprecated = true];
+  E4_DEP2 = 4 [deprecated = true];
+  E5_DEP2 = 5 [deprecated = true];
+  E5_DEP1 = 5 [deprecated = true];
+}

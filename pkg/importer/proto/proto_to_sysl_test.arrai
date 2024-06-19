@@ -1,4 +1,4 @@
-let (:import, ...) = //{./proto_parser};
+let (:import, :parseFile, ...) = //{./proto_parser};
 let (:module, ...) = //{./proto_to_sysl};
 
 (
@@ -21,5 +21,30 @@ let (:module, ...) = //{./proto_to_sysl};
             let actual = sysl.apps('SearchService').attrs('proto_options').a.elt(0).s;
             # Strings are not escaped in memory, only on serialization.
             //test.assert.equal(`php_namespace = Foo\Bar`, actual),
+    ),
+
+    enum: (
+        dupicates_filter:
+            let model = {'f.proto': parseFile(`
+                syntax = "proto3";
+                package enums;
+                enum e {
+                    E0 = 0;
+                    E1 = 1;
+                    E1_DEP = 1 [deprecated = true];
+                    E2 = 2;
+                    E2_DEP1 = 2 [deprecated = true];
+                    E2_DEP2 = 2 [deprecated = true];
+                    E3_DEP = 3 [deprecated = true];
+                    E4_DEP1 = 4 [deprecated = true];
+                    E4_DEP2 = 4 [deprecated = true];
+                    E5_DEP2 = 5 [deprecated = true];
+                    E5_DEP1 = 5 [deprecated = true];
+                }`
+            )};
+            let sysl = module((), model);
+            let expected = {'E0': 0, 'E1': 1, 'E2': 2, 'E3_DEP': 3, 'E4_DEP1': 4, 'E5_DEP1': 5};
+            let actual = sysl.apps('enums').types('e').enum.items;
+            //test.assert.equal(expected, actual),
     )
 )
