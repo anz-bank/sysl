@@ -246,6 +246,16 @@ func TestLoadProtobufDirFromTestDir(t *testing.T) {
 	})
 }
 
+func TestLoadProtobufDirFromTestDirWithDot(t *testing.T) {
+	runImportDirEqualityTests(t, testConfig{
+		name:          "TestLoadProtobufDirFromTestDir",
+		testDir:       "proto/tests/combined",
+		testExtension: "",
+		format:        "protobufDir",
+		imports:       "./proto/tests/combined",
+	})
+}
+
 /*
 func TestLoadGrammarFromTestFiles(t *testing.T) {
 	runImportEqualityTests(t, testConfig{

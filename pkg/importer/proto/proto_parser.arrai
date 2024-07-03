@@ -340,11 +340,14 @@ let parseFile =
 let import = \(importPaths?:paths:[], ...) \files
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let isLocal = \path localImports(path)?:false && true;
-    let fileMaps = paths >> \path {path: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
+    let fileMaps = paths >> \path
+        # //os.tree() trims './' so remove it
+        let pathTrimmed = cond {path='.':'', _://seq.trim_prefix('./',path)};
+        {pathTrimmed: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
     let rec path = \file
-        let m = (fileMaps >> \maps let map = maps single; map.@value where . = $`${map.@}/${file}`) where .@item;
+        let m = (fileMaps >> \maps let map = maps single; map.@value where . = $`${map.@}${cond{map.@:'/'}}${file}`) where .@item;
         cond {m: (m rank (:.@))(0) single, _: file};
     # `_import` returns the parsed files and their imports
     # `files` the files to parse
