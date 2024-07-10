@@ -40,3 +40,7 @@ TestApp "Simple":
             @json_tag = "i"
         j <: string(1..2)?:
             @json_tag = "j"
+        k <: float?:
+            @json_tag = "k"
+        l <: int(6)?:
+            @json_tag = "l"

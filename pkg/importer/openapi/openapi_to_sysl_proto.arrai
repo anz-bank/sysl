@@ -228,10 +228,15 @@ let specialAnno = {
         let constraint =
             let c = (
                 length:
-                    let maxLength = t('maxLength')?:{};
-                    let minLength = t('minLength')?:{};
-                    cond {maxLength: ('max': maxLength), _: ()} +>
-                    cond {minLength: ('min': minLength), _: ()}
+                    cond {
+                    type = primitive('FLOAT'):
+                        (), # no length on a float
+                    _:
+                        let maxLength = t('maxLength')?:{};
+                        let minLength = t('minLength')?:{};
+                        cond {maxLength: ('max': maxLength), _: ()} +>
+                        cond {minLength: ('min': minLength), _: ()},
+                    }
                 ,
                 bit_width:
                     let format = intOrFloatRegex.sub('', t('format')?.s:{});

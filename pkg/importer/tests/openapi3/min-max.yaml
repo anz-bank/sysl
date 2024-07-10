@@ -41,3 +41,9 @@ components:
           type: integer
         j:
           $ref: '#/components/schemas/toRefWithLength'
+        k:
+          type: number
+          maxLength: 6 # invalid, but sysl shouldn't crash
+        l:
+          type: integer
+          maxLength: 6 # invalid, but sysl shouldn't crash
