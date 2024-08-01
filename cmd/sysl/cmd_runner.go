@@ -144,6 +144,10 @@ func (r *cmdRunner) Configure(app *kingpin.Application) error {
 		"When parsing imports don't error when a file is imported from multiple branches or into multiple app-names.",
 	).BoolVar(&r.parseSettings.NoDifferentVersionCheck)
 
+	app.Flag("cache-dir",
+		"Where to cache the repos for imported files",
+	).StringVar(&remotefs.CacheDir)
+
 	sort.Slice(commands, func(i, j int) bool {
 		return strings.Compare(commands[i].Name(), commands[j].Name()) < 0
 	})
