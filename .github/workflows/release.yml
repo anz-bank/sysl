@@ -20,13 +20,14 @@ jobs:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: 1.22
           check-latest: true
+          cache: false
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -39,9 +40,9 @@ jobs:
           SYSL_PLANTUML: http://www.plantuml.com/plantuml
 
       - name: Validate goreleaser config
-        uses: goreleaser/goreleaser-action@v4.3.0
+        uses: goreleaser/goreleaser-action@v6.0.0
         with:
-          version: v1.18.2
+          version: v2.1.0
           args: check -f .goreleaser.yml
 
       - name: Set GOVERSION env var
@@ -49,26 +50,26 @@ jobs:
 
       # GoReleaser release process is customized in `.goreleaser.yml` file
       - name: Release binaries via goreleaser
-        uses: goreleaser/goreleaser-action@v4.3.0
+        uses: goreleaser/goreleaser-action@v6.0.0
         with:
-          version: v1.18.2
-          args: release --rm-dist --debug -f .goreleaser.yml
+          version: v2.1.0
+          args: release --clean --verbose -f .goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             docker.io/anzbank/sysl
@@ -81,7 +82,7 @@ jobs:
             org.opencontainers.image.url=https://sysl.io
 
       - name: Build and push docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           pull: true
@@ -92,7 +93,7 @@ jobs:
 
       - name: "Docker meta: sysl-version-diff"
         id: diffmeta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             docker.io/anzbank/sysl-version-diff
@@ -103,7 +104,7 @@ jobs:
             type=sha,prefix=,format=long
 
       - name: "Build and push docker image: sysl-version-diff"
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: sysl-version-diff/Dockerfile

@@ -16,7 +16,7 @@ coverage_level() {
         awk '//{sub(/(\.[0-9]+)?%$/,"",$3);print$3}'
 }
 
-CGO_ENABLED=0 go test -coverprofile=$COVERAGE_FILE -covermode=atomic ./...
+GOEXPERIMENT=nocoverageredesign CGO_ENABLED=0 go test -coverprofile=$COVERAGE_FILE -covermode=atomic ./...
 EXIT_CODE=$(echo $?)
 
 COVERAGE_LEVEL="$(coverage_level)"

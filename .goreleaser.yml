@@ -1,3 +1,4 @@
+version: 2
 project_name: sysl
 env:
   - GO111MODULE=on
@@ -35,7 +36,6 @@ archives:
   files:
     - README.md
     - LICENSE
-  rlcp: true
 
 checksum:
   name_template: '{{.ProjectName}}_{{.Version}}_checksums.txt'
@@ -60,7 +60,7 @@ brews:
     - sysl
 
     # Github repository to push the tap to.
-    tap:
+    repository:
       owner: anz-bank
       name: homebrew-sysl
 
@@ -72,8 +72,8 @@ brews:
       name: goreleaserbot
       email: goreleaser@carlosbecker.com
 
-    # Folder inside the repository to put the formula.
-    folder: Formula
+    # Directory inside the repository to put the formula.
+    directory: Formula
 
     test: |
       system "#{bin}/sysl --version"

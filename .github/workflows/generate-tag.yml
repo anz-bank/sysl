@@ -11,12 +11,12 @@ jobs:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: '0'
 
       - name: Checkout github-tag-action
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ vars.GENERATE_TAG_REPO || 'anz-bank/github-tag-action' }}
           ref: ${{ vars.GENERATE_TAG_REF || '1.40.0' }}

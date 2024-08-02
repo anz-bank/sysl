@@ -19,18 +19,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: 1.22
           check-latest: true
+          cache: false
 
       - name: Set up Node
         if: runner.os != 'Windows'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             ~/go/pkg/mod
@@ -40,7 +41,7 @@ jobs:
             ${{ runner.os }}-go-cache-
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Ensure no tests are using Jest's 'test.only()'
         run: find ts/src -type f -name '*.test.ts' | (! xargs grep 'test\.only\(')
@@ -119,13 +120,14 @@ jobs:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: 1.22
           check-latest: true
+          cache: false
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -134,7 +136,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             docker.io/anzbank/sysl
@@ -147,7 +149,7 @@ jobs:
             org.opencontainers.image.url=https://sysl.io
 
       - name: Build docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v6
         with:
           context: .
           pull: true
@@ -162,13 +164,13 @@ jobs:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: 1.22
           check-latest: true
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -186,4 +188,4 @@ jobs:
 
       - name: Validate goreleaser config
         run: |
-          go run github.com/goreleaser/goreleaser@v1.18.2 check -f .goreleaser.yml
+          go run github.com/goreleaser/goreleaser/v2@v2.1.0 check -f .goreleaser.yml

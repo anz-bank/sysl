@@ -11,9 +11,9 @@ jobs:
   check-version:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -30,9 +30,9 @@ jobs:
     runs-on: ${{ vars.RUNNER_UBUNTU && fromJSON(vars.RUNNER_UBUNTU) || 'ubuntu-latest' }}
     if: ${{ github.repository_owner == 'anz-bank' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           registry-url: "https://registry.npmjs.org"

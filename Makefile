@@ -129,7 +129,7 @@ pkg/importer/proto/bundled_files/local_imports.arrai: pkg/importer/proto/bundled
 bundled-proto: pkg/importer/proto/bundled_files/local_imports.arrai
 
 release:
-	GOVERSION="$(GOVERSION)" goreleaser build --rm-dist --snapshot -f .goreleaser.yml
+	GOVERSION="$(GOVERSION)" goreleaser build --clean --snapshot -f .goreleaser.yml
 
 install: build ## Install the sysl binary into $(GOPATH)/bin. We don't use go install because we need to pass in LDFLAGS.
 	test -n "$(GOPATH)"  # $$GOPATH
