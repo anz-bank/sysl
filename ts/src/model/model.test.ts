@@ -186,7 +186,7 @@ describe("DTO", () => {
         `);
         const model = await Model.fromText(sysl, "main.sysl", { maxImportDepth: 1 });
 
-        const dto = model.toDto();
+        const dto = JSON.parse(JSON.stringify(model.toDto()));
         expect(dto).toMatchObject(
             {
                 header: "# Header",
@@ -196,7 +196,7 @@ describe("DTO", () => {
                         kind: "Application",
                         namespace: ["Ns"],
                         name: "App",
-                        metadata: { appTag: undefined, appAnno: "App" },
+                        metadata: { appTag: null, appAnno: "App" },
                         locations: {
                             0: "ts/main.sysl:5:1:12:33",
                             appTag: "ts/main.sysl:5:12::19",
@@ -206,7 +206,7 @@ describe("DTO", () => {
                             {
                                 kind: "Type",
                                 name: "Type",
-                                metadata: { typeTag: undefined, typeAnno: "Type" },
+                                metadata: { typeTag: null, typeAnno: "Type" },
                                 locations: {
                                     0: "ts/main.sysl:7:5:12:33",
                                     typeTag: "ts/main.sysl:7:17::25",
@@ -232,7 +232,7 @@ describe("DTO", () => {
                                         kind: "Field",
                                         name: "Reference",
                                         ref: "Other.Type",
-                                        metadata: { fieldTag: undefined, fieldAnno: "Field" },
+                                        metadata: { fieldTag: null, fieldAnno: "Field" },
                                         locations: {
                                             0: "ts/main.sysl:11:9:13:2",
                                             fieldTag: "ts/main.sysl:11:34::43",
@@ -265,7 +265,7 @@ describe("DTO", () => {
         `);
         const model = await Model.fromText(sysl, "main.sysl", { maxImportDepth: 1 });
 
-        const dto = model.toDto();
+        const dto = JSON.parse(JSON.stringify(model.toDto()));
         expect(dto).toMatchObject(
             {
                 apps: [
@@ -281,7 +281,7 @@ describe("DTO", () => {
                                         primitive: "string",
                                         constraint: "(32..64)",
                                         metadata: {
-                                            paramTag: undefined,
+                                            paramTag: null,
                                             paramAnno: [["1"],"2"],
                                         },
                                         locations: {
@@ -313,7 +313,7 @@ describe("DTO", () => {
                                         }
                                     ],
                                 },
-                                metadata: { methodTag: undefined, restAnno: "GET Customer" },
+                                metadata: { methodTag: null, restAnno: "GET Customer" },
                                 locations: {
                                     0: "ts/main.sysl:3:9:9:2",
                                     methodTag: "ts/main.sysl:3:100::110",
@@ -381,7 +381,7 @@ describe("DTO", () => {
         `);
         const model = await Model.fromText(sysl, "main.sysl", { maxImportDepth: 1 });
 
-        const dto = model.toDto();
+        const dto = JSON.parse(JSON.stringify(model.toDto()));
         expect(dto).toMatchObject(
             {
                 apps: [
@@ -404,7 +404,7 @@ describe("DTO", () => {
                                         primitive: "string",
                                         constraint: "(32..64)",
                                         metadata: {
-                                            paramTag: undefined,
+                                            paramTag: null,
                                             paramAnno: [["1"],"2"],
                                         },
                                         locations: {
@@ -422,7 +422,7 @@ describe("DTO", () => {
                                     }
 
                                 ],
-                                metadata: { rpcTag: undefined, rpcAnno: "GetCustomer" },
+                                metadata: { rpcTag: null, rpcAnno: "GetCustomer" },
                                 locations: {
                                     0: "ts/main.sysl:2:5:7:38",
                                     "rpcAnno": "ts/main.sysl:3:9::33",
@@ -472,7 +472,7 @@ describe("DTO", () => {
     test.concurrent("All", async () => {
         const model = await Model.fromFile(allPath);
         
-        const dto = model.toDto();
+        const dto = JSON.parse(JSON.stringify(model.toDto()));
         const model2 = Model.fromDto(dto);
 
         // Not serialized by toDto()

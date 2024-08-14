@@ -51,7 +51,7 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
                 ...this.annos.map(a => [a.name, a.locations[0]?.toString()]),
             ]) as { [index: number]: string; [name: string]: string },
             metadata: Object.fromEntries([
-                ...this.tags.map(t => [t.name, undefined]),
+                ...this.tags.map(t => [t.name, null]),
                 ...this.annos.map(a => [a.name, a.value]),
             ]) as { [name: string]: AnnoValue | undefined },
         };
@@ -67,7 +67,7 @@ export abstract class Element implements ILocational, IRenderable, IChild, IClon
         const metadata = Object.entries(dto.metadata).map(([name, value]) => {
             const loc = dto.locations[name];
             const params = { locations: loc ? [Location.parse(loc)] : [] };
-            return value == undefined ? new Tag(name, params) : new Annotation(name, value, params);
+            return value == null ? new Tag(name, params) : new Annotation(name, value, params);
         });
         const tags = metadata.filter(a => a instanceof Tag) as Tag[];
         const annos = metadata.filter(a => a instanceof Annotation) as Annotation[];
