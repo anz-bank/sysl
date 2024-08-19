@@ -99,11 +99,10 @@ let renderTypeUsage = \type
     };
     let (?:opt:false, ?:constraint:{}, ...) = type;
 
-    # FIXME handle precision
     let constraintStr = cond constraint {
-        [(length: ('max': maxLength, 'min': minLength), ...)]: $`(${minLength}..${maxLength})`,
-        [(length: ('max': maxLength), ...)]: $`(${maxLength})`,
-        [(length: ('min': minLength), ...)]: $`(${minLength}..)`,
+        [(length: ('max': maxLength, 'min': minLength), ...)]: $`(${minLength:d}..${maxLength:d})`,
+        [(length: ('max': maxLength), ...)]: $`(${maxLength:d})`,
+        [(length: ('min': minLength), ...)]: $`(${minLength:d}..)`,
     };
 
     let bitWidth = cond constraint {

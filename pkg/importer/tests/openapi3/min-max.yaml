@@ -47,3 +47,13 @@ components:
         l:
           type: integer
           maxLength: 6 # invalid, but sysl shouldn't crash
+        maxLength:
+          type: string
+          maxLength: 2147483647
+        minLength:
+          type: string
+          minLength: 2147483646
+        minAndMaxLength:
+          type: string
+          minLength: 2147483646
+          maxLength: 2147483647

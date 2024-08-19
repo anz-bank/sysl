@@ -44,3 +44,9 @@ TestApp "Simple":
             @json_tag = "k"
         l <: int(6)?:
             @json_tag = "l"
+        maxLength <: string(2147483647)?:
+            @json_tag = "maxLength"
+        minAndMaxLength <: string(2147483646..2147483647)?:
+            @json_tag = "minAndMaxLength"
+        minLength <: string(2147483646..)?:
+            @json_tag = "minLength"

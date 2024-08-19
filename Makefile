@@ -91,15 +91,28 @@ plugins: \
 internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cli.arrai go.mod
 	$(BUNDLE)
 
-internal/bundles/assets/import_sql_cli.arraiz: pkg/importer/sql/import_sql_cli.arrai pkg/importer/sql/sql.arrai go.mod
+internal/bundles/assets/import_sql_cli.arraiz: \
+		pkg/importer/sql/import_sql_cli.arrai \
+		pkg/importer/sql/sql.arrai \
+		$(shell find pkg/arrai/sysl-renderer -name '*.arrai') \
+		go.mod
 	$(BUNDLE)
 
-internal/bundles/assets/import_openapi_cli.arraiz: pkg/importer/openapi/import_openapi_cli.arrai pkg/importer/cli.arrai $(shell find pkg/importer/openapi -name '*.arrai') go.mod
+internal/bundles/assets/import_openapi_cli.arraiz: \
+		pkg/importer/openapi/import_openapi_cli.arrai \
+		pkg/importer/cli.arrai \
+		$(shell find pkg/importer/openapi -name '*.arrai') \
+		$(shell find pkg/arrai/sysl-renderer -name '*.arrai') \
+		go.mod
 	$(BUNDLE)
 
 # There are many files that change the proto importer logic.
 # Check all arrai files within the directory for changes before bundling.
-internal/bundles/assets/import_proto_cli.arraiz: pkg/importer/proto/import_proto_cli.arrai $(shell find pkg/importer/proto -name '*.arrai') go.mod
+internal/bundles/assets/import_proto_cli.arraiz: \
+		pkg/importer/proto/import_proto_cli.arrai \
+		$(shell find pkg/importer/proto -name '*.arrai') \
+		$(shell find pkg/arrai/sysl-renderer -name '*.arrai') \
+		go.mod
 	$(BUNDLE)
 
 internal/bundles/exporters/proto/transform.arraiz: transforms/exporters/proto/transform.arrai $(shell find transforms/exporters/proto -name '*.arrai') go.mod
