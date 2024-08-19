@@ -12,9 +12,16 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/anz-bank/golden-retriever/reader"
 	"github.com/anz-bank/golden-retriever/reader/remotefs"
 	"github.com/anz-bank/pkg/mod"
+	"github.com/imdario/mergo"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/anz-bank/sysl/pkg/env"
 	parser "github.com/anz-bank/sysl/pkg/grammar"
 	"github.com/anz-bank/sysl/pkg/importer"
@@ -23,13 +30,6 @@ import (
 	"github.com/anz-bank/sysl/pkg/printer"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/anz-bank/sysl/pkg/syslutil"
-
-	"github.com/antlr/antlr4/runtime/Go/antlr"
-	"github.com/imdario/mergo"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
-	"golang.org/x/sync/errgroup"
 )
 
 type Settings struct {
@@ -65,7 +65,14 @@ func NewParser() *Parser {
 	}
 }
 
-func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileContext, error) {
+func parseString(filename string, input antlr.CharStream) (tree parser.ISysl_fileContext, err error) {
+	defer func() {
+		// recover from panic if one occurred. Set err to nil otherwise.
+		if recover() != nil {
+			err = syslutil.Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
+		}
+	}()
+
 	errorListener := SyslParserErrorListener{}
 	lexer := parser.NewThreadSafeSyslLexer(input)
 	defer parser.DeleteLexerState(lexer)
@@ -76,7 +83,7 @@ func parseString(filename string, input antlr.CharStream) (parser.ISysl_fileCont
 	p.AddErrorListener(&errorListener)
 
 	p.BuildParseTrees = true
-	tree := p.Sysl_file()
+	tree = p.Sysl_file()
 	if errorListener.hasErrors {
 		return nil, syslutil.Exitf(ParseError, fmt.Sprintf("%s has syntax errors\n", filename))
 	}
