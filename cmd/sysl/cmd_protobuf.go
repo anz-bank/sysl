@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
@@ -75,6 +76,10 @@ func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 	}
 
 	if toJSON {
+		if p.compact {
+			removeSourceContext(m.Apps)
+		}
+
 		if p.splitappspath != "-" {
 			return pbutil.OutputSplitApplications(m, "json", opt, p.splitappspath, "data.json", args.Filesystem)
 		} else if p.output == "-" {
@@ -103,4 +108,40 @@ func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 		return pbutil.OutputSplitApplications(m, p.mode, opt, p.splitappspath, "data.pb", args.Filesystem)
 	}
 	return pbutil.GeneratePBBinaryMessageFile(m, p.output, args.Filesystem)
+}
+
+func removeSourceContext(target any) {
+	removeSourceContextImpl(reflect.ValueOf(target))
+}
+
+func removeSourceContextImpl(v reflect.Value) {
+	for v.Kind() == reflect.Ptr || v.Kind() == reflect.Interface {
+		v = v.Elem()
+	}
+	switch v.Kind() {
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < v.Len(); i++ {
+			removeSourceContextImpl(v.Index(i))
+		}
+	case reflect.Map:
+		for iterator := v.MapRange(); iterator.Next(); {
+			removeSourceContextImpl(iterator.Value())
+		}
+	case reflect.Struct:
+		t := v.Type()
+		for i := 0; i < v.NumField(); i++ {
+			fType := t.Field(i)
+			if fType.IsExported() == false || fType.Name == "SourceContexts" {
+				continue
+			}
+
+			fValue := v.Field(i)
+			if fType.Name == "SourceContext" {
+				fValue.Set(reflect.Zero(fType.Type))
+			} else {
+				removeSourceContextImpl(fValue)
+			}
+		}
+	default:
+	}
 }
