@@ -3,6 +3,7 @@ info:
   title: Params For All Operations
 paths:
   /param/{id}:
+    description: Common description
     parameters:
       - $ref: "#/components/parameters/name"
       - name: id
@@ -14,7 +15,7 @@ paths:
           type: string
         in: query
     post:
-      description: Empty parameters
+      # no parameters or description
       responses:
         "200":
           description: "OK"

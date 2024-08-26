@@ -26,7 +26,6 @@ let singleSyslStrTag = \tag {'patterns': (a: (elt: [(s: tag)]))};
 let schemaSyslTag = \tag {syslAttrs: singleSyslStrTag(tag)};
 
 # FIXME: handle content type on paths, they have precedence rule (e.g. text/* > text/plain)
-# FIXME: handle non verbs in path
 
 # simplifiedParams moves top level parameters from a path and move it into all operation objects in a path.
 let simplifiedParams = \oapi
@@ -50,12 +49,31 @@ let simplifiedParams = \oapi
                 (nested(top) +> nested(bottom)) => .@value orderby .,
         }
     ;
+    let mergeDesc = \top \bottom
+        cond {
+            bottom = '': top,
+            _: bottom,
+        }
+    ;
 
     oapi +> {
-        'paths': oapi('paths')?:{} >> cond . {
-            {'parameters': top, ...verbs}: verbs >> . +> {'parameters': (a: mergeParams(top.a, .('parameters')?.a?:{}))},
-            _: .,
-        }
+        'paths': oapi('paths')?:{} >> 
+            cond . {
+                {'parameters': commonParams, ...verbs}: 
+                    verbs => cond {
+                        .@ <: httpVerbs: (:.@, @value: .@value +> {'parameters': (a: mergeParams(commonParams.a, .@value('parameters')?.a?:{}))}),
+                        _: .,
+                    },
+                _: .,
+            } >>
+            cond . {
+                {'description': commonDesc, ...verbs}: 
+                    verbs => cond {
+                        .@ <: httpVerbs: (:.@, @value: .@value +> {'description': (s: mergeDesc(commonDesc.s, .@value('description')?.s?:''))}),
+                        _: .,
+                    },
+                _: .,
+            } where .@ !<: {'parameters', 'description'}
     }
 ;
 

@@ -12,5 +12,5 @@ TestApp "Params For All Operations":
             | has existing parameters
             return 200
         POST?name=string?&special%2Dcharacter=string?:
-            | Empty parameters
+            | Common description
             return 200
