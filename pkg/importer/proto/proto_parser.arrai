@@ -86,7 +86,7 @@ floatLit        -> /{\d+(?:\.\d+?)? (?:e[-+]?\d+)? | \. \d+ (?:e[-+]?\d+)? | inf
 
 boolLit         -> /{true | false};
 
-strLit          -> ('"' s=([^"]*:'""') '"' | "'" s=([^']*:"''") "'"):\s; //';
+strLit          -> (c* (s=(["]\s* [^"]*:'""') ["] | s=([']\s* [^']*:"''") ['])):\s; // ";
 
 object          -> "{" (c* objectField comma? c*)* "}";
 objectField     -> objectKey ":"? objectValue;
@@ -137,12 +137,15 @@ let concatStrLit = \strLit
     //seq.concat(//seq.concat(
         (strLit.s >> .'') => \i (
             @:i.@,
-            @item: i.@item >> \v
-                let s=(v rank (:.@));
-                cond strLit.@choice(i.@) {
-                    0: cond s {'""':'"', _:s},
-                    1: cond s {"''":"'", _:s},
-                }
+            @item: i.@item => \v
+                let st=(v.@item rank (:.@));
+                let s=cond {v.@=0:st where .@>0 rank (:.@), _:st};
+                (@:v.@, @item:
+                    cond strLit.@choice(i.@) {
+                        0: cond s {'""':'"', _:s},
+                        1: cond s {"''":"'", _:s},
+                    }
+                )
         )
     ));
 
