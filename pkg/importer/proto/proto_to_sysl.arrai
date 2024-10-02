@@ -61,14 +61,21 @@ let referencedType = \t \file \appName \imports \scope \prefix
     # `referencedNs` finds the file that had the original type definition and returns the namespace of that file.
     let referencedNs = \t \file \imports
         let resolvedImports = (file.@value.imports => cond {includeImport(.@): resolveImport(.@, imports)}) where .;
-        let ref = (
+        let refs = (
             (resolvedImports where fileContainsType(imports(.), t.name)) ||
             # FIXME: this is a hack. Currently the proto importer has problems parsing types references which references
             # nested types (types defined in a type). When this happens, imports cannot be resolved as it will not be
             # able to find the referenced types in imported definitions. What this hack does is ensure that if a type
             # is not found in imported definitions, it will attempt to find the type in the main file.
             {file.@}
-        ) single;
+        );
+        let refs = cond {
+            # If more than 1 file was found then also check the package (it should probably do that above already in fileContainsType)
+            refs count > 1: refs where //seq.has_prefix(getPackage((@value:imports(.))), t.package),
+            _: refs,
+        };
+        let _ = cond {refs count > 1: //error($`"${t}" found in multiple files: ${refs}`)};
+        let ref = refs single;
         getNamespace(imports(ref));
 
     let samePackage = \t t.package?:'' = getPackage(file);
