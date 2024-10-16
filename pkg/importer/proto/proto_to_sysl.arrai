@@ -15,7 +15,7 @@ let packageToApp = \package //seq.sub(".", "_", package);
 # `import` the import path as it appears in a proto file.
 # `imports` a map of all files in the module.
 let resolveImport = \import \imports
-    let matches = (imports where //seq.contains(import, .@));
+    let matches = (imports where //seq.has_prefix(import, .@));
     cond {
         matches: (matches single).@,
         _: //error($`Unresolvable import: ${import} not in [${imports => .@ orderby .::, }]`)
