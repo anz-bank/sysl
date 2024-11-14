@@ -27,6 +27,7 @@ let mediatypeAnno     = 'mediatype';
 let openapiTypeAnno   = 'openapi_type';
 let openapiFormatAnno = 'openapi_format';
 let openapiEnumAnno   = 'openapi_enum';
+let openapiTagsAnno   = 'openapi_tags';
 let packageAnno       = 'package';
 let exampleAnno       = 'examples';
 let patternsAnno      = 'patterns';
@@ -445,6 +446,8 @@ let specialAnno = {
     let oapiToAppMessage = \appName
         let (:long_name, :docstring, :attrs) = infoToAppMessageData(oapi('info')?:{});
         let attrs = attrs +> (packageName && {packageAnno: (s: packageName)});
+        let tags = oapi('tags')?.a?:[] >> \tag tag('name');
+        let attrs = attrs +> (tags && {openapiTagsAnno: (a: (elt: tags))});
         let endpoints = pathsToEndpointMessages(oapi('paths')?:{});
         (
             apps: {

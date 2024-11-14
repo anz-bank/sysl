@@ -54,6 +54,7 @@ components:
 tags:
   - name: "Test"
     description: "Test OpenAPI YAML"
+  - name: Test "2"
 
 security:
   - BearerJWT: []

@@ -13,6 +13,7 @@ TestApp "Meta API Test":
     @license = "license"
     @license_name = "license name"
     @license_url = "https://example.com/license"
+    @openapi_tags = ["Test", "Test \"2\""]
     @package = "com.example.package"
     @version = "1.0.0"
     
