@@ -157,6 +157,15 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.T) (string, error) {
 	return result.String(), err
 }
 
+// getTagNames extracts names from OpenAPI tags
+func getTagNames(tags openapi3.Tags) []string {
+	names := make([]string, len(tags))
+	for i, tag := range tags {
+		names[i] = tag.Name
+	}
+	return names
+}
+
 func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.T, basepath string) SyslInfo {
 	info := SyslInfo{
 		OutputData: OutputData{
@@ -166,6 +175,7 @@ func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.T, basepath string) Sysl
 		Title:       spec.Info.Title,
 		Description: spec.Info.Description,
 		OtherFields: []string{},
+		OpenapiTags: getTagNames(spec.Tags),
 	}
 	values := []string{
 		"version", spec.Info.Version,
@@ -188,6 +198,7 @@ func (o *OpenAPI3Importer) buildSyslInfo(spec *openapi3.T, basepath string) Sysl
 			info.OtherFields = append(info.OtherFields, key, val)
 		}
 	}
+
 	return info
 }
 

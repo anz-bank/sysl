@@ -1,0 +1,10 @@
+swagger: "2.0"
+info:
+  title: foo
+tags:
+  - name: test1
+    description: test1 description
+  - name: test "2"
+    description: test2 description
+paths:
+definitions:

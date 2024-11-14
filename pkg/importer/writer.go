@@ -30,6 +30,7 @@ type SyslInfo struct {
 	Title       string
 	Description string
 	OtherFields []string // Ordered key, val pair
+	OpenapiTags []string `json:"openapi_tags,omitempty" yaml:"openapi_tags,omitempty"`
 }
 
 type MethodEndpoints struct {
@@ -102,6 +103,13 @@ func (w *writer) writeHeader(info SyslInfo) error {
 		if val != "" {
 			w.writeLines(fmt.Sprintf("@%s = %s", key, quote(val)))
 		}
+	}
+	if len(info.OpenapiTags) > 0 {
+		escapedTags := make([]string, len(info.OpenapiTags))
+		for i, tag := range info.OpenapiTags {
+			escapedTags[i] = strings.ReplaceAll(tag, `"`, `\"`)
+		}
+		w.writeLines(fmt.Sprintf(`@openapi_tags = ["%s"]`, strings.Join(escapedTags, `", "`)))
 	}
 	w.writeLines("@description =:", PushIndent)
 	desc := getDescription(info.Description)
