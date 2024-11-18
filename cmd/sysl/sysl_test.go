@@ -623,7 +623,8 @@ func TestMain2WithEmptySdParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "sd", "-g", " ", "-o", "", "tests/groupby.sysl", "-a", " "}, fs, logger, os.Stdin, io.Discard, main3)
+	main2([]string{"sysl", "sd", "-g", " ", "-o", "", "tests/groupby.sysl", "-a", " "},
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t, "'output' value passed is empty\n"+
 		"'app' value passed is empty\n"+
@@ -636,7 +637,8 @@ func TestMain2WithValidateSyslNamespaces(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
-	ret := main2([]string{"sysl", "validate", filepath.Join(testDir, "apps_namespaces.sysl")}, fs, logger, os.Stdin, io.Discard, main3)
+	ret := main2([]string{"sysl", "validate", filepath.Join(testDir, "apps_namespaces.sysl")},
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 0, ret)
 	assert.False(t, len(hook.AllEntries()) > 0)
 }
@@ -781,7 +783,8 @@ func TestSwaggerExportInvalid(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
-		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")}, fs, logger, os.Stdin, io.Discard, main3)
+		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")},
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.True(t, errInt == 1)
 }
 
