@@ -1122,7 +1122,9 @@ func runSyslWithOutput(t *testing.T, outFileExt string, stdin io.Reader, args ..
 	if outFileExt == "" {
 		outFileExt = ".out"
 	}
-	outputPath := filepath.Join(t.TempDir(), "output"+outFileExt)
+	tempDir := t.TempDir()
+	_ = os.Chmod(tempDir, 0777)
+	outputPath := filepath.Join(tempDir, "output"+outFileExt)
 	args = append(args, "--output", outputPath)
 	runSysl(t, 0, stdin, args...)
 	require.FileExists(t, outputPath)
