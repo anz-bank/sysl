@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/anz-bank/sysl/pkg/arrai"
@@ -39,7 +40,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) e
 	if err != nil {
 		return err
 	}
-	
+
 	for i, val := range runner.modules {
 		runner.modules[i] = path.Clean(val)
 	}
