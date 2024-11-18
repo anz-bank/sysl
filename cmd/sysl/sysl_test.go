@@ -1123,7 +1123,7 @@ func runSyslWithOutput(t *testing.T, outFileExt string, stdin io.Reader, args ..
 		outFileExt = ".out"
 	}
 	tempDir := t.TempDir()
-	_ = os.Chmod(tempDir, 0777)
+	_ = os.Chmod(tempDir, 0777) //nolint:errcheck
 	outputPath := filepath.Join(tempDir, "output"+outFileExt)
 	args = append(args, "--output", outputPath)
 	runSysl(t, 0, stdin, args...)
