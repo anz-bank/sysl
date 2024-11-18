@@ -39,6 +39,10 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) e
 	if err != nil {
 		return err
 	}
+	
+	for i, val := range runner.modules {
+		runner.modules[i] = path.Clean(val)
+	}
 
 	return runner.Run(selectedCommand, fs, logger, stdin)
 }
