@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -92,9 +93,11 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	t.Helper()
 
 	logger, _ := test.NewNullLogger()
+	cfg.testDir = path.Clean(cfg.testDir)
+	cfg.imports = path.Clean(cfg.imports)
 	syslFile := filepath.Join(cfg.testDir, filepath.Base(cfg.testDir)+".sysl")
-	path := syslutil.MustAbsolute(t, cfg.testDir)
-	imp, err := Factory(path, true, cfg.format, nil, logger)
+	testPath := syslutil.MustAbsolute(t, cfg.testDir)
+	imp, err := Factory(testPath, true, cfg.format, nil, logger)
 	require.NoError(t, err)
 	imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package", Imports: cfg.imports})
 	require.NoError(t, err)
@@ -103,7 +106,7 @@ func runImportDirEqualityTests(t *testing.T, cfg testConfig) {
 	case *ProtobufImporter:
 		out, err = imp.LoadFile(cfg.testDir)
 	default:
-		out, err = imp.LoadFile(path)
+		out, err = imp.LoadFile(testPath)
 	}
 	require.NoError(t, err)
 	expected, err := os.ReadFile(syslFile)
@@ -326,12 +329,12 @@ func TestIpmortOpenAPI3Relative(t *testing.T) {
 	cwd, err := os.Getwd()
 	require.NoError(t, err)
 	// needs to be any valid swagger outside the cwd for test
-	path := syslutil.MustAbsolute(t, cwd+"/../../cmd/sysl/SIMPLE_SWAGGER_EXAMPLE.yaml")
+	cwd = syslutil.MustAbsolute(t, cwd+"/../../cmd/sysl/SIMPLE_SWAGGER_EXAMPLE.yaml")
 	logger, _ := test.NewNullLogger()
-	imp, err := Factory(path, false, OpenAPI3.Name, nil, logger)
+	imp, err := Factory(cwd, false, OpenAPI3.Name, nil, logger)
 	require.NoError(t, err)
 	imp, err = imp.Configure(&ImporterArg{AppName: "TestApp", PackageName: "com.example.package"})
 	require.NoError(t, err)
-	_, err = imp.LoadFile(path)
+	_, err = imp.LoadFile(cwd)
 	require.NoError(t, err)
 }

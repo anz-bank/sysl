@@ -7,13 +7,14 @@ import (
 	"path"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/arrai"
-	"github.com/anz-bank/sysl/pkg/cfg"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/arrai"
+	"github.com/anz-bank/sysl/pkg/cfg"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 // main3 is the real main function. It takes its output streams and command-line
@@ -41,6 +42,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) e
 		return err
 	}
 
+	// clean paths for multiplatform compatibility
 	for i, val := range runner.modules {
 		runner.modules[i] = path.Clean(val)
 	}

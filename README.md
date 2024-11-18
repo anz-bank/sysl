@@ -15,7 +15,6 @@ transformations. The Sysl compiler automatically generates sequence diagrams,
 integrations, and other views. It also offers a range of code generation
 options, all from one common Sysl specification.
 
-
 The set of outputs is open-ended and allows for your own extensions. Sysl has
 been created with extensibility in mind and it will grow to support other
 representations over time.

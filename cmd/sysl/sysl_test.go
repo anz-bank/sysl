@@ -1094,6 +1094,15 @@ func TestProtobufImportWithPaths(t *testing.T) {
 		"--format", "protobuf")
 }
 
+func TestPbCloneVersion(t *testing.T) {
+	t.Parallel()
+	runSyslWithOutput(t, "", nil,
+		"protobuf",
+		"--mode=json",
+		"--clone-version=master",
+		"../../tests/apps_namespaces.sysl")
+}
+
 // runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch
 // with a file directed at a temporary output directory. The content of the file are verified to be identical to the
 // file specified in the expectedPathFromRepoRoot parameter (no need for "../../" in its path).
