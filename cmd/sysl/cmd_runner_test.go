@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -75,7 +76,7 @@ func TestLoadModule_stdinSplitBytes(t *testing.T) {
 
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
-	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.pb")
+	fileExists, err := afero.Exists(dummyFs, path.Clean("/Stdin/App/test.pb"))
 	assert.NoError(t, err)
 	assert.True(t, fileExists)
 }
@@ -93,7 +94,7 @@ func TestLoadModule_stdinSplitJSON(t *testing.T) {
 
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
-	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.json")
+	fileExists, err := afero.Exists(dummyFs, path.Clean("/Stdin/App/test.json"))
 	assert.NoError(t, err)
 	assert.True(t, fileExists)
 }
@@ -111,7 +112,7 @@ func TestLoadModule_stdinSplitTextPB(t *testing.T) {
 
 	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
-	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.textpb")
+	fileExists, err := afero.Exists(dummyFs, path.Clean("/Stdin/App/test.textpb"))
 	assert.NoError(t, err)
 	assert.True(t, fileExists)
 }

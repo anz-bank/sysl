@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -170,7 +171,7 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 	if err != nil {
 		return nil, err
 	}
-	return p.Parse(filename, r)
+	return p.Parse(path.Clean(filename), r)
 }
 
 // ParseFromFsWithVendor parses a sysl definition from an afero filesystem, and vendor remote files in root dir
@@ -1042,8 +1043,8 @@ func renestTypes(app *sysl.Application) {
 	sort.Strings(typeNames)
 
 	for _, typeName := range typeNames {
-		path := strings.Split(typeName, ".")
-		if len(path) > 1 && injectType(app.Types[typeName], app.Types, path) {
+		splitPath := strings.Split(typeName, ".")
+		if len(splitPath) > 1 && injectType(app.Types[typeName], app.Types, splitPath) {
 			if mode == "move" {
 				delete(app.Types, typeName)
 			}
