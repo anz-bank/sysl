@@ -42,6 +42,8 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Ensure no tests are using Jest's 'test.only()'
         if: runner.os == 'Linux'

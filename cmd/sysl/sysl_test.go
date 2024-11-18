@@ -1099,7 +1099,7 @@ func TestPbCloneVersion(t *testing.T) {
 	runSyslWithOutput(t, "", nil,
 		"protobuf",
 		"--mode=json",
-		"--clone-version=HEAD",
+		"--clone-version=master",
 		"../../tests/apps_namespaces.sysl")
 }
 
