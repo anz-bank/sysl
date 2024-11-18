@@ -43,6 +43,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Ensure no tests are using Jest's 'test.only()'
+        if: runner.os == 'Linux'
+        run: find ts/src -type f -name '*.test.ts' | (! xargs grep 'test\.only\(')
+
       - name: Generate intermediate files
         run: make generate
 
