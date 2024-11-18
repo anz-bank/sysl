@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/sirupsen/logrus"
@@ -749,7 +750,7 @@ func TestMain2WithDataMultipleRelationships(t *testing.T) {
 
 func TestMain2WithBinaryInfoCmd(t *testing.T) {
 	t.Parallel()
-	runSysl(t, 0, nil, "info")
+	runSyslSuppressStdOut(t, 0, nil, "info")
 }
 
 func TestSwaggerExportCurrentDir(t *testing.T) {
@@ -1096,7 +1097,7 @@ func TestProtobufImportWithPaths(t *testing.T) {
 
 func TestPbCloneVersion(t *testing.T) {
 	t.Parallel()
-	runSyslWithOutput(t, "", nil,
+	runSyslSuppressStdOut(t, 0, nil,
 		"protobuf",
 		"--mode=json",
 		"--clone-version=298ef0551d1d2b30863d8cf898d974fbf9d009ad",
@@ -1123,7 +1124,6 @@ func runSyslWithOutput(t *testing.T, outFileExt string, stdin io.Reader, args ..
 		outFileExt = ".out"
 	}
 	tempDir := t.TempDir()
-	_ = os.Chmod(tempDir, 0777) //nolint:errcheck
 	outputPath := filepath.Join(tempDir, "output"+outFileExt)
 	args = append(args, "--output", outputPath)
 	runSysl(t, 0, stdin, args...)
@@ -1147,6 +1147,41 @@ func runSysl(t *testing.T, expectedRet int, stdin io.Reader, args ...string) {
 	}
 
 	ret := main2(args, afero.NewOsFs(), logger, stdin, main3)
+
+	lastEntry := hook.LastEntry()
+	var lastMessage string
+	if lastEntry != nil {
+		lastMessage = lastEntry.Message
+	}
+	require.Equal(t, expectedRet, ret, lastMessage)
+}
+
+// runSysl runs the Sysl command line tool with the specified arguments (without needing 'sysl' as the first argument)
+// and then ensures it completed with the specified return code.
+func runSyslSuppressStdOut(t *testing.T, expectedRet int, stdin io.Reader, args ...string) {
+	logger, hook := test.NewNullLogger()
+
+	if args[0] != "sysl" {
+		args = append([]string{"sysl"}, args...)
+	}
+
+	if stdin == nil {
+		stdin = os.Stdin
+	}
+
+	// dump stdout
+	null, _ := os.OpenFile(os.DevNull, os.O_WRONLY, 0) //nolint:errcheck
+	sOut := os.Stdout
+	os.Stdout = null
+	resetOut := sync.OnceFunc(func() {
+		os.Stdout = sOut
+		_ = null.Close() //nolint:errcheck
+	})
+	defer resetOut()
+
+	ret := main2(args, afero.NewOsFs(), logger, stdin, main3)
+
+	resetOut()
 
 	lastEntry := hook.LastEntry()
 	var lastMessage string
