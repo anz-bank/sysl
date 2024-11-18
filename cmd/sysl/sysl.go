@@ -19,7 +19,7 @@ import (
 
 // main3 is the real main function. It takes its output streams and command-line
 // arguments as parameters to support testability.
-func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error {
+func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader, stdout io.Writer) error {
 	flags, err := syslutil.PopulateCMDFlagsFromFile(args)
 	if err == nil && len(flags) > 0 {
 		// apply flags in file
@@ -47,7 +47,7 @@ func main3(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) e
 		runner.modules[i] = path.Clean(val)
 	}
 
-	return runner.Run(selectedCommand, fs, logger, stdin)
+	return runner.Run(selectedCommand, fs, logger, stdin, stdout)
 }
 
 type debugTypeData struct {
@@ -89,9 +89,10 @@ func main2(
 	fs afero.Fs,
 	logger *logrus.Logger,
 	stdin io.Reader,
-	main3 func(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error,
+	stdout io.Writer,
+	main3 func(args []string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader, stdout io.Writer) error,
 ) int {
-	if err := main3(args, fs, logger, stdin); err != nil {
+	if err := main3(args, fs, logger, stdin, stdout); err != nil {
 		arraiErr, ok := errors.Cause(err).(arrai.ExecutionError)
 		var exitCode = 1
 		if ok {
@@ -118,7 +119,7 @@ func main2(
 
 // main is as small as possible to minimise its no-coverage footprint.
 func main() {
-	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), os.Stdin, main3); rc != 0 {
+	if rc := main2(os.Args, afero.NewOsFs(), logrus.StandardLogger(), os.Stdin, os.Stdout, main3); rc != 0 {
 		os.Exit(rc)
 	}
 }

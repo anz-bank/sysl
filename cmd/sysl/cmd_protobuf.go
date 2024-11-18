@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 
@@ -83,14 +82,14 @@ func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 		if p.splitappspath != "-" {
 			return pbutil.OutputSplitApplications(m, "json", opt, p.splitappspath, "data.json", args.Filesystem)
 		} else if p.output == "-" {
-			return pbutil.FJSONPBWithOpt(os.Stdout, m, opt)
+			return pbutil.FJSONPBWithOpt(args.Stdout, m, opt)
 		}
 		return pbutil.JSONPBWithOpt(m, p.output, args.Filesystem, opt)
 	}
 
 	if p.mode == "" || p.mode == "textpb" {
 		if p.output == "-" && p.splitappspath == "-" {
-			return pbutil.FTextPBWithOpt(os.Stdout, m, opt)
+			return pbutil.FTextPBWithOpt(args.Stdout, m, opt)
 		}
 		if p.splitappspath != "-" {
 			return pbutil.OutputSplitApplications(m, p.mode, opt, p.splitappspath, "data.textpb", args.Filesystem)
@@ -101,7 +100,7 @@ func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 
 	// output format is binary
 	if p.output == "-" && p.splitappspath == "-" {
-		return pbutil.GeneratePBBinaryMessage(os.Stdout, m)
+		return pbutil.GeneratePBBinaryMessage(args.Stdout, m)
 	}
 
 	if p.splitappspath != "-" {

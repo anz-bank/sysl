@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
@@ -9,10 +10,11 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
-	"github.com/anz-bank/sysl/pkg/database"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
+
+	"github.com/anz-bank/sysl/pkg/database"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -54,7 +56,7 @@ func TestModDBScriptValidSyslFile(t *testing.T) {
 	main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql")
 }
 
@@ -66,7 +68,7 @@ func TestModDBScriptInValidOrgSyslFile(t *testing.T) {
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 2, err)
 }
 
@@ -77,7 +79,7 @@ func TestModDBScriptOneModule(t *testing.T) {
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 1, err)
 }
 
@@ -90,7 +92,7 @@ func TestModDBScriptThreeModule(t *testing.T) {
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 1, err)
 }
 
@@ -102,7 +104,7 @@ func TestModDBScriptInValidNewSyslFile(t *testing.T) {
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 2, err)
 }
 
@@ -114,7 +116,7 @@ func TestModDBScriptNewAppSyslFile(t *testing.T) {
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel,RelModelNew",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 0, err)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql", "/RelModelNew.sql")
 }

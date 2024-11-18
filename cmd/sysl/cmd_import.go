@@ -7,12 +7,14 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/sirupsen/logrus"
 
-	"github.com/anz-bank/sysl/pkg/importer"
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/importer"
 )
 
 type importCmd struct {
@@ -96,7 +98,7 @@ func (p *importCmd) Execute(args cmdutils.ExecuteArgs) error {
 	if p.outFile != "" {
 		return afero.WriteFile(args.Filesystem, p.outFile, []byte(output), os.ModePerm)
 	}
-	_, err = fmt.Println(output)
+	_, err = fmt.Fprintln(args.Stdout, output)
 	return err
 }
 

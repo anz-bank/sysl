@@ -1,12 +1,11 @@
 package main
 
 import (
-	"os"
-
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
-	"github.com/anz-bank/sysl/pkg/eval"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/eval"
 )
 
 type replCmd struct{}
@@ -21,7 +20,7 @@ func (p *replCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 
 func (p *replCmd) Execute(args cmdutils.ExecuteArgs) error {
 	s := &eval.Scope{}
-	repl := eval.NewREPL(os.Stdin, os.Stdout)
+	repl := eval.NewREPL(args.Stdin, args.Stdout)
 	for {
 		if err := repl(s, nil, nil); err != nil {
 			return nil // means EOF

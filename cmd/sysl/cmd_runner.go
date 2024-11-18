@@ -36,7 +36,7 @@ type cmdRunner struct {
 
 // Run identifies the command to run, loads the Sysl modules from the input (if necessary), then
 // executes the command with all of the accumulated context.
-func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader) error {
+func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin io.Reader, stdout io.Writer) error {
 	// splitter to parse main command from subcommand
 	mainCommand := strings.Split(which, " ")[0]
 	if cmd, ok := r.commands[mainCommand]; ok {
@@ -88,6 +88,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 				ModulePaths:    r.modules,
 				Root:           r.Root,
 				Stdin:          stdin,
+				Stdout:         stdout,
 			})
 		}
 	}

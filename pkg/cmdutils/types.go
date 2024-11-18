@@ -3,11 +3,12 @@ package cmdutils
 import (
 	"io"
 
-	"github.com/anz-bank/sysl/pkg/parse"
-	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/parse"
+	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
 type Visitor interface {
@@ -102,6 +103,7 @@ type ExecuteArgs struct {
 	ModulePaths    []string
 	Root           string
 	Stdin          io.Reader
+	Stdout         io.Writer
 }
 
 type DiagramCmd struct {

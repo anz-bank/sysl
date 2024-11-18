@@ -9,13 +9,14 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
+	"github.com/stretchr/testify/require"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/afero"
-	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -34,15 +35,15 @@ Stdin::App:
 	...`
 
 func TestLoadModule_path(t *testing.T) {
-	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	cmd := sysl.Command("foo", "")
+	syslKingpin := kingpin.New("sysl", "System Modelling Language Toolkit")
+	cmd := syslKingpin.Command("foo", "")
 	_ = cmd.Flag("bar", "").Default("foo").String()
 	_ = cmd.Flag("other", "").Default("foo").String()
 
 	EnsureFlagsNonEmpty(cmd, "bar")
 
 	args := []string{"foo", "--bar", ""}
-	selected, err := sysl.Parse(args)
+	selected, err := syslKingpin.Parse(args)
 	assert.Equal(t, "foo", selected)
 	assert.NoError(t, err)
 }
@@ -56,7 +57,7 @@ func TestLoadModule_stdinBytes(t *testing.T) {
 	stdin := new(bytes.Buffer)
 	require.NoError(t, pbutil.GeneratePBBinaryMessage(stdin, m))
 
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	assert.Len(t, mods, 1)
 	assert.NotEmpty(t, mods[0].Apps["Stdin :: App"])
@@ -73,7 +74,7 @@ func TestLoadModule_stdinSplitBytes(t *testing.T) {
 	dummyFs := afero.NewMemMapFs()
 	require.NoError(t, pbutil.OutputSplitApplications(m, "binarypb", opt, "/", "test.pb", dummyFs))
 
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.pb")
 	assert.NoError(t, err)
@@ -91,7 +92,7 @@ func TestLoadModule_stdinSplitJSON(t *testing.T) {
 	dummyFs := afero.NewMemMapFs()
 	require.NoError(t, pbutil.OutputSplitApplications(m, "json", opt, "/", "test.json", dummyFs))
 
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.json")
 	assert.NoError(t, err)
@@ -109,7 +110,7 @@ func TestLoadModule_stdinSplitTextPB(t *testing.T) {
 	dummyFs := afero.NewMemMapFs()
 	require.NoError(t, pbutil.OutputSplitApplications(m, "textpb", opt, "/", "test.textpb", dummyFs))
 
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	fileExists, err := afero.Exists(dummyFs, "/Stdin/App/test.textpb")
 	assert.NoError(t, err)
@@ -121,7 +122,7 @@ func TestLoadModule_stdin(t *testing.T) {
 	r := buildRunner(t, modsCmd(&mods))
 
 	stdin := toStdin(t, stdinFile{Path: filepath.Join(cwd(), "test.sysl"), Content: emptyAppSrc})
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	assert.Len(t, mods, 1)
 	assert.NotEmpty(t, mods[0].Apps["Stdin :: App"])
@@ -132,7 +133,7 @@ func TestLoadModule_stdinImport(t *testing.T) {
 	r := buildRunner(t, modsCmd(&mods))
 
 	stdin := toStdin(t, stdinFile{Path: "test.sysl", Content: importSrc})
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	assert.Len(t, mods, 1)
 	assert.Len(t, mods[0].Apps, 3)
@@ -146,7 +147,7 @@ func TestLoadModule_stdinPathImport(t *testing.T) {
 	r := buildRunner(t, modsCmd(&mods))
 
 	stdin := toStdin(t, stdinFile{Path: filepath.Join("..", "..", "tests", "test.sysl"), Content: "import simple.sysl"})
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 
 	assert.Len(t, mods, 1)
 	assert.Len(t, mods[0].Apps, 2)
@@ -164,32 +165,32 @@ func TestLoadModule_pathsAndStdin(t *testing.T) {
 	r := buildRunnerWithRoot(t, cmd, testDir, args...)
 
 	stdin := toStdin(t, stdinFile{Path: "test.sysl", Content: emptyAppSrc})
-	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin))
+	require.NoError(t, r.Run(cmdName, afero.NewOsFs(), logrus.StandardLogger(), stdin, io.Discard))
 }
 
 func TestEnsureFlagsNonEmpty_AllowsExcludes(t *testing.T) {
-	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	cmd := sysl.Command("foo", "")
+	syslKingpin := kingpin.New("sysl", "System Modelling Language Toolkit")
+	cmd := syslKingpin.Command("foo", "")
 	_ = cmd.Flag("bar", "").Default("foo").String()
 	_ = cmd.Flag("other", "").Default("foo").String()
 
 	EnsureFlagsNonEmpty(cmd, "bar")
 
 	args := []string{"foo", "--bar", ""}
-	selected, err := sysl.Parse(args)
+	selected, err := syslKingpin.Parse(args)
 	assert.Equal(t, "foo", selected)
 	assert.NoError(t, err)
 }
 
 func TestEnsureFlagsNonEmpty(t *testing.T) {
-	sysl := kingpin.New("sysl", "System Modelling Language Toolkit")
-	cmd := sysl.Command("foo", "")
+	syslKingpin := kingpin.New("sysl", "System Modelling Language Toolkit")
+	cmd := syslKingpin.Command("foo", "")
 	cmd.Flag("bar", "").Default("foo")
 
 	EnsureFlagsNonEmpty(cmd)
 
 	args := []string{"foo", "--bar", ""}
-	_, err := sysl.ParseContext(args)
+	_, err := syslKingpin.ParseContext(args)
 	assert.Error(t, err)
 }
 

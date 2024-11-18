@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,10 +10,11 @@ import (
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/loader"
 
-	"github.com/anz-bank/sysl/pkg/database"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
+
+	"github.com/anz-bank/sysl/pkg/database"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/alecthomas/kingpin.v2"
@@ -53,7 +55,7 @@ func TestCreateDBScriptValidSyslFile(t *testing.T) {
 		"-o", "",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		"-a", "RelModel"},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql")
 }
 
@@ -64,7 +66,7 @@ func TestCreateDBScriptInValidSyslFile(t *testing.T) {
 
 	err := main2([]string{"sysl", "generatescript", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 1, err)
 }
 
@@ -75,7 +77,7 @@ func TestCreateDBScriptNoAppSyslFile(t *testing.T) {
 
 	err := main2([]string{"sysl", "generatescript", "-t", "PetStore", "-o", "", "-a", "Proj123",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 1, err)
 }
 

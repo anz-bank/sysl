@@ -22,7 +22,7 @@ func (c *envCmd) Configure(app *kingpin.Application) *kingpin.CmdClause {
 func (c *envCmd) Execute(args cmdutils.ExecuteArgs) error {
 	for _, e := range env.Vars {
 		if !strings.HasPrefix(e.Name(), "SYSL_DEV_") || e.Value() != e.Default() {
-			fmt.Printf("%s=\"%s\"\n", e, e.Value())
+			fmt.Fprintf(args.Stdout, "%s=\"%s\"\n", e, e.Value())
 		}
 	}
 	return nil
