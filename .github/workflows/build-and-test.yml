@@ -14,6 +14,7 @@ jobs:
   build-and-test:
     name: Build and Test
     strategy:
+      fail-fast: false
       matrix:
         os: ${{ vars.BUILD_AND_TEST_OS_MATRIX && fromJSON(vars.BUILD_AND_TEST_OS_MATRIX) || fromJSON('[ "ubuntu-latest", "macOS-latest", "windows-latest" ]') }}
     runs-on: ${{ matrix.os }}
