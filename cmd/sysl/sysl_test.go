@@ -647,12 +647,30 @@ func TestMain2WithEmptyPbParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+
+	resetOut := suppressStdOut()
+	defer resetOut()
+
 	main2([]string{"sysl", "pb", "-o", " ", "--mode", "", filepath.Join(testDir, "call.sysl")},
 		fs, logger, os.Stdin, main3)
+
+	resetOut()
+
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'output' value passed is empty\n'mode' value passed is empty\n", hook.LastEntry().Message)
 	syslutil.AssertFsHasExactly(t, memFs)
+}
+
+// suppressStdOut will suppress all stdOut and return a function that can be called to restore
+func suppressStdOut() func() {
+	null, _ := os.OpenFile(os.DevNull, os.O_WRONLY, 0) //nolint:errcheck
+	sOut := os.Stdout
+	os.Stdout = null
+	return sync.OnceFunc(func() {
+		os.Stdout = sOut
+		_ = null.Close() //nolint:errcheck
+	})
 }
 
 func TestMain2WithEmptyGenParams(t *testing.T) {
@@ -1169,14 +1187,8 @@ func runSyslSuppressStdOut(t *testing.T, expectedRet int, stdin io.Reader, args 
 		stdin = os.Stdin
 	}
 
-	// dump stdout
-	null, _ := os.OpenFile(os.DevNull, os.O_WRONLY, 0) //nolint:errcheck
-	sOut := os.Stdout
-	os.Stdout = null
-	resetOut := sync.OnceFunc(func() {
-		os.Stdout = sOut
-		_ = null.Close() //nolint:errcheck
-	})
+	// suppress stdout
+	resetOut := suppressStdOut()
 	defer resetOut()
 
 	ret := main2(args, afero.NewOsFs(), logger, stdin, main3)
