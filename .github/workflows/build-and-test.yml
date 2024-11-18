@@ -43,6 +43,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref }}  # Needed to get the head of the branch for pull request events
           fetch-depth: 0
 
       - name: Ensure no tests are using Jest's 'test.only()'
