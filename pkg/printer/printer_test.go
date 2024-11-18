@@ -7,10 +7,8 @@ import (
 	"testing"
 
 	"github.com/alecthomas/assert"
-
-	"github.com/spf13/afero"
-
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/afero"
 
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/printer"

@@ -11,15 +11,14 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
-
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 const cmdName = "foo"

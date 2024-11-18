@@ -6,18 +6,15 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/loader"
-
-	"github.com/anz-bank/sysl/pkg/cmdutils"
-
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
-
-	"github.com/anz-bank/sysl/pkg/database"
-	"github.com/anz-bank/sysl/pkg/syslutil"
-
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/database"
+	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 type scriptModArgs struct {
