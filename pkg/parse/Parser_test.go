@@ -15,11 +15,6 @@ import (
 	"time"
 
 	"github.com/anz-bank/golden-retriever/retriever"
-	"github.com/anz-bank/sysl/pkg/env"
-	"github.com/anz-bank/sysl/pkg/msg"
-	"github.com/anz-bank/sysl/pkg/pbutil"
-	"github.com/anz-bank/sysl/pkg/sysl"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/pkg/errors"
 	"github.com/pmezard/go-difflib/difflib"
 	"github.com/sirupsen/logrus"
@@ -29,6 +24,12 @@ import (
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+
+	"github.com/anz-bank/sysl/pkg/env"
+	"github.com/anz-bank/sysl/pkg/msg"
+	"github.com/anz-bank/sysl/pkg/pbutil"
+	"github.com/anz-bank/sysl/pkg/sysl"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 var (
@@ -1227,23 +1228,32 @@ type mockContent struct {
 	branch  string
 }
 
+func (r mockReader) lookup(resource string) (mockContent, bool) {
+	if os.PathSeparator != '/' {
+		resource = strings.ReplaceAll(resource, string(os.PathSeparator), "/")
+	}
+	c, ok := r.contents[resource]
+
+	return c, ok
+}
+
 func (r mockReader) Read(_ context.Context, resource string) ([]byte, error) {
-	if c, ok := r.contents[resource]; ok {
+	if c, ok := r.lookup(resource); ok {
 		return []byte(c.content), nil
 	}
 	return nil, fmt.Errorf("file not found")
 }
 
 func (r mockReader) ReadHash(_ context.Context, resource string) ([]byte, retriever.Hash, error) {
-	if c, ok := r.contents[resource]; ok {
-		return []byte(c.content), r.contents[resource].hash, nil
+	if c, ok := r.lookup(resource); ok {
+		return []byte(c.content), c.hash, nil
 	}
 	return nil, retriever.Hash{}, fmt.Errorf("file not found")
 }
 
 func (r mockReader) ReadHashBranch(_ context.Context, resource string) ([]byte, retriever.Hash, string, error) {
-	if c, ok := r.contents[resource]; ok {
-		return []byte(c.content), r.contents[resource].hash, r.contents[resource].branch, nil
+	if c, ok := r.lookup(resource); ok {
+		return []byte(c.content), c.hash, c.branch, nil
 	}
 	return nil, retriever.ZeroHash, "", fmt.Errorf("file not found")
 }
