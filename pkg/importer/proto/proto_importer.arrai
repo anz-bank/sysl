@@ -14,6 +14,8 @@ let importParsed = \config \parsed
 let importFiles = \config \files
     let (?:importPaths:'', ?:shallow:false, ...) = config;
     let importPaths = cond {importPaths: //seq.split(",", importPaths)} || [];
+    let _ = //log.print((:importPaths));
+    let _ = //log.print((:files));
     let imported = import((:importPaths), files);
 
     let filesToExclude = shallow &&
