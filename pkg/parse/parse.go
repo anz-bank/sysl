@@ -171,6 +171,7 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("ParseFromFs: ", filename, ", ", path.Clean(filename))
 	return p.Parse(path.Clean(filename), r)
 }
 
@@ -430,10 +431,12 @@ func (p *Parser) collectSpecs(
 	retrieved.l[filenameIndex] = fi
 	retrieved.mutex.Unlock()
 
+	fmt.Println("reader.ReadHashBranch", source.filename)
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
 	if err != nil {
+		fmt.Println("reader.ReadHashBranch failed: ", err)
 		return syslutil.Exitf(ImportError, fmt.Sprintf(
-			"error reading %#v: \n%v\n", cleanImportFilename(source.filename), err,
+			"error reading %#v: \n%v\n", source.filename, err,
 		))
 	}
 	fi.src.input = string(content)
@@ -466,8 +469,9 @@ func (p *Parser) collectSpecs(
 
 	err = g.Wait()
 	if err != nil {
+		fmt.Println("collectSpecs failed: ", err)
 		return syslutil.Exitf(ImportError, fmt.Sprintf(
-			"error reading %#v: \n%v", cleanImportFilename(source.filename), err,
+			"error reading %#v: \n%v", source.filename, err,
 		))
 	}
 
