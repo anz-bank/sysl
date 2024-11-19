@@ -55,11 +55,6 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 
 			if r.CloneVersion != "" {
 				fs, gitRoot, err = r.getClonedRepo(fs)
-				fmt.Println("cloned: ", fs.Name(), " ", gitRoot, " ", err)
-				info, iErr := fs.Stat("Makefile")
-				fmt.Printf("Makefile stat: %s %t %s\n", info.Name(), info.IsDir(), iErr)
-				info, iErr = fs.Stat("tests/args.sysl")
-				fmt.Printf("tests/args.sysl stat: %s %t %s\n", info.Name(), info.IsDir(), iErr)
 				if err != nil {
 					return err
 				}
@@ -68,13 +63,7 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 			if cmd.MaxSyslModule() > 0 {
 				if len(r.modules) > 0 {
 					if r.CloneVersion != "" {
-						fmt.Println("loading from clone: ", gitRoot)
 						modules, err = r.loadFromClone(fs, gitRoot)
-						if err != nil {
-							fmt.Println("res: ", err.Error())
-						} else {
-							fmt.Println("res: success")
-						}
 					} else {
 						modules, err = r.loadFromModules(fs, logger)
 					}
@@ -286,7 +275,6 @@ func (r *cmdRunner) loadFromClone(fs afero.Fs, gitRoot string) ([]*sysl.Module, 
 
 		modelParser := parse.NewParser()
 		modelParser.Set(r.parseSettings)
-		fmt.Println("modelParser.ParseFromFs: ", moduleName)
 		mod, err := modelParser.ParseFromFs(moduleName, fs)
 		if err != nil {
 			return nil, err
