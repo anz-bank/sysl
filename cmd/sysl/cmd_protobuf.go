@@ -5,11 +5,12 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/spf13/afero"
+	"gopkg.in/alecthomas/kingpin.v2"
+
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
-
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type protobufCmd struct {
@@ -50,6 +51,12 @@ func (p *protobufCmd) Execute(args cmdutils.ExecuteArgs) error {
 
 	if p.splitappspath != "-" {
 		args.Logger.Warn("Using --split-apps to split input into multiple files will BREAK references")
+	}
+
+	if p.splitappspath != "-" || p.output != "-" {
+		if _, ok := args.Filesystem.(*afero.ReadOnlyFs); ok {
+			return fmt.Errorf("can not output to a read only FS (likely used both --clone-version and --output)")
+		}
 	}
 
 	p.output = strings.TrimSpace(p.output)

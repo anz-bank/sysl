@@ -1108,6 +1108,27 @@ func TestPbCloneVersion(t *testing.T) {
 		"../../tests/apps_namespaces.sysl")
 }
 
+func TestPbCloneVersionWithOutFile(t *testing.T) {
+	t.Parallel()
+
+	logger, hook := test.NewNullLogger()
+	rc := main2(
+		[]string{
+			"sysl",
+			"protobuf",
+			"--mode=json",
+			"--clone-version=298ef0551d1d2b30863d8cf898d974fbf9d009ad",
+			"--output", "out.sysl",
+			"../../tests/apps_namespaces.sysl",
+		},
+		afero.NewOsFs(), logger, os.Stdin, io.Discard, main3,
+	)
+	assert.NotEqual(t, 0, rc)
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	reg := regexp.MustCompile(`can not output to a read only FS`)
+	assert.True(t, reg.MatchString(hook.LastEntry().Message))
+}
+
 // runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch
 // with a file directed at a temporary output directory. The content of the file are verified to be identical to the
 // file specified in the expectedPathFromRepoRoot parameter (no need for "../../" in its path).
