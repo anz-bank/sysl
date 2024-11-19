@@ -1228,31 +1228,22 @@ type mockContent struct {
 	branch  string
 }
 
-func (r mockReader) lookup(resource string) (mockContent, bool) {
-	if os.PathSeparator != '/' {
-		resource = strings.ReplaceAll(resource, string(os.PathSeparator), "/")
-	}
-	c, ok := r.contents[resource]
-
-	return c, ok
-}
-
 func (r mockReader) Read(_ context.Context, resource string) ([]byte, error) {
-	if c, ok := r.lookup(resource); ok {
+	if c, ok := r.contents[resource]; ok {
 		return []byte(c.content), nil
 	}
 	return nil, fmt.Errorf("file not found")
 }
 
 func (r mockReader) ReadHash(_ context.Context, resource string) ([]byte, retriever.Hash, error) {
-	if c, ok := r.lookup(resource); ok {
+	if c, ok := r.contents[resource]; ok {
 		return []byte(c.content), c.hash, nil
 	}
 	return nil, retriever.Hash{}, fmt.Errorf("file not found")
 }
 
 func (r mockReader) ReadHashBranch(_ context.Context, resource string) ([]byte, retriever.Hash, string, error) {
-	if c, ok := r.lookup(resource); ok {
+	if c, ok := r.contents[resource]; ok {
 		return []byte(c.content), c.hash, c.branch, nil
 	}
 	return nil, retriever.ZeroHash, "", fmt.Errorf("file not found")
