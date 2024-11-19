@@ -2,12 +2,14 @@ package importer
 
 import (
 	"fmt"
+	"path"
 	"strings"
+
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 type ProtobufImporter struct {
@@ -22,12 +24,20 @@ func MakeProtobufImporter(logger *logrus.Logger) *ProtobufImporter {
 	return &ProtobufImporter{logger: logger}
 }
 
+func cleanImporterPaths(importPaths string) string {
+	split := strings.Split(importPaths, ",")
+	for i, p := range split {
+		split[i] = path.Clean(p)
+	}
+	return strings.Join(split, ",")
+}
+
 func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 	b := bundles.ProtoImporter
 
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specPath:    path,
-		importPaths: p.importPaths,
+		importPaths: cleanImporterPaths(p.importPaths),
 		shallow:     p.shallow,
 	})
 
@@ -52,7 +62,7 @@ func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specContent: protoSpec,
-		importPaths: p.importPaths,
+		importPaths: cleanImporterPaths(p.importPaths),
 		shallow:     p.shallow,
 	})
 
