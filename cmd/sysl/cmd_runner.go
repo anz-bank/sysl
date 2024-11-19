@@ -63,7 +63,13 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 			if cmd.MaxSyslModule() > 0 {
 				if len(r.modules) > 0 {
 					if r.CloneVersion != "" {
+						fmt.Println("loading from clone: ", gitRoot)
 						modules, err = r.loadFromClone(fs, gitRoot)
+						if err != nil {
+							fmt.Println("res: ", err.Error())
+						} else {
+							fmt.Println("res: success")
+						}
 					} else {
 						modules, err = r.loadFromModules(fs, logger)
 					}
@@ -275,6 +281,7 @@ func (r *cmdRunner) loadFromClone(fs afero.Fs, gitRoot string) ([]*sysl.Module, 
 
 		modelParser := parse.NewParser()
 		modelParser.Set(r.parseSettings)
+		fmt.Println("modelParser.ParseFromFs: ", moduleName)
 		mod, err := modelParser.ParseFromFs(moduleName, fs)
 		if err != nil {
 			return nil, err
