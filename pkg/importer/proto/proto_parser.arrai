@@ -347,6 +347,7 @@ let import = \(importPaths?:paths:[], ...) \files
         # //os.tree() trims './' so remove it
         let pathTrimmed = cond {path='.':'', _://seq.trim_prefix('./',path)};
         {pathTrimmed: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
+    let _ = //log.print((:fileMaps));
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
     let rec path = \file
