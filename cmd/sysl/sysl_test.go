@@ -1106,6 +1106,8 @@ func TestPbCloneVersion(t *testing.T) {
 		"--mode=json",
 		"--clone-version=298ef0551d1d2b30863d8cf898d974fbf9d009ad",
 		"../../tests/apps_namespaces.sysl")
+
+	require.Fail(t, "test fail")
 }
 
 // runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch
