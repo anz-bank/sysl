@@ -362,8 +362,8 @@ let import = \(importPaths?:paths:[], ...) \files
             {}: result,
             [file, ...tail]:
                 # If the file is a local import, don't attempt to resolve a path elsewhere.
-                let fwdSlashFile = forwardSlashedPath(file);
-                let filePath = !isLocal(fwdSlashFile) && path(fwdSlashFile);
+                let file = forwardSlashedPath(file);
+                let filePath = !isLocal(file) && path(file);
                 let parsed = cond {
                     filePath: cond {
                             !result(filePath)?:{}: parseFile(//os.file(filePath)),
