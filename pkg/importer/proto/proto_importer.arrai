@@ -29,7 +29,10 @@ let importDir = \dir \importPaths
     let isProto = \path //seq.has_suffix(".proto", path);
 
     let paths = //os.tree(dir) => .path;
+    let _ = //log.print((:paths));
     let files = (paths where isProto(.)) orderby .;
+    let _ = //log.print((:files));
+    let _ = //log.print((:importPaths));
 
     importFiles((:importPaths), files)
 ;
