@@ -27,6 +27,8 @@ type scriptArgs struct {
 }
 
 func TestDoGenerateDataScript(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptArgs{
 		source:    database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		outputDir: "",
@@ -46,6 +48,7 @@ func TestDoGenerateDataScript(t *testing.T) {
 
 func TestCreateDBScriptValidSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -59,6 +62,7 @@ func TestCreateDBScriptValidSyslFile(t *testing.T) {
 
 func TestCreateDBScriptInValidSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -70,6 +74,7 @@ func TestCreateDBScriptInValidSyslFile(t *testing.T) {
 
 func TestCreateDBScriptNoAppSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -80,6 +85,8 @@ func TestCreateDBScriptNoAppSyslFile(t *testing.T) {
 }
 
 func TestDoConstructDatabaseScript(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptArgs{
 		source:    database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		outputDir: database.DBTestDir + "db_scripts/",
@@ -90,20 +97,22 @@ func TestDoConstructDatabaseScript(t *testing.T) {
 				"db_scripts/postgres-create-script-golden.sql"),
 		},
 	}
-	result, err := DoConstructDatabaseScriptWithParams("", args.title, args.outputDir,
+	result, err := DoConstructDatabaseScriptWithParams(args.title, args.outputDir,
 		args.appNames, args.source)
 	assert.Nil(t, err, "Generating the sql script failed")
 	database.CompareSQL(t, args.expected, result)
 }
 
 func TestDoConstructDatabaseScriptInvalidFile(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptArgs{
 		source:    database.DBTestDir + "db_scripts/invalid.sysl",
 		outputDir: database.DBTestDir + "db_scripts/",
 		title:     "Petstore Schema",
 		appNames:  "RelModel",
 	}
-	_, err := DoConstructDatabaseScriptWithParams("", args.title, args.outputDir,
+	_, err := DoConstructDatabaseScriptWithParams(args.title, args.outputDir,
 		args.appNames, args.source)
 	actualErr, isParseExit := err.(syslutil.Exit)
 	assert.True(t, isParseExit)
@@ -112,7 +121,7 @@ func TestDoConstructDatabaseScriptInvalidFile(t *testing.T) {
 }
 
 func DoConstructDatabaseScriptWithParams(
-	filter, title, output, appNames, source string,
+	title, output, appNames, source string,
 ) ([]database.ScriptOutput, error) {
 	cmdDatabaseScript := &cmdutils.CmdDatabaseScriptParams{
 		Title:     title,

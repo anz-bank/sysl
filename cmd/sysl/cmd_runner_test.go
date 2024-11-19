@@ -35,6 +35,8 @@ Stdin::App:
 	...`
 
 func TestLoadModule_path(t *testing.T) {
+	t.Parallel()
+
 	syslKingpin := kingpin.New("sysl", "System Modelling Language Toolkit")
 	cmd := syslKingpin.Command("foo", "")
 	_ = cmd.Flag("bar", "").Default("foo").String()
@@ -49,6 +51,8 @@ func TestLoadModule_path(t *testing.T) {
 }
 
 func TestLoadModule_stdinBytes(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	r := buildRunner(t, modsCmd(&mods))
 
@@ -64,6 +68,8 @@ func TestLoadModule_stdinBytes(t *testing.T) {
 }
 
 func TestLoadModule_stdinSplitBytes(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	opt := pbutil.OutputOptions{Compact: false}
 	r := buildRunner(t, modsCmd(&mods))
@@ -82,6 +88,8 @@ func TestLoadModule_stdinSplitBytes(t *testing.T) {
 }
 
 func TestLoadModule_stdinSplitJSON(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	opt := pbutil.OutputOptions{Compact: false}
 	r := buildRunner(t, modsCmd(&mods))
@@ -100,6 +108,8 @@ func TestLoadModule_stdinSplitJSON(t *testing.T) {
 }
 
 func TestLoadModule_stdinSplitTextPB(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	opt := pbutil.OutputOptions{Compact: false}
 	r := buildRunner(t, modsCmd(&mods))
@@ -118,6 +128,8 @@ func TestLoadModule_stdinSplitTextPB(t *testing.T) {
 }
 
 func TestLoadModule_stdin(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	r := buildRunner(t, modsCmd(&mods))
 
@@ -129,6 +141,8 @@ func TestLoadModule_stdin(t *testing.T) {
 }
 
 func TestLoadModule_stdinImport(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	r := buildRunner(t, modsCmd(&mods))
 
@@ -143,6 +157,8 @@ func TestLoadModule_stdinImport(t *testing.T) {
 }
 
 func TestLoadModule_stdinPathImport(t *testing.T) {
+	t.Parallel()
+
 	var mods []*sysl.Module
 	r := buildRunner(t, modsCmd(&mods))
 
@@ -160,6 +176,8 @@ func TestLoadModule_stdinPathImport(t *testing.T) {
 }
 
 func TestLoadModule_pathsAndStdin(t *testing.T) {
+	t.Parallel()
+
 	args := []string{"simple.sysl"}
 	cmd := &testCmd{name: cmdName, maxSyslModule: 1, exec: func(args cmdutils.ExecuteArgs) {}}
 	r := buildRunnerWithRoot(t, cmd, testDir, args...)
@@ -169,6 +187,8 @@ func TestLoadModule_pathsAndStdin(t *testing.T) {
 }
 
 func TestEnsureFlagsNonEmpty_AllowsExcludes(t *testing.T) {
+	t.Parallel()
+
 	syslKingpin := kingpin.New("sysl", "System Modelling Language Toolkit")
 	cmd := syslKingpin.Command("foo", "")
 	_ = cmd.Flag("bar", "").Default("foo").String()
@@ -183,6 +203,8 @@ func TestEnsureFlagsNonEmpty_AllowsExcludes(t *testing.T) {
 }
 
 func TestEnsureFlagsNonEmpty(t *testing.T) {
+	t.Parallel()
+
 	syslKingpin := kingpin.New("sysl", "System Modelling Language Toolkit")
 	cmd := syslKingpin.Command("foo", "")
 	cmd.Flag("bar", "").Default("foo")

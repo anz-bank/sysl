@@ -27,6 +27,8 @@ type scriptModArgs struct {
 }
 
 func TestDoGenerateDataScriptMod(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptModArgs{
 		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModifiedTwo.sysl",
@@ -47,6 +49,7 @@ func TestDoGenerateDataScriptMod(t *testing.T) {
 
 func TestModDBScriptValidSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -59,6 +62,7 @@ func TestModDBScriptValidSyslFile(t *testing.T) {
 
 func TestModDBScriptInValidOrgSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -71,6 +75,7 @@ func TestModDBScriptInValidOrgSyslFile(t *testing.T) {
 
 func TestModDBScriptOneModule(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -82,6 +87,7 @@ func TestModDBScriptOneModule(t *testing.T) {
 
 func TestModDBScriptThreeModule(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -95,6 +101,7 @@ func TestModDBScriptThreeModule(t *testing.T) {
 
 func TestModDBScriptInValidNewSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -107,6 +114,7 @@ func TestModDBScriptInValidNewSyslFile(t *testing.T) {
 
 func TestModDBScriptNewAppSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -119,6 +127,8 @@ func TestModDBScriptNewAppSyslFile(t *testing.T) {
 }
 
 func TestDoConstructDatabaseScriptMod(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptModArgs{
 		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModified.sysl",
@@ -130,13 +140,15 @@ func TestDoConstructDatabaseScriptMod(t *testing.T) {
 				"db_scripts/postgres-modify-script-golden.sql"),
 		},
 	}
-	result, err := DoConstructModDatabaseScriptWithParams("", args.title,
+	result, err := DoConstructModDatabaseScriptWithParams(args.title,
 		args.outputDir, args.appNames, args.orgSource, args.newSource)
 	assert.Nil(t, err, "Generating the sql script failed")
 	database.CompareSQL(t, args.expected, result)
 }
 
 func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptModArgs{
 		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModifiedTwoApps.sysl",
@@ -150,14 +162,14 @@ func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
 				"/db_scripts/postgres-modify-script-golden_second_app.sql"),
 		},
 	}
-	result, err := DoConstructModDatabaseScriptWithParams("", args.title, args.outputDir,
+	result, err := DoConstructModDatabaseScriptWithParams(args.title, args.outputDir,
 		args.appNames, args.orgSource, args.newSource)
 	assert.Nil(t, err, "Generating the sql script failed")
 	database.CompareSQL(t, args.expected, result)
 }
 
 func DoConstructModDatabaseScriptWithParams(
-	filter, title, outputDir, appNames, orgSource, newSource string,
+	title, outputDir, appNames, orgSource, newSource string,
 ) ([]database.ScriptOutput, error) {
 	cmdDatabaseScriptMod := &cmdutils.CmdDatabaseScriptParams{
 		Title:     title,

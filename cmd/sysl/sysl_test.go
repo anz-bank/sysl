@@ -1165,6 +1165,8 @@ func runSysl(t *testing.T, expectedRet int, stdin io.Reader, stdout io.Writer, a
 }
 
 func TestMain3(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	fs := afero.NewOsFs()
 
