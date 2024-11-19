@@ -340,13 +340,22 @@ let parseFile =
 #       syntax: 'proto3'
 #   )
 # }
+
+# imports will use / so replace \ with / if on windows
+let toUnixPath =
+    let func = cond //os.path_separator {
+        "\\": \in //seq.sub("\\", "/", in),
+        _: \in in,
+    };
+    \path func(path);
+
 let import = \(importPaths?:paths:[], ...) \files
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let isLocal = \path localImports(path)?:false && true;
     let fileMaps = paths >> \path
         # //os.tree() trims './' so remove it
         let pathTrimmed = cond {path='.':'', _://seq.trim_prefix('./',path)};
-        {pathTrimmed: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
+        {pathTrimmed: //os.tree(path) => toUnixPath(.path) where //seq.has_suffix(".proto", .)};
     let _ = //log.print((:fileMaps));
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed

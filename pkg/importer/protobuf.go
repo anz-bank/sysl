@@ -2,7 +2,6 @@ package importer
 
 import (
 	"fmt"
-	"path"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -101,11 +100,11 @@ func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
 		args = append(args, "--spec", a.specContent)
 	}
 	if a.specPath != "" {
-		args = append(args, "--input", path.Clean(a.specPath))
+		args = append(args, "--input", a.specPath)
 	}
 
 	if a.importPaths != "" {
-		args = append(args, "--import-paths", cleanImportPaths(a.importPaths))
+		args = append(args, "--import-paths", a.importPaths)
 	}
 
 	if a.shallow {
@@ -113,12 +112,4 @@ func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
 	}
 
 	return args, nil
-}
-
-func cleanImportPaths(importPaths string) string {
-	split := strings.Split(importPaths, ",")
-	for i, p := range split {
-		split[i] = path.Clean(p)
-	}
-	return strings.Join(split, ",")
 }
