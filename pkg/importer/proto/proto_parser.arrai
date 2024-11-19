@@ -349,7 +349,6 @@ let import = \(importPaths?:paths:[], ...) \files
         let fwdSlashPath = forwardSlashedPath(path);
         let pathTrimmed = cond {fwdSlashPath='.':'', _://seq.trim_prefix('./', fwdSlashPath)};
         {pathTrimmed: //os.tree(path) => forwardSlashedPath(.path) where //seq.has_suffix(".proto", .)};
-    let _ = //log.print((:fileMaps));
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
     let rec path = \file
@@ -363,8 +362,8 @@ let import = \(importPaths?:paths:[], ...) \files
             {}: result,
             [file, ...tail]:
                 # If the file is a local import, don't attempt to resolve a path elsewhere.
-                let file = forwardSlashedPath(file);
-                let filePath = !isLocal(file) && path(file);
+                let fwdSlashFile = forwardSlashedPath(file);
+                let filePath = !isLocal(fwdSlashFile) && path(fwdSlashFile);
                 let parsed = cond {
                     filePath: cond {
                             !result(filePath)?:{}: parseFile(//os.file(filePath)),

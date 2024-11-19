@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-
 	"github.com/anz-bank/sysl/internal/bundles"
 	"github.com/anz-bank/sysl/pkg/arrai"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type ProtobufImporter struct {

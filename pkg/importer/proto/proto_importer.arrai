@@ -14,8 +14,6 @@ let importParsed = \config \parsed
 let importFiles = \config \files
     let (?:importPaths:'', ?:shallow:false, ...) = config;
     let importPaths = cond {importPaths: //seq.split(",", importPaths)} || [];
-    let _ = //log.print((:importPaths));
-    let _ = //log.print((:files));
     let imported = import((:importPaths), files);
 
     let filesToExclude = shallow &&
@@ -31,10 +29,7 @@ let importDir = \dir \importPaths
     let isProto = \path //seq.has_suffix(".proto", path);
 
     let paths = //os.tree(dir) => .path;
-    let _ = //log.print((:paths));
     let files = (paths where isProto(.)) orderby .;
-    let _ = //log.print((:files));
-    let _ = //log.print((:importPaths));
 
     importFiles((:importPaths), files)
 ;
