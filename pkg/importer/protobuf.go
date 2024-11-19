@@ -24,20 +24,12 @@ func MakeProtobufImporter(logger *logrus.Logger) *ProtobufImporter {
 	return &ProtobufImporter{logger: logger}
 }
 
-func cleanImporterPaths(importPaths string) string {
-	split := strings.Split(importPaths, ",")
-	for i, p := range split {
-		split[i] = path.Clean(p)
-	}
-	return strings.Join(split, ",")
-}
-
 func (p *ProtobufImporter) LoadFile(path string) (string, error) {
 	b := bundles.ProtoImporter
 
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specPath:    path,
-		importPaths: cleanImporterPaths(p.importPaths),
+		importPaths: p.importPaths,
 		shallow:     p.shallow,
 	})
 
@@ -62,7 +54,7 @@ func (p *ProtobufImporter) Load(protoSpec string) (string, error) {
 
 	args, err := buildImporterArgs(&protobufImporterArgs{
 		specContent: protoSpec,
-		importPaths: cleanImporterPaths(p.importPaths),
+		importPaths: p.importPaths,
 		shallow:     p.shallow,
 	})
 
@@ -109,11 +101,11 @@ func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
 		args = append(args, "--spec", a.specContent)
 	}
 	if a.specPath != "" {
-		args = append(args, "--input", a.specPath)
+		args = append(args, "--input", path.Clean(a.specPath))
 	}
 
 	if a.importPaths != "" {
-		args = append(args, "--import-paths", a.importPaths)
+		args = append(args, "--import-paths", cleanImportPaths(a.importPaths))
 	}
 
 	if a.shallow {
@@ -121,4 +113,12 @@ func buildImporterArgs(a *protobufImporterArgs) ([]string, error) {
 	}
 
 	return args, nil
+}
+
+func cleanImportPaths(importPaths string) string {
+	split := strings.Split(importPaths, ",")
+	for i, p := range split {
+		split[i] = path.Clean(p)
+	}
+	return strings.Join(split, ",")
 }
