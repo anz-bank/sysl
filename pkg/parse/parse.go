@@ -435,6 +435,8 @@ func (p *Parser) collectSpecs(
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
 	if err != nil {
 		fmt.Println("reader.ReadHashBranch failed: ", err)
+		info, iErr := reader.Stat("tests")
+		fmt.Println("tests stat: ", info, " ", iErr)
 		return syslutil.Exitf(ImportError, fmt.Sprintf(
 			"error reading %#v: \n%v\n", source.filename, err,
 		))
