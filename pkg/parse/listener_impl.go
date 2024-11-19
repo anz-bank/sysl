@@ -3410,6 +3410,11 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 			filename = "/" + path.Join(base, filename)
 		} else {
 			filename = filepath.Join(base, filename)
+			// need to do the ReplaceAll here already because the IsRemote checks for '/'
+			if os.PathSeparator != '/' {
+				filename = strings.ReplaceAll(filename, string(os.PathSeparator), "/")
+			}
+
 			// if it's a relative path but reader will think its remote then add ./
 			if base == "." && filename[:1] != "." && (&remotefs.RemoteFs{}).IsRemote(filename) {
 				filename = "./" + filename
