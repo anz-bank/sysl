@@ -55,6 +55,11 @@ func (r *cmdRunner) Run(which string, fs afero.Fs, logger *logrus.Logger, stdin 
 
 			if r.CloneVersion != "" {
 				fs, gitRoot, err = r.getClonedRepo(fs)
+				fmt.Println("cloned: ", fs.Name(), " ", gitRoot, " ", err)
+				info, iErr := fs.Stat("Makefile")
+				fmt.Printf("Makefile stat: %s %t %s\n", info.Name(), info.IsDir(), iErr)
+				info, iErr = fs.Stat("tests/args.sysl")
+				fmt.Printf("tests/args.sysl stat: %s %t %s\n", info.Name(), info.IsDir(), iErr)
 				if err != nil {
 					return err
 				}
