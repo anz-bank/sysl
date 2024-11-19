@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -171,7 +170,7 @@ func (p *Parser) ParseFromFs(filename string, fs afero.Fs) (*sysl.Module, error)
 	if err != nil {
 		return nil, err
 	}
-	return p.Parse(path.Clean(filename), r)
+	return p.Parse(filename, r)
 }
 
 // ParseFromFsWithVendor parses a sysl definition from an afero filesystem, and vendor remote files in root dir
@@ -230,7 +229,7 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 
 	if err := p.collectSpecs(
 		context.Background(),
-		importDef{filename: resource},
+		newImportDef(resource),
 		reader,
 		&retrieved,
 		p.MaxImportDepth,
