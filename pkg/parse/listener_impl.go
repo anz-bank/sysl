@@ -4,6 +4,7 @@ package parse // SyslParser
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -28,6 +29,14 @@ type importDef struct {
 	appname  string
 	pkg      string
 	mode     string
+}
+
+func newImportDef(filename string) importDef {
+	if os.PathSeparator != '/' {
+		filename = strings.ReplaceAll(filename, string(os.PathSeparator), "/")
+	}
+
+	return importDef{filename: filename}
 }
 
 // TreeShapeListener ..
@@ -3401,6 +3410,11 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 			filename = "/" + path.Join(base, filename)
 		} else {
 			filename = filepath.Join(base, filename)
+			// need to do the ReplaceAll here already because the IsRemote checks for '/'
+			if os.PathSeparator != '/' {
+				filename = strings.ReplaceAll(filename, string(os.PathSeparator), "/")
+			}
+
 			// if it's a relative path but reader will think its remote then add ./
 			if base == "." && filename[:1] != "." && (&remotefs.RemoteFs{}).IsRemote(filename) {
 				filename = "./" + filename
@@ -3411,9 +3425,7 @@ func (s *TreeShapeListener) EnterImport_stmt(ctx *parser.Import_stmtContext) {
 		}
 	}
 
-	id := importDef{
-		filename: filename,
-	}
+	id := newImportDef(filename)
 
 	if ctx.AS() != nil {
 		if ctx.App_name() != nil {

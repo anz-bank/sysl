@@ -3,15 +3,16 @@ package pbutil
 import (
 	"fmt"
 	"io"
+	"path"
 	"regexp"
-	"strings"
 
-	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/spf13/afero"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/encoding/prototext"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+
+	"github.com/anz-bank/sysl/pkg/sysl"
 )
 
 type OutputOptions struct {
@@ -144,13 +145,13 @@ func CreatePathForApplication(
 	appdata *sysl.Application,
 	fileName string,
 	fs afero.Fs) (afero.File, error) {
-	dirName := strings.Join(append([]string{basePath}, appdata.Name.GetPart()...), string("/"))
+	dirName := path.Join(append([]string{basePath}, appdata.Name.GetPart()...)...)
 	err := fs.MkdirAll(dirName, 0755)
 	if err != nil {
 		return nil, err
 	}
 
-	destFileName := fmt.Sprintf("%s/%s", dirName, fileName)
+	destFileName := path.Join(dirName, fileName)
 	fd, err := fs.Create(destFileName)
 	if err != nil {
 		return nil, err

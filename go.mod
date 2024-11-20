@@ -7,7 +7,7 @@ require (
 	github.com/alecthomas/assert v1.0.0
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
 	github.com/anz-bank/decimal v1.8.0
-	github.com/anz-bank/golden-retriever v0.42.0
+	github.com/anz-bank/golden-retriever v0.43.0
 	github.com/anz-bank/mermaid-go v0.1.1
 	github.com/anz-bank/pkg v0.0.48
 	github.com/arr-ai/arrai v0.321.0

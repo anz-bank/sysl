@@ -229,7 +229,7 @@ func (p *Parser) Parse(resource string, reader reader.Reader) (*sysl.Module, err
 
 	if err := p.collectSpecs(
 		context.Background(),
-		importDef{filename: resource},
+		newImportDef(resource),
 		reader,
 		&retrieved,
 		p.MaxImportDepth,
@@ -432,7 +432,7 @@ func (p *Parser) collectSpecs(
 	content, hash, branch, err := reader.ReadHashBranch(ctx, source.filename)
 	if err != nil {
 		return syslutil.Exitf(ImportError, fmt.Sprintf(
-			"error reading %#v: \n%v\n", cleanImportFilename(source.filename), err,
+			"error reading %#v: \n%v\n", source.filename, err,
 		))
 	}
 	fi.src.input = string(content)
@@ -466,7 +466,7 @@ func (p *Parser) collectSpecs(
 	err = g.Wait()
 	if err != nil {
 		return syslutil.Exitf(ImportError, fmt.Sprintf(
-			"error reading %#v: \n%v", cleanImportFilename(source.filename), err,
+			"error reading %#v: \n%v", source.filename, err,
 		))
 	}
 
@@ -1042,8 +1042,8 @@ func renestTypes(app *sysl.Application) {
 	sort.Strings(typeNames)
 
 	for _, typeName := range typeNames {
-		path := strings.Split(typeName, ".")
-		if len(path) > 1 && injectType(app.Types[typeName], app.Types, path) {
+		splitPath := strings.Split(typeName, ".")
+		if len(splitPath) > 1 && injectType(app.Types[typeName], app.Types, splitPath) {
 			if mode == "move" {
 				delete(app.Types, typeName)
 			}

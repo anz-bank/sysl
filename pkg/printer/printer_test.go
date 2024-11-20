@@ -3,17 +3,16 @@ package printer_test
 import (
 	"bytes"
 	"fmt"
-	"os"
+	"io"
 	"testing"
 
 	"github.com/alecthomas/assert"
-
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 
 	"github.com/anz-bank/sysl/pkg/loader"
 	"github.com/anz-bank/sysl/pkg/printer"
 	"github.com/anz-bank/sysl/pkg/syslutil"
-	"github.com/sirupsen/logrus"
 )
 
 func TestPrinting(t *testing.T) {
@@ -62,5 +61,5 @@ Server[~yay]:
 	}
 
 	// Make a New printer to os.Stdout (io.Writer) and Module
-	printer.Module(os.Stdout, module)
+	printer.Module(io.Discard, module)
 }

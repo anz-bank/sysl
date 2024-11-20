@@ -3,12 +3,15 @@ package main
 import (
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/datamodeldiagram"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/datamodeldiagram"
 )
 
 func TestDoGenerateDataDiagramsWithProjectMannerModuleCMD(t *testing.T) {
+	t.Parallel()
+
 	args := &datamodeldiagram.DataArgs{
 		Modules: "data.sysl",
 		Output:  "%(epname).png",
@@ -25,6 +28,8 @@ func TestDoGenerateDataDiagramsWithProjectMannerModuleCMD(t *testing.T) {
 }
 
 func TestDoGenerateDataDiagramsWithPureModuleCMD(t *testing.T) {
+	t.Parallel()
+
 	args := &datamodeldiagram.DataArgs{
 		Modules: "reviewdatamodelcmd.sysl",
 		Output:  "%(epname).png",

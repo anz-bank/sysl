@@ -64,7 +64,7 @@ var textProtoExtraSpaceAfterColonRE = regexp.MustCompile(`([^ ]+: ) +`)
 func runMain2(t *testing.T, fs afero.Fs, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
 	output := "out.textpb"
-	rc := main2(append([]string{"sysl", "pb", "-o", output}, args...), fs, logger, os.Stdin, main3)
+	rc := main2(append([]string{"sysl", "pb", "-o", output}, args...), fs, logger, os.Stdin, io.Discard, main3)
 	assert.Zero(t, rc)
 
 	actual, err := afero.ReadFile(fs, output)
@@ -199,7 +199,7 @@ func TestMain2_file_merge_json(t *testing.T) {
 func testMain2Stdout(t *testing.T, args []string, golden string) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	rc := main2(append([]string{"sysl", "pb", "-o", " - "}, args...), fs, logger, os.Stdin, main3)
+	rc := main2(append([]string{"sysl", "pb", "-o", " - "}, args...), fs, logger, os.Stdin, io.Discard, main3)
 	assert.Zero(t, rc)
 
 	_, err := os.ReadFile(golden)
@@ -224,7 +224,7 @@ func TestMain2BadMode(t *testing.T) {
 			"--mode", "BAD",
 			filepath.Join(testDir, "args.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotZero(t, rc)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -246,7 +246,7 @@ func TestMain2BadLog(t *testing.T) {
 			"--log", "BAD",
 			filepath.Join(testDir, "args.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotZero(t, rc)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -264,7 +264,7 @@ func TestMain2SeqdiagWithMissingFile(t *testing.T) {
 			filepath.Join(testDir, "MISSING.sysl"),
 			"-a", "Project :: Sequences",
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotEqual(t, 0, rc)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -286,7 +286,7 @@ func TestMain2SeqdiagWithNonsensicalOutput(t *testing.T) {
 			"-b", "Server <- Login=call to database",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotEqual(t, 0, rc)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
@@ -311,7 +311,7 @@ func TestMain2WithBlackboxParams(t *testing.T) {
 			"-b", "Server <- Login=call to database",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, rc)
 	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
@@ -337,7 +337,7 @@ func TestMain2WithReadOnlyFs(t *testing.T) {
 			"-b", "Server <- Login=call to database",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotEqual(t, 0, rc)
 	assertLogEntry(t, hook.LastEntry(), logrus.ErrorLevel,
@@ -359,7 +359,7 @@ func TestMain2WithBlackboxParamsFaultyArguments(t *testing.T) {
 			"-b", "Server <- Login",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotEqual(t, 0, ret)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
@@ -381,7 +381,7 @@ func TestMain2WithBlackboxSysl(t *testing.T) {
 			filepath.Join(testDir, "blackbox.sysl"),
 			"-a", "Project :: Sequences",
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, rc)
 	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
@@ -407,7 +407,7 @@ func TestMain2WithBlackboxSyslEmptyEndpoints(t *testing.T) {
 			filepath.Join(testDir, "blackbox.sysl"),
 			"-a", "Project :: Integrations",
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotEqual(t, 0, rc)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
@@ -419,8 +419,8 @@ func TestMain2Fatal(t *testing.T) {
 	t.Parallel()
 
 	logger, hook := test.NewNullLogger()
-	assert.Equal(t, 42, main2(nil, nil, logger, os.Stdin,
-		func(_ []string, _ afero.Fs, _ *logrus.Logger, stdio io.Reader) error {
+	assert.Equal(t, 42, main2(nil, nil, logger, os.Stdin, io.Discard,
+		func(_ []string, _ afero.Fs, _ *logrus.Logger, stdio io.Reader, stdout io.Writer) error {
 			return syslutil.Exitf(42, "Exit error")
 		}))
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
@@ -440,7 +440,7 @@ func TestMain2WithGroupingParamsGroupParamAbsent(t *testing.T) {
 			"-o", "tests/call3.png",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.NotEqual(t, 0, rc)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
@@ -464,7 +464,7 @@ func TestMain2WithGroupingParamsCommandline(t *testing.T) {
 			"-o", out,
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, rc)
 	syslutil.AssertFsHasExactly(t, memFs, out)
@@ -485,7 +485,7 @@ func TestMain2WithGroupingParamsSysl(t *testing.T) {
 			filepath.Join(testDir, "groupby.sysl"),
 			"-a", "Project :: Sequences",
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, rc)
 	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level)
@@ -509,7 +509,7 @@ func TestMain2WithGenerateIntegrations(t *testing.T) {
 			"-j", "Project",
 			"indirect_1.sysl",
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	syslutil.AssertFsHasExactly(t, memFs, out)
 }
@@ -532,7 +532,7 @@ func TestMain2WithGenerateCode(t *testing.T) {
 			"--dep-path", "example.com/abc/asx/lmno/",
 			"model.sysl",
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, ret)
 	out, err := filepath.Abs(filepath.Join(".", "Model.java"))
@@ -554,7 +554,7 @@ func TestMain2WithTextPbMode(t *testing.T) {
 			"-o", out,
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, ret)
 	syslutil.AssertFsHasExactly(t, memFs, out)
@@ -574,7 +574,7 @@ func TestMain2WithJSONMode(t *testing.T) {
 			"-o", out,
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, ret)
 	syslutil.AssertFsHasExactly(t, memFs, out)
@@ -593,7 +593,7 @@ func TestMain2WithTextPbModeStdout(t *testing.T) {
 			"-o", " - ",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, ret)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -612,7 +612,7 @@ func TestMain2WithJSONModeStdout(t *testing.T) {
 			"-o", " - ",
 			filepath.Join(testDir, "call.sysl"),
 		},
-		fs, logger, os.Stdin, main3,
+		fs, logger, os.Stdin, io.Discard, main3,
 	)
 	assert.Equal(t, 0, ret)
 	syslutil.AssertFsHasExactly(t, memFs)
@@ -623,7 +623,8 @@ func TestMain2WithEmptySdParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "sd", "-g", " ", "-o", "", "tests/groupby.sysl", "-a", " "}, fs, logger, os.Stdin, main3)
+	main2([]string{"sysl", "sd", "-g", " ", "-o", "", "tests/groupby.sysl", "-a", " "},
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t, "'output' value passed is empty\n"+
 		"'app' value passed is empty\n"+
@@ -636,7 +637,8 @@ func TestMain2WithValidateSyslNamespaces(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
-	ret := main2([]string{"sysl", "validate", filepath.Join(testDir, "apps_namespaces.sysl")}, fs, logger, os.Stdin, main3)
+	ret := main2([]string{"sysl", "validate", filepath.Join(testDir, "apps_namespaces.sysl")},
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 0, ret)
 	assert.False(t, len(hook.AllEntries()) > 0)
 }
@@ -646,8 +648,10 @@ func TestMain2WithEmptyPbParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
+
 	main2([]string{"sysl", "pb", "-o", " ", "--mode", "", filepath.Join(testDir, "call.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
+
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'output' value passed is empty\n'mode' value passed is empty\n", hook.LastEntry().Message)
@@ -661,7 +665,7 @@ func TestMain2WithEmptyGenParams(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "gen", "--transform",
 		filepath.Join(testDir, "test.gen_multiple_annotations.sysl"),
-		"--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, os.Stdin, main3)
+		"--grammar", " ", "--start", "", "--outdir", " "}, fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'grammar' value passed is empty\n"+
@@ -675,7 +679,7 @@ func TestMain2WithEmptyIntsParams(t *testing.T) {
 
 	logger, hook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
-	main2([]string{"sysl", "ints", "-o", "", "-j", " ", "indirect_1.sysl"}, fs, logger, os.Stdin, main3)
+	main2([]string{"sysl", "ints", "-o", "", "-j", " ", "indirect_1.sysl"}, fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 	assert.Equal(t,
 		"'output' value passed is empty\n"+
@@ -690,7 +694,7 @@ func TestMain2WithDataMultipleFiles(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
-		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, os.Stdin, main3)
+		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs,
 		"/Cross-Model.png",
 		"/Relational-Model.png",
@@ -707,7 +711,7 @@ func TestMain2WithDataSingleFile(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "data.png",
-		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, os.Stdin, main3)
+		filepath.Join(testDir, "data.sysl"), "-j", "Project"}, fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/data.png")
 }
 
@@ -716,7 +720,7 @@ func TestMain2WithDataNoProject(t *testing.T) {
 	logger, testHook := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
-		filepath.Join(testDir, "data.sysl")}, fs, logger, os.Stdin, main3)
+		filepath.Join(testDir, "data.sysl")}, fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, logrus.ErrorLevel, testHook.LastEntry().Level)
 	assert.Equal(t, "project not found in sysl", testHook.LastEntry().Message)
 	testHook.Reset()
@@ -731,7 +735,7 @@ func TestMain2WithDataFilter(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png", "-f",
 		"Object-Model.png", filepath.Join(testDir, "data.sysl"), "-j",
-		"Project"}, fs, logger, os.Stdin, main3)
+		"Project"}, fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Object-Model.png")
 }
 
@@ -743,13 +747,13 @@ func TestMain2WithDataMultipleRelationships(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "data", "-o", "%(epname).png",
 		filepath.Join(testDir, "datareferences.sysl"), "-j", "Project"},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/Relational-Model.png", "/Object-Model.png")
 }
 
 func TestMain2WithBinaryInfoCmd(t *testing.T) {
 	t.Parallel()
-	runSysl(t, 0, nil, "info")
+	runSysl(t, 0, nil, io.Discard, "info")
 }
 
 func TestSwaggerExportCurrentDir(t *testing.T) {
@@ -758,7 +762,7 @@ func TestSwaggerExportCurrentDir(t *testing.T) {
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 	main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE.yaml", "-a", "testapp",
 		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl"),
-	}, fs, logger, os.Stdin, main3)
+	}, fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/SIMPLE_SWAGGER_EXAMPLE.yaml")
 }
 
@@ -779,14 +783,15 @@ func TestSwaggerExportInvalid(t *testing.T) {
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 	errInt := main2([]string{"sysl", "export", "-o", "SIMPLE_SWAGGER_EXAMPLE1.blah", "-a", "testapp",
-		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")}, fs, logger, os.Stdin, main3)
+		filepath.Join(syslDir, "exporter/test-data/openapi2/SIMPLE_SWAGGER_EXAMPLE.sysl")},
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.True(t, errInt == 1)
 }
 
 func TestSwaggerAppExportNoDir(t *testing.T) {
 	t.Parallel()
 	outputDir := filepath.Join(t.TempDir(), "dirYetToBeCreated")
-	runSysl(t, 0, nil, "export", "-o", filepath.Join(outputDir, "%(appname).yaml"),
+	runSysl(t, 0, nil, io.Discard, "export", "-o", filepath.Join(outputDir, "%(appname).yaml"),
 		filepath.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
 	assert.FileExists(t, filepath.Join(outputDir, "single.yaml"))
 	assert.FileExists(t, filepath.Join(outputDir, "multiple.yaml"))
@@ -795,7 +800,7 @@ func TestSwaggerAppExportNoDir(t *testing.T) {
 func TestSwaggerAppExportDirExists(t *testing.T) {
 	t.Parallel()
 	outputDir := t.TempDir()
-	runSysl(t, 0, nil, "export", "-o", filepath.Join(outputDir, "%(appname).yaml"),
+	runSysl(t, 0, nil, io.Discard, "export", "-o", filepath.Join(outputDir, "%(appname).yaml"),
 		filepath.Join(syslDir, "exporter/test-data/openapi2/multiple/SIMPLE_SWAGGER_EXAMPLE_MULTIPLE.sysl"))
 	assert.FileExists(t, filepath.Join(outputDir, "single.yaml"))
 	assert.FileExists(t, filepath.Join(outputDir, "multiple.yaml"))
@@ -999,7 +1004,7 @@ func (ts folderTestStructure) getExpectedModule(t *testing.T) string {
 		logger, _ := test.NewNullLogger()
 		memFs, fs := syslutil.WriteToMemOverlayFs("/")
 		main2([]string{"sysl", "import", "-i",
-			syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, os.Stdin, main3)
+			syslDir + "importer/tests-grammar/simplerules.gen.g", "-a", "go"}, fs, logger, os.Stdin, io.Discard, main3)
 		syslutil.AssertFsHasExactly(t, memFs, "/output.sysl")
 	}
 
@@ -1008,7 +1013,7 @@ func (ts folderTestStructure) getExpectedModule(t *testing.T) string {
 		logger, _ := test.NewNullLogger()
 		memFs, fs := syslutil.WriteToMemOverlayFs("/")
 		main2([]string{"sysl", "import", "-i", syslDir + "importer/tests-grammar/unions.gen.g",
-			"-o", "out.sysl", "-a", "go"}, fs, logger, os.Stdin, main3)
+			"-o", "out.sysl", "-a", "go"}, fs, logger, os.Stdin, io.Discard, main3)
 		syslutil.AssertFsHasExactly(t, memFs, "/out.sysl")
 	}
 */
@@ -1019,7 +1024,7 @@ func TestTemplating(t *testing.T) {
 	main2([]string{"sysl", "tmpl", "--root", "../../demo/codegen/AuthorisationAPI",
 		"--root-template", "../../demo/codegen",
 		"--template", "AuthorisationAPI/grpc.sysl", "--app-name", "AuthorisationAPI", "--start", "start",
-		"--outdir", "../../demo/codegen/AuthorisationAPI/", "authorisation"}, fs, logger, os.Stdin, main3)
+		"--outdir", "../../demo/codegen/AuthorisationAPI/", "authorisation"}, fs, logger, os.Stdin, io.Discard, main3)
 	outputFilename := "../../demo/codegen/AuthorisationAPI/AuthorisationAPI.proto"
 	syslutil.AssertFsHasExactly(t, memFs, outputFilename)
 	expected, err := os.ReadFile(outputFilename)
@@ -1094,6 +1099,36 @@ func TestProtobufImportWithPaths(t *testing.T) {
 		"--format", "protobuf")
 }
 
+func TestPbCloneVersion(t *testing.T) {
+	t.Parallel()
+	runSysl(t, 0, nil, io.Discard,
+		"protobuf",
+		"--mode=json",
+		"--clone-version=298ef0551d1d2b30863d8cf898d974fbf9d009ad",
+		"../../tests/apps_namespaces.sysl")
+}
+
+func TestPbCloneVersionWithOutFile(t *testing.T) {
+	t.Parallel()
+
+	logger, hook := test.NewNullLogger()
+	rc := main2(
+		[]string{
+			"sysl",
+			"protobuf",
+			"--mode=json",
+			"--clone-version=298ef0551d1d2b30863d8cf898d974fbf9d009ad",
+			"--output", "out.sysl",
+			"../../tests/apps_namespaces.sysl",
+		},
+		afero.NewOsFs(), logger, os.Stdin, io.Discard, main3,
+	)
+	assert.NotEqual(t, 0, rc)
+	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
+	reg := regexp.MustCompile(`can not output to a read only FS`)
+	assert.True(t, reg.MatchString(hook.LastEntry().Message))
+}
+
 // runSyslWithExpectedOutput runs the Sysl command line tool with the specified arguments and adds an --output switch
 // with a file directed at a temporary output directory. The content of the file are verified to be identical to the
 // file specified in the expectedPathFromRepoRoot parameter (no need for "../../" in its path).
@@ -1113,9 +1148,10 @@ func runSyslWithOutput(t *testing.T, outFileExt string, stdin io.Reader, args ..
 	if outFileExt == "" {
 		outFileExt = ".out"
 	}
-	outputPath := filepath.Join(t.TempDir(), "output"+outFileExt)
+	tempDir := t.TempDir()
+	outputPath := filepath.Join(tempDir, "output"+outFileExt)
 	args = append(args, "--output", outputPath)
-	runSysl(t, 0, stdin, args...)
+	runSysl(t, 0, stdin, io.Discard, args...)
 	require.FileExists(t, outputPath)
 	output, err := os.ReadFile(outputPath)
 	require.NoError(t, err)
@@ -1124,7 +1160,7 @@ func runSyslWithOutput(t *testing.T, outFileExt string, stdin io.Reader, args ..
 
 // runSysl runs the Sysl command line tool with the specified arguments (without needing 'sysl' as the first argument)
 // and then ensures it completed with the specified return code.
-func runSysl(t *testing.T, expectedRet int, stdin io.Reader, args ...string) {
+func runSysl(t *testing.T, expectedRet int, stdin io.Reader, stdout io.Writer, args ...string) {
 	logger, hook := test.NewNullLogger()
 
 	if args[0] != "sysl" {
@@ -1135,7 +1171,11 @@ func runSysl(t *testing.T, expectedRet int, stdin io.Reader, args ...string) {
 		stdin = os.Stdin
 	}
 
-	ret := main2(args, afero.NewOsFs(), logger, stdin, main3)
+	if stdout == nil {
+		stdout = os.Stdout
+	}
+
+	ret := main2(args, afero.NewOsFs(), logger, stdin, stdout, main3)
 
 	lastEntry := hook.LastEntry()
 	var lastMessage string
@@ -1146,17 +1186,19 @@ func runSysl(t *testing.T, expectedRet int, stdin io.Reader, args ...string) {
 }
 
 func TestMain3(t *testing.T) {
+	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	fs := afero.NewOsFs()
 
-	assert.Error(t, main3([]string{"sysl", "codegen"}, fs, logger, os.Stdin))
+	assert.Error(t, main3([]string{"sysl", "codegen"}, fs, logger, os.Stdin, io.Discard))
 
-	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config.txt"}, fs, logger, os.Stdin))
+	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config.txt"}, fs, logger, os.Stdin, io.Discard))
 
-	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config_new.txt"}, fs, logger, os.Stdin))
+	assert.Error(t, main3([]string{"sysl", "codegen", "@tests/config_new.txt"}, fs, logger, os.Stdin, io.Discard))
 
 	assert.Error(t, main3([]string{"sysl", "codegen", "--grammar=go.gen.g", "--transform=go.gen.sysl", "model.sysl"},
-		fs, logger, os.Stdin))
+		fs, logger, os.Stdin, io.Discard))
 }
 
 // Refers https://golang.org/pkg/testing/#hdr-Main
@@ -1177,7 +1219,7 @@ func TestAvroImport(t *testing.T) {
 		"--input", filepath.Join(testDir, "/simple_avro.avsc"),
 		"--app-name", "testapp",
 		"--package", "test",
-		"--output", outputPath}, afero.NewOsFs(), logger, os.Stdin, main3)
+		"--output", outputPath}, afero.NewOsFs(), logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 0, ret)
 	assert.FileExists(t, outputPath)
 }
@@ -1203,7 +1245,7 @@ func TestSyslSyntaxValidate(t *testing.T) {
 			if strings.HasSuffix(file.Name(), ".sysl") {
 				t.Run(file.Name(), func(t *testing.T) {
 					ret := main2([]string{"sysl", "validate",
-						filepath.Join(dir, file.Name())}, afero.NewOsFs(), logger, os.Stdin, main3)
+						filepath.Join(dir, file.Name())}, afero.NewOsFs(), logger, os.Stdin, io.Discard, main3)
 					assert.Equal(t, 0, ret)
 				})
 			}

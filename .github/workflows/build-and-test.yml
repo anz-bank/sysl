@@ -14,6 +14,7 @@ jobs:
   build-and-test:
     name: Build and Test
     strategy:
+      fail-fast: false
       matrix:
         os: ${{ vars.BUILD_AND_TEST_OS_MATRIX && fromJSON(vars.BUILD_AND_TEST_OS_MATRIX) || fromJSON('[ "ubuntu-latest", "macOS-latest", "windows-latest" ]') }}
     runs-on: ${{ matrix.os }}
@@ -42,8 +43,12 @@ jobs:
 
       - name: Check out code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}  # Needed to get the head of the branch for pull request events
+          fetch-depth: 0
 
       - name: Ensure no tests are using Jest's 'test.only()'
+        if: runner.os == 'Linux'
         run: find ts/src -type f -name '*.test.ts' | (! xargs grep 'test\.only\(')
 
       - name: Generate intermediate files

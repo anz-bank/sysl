@@ -1,21 +1,20 @@
 package main
 
 import (
+	"io"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/anz-bank/sysl/pkg/loader"
-
-	"github.com/anz-bank/sysl/pkg/cmdutils"
-
-	"github.com/anz-bank/sysl/pkg/database"
-	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
-
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/anz-bank/sysl/pkg/cmdutils"
+	"github.com/anz-bank/sysl/pkg/database"
+	"github.com/anz-bank/sysl/pkg/loader"
+	"github.com/anz-bank/sysl/pkg/syslutil"
 )
 
 type scriptModArgs struct {
@@ -28,6 +27,8 @@ type scriptModArgs struct {
 }
 
 func TestDoGenerateDataScriptMod(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptModArgs{
 		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModifiedTwo.sysl",
@@ -48,41 +49,45 @@ func TestDoGenerateDataScriptMod(t *testing.T) {
 
 func TestModDBScriptValidSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
 	main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql")
 }
 
 func TestModDBScriptInValidOrgSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 2, err)
 }
 
 func TestModDBScriptOneModule(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 1, err)
 }
 
 func TestModDBScriptThreeModule(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
@@ -90,36 +95,40 @@ func TestModDBScriptThreeModule(t *testing.T) {
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModified.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 1, err)
 }
 
 func TestModDBScriptInValidNewSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	_, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/invalid.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 2, err)
 }
 
 func TestModDBScriptNewAppSyslFile(t *testing.T) {
 	t.Parallel()
+
 	logger, _ := test.NewNullLogger()
 	memFs, fs := syslutil.WriteToMemOverlayFs("/")
 
 	err := main2([]string{"sysl", "generatedbscriptsdelta", "-t", "PetStore", "-o", "", "-a", "RelModel,RelModelNew",
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptOrg.sysl"),
 		filepath.Join(database.DBTestDir, "db_scripts/dataForSqlScriptModifiedTwoApps.sysl")},
-		fs, logger, os.Stdin, main3)
+		fs, logger, os.Stdin, io.Discard, main3)
 	assert.Equal(t, 0, err)
 	syslutil.AssertFsHasExactly(t, memFs, "/RelModel.sql", "/RelModelNew.sql")
 }
 
 func TestDoConstructDatabaseScriptMod(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptModArgs{
 		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModified.sysl",
@@ -131,13 +140,15 @@ func TestDoConstructDatabaseScriptMod(t *testing.T) {
 				"db_scripts/postgres-modify-script-golden.sql"),
 		},
 	}
-	result, err := DoConstructModDatabaseScriptWithParams("", args.title,
+	result, err := DoConstructModDatabaseScriptWithParams(args.title,
 		args.outputDir, args.appNames, args.orgSource, args.newSource)
 	assert.Nil(t, err, "Generating the sql script failed")
 	database.CompareSQL(t, args.expected, result)
 }
 
 func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
+	t.Parallel()
+
 	args := &scriptModArgs{
 		orgSource: database.DBTestDir + "db_scripts/dataForSqlScriptOrg.sysl",
 		newSource: database.DBTestDir + "db_scripts/dataForSqlScriptModifiedTwoApps.sysl",
@@ -151,14 +162,14 @@ func TestDoConstructDatabaseScriptModTwoApps(t *testing.T) {
 				"/db_scripts/postgres-modify-script-golden_second_app.sql"),
 		},
 	}
-	result, err := DoConstructModDatabaseScriptWithParams("", args.title, args.outputDir,
+	result, err := DoConstructModDatabaseScriptWithParams(args.title, args.outputDir,
 		args.appNames, args.orgSource, args.newSource)
 	assert.Nil(t, err, "Generating the sql script failed")
 	database.CompareSQL(t, args.expected, result)
 }
 
 func DoConstructModDatabaseScriptWithParams(
-	filter, title, outputDir, appNames, orgSource, newSource string,
+	title, outputDir, appNames, orgSource, newSource string,
 ) ([]database.ScriptOutput, error) {
 	cmdDatabaseScriptMod := &cmdutils.CmdDatabaseScriptParams{
 		Title:     title,

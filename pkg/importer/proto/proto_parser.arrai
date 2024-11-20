@@ -1,4 +1,4 @@
-let (:includeImport, :primitiveTypes, ...) = //{./util};
+let (:includeImport, :primitiveTypes, :forwardSlashedPath, ...) = //{./util};
 
 # Tools for parsing and importing Protocol Buffers.
 #
@@ -340,13 +340,15 @@ let parseFile =
 #       syntax: 'proto3'
 #   )
 # }
+
 let import = \(importPaths?:paths:[], ...) \files
     let localImports = //{/pkg/importer/proto/bundled_files/local_imports};
     let isLocal = \path localImports(path)?:false && true;
     let fileMaps = paths >> \path
         # //os.tree() trims './' so remove it
-        let pathTrimmed = cond {path='.':'', _://seq.trim_prefix('./',path)};
-        {pathTrimmed: //os.tree(path) => .path where //seq.has_suffix(".proto", .)};
+        let fwdSlashPath = forwardSlashedPath(path);
+        let pathTrimmed = cond {fwdSlashPath='.':'', _://seq.trim_prefix('./', fwdSlashPath)};
+        {pathTrimmed: //os.tree(path) => forwardSlashedPath(.path) where //seq.has_suffix(".proto", .)};
     # `path` returns the full filepath for the file being processed
     # `file` the file being processed
     let rec path = \file
@@ -360,6 +362,7 @@ let import = \(importPaths?:paths:[], ...) \files
             {}: result,
             [file, ...tail]:
                 # If the file is a local import, don't attempt to resolve a path elsewhere.
+                let file = forwardSlashedPath(file);
                 let filePath = !isLocal(file) && path(file);
                 let parsed = cond {
                     filePath: cond {
