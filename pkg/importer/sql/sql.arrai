@@ -71,7 +71,8 @@ create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED"
 storing_clause      -> "STORING" "(" column_name:",",? ")";
 interleaving_clause -> "INTERLEAVE" "IN" table_name;
 
-create_view         -> "CREATE" ("OR" "REPLACE")? "VIEW" table_prefix? view_name "AS" select;
+sql_security        -> "SQL" "SECURITY" ("INVOKER" | "DEFINER");
+create_view         -> "CREATE" ("OR" "REPLACE")? "VIEW" table_prefix? view_name sql_security? "AS" select;
 
 create_sequence     -> "CREATE" "SEQUENCE" if_not_exists? table_prefix? sequence_name sequence_opt*;
 sequence_opt        -> "START" "WITH" \d+
