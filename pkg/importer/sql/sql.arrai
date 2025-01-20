@@ -119,6 +119,7 @@ table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name attr_type 
                      | ADD_CONSTRAINT  = ("ADD" table_constraint)
                      | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name)
                      | OWNER_TO        = ("OWNER" "TO" name)
+                     | RENAME_TO       = ("RENAME" "TO" name)
                      | ADD_ROW_DELETION_POLICY = ("ADD" row_deletion_policy)
                      | DROP_ROW_DELETION_POLICY = ("DROP" "ROW" "DELETION" "POLICY")
                      | REPLACE_ROW_DELETION_POLICY = ("REPLACE" row_deletion_policy)
@@ -429,6 +430,13 @@ let evalTableAlteration = \parsed cond parsed {
         alteration: data,
     ),
 
+    (table_alteration: (RENAME_TO: data, ...), ...): (
+        type: "rename_to",
+        alteration: (
+            name: data.name.'' rank (:.@),
+        ),
+    ),
+
     (table_alteration: (drop_index: data, ...), ...): (
         type: "drop_index",
         alteration: data,
@@ -665,6 +673,27 @@ let renameCol = \m \t \from \to changeCols(m, t, \cs
     cs without old with old +> (@item: old.@item +> (name: to))
 );
 
+# renameTo updates the name of table t in m to newName.
+let renameTo = \m \t \newName 
+    m +> (
+        entities: m.entities => \e e +> (
+            # replace table name
+            name: cond {e.name = t: newName, _: e.name},
+            # replace references in interleaved_in
+            cluster: e.cluster >> \c c +> (
+                interleaved_in: cond {c.interleaved_in = t: newName, _: c.interleaved_in},
+            ),
+            # replace references in foreign_keys
+            foreign_keys: e.foreign_keys => \f f +> (foreign_keys: f.foreign_keys => \ff ff +> (
+                reference_table: cond {ff.reference_table = t: newName, _: ff.reference_table},
+            )),
+        ),
+        # replace indexes
+        indexes: m.indexes => \i i +> (
+            table_name: cond {i.table_name = t: newName, _: i.table_name},
+        ),
+    );
+
 # Applies a single table alteration given model, table name and alteration data.
 let stepAlt = \m \t \(:type, alteration:alt)
     cond type {
@@ -672,6 +701,7 @@ let stepAlt = \m \t \(:type, alteration:alt)
         'drop_column': dropCol(m, t, alt.name),
         'alter_column': alterCol(m, t, alt),
         'rename_column': renameCol(m, t, alt.from, alt.to),
+        'rename_to': renameTo(m, t, alt.name),
         # 'on_delete':  TODO,
         # 'add_constraint':  TODO,
         # 'drop_constraint':  TODO,

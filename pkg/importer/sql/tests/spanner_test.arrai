@@ -246,6 +246,32 @@ let foo_ix = applyDropIndex(dropIndex.data, foo_i);
 
             actual = expected,
 
+        renamed:
+            let actual = applyStmt(parseDdl('
+                CREATE DATABASE test;
+                CREATE TABLE foo (a INT64) PRIMARY KEY (a);
+                CREATE TABLE bar (a INT64, t TIMESTAMP OPTIONS (allow_commit_timestamp = true)) PRIMARY KEY (a, t), INTERLEAVE IN PARENT foo;
+                CREATE TABLE fkey (a INT64, CONSTRAINT FK_A FOREIGN KEY (a) REFERENCES foo (a)) PRIMARY KEY (a ASC);
+                CREATE INDEX fooIndex ON foo (a DESC);
+                ALTER TABLE foo RENAME TO baz;
+            '), empty);
+
+            let a = (name: 'a', type: 'int64', length: 0, nullable: true, options: {}, scale: 0);
+            let t = (name: 't', type: 'datetime', length: 0, nullable: true, options: {'allow_commit_timestamp': 'true'}, scale: 0);
+            let f = (constraint_name: 'FK_A', foreign_keys: {(attribute: 'a', reference_attribute: 'a', reference_table: 'baz')}, on_delete: {}, on_update: {});
+            let expected = (
+                entities: {
+                    |name , attributes, primary_key, foreign_keys, unique_keys, name_prefix, cluster                                 |
+                    ('baz',  [a]      , ['a']      , {}          , {}         , ''         , {}                                      ),
+                    ('fkey', [a]      , ['a(asc)'] , {f}         , {}         , ''         , {}                                      ),
+                    ('bar',  [a, t]   , ['a', 't'] , {}          , {}         , ''         , [(interleaved_in: 'baz', on_delete: {})]),
+                },
+                indexes: {|interleaved_table, key_parts, name, nullfiltered, storing_col, table_name, unique| ({}, ['a(desc)'], 'fooIndex', {}, {}, 'baz', {})},
+                schema: {|name| ('test')},
+            );
+
+            actual = expected,
+
         defaultNumeric:
             let actual = applyStmt(parseDdl(`
                 CREATE TABLE foo (
