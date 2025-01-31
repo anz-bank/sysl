@@ -111,11 +111,12 @@ func (o *OpenAPI3Importer) convertSpec(spec *openapi3.T) (string, error) {
 	// Convert types
 	o.types = TypeList{}
 	for name, ref := range spec.Components.Schemas {
-		if _, found := o.types.Find(name); !found {
+		sName := getSyslSafeName(name)
+		if _, found := o.types.Find(sName); !found {
 			if ref.Value == nil {
-				o.types.Add(NewStringAlias(name))
+				o.types.Add(NewStringAlias(sName))
 			} else {
-				t, err := o.loadTypeSchema(name, ref.Value)
+				t, err := o.loadTypeSchema(sName, ref.Value)
 				if err != nil {
 					return "", err
 				}
@@ -254,12 +255,28 @@ func getAttrs(schema *openapi3.Schema) []string {
 	return nil
 }
 
-func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
+func (o *OpenAPI3Importer) existingTypeOrSyslSafeName(name string) string {
+	safeName := getSyslSafeName(name)
+
+	// If the safeName type exists use it
+	if _, found := o.types.Find(safeName); found {
+		return safeName
+	}
+
+	// Check if the unencoded version exists (it is already encoded)
+	if _, found := o.types.Find(name); found {
+		return name
+	}
+
+	return safeName
+}
+
+func (o *OpenAPI3Importer) typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 	if idx := strings.Index(ref.Ref, openapiv3DefinitionPrefix); idx >= 0 {
-		return getSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv3DefinitionPrefix))
+		return o.existingTypeOrSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv3DefinitionPrefix))
 	}
 	if idx := strings.Index(ref.Ref, openapiv2DefinitionPrefix); idx >= 0 {
-		return getSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv2DefinitionPrefix))
+		return o.existingTypeOrSyslSafeName(strings.TrimPrefix(ref.Ref[idx:], openapiv2DefinitionPrefix))
 	}
 	switch {
 	case ref.Value.Type.Is(openapi3.TypeArray):
@@ -267,7 +284,7 @@ func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 		if ref.Value.Items == nil {
 			return OpenAPI_OBJECT
 		}
-		return typeNameFromSchemaRef(ref.Value.Items)
+		return o.typeNameFromSchemaRef(ref.Value.Items)
 	case ref.Value.Type.Is(openapi3.TypeObject), ref.Value.Type.Is(OpenAPI_EMPTY), ref.Value.Type == nil:
 		return OpenAPI_OBJECT
 	case ref.Value.Type.Is(openapi3.TypeBoolean):
@@ -281,7 +298,7 @@ func typeNameFromSchemaRef(ref *openapi3.SchemaRef) string {
 		if len(ref.Value.Type.Slice()) > 0 {
 			refValueType = ref.Value.Type.Slice()[0]
 		}
-		return getSyslSafeName(refValueType)
+		return o.existingTypeOrSyslSafeName(refValueType)
 	}
 }
 
@@ -290,7 +307,7 @@ func nameOnlyType(name string) Type {
 }
 
 func (o *OpenAPI3Importer) typeAliasForSchema(ref *openapi3.SchemaRef) Type {
-	name := typeNameFromSchemaRef(ref)
+	name := o.typeNameFromSchemaRef(ref)
 	t, found := o.types.Find(name)
 	if !found {
 		t = nameOnlyType(name)
@@ -331,7 +348,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Fi
 	}
 
 	f := Field{Name: name}
-	typeName := typeNameFromSchemaRef(prop)
+	typeName := o.typeNameFromSchemaRef(prop)
 
 	if prop.Ref != "" {
 		f.Type = nameOnlyType(typeName)
@@ -341,7 +358,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Fi
 	defer o.pushName(name)()
 
 	if isArray && prop.Value.Items.Ref != "" {
-		f.Type = &Array{Items: nameOnlyType(typeNameFromSchemaRef(prop.Value.Items))}
+		f.Type = &Array{Items: nameOnlyType(o.typeNameFromSchemaRef(prop.Value.Items))}
 		// f.SizeSpec = makeSizeSpec(prop.Value.MinItems, prop.Value.MaxItems)
 		return f, nil
 	}
@@ -399,13 +416,12 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 	if o.refMap == nil {
 		o.refMap = make(map[string]bool)
 	}
-	name = getSyslSafeName(name)
 	defer o.pushName(name)()
 	setDefined := func(refName string) { o.refMap[refName] = true }
 	switch {
 	case schema.Type.Is(openapi3.TypeArray):
 		var items Type
-		if childName := typeNameFromSchemaRef(schema.Items); childName == OpenAPI_OBJECT {
+		if childName := o.typeNameFromSchemaRef(schema.Items); childName == OpenAPI_OBJECT {
 			defer o.pushName("obj")()
 			if o.isCircular(schema.Items) {
 				return nil, errCircularType(o.nameStack)
@@ -432,7 +448,7 @@ func (o *OpenAPI3Importer) loadTypeSchema(name string, schema *openapi3.Schema) 
 		if len(schema.OneOf) != 0 {
 			var fields FieldList
 			for _, subSchema := range schema.OneOf {
-				field, err := o.buildField(typeNameFromSchemaRef(subSchema), subSchema)
+				field, err := o.buildField(o.typeNameFromSchemaRef(subSchema), subSchema)
 				if err != nil {
 					return nil, err
 				}
@@ -592,7 +608,7 @@ func (o *OpenAPI3Importer) buildRequests(req *openapi3.RequestBodyRef, ep *Endpo
 	fields := make(map[string]map[string]*openapi3.MediaType)
 	for mediaType, obj := range req.Value.Content {
 		schema := obj.Schema
-		tname := typeNameFromSchemaRef(schema)
+		tname := o.typeNameFromSchemaRef(schema)
 		if _, ok := fields[tname]; !ok {
 			fields[tname] = make(map[string]*openapi3.MediaType)
 		}
@@ -638,7 +654,7 @@ func (o *OpenAPI3Importer) buildResponses(
 	fields := make(map[string]map[string]*openapi3.MediaType)
 	for mediaType, obj := range resp.Value.Content {
 		schema := obj.Schema
-		tname := typeNameFromSchemaRef(schema)
+		tname := o.typeNameFromSchemaRef(schema)
 		if _, ok := fields[tname]; !ok {
 			fields[tname] = make(map[string]*openapi3.MediaType)
 		}
@@ -747,7 +763,7 @@ func (o *OpenAPI3Importer) fieldForMediaType(
 	mtType mediaTypeFieldType,
 ) (Field, error) {
 	schema := mediaObj.Schema
-	tname := typeNameFromSchemaRef(schema)
+	tname := o.typeNameFromSchemaRef(schema)
 
 	medianame, typeSuffix := "", ""
 	if mtType == mtMultiReq || mtType == mtMultiResp {
