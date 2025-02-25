@@ -77,3 +77,6 @@ CREATE VIEW vWithSecurityInvoker SQL SECURITY INVOKER AS SELECT * from t;
 CREATE VIEW vWithSecurityDefiner SQL SECURITY DEFINER AS SELECT * from t;
 
 ALTER TABLE Account RENAME TO Account1Renamed;
+
+CREATE CHANGE STREAM AccountStream FOR Account
+    OPTIONS( retention_period = '7d' );

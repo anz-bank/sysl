@@ -599,6 +599,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
     # Ignore non-DDL statements.
     (:use, ...): {},
     (:set, ...): {},
+    (:create_change_stream, ...): {},
     (:create_extension, ...): {},
     (:comment_on_extension, ...): {},
     (:create_sequence, ...): {},
