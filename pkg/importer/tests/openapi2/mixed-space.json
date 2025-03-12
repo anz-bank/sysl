@@ -136,6 +136,32 @@
     },
     "rsp%20with%20space%20existing": {
       "type": "string"
+    },
+    "def with refs": {
+      "type": "object",
+      "properties": {
+        "preencoded": {
+          "$ref": "#/definitions/def%20with%20space"
+        },
+        "raw": {
+          "$ref": "#/definitions/def with space"
+        },
+        "exiting space": {
+          "$ref": "#/definitions/def with space existing"
+        },
+        "existing encoded": {
+          "$ref": "#/definitions/def%20with%20space%20existing"
+        }
+      }
+    },
+    "def with space": {
+      "type": "string"
+    },
+    "def with space existing": {
+      "type": "string"
+    },
+    "def%20with%20space%20existing": {
+      "type": "string"
     }
   }
 }

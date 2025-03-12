@@ -48,6 +48,25 @@ TestApp "Test" [package="com.example.package"]:
         data <: rsp%20with%20space?:
             @json_tag = "data"
 
+    !type def%20with%20refs:
+        existing%20encoded <: def%2520with%2520space%2520existing?:
+            @json_tag = "existing encoded"
+        exiting%20space <: def%20with%20space%20existing?:
+            @json_tag = "exiting space"
+        preencoded <: def%20with%20space?:
+            @json_tag = "preencoded"
+        raw <: def%20with%20space?:
+            @json_tag = "raw"
+
+    !alias def%20with%20space:
+        string
+
+    !alias def%20with%20space%20existing:
+        string
+
+    !alias def%2520with%2520space%2520existing:
+        string
+
     !alias req%20with%20space:
         string
 

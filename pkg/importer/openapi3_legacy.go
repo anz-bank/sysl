@@ -42,6 +42,8 @@ type OpenAPI3Importer struct {
 
 	// to check for circular references when loading schemas.
 	refMap map[string]bool
+	// map of all the encoded schema names for looking up later
+	schemaNames map[string]struct{}
 }
 
 func NewLegacyOpenAPIV3Importer(logger *logrus.Logger, fs afero.Fs) Importer {
@@ -108,6 +110,13 @@ func (o *OpenAPI3Importer) pushName(n string) func() {
 func (o *OpenAPI3Importer) popName() { o.nameStack = o.nameStack[:len(o.nameStack)-1] }
 
 func (o *OpenAPI3Importer) convertSpec(spec *openapi3.T) (string, error) {
+	// Cache all the encoded schema names
+	o.schemaNames = make(map[string]struct{})
+	for name := range spec.Components.Schemas {
+		sName := getSyslSafeName(name)
+		o.schemaNames[sName] = struct{}{}
+	}
+
 	// Convert types
 	o.types = TypeList{}
 	for name, ref := range spec.Components.Schemas {
@@ -259,11 +268,17 @@ func (o *OpenAPI3Importer) existingTypeOrSyslSafeName(name string) string {
 	safeName := getSyslSafeName(name)
 
 	// If the safeName type exists use it
+	if _, found := o.schemaNames[safeName]; found {
+		return safeName
+	}
 	if _, found := o.types.Find(safeName); found {
 		return safeName
 	}
 
 	// Check if the unencoded version exists (it is already encoded)
+	if _, found := o.schemaNames[name]; found {
+		return name
+	}
 	if _, found := o.types.Find(name); found {
 		return name
 	}
