@@ -177,7 +177,14 @@ let evalComments = \parsed
         })
     } || ();
 
-let evalOption = \parsed { evalOptionName(parsed.optionName): evalConstant(parsed.constant) +> evalComments(parsed) };
+let evalOption = \parsed 
+    let optionVal = evalConstant(parsed.constant);
+    # turn fullIdent into a string tuple
+    let optionValTuple = cond optionVal {
+        (...): optionVal,
+        _: (s: optionVal)
+    };
+    { evalOptionName(parsed.optionName): optionValTuple +> evalComments(parsed) };
 let evalOptions = \parsed //rel.union(parsed => evalOption(.@item));
 
 let evalField = \currentPackage \parsed

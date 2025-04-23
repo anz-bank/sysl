@@ -77,6 +77,12 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                 let actual = file.options;
                 //test.assert.equal(expected, actual),
 
+            fullIdent:
+                let file = parseFile(`syntax = "proto3"; option idempotency_level = NO_SIDE_EFFECTS;`);
+                let expected = {'idempotency_level': (s: 'NO_SIDE_EFFECTS')};
+                let actual = file.options;
+                //test.assert.equal(expected, actual),
+
             comment:
                 let file = parseFile(`
                     syntax = "proto3"; option (foo.java_package).bar = {
@@ -264,6 +270,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                                 '(my_option).a': (b: true),
                                                 '(object_option).a': (fields: {'array': [(d: 1), (s: 'string'), (fields: {'foo': (s: 'bar')})], 'object': (fields: {'foo': (s: 'bar')})}),
                                                 'adjacentString': (s: "firstsec'ondthi\"rdfourthfif't\"h"),
+                                                'idempotency_level': (s: "NO_SIDE_EFFECTS"),
                                             },
                                         ),
                                     },

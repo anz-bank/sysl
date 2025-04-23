@@ -23,6 +23,7 @@ message Outer {
     };
     option adjacentString = "first" "sec'ond"
     "thi""rd" 'fourth'  'fif''t"h';
+    option idempotency_level = NO_SIDE_EFFECTS;
 
     required int64 ival = 1;
 
