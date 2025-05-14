@@ -43,7 +43,11 @@ message Outer {
 }
 /* single line multiline */
 extend Foo {
-    optional int32 bar = 126;
+    optional int32 bar = 126 [
+        // comment before option
+        (custom_option) = "hello world"
+        // comment after option
+    ];
 }
 service SearchService {
     rpc Search (SearchRequest) returns (SearchResponse);

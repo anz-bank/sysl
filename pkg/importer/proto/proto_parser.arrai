@@ -45,8 +45,8 @@ extend          -> c* "extend" messageType "{" (field | group | emptyStatement |
 field           -> c* label? type fieldName "=" fieldNumber ("[" fieldOptions "]")? ";"  ($ | c)?;
 fieldName       -> ident;
 fieldNumber     -> intLit;
-fieldOptions    -> fieldOption:comma;
-fieldOption     -> optionName "=" constant c*;
+fieldOptions    -> fieldOption:comma c*;
+fieldOption     -> c* optionName "=" constant;
 
 group           -> c* label "group" groupName "=" fieldNumber messageBody;
 groupName       -> ident;
