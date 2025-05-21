@@ -15,6 +15,7 @@ import (
 	"github.com/anz-bank/sysl/pkg/pbutil"
 	"github.com/anz-bank/sysl/pkg/sysl"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/golden-retriever/pkg/gitfs"
 	"github.com/anz-bank/golden-retriever/reader/remotefs"
 	"github.com/go-git/go-git/v5"
@@ -22,7 +23,6 @@ import (
 	"github.com/go-git/go-git/v5/storage/memory"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type cmdRunner struct {

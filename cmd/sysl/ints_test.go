@@ -5,8 +5,8 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/integrationdiagram"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func TestDoGenerateIntegrations(t *testing.T) {

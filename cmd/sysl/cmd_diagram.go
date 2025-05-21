@@ -4,13 +4,13 @@ import (
 	"errors"
 	"os"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/mermaid-go/mermaid"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/mermaid/datamodeldiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/integrationdiagram"
 	"github.com/anz-bank/sysl/pkg/mermaid/sequencediagram"
 	"github.com/anz-bank/sysl/pkg/sysl"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type diagramCmd cmdutils.DiagramCmd

@@ -10,11 +10,11 @@ import (
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/syslwrapper"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/exporter"
 	sysl "github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type exportCmd struct {

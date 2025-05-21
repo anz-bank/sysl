@@ -10,7 +10,7 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
-	"gopkg.in/alecthomas/kingpin.v2"
+	"github.com/alecthomas/kingpin/v2"
 )
 
 type lspCmd struct {

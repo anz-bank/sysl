@@ -5,6 +5,7 @@ go 1.21
 require (
 	aqwari.net/xml v0.0.0-20210331023308-d9421b293817
 	github.com/alecthomas/assert v1.0.0
+	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20211115101625-aeaa445b4d4f
 	github.com/anz-bank/decimal v1.8.0
 	github.com/anz-bank/golden-retriever v0.43.0
@@ -38,7 +39,6 @@ require (
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.34.2
-	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 )
 
 require (
@@ -49,8 +49,7 @@ require (
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/alecthomas/colour v0.1.0 // indirect
 	github.com/alecthomas/repr v0.4.0 // indirect
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
-	github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4 // indirect
+	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137 // indirect
 	github.com/chromedp/cdproto v0.0.0-20200209033844-7e00b02ea7d2 // indirect
 	github.com/chromedp/chromedp v0.5.3 // indirect
 	github.com/cloudflare/circl v1.3.9 // indirect
@@ -92,6 +91,7 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/urfave/cli/v2 v2.2.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
+	github.com/xhit/go-str2duration/v2 v2.1.0 // indirect
 	github.com/xuri/efp v0.0.0-20240408161823-9ad904a10d6d // indirect
 	github.com/xuri/excelize/v2 v2.8.1 // indirect
 	github.com/xuri/nfp v0.0.0-20240318013403-ab9948c2c4a7 // indirect

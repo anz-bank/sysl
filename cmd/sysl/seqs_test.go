@@ -11,12 +11,12 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type loadAppArgs struct {

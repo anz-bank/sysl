@@ -6,12 +6,12 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/parse"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/transforms"
 	"github.com/pkg/errors"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type templateCmd struct {

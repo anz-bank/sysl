@@ -1,10 +1,10 @@
 package main
 
 import (
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/diagrams"
 	"github.com/anz-bank/sysl/pkg/sequencediagram"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type sequenceDiagramCmd struct {

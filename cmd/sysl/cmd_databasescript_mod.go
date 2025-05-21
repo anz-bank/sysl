@@ -6,10 +6,10 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/database"
 	"github.com/anz-bank/sysl/pkg/sysl"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 func GenerateModDatabaseScripts(scriptParams *cmdutils.CmdDatabaseScriptParams, modelOld, modelNew *sysl.Module,

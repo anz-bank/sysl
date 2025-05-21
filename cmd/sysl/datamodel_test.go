@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/anz-bank/sysl/pkg/datamodeldiagram"
 )

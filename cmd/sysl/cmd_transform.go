@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/arrai/transform"
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 	"github.com/anz-bank/sysl/pkg/syslutil"
@@ -17,7 +18,6 @@ import (
 	"github.com/arr-ai/arrai/syntax"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type transformCmd struct {

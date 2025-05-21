@@ -7,10 +7,10 @@ import (
 	"path"
 	"strings"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
-	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/anz-bank/sysl/pkg/arrai"
 	"github.com/anz-bank/sysl/pkg/cfg"

@@ -18,7 +18,7 @@ COPY . .
 
 RUN make build
 
-FROM ${DOCKER_BASE} as runner
+FROM ${DOCKER_BASE} AS runner
 
 COPY --from=builder /sysl/dist/sysl /
 

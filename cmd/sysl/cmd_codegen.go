@@ -5,10 +5,10 @@ import (
 
 	"github.com/anz-bank/sysl/pkg/cmdutils"
 
+	"github.com/alecthomas/kingpin/v2"
 	"github.com/anz-bank/sysl/pkg/eval"
 	"github.com/anz-bank/sysl/pkg/syslutil"
 	"github.com/anz-bank/sysl/pkg/validate"
-	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type codegenCmd struct {
