@@ -77,3 +77,4 @@ CREATE SEQUENCE AccountNumSeq
 ALTER TABLE Account OWNER TO local;
 ALTER SEQUENCE AccountNumSeq OWNED BY Account.AccountNum;
 ALTER TABLE ONLY Account ALTER COLUMN AccountNum SET DEFAULT nextval('AccountNumSeq'::regclass);
+ALTER TABLE ONLY Account ALTER COLUMN AccountNum DROP DEFAULT;

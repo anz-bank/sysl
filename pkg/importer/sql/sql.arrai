@@ -125,7 +125,7 @@ table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name attr_type 
                      | REPLACE_ROW_DELETION_POLICY = ("REPLACE" row_deletion_policy)
                      | drop_index;
 attr_alteration     -> ("ALTER" | "MODIFY") "COLUMN"? column_name
-                       (action=("SET" | "DROP") NOT_NULL | "SET" (options_def | default) | "TYPE"? attr_type);
+                       (action=("SET" | "DROP") NOT_NULL | "SET" (options_def | default) | "DROP" "DEFAULT" | "TYPE"? attr_type);
 
 //# Spanner
 update_table        -> "UPDATE" /{(?: :[^};] | [^:;] )*};
@@ -347,6 +347,7 @@ let evalAttribute = \parsed
     attr +> cond parsed {
         (:attr_type, ...): evalType(attr_type),
         (:NOT_NULL, :action, ...): (nullable: action = "SET"),
+        # ignoring DROP DEFAULT
         _: (),
     };
 
