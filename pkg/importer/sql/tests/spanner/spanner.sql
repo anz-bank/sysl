@@ -42,6 +42,17 @@ CREATE TABLE CustomerHasAccount (
     CONSTRAINT FK_AccountNum FOREIGN KEY (AccountNum, BranchID) REFERENCES Account (AccountNum, BSB),
 ) PRIMARY KEY (AccountNum ASC, CustomerID);
 
+CREATE TABLE ConstrainNotEnforced (
+    CustomerID  STRING(36) NOT NULL,
+    Customer    STRING(36) NOT NULL,
+    AccountNum  STRING(23) NOT NULL,
+    LegalRole   STRING(10) NOT NULL,
+    BranchID    STRING(6)  NOT NULL,
+    Permissions ARRAY<STRING(10)>,
+    FOREIGN KEY (CustomerID) REFERENCES Customer (CustomerID),
+    CONSTRAINT FK_AccountNum FOREIGN KEY (AccountNum, BranchID) REFERENCES Account (AccountNum, BSB) NOT ENFORCED,
+) PRIMARY KEY (AccountNum ASC, CustomerID);
+
 CREATE TABLE AccountAddress (
     AccountNum        STRING(23) NOT NULL,
     AddressPostCode   STRING(10) NOT NULL,

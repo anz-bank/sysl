@@ -27,6 +27,15 @@ customeraccounts:
         AddressLine2 <: string(100)? [~hex]
         AddressLine3 <: bytes(100)?
 
+    !table ConstrainNotEnforced [foreign_keys=[["columns:CustomerID"],["constraint:FK_AccountNum","columns:AccountNum,BranchID","not_enforced:true"]]]:
+        @primary_key = ["AccountNum", "CustomerID"]
+        CustomerID <: Customer.CustomerID [~pk, ~fk]
+        Customer <: string(36)
+        AccountNum <: Account1Renamed.AccountNum [~pk, ~asc, ~fk]
+        LegalRole <: string(10)
+        BranchID <: Account1Renamed.BSB [~fk]
+        Permissions <: sequence of string(10)?
+
     !table Customer [indexes=[["name:CustomerByEmail","unique:true","null_filtered:true","key_parts:Email,Mobile(desc)","storing:Email,Mobile","interleave_in:Customer"],["name:InterleaveIndex","key_parts:AccountNum,CustomerID","interleave_in:Account"],["name:StoringIndex","key_parts:CustomerID","storing:NetWorth"]]]:
         @primary_key = ["CustomerID"]
         CustomerID <: string(36) [~pk]

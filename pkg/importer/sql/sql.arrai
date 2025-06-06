@@ -46,11 +46,12 @@ create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name 
                         options_def?
                         pks_outer=(pk "(" key_parts ")")?
                         ("," cluster)*; //# Spanner
-table_constraint    -> ("CONSTRAINT" constraint_name)? (check | unique | fk | pks=(pk "(" key_parts ")"));
+table_constraint    -> ("CONSTRAINT" constraint_name)? (check | unique | fk | pks=(pk "(" key_parts ")")) not_enforced?;
 check               -> "CHECK" "(" condition ")";
 unique              -> "UNIQUE"? ("KEY" key_name=name)? "(" column_name:"," ")";
 fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")" references on_delete? on_update?;
 references          -> "REFERENCES" foreign=(table_prefix? table_name ("(" column_name:"," ")")?);
+not_enforced        -> "NOT" "ENFORCED";
 cluster             -> interleave=("INTERLEAVE" "IN" "PARENT" table_name on_delete?)
                      | row_deletion_policy
                      ; //# Spanner
@@ -384,9 +385,13 @@ let evalUniqueConstraint = \parsed (
 );
 
 let evalConstraint = \parsed
-    cond parsed {
+    let ret = cond parsed {
         (:fk, ...): evalForeignKeyConstraint(parsed),
         (:unique, ...): evalUniqueConstraint(parsed),
+    };
+    ret +> cond {
+        ret && parsed.not_enforced?:{}: (not_enforced: true),
+        ret: (),
     }
 ;
 

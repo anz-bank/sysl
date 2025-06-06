@@ -50,7 +50,7 @@ let entityPatterns = \entity \model
         {}: {},
         fks: $`
             foreign_keys=[${(fks => \keys $`
-                [${cond {keys.constraint_name: $`"constraint:${keys.constraint_name}",`}}"columns:${keys.foreign_keys => .attribute orderby .::,}"]
+                [${cond {keys.constraint_name: $`"constraint:${keys.constraint_name}",`}}"columns:${keys.foreign_keys => .attribute orderby .::,}"${cond {keys.not_enforced?:{}: $`,"not_enforced:true"`}}]
             `) orderby .::,}]
         `,
     };

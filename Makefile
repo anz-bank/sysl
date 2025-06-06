@@ -94,6 +94,7 @@ internal/bundles/assets/transformer_cli.arraiz: pkg/importer/avro/transformer_cl
 internal/bundles/assets/import_sql_cli.arraiz: \
 		pkg/importer/sql/import_sql_cli.arrai \
 		pkg/importer/sql/sql.arrai \
+		$(shell find pkg/importer/sql -name '*.arrai') \
 		$(shell find pkg/arrai/sysl-renderer -name '*.arrai') \
 		go.mod
 	$(BUNDLE)
