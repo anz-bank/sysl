@@ -113,7 +113,7 @@ change_stream_option -> "retention_period" "=" /{'\d+[dhms]'}
                       | "value_capture_type" "=" ( "'OLD_AND_NEW_VALUES'" | "'NEW_ROW'" | "'NEW_VALUES'" );
 
 alter_table         -> "ALTER" "TABLE" "ONLY"? table_prefix? table_name (alter=(table_alteration|attr_alteration)):",";
-table_alteration    -> ADD_COLUMN      = ("ADD" "COLUMN"? column_name attr_type options_def? generated?)
+table_alteration    -> ADD_COLUMN      = ("ADD" ("COLUMN" if_not_exists?)? column_name attr_type options_def? generated?)
                      | DROP_COLUMN     = ("DROP" "COLUMN" column_name)
                      | RENAME_COLUMN   = ("RENAME" "COLUMN" from=column_name "TO" to=column_name)
                      | SET_COLUMN      = ("SET" on_delete)
@@ -397,7 +397,10 @@ let evalConstraint = \parsed
 
 let evalTableAlteration = \parsed cond parsed {
     (table_alteration: (ADD_COLUMN: data, ...), ...): (
-        type: "add_column",
+        type: cond { 
+            data.if_not_exists?:{}: "add_column_if_not_exists",
+            _: "add_column",
+        },
         alteration: evalAttribute(data),
     ),
 
@@ -667,6 +670,13 @@ let changeCols = \m \t \fn
 
 # addCol adds column c to t's attributes in m.
 let addCol = \m \t \c changeCols(m, t, \cs cs ++ [c]);
+# add_column_if_not_exists adds column c to t's attributes in m if c doesn't yet exist.
+let add_column_if_not_exists = \m \t \c changeCols(m, t, \cs
+    cond {
+        (cs where .@item.name = c.name): cs, # column already exists
+        _: cs ++ [c],
+    }
+);
 # dropCol removes the named column from t's attributes in m.
 let dropCol = \m \t \name changeCols(m, t, \cs (cs where .@item.name != name) rank (:.@));
 # alterCol replaces the named column in t's attributes in m.
@@ -705,6 +715,7 @@ let renameTo = \m \t \newName
 let stepAlt = \m \t \(:type, alteration:alt)
     cond type {
         'add_column': addCol(m, t, alt),
+        'add_column_if_not_exists': add_column_if_not_exists(m, t, alt),
         'drop_column': dropCol(m, t, alt.name),
         'alter_column': alterCol(m, t, alt),
         'rename_column': renameCol(m, t, alt.from, alt.to),

@@ -20,6 +20,12 @@ let foo_b = applyAlterTable(addCol.data, foo);
 let [alterCol] = parseDdl('ALTER TABLE foo ALTER COLUMN b SET NOT NULL;');
 let foo_b2 = applyAlterTable(alterCol.data, foo_b);
 
+let [addColIfNotExist] = parseDdl('ALTER TABLE foo ADD COLUMN IF NOT EXISTS b STRING;');
+let foo_b3 = applyAlterTable(addColIfNotExist.data, foo_b2);
+
+let [addColIfNotExistAdded] = parseDdl('ALTER TABLE foo ADD COLUMN IF NOT EXISTS c STRING;');
+let foo_b4 = applyAlterTable(addColIfNotExistAdded.data, foo_b3);
+
 let [dropCol] = parseDdl('ALTER TABLE foo DROP COLUMN b;');
 let foo_bx = applyAlterTable(dropCol.data, foo_b2);
 
@@ -162,6 +168,22 @@ let [createTableInlinePK] = parseDdl('CREATE TABLE foo (a INT, PRIMARY KEY(a));'
             attributes: [
                 (name: 'a', type: 'int', nullable: true, options: {}, length: 0, scale: 0),
                 (name: 'b', type: 'int', nullable: false, options: {}, length: 0, scale: 0),
+            ],
+            primary_key: ['a'],
+            foreign_keys: {},
+            unique_keys: {},
+            name_prefix: '',
+            cluster: {},
+        )},
+
+        addColIfNotExist: foo_b3.entities = foo_b2.entities,
+
+        addColIfNotExistAdded: foo_b4.entities = {(
+            name: 'foo',
+            attributes: [
+                (name: 'a', type: 'int', nullable: true, options: {}, length: 0, scale: 0),
+                (name: 'b', type: 'int', nullable: false, options: {}, length: 0, scale: 0),
+                (name: 'c', type: 'string', nullable: true, options: {}, length: 0, scale: 0),
             ],
             primary_key: ['a'],
             foreign_keys: {},
