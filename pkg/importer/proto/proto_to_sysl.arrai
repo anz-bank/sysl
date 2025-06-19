@@ -22,13 +22,25 @@ let resolveImport = \import \imports
         _: //error($`Unresolvable import: ${import} not in [${imports => .@ orderby .::, }]`)
     };
 
+# `fileContainsTypeImp` checks whether a Sysl type is defined in a block and will return a set of remaining namespaces of matches.
+let rec fileContainsTypeImp = \fileContent \typeName \namespace
+    # if this level contains the type
+    let t = cond {(fileContent.messages?:{} where .@ = typeName) || (fileContent.enums?:{} where .@ = typeName): {namespace}};
+    # search submessages
+    let submatches = //rel.union(
+        fileContent.messages?:{} => 
+        let n = '.' ++ .@; (fileContainsTypeImp(.@value, typeName, namespace) where //seq.has_suffix(n, .)) => //seq.trim_suffix(n, .)
+    );
+    t | submatches;
+
 # `fileContainsType` checks whether a Sysl type is defined in a file by searching messages/enums.
-#  This also searches nested messages/enums.
 # `fileContent` the content of the file being searched in.
-# `typeName` the name of the type being searched for.
-let rec fileContainsType = \fileContent \typeName
-    !!(fileContent.messages?:{} where .@ = typeName || fileContainsType(.@value, typeName)) ||
-    !!(fileContent.enums?:{} where .@ = typeName);
+# `type` the type being searched for.
+let fileContainsType = \fileContent \type
+    let tpackage = cond {type.package: '.' ++ type.package};
+    let res = fileContainsTypeImp(fileContent, type.name, tpackage);
+    let filePackage = (cond {//seq.has_prefix('.', type.package): '.'}) ++ '.' ++ (fileContent.package single).@;
+    !!(res where (. = '' || //seq.has_suffix(., filePackage)));
 
 # `evalNumber` return the value of a number holding tuple
 # `number` the tuple represenation of a number
@@ -63,18 +75,13 @@ let referencedType = \t \file \appName \imports \scope \prefix
     let referencedNs = \t \file \imports
         let resolvedImports = (file.@value.imports => cond {includeImport(.@): resolveImport(.@, imports)}) where .;
         let refs = (
-            (resolvedImports where fileContainsType(imports(.), t.name)) ||
+            (resolvedImports where fileContainsType(imports(.), t)) ||
             # FIXME: this is a hack. Currently the proto importer has problems parsing types references which references
             # nested types (types defined in a type). When this happens, imports cannot be resolved as it will not be
             # able to find the referenced types in imported definitions. What this hack does is ensure that if a type
             # is not found in imported definitions, it will attempt to find the type in the main file.
             {file.@}
         );
-        let refs = cond {
-            # If more than 1 file was found then also check the package (it should probably do that above already in fileContainsType)
-            refs count > 1: refs where //seq.has_prefix(getPackage((@value:imports(.))), t.package),
-            _: refs,
-        };
         let _ = cond {refs count > 1: //error($`"${t}" found in multiple files: ${refs}`)};
         let ref = refs single;
         getNamespace(imports(ref));
@@ -103,7 +110,7 @@ let referencedType = \t \file \appName \imports \scope \prefix
                     # TODO: Get the full name of a type when it's found in a file
                     # For example: If Baz and is a nested message within Foo
                     # name is set to Baz when it should be Foo.Baz
-                    fileContainsType(file.@value, t.name): cond {
+                    fileContainsType(file.@value, t): cond {
                         //seq.contains(typeAppSuffix, appName): (path: [name]),
                         _:
                             let ns = getNamespace(file.@value);

@@ -1,0 +1,16 @@
+// {"sysl": {"namespace": "Name :: Space"}}
+syntax = "proto3";
+
+option go_package = "helloworld";
+package hello.world;
+
+import "proto/tests/imports1.proto";
+import "proto/tests/imports2.proto";
+
+message M3 {
+    M1.State test1 = 1; // exact match (Space1), no package
+    M2.State test2 = 2; // exact match (Space2), no package
+    hello.world1.M1.State test3 = 3; // full package  (Space1)
+    world1.M1.State test4 = 4; // partial package (Space1)
+    State test5 = 5; // should not find without outer message
+}

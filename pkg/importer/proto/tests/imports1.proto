@@ -1,0 +1,11 @@
+// {"sysl": {"namespace": "Name :: Space1"}}
+syntax = "proto3";
+
+option go_package = "helloworld1";
+package hello.world1;
+
+message M1 {
+    enum State {
+        STATE_1 = 0;
+    }
+}
