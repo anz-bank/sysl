@@ -270,6 +270,7 @@ let (:evalConstant, :parseFile, ...) = //{./proto_parser};
                                                 '(my_option).a': (b: true),
                                                 '(object_option).a': (fields: {'array': [(d: 1), (s: 'string'), (fields: {'foo': (s: 'bar')})], 'object': (fields: {'foo': (s: 'bar')})}),
                                                 'adjacentString': (s: "firstsec'ondthi\"rdfourthfif't\"h"),
+                                                'emptyObject': (fields: {}),
                                                 'idempotency_level': (s: "NO_SIDE_EFFECTS"),
                                             },
                                         ),

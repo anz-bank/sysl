@@ -88,7 +88,7 @@ boolLit         -> /{true | false};
 
 strLit          -> (c* (s=(["]\s* [^"]*:'""') ["] | s=([']\s* [^']*:"''") ['])):\s; // ";
 
-object          -> "{" (c* objectField comma? c*)* "}";
+object          -> "{" (c* objectField comma?)* c* "}";
 objectField     -> objectKey ":"? objectValue;
 objectKey       -> constant;
 objectValue     -> constant ";"?;

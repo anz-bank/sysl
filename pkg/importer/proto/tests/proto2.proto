@@ -25,6 +25,10 @@ message Outer {
     "thi""rd" 'fourth'  'fif''t"h';
     option idempotency_level = NO_SIDE_EFFECTS;
 
+    option emptyObject = {
+        // with comment
+    };
+
     required int64 ival = 1;
 
     // Level 2

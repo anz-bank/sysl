@@ -35,7 +35,7 @@ proto2:
     !type Outer:
         @description =:
             | Level 1
-        @proto_options = ["(my_option).a = true", "(object_option).a = {\"array: [1, 'string', {'foo: bar'}]\", \"object: {'foo: bar'}\"}", "adjacentString = firstsec'ondthi\"rdfourthfif't\"h", "idempotency_level = NO_SIDE_EFFECTS"]
+        @proto_options = ["(my_option).a = true", "(object_option).a = {\"array: [1, 'string', {'foo: bar'}]\", \"object: {'foo: bar'}\"}", "adjacentString = firstsec'ondthi\"rdfourthfif't\"h", "emptyObject = ", "idempotency_level = NO_SIDE_EFFECTS"]
         @source_path = "proto/tests/proto2.proto"
         enum_field <: EnumAllowingAlias?:
             @json_tag = "enumField"
