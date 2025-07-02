@@ -82,6 +82,7 @@ ALTER TABLE Account2 REPLACE ROW DELETION POLICY (OLDER_THAN(created, INTERVAL 6
 ALTER TABLE Account2 ADD COLUMN Refresh TIMESTAMP OPTIONS (allow_commit_timestamp=TRUE);
 
 CREATE CHANGE STREAM foo FOR bar OPTIONS( retention_period = '14d' );
+ALTER CHANGE STREAM foo SET OPTIONS( retention_period = '7d' );
 
 CREATE VIEW v AS SELECT * from t;
 CREATE VIEW vWithSecurityInvoker SQL SECURITY INVOKER AS SELECT * from t;

@@ -19,6 +19,7 @@ ddl                 -> stmt=(create_database
                             |call
                             |comment_on_extension
                             |create_change_stream
+                            |alter_change_stream
                             |analyze
                             |alter_table
                             |alter_sequence
@@ -111,6 +112,7 @@ create_change_stream -> "CREATE" "CHANGE" "STREAM" name
 table_columns        -> table_name ("(" column_name:"," ")")?;
 change_stream_option -> "retention_period" "=" /{'\d+[dhms]'}
                       | "value_capture_type" "=" ( "'OLD_AND_NEW_VALUES'" | "'NEW_ROW'" | "'NEW_VALUES'" );
+alter_change_stream  -> "ALTER" "CHANGE" "STREAM" name "SET" "OPTIONS" "(" change_stream_option:"," ")";
 
 alter_table         -> "ALTER" "TABLE" "ONLY"? table_prefix? table_name (alter=(table_alteration|attr_alteration)):",";
 table_alteration    -> ADD_COLUMN      = ("ADD" ("COLUMN" if_not_exists?)? column_name attr_type options_def? generated?)
@@ -609,6 +611,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
     (:use, ...): {},
     (:set, ...): {},
     (:create_change_stream, ...): {},
+    (:alter_change_stream, ...): {},
     (:create_extension, ...): {},
     (:comment_on_extension, ...): {},
     (:create_sequence, ...): {},
