@@ -64,6 +64,7 @@ CREATE TABLE AccountAddress (
     AddressLine1    BYTES(MAX),
     AddressLine2    VARCHAR(0x100),
     AddressLine3    BYTES(100),
+    SYNONYM (AccountAddressSynonym),
     PRIMARY KEY (AccountNum, AddressPostCode)
 );
 
@@ -78,3 +79,5 @@ ALTER TABLE Account OWNER TO local;
 ALTER SEQUENCE AccountNumSeq OWNED BY Account.AccountNum;
 ALTER TABLE ONLY Account ALTER COLUMN AccountNum SET DEFAULT nextval('AccountNumSeq'::regclass);
 ALTER TABLE ONLY Account ALTER COLUMN AccountNum DROP DEFAULT;
+
+ALTER TABLE CustomerHasAccount ADD SYNONYM CustomerHasAccountRenamed;

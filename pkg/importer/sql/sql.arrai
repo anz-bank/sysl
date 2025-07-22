@@ -41,13 +41,14 @@ create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
 table_prefix        -> ('`' name=[^`]+ '`' | name=[^(.\s]+) "."; //'
 create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name "("(
                               attr=(column_name attr_type generated? options_def? pk? references?)
-                            | table_constraint
+                            | table_constraint | table_synonym
                         ):"," ","? ")"
                         partition_by_def?
                         options_def?
                         pks_outer=(pk "(" key_parts ")")?
                         ("," cluster)*; //# Spanner
 table_constraint    -> ("CONSTRAINT" constraint_name)? (check | unique | fk | pks=(pk "(" key_parts ")")) not_enforced?;
+table_synonym       -> "SYNONYM" "(" table_name ")";
 check               -> "CHECK" "(" condition ")";
 unique              -> "UNIQUE"? ("KEY" key_name=name)? "(" column_name:"," ")";
 fk                  -> "FOREIGN" "KEY" "(" column_name:"," ")" references on_delete? on_update?;
@@ -123,6 +124,7 @@ table_alteration    -> ADD_COLUMN      = ("ADD" ("COLUMN" if_not_exists?)? colum
                      | DROP_CONSTRAINT = ("DROP" "CONSTRAINT" constraint_name)
                      | OWNER_TO        = ("OWNER" "TO" name)
                      | RENAME_TO       = ("RENAME" "TO" name)
+                     | ADD_SYNONYM     = ("ADD" "SYNONYM" table_name)
                      | ADD_ROW_DELETION_POLICY = ("ADD" row_deletion_policy)
                      | DROP_ROW_DELETION_POLICY = ("DROP" "ROW" "DELETION" "POLICY")
                      | REPLACE_ROW_DELETION_POLICY = ("REPLACE" row_deletion_policy)
@@ -447,6 +449,8 @@ let evalTableAlteration = \parsed cond parsed {
             name: data.name.'' rank (:.@),
         ),
     ),
+
+    (table_alteration: (ADD_SYNONYM: data, ...), ...): (),
 
     (table_alteration: (drop_index: data, ...), ...): (
         type: "drop_index",
