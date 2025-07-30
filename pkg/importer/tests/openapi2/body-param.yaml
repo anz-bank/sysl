@@ -18,6 +18,11 @@ definitions:
         format: date
       with-question?:
         type: string
+      object-with-question?:
+        type: object
+        properties:
+          name:
+            type: string
     type: object
 
 paths:

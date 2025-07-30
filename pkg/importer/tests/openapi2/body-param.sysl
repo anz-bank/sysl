@@ -24,8 +24,14 @@ TestApp "Goat CRUD API" [package="com.example.package"]:
             @json_tag = "birthday"
         name <: string?:
             @json_tag = "name"
+        object-with-question%3F <: Goat_object-with-question%3F?:
+            @json_tag = "object-with-question?"
         with-question%3F <: string?:
             @json_tag = "with-question?"
+
+    !type Goat_object-with-question%3F:
+        name <: string?:
+            @json_tag = "name"
 
     !type _goat_create_goat_201:
         Location <: string [~header]:

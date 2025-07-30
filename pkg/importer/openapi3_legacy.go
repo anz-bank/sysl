@@ -328,7 +328,7 @@ func (o *OpenAPI3Importer) typeAliasForSchema(ref *openapi3.SchemaRef) Type {
 		t = nameOnlyType(name)
 	}
 	if name == OpenAPI_OBJECT {
-		t = nameOnlyType(strings.Join(o.nameStack, "_"))
+		t = nameOnlyType(o.existingTypeOrSyslSafeName(strings.Join(o.nameStack, "_")))
 	}
 
 	if _, ok := t.(*Array); !ok && ref.Value.Type.Is(openapi3.TypeArray) {
@@ -355,6 +355,11 @@ func makeSizeSpec(min uint64, max *uint64) *sizeSpec {
 }
 
 func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Field, error) {
+	if strings.ContainsRune(name, '?') {
+		// warn, but ignore
+		o.logger.Warnf("invalid field name %q (field names can not contain a '?')", name)
+	}
+
 	isArray := prop.Value.Type.Is(openapi3.TypeArray)
 
 	// If type is array, but Items is nil then default to an array of object
@@ -388,7 +393,7 @@ func (o *OpenAPI3Importer) buildField(name string, prop *openapi3.SchemaRef) (Fi
 		ns := o.nameStack
 		o.nameStack = nil
 		defer func() { o.nameStack = ns }()
-		t, err := o.loadTypeSchema(strings.Join(ns, "_"), prop.Value)
+		t, err := o.loadTypeSchema(o.existingTypeOrSyslSafeName(strings.Join(ns, "_")), prop.Value)
 		if err != nil {
 			return Field{}, err
 		}
