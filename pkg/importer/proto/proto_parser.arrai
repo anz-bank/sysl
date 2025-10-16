@@ -74,7 +74,7 @@ type            ->  messageType;
 
 constant        ->  [-+]? intLit | [-+]? floatLit | strLit | boolLit | fullIdent | object | array;
 
-ident           -> [[:alnum:]] [[:alnum:]_]*;
+ident           -> [[:alnum:]_] [[:alnum:]_]*;
 fullIdent       -> ident:".";
 
 intLit          -> decimalLit | octalLit | hexLit;
