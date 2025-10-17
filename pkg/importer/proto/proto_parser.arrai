@@ -86,7 +86,7 @@ floatLit        -> /{\d+(?:\.\d+?)? (?:e[-+]?\d+)? | \. \d+ (?:e[-+]?\d+)? | inf
 
 boolLit         -> /{true | false};
 
-strLit          -> (c* (s=(["]\s* [^"]*:'""') ["] | s=([']\s* [^']*:"''") ['])):\s; // ";
+strLit          -> (c* (s=(["]\s* ([^"\\]+|"\\".)*:'""') ["] | s=([']\s* ([^'\\]+|"\\".)*:"''") ['])):\s; // ";
 
 object          -> "{" (c* objectField comma?)* c* "}";
 objectField     -> objectKey ":"? objectValue;

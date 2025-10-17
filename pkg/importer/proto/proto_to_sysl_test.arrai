@@ -46,5 +46,20 @@ let (:module, ...) = //{./proto_to_sysl};
             let expected = {'E0': 0, 'E1': 1, 'E2': 2, 'E3_DEP': 3, 'E4_DEP1': 4, 'E5_DEP1': 5};
             let actual = sysl.apps('enums').types('e').enum.items;
             //test.assert.equal(expected, actual),
+    ),
+
+    escape: (
+        quote:
+            let model = {'f.proto': parseFile(`
+                syntax = "proto3";
+                option java_package  = "text with an \"excaped quote\" inside";
+                package escape;
+                message M {}
+                `
+            )};
+            let sysl = module((), model);
+            let expected = 'text with an \\"excaped quote\\"inside';
+            let actual = sysl.apps('escape').attrs('java_package').s;
+            //test.assert.equal(expected, actual),
     )
 )
