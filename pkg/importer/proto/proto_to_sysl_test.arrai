@@ -58,7 +58,7 @@ let (:module, ...) = //{./proto_to_sysl};
                 `
             )};
             let sysl = module((), model);
-            let expected = 'text with an \\"excaped quote\\"inside';
+            let expected = 'text with an \\"excaped quote\\" inside';
             let actual = sysl.apps('escape').attrs('java_package').s;
             //test.assert.equal(expected, actual),
     )

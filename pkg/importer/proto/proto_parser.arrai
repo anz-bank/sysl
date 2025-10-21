@@ -86,7 +86,11 @@ floatLit        -> /{\d+(?:\.\d+?)? (?:e[-+]?\d+)? | \. \d+ (?:e[-+]?\d+)? | inf
 
 boolLit         -> /{true | false};
 
-strLit          -> (c* (s=(["]\s* ([^"\\]+|"\\".)*:'""') ["] | s=([']\s* ([^'\\]+|"\\".)*:"''") ['])):\s; // ";
+strLit          -> (c* (
+                        s=/{"((?:[^"\\]+|\\.|"{2})*)"}
+                        | 
+                        s=/{'((?:[^'\\]+|\\.|'{2})*)'}
+                   )):\s;
 
 object          -> "{" (c* objectField comma?)* c* "}";
 objectField     -> objectKey ":"? objectValue;
@@ -133,21 +137,16 @@ let evalType = \currentPackage \parsed
 
 let evalLabel = \parsed parsed.'' rank (:.@) ;
 
-let concatStrLit = \strLit 
-    //seq.concat(//seq.concat(
-        (strLit.s >> .'') => \i (
-            @:i.@,
-            @item: i.@item => \v
-                let st=(v.@item rank (:.@));
-                let s=cond {v.@=0:st where .@>0 rank (:.@), _:st};
-                (@:v.@, @item:
-                    cond strLit.@choice(i.@) {
-                        0: cond s {'""':'"', _:s},
-                        1: cond s {"''":"'", _:s},
-                    }
-                )
-        )
-    ));
+let concatStrLit = \strLit
+    //seq.concat(
+        strLit.s >>> \i \v 
+            let s = v.'' rank (:.@);
+            cond strLit.@choice(i) {
+                0: //seq.sub('""', '"', s),
+                1: //seq.sub("''", "'", s),
+            }
+    );
+
 
 let rec evalConstant = \parsed
     cond parsed {
