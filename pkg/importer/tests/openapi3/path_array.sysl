@@ -8,5 +8,5 @@ TestApp "Array path param":
     @package = "com.example.package"
     
     /endpoint/{id <: sequence of int64}:
-        GET:
+        GET(id <: sequence of int64 [~path, name="id"]):
             return 200

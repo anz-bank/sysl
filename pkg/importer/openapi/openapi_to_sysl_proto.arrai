@@ -416,7 +416,7 @@ let specialAnno = {
         let reqBodyParam = reqBodyToParamMessage(name, ep('requestBody')?:{});
         (
             :name,
-            param: [reqBodyParam] ++ header ++ cookie,
+            param: [reqBodyParam] ++ header ++ cookie ++ path,
             stmt: responsesToReturnMessages(ep('responses')?:{}),
             docstring: ep(descAnno)?.s:{},
             attrs: extensionToAnnotations(ep),

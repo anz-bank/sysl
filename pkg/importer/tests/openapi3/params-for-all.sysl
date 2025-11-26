@@ -8,9 +8,9 @@ TestApp "Params For All Operations":
     @package = "com.example.package"
     
     /param/{id <: string}:
-        GET?key=string?&name=string?&special%2Dcharacter=string?:
+        GET(id <: string [~path, name="id"]) ?key=string?&name=string?&special%2Dcharacter=string?:
             | has existing parameters
             return 200
-        POST?name=string?&special%2Dcharacter=string?:
+        POST(id <: string [~path, name="id"]) ?name=string?&special%2Dcharacter=string?:
             | Common description
             return 200

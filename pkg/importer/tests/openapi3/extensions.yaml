@@ -13,12 +13,12 @@ paths:
       parameters:
         - name: param1
           in: path
-          x-param1-anno: "this should be ignored in the import"
+          x-param1-anno: "this is anno for param1"
           schema:
             type: string
         - name: param2
           in: query
-          x-param2-anno: "this should be ignored in the import"
+          x-param2-anno: "this is anno for param2"
           schema:
             type: string
         - name: param3
@@ -67,7 +67,7 @@ paths:
       parameters:
         - name: param1
           in: path
-          x-param1-anno: "this should be ignored in the import"
+          x-param1-anno: "this is anno for param1"
           schema:
             type: string
       requestBody:

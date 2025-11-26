@@ -48,13 +48,13 @@ TestApp "Swagger Petstore":
             return error <: Error [mediatype="application/json"]
     
     /pets/{id <: int64}:
-        DELETE:
+        DELETE(id <: int64 [~path, description="ID of pet to delete", name="id"]):
             | deletes a single pet based on the ID supplied
             return 204
             return error <: Error [mediatype="application/json"]
     
     /pets/{id <: int64}:
-        GET:
+        GET(id <: int64 [~path, description="ID of pet to fetch", name="id"]):
             | Returns a user based on a single ID, if the user does not have access to the
             | pet
             return 200 <: Pet [mediatype="application/json"]

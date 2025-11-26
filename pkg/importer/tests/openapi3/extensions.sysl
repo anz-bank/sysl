@@ -12,12 +12,12 @@ TestApp "Extensions":
     @x-package = "second package data"
     
     /path/{param1 <: string}:
-        GET(param3 <: string [~header, name="param3", param3-anno="this is anno for param3"], param4 <: string [~cookie, name="param4", param3-anno="this is anno for param4"]) ?param2=string?:
+        GET(param3 <: string [~header, name="param3", param3-anno="this is anno for param3"], param4 <: string [~cookie, name="param4", param3-anno="this is anno for param4"], param1 <: string [~path, name="param1", param1-anno="this is anno for param1"]) ?param2=string?:
             @op-anno = "this is operation level annotation"
             return 200 <: string [get-200-resp="this is anno for get 200 response", mediatype="plain/text"]
             return 300 <: string [get-300-resp="this anno should replace get 300 response", mediatype="plain/text"]
             return 400 <: get_path_param1__400_resp_type [get-400-resp="this is anno for get 400 response"]
-        POST(post_path_param1__req_body <: string [~body, mediatype="application/json", req-body-anno="this is anno for request body"]):
+        POST(post_path_param1__req_body <: string [~body, mediatype="application/json", req-body-anno="this is anno for request body"], param1 <: string [~path, name="param1", param1-anno="this is anno for param1"]):
             @path-anno = "this should replace path level annotation"
             return 200 <: string [examples="simple example", mediatype="application/json"]
     

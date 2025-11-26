@@ -8,7 +8,7 @@ TestApp "Simple":
     @package = "com.example.package"
     
     /docs/{docId <: bytes}:
-        GET:
+        GET(docId <: bytes [~path, name="docId"]):
             return 200 <: SimpleObj [mediatype="application/json"]
             return 400 <: bytes [mediatype="application/json"]
             return 500

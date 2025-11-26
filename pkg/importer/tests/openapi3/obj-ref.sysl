@@ -8,7 +8,7 @@ TestApp "Simple":
     @package = "com.example.package"
     
     /parameters/{param4 <: string}:
-        POST(param2 <: param2_param [~header, name="param2"], param3 <: param3_param? [~cookie, name="param3"]) ?param1=string&param5=string?:
+        POST(param2 <: param2_param [~header, name="param2"], param3 <: param3_param? [~cookie, name="param3"], param4 <: string [~path, name="param4"]) ?param1=string&param5=string?:
             return 200 <: string [mediatype="application/json"]
             return 400 <: complex_response 
             return 500 <: very_complex_response 

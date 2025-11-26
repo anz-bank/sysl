@@ -19,7 +19,7 @@ TestApp "Twilio - Conversations":
             return 200 <: get_v1_Conversations_200_resp_type 
     
     /v1/Conversations/{ConversationSid <: string}/Messages:
-        GET?PageSize=int?:
+        GET(ConversationSid <: string [~path, description="The unique ID of the [Conversation](https://www.twilio.com/docs/conversations/api/conversation-resource) for messages.", name="ConversationSid"]) ?PageSize=int?:
             | Retrieve a list of all messages in the conversation
             return 200 <: get_v1_Conversations_ConversationSid_Messages_200_resp_type 
     
