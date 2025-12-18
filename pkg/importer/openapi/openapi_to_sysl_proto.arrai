@@ -187,10 +187,11 @@ let specialAnno = {
                                 };
                                 # if the referenced type is an alias with constraints, return the type instead of typeref
                                 let obj = oapi('components', 'schemas', type)?:{};
+                                let hasConstraint = \ob ob('maxLength')?:{} || ob('minLength')?:{};
                                 (
-                                    isNativeType(obj('type')?.s:'') &&
-                                    (obj('maxLength')?:{} || obj('minLength')?:{}) &&
-                                    schemaToTypeMessageWithConfig(conf, obj)
+                                    ((isNativeType(obj('type')?.s:'') && hasConstraint(obj))
+                                     || (obj('type')?.s:'' = 'array' && isNativeType(obj('items')?('type')?.s:'') && hasConstraint(obj('items')?:{}))
+                                    ) && schemaToTypeMessageWithConfig(conf, obj)
                                 ) || typeRef((path: [safeType]))
                             ,
                             ['#', 'components', _, _]: schemaToTypeMessageWithConfig(conf, resolveToObj(t)('schema')?:{}),

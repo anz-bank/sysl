@@ -7,6 +7,12 @@ components:
       type: string
       minLength: 1
       maxLength: 2
+    toRefOfArrayWithLength:
+      type: array
+      items:
+        type: string
+        minLength: 1
+        maxLength: 3
     type:
       properties:
         a:
@@ -41,6 +47,8 @@ components:
           type: integer
         j:
           $ref: '#/components/schemas/toRefWithLength'
+        refOfArrayWithLength:
+          $ref: '#/components/schemas/toRefOfArrayWithLength'
         k:
           type: number
           maxLength: 6 # invalid, but sysl shouldn't crash

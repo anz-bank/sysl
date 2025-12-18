@@ -50,3 +50,5 @@ TestApp "Simple":
             @json_tag = "minAndMaxLength"
         minLength <: string(2147483646..)?:
             @json_tag = "minLength"
+        refOfArrayWithLength <: sequence of string(1..3)?:
+            @json_tag = "refOfArrayWithLength"
