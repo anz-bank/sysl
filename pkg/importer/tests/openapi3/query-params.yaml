@@ -26,3 +26,12 @@ paths:
           required: true
           in: query
           format: date
+        - name: array_with_length
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              maxLength: 5
+              pattern: ^[0-9a-fA-F]{32}$

@@ -327,7 +327,14 @@ let simplifiedInplaceTypeDefinitions = \conf \oapi
                         'query': !(isNativeType(schema('type')?.s?:'') || schema('$ref')?:false),
                         _: isComplexSchema(schema),
                     };
-                    (isComplex && newEpWithSchema(schema)) || default
+                    # query params don't support native array, but alias doesn't support min/maxLength, so remove them for now.
+                    let cleanedSchema = 
+                        cond {
+                            (param('in')?.s:'' = 'query') && (schema('type')?.s:'' = 'array') && isNativeType(schema('items')?('type')?.s:''):
+                                schema +> {'items': schema('items') where .@ !<: {'minLength', 'maxLength'}},
+                            _: schema
+                        };
+                    (isComplex && newEpWithSchema(cleanedSchema)) || default
                 ;
                 acc +> (schemas|: schemas, paths|: paths)
         ;

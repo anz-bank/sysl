@@ -8,5 +8,9 @@ TestApp "Simple":
     @package = "com.example.package"
     
     /test:
-        GET?key=string?&min_date=string&number=int32?:
+        GET?array_with_length={get_test_array_with_length}?&key=string?&min_date=string&number=int32?:
             return 200
+    
+    !alias get_test_array_with_length:
+        @regex = "^[0-9a-fA-F]{32}$"
+        sequence of string
