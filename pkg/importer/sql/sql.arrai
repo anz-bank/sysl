@@ -22,6 +22,7 @@ ddl                 -> stmt=(create_database
                             |alter_change_stream
                             |analyze
                             |alter_table
+                            |alter_index
                             |alter_sequence
                             |alter_function
                             |update_table
@@ -73,6 +74,8 @@ create_index        -> "CREATE" unique=("UNIQUE")? nullfiltered=("NULL_FILTERED"
                        storing_clause? ","? interleaving_clause?;
 storing_clause      -> "STORING" "(" column_name:",",? ")";
 interleaving_clause -> "INTERLEAVE" "IN" table_name;
+
+alter_index         -> "ALTER" "INDEX" index_name "ADD" "STORED" "COLUMN" column_name:",",?;
 
 sql_security        -> "SQL" "SECURITY" ("INVOKER" | "DEFINER");
 create_view         -> "CREATE" ("OR" "REPLACE")? "VIEW" table_prefix? view_name sql_security? "AS" select;
@@ -573,6 +576,14 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
         ),
     ),
 
+    (alter_index: val, ...): (
+        stmt: "alter_index",
+        data: (
+            name: val.index_name.'' rank (:.@),
+            add_stored_columns: val.column_name >> (.'' rank (:.@)),
+        ),
+    ),
+
     (create_view: val, ...): (
         stmt: "create_view",
         data: (
@@ -650,6 +661,14 @@ let applyCreateTable = \relation \model
 let applyCreateIndex = \index \model
     let _ = //test.assert.equal({}, model.indexes where .name = index.name);
     model +> (indexes: model.indexes | {index});
+
+# applies an alter index statement
+let applyAlterIndex = \(:name, add_stored_columns:columns) \model
+    let {old} = model.indexes where .name = name;
+    let _ = //test.assert.equal(1, (model.indexes where .name = name) count);
+    let existingCols = old.storing_col?:[];
+    let updatedIndex = old +> (storing_col: existingCols ++ columns);
+    model +> (indexes: model.indexes without old with updatedIndex);
 
 # applies a create database statement
 let applyCreateDatabase = \database \model
@@ -745,6 +764,7 @@ let rec applyStmt = \stmt \model
         (stmt: "create_database", data: schema): applyCreateDatabase(schema, model),
         (stmt: "create_table", data: relation):  applyCreateTable(relation, model),
         (stmt: "create_index", data: index):     applyCreateIndex(index, model),
+        (stmt: "alter_index", data: alteration): applyAlterIndex(alteration, model),
         (stmt: "alter_table", data: alteration): applyAlterTable(alteration, model),
         (stmt: "drop_table", data: name):        applyDropTable(name, model),
         (stmt: "drop_index", data: name):        applyDropIndex(name, model),
@@ -767,6 +787,7 @@ let emptyModel = (entities: {}, indexes: {}, schema: {});
     :applyCreateTable,
     :applyAlterTable,
     :applyCreateIndex,
+    :applyAlterIndex,
     :applyCreateDatabase,
     :applyDropTable,
     :applyDropIndex,

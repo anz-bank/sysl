@@ -203,6 +203,17 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
             --- {(name: 'ix', table_name: 't1', key_parts: ['id'])}
     ),
 
+    alter_index: (
+        add_stored_column:
+            let s = {:macro:CREATE INDEX ix ON t1(id) STORING (col1); ALTER INDEX ix ADD STORED COLUMN col2:};
+            (s.indexes single).storing_col = ['col1', 'col2']
+        ,
+        add_multiple_stored_columns:
+            let s = {:macro:CREATE INDEX ix ON t1(id); ALTER INDEX ix ADD STORED COLUMN col1, col2, col3:};
+            (s.indexes single).storing_col = ['col1', 'col2', 'col3']
+        ,
+    ),
+
     # TODO: Include views in model.
     view: (
         create: ({:macro:CREATE VIEW v AS SELECT stuff:}) = emptyModel,
