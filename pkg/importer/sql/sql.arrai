@@ -8,6 +8,7 @@ let (:reduce, ...) = //{github.com/arr-ai/arrai/contrib/util};
 
 let grammar = {://grammar.lang.wbnf:
 ddl                 -> stmt=(create_database
+                            |create_schema
                             |select
                             |create_table
                             |create_index
@@ -37,7 +38,7 @@ ddl                 -> stmt=(create_database
                             |grant):";"? ";"? \s*;
 
 create_database     -> "CREATE" "DATABASE" database=([a-z][0-9a-z_]*[0-9a-z]);
-
+create_schema       -> "CREATE" "SCHEMA" if_not_exists? schema_name=name;
 
 table_prefix        -> ('`' name=[^`]+ '`' | name=[^(.\s]+) "."; //'
 create_table        -> "CREATE" "TABLE" if_not_exists? table_prefix? table_name "("(
@@ -92,9 +93,14 @@ alter_sequence      -> "ALTER" "SEQUENCE" table_prefix? sequence_name
                         ("OWNED" "BY" dotted_name | "RESTART" "WITH" value)*;
 alter_function      -> "ALTER" "FUNCTION" table_prefix? function_name=name "(" ")" "OWNER" "TO" owner_name=name;
 
-create_function     -> "CREATE" "FUNCTION" table_prefix? function_name=name "(" ")" "RETURNS" var_name=name
+create_function     -> "CREATE" "FUNCTION" table_prefix? function_name=name "(" func_params? ")" "RETURNS" var_name=name
+                       sql_security?
                        ("LANGUAGE" name)?
-                       "AS" /{\$\w*\$.*?\$\w*\$} function_opt*;
+                       "AS" function_body function_opt*;
+function_body       -> /{\$\w*\$.*?\$\w*\$}
+                     | /{\([^;]*\)};
+func_params         -> func_param:",";
+func_param          -> param_name=name param_type=name;
 function_opt        -> "LANGUAGE" lang_name=name
                      | "VOLATILE"
                      | "COST" cost=\d+;
@@ -623,6 +629,7 @@ let evalDdl = \parsed parsed.stmt?:[] >> cond . {
     ),
 
     # Ignore non-DDL statements.
+    (:create_schema, ...): {},
     (:use, ...): {},
     (:set, ...): {},
     (:create_change_stream, ...): {},

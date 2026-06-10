@@ -381,6 +381,11 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
         ] >> . = [{}],
     ),
 
+    create_schema: [
+        {:macro:CREATE SCHEMA my_schema:},
+        {:macro:CREATE SCHEMA IF NOT EXISTS my_schema:},
+    ] >> . = emptyModel,
+
     functions: (
         create: [
             {:macro:CREATE FUNCTION public.newid() RETURNS uuid AS $BODY$ foo $BODY$:},
@@ -389,6 +394,10 @@ let (:macro, :applyStmt, :emptyModel, :parseDdl, ...) = //{./sql};
                 LANGUAGE sql
                 AS $$select md5(random()::text || clock_timestamp()::text)::uuid$$;
             :},
+            # Spanner UDFs: paren body
+            {:macro:CREATE FUNCTION my_schema.my_func() RETURNS INT64 AS (42):},
+            {:macro:CREATE FUNCTION my_schema.add(x INT64, y INT64) RETURNS INT64 SQL SECURITY INVOKER AS (x + y):},
+            {:macro:CREATE FUNCTION my_schema.classify(x STRING, y NUMERIC) RETURNS BOOL SQL SECURITY INVOKER AS (CASE WHEN x = 'A' AND y > 0 THEN TRUE ELSE FALSE END):},
         ] >> . = emptyModel,
 
         alter: [
