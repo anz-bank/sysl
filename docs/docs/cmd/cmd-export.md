@@ -19,7 +19,7 @@ sysl export [<flags>] <MODULE>
 Currently, the supported formats include:
 
 - OpenAPI 2.0 (fka Swagger): `swagger`
-- OpenAPI 3.0 `openapi`
+- OpenAPI 3.0 `openapi3`
 - Spanner `spanner`
 - Proto `proto`
 
