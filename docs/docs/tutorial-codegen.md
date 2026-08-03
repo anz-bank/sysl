@@ -114,7 +114,7 @@ This can now be committed if you're using a version control system.
 
 Before you can successfully run your application, you need to add some handler functions for the endpoints you've defined in your specification.
 
-To do this, create the file in the path `internal\handlers\pet.go`
+To do this, create the file in the path `internal/handlers/pet.go`
 
 ```go
 package handlers
