@@ -58,7 +58,7 @@ Commands:
     initializes and writes a new go.mod to the current directory
 
   protobuf [<flags>] <MODULE>...
-    Generate textpb/json
+    Generate textpb/json/pb
 
   repl
     Enter a sysl REPL
