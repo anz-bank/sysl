@@ -720,7 +720,7 @@ Client:
 
 Above code assumes, server and client files are in the same directory. If they are in different directories, you must have at least a common root directory and `import /path/from/root`.
 
-All sysl commands accept `--root` argument. Run `sysl -h` or `reljam -h` for more details.
+All sysl commands accept `--root` argument. Run `sysl -h` for more details.
 
 ### Internal relative file
 
