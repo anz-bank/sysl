@@ -521,7 +521,7 @@ func GenerateView(args *Args, params *IntsParam, mod *sysl.Module) string {
 		"eplongname": params.Endpt.LongName,
 	}
 	title := args.Title
-	if appAttrs["title"].GetS() != "" {
+	if title == "" && appAttrs["title"].GetS() != "" {
 		title = appAttrs["title"].GetS()
 	}
 	titleParser = cmdutils.MakeFormatParser(title)

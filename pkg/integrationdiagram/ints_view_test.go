@@ -645,6 +645,36 @@ _0 --> _1 <<indirect>>
 @enduml`, result)
 }
 
+func TestGenerateViewTitlePrecedence(t *testing.T) {
+	t.Parallel()
+
+	params := &IntsParam{
+		App: &sysl.Application{
+			Attrs: map[string]*sysl.Attribute{
+				"title": {Attribute: &sysl.Attribute_S{S: "%(epname)"}},
+			},
+		},
+		Endpt: &sysl.Endpoint{
+			Name:  "Greeting",
+			Attrs: map[string]*sysl.Attribute{},
+		},
+	}
+
+	for _, test := range []struct {
+		name     string
+		cliTitle string
+		want     string
+	}{
+		{name: "project attribute is the default", want: "title Greeting\n"},
+		{name: "command flag overrides project attribute", cliTitle: "foo", want: "title foo\n"},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			result := GenerateView(&Args{Title: test.cliTitle}, params, &sysl.Module{})
+			assert.Contains(t, result, test.want)
+		})
+	}
+}
+
 func TestDrawSystemView(t *testing.T) {
 	t.Parallel()
 
